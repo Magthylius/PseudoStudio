@@ -3,12 +3,12 @@ Shader "PeerPlay/NoiseGround"
 {
     Properties
     {
+        _Tess("Tesselation", Range(1,8)) = 4
         _Color("Color", Color) = (1,1,1,1)
         _MainTex("Albedo (RGB)", 2D) = "white" {}
         _NormalMap("Normal Map", 2D) = "bump"  {}
         _Glossiness("Smoothness", Range(0,1)) = 0.5
         _Metallic("Metallic", Range(0,1)) = 0.0
-        _Tess("Tesselation", Range(1,8)) = 4
         _NoiseScale("Noise Scale", float) = 1
         _NoiseFrequency("Noise Frequency", float) = 1
         _NoiseOffset("Noise Offset", Vector) = (0,0,0,0)

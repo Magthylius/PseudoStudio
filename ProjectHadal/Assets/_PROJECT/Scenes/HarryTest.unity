@@ -363,7 +363,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 7.9
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -409,10 +409,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mat: {fileID: 2100000, guid: f6790e9c1cf27a9428c484d8522ef832, type: 2}
+  _depthStart: 0
+  _depthDistance: 12
   _pixelOffset: 0.001
-  _noiseScale: 8.84
-  _noiseFrequency: 10.68
-  _noiseSpeed: 21
+  _noiseScale: 8.3
+  _noiseFrequency: 15.2
+  _noiseSpeed: 4
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,6 +429,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mat: {fileID: 2100000, guid: 1f8979a47c81d224680098ed7249b744, type: 2}
   _fogColor: {r: 0, g: 0.26734945, b: 0.7075472, a: 0}
+  _depthStart: -4.43
+  _depthDistance: 13.62
 --- !u!1 &1007458820
 GameObject:
   m_ObjectHideFlags: 0
@@ -627,17 +631,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Micro_Sub
       objectReference: {fileID: 0}
-    - target: {fileID: 1000013002967384, guid: c9c10e442362b304fa498afd8bec3b1c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4000010454786744, guid: c9c10e442362b304fa498afd8bec3b1c, type: 3}
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4000010454786744, guid: c9c10e442362b304fa498afd8bec3b1c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.78
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4000010454786744, guid: c9c10e442362b304fa498afd8bec3b1c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -645,7 +645,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010454786744, guid: c9c10e442362b304fa498afd8bec3b1c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.21
+      value: -1.93
       objectReference: {fileID: 0}
     - target: {fileID: 4000010454786744, guid: c9c10e442362b304fa498afd8bec3b1c, type: 3}
       propertyPath: m_LocalRotation.w

@@ -5,8 +5,8 @@ Shader "PeerPlay/FogShader"
     {
         _MainTex("Texture", 2D) = "white" {}
         _FogColor("Fog Color", Color) = (1,1,1,1)
-        //_DepthStart("Depth Start" float) = 1
-        //_DepthDistance("Depth Distance", float) = 1
+        _DepthStart("Depth Start", float) = 1
+        _DepthDistance("Depth Distance", float) = 1
     }
 
     SubShader
@@ -24,7 +24,7 @@ Shader "PeerPlay/FogShader"
 
             sampler2D _CameraDepthTexture;
             fixed4 _FogColor;
-            //float _DepthStart, _DepthDistance;
+            float _DepthStart, _DepthDistance;
 
             struct appdata
             {
@@ -52,7 +52,8 @@ Shader "PeerPlay/FogShader"
 
             fixed4 frag(v2f i) : COLOR
             {
-                float depthValue = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.scrPos)).r);
+                float depthValue = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.scrPos)).r) * _ProjectionParams.z;
+                depthValue = saturate((depthValue - _DepthStart) / _DepthDistance);
                 fixed4 fogColor = _FogColor * depthValue;
                 fixed4 col = tex2Dproj(_MainTex, i.scrPos);
                 return lerp(col,fogColor,depthValue);
