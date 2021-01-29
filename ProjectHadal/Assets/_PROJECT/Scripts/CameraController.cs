@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public bool isMovementEnabled;
+
     public float forwardSpeed = 25f, strafeSpeed = 7.5f, hoverSpeed = 5f;
     private float activeForwardSpeed, activeStrafeSpeed, activeHoverSpeed;
     private float forwardAcceleration = 2.5f, strafeAcceleration = 2f, hoverAccelaration = 2f;
@@ -23,8 +25,21 @@ public class CameraController : MonoBehaviour
         Cursor.visible = false;
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            if (isMovementEnabled)
+                isMovementEnabled = false;
+            else
+                isMovementEnabled = true;
+        }
+    }
+
     private void FixedUpdate()
     {
+        if(isMovementEnabled)
+        {
             lookInput.x = Input.mousePosition.x;
             lookInput.y = Input.mousePosition.y;
 
@@ -43,5 +58,6 @@ public class CameraController : MonoBehaviour
 
             transform.position += transform.forward * activeForwardSpeed * Time.deltaTime;
             transform.position += (transform.right * activeStrafeSpeed * Time.deltaTime) + (transform.up * activeHoverSpeed * Time.deltaTime);
+        }
     }
 }
