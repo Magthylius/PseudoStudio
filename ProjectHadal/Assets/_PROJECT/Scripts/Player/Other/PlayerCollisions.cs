@@ -28,14 +28,14 @@ namespace Hadal.Controls
 
         private void OnCollisionStay(Collision collision)
         {
-            LayerMask layer = LayerMask.NameToLayer(interactLayer);
-            if (collision.gameObject.layer == layer.value)
-            {
-                if(Input.GetKeyDown(KeyCode.T))
-                {
-                    collision.gameObject.GetComponent<Interactable>().Interact();
-                }    
-            }
+			if(Input.GetKeyDown(KeyCode.T))
+			{
+				LayerMask layer = LayerMask.NameToLayer(interactLayer);
+				if (collision.gameObject.layer == layer.value)
+				{
+					collision.gameObject.GetComponent<Interactable>().Interact();
+				}
+			}
         }
     }
 }
