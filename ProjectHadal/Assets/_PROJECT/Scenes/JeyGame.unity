@@ -1065,5 +1065,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8092643721678471735, guid: 38594b8ddacbdc042b5df3fdeb6d7fbb, type: 3}
+      propertyPath: cubeColor
+      value: 
+      objectReference: {fileID: 2100000, guid: e3ae06a3979f53046aa05330d69de1fa, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38594b8ddacbdc042b5df3fdeb6d7fbb, type: 3}
+--- !u!1 &8092643721634252137 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8092643721678471730, guid: 38594b8ddacbdc042b5df3fdeb6d7fbb, type: 3}
+  m_PrefabInstance: {fileID: 8092643721634252136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8092643721634252138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8092643721634252137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
