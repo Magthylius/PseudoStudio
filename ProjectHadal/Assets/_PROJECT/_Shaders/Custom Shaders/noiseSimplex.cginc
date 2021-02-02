@@ -96,8 +96,6 @@ float4 permute(float4 x) {
 	);
 }
 
-
-
 float taylorInvSqrt(float r) {
 	return 1.79284291400159 - 0.85373472095314 * r;
 }
@@ -105,8 +103,6 @@ float taylorInvSqrt(float r) {
 float4 taylorInvSqrt(float4 r) {
 	return 1.79284291400159 - 0.85373472095314 * r;
 }
-
-
 
 float4 grad4(float j, float4 ip)
 {
@@ -124,8 +120,6 @@ float4 grad4(float j, float4 ip)
 	
 	return p;
 }
-
-
 
 // ----------------------------------- 2D -------------------------------------
 
