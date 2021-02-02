@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Hadal.Security
 {
@@ -32,5 +33,14 @@ namespace Hadal.Security
         private void SetBool(int location, bool flag)
             => _data = (byte)(((_data | (1 << location)).AsByte() * flag.AsByte()) + ((_data & ~(1 << location)).AsByte() * (!flag).AsByte()));
         private bool GetBool(int location) => ((byte)(_data & (1 << location))).AsBool();
+    }
+    public class BoolBitDictionary<T> : Dictionary<string, T>
+    {
+        private BoolBitArray _array;
+
+        public BoolBitDictionary()
+        {
+
+        }
     }
 }
