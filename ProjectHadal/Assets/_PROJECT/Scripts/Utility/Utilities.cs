@@ -32,12 +32,15 @@ namespace Hadal
         }
 
         public static int Round(this float number) => Mathf.RoundToInt(number);
+        public static byte AsByte(this int number) => Convert.ToByte(number);
+        public static byte AsByte(this bool statement) => Convert.ToByte(statement);
         public static int AsInt(this bool statement) => Convert.ToInt32(statement);
         public static uint AsUint(this bool statement) => Convert.ToUInt32(statement);
         public static uint AsUint(this float number) => Convert.ToUInt32(number);
         public static uint AsUint(this int number) => Convert.ToUInt32(number);
         public static float AsFloat(this bool statement) => statement.AsInt();
         public static float AsFloat(this int number) => number;
+        public static bool AsBool(this byte bitSet) => Convert.ToBoolean(bitSet);
         public static bool AsBool(this uint number) => Convert.ToBoolean(number);
         public static float Clamp0(this float number) => Mathf.Clamp(number, 0.0f, float.MaxValue);
         public static float Clamp01(this float number) => Mathf.Clamp01(number);
