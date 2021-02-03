@@ -8,7 +8,7 @@ namespace Hadal.Controls
 {
     public class PlayerManager : MonoBehaviour
     {
-        private const string PrefabFolder = "PhotonControlPrefabs";
+        private const string PrefabFolder = "Prefabs/Player";
         private const string PrefabName = "Player";
         private PhotonView _pView;
         private GameObject _controller;
