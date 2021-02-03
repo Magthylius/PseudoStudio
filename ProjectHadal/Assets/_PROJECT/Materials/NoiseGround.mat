@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: NoiseGround
-  m_Shader: {fileID: -6465566751694194690, guid: 117a45997b7ec3a43a01061260569d18, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 3d7d5b39c82480d4eb2c77974044f0ac, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -89,6 +89,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Boolean_28b4a593b56d4ffd8ae8c90a8e054524: 1
+    - Vector1_3130bed0389049dc985a7ead18668607: 22.7
+    - Vector1_5ff199afdcf440cf95efc0378305ffe6: -0.1
+    - Vector1_8e92854263824e1193ce449233b02074: 16
     - Vector1_a375d29054074ac7ad32044ef1d384b8: -0.25
     - Vector1_a5c2fbd0cab2432aa1d25ffbdbec6ffb: 0.97
     - Vector1_dee24a2855fa4056a69c94a5265f23b6: 1.73
@@ -120,6 +124,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Vector4_bc07e96179ad436db9d1db542997c565: {r: 1, g: 1, b: 1, a: 1}
+    - Vector4_d4a54f2253954afa9d51dd97d0ac857d: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
