@@ -41,7 +41,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         string path1 = string.Empty, path2 = string.Empty;
         path2 = "PlayerManager";
         if (scene.buildIndex == 1) { path1 = "PhotonPrefabs"; }
-        else if (scene.buildIndex == 2) { path1 = "PhotonControlPrefabs"; }
+        else if (scene.buildIndex == 2) { path1 = "Prefabs/Player"; }
         
         PhotonNetwork.Instantiate(Path.Combine(path1, path2), Vector3.zero, Quaternion.identity); 
         CreateAI();
@@ -51,7 +51,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.Instantiate(Path.Combine("PhotonControlPrefabs", "Animal"),
+            PhotonNetwork.Instantiate(Path.Combine("Prefabs/Animol", "Animal"),
                                                transform.position,
                                                transform.rotation,
                                                0);
