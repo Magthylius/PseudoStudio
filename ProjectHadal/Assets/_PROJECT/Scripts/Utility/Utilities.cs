@@ -42,6 +42,10 @@ namespace Hadal
         public static float AsFloat(this int number) => number;
         public static bool AsBool(this byte bitSet) => Convert.ToBoolean(bitSet);
         public static bool AsBool(this uint number) => Convert.ToBoolean(number);
+        public static T AsType<T>(this GameObject gameObject) where T : Component => gameObject.GetComponent<T>();
+        public static T AsType<T>(this T tee) where T : Component => tee.GetComponent<T>();
+        public static GameObject AsGObject(this UnityEngine.Object obj) => (GameObject)obj;
+
         public static float Clamp0(this float number) => Mathf.Clamp(number, 0.0f, float.MaxValue);
         public static float Clamp01(this float number) => Mathf.Clamp01(number);
         public static float DiffFrom(this float thisNum, float otherNum) => (thisNum - otherNum).Abs();
@@ -61,6 +65,10 @@ namespace Hadal
                 index++;
             }
             return index - 1;
+        }
+        public static UnityEngine.Object Instantiate0(this UnityEngine.Object prefab)
+        {
+            return UnityEngine.Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
         }
     }
 }
