@@ -26,7 +26,7 @@ namespace Hadal.Tests
                 bCheck = interactable.GetComponent<Renderer>().material;
                 yield return null;
 
-                Assert.AreEqual(aCheck, bCheck);
+                Assert.AreNotEqual(aCheck, bCheck);
             }
 
             [UnitySetUp]
