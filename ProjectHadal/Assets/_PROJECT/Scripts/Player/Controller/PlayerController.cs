@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using NaughtyAttributes;
+using Photon.Pun;
 using UnityEngine;
 
 //Created by Jet
@@ -8,14 +9,14 @@ namespace Hadal.Controls
     {
         #region Variable Definitions
 
-        [SerializeField] private PlayerCameraController cameraController;
-        [SerializeField] private PlayerHealthManager healthManager;
-        [SerializeField] private PlayerInventory inventory;
-        [SerializeField] private PlayerLamp lamp;
-        [SerializeField] private SmoothNetworkPlayer networkPlayer;
-        [SerializeField] private string localPlayerLayer;
-        [SerializeField] private GameObject[] graphics;
-        [SerializeField] private GameObject wraithGraphic;
+        [Foldout("Components"), SerializeField] private PlayerCameraController cameraController;
+        [Foldout("Components"), SerializeField] private PlayerHealthManager healthManager;
+        [Foldout("Components"), SerializeField] private PlayerInventory inventory;
+        [Foldout("Components"), SerializeField] private PlayerLamp lamp;
+        [Foldout("Settings"), SerializeField] private SmoothNetworkPlayer networkPlayer;
+        [Foldout("Settings"), SerializeField] private string localPlayerLayer;
+        [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
+        [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
         private PhotonView _pView;
         private PlayerManager _manager;
 
@@ -27,7 +28,6 @@ namespace Hadal.Controls
         {
             base.Awake();
             _pView = GetComponent<PhotonView>();
-            _manager = PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
             InjectAwakeDependencies();
         }
         private void Start()
@@ -47,12 +47,14 @@ namespace Hadal.Controls
 
         #region Public Methods
 
+        public void InjectManager(PlayerManager playerManager) => _manager = playerManager;
+
         public void AddVelocity(float speed, Vector3 direction)
         {
             Vector3 addVelocity = direction.normalized * speed;
             mover.Velocity.AddVelocity(addVelocity);
         }
-        public void Die() => _manager.Die();
+        public void Die() => _manager.TryToDie();
         public void ResetController()
         {
             healthManager.Inject(_pView, this, cameraController);
@@ -88,7 +90,7 @@ namespace Hadal.Controls
         {
             if (isMine)
             {
-                UI.UIManager.Instance.SetPlayer(this);
+                if(UI.UIManager.Instance != null) UI.UIManager.Instance.SetPlayer(this);
                 gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
                 Destroy(networkPlayer);
                 Cursor.lockState = CursorLockMode.Locked;
@@ -107,12 +109,12 @@ namespace Hadal.Controls
 
         private void Deactivate()
         {
-            
+
         }
 
         private void DebugCursor()
         {
-            if(Input.GetKeyDown(KeyCode.O))
+            if (Input.GetKeyDown(KeyCode.O))
             {
                 Cursor.lockState = CursorLockMode.None;
             }
@@ -129,6 +131,7 @@ namespace Hadal.Controls
         }
         private void InjectStartDependencies()
         {
+            _manager ??= PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
             inventory.Inject(_pView, this);
         }
 

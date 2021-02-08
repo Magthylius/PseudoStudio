@@ -1,4 +1,5 @@
 ﻿using Hadal.Controls;
+using NaughtyAttributes;
 using Photon.Pun;
 using UnityEngine;
 
@@ -30,9 +31,9 @@ namespace Hadal
     [System.Serializable]
     public abstract class Controller : MonoBehaviourPunCallbacks
     {
-        [SerializeField] protected Mover mover;
-        [SerializeField] protected Rotator rotator;
-        [SerializeField] protected Transform pTrans;
+        [Foldout("Main"), SerializeField] protected Mover mover;
+        [Foldout("Main"), SerializeField] protected Rotator rotator;
+        [Foldout("Main"), SerializeField] protected Transform pTrans;
 
         protected virtual void Awake()
         {
