@@ -1,24 +1,32 @@
 using UnityEngine;
 
+//Created by Jet
 namespace Hadal.Equipment
 {
-    [CreateAssetMenu(menuName = "Items/Data")]
-    public class ItemData : ScriptableObject
+    public abstract class ItemData : ScriptableObject
     {
         public int ID;
         public string Name;
+        public int BaseDamage;
         public bool IsDamaging;
         public Vector3 ItemOffset;
         public GameObject ItemPrefab;
         public GameObject ProjectilePrefab;
+        protected GameObject spawnedObject;
 
-        public virtual GameObject InstanstiateItem(Vector3 position, Quaternion rotation, Transform parent)
+        public abstract bool DoEffect(ItemHandlerInfo info);
+        protected virtual GameObject InstanstiateItem(Vector3 position, Quaternion rotation, Transform parent)
         {
-            var obj = Instantiate(ItemPrefab, position + ItemOffset, rotation, parent);
-            obj.GetComponent<UsableObject>().Data = this;
-            return obj;
+            spawnedObject = Instantiate(ItemPrefab, position + ItemOffset, rotation, parent);
+            spawnedObject.GetComponent<UsableObject>().Data = this;
+            return spawnedObject;
         }
-        public virtual GameObject InstanstiateProjectile(Vector3 position, Quaternion rotation, Transform parent)
+        protected virtual GameObject InstanstiateProjectile(Vector3 position, Quaternion rotation, Transform parent)
             => Instantiate(ProjectilePrefab, position, rotation, parent);
+
+        private void OnValidate()
+        {
+            Name = name;
+        }
     }
 }
