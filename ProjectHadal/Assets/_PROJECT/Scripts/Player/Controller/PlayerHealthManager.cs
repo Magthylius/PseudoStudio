@@ -4,7 +4,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Controls
 {
-    public class PlayerHealthManager : MonoBehaviour, IDamageable
+    public class PlayerHealthManager : MonoBehaviour, Hadal.IDamageable
     {
         [SerializeField] private int maxHealth;
         private int _currentHealth;
@@ -25,7 +25,12 @@ namespace Hadal.Controls
             _cameraController = cameraControl;
         }
 
-        public void TakeDamage(int damage) => _pView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
+        public bool TakeDamage(int damage)
+        {
+            TakeTheDamage(damage);
+            return true;
+        }
+        private void TakeTheDamage(int damage) => _pView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
 
         [PunRPC]
         private void RPC_TakeDamage(int damage)
