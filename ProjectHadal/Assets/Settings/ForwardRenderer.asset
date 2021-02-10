@@ -1,29 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2667117388038053617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85d7ac9fea6f3e446bc421b9deacda37, type: 3}
-  m_Name: FullScreenShader
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  settings:
-    Event: 300
-    blitMaterial: {fileID: 2100000, guid: 8fc52045b4eda2c4db15d057fb8dcba5, type: 2}
-    blitMaterialPassIndex: 0
-    setInverseViewMatrix: 0
-    srcType: 0
-    srcTextureId: _CameraColorTexture
-    srcTextureObject: {fileID: 0}
-    dstType: 0
-    dstTextureId: _BlitPassTexture
-    dstTextureObject: {fileID: 0}
 --- !u!114 &-2175915334453168368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85d7ac9fea6f3e446bc421b9deacda37, type: 3}
-  m_Name: Fog
+  m_Name: UnderwaterNoise
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
@@ -61,9 +37,9 @@ MonoBehaviour:
   m_Name: ForwardRenderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: -2667117388038053617}
   - {fileID: -2175915334453168368}
-  m_RendererFeatureMap: 0f61b9d7dd7efcda10f797248898cde1
+  - {fileID: 3615552171418205321}
+  m_RendererFeatureMap: 10f797248898cde1893c463c8b052d32
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -92,3 +68,30 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
   m_AccurateGbufferNormals: 0
+--- !u!114 &3615552171418205321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2f9380176f81bd4aae4be25fcf75e4d, type: 3}
+  m_Name: Atmospheric Fog
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    color: {r: 0, g: 0, b: 0, a: 1}
+    sunColor: {r: 0, g: 0, b: 0, a: 1}
+    fogDensity: 0.01
+    fogDensityPower: 1
+    skyAlpha: 1
+    useHeightFog: 0
+    fogHeightStart: 0
+    fogHeightEnd: 30
+    fogHeightPower: 0.5
+    extraFogHeightEnd: 0
+    extraFogHeightPower: 0.5
+    directionalIntesity: 1
+    directionalPower: 1
