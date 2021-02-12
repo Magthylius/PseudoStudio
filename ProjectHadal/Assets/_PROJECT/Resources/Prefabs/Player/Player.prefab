@@ -392,6 +392,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7cbadf139e055f49be860d08bf153b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugEnabled: 1
+  torpedoMaxCount: 4
+  floodDelay: 2
+  reloadDelay: 3
+  startFullyLoaded: 1
   firePoint: {fileID: 3869409784348184770}
   bullet: {fileID: 7351274592407701336, guid: 9fdfcbe5d4884284cb4daf02bcf7ff0b, type: 3}
   fireRate: 0

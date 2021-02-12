@@ -27,6 +27,8 @@ namespace Hadal
         protected Transform target;
         public abstract void Initialise(Transform transform);
         public abstract void DoUpdate(in float deltaTime);
+        public Quaternion localRotation => target.localRotation;
+        public Quaternion rotation => target.rotation;
     }
     [System.Serializable]
     public abstract class Controller : MonoBehaviourPunCallbacks
@@ -49,6 +51,8 @@ namespace Hadal
 
         public float DeltaTime => Time.deltaTime;
         public float SqrSpeed => mover.SqrSpeed;
+
+        public Rotator Rotator => rotator;
     }
     [System.Serializable]
     public abstract class CameraController : MonoBehaviour
