@@ -1,24 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.AI;
 
-public abstract class AIBaseState
+namespace Hadal.AI
 {
-    protected GameObject gameObject;
-    protected Transform transform;
-    protected NavMeshAgent agent;
-
-    public abstract Type Tick();
-    public abstract Type Start();
-
-    public AIBaseState(GameObject GameObject)
+    public abstract class AIBaseState
     {
-        this.gameObject = GameObject;
-        this.transform = GameObject.transform;
-        this.agent = GameObject.GetComponent<NavMeshAgent>();
-    }
+        protected GameObject gameObject;
+        protected Transform transform;
+        protected NavMeshAgent agent;
 
-    
+        public abstract Type Tick();
+        public abstract Type Start();
+
+        public AIBaseState(GameObject GameObject)
+        {
+            this.gameObject = GameObject;
+            this.transform = GameObject.transform;
+            this.agent = GameObject.GetComponent<NavMeshAgent>();
+        }
+
+
+    }
 }

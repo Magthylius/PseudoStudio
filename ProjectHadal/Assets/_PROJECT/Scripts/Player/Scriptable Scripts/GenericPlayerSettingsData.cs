@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Hadal.Controls
+namespace Hadal.Player
 {
     [CreateAssetMenu(menuName = "Player/Generic Settings Data")]
     public class GenericPlayerSettingsData : ScriptableObject
