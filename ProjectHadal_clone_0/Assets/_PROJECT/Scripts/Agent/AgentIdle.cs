@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace NicholasAI.GGJAI
+namespace Hadal.AI
 {
     public class AgentIdle : MonoBehaviour
     {
