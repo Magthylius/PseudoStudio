@@ -1,8 +1,8 @@
-//created by Jin
+//created by Jin, edited by Jon
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Hadal.UI;
+using Hadal.Player;
 using Magthylius.DataFunctions;
 
 public class PlayerShoot : MonoBehaviour

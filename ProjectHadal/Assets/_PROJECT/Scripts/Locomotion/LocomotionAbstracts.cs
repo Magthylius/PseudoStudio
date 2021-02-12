@@ -24,5 +24,8 @@ namespace Hadal.Locomotion
         protected Transform target;
         public abstract void Initialise(Transform transform);
         public abstract void DoUpdate(in float deltaTime);
+
+        public Quaternion localRotation => target.localRotation;
+        public Quaternion rotation => target.rotation;
     }
 }

@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 2446224198192976797}
   - component: {fileID: -1401834016356404041}
   - component: {fileID: 4400593999370135737}
-  - component: {fileID: 2765303436767595968}
+  - component: {fileID: 2907668246131652117}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -380,7 +380,7 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &2765303436767595968
+--- !u!114 &2907668246131652117
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -389,18 +389,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 2719752003713521068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7cbadf139e055f49be860d08bf153b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 862364cc166369e42952db6e9e3e5939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   debugEnabled: 1
   torpedoMaxCount: 4
   floodDelay: 2
-  reloadDelay: 3
+  reloadDelay: 2
   startFullyLoaded: 1
   firePoint: {fileID: 3869409784348184770}
   bullet: {fileID: 7351274592407701336, guid: 9fdfcbe5d4884284cb4daf02bcf7ff0b, type: 3}
-  fireRate: 0
-  force: 9000
+  fireRate: 5
+  force: 5
 --- !u!1 &2720187582479781533
 GameObject:
   m_ObjectHideFlags: 0

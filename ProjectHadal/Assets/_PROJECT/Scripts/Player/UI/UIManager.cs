@@ -1,4 +1,5 @@
 ﻿using Hadal.Player.Behaviours;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,10 @@ namespace Hadal.Player
     public class UIManager : MonoBehaviour
     {
         public static UIManager Instance;
+
+        [Header("Position Info")]
+        public RectTransform uiRotators;
+
         [SerializeField] private float highestPoint;
         [SerializeField] private PlayerController player;
         [SerializeField] private Text depthText;
@@ -18,16 +23,15 @@ namespace Hadal.Player
         [SerializeField] private Image healthBar;
         public static event OnHealthChange OnHealthChange;
 
+        [Header("Shooting Info")]
+        public int torpCount;
+        public Image floodReticle;
+        public List<GameObject> tubeIcons;
+
         private PlayerLamp _lamp;
         private PlayerHealthManager _healthManager;
 
-        public void SetPlayer(PlayerController target)
-        {
-            player = target;
-            _lamp = player.GetComponent<PlayerLamp>();
-            _healthManager = player.GetComponent<PlayerHealthManager>();
-        }
-
+        #region Unity Lifecycle
         private void Awake()
         {
             if (Instance == null)
@@ -41,7 +45,7 @@ namespace Hadal.Player
                 return;
             }
         }
-        private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
+
         private void Update()
         {
             if (player == null) return;
@@ -50,8 +54,25 @@ namespace Hadal.Player
 
             string lightIs = _lamp.LightsOn ? "ON" : "OFF";
             lightText.text = $"Light: {lightIs}";
+
+            Quaternion rotatorAngles = Quaternion.identity;
+            rotatorAngles.z = player.Rotator.rotation.z;
+            rotatorAngles.w = player.Rotator.rotation.w;
+
+            uiRotators.rotation = rotatorAngles;
         }
 
+        private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
+        #endregion
+
+        public void SetPlayer(PlayerController target)
+        {
+            player = target;
+            _lamp = player.GetComponent<PlayerLamp>();
+            _healthManager = player.GetComponent<PlayerHealthManager>();
+        }
+
+        #region Health
         private void UpdateHealthBar()
         {
             if (player == null) return;
@@ -59,5 +80,22 @@ namespace Hadal.Player
         }
 
         public static void InvokeOnHealthChange() => OnHealthChange?.Invoke();
+        #endregion
+
+        #region Torpedoes
+        public void UpdateFlooding(float progress)
+        {
+            floodReticle.fillAmount = progress;
+        }
+        public void UpdateTubes(int torpedoCount)
+        {
+            torpCount = torpedoCount;
+            foreach (GameObject tube in tubeIcons) tube.SetActive(false);
+            for (int i = 0; i < torpedoCount - 1; i++)
+            {
+                tubeIcons[i].SetActive(true);
+            }
+        }
+        #endregion
     }
 }
