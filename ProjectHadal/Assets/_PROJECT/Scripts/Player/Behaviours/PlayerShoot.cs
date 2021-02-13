@@ -49,7 +49,7 @@ public class PlayerShoot : MonoBehaviourDebug
             allowReload = false;
         }
 
-        uiManager.UpdateTubes(torpedoCount);
+        SetupTorpedoUI();
         DoDebugEnabling(debugKey);
     }
 
@@ -57,11 +57,15 @@ public class PlayerShoot : MonoBehaviourDebug
     {
         if (allowFlood && torpedoCount > 0)
         {
-            uiManager.UpdateFlooding(floodTimer.Progress);
+            uiManager.UpdateFlooding(floodTimer.Progress, allowFlood);
             floodTimer.Tick(Time.deltaTime);
         }
 
-        if (allowReload) reloadTimer.Tick(Time.deltaTime);
+        if (allowReload)
+        {
+            reloadTimer.Tick(Time.deltaTime);
+            uiManager.UpdateReload(reloadTimer.Progress, allowReload);
+        }
 
         // swap to input system
         if (Input.GetMouseButtonDown(0)) FireTorpedo();
@@ -75,21 +79,25 @@ public class PlayerShoot : MonoBehaviourDebug
     #endregion
 
     #region Torpedoes
+    void SetupTorpedoUI()
+    {
+        uiManager.UpdateTubes(torpedoCount);
+        uiManager.UpdateReload(reloadTimer.Progress, allowReload);
+    }
+
     void ReloadTorpedoes()
     {
-        if (torpedoCount < torpedoMaxCount)
-        {
-            torpedoCount++;
-            uiManager.UpdateTubes(torpedoCount);
-        }
+        torpedoCount++;
+        uiManager.UpdateTubes(torpedoCount);
 
+        if (torpedoCount >= torpedoMaxCount) allowReload = false;
         DebugLog("Torpedo Loaded!");
     }
 
     void FloodTorpedoes()
     {
         allowFlood = false;
-        uiManager.UpdateFlooding(1f);
+        uiManager.UpdateFlooding(1f, allowFlood);
         DebugLog("Torpedo Flooded");
     }
 

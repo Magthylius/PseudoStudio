@@ -3,13 +3,14 @@ using Photon.Pun;
 using UnityEngine;
 using Hadal.Usables;
 using Hadal.Inputs;
+using Castle.Core.Internal;
 
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
     public class PlayerInventory : MonoBehaviourPunCallbacks
     {
-        [SerializeField] private UsableObject[] usables;
+        [SerializeField] private UsableObject[] utilities;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
         private int _selectedItem;
@@ -42,8 +43,8 @@ namespace Hadal.Player.Behaviours
 
         private void SelectItem()
         {
-            if (usables == null) return;
-            for (int i = 0; i < usables.Length; i++)
+            if (utilities.IsNullOrEmpty()) return;
+            for (int i = 0; i < utilities.Length; i++)
             {
                 if (!_eInput.SlotIndex(i)) continue;
                 EquipItem(i);
@@ -55,15 +56,19 @@ namespace Hadal.Player.Behaviours
         {
             if (_uInput.FireKey1)
             {
-                _controllerInfo.Shooter.Fire(EquippedUsable);
+                _controllerInfo.Shooter.FireTorpedo();
+            }
+            if (_uInput.FireKey2)
+            {
+                _controllerInfo.Shooter.FireUtility(EquippedUsable);
             }
         }
 
         private void UpdateUsables(in float deltaTime)
         {
             int i = -1;
-            while(++i < usables.Length)
-                usables[i].DoUpdate(deltaTime);
+            while(++i < utilities.Length)
+                utilities[i].DoUpdate(deltaTime);
         }
 
         private void EquipItem(int _index)
@@ -79,9 +84,10 @@ namespace Hadal.Player.Behaviours
 
         private void ToggleItemActiveState()
         {
-            usables[_selectedItem].Activate();
+            if (utilities.IsNullOrEmpty()) return;
+            utilities[_selectedItem].Activate();
             if (_previousSelectedItem != -1)
-                usables[_previousSelectedItem].Deactivate();
+                utilities[_previousSelectedItem].Deactivate();
         }
 
         private void UpdateNetworkItem()
@@ -95,9 +101,9 @@ namespace Hadal.Player.Behaviours
         {
             var camera = _controllerInfo.CameraController.GetCamera;
             int i = 0;
-            while (i < usables.Length)
+            while (i < utilities.Length)
             {
-                usables[i].Inject(camera);
+                utilities[i].Inject(camera);
                 i++;
             }
         }
@@ -117,7 +123,7 @@ namespace Hadal.Player.Behaviours
 
         #region Shorthand
 
-        private UsableObject EquippedUsable => usables[_selectedItem];
+        private UsableObject EquippedUsable => utilities[_selectedItem];
 
         #endregion
     }

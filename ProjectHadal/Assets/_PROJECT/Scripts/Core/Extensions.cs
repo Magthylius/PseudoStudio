@@ -34,7 +34,12 @@ namespace Hadal
         public static bool AsBool(this uint number) => Convert.ToBoolean(number);
         public static T AsType<T>(this GameObject gameObject) where T : UnityEngine.Component => gameObject.GetComponent<T>();
         public static T AsType<T>(this T tee) where T : UnityEngine.Component => tee.GetComponent<T>();
-        public static GameObject AsGObject(this UnityEngine.Object obj) => (GameObject)obj;
+        public static GameObject AsGObject(this UnityEngine.Object obj) => (GameObject) obj;
+    }
+
+    public static class FluentBool
+    {
+        public static bool Not(bool statement) => !statement;
     }
 
     public static class ClampExten

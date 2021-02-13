@@ -11,13 +11,13 @@ namespace Hadal.Usables
         {
             var projectileObj = TorpedoPool.Instance.Scoop().WithGObjectSetActive(true);
             projectileObj.Data = ProjectileData;
-            projectileObj.DumpEvent = CallOnDump;
+            projectileObj.DumpEvent = DumpProjectileMethod;
             projectileObj.gameObject.transform.position = info.FirePoint;
             projectileObj.gameObject.transform.rotation = info.Orientation;
             projectileObj.Rigidbody.AddForce(info.Direction * info.Force);
         }
 
-        private void CallOnDump(ProjectileObject obj)
+        private void DumpProjectileMethod(ProjectileObject obj)
         {
             if (obj is TorpedoObject torpedo)
             {
