@@ -55,7 +55,7 @@ namespace Hadal.Player.Behaviours
         {
             if (_uInput.FireKey1)
             {
-                _controllerInfo.Shooter.Fire(EquippedUsable);
+                //_controllerInfo.Shooter.Fire(EquippedUsable);
             }
         }
 
@@ -68,13 +68,13 @@ namespace Hadal.Player.Behaviours
 
         private void EquipItem(int _index)
         {
-            if (_index == _previousSelectedItem) return;
+            /*if (_index == _previousSelectedItem) return;
             _selectedItem = _index;
             ToggleItemActiveState();
             _previousSelectedItem = _selectedItem;
 
             if (!_pView.IsMine) return;
-            UpdateNetworkItem();
+            UpdateNetworkItem();*/
         }
 
         private void ToggleItemActiveState()
