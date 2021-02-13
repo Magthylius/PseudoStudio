@@ -1,14 +1,12 @@
+using Hadal.Usables.Projectiles;
 using UnityEngine;
 
 //Created by Jet
 namespace Hadal.Usables
 {
     [CreateAssetMenu(menuName = "Items/Sonic Dart")]
-    public class SonicDartLauncherData : ItemData
+    public class SonicDartLauncherData : UsableData
     {
-        public override bool DoEffect(ItemHandlerInfo info)
-        {
-            return true;
-        }
+        
     }
 }

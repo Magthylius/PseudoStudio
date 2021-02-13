@@ -3,9 +3,43 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables
 {
-    public class UsableObject : MonoBehaviour, IUsable
+    public class UsableObject : MonoBehaviour, IUsable, IUnityServicer
     {
-        public virtual ItemData Data { get; set; }
-        public virtual bool Use(ItemHandlerInfo info) => Data.DoEffect(info);
+        [SerializeField] private UsableData data;
+        public virtual UsableData Data { get => data; set => data = value; }
+        protected Camera PCamera { get; set; } = null;
+        protected bool IsActive { get; set; } = false;
+
+        #region Unity Lifecycle
+
+        protected virtual void Awake() { }
+        private void Update() => DoUpdate(DeltaTime);
+
+        #endregion
+
+        #region Command Methods
+
+        public void Inject(Camera camera) => PCamera = camera;
+        public void Activate() => IsActive = true;
+        public void Deactivate() => IsActive = false;
+
+        #endregion
+
+        #region Use Method
+
+        public virtual bool Use(UsableHandlerInfo info)
+        {
+            if (!IsActive) return false;
+            LaunchToDestination(info);
+            return true;
+        }
+        protected virtual void LaunchToDestination(UsableHandlerInfo info)
+            => Data.DoEffect(info.WithCamera(PCamera));
+
+        #endregion
+
+        public virtual void DoUpdate(in float deltaTime) { }
+        public float ElapsedTime => Time.time;
+        public float DeltaTime => Time.deltaTime;
     }
 }

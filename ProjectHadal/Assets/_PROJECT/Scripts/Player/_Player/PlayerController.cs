@@ -14,6 +14,7 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] private PlayerHealthManager healthManager;
         [Foldout("Components"), SerializeField] private PlayerInventory inventory;
         [Foldout("Components"), SerializeField] private PlayerLamp lamp;
+        [Foldout("Components"), SerializeField] private PlayerShoot shooter;
         [Foldout("Settings"), SerializeField] private SmoothNetworkPlayer networkPlayer;
         [Foldout("Settings"), SerializeField] private string localPlayerLayer;
         [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
@@ -150,6 +151,7 @@ namespace Hadal.Player
         private float BoostInputSpeed => mover.Input.BoostAxis * mover.Accel.Boost + 1.0f;
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
+        public ControllerInfo GetInfo => new ControllerInfo(cameraController, healthManager, inventory, lamp, shooter);
 
         #endregion
     }

@@ -8,10 +8,11 @@ namespace Hadal.Usables.Projectiles
         public int ID;
         public string Name;
         public int BaseDamage;
+        public float Movespeed;
+        public float ExpireTime;
+        public LayerMask TargetLayer;
         public GameObject ProjectilePrefab;
-        protected GameObject projectileObject;
 
-        public abstract bool DoEffect(ProjectileHandlerInfo info);
         protected virtual GameObject InstantiateProjectile(Vector3 position, Quaternion rotation, Transform parent)
         {
             return Instantiate(ProjectilePrefab, position, rotation, parent);

@@ -1,14 +1,12 @@
+using Hadal.Usables.Projectiles;
 using UnityEngine;
 
 //Created by Jet
 namespace Hadal.Usables
 {
     [CreateAssetMenu(menuName = "Items/Flare")]
-    public class FlareLauncherData : ItemData
+    public class FlareLauncherData : UsableData
     {
-        public override bool DoEffect(ItemHandlerInfo info)
-        {
-            return true;
-        }
+        
     }
 }
