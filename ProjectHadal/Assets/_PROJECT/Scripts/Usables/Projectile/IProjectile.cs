@@ -6,6 +6,5 @@ namespace Hadal.Usables.Projectiles
     public interface IProjectile
     {
         ProjectileData Data {get;}
-        bool Use(ProjectileHandlerInfo info);
     }
 }

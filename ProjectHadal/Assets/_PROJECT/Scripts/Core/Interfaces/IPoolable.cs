@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 //Created by Jet
@@ -6,7 +6,7 @@ namespace Hadal
 {
     public interface IPoolable<T> where T : Component
     {
-        ObjectPool<T> MotherPool { get; }
+        Action<T> DumpEvent { get; }
         void Dump();
     }
 }

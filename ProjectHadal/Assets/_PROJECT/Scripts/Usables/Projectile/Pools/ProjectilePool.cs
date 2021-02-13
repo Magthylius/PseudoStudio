@@ -4,14 +4,14 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
-    public class ProjectilePool : ObjectPool<ProjectileObject>
+    public class ProjectilePool<T> : ObjectPool<T> where T : ProjectileObject
     {
         [ReadOnly, SerializeField] protected ProjectileData data;
 
-        protected override void Awake()
+        protected override void Start()
         {
-            prefab = data.ProjectilePrefab.GetComponent<ProjectileObject>();
-            base.Awake();
+            prefab = data.ProjectilePrefab.GetComponent<T>();
+            base.Start();
         }
     }
 }

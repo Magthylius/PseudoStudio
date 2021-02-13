@@ -2,7 +2,7 @@ namespace Hadal.Usables
 {
     public interface IUsable
     {
-        ItemData Data { get; }
-        bool Use(ItemHandlerInfo info);
+        UsableData Data { get; }
+        bool Use(UsableHandlerInfo info);
     }
 }

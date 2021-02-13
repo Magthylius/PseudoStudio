@@ -7,9 +7,5 @@ namespace Hadal.Usables.Projectiles
     public class SonarDartData : ProjectileData
     {
         
-        public override bool DoEffect(ProjectileHandlerInfo info)
-        {
-            return true;
-        }
     }
 }

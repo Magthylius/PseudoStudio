@@ -6,9 +6,10 @@ namespace Hadal
         public const string PlayerManagerPrefabPath = "Prefabs/Player/PlayerManager";
         public const string PlayerPrefabPath = "Prefabs/Player/Player";
         public const string GenericPlayerSettingsDataPath = "";
-        public const string EmptyItemDataPath = "";
+        public const string EmptyUsableDataPath = "ScriptableObjects/Usables/EmptyUsableData";
+        public const string EmptyProjectileDataPath = "ScriptableObjects/Projectiles/EmptyProjectileData";
         public const string ProjectilePrefabsPath = "Prefabs/Projectiles";
-        public const string UtilitiesDataPath = "ScriptableObjects/Utilities";
+        public const string UtilitiesDataPath = "ScriptableObjects/Usables";
         public const string ProjectileDataPath = "ScriptableObjects/Projectiles";
     }
 }
