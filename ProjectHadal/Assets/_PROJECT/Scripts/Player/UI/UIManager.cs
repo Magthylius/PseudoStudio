@@ -8,9 +8,11 @@ namespace Hadal.Player
 {
     public delegate void OnHealthChange();
 
-    public class UIManager : MonoBehaviour
+    public class UIManager : MonoBehaviourDebug
     {
         public static UIManager Instance;
+
+        public string debugKey;
 
         [Header("Position Info")]
         public RectTransform uiRotators;
@@ -25,7 +27,8 @@ namespace Hadal.Player
 
         [Header("Shooting Info")]
         public int torpCount;
-        public Image floodReticle;
+        public List<Image> floodIndicators;
+        public GameObject fireReticle;
         public List<GameObject> tubeIcons;
 
         private PlayerLamp _lamp;
@@ -44,6 +47,11 @@ namespace Hadal.Player
                 Destroy(gameObject);
                 return;
             }
+        }
+
+        private void Start()
+        {
+            DoDebugEnabling(debugKey);
         }
 
         private void Update()
@@ -65,6 +73,7 @@ namespace Hadal.Player
         private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
         #endregion
 
+
         public void SetPlayer(PlayerController target)
         {
             player = target;
@@ -85,16 +94,18 @@ namespace Hadal.Player
         #region Torpedoes
         public void UpdateFlooding(float progress)
         {
-            floodReticle.fillAmount = progress;
+            foreach (Image img in floodIndicators) img.fillAmount = progress;
+
+            if (progress < 1f) fireReticle.SetActive(false);
+            else fireReticle.SetActive(true);
+
+            DebugLog("Flood Progress: " + progress);
         }
         public void UpdateTubes(int torpedoCount)
         {
             torpCount = torpedoCount;
             foreach (GameObject tube in tubeIcons) tube.SetActive(false);
-            for (int i = 0; i < torpedoCount - 1; i++)
-            {
-                tubeIcons[i].SetActive(true);
-            }
+            for (int i = 0; i < torpedoCount - 1; i++) tubeIcons[i].SetActive(true);
         }
         #endregion
     }

@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Player;
+using Hadal;
 using Magthylius.DataFunctions;
 
-public class PlayerShoot : MonoBehaviour
+public class PlayerShoot : MonoBehaviourDebug
 {
     UIManager uiManager;
-    public bool debugEnabled = true;
+    public string debugKey;
 
     [Header("Torpedoes")]
     public int torpedoMaxCount = 4;
@@ -48,14 +49,8 @@ public class PlayerShoot : MonoBehaviour
             allowReload = false;
         }
 
-#if UNITY_EDITOR
-    if (debugEnabled) Debug.unityLogger.logEnabled = true;
-    else Debug.unityLogger.logEnabled = false;
-#else
-    Debug.unityLogger.logEnabled = false;
-#endif
-
         uiManager.UpdateTubes(torpedoCount);
+        DoDebugEnabling(debugKey);
     }
 
     private void Update()
@@ -64,11 +59,6 @@ public class PlayerShoot : MonoBehaviour
         {
             uiManager.UpdateFlooding(floodTimer.Progress);
             floodTimer.Tick(Time.deltaTime);
-
-            //if (floodTimer.Progress >= 1f) allowFlood = false;
-            //uiManager.UpdateFlooding(floodTimer.Progress);
-
-            //Debug.Log("Flooding: " + floodTimer.Progress);
         }
 
         if (allowReload) reloadTimer.Tick(Time.deltaTime);
@@ -93,14 +83,14 @@ public class PlayerShoot : MonoBehaviour
             uiManager.UpdateTubes(torpedoCount);
         }
 
-        Debug.Log("Torpedo Loaded!");
+        DebugLog("Torpedo Loaded!");
     }
 
     void FloodTorpedoes()
     {
         allowFlood = false;
         uiManager.UpdateFlooding(1f);
-        Debug.Log("Torpedo Flooded");
+        DebugLog("Torpedo Flooded");
     }
 
     void FireTorpedo()
@@ -115,7 +105,7 @@ public class PlayerShoot : MonoBehaviour
         
         floodTimer.Reset();
         uiManager.UpdateTubes(torpedoCount);
-        Debug.Log("Torpedo Fired!");
+        DebugLog("Torpedo Fired!");
     }
     #endregion
 }
