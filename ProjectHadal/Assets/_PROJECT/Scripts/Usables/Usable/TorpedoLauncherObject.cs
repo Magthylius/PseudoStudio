@@ -28,11 +28,12 @@ namespace Hadal.Usables
         public int ChamberCount { get; private set; }
         public bool IsReloading { get; private set; }
         public float ChamberReloadRatio => _chamberReloadTimer.GetCompletionRatio;
+        public bool IsChamberLoaded => ChamberCount > 0;
         public event Action<bool> OnChamberChanged;
         private Timer _chamberReloadTimer;
 
         public int TotalTorpedoes => ReserveCount + ChamberCount;
-
+        
         #endregion
 
         protected override void Awake()
@@ -55,8 +56,7 @@ namespace Hadal.Usables
                 _chamberReloadTimer.Restart();
             }
         }
-
-        public bool IsChamberLoaded => ChamberCount > 0;
+        
         public void DecrementChamber()
         {
             UpdateChamberCount(ChamberCount - 1);
@@ -95,7 +95,7 @@ namespace Hadal.Usables
                                 .WithOnCompleteEvent(IncrementChamber)
                                 .WithShouldPersist(true);
             _reserveRegenTimer.Pause();
-            _chamberReloadTimer.Pause();
+            _chamberReloadTimer.CompletedOnStart();
         }
         private void SetDefaults()
         {

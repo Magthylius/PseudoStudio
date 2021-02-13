@@ -425,7 +425,6 @@ MonoBehaviour:
   debugKey: Player
   tLauncher: {fileID: 4213735574807413925}
   torpedoFirePoint: {fileID: 3869409784348184770}
-  torpedoFireDelay: 0.5
   torpedoForce: 1000
   utilityFirePoint: {fileID: 2911960973859190668}
   utilityFireDelay: 0.5
@@ -588,9 +587,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 49312724e43f40546a6afcbd3c28a755, type: 2}
   maxReserveCapacity: 3
-  reserveRegenerationTime: 60
+  reserveRegenerationTime: 4
   maxChamberCapacity: 1
-  chamberReloadTime: 4
+  chamberReloadTime: 2
   maxOnLoadOut: 1
 --- !u!1 &3309683987410669343
 GameObject:
