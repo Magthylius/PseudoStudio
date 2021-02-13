@@ -1,121 +1,113 @@
 //created by Jin, edited by Jon
-using System.Collections;
-using System.Collections.Generic;
+//edited by Jey
 using UnityEngine;
-using Hadal.Player;
-using Magthylius.DataFunctions;
+using Hadal.Usables;
+using Hadal.Utility;
 
-public class PlayerShoot : MonoBehaviour
+namespace Hadal.Player.Behaviours
 {
-    UIManager uiManager;
-    public bool debugEnabled = true;
-
-    [Header("Torpedoes")]
-    public int torpedoMaxCount = 4;
-    public float floodDelay = 2f;
-    public float reloadDelay = 2f;
-    public bool startFullyLoaded = true;
-
-    int torpedoCount;
-    bool allowFlood;
-    bool allowReload;
-    Timer floodTimer;
-    Timer reloadTimer;
-
-    [Header("Utilities")]
-    [SerializeField] Transform firePoint;
-    [SerializeField] GameObject bullet;
-    [SerializeField] float fireRate;
-    [SerializeField] float force;
-
-    #region Unity Lifecycle
-    private void Start()
+    public class PlayerShoot : MonoBehaviour
     {
-        uiManager = UIManager.Instance;
+        [SerializeField] TorpedoLauncherObject tLauncher;
+        [SerializeField] Transform firePoint;
+        [SerializeField] float fireDelay;
+        [SerializeField] float force;
+        private Timer _reloadTimer;
+        private bool _canFire;
 
-        floodTimer = new Timer(floodDelay, true, true);
-        reloadTimer = new Timer(reloadDelay);
+        #region Unity Lifecycle
 
-        floodTimer.TargetTickedEvent.AddListener(FloodTorpedoes);
-        reloadTimer.TargetTickedEvent.AddListener(ReloadTorpedoes);
-
-        allowFlood = false;
-        allowReload = true;
-
-        if (startFullyLoaded)
+        private void Awake()
         {
-            torpedoCount = torpedoMaxCount;
-            allowReload = false;
+            _canFire = true;
+            BuildTimer();
         }
 
-#if UNITY_EDITOR
-    if (debugEnabled) Debug.unityLogger.logEnabled = true;
-    else Debug.unityLogger.logEnabled = false;
-#else
-    Debug.unityLogger.logEnabled = false;
-#endif
-
-        uiManager.UpdateTubes(torpedoCount);
-    }
-
-    private void Update()
-    {
-        if (allowFlood && torpedoCount > 0)
+        private void Start()
         {
-            uiManager.UpdateFlooding(floodTimer.Progress);
-            floodTimer.Tick(Time.deltaTime);
-
-            //if (floodTimer.Progress >= 1f) allowFlood = false;
-            //uiManager.UpdateFlooding(floodTimer.Progress);
-
-            //Debug.Log("Flooding: " + floodTimer.Progress);
+            UpdateUIChamberCount();
+            tLauncher.OnChamberChanged += OnChamberChangedMethod;
         }
 
-        if (allowReload) reloadTimer.Tick(Time.deltaTime);
-
-        // swap to input system
-        if (Input.GetMouseButtonDown(0)) FireTorpedo();
-
-        if(Input.GetMouseButtonDown(1))
+        private void OnDestroy()
         {
-            GameObject projectile = Instantiate(bullet, firePoint.position, firePoint.rotation);
-            projectile.GetComponent<Rigidbody>().AddForce(firePoint.forward * force);
-        }
-    }
-    #endregion
-
-    #region Torpedoes
-    void ReloadTorpedoes()
-    {
-        if (torpedoCount < torpedoMaxCount)
-        {
-            torpedoCount++;
-            uiManager.UpdateTubes(torpedoCount);
+            tLauncher.OnChamberChanged -= OnChamberChangedMethod;
         }
 
-        Debug.Log("Torpedo Loaded!");
-    }
+        public void DoUpdate(in float deltaTime)
+        {
+            OnUnityUpdateUI();
+        }
 
-    void FloodTorpedoes()
-    {
-        allowFlood = false;
-        uiManager.UpdateFlooding(1f);
-        Debug.Log("Torpedo Flooded");
-    }
+        #endregion
 
-    void FireTorpedo()
-    {
-        if (allowFlood || torpedoCount == 0) return;
+        #region Handler Methods
 
-        torpedoCount--;
-        allowReload = true;
+        public void Fire(UsableObject usable)
+        {
+            if (!_canFire) return;
+            HandleFireTimer();
+            HandleUsable(usable);
+        }
 
-        if (torpedoCount > 0)
-            allowFlood = true;
+        private void HandleUsable(UsableObject usable)
+        {
+            if (usable is TorpedoLauncherObject torpedo)
+            {
+                if (!torpedo.IsChamberLoaded) return;
+                torpedo.DecrementChamber();
+                torpedo.Use(CreateInfo());
+                return;
+            }
+            usable.Use(CreateInfo());
+        }
+
+        private UsableHandlerInfo CreateInfo() => new UsableHandlerInfo().WithTransformInfo(firePoint).WithForce(force);
         
-        floodTimer.Reset();
-        uiManager.UpdateTubes(torpedoCount);
-        Debug.Log("Torpedo Fired!");
+        #endregion
+
+        #region UI
+
+        private void OnChamberChangedMethod(bool isIncrement)
+        {
+            UpdateUIChamberCount();
+            if (isIncrement) UpdateUIFloodRatio(1f);
+        }
+        private void OnUnityUpdateUI()
+        {
+            if (tLauncher.IsReloading)
+                UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
+        }
+        private void UpdateUIChamberCount()
+        {
+            UIManager.Instance
+            .UpdateTubes(tLauncher.TotalTorpedoes);
+        }
+        private void UpdateUIFloodRatio(in float ratio)
+        {
+            UIManager.Instance
+            .UpdateFlooding(ratio.Clamp01());
+        }
+
+        #endregion
+
+        #region Timer
+
+        private void BuildTimer()
+        {
+            _reloadTimer = this.Create_A_Timer()
+                        .WithDuration(fireDelay)
+                        .WithOnCompleteEvent(SetCanFire)
+                        .WithShouldPersist(true);
+            _reloadTimer.Pause();
+        }
+        private void HandleFireTimer()
+        {
+            _canFire = false;
+            _reloadTimer.Restart();
+        }
+        private void SetCanFire() => _canFire = true;
+
+        #endregion
     }
-    #endregion
 }

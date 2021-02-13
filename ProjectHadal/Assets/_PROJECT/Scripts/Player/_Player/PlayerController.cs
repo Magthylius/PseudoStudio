@@ -86,6 +86,7 @@ namespace Hadal.Player
             lamp.DoUpdate(deltaTime);
             mover.DoUpdate(deltaTime);
             rotator.DoUpdate(deltaTime);
+            shooter.DoUpdate(deltaTime);
         }
 
         private void HandlePhotonView(bool isMine)
