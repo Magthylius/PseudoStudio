@@ -14,7 +14,8 @@ namespace Hadal.Usables
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);
-            projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
+            if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
+            else projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)

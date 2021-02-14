@@ -75,7 +75,8 @@ namespace Hadal.Usables.Projectiles
 
         private void HandleDependentComponents()
         {
-            Rigidbody = GetComponent<Rigidbody>();
+            Rigidbody = GetComponentInChildren<Rigidbody>();
+            PPhysics = GetComponentInChildren<ProjectilePhysics>();
         }
 
         public void SetPositionRotation(Vector3 position, Quaternion rotation)
