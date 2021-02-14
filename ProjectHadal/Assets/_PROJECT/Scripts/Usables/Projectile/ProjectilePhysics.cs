@@ -33,20 +33,27 @@ public class ProjectilePhysics : MonoBehaviourDebug
     {
         if (allowLaunch)
         {
-            projectileTimer.Tick(Time.deltaTime);
-
-
+            projectileTimer.Tick(Time.deltaTime); 
         }
     }
 
-    void LaunchProjectile()
+    void FixedUpdate()
+    {
+        if (allowLaunch)
+        {
+            projectileModeList[modeIndex].DoUpdate();
+        }    
+    }
+
+    public void LaunchProjectile()
     {
         allowLaunch = true;
     }
 
     void SwapModes()
     {
-
+        modeIndex++;
+        projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
     }
 
     void SetupProjectileModes()
