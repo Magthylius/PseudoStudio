@@ -8,7 +8,7 @@ namespace Hadal.Usables.Projectiles
     public abstract class ProjectileBehaviour : MonoBehaviour, IProjectile, IPoolable<ProjectileBehaviour>
     {
         public virtual ProjectileData Data { get; set; }
-        // public virtual ProjectilePhysics PPhysics { get; private set; }
+        public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public bool IsArmed { get; set; } = false;
         public event Action<bool> OnHit;
