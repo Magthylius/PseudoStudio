@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
@@ -14,10 +12,16 @@ public abstract class ProjectileMode : MonoBehaviour
         SELF_DEACTIVATE
     }
 
+    [Header("Projectile base settings")]
     [ReadOnly] public ProjectileModeEnum mode;
     public float endTime;
     public bool armsProjectile;
     public bool skipsOnContact;
 
-    public abstract void Setup();
+    protected new Rigidbody rigidbody;
+    protected bool frameSetupCompleted = false;
+
+    public abstract void Setup(Rigidbody rb);
+    public abstract void FirstFrameSetup();
+    public abstract void DoUpdate();
 }

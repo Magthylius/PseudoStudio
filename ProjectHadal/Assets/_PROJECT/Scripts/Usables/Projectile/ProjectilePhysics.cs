@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hadal;
 using NaughtyAttributes;
+using Magthylius.DataFunctions;
 
 public class ProjectilePhysics : MonoBehaviourDebug
 {
-    [ReadOnly]
-    public List<ProjectileMode> projectileModeList;
+    public Rigidbody projectileRigidbody;
+    [ReadOnly] public List<ProjectileMode> projectileModeList;
+
+    int modeIndex;
+    Timer projectileTimer;
+    bool allowLaunch;
 
     void OnValidate()
     {
@@ -17,10 +22,44 @@ public class ProjectilePhysics : MonoBehaviourDebug
     void Start()
     {
         SetupProjectileModes();
+
+        modeIndex = 0;
+
+        projectileTimer = new Timer(projectileModeList[0].endTime);
+        projectileTimer.TargetTickedEvent.AddListener(SwapModes);
+    }
+
+    void Update()
+    {
+        if (allowLaunch)
+        {
+            projectileTimer.Tick(Time.deltaTime);
+
+
+        }
+    }
+
+    void LaunchProjectile()
+    {
+        allowLaunch = true;
+    }
+
+    void SwapModes()
+    {
+
     }
 
     void SetupProjectileModes()
     {
-        foreach (ProjectileMode proj in projectileModeList) proj.Setup();
+        foreach (ProjectileMode proj in projectileModeList)
+        {
+            if (proj == null)
+            {
+                projectileModeList.Remove(proj);
+                SetupProjectileModes();
+                return;
+            }
+            proj.Setup(projectileRigidbody);
+        }
     }
 }
