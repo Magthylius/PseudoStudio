@@ -14,6 +14,7 @@ namespace Hadal.Player.Behaviours
         [SerializeField] TorpedoLauncherObject tLauncher;
         [SerializeField] Transform torpedoFirePoint;
         [SerializeField] float torpedoForce;
+        public TorpedoLauncherObject GetTorpedoLauncher => tLauncher;
 
         [Header("Utility")]
         [SerializeField] Transform utilityFirePoint;
@@ -61,7 +62,7 @@ namespace Hadal.Player.Behaviours
         public void FireUtility(UsableObject usable)
         {
             if (!_canUtilityFire) return;
-            HandleUtilityReloadTimer();
+            HandleUtilityReloadTimer(usable);
             usable.Use(CreateInfoForUtility());
         }
 
@@ -122,16 +123,18 @@ namespace Hadal.Player.Behaviours
 
         private void BuildTimers()
         {
+            SetCanUtilityFire();
             _utilityReloadTimer = this.Create_A_Timer()
                         .WithDuration(utilityFireDelay)
                         .WithOnCompleteEvent(SetCanUtilityFire)
                         .WithShouldPersist(true);
-            _utilityReloadTimer.Pause();
+            _utilityReloadTimer.PausedOnStart();
         }
-        private void HandleUtilityReloadTimer()
+        private void HandleUtilityReloadTimer(UsableObject usable)
         {
             _canUtilityFire = false;
             _utilityReloadTimer.Restart();
+            usable.OnRestockInvoke();
         }
         private void SetCanUtilityFire() => _canUtilityFire = true;
 

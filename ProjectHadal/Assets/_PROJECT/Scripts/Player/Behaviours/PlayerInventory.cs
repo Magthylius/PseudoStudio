@@ -100,11 +100,11 @@ namespace Hadal.Player.Behaviours
         private void InjectDependencies()
         {
             var camera = _controllerInfo.CameraController.GetCamera;
-            int i = 0;
-            while (i < utilities.Length)
+            int i = -1;
+            while (++i < utilities.Length)
             {
                 utilities[i].Inject(camera);
-                i++;
+                utilities[i].Deactivate();
             }
         }
 
@@ -123,6 +123,7 @@ namespace Hadal.Player.Behaviours
 
         #region Shorthand
 
+        public UsableObject[] GetUsableObjects => utilities;
         private UsableObject EquippedUsable => utilities[_selectedItem];
 
         #endregion

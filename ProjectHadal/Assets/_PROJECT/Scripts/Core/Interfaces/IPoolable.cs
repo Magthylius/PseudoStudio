@@ -6,7 +6,7 @@ namespace Hadal
 {
     public interface IPoolable<T> where T : Component
     {
-        Action<T> DumpEvent { get; }
+        event Action<T> DumpEvent;
         void Dump();
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Utility;
+using System.Linq;
 
 //Created by Jet
 namespace Hadal
@@ -27,12 +28,21 @@ namespace Hadal
 
         private void Add(int count)
         {
-            int i = 0;
-            while(i < count)
-            {
+            int i = -1;
+            while(++i < count)
                 Dump(Instantiate(prefab, transform));
-                i++;
-            }
+        }
+
+        public static void DumpAll<TPoolable>() where TPoolable : Component
+        {
+            var allPoolables = FindObjectsOfType<GameObject>()
+                                .Select(p => p.GetComponent<IPoolable<TPoolable>>())
+                                .Where(p => p != null)
+                                .ToArray();
+            
+            int i = -1;
+            while(++i < allPoolables.Length)
+                allPoolables[i].Dump();
         }
     }
 }

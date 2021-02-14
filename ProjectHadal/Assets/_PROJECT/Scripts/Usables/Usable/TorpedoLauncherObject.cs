@@ -40,6 +40,7 @@ namespace Hadal.Usables
         {
             SetDefaults();
             BuildTimers();
+            IsActive = true;
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -68,6 +69,7 @@ namespace Hadal.Usables
             DecrementReserve();
             UpdateChamberCount(ChamberCount + 1);
             OnChamberChanged?.Invoke(true);
+            OnRestockInvoke();
         }
         private void DecrementReserve()
         {

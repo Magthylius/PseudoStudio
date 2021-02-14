@@ -9,15 +9,15 @@ namespace Hadal.Usables
     {
         public override void DoEffect(UsableHandlerInfo info)
         {
-            var projectileObj = TorpedoPool.Instance.Scoop().WithGObjectSetActive(true);
+            var projectileObj = TorpedoPool.Instance.Scoop();
             projectileObj.Data = ProjectileData;
-            projectileObj.DumpEvent = DumpProjectileMethod;
-            projectileObj.gameObject.transform.position = info.FirePoint;
-            projectileObj.gameObject.transform.rotation = info.Orientation;
-            projectileObj.Rigidbody.AddForce(info.Direction * info.Force);
+            projectileObj.DumpEvent += DumpProjectileMethod;
+            projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
+            projectileObj.WithGObjectSetActive(true);
+            projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
         }
 
-        private void DumpProjectileMethod(ProjectileObject obj)
+        protected override void DumpProjectileMethod(ProjectileObject obj)
         {
             if (obj is TorpedoObject torpedo)
             {

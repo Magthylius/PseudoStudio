@@ -8,9 +8,9 @@ namespace Hadal.Usables.Projectiles
     public abstract class ProjectileObject : MonoBehaviour, IProjectile, IPoolable<ProjectileObject>
     {
         public virtual ProjectileData Data { get; set; }
-        public Action<ProjectileObject> DumpEvent { get; set; }
+        public event Action<ProjectileObject> DumpEvent;
         public Rigidbody Rigidbody { get; private set; }
-        public event Action OnHit;
+        public event Action<bool> OnHit;
         private Timer _expireTimer;
 
         #region Unity Lifecycle
@@ -36,24 +36,35 @@ namespace Hadal.Usables.Projectiles
 
         protected bool TryDamageTarget(IDamageable target)
         {
-            if (NotDamageable(target) || NotTargetLayer(target)) return false;
+            if (NotDamageable(target) || NotTargetLayer(target))
+            {
+                DisposeOnHit(false);
+                return false;
+            }
             DamageTarget(target);
             return true;
         }
 
         protected virtual void DamageTarget(IDamageable target)
         {
-            if (target.TakeDamage(Data.BaseDamage))
-            {
-                OnHit?.Invoke();
-                Dump();
-            }
-
-            print($"Hit a {target.Obj.name}");
+            bool didDamage = target.TakeDamage(Data.BaseDamage);
+            DisposeOnHit(didDamage);
         }
 
-        private bool NotTargetLayer(IDamageable d) => d.Obj.layer != Data.TargetLayer;
-        private static bool NotDamageable(IDamageable d) => d is null;
+        private void DisposeOnHit(bool didDamage)
+        {
+            OnHit?.Invoke(didDamage);
+            Dump();
+        }
+        private bool NotTargetLayer(IDamageable d)
+        {
+            if (d != null)
+            {
+                return d.Obj.layer != Data.TargetLayer;
+            }
+            return false;
+        }
+        private static bool NotDamageable(IDamageable d) => d == null;
 
         #endregion
 
@@ -74,14 +85,24 @@ namespace Hadal.Usables.Projectiles
                 Debug.LogWarning($"RigidBody is missing for {name}!");
         }
 
+        public void SetPositionRotation(Vector3 position, Quaternion rotation)
+        {
+            transform.position = position;
+            transform.rotation = rotation;
+        }
+
         #endregion
 
         #region Interface Methods
 
         public virtual void Dump()
         {
+            _expireTimer.Pause();
+            Rigidbody.velocity = Vector3.zero;
+            Rigidbody.angularVelocity = Vector3.zero;
             Data = null;
             DumpEvent?.Invoke(this);
+            DumpEvent = null;
         }
 
         #endregion

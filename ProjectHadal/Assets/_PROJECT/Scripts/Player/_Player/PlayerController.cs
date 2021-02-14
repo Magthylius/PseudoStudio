@@ -1,4 +1,5 @@
-﻿using Hadal.Player.Behaviours;
+﻿using System;
+using Hadal.Player.Behaviours;
 using NaughtyAttributes;
 using Photon.Pun;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Hadal.Player
         [Foldout("Settings"), SerializeField] private string localPlayerLayer;
         [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
         [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
+        public static event Action<PlayerController> OnInitialiseComplete;
         private PhotonView _pView;
         private PlayerManager _manager;
 
@@ -36,6 +38,7 @@ namespace Hadal.Player
         {
             InjectStartDependencies();
             HandlePhotonView(_pView.IsMine);
+            OnInitialiseComplete?.Invoke(this);
         }
 
         protected override void Update()
@@ -106,7 +109,7 @@ namespace Hadal.Player
 
             wraithGraphic.SetActive(true);
             PhotonNetwork.RemoveBufferedRPCs(_pView.ViewID, nameof(RPC_SetPlayerGraphics));
-            int randomIndex = Random.Range(0, graphics.Length);
+            int randomIndex = UnityEngine.Random.Range(0, graphics.Length);
             _pView.RPC(nameof(RPC_SetPlayerGraphics), RpcTarget.AllBuffered, randomIndex);
         }
 
