@@ -3,7 +3,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
-    public class FlarePool : ProjectilePool<FlareObject>
+    public class FlarePool : ProjectilePool<FlareBehaviour>
     {
         protected override void Start()
         {

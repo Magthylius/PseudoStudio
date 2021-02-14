@@ -23,7 +23,7 @@ namespace Hadal.Usables
             projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
         }
 
-        protected virtual void DumpProjectileMethod(ProjectileObject obj) { }
+        protected virtual void DumpProjectileMethod(ProjectileBehaviour obj) { }
         private void OnValidate()
         {
             Name = name.Replace(" Data", string.Empty);

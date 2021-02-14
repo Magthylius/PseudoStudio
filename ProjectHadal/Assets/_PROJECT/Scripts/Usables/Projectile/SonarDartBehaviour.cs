@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Hadal.Usables.Projectiles
 {
-    public class FlareObject : ProjectileObject
+    public class SonarDartBehaviour : ProjectileBehaviour
     {
         
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
-    public class SonarDartPool : ProjectilePool<SonarDartObject>
+    public class SonarDartPool : ProjectilePool<SonarDartBehaviour>
     {
         protected override void Start()
         {

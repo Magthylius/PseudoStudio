@@ -99,7 +99,6 @@ namespace Hadal.Player
                 if(UIManager.Instance != null) UIManager.Instance.SetPlayer(this);
                 gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
                 Destroy(networkPlayer);
-                Cursor.lockState = CursorLockMode.Locked;
             }
             else
             {
@@ -107,6 +106,7 @@ namespace Hadal.Player
                 cameraController.Deactivate();
             }
 
+            Cursor.lockState = CursorLockMode.Locked;
             wraithGraphic.SetActive(true);
             PhotonNetwork.RemoveBufferedRPCs(_pView.ViewID, nameof(RPC_SetPlayerGraphics));
             int randomIndex = UnityEngine.Random.Range(0, graphics.Length);
