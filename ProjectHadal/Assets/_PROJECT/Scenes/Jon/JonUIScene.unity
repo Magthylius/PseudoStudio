@@ -669,7 +669,19 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+      propertyPath: debugKeyList.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+      propertyPath: debugKeyList.Array.data[3].key
+      value: ProjectilePhysics
+      objectReference: {fileID: 0}
+    - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: debugKeyList.Array.data[0].allowDebug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+      propertyPath: debugKeyList.Array.data[1].allowDebug
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8716315643385868219, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
