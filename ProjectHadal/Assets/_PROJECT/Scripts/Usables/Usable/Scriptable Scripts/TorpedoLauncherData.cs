@@ -17,9 +17,9 @@ namespace Hadal.Usables
             projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
         }
 
-        protected override void DumpProjectileMethod(ProjectileObject obj)
+        protected override void DumpProjectileMethod(ProjectileBehaviour obj)
         {
-            if (obj is TorpedoObject torpedo)
+            if (obj is TorpedoBehaviour torpedo)
             {
                 TorpedoPool.Instance.Dump(torpedo);
             }

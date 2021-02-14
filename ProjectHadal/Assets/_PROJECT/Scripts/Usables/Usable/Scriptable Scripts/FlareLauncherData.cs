@@ -17,9 +17,9 @@ namespace Hadal.Usables
             projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
         }
 
-        protected override void DumpProjectileMethod(ProjectileObject obj)
+        protected override void DumpProjectileMethod(ProjectileBehaviour obj)
         {
-            if (obj is FlareObject flare)
+            if (obj is FlareBehaviour flare)
             {
                 FlarePool.Instance.Dump(flare);
             }

@@ -5,34 +5,32 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
-    public abstract class ProjectileObject : MonoBehaviour, IProjectile, IPoolable<ProjectileObject>
+    public abstract class ProjectileBehaviour : MonoBehaviour, IProjectile, IPoolable<ProjectileBehaviour>
     {
         public virtual ProjectileData Data { get; set; }
-        public event Action<ProjectileObject> DumpEvent;
+        // public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
+        public bool IsArmed { get; set; } = false;
         public event Action<bool> OnHit;
+        public event Action<ProjectileBehaviour> DumpEvent;
+        
         private Timer _expireTimer;
 
         #region Unity Lifecycle
 
-        private void Awake()
-        {
-            HandleDependentComponents();
-        }
-
+        protected virtual void Awake() => HandleDependentComponents();
         protected virtual void Start() => BuildTimer();
-
         private void OnEnable() => _expireTimer?.Restart();
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            var damageable = collision.transform.GetComponent<IDamageable>();
-            TryDamageTarget(damageable);
-        }
 
         #endregion
 
-        #region Damage/Impact Methods
+        #region Behavioural Methods
+
+        public virtual bool ImpactBehaviour(Collision collision)
+        {
+            var damageable = collision.transform.GetComponent<IDamageable>();
+            return TryDamageTarget(damageable);
+        }
 
         protected bool TryDamageTarget(IDamageable target)
         {
@@ -58,11 +56,8 @@ namespace Hadal.Usables.Projectiles
         }
         private bool NotTargetLayer(IDamageable d)
         {
-            if (d != null)
-            {
-                return d.Obj.layer != Data.TargetLayer;
-            }
-            return false;
+            if (d == null) return false;
+            return d.Obj.layer != Data.TargetLayer;
         }
         private static bool NotDamageable(IDamageable d) => d == null;
 
@@ -81,8 +76,6 @@ namespace Hadal.Usables.Projectiles
         private void HandleDependentComponents()
         {
             Rigidbody = GetComponent<Rigidbody>();
-            if (Rigidbody is null)
-                Debug.LogWarning($"RigidBody is missing for {name}!");
         }
 
         public void SetPositionRotation(Vector3 position, Quaternion rotation)

@@ -4,7 +4,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
-    public class ProjectilePool<T> : ObjectPool<T> where T : ProjectileObject
+    public class ProjectilePool<T> : ObjectPool<T> where T : ProjectileBehaviour
     {
         [ReadOnly, SerializeField] protected ProjectileData data;
 

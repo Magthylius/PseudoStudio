@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Hadal.Usables.Projectiles
 {
-    public class TorpedoPool : ProjectilePool<TorpedoObject>
+    public class TorpedoPool : ProjectilePool<TorpedoBehaviour>
     {
         protected override void Awake()
         {
