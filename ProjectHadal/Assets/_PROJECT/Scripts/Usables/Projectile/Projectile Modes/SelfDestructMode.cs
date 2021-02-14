@@ -18,11 +18,13 @@ public class SelfDestructMode : ProjectileMode
 
     public override void FirstFrameSetup()
     {
+        frameSetupCompleted = false;
 
+        rigidbody.AddExplosionForce(outwardForce, rigidbody.position, range);
     }
 
     public override void DoUpdate()
     {
-
+        if (!frameSetupCompleted) FirstFrameSetup();
     }
 }
