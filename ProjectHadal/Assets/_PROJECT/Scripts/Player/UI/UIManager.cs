@@ -85,12 +85,7 @@ namespace Hadal.Player
             string lightIs = _lamp.LightsOn ? "ON" : "OFF";
             lightText.text = $"Light: {lightIs}";
 
-            Quaternion rotatorAngles = Quaternion.identity;
-            rotatorAngles.z = player.Rotator.rotation.z;
-            rotatorAngles.w = player.Rotator.rotation.w;
-
-            uiRotators.rotation = rotatorAngles;
-
+            BalancerUpdate();
             if (Input.GetKeyDown(KeyCode.J)) ToggleLights();
         }
 
@@ -125,7 +120,7 @@ namespace Hadal.Player
 
             floodText.SetActive(showFlooding);
 
-            DebugLog("Flood Progress: " + progress);
+            //DebugLog("Flood Progress: " + progress);
         }
 
         public void UpdateTubes(int torpedoCount)
@@ -143,6 +138,20 @@ namespace Hadal.Player
         #endregion
 
         #region Modules
+        void BalancerUpdate()
+        {
+            /*Quaternion rotatorAngles = Quaternion.identity;
+            rotatorAngles.z = Mathf.Abs(player.Rotator.localRotation.z);
+            rotatorAngles.w = player.Rotator.localRotation.w;*/
+
+            Vector3 balancerAngles = new Vector3();
+            balancerAngles.z = player.Rotator.localRotation.eulerAngles.z;
+
+            uiRotators.rotation = Quaternion.Euler(balancerAngles);
+
+            DebugLog(player.transform.localRotation + ", " + player.transform.localRotation.eulerAngles);
+        }
+
         void ToggleLights()
         {
             isLightOn = !isLightOn;

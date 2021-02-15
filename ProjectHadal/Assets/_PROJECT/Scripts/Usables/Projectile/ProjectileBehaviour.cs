@@ -19,7 +19,11 @@ namespace Hadal.Usables.Projectiles
         #region Unity Lifecycle
 
         protected virtual void Awake() => HandleDependentComponents();
-        protected virtual void Start() => BuildTimer();
+        protected virtual void Start()
+        {
+            BuildTimer();
+            PPhysics.PhysicsFinished += Dump;
+        }
         private void OnEnable() => _expireTimer?.Restart();
 
         #endregion
@@ -92,8 +96,11 @@ namespace Hadal.Usables.Projectiles
         public virtual void Dump()
         {
             _expireTimer.Pause();
+
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.angularVelocity = Vector3.zero;
+            transform.position = Vector3.zero;
+
             Data = null;
             DumpEvent?.Invoke(this);
             DumpEvent = null;

@@ -7,8 +7,9 @@ public class SelfDeactivationMode : ProjectileMode
     [Header("Deactivation settings")]
     public bool destroyObject;
 
-    public override void Setup(Rigidbody rb)
+    public override void Setup(Rigidbody rb, Transform rTransform)
     {
+        rootTransform = rTransform;
         rigidbody = rb;
         mode = ProjectileModeEnum.SELF_DEACTIVATE;
     }

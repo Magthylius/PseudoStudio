@@ -46,8 +46,10 @@ MonoBehaviour:
   debugEnabled: 1
   debugKeyList:
   - key: Player
-    allowDebug: 1
+    allowDebug: 0
   - key: UI
-    allowDebug: 1
+    allowDebug: 0
   - key: PlayerLauncherEvents
+    allowDebug: 0
+  - key: ProjectilePhysics
     allowDebug: 0

@@ -8,8 +8,9 @@ public class PropulsionMode : ProjectileMode
     public float force;
     public float linearDrag;
 
-    public override void Setup(Rigidbody rb)
+    public override void Setup(Rigidbody rb, Transform rTransform)
     {
+        rootTransform = rTransform;
         rigidbody = rb;
         mode = ProjectileModeEnum.PROPULSION;
     }
@@ -24,6 +25,6 @@ public class PropulsionMode : ProjectileMode
     {
         if (!frameSetupCompleted) FirstFrameSetup();
 
-        rigidbody.AddForce(Vector3.forward * force, ForceMode.Force);
+        rigidbody.AddForce(rootTransform.forward * force, ForceMode.Force);
     }
 }

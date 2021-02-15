@@ -9,8 +9,9 @@ public class ImpulseMode : ProjectileMode
     public float force;
     public float linearDrag;
 
-    public override void Setup(Rigidbody rb)
+    public override void Setup(Rigidbody rb, Transform rTransform)
     {
+        rootTransform = rTransform;
         rigidbody = rb;
         mode = ProjectileModeEnum.IMPULSE;
     }
@@ -20,7 +21,7 @@ public class ImpulseMode : ProjectileMode
         frameSetupCompleted = false;
         rigidbody.drag = linearDrag;
 
-        rigidbody.AddForce(direction * force, ForceMode.Impulse);
+        rigidbody.AddRelativeForce(direction.normalized * force, ForceMode.Impulse);
     }
 
     public override void DoUpdate()

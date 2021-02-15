@@ -10,6 +10,10 @@ namespace Hadal.Player.Behaviours
     {
         [SerializeField] string debugKey;
 
+        [Header("Aiming")]
+        public Transform aimParentObject;
+        public Transform aimPoint;
+
         [Header("Torpedo")]
         [SerializeField] TorpedoLauncherObject tLauncher;
         [SerializeField] Transform torpedoFirePoint;
@@ -42,6 +46,19 @@ namespace Hadal.Player.Behaviours
         {
             tLauncher.OnChamberChanged -= OnChamberChangedMethod;
             tLauncher.OnReservesChanged -= OnReserveChangedMethod;
+        }
+
+        void OnDrawGizmos()
+        {
+            Ray ray = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+
+            }
+
+            Gizmos.DrawRay(ray);
+            Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
         }
 
         public void DoUpdate(in float deltaTime)

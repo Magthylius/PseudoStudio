@@ -11,8 +11,9 @@ public class SelfDestructMode : ProjectileMode
 
     public bool destroyObject;
 
-    public override void Setup(Rigidbody rb)
+    public override void Setup(Rigidbody rb, Transform rTransform)
     {
+        rootTransform = rTransform;
         rigidbody = rb;
         mode = ProjectileModeEnum.SELF_DESTRUCT;
     }

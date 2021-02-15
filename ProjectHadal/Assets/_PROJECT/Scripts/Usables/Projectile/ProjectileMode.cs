@@ -21,9 +21,10 @@ public abstract class ProjectileMode : MonoBehaviour
     public bool skipsOnContact;
 
     protected new Rigidbody rigidbody;
+    protected Transform rootTransform;
     protected bool frameSetupCompleted = false;
 
-    public abstract void Setup(Rigidbody rb);
+    public abstract void Setup(Rigidbody rb, Transform rTransform);
     public abstract void FirstFrameSetup();
     public abstract void DoUpdate();
 }

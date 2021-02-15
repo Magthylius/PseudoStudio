@@ -8,8 +8,15 @@ using Magthylius.DataFunctions;
 // C: Jon
 public class ProjectilePhysics : MonoBehaviourDebug
 {
+    public string debugKey;
+
+    [Header("References")]
+    public Transform rootTransform;
     public Rigidbody projectileRigidbody;
     [ReadOnly] public List<ProjectileMode> projectileModeList;
+
+    public delegate void PhysicsFinishedEvent();
+    public event PhysicsFinishedEvent PhysicsFinished;
 
     int modeIndex;
     Timer projectileTimer;
@@ -28,6 +35,8 @@ public class ProjectilePhysics : MonoBehaviourDebug
 
         projectileTimer = new Timer(projectileModeList[0].endTime);
         projectileTimer.TargetTickedEvent.AddListener(SwapModes);
+
+        DoDebugEnabling(debugKey);
     }
 
     void Update()
@@ -51,10 +60,30 @@ public class ProjectilePhysics : MonoBehaviourDebug
         allowLaunch = true;
     }
 
+    void OnPhysicsFinished()
+    {
+        DebugLog("Projectile Physics finished!");
+
+        PhysicsFinished?.Invoke();
+        modeIndex = 0;
+
+        
+    }
+
     void SwapModes()
     {
         modeIndex++;
-        projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
+        if (modeIndex >= projectileModeList.Count)
+        {
+            OnPhysicsFinished();
+            allowLaunch = false;
+
+            DebugLog("Projectile Physics finished!");
+        }
+        else
+        {
+            projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
+        }
     }
 
     void SetupProjectileModes()
@@ -67,7 +96,7 @@ public class ProjectilePhysics : MonoBehaviourDebug
                 SetupProjectileModes();
                 return;
             }
-            proj.Setup(projectileRigidbody);
+            proj.Setup(projectileRigidbody, rootTransform);
         }
     }
 }
