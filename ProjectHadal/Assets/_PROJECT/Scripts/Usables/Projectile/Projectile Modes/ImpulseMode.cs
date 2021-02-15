@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// C: Jon
 [System.Serializable]
 public class ImpulseMode : ProjectileMode
 {
