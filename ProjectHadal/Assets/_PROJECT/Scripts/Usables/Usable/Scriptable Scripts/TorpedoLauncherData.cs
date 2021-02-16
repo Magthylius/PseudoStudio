@@ -1,7 +1,7 @@
 using Hadal.Usables.Projectiles;
 using UnityEngine;
 
-//Created by Jey
+//Created by Jey, edited by Jon
 namespace Hadal.Usables
 {
     [CreateAssetMenu(menuName = "Items/Torpedo")]
@@ -14,8 +14,10 @@ namespace Hadal.Usables
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);
+
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
-            else projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
+            //else projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
+            else Debug.LogWarning("PPhysics didnt init");
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)

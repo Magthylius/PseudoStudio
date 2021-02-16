@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.3.5
+// Version 1.3.6
 namespace Magthylius
 {
     namespace LerpFunctions
@@ -1156,6 +1156,7 @@ namespace Magthylius
             }
 
             public void Reset() => tick = 0f;
+            public float CurrentTick => tick;
             public void SetTickTarget(float target) => tickTarget = target;
             public float Progress => Mathf.Clamp01(tick / tickTarget);
             public int PassedCount => passedCount;

@@ -19,7 +19,7 @@ public class ProjectilePhysics : MonoBehaviourDebug
     public event PhysicsFinishedEvent PhysicsFinished;
 
     int modeIndex;
-    Timer projectileTimer;
+    Timer projectileTimer = new Timer(0);
     bool allowLaunch;
 
     void OnValidate()
@@ -55,22 +55,22 @@ public class ProjectilePhysics : MonoBehaviourDebug
         }    
     }
 
+    //! Trigger projectile launch
     public void LaunchProjectile()
     {
         allowLaunch = true;
-        projectileTimer.Reset();
     }
 
+    //! Finished physics event
     void OnPhysicsFinished()
     {
         DebugLog("Projectile Physics finished!");
 
         PhysicsFinished?.Invoke();
-        modeIndex = 0;
-
-        
+        ResetTimer();
     }
 
+    //! Swap modes when one stage is complete
     void SwapModes()
     {
         modeIndex++;
@@ -78,8 +78,6 @@ public class ProjectilePhysics : MonoBehaviourDebug
         {
             OnPhysicsFinished();
             allowLaunch = false;
-
-            DebugLog("Projectile Physics finished!");
         }
         else
         {
@@ -88,6 +86,7 @@ public class ProjectilePhysics : MonoBehaviourDebug
         }
     }
 
+    //! Initialization
     void SetupProjectileModes()
     {
         foreach (ProjectileMode proj in projectileModeList)
@@ -100,5 +99,12 @@ public class ProjectilePhysics : MonoBehaviourDebug
             }
             proj.Setup(projectileRigidbody, rootTransform);
         }
+    }
+
+    void ResetTimer()
+    {
+        modeIndex = 0;
+        projectileTimer.Reset();
+        projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
     }
 }
