@@ -2,7 +2,7 @@ using System;
 using Hadal.Utility;
 using UnityEngine;
 
-//Created by Jet
+//Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
 {
     public abstract class ProjectileBehaviour : MonoBehaviour, IProjectile, IPoolable<ProjectileBehaviour>
@@ -79,7 +79,8 @@ namespace Hadal.Usables.Projectiles
 
         private void HandleDependentComponents()
         {
-            Rigidbody = GetComponentInChildren<Rigidbody>();
+            //Rigidbody = GetComponentInChildren<Rigidbody>();
+            Rigidbody = GetComponent<Rigidbody>();
             PPhysics = GetComponentInChildren<ProjectilePhysics>();
         }
 

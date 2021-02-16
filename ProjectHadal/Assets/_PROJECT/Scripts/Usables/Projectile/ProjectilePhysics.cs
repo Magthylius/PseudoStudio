@@ -58,6 +58,7 @@ public class ProjectilePhysics : MonoBehaviourDebug
     public void LaunchProjectile()
     {
         allowLaunch = true;
+        projectileTimer.Reset();
     }
 
     void OnPhysicsFinished()
@@ -82,6 +83,7 @@ public class ProjectilePhysics : MonoBehaviourDebug
         }
         else
         {
+            DebugLog("Projectile Mode: " + projectileModeList[modeIndex].mode.ToString());
             projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
         }
     }

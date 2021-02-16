@@ -26,5 +26,6 @@ public class PropulsionMode : ProjectileMode
         if (!frameSetupCompleted) FirstFrameSetup();
 
         rigidbody.AddForce(rootTransform.forward * force, ForceMode.Force);
+        //rigidbody.AddRelativeForce(transform.forward * force, ForceMode.Force);
     }
 }
