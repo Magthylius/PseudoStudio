@@ -24,7 +24,22 @@ public abstract class ProjectileMode : MonoBehaviour
     protected Transform rootTransform;
     protected bool frameSetupCompleted = false;
 
-    public abstract void Setup(Rigidbody rb, Transform rTransform);
+    public virtual void Setup(Rigidbody rb, Transform rTransform)
+    {
+        if (armsProjectile)
+        {
+            //! do projectile arming
+        }
+
+        if (skipsOnContact)
+        {
+
+        }
+
+        rootTransform = rTransform;
+        rigidbody = rb;
+    }
+
     public abstract void FirstFrameSetup();
     public abstract void DoUpdate();
 }

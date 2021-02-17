@@ -11,8 +11,7 @@ public class ImpulseMode : ProjectileMode
 
     public override void Setup(Rigidbody rb, Transform rTransform)
     {
-        rootTransform = rTransform;
-        rigidbody = rb;
+        base.Setup(rb, rTransform);
         mode = ProjectileModeEnum.IMPULSE;
     }
 
