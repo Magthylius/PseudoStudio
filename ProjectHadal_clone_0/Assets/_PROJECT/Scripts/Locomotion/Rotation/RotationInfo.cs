@@ -61,6 +61,20 @@ namespace Hadal.Locomotion
             target.Rotate(-mouseDistance.y, mouseDistance.x, 0.0f, Space.Self);
         }
 
+        private static Vector3 ReverseZAxis(Vector3 rotation)
+        {
+            Vector3 postRot = rotation;
+            if (postRot.z >= 0f && postRot.z < 180f)
+            {
+                postRot.z = 360f - postRot.z;
+            }
+            else// if (postRot.z < 360f && postRot.z > 180f)
+            {
+                postRot.z = 0f + (360f - postRot.z.Abs());
+            }
+            return postRot;
+        }
+
         private float RotateZAxisWithLerpClamp(in IRotationInput input, in Vector3 euler, in float deltaTime)
         {
             float z = euler.z;
