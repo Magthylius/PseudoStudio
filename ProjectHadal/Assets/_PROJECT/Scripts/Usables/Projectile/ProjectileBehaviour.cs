@@ -5,26 +5,24 @@ using UnityEngine;
 //Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
 {
-    public abstract class ProjectileBehaviour : MonoBehaviour, IProjectile, IPoolable<ProjectileBehaviour>
+    public abstract class ProjectileBehaviour : MonoBehaviourDebug, IProjectile, IPoolable<ProjectileBehaviour>
     {
+        public string DebugKey;
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public bool IsArmed { get; set; } = false;
         public event Action<bool> OnHit;
         public event Action<ProjectileBehaviour> DumpEvent;
-        
-        private Timer _expireTimer;
 
         #region Unity Lifecycle
 
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void Start()
         {
-            BuildTimer();
+            DoDebugEnabling(DebugKey);
             PPhysics.PhysicsFinished += Dump;
         }
-        private void OnEnable() => _expireTimer?.Restart();
 
         #endregion
 
@@ -69,17 +67,8 @@ namespace Hadal.Usables.Projectiles
 
         #region Initialise Methods
 
-        protected virtual void BuildTimer()
-        {
-            _expireTimer = this.Create_A_Timer()
-                        .WithDuration(Data.ExpireTime)
-                        .WithOnCompleteEvent(Dump)
-                        .WithShouldPersist(true);
-        }
-
         private void HandleDependentComponents()
         {
-            //Rigidbody = GetComponentInChildren<Rigidbody>();
             Rigidbody = GetComponent<Rigidbody>();
             PPhysics = GetComponentInChildren<ProjectilePhysics>();
         }
@@ -96,8 +85,6 @@ namespace Hadal.Usables.Projectiles
 
         public virtual void Dump()
         {
-            _expireTimer.Pause();
-
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.angularVelocity = Vector3.zero;
             transform.position = Vector3.zero;

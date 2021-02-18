@@ -49,7 +49,7 @@ public class CameraController : MonoBehaviour // simple movement for harry to te
 
             mouseDistance = Vector2.ClampMagnitude(mouseDistance, 1f);
 
-            rollInput = Mathf.Lerp(rollInput, Input.GetAxisRaw("Roll"), rollAcceleration * Time.deltaTime);
+            rollInput = Mathf.Lerp(rollInput, Input.GetAxisRaw("Harry's Roll Test"), rollAcceleration * Time.deltaTime);
 
             transform.Rotate(-mouseDistance.y * lookRateSpeed * Time.deltaTime, mouseDistance.x * lookRateSpeed * Time.deltaTime, rollInput * rollSpeed * Time.deltaTime, Space.Self);
 
