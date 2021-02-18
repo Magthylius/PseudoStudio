@@ -26,6 +26,7 @@ namespace Hadal.Player.Behaviours
             _cameraController = cameraControl;
         }
 
+        public GameObject Obj => gameObject;
         public bool TakeDamage(int damage)
         {
             TakeTheDamage(damage);

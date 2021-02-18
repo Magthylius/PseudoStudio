@@ -3,7 +3,7 @@ namespace Hadal.Usables
 {
     public class EmptyUsable : UsableObject
     {
-        public override ItemData Data => EmptyItemData.Get();
-        public override bool Use(ItemHandlerInfo info) => true;
+        public override UsableData Data => EmptyUsableData.Get();
+        public override bool Use(UsableHandlerInfo info) => false;
     }
 }

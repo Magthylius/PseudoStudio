@@ -14,5 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Name: Flare
-  BaseDamage: 0
+  BaseDamage: 1
+  Movespeed: 1
+  ExpireTime: 4
+  TargetLayer:
+    serializedVersion: 2
+    m_Bits: 1
   ProjectilePrefab: {fileID: 7351274592407701336, guid: 9fdfcbe5d4884284cb4daf02bcf7ff0b, type: 3}

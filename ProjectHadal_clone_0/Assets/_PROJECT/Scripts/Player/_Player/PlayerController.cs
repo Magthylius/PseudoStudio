@@ -1,4 +1,5 @@
-﻿using Hadal.Player.Behaviours;
+﻿using System;
+using Hadal.Player.Behaviours;
 using NaughtyAttributes;
 using Photon.Pun;
 using UnityEngine;
@@ -14,10 +15,12 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] private PlayerHealthManager healthManager;
         [Foldout("Components"), SerializeField] private PlayerInventory inventory;
         [Foldout("Components"), SerializeField] private PlayerLamp lamp;
+        [Foldout("Components"), SerializeField] private PlayerShoot shooter;
         [Foldout("Settings"), SerializeField] private SmoothNetworkPlayer networkPlayer;
         [Foldout("Settings"), SerializeField] private string localPlayerLayer;
         [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
         [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
+        public static event Action<PlayerController> OnInitialiseComplete;
         private PhotonView _pView;
         private PlayerManager _manager;
 
@@ -35,6 +38,7 @@ namespace Hadal.Player
         {
             InjectStartDependencies();
             HandlePhotonView(_pView.IsMine);
+            OnInitialiseComplete?.Invoke(this);
         }
 
         protected override void Update()
@@ -85,6 +89,7 @@ namespace Hadal.Player
             lamp.DoUpdate(deltaTime);
             mover.DoUpdate(deltaTime);
             rotator.DoUpdate(deltaTime);
+            shooter.DoUpdate(deltaTime);
         }
 
         private void HandlePhotonView(bool isMine)
@@ -94,7 +99,6 @@ namespace Hadal.Player
                 if(UIManager.Instance != null) UIManager.Instance.SetPlayer(this);
                 gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
                 Destroy(networkPlayer);
-                Cursor.lockState = CursorLockMode.Locked;
             }
             else
             {
@@ -102,9 +106,10 @@ namespace Hadal.Player
                 cameraController.Deactivate();
             }
 
+            Cursor.lockState = CursorLockMode.Locked;
             wraithGraphic.SetActive(true);
             PhotonNetwork.RemoveBufferedRPCs(_pView.ViewID, nameof(RPC_SetPlayerGraphics));
-            int randomIndex = Random.Range(0, graphics.Length);
+            int randomIndex = UnityEngine.Random.Range(0, graphics.Length);
             _pView.RPC(nameof(RPC_SetPlayerGraphics), RpcTarget.AllBuffered, randomIndex);
         }
 
@@ -150,6 +155,7 @@ namespace Hadal.Player
         private float BoostInputSpeed => mover.Input.BoostAxis * mover.Accel.Boost + 1.0f;
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
+        public ControllerInfo GetInfo => new ControllerInfo(cameraController, healthManager, inventory, lamp, shooter);
 
         #endregion
     }

@@ -97,6 +97,7 @@ namespace Hadal.Player.Behaviours
         #region Shorthands
 
         private float BoostedFOV => _originalCameraFOV + additionalFOVOnBoost;
+        public Camera GetCamera => selfCamera;
 
         #endregion
     }

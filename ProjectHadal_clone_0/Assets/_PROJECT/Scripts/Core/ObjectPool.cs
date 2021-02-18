@@ -1,26 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Hadal.Utility;
+using System.Linq;
 
 //Created by Jet
 namespace Hadal
 {
-    public class ObjectPool<T> : MonoBehaviour where T : Component
+    public class ObjectPool<T> : Singleton<ObjectPool<T>> where T : Component
     {
-        public static ObjectPool<T> Instance { get; private set; }
-        [SerializeField] private bool isDoNotDestroy = false;
         [SerializeField] protected T prefab;
+        [SerializeField] protected int initialCount;
         private Queue<T> pool = new Queue<T>();
 
-        protected virtual void Awake()
-        {
-            if (Instance != null) { Destroy(gameObject); return; }
-            Instance = this;
-            HandleSettings();
-        }
+        protected virtual void Start() => Add(initialCount.Clamp0());
 
         public T Scoop()
         {
-            if(pool.Count == 0) Add(1);
+            if(pool.IsEmpty()) Add(1);
             return pool.Dequeue();
         }
 
@@ -32,13 +28,21 @@ namespace Hadal
 
         private void Add(int count)
         {
-            var obj = Instantiate(prefab);
-            Dump(obj);
+            int i = -1;
+            while(++i < count)
+                Dump(Instantiate(prefab, transform));
         }
 
-        private void HandleSettings()
+        public static void DumpAll<TPoolable>() where TPoolable : Component
         {
-            if(isDoNotDestroy) DontDestroyOnLoad(gameObject);
+            var allPoolables = FindObjectsOfType<GameObject>()
+                                .Select(p => p.GetComponent<IPoolable<TPoolable>>())
+                                .Where(p => p != null)
+                                .ToArray();
+            
+            int i = -1;
+            while(++i < allPoolables.Length)
+                allPoolables[i].Dump();
         }
     }
 }
