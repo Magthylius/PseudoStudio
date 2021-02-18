@@ -139,5 +139,10 @@ namespace Hadal.Legacy
         {
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
         }
+
+        public void ChangeNickname(string name)
+        {
+            PhotonNetwork.NickName = name;
+        }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.3.6
+// Version 1.4.0
 namespace Magthylius
 {
     namespace LerpFunctions
@@ -302,6 +302,9 @@ namespace Magthylius
             public Image image;
             public UnityEvent fillCompleteEvent;
 
+            public delegate void FillCompleteEvent();
+            public event FillCompleteEvent OnFillComplete;
+
             float chargeRate;
             float charge;
             float maxCharge;
@@ -312,7 +315,7 @@ namespace Magthylius
 
             bool isFilled;
 
-            public ImageFiller(Image _image, float _chargeRate, float _maxCharge, bool _stopChargeWhenFilled = true)
+            public ImageFiller(Image _image, float _chargeRate = 0.1f, float _maxCharge = 1f, bool _stopChargeWhenFilled = true)
             {
                 image = _image;
 
@@ -341,6 +344,7 @@ namespace Magthylius
                 {
                     isFilled = true;
                     fillCompleteEvent.Invoke();
+                    OnFillComplete?.Invoke();
 
                     progress = 1f;
                     charge = maxCharge;
