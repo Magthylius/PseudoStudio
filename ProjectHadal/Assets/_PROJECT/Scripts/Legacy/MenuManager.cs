@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
+//! E: Jon
 namespace Hadal.Legacy
 {
     public class MenuManager : MonoBehaviour
     {
         public static MenuManager Instance;
+
+        [Header("Menu references")]
         [SerializeField] Menu[] menus;
 
         private void Awake()
