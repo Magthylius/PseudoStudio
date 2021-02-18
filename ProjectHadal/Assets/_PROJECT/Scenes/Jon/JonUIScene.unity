@@ -323,10 +323,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Projectile ObjectPools
       objectReference: {fileID: 0}
-    - target: {fileID: 9221942647745312698, guid: 0f686fdc5e5ca3c4b9ee61d054fb96b6, type: 3}
-      propertyPath: initialCount
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f686fdc5e5ca3c4b9ee61d054fb96b6, type: 3}
 --- !u!1 &1020912814
@@ -730,16 +726,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+      propertyPath: debugEnabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: debugKeyList.Array.data[3].key
       value: Projectile Physics
       objectReference: {fileID: 0}
     - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: debugKeyList.Array.data[1].allowDebug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: debugKeyList.Array.data[3].allowDebug
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8716315643385868219, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: m_Name
