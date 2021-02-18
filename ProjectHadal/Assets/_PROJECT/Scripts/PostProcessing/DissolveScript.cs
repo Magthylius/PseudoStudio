@@ -1,8 +1,9 @@
+//Created by Harry
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DissolveScript : MonoBehaviour
+public class DissolveScript : MonoBehaviour // Script for controlling Dissolve Material parameters
 {
     public Material dissolveMat;
     public float amplitude = 3f;

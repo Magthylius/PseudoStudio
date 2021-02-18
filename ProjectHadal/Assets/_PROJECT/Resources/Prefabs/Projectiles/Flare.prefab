@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5118692649966226049}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &6458389941356830930
 Light:
@@ -93,6 +93,93 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &2207750976078041492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8941488255489450854}
+  - component: {fileID: 4425094837769983367}
+  - component: {fileID: 472507857315160384}
+  - component: {fileID: 7832137983088651165}
+  m_Layer: 0
+  m_Name: ProjectileData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8941488255489450854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2207750976078041492}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5118692649966226049}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4425094837769983367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2207750976078041492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4013ee668a9e1a947879444b920970f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugKey: Projectile Physics
+  rootTransform: {fileID: 5118692649966226049}
+  projectileRigidbody: {fileID: 1726207187124534749}
+  projectileModeList:
+  - {fileID: 472507857315160384}
+  - {fileID: 7832137983088651165}
+--- !u!114 &472507857315160384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2207750976078041492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6006442c90951cb4196c6d7d8bd20144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 1
+  endTime: 2
+  armsProjectile: 0
+  skipsOnContact: 0
+  direction: {x: 0, y: 0, z: 3}
+  force: 0.25
+  linearDrag: 10
+--- !u!114 &7832137983088651165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2207750976078041492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8744ad15030187d4e84f934c35b5d55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 4
+  endTime: 60
+  armsProjectile: 0
+  skipsOnContact: 0
+  destroyObject: 0
 --- !u!1 &7351274592407701336
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +212,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 8941488255489450854}
   - {fileID: 4644473755678948276}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -186,7 +274,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7351274592407701336}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
@@ -220,3 +308,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f91002a9a27bd142aa2f0b956ff1239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DebugKey: Projectile Physics

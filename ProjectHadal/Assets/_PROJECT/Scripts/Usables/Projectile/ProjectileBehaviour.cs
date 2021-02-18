@@ -5,8 +5,9 @@ using UnityEngine;
 //Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
 {
-    public abstract class ProjectileBehaviour : MonoBehaviour, IProjectile, IPoolable<ProjectileBehaviour>
+    public abstract class ProjectileBehaviour : MonoBehaviourDebug, IProjectile, IPoolable<ProjectileBehaviour>
     {
+        public string DebugKey;
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
@@ -21,7 +22,8 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void Start()
         {
-            BuildTimer();
+            DoDebugEnabling(DebugKey);
+           //BuildTimer();
             PPhysics.PhysicsFinished += Dump;
         }
         private void OnEnable() => _expireTimer?.Restart();
@@ -96,8 +98,8 @@ namespace Hadal.Usables.Projectiles
 
         public virtual void Dump()
         {
-            _expireTimer.Pause();
-
+            //_expireTimer.Pause();
+            DebugLog("I dumpstered !");
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.angularVelocity = Vector3.zero;
             transform.position = Vector3.zero;

@@ -40,7 +40,7 @@ Shader "Custom/UnderWaterImageEffect"
                 float4 scrPos : TEXCOORD1;
             };
 
-            v2f vert (appdata v)
+            v2f vert (appdata v) 
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -51,7 +51,7 @@ Shader "Custom/UnderWaterImageEffect"
 
             sampler2D _MainTex;
 
-            fixed4 frag(v2f i) : COLOR
+            fixed4 frag(v2f i) : COLOR // apply effect
             {
                 float3 spos = float3(i.scrPos.x, i.scrPos.y, 0) * _NoiseFrequency;
                 spos.z += _Time.x * _NoiseSpeed;
