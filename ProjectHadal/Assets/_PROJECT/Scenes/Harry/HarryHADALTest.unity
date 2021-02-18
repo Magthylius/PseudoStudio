@@ -14,12 +14,12 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 0
-  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
-  m_FogMode: 3
+  m_Fog: 1
+  m_FogColor: {r: 0.005522314, g: 0, b: 0.2264151, a: 1}
+  m_FogMode: 1
   m_FogDensity: 0.01
   m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_LinearFogEnd: 60
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -611,7 +611,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &289962379
 Transform:
   m_ObjectHideFlags: 0
@@ -1288,6 +1288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 613322234}
   - component: {fileID: 613322236}
+  - component: {fileID: 613322235}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1313,6 +1314,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &613322235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613322233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 580ae5ebb3e7531498e46038f97d7217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMovementEnabled: 0
+  forwardSpeed: 25
+  strafeSpeed: 7.5
+  hoverSpeed: 5
+  lookRateSpeed: 90
+  rollSpeed: 90
+  rollAcceleration: 3.5
 --- !u!54 &613322236
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1429,7 +1449,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &651825784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1452,7 +1472,7 @@ MonoBehaviour:
   - {fileID: 1626073363}
   - {fileID: 1977213952}
   mindistance: 25
-  speed: 20
+  speed: 5
   rotationspeed: 20
   Positions:
   - {fileID: 915011782}
@@ -2936,7 +2956,7 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 500
   m_Range: 75
-  m_SpotAngle: 75
+  m_SpotAngle: 55
   m_InnerSpotAngle: 45
   m_CookieSize: 10
   m_Shadows:
@@ -3046,7 +3066,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1599159012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3456,6 +3476,8 @@ MonoBehaviour:
   _noiseScale: 3.8
   _noiseFrequency: 3
   _noiseSpeed: 4
+  _depthStart: 0
+  _depthDistance: 100
 --- !u!81 &1784624798
 AudioListener:
   m_ObjectHideFlags: 0
@@ -3663,7 +3685,7 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 500
   m_Range: 75
-  m_SpotAngle: 75
+  m_SpotAngle: 55
   m_InnerSpotAngle: 45
   m_CookieSize: 10
   m_Shadows:
