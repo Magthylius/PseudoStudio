@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.4.0
+// Version 1.4.3
 namespace Magthylius
 {
     namespace LerpFunctions
@@ -75,17 +75,35 @@ namespace Magthylius
         [Serializable]
         public class FlexibleRect
         {
+
             public RectTransform rectTransform;
             public Vector2 originalPosition;
-            public Vector2 endPosition;
+            public Vector2 targetPosition;
 
+            Vector2 endPosition;
             bool allowTransition = false;
+            bool isMovingAway = true;
 
             public FlexibleRect(RectTransform rectTr)
             {
                 rectTransform = rectTr;
                 originalPosition = center;
+
+                targetPosition = Vector2.zero;
                 endPosition = Vector2.zero;
+
+                isMovingAway = true;
+            }
+
+            public FlexibleRect(RectTransform rectTr, Vector2 targetPos)
+            {
+                rectTransform = rectTr;
+                originalPosition = center;
+
+                targetPosition = targetPos;
+                endPosition = Vector2.zero;
+
+                isMovingAway = true;
             }
 
             public void Step(float speed, float precision = 0.1f)
@@ -97,10 +115,33 @@ namespace Magthylius
             }
 
             //! Lerp
+            public void StartLerp()
+            {
+                allowTransition = true;
+                isMovingAway = !isMovingAway;
+                DetermineEndPosition();
+            }
+
+            public void StartLerp(bool movingAway)
+            {
+                allowTransition = true;
+                isMovingAway = movingAway;
+
+                DetermineEndPosition();
+            }
+
             public void StartLerp(Vector2 endPos)
             {
                 allowTransition = true;
                 endPosition = endPos;
+
+                isMovingAway = true;
+            }
+
+            void DetermineEndPosition()
+            {
+                if (isMovingAway) endPosition = targetPosition;
+                else endPosition = originalPosition;
             }
 
             public void EndLerp()
@@ -130,11 +171,14 @@ namespace Magthylius
                 rectTransform.offsetMin += diff;
             }
 
+            public void MoveToStart() => MoveTo(originalPosition);
+            public void MoveToEnd() => MoveTo(targetPosition);
+
             //! Setters
-            public void SetEndPosition(Vector2 targetPos)
-            {
-                endPosition = targetPos;
-            }
+            public void SetMovingAway(bool status) => isMovingAway = status;
+            public void ToggleMovement() => isMovingAway = !isMovingAway;
+            public void SetTargetPosition(Vector2 targetPos) => targetPosition = targetPos;
+            public void SetEndPosition(Vector2 targetPos) => endPosition = targetPos;
 
             //! Queries
             public Vector2 GetBodyOffset(Vector2 direction)
@@ -156,6 +200,7 @@ namespace Magthylius
             public float halfWidth => width * 0.5f;
             public float halfHeight => height * 0.5f;
             public virtual bool IsTransitioning => allowTransition;
+            public bool IsMovingAway => isMovingAway;
         }
 
         [Serializable]
@@ -290,9 +335,9 @@ namespace Magthylius
 
                 }
 
-                endPosition = mousePos - originalPosition;
+                Vector2 nextPos = mousePos - originalPosition;
                 //Debug.Log(endPosition);
-                StartLerp(endPosition);
+                StartLerp(nextPos);
                 Step(speed, precision);
             }
         }

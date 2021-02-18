@@ -4,18 +4,29 @@ using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
 
+//! E: Jon
 namespace Hadal.Legacy
 {
     public class Launcher : MonoBehaviourPunCallbacks
     {
         public static Launcher Instance;
+
+        [Header("Room Settings")]
+        [SerializeField] Menu roomMenu;
+        [SerializeField] Menu lobbyMenu;
+
+        [Header("Text Settings")]
         [SerializeField] TMP_InputField roomNameInputField;
         [SerializeField] TMP_Text errorText;
         [SerializeField] TMP_Text roomNameText;
+
+        [Header("Spawn Settings")]
         [SerializeField] Transform roomListContent;
         [SerializeField] Transform playerListContent;
         [SerializeField] GameObject roomListItemPrefab;
         [SerializeField] GameObject playerListItemPrefab;
+
+        [Header("Scene Settings")]
         [SerializeField] GameObject startGameNicoButton;
         [SerializeField] GameObject startGameJeyButton;
 
@@ -39,7 +50,7 @@ namespace Hadal.Legacy
 
         public override void OnJoinedLobby()
         {
-            MenuManager.Instance.OpenMenu("title");
+            //MainMenuManager.Instance.OpenMenu("title");
             Debug.Log("Joined Lobby");
             PhotonNetwork.NickName = "Player " + Random.Range(0, 10).ToString("00");
         }
@@ -56,12 +67,20 @@ namespace Hadal.Legacy
                 return;
             }
             PhotonNetwork.CreateRoom(roomNameInputField.text);
-            MenuManager.Instance.OpenMenu("loading");
+            MainMenuManager.Instance.OpenMenu("loading");
+        }
+
+        public void CreateRoom(string roomName, Menu loadMenu)
+        {
+            if (string.IsNullOrEmpty(roomName)) return;
+
+            PhotonNetwork.CreateRoom(roomName);
+            MainMenuManager.Instance.OpenMenu(loadMenu);
         }
 
         public override void OnJoinedRoom()
         {
-            MenuManager.Instance.OpenMenu("room");
+            MainMenuManager.Instance.StartRoomPhase();
             roomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
             Player[] players = PhotonNetwork.PlayerList;
@@ -78,8 +97,10 @@ namespace Hadal.Legacy
             }
 
             //! If host, button is set active
-            startGameNicoButton.SetActive(PhotonNetwork.IsMasterClient);
-            startGameJeyButton.SetActive(PhotonNetwork.IsMasterClient);
+            //startGameNicoButton.SetActive(PhotonNetwork.IsMasterClient);
+            //startGameJeyButton.SetActive(PhotonNetwork.IsMasterClient);
+
+            MainMenuManager.Instance.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         }
 
         //! Photon has in built where host leaves, a new host will be chosen, during switch, active the game start button
@@ -92,7 +113,7 @@ namespace Hadal.Legacy
         public override void OnCreateRoomFailed(short returnCode, string message)
         {
             errorText.text = "Room Creation Failed" + message;
-            MenuManager.Instance.OpenMenu("error");
+            MainMenuManager.Instance.OpenMenu("error");
         }
 
         /// <summary>
@@ -106,18 +127,18 @@ namespace Hadal.Legacy
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
-            MenuManager.Instance.OpenMenu("loading");
+            //MainMenuManager.Instance.OpenMenu("loading");
         }
 
         public void JoinRoom(RoomInfo info)
         {
             PhotonNetwork.JoinRoom(info.Name);
-            MenuManager.Instance.OpenMenu("loading");
+            MainMenuManager.Instance.OpenMenu("loading");
         }
 
         public override void OnLeftRoom()
         {
-            MenuManager.Instance.OpenMenu("title");
+            MainMenuManager.Instance.OpenMenu("title");
         }
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
