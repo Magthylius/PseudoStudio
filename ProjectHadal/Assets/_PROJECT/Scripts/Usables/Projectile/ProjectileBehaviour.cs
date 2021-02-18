@@ -14,8 +14,6 @@ namespace Hadal.Usables.Projectiles
         public bool IsArmed { get; set; } = false;
         public event Action<bool> OnHit;
         public event Action<ProjectileBehaviour> DumpEvent;
-        
-        private Timer _expireTimer;
 
         #region Unity Lifecycle
 
@@ -23,10 +21,8 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Start()
         {
             DoDebugEnabling(DebugKey);
-           //BuildTimer();
             PPhysics.PhysicsFinished += Dump;
         }
-        private void OnEnable() => _expireTimer?.Restart();
 
         #endregion
 
@@ -71,17 +67,8 @@ namespace Hadal.Usables.Projectiles
 
         #region Initialise Methods
 
-        protected virtual void BuildTimer()
-        {
-            _expireTimer = this.Create_A_Timer()
-                        .WithDuration(Data.ExpireTime)
-                        .WithOnCompleteEvent(Dump)
-                        .WithShouldPersist(true);
-        }
-
         private void HandleDependentComponents()
         {
-            //Rigidbody = GetComponentInChildren<Rigidbody>();
             Rigidbody = GetComponent<Rigidbody>();
             PPhysics = GetComponentInChildren<ProjectilePhysics>();
         }
@@ -98,8 +85,6 @@ namespace Hadal.Usables.Projectiles
 
         public virtual void Dump()
         {
-            //_expireTimer.Pause();
-            DebugLog("I dumpstered !");
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.angularVelocity = Vector3.zero;
             transform.position = Vector3.zero;
