@@ -2043,7 +2043,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 391532885}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1235797653}
+        m_TargetAssemblyTypeName: MainMenuManager, Hadal.UI
+        m_MethodName: BTN_ApplyName
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &391532885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5886,11 +5898,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menus: []
+  launcher: {fileID: 1235797654}
   startFiller: {fileID: 253989098}
   startFillerSpeed: 0.892
   versionTMP: {fileID: 2067596120}
+  startMenu: {fileID: 1033813288}
   nicknameMenu: {fileID: 617406914}
   lobbyMenu: {fileID: 1060153296}
+  nicknameTMPInput: {fileID: 192288966}
+  lobbyNicknameTMP: {fileID: 1342324683}
   createRoomPanel: {fileID: 1893263246}
   findRoomPanel: {fileID: 381476224}
 --- !u!114 &1235797654
@@ -7670,24 +7686,18 @@ MonoBehaviour:
   colorFadeSpeed: 0
   pointerEnterEvent:
     eventType: 0
-    color: {r: 1, g: 1, b: 1, a: 0.050980393}
+    color: {r: 1, g: 1, b: 1, a: 1}
     eventDelegates:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1235797653}
-          m_TargetAssemblyTypeName: MainMenuManager, Hadal.UI
-          m_MethodName: PNTR_ChargeStartFiller
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
   pointerExitEvent:
     eventType: 1
+    color: {r: 1, g: 1, b: 1, a: 0.011764706}
+    eventDelegates:
+      m_PersistentCalls:
+        m_Calls: []
+  pointerUpEvent:
+    eventType: 3
     color: {r: 1, g: 1, b: 1, a: 0.011764706}
     eventDelegates:
       m_PersistentCalls:
@@ -7704,18 +7714,24 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  pointerUpEvent:
-    eventType: 3
-    color: {r: 1, g: 1, b: 1, a: 1}
-    eventDelegates:
-      m_PersistentCalls:
-        m_Calls: []
   pointerDownEvent:
     eventType: 2
-    color: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: 1, g: 1, b: 1, a: 0.050980393}
     eventDelegates:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1235797653}
+          m_TargetAssemblyTypeName: MainMenuManager, Hadal.UI
+          m_MethodName: PNTR_ChargeStartFiller
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   pointerClickedEvent:
     eventType: 4
     color: {r: 1, g: 1, b: 1, a: 1}
