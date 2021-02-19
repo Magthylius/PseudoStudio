@@ -59,7 +59,7 @@ namespace Hadal.Player.Behaviours
         {
             var info = controller.GetInfo;
             _controller = controller;
-            _pView = info.PhotonView;
+            _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
         }
 

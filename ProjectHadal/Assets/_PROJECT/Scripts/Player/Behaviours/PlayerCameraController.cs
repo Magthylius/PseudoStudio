@@ -94,7 +94,7 @@ namespace Hadal.Player.Behaviours
         public void Inject(PlayerController controller)
         {
             var info = controller.GetInfo;
-            _pView = info.PhotonView;
+            _pView = info.PhotonInfo.PView;
         }
 
         #endregion

@@ -4,23 +4,23 @@ using Photon.Pun;
 //Created by Jet
 namespace Hadal.Player
 {
-    public class ControllerInfo
+    public class PlayerControllerInfo
     {
         public PlayerCameraController CameraController { get; private set; }
         public PlayerHealthManager HealthManager { get; private set; }
         public PlayerInventory Inventory { get; private set; }
         public PlayerLamp Lamp { get; private set; }
         public PlayerShoot Shooter { get; private set; }
-        public PhotonView PhotonView { get; private set; }
+        public PlayerPhotonInfo PhotonInfo { get; private set; }
 
-        public ControllerInfo(PlayerCameraController camControl, PlayerHealthManager healthM, PlayerInventory inventory, PlayerLamp lamp, PlayerShoot shooter, PhotonView pView)
+        public PlayerControllerInfo(PlayerCameraController camControl, PlayerHealthManager healthM, PlayerInventory inventory, PlayerLamp lamp, PlayerShoot shooter, PlayerPhotonInfo pInfo)
         {
             CameraController = camControl;
             HealthManager = healthM;
             Inventory = inventory;
             Lamp = lamp;
             Shooter = shooter;
-            PhotonView = pView;
+            PhotonInfo = pInfo;
         }
     }
 }

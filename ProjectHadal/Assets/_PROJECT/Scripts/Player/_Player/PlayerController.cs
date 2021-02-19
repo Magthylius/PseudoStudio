@@ -17,10 +17,11 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] private PlayerInventory inventory;
         [Foldout("Components"), SerializeField] private PlayerLamp lamp;
         [Foldout("Components"), SerializeField] private PlayerShoot shooter;
+        [Foldout("Photon"), SerializeField] private PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] private string localPlayerLayer;
         [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
         [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
-        [Foldout("Photon"), SerializeField] private PhotonView _pView;
+        private PhotonView _pView;
         private PlayerManager _manager;
         
         public static event Action<PlayerController> OnInitialiseComplete;
@@ -39,6 +40,7 @@ namespace Hadal.Player
 
         private void Start()
         {
+            _pView = photonInfo.PView;
             OnInjectEvent?.Invoke(this); OnInjectEvent = null;
             TryInjectDependencies();
             HandlePhotonView(_pView.IsMine);
@@ -150,7 +152,8 @@ namespace Hadal.Player
         private float BoostInputSpeed => mover.Input.BoostAxis * mover.Accel.Boost + 1.0f;
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
-        public ControllerInfo GetInfo => new ControllerInfo(cameraController, healthManager, inventory, lamp, shooter, _pView);
+        public PlayerControllerInfo GetInfo
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo);
 
         #endregion
     }

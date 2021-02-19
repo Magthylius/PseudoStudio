@@ -183,12 +183,12 @@ MonoBehaviour:
   inventory: {fileID: 6945771040949894967}
   lamp: {fileID: 8282269215967108456}
   shooter: {fileID: 6532950759972583128}
+  photonInfo: {fileID: 155871750561701772}
   localPlayerLayer: LocalPlayer
   graphics:
   - {fileID: 4539653840631415359}
   - {fileID: 4978499224615874863}
   wraithGraphic: {fileID: 2469977813199017833, guid: 007545c8f11ba3a4e84c2abc9fd1a6a8, type: 3}
-  _pView: {fileID: 2206509022547154127}
 --- !u!1 &2720187582479781533
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,8 +639,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4944ec5961e45184385376828cf8aa72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerController: {fileID: 7088606113726875039}
-  _cameraController: {fileID: 3755182030028118020}
   obstacleLayer: Obstacle
   interactLayer: Interactable
 --- !u!65 &7185453320966422628
@@ -780,6 +778,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8660071028440307182}
+  - component: {fileID: 155871750561701772}
   - component: {fileID: 2206509022547154127}
   - component: {fileID: 8987875698388589135}
   - component: {fileID: 714413137101610856}
@@ -805,6 +804,18 @@ Transform:
   m_Father: {fileID: 2719752003713521067}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &155871750561701772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8113724812607363629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d6759f0afb3b584e953b551930d1c09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2206509022547154127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -884,6 +895,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useCustomTransform: 1
+  customTrans: {fileID: 2719752003713521067}
   m_PositionModel:
     SynchronizeEnabled: 1
     TeleportEnabled: 1
@@ -1352,11 +1365,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32e556cc2dc1e02458e61854c6d2e0c1, type: 3}
---- !u!4 &4280932852447775244 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6459471827641733724, guid: 32e556cc2dc1e02458e61854c6d2e0c1, type: 3}
-  m_PrefabInstance: {fileID: 7119147403382986832}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3978814883448348836 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6195789625595820276, guid: 32e556cc2dc1e02458e61854c6d2e0c1, type: 3}
@@ -1368,6 +1376,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2aca04197d4acc3438466ec866c3aa74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &4280932852447775244 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6459471827641733724, guid: 32e556cc2dc1e02458e61854c6d2e0c1, type: 3}
+  m_PrefabInstance: {fileID: 7119147403382986832}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7444504158546929222
 PrefabInstance:
   m_ObjectHideFlags: 0

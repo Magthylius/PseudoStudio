@@ -17,7 +17,7 @@ namespace Hadal.Player.Behaviours
         private int _previousSelectedItem = -1;
         private PhotonView _pView;
         private PlayerController _controller;
-        private ControllerInfo _controllerInfo;
+        private PlayerControllerInfo _controllerInfo;
 
         private void Awake()
         {
@@ -28,7 +28,7 @@ namespace Hadal.Player.Behaviours
         public void Inject(PlayerController controller)
         {
             var info = controller.GetInfo;
-            _pView = info.PhotonView;
+            _pView = info.PhotonInfo.PView;
             _controller = controller;
             GetControllerInfo();
             InjectDependencies();
