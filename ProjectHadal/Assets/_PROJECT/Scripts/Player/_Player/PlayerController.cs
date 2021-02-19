@@ -110,10 +110,10 @@ namespace Hadal.Player
 
         private void SetGraphics()
         {
-            wraithGraphic.SetActive(true);
-            PhotonNetwork.RemoveBufferedRPCs(_pView.ViewID, nameof(RPC_SetPlayerGraphics));
-            int randomIndex = UnityEngine.Random.Range(0, graphics.Length);
-            _pView.RPC(nameof(RPC_SetPlayerGraphics), RpcTarget.AllBuffered, randomIndex);
+            // wraithGraphic.SetActive(true);
+            // PhotonNetwork.RemoveBufferedRPCs(_pView.ViewID, nameof(RPC_SetPlayerGraphics));
+            // int randomIndex = UnityEngine.Random.Range(0, graphics.Length);
+            // _pView.RPC(nameof(RPC_SetPlayerGraphics), RpcTarget.AllBuffered, randomIndex);
         }
 
         private void Deactivate()
@@ -141,8 +141,8 @@ namespace Hadal.Player
         [PunRPC]
         private void RPC_SetPlayerGraphics(int index)
         {
-            if (_pView.IsMine) return;
-            graphics[index].SetActive(true);
+            if (!_pView.IsMine) return;
+            graphics[0].SetActive(true);
         }
 
         #endregion
