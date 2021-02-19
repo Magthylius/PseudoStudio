@@ -32,13 +32,13 @@ namespace Hadal.Legacy
         public override void OnDisable()
         {
             base.OnDisable();
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             if (scene.buildIndex == 0) return;
-            PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity); 
+            PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
             //CreateAI();
         }
 
