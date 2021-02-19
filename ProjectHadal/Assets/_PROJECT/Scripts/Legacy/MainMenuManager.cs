@@ -58,6 +58,11 @@ namespace Hadal.Legacy
         public GameObject startGameButton;
         [SerializeField] string nextLevelName;
 
+        [Header("Quit Settings")]
+        [SerializeField] RectTransform confirmQuitPanel;
+
+        FlexibleRect confirmQuitFR;
+
         private void Awake()
         {
             Instance = this;
@@ -78,6 +83,10 @@ namespace Hadal.Legacy
             findRoomFR.SetTargetPosition(findRoomFR.GetBodyOffset(Vector2.right));
             findRoomFR.MoveToEnd();
 
+            confirmQuitFR = new FlexibleRect(confirmQuitPanel);
+            confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
+            confirmQuitFR.MoveToEnd();
+
             OpenMenu(startMenu);
             OpenMenu(gameOptions);
             CloseMenu(nicknameMenu);
@@ -96,6 +105,7 @@ namespace Hadal.Legacy
                 case MenuPhase.MAIN:
                     createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     break;
             }
         }
@@ -175,12 +185,12 @@ namespace Hadal.Legacy
 
         public void BTN_QuitGame()
         {
-            //! spawn popup
+            confirmQuitFR.StartLerp(false);
         }
 
         public void BTN_CancelQuit()
         {
-
+            confirmQuitFR.StartLerp(true);
         }
 
         public void BTN_ActualQuit()

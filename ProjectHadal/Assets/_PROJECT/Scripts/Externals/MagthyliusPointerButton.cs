@@ -14,6 +14,7 @@ public class MagthyliusPointerButton : MonoBehaviour
     {
         [HideInInspector] public EventTriggerType eventType;
         public Color color;
+        public GameObject triggerObject;
         public UnityEvent eventDelegates;
 
         public UIEventContainer(EventTriggerType type)
@@ -21,13 +22,14 @@ public class MagthyliusPointerButton : MonoBehaviour
             eventType = type;
             eventDelegates = new UnityEvent();
             color = Color.white;
+            color.a = 0f;
         }
     }
 
     EventTrigger et;
-    Image img;
+    public Image image;
 
-    [Range(0f, 1f)] public float colorFadeSpeed;
+    [Min(0f)] public float colorFadeSpeed;
 
     [Header("Pointer events")]
     [SerializeField] UIEventContainer pointerEnterEvent = new UIEventContainer(EventTriggerType.PointerEnter);
@@ -41,13 +43,16 @@ public class MagthyliusPointerButton : MonoBehaviour
     [SerializeField] UIEventContainer pointerClickedEvent = new UIEventContainer(EventTriggerType.PointerClick);
 
     List<UIEventContainer> eventList;
-    bool allowLerp;
+
+    bool allowColorLerp;
     Color targetColor;
+    GameObject currentObject;
 
     void Start()
     {
         et = GetComponent<EventTrigger>();
-        img = GetComponent<Image>();
+
+        if (image == null) image = GetComponent<Image>();
 
         eventList = new List<UIEventContainer> { pointerEnterEvent, pointerExitEvent, pointerUpEvent, pointerDownEvent, pointerClickedEvent };
 
@@ -56,15 +61,15 @@ public class MagthyliusPointerButton : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (allowLerp)
+        if (allowColorLerp && image != null)
         {
-            img.color = Color.Lerp(img.color, targetColor, colorFadeSpeed);
+            image.color = Color.Lerp(image.color, targetColor, colorFadeSpeed);
             float colorCheck = color.r + color.g + color.b + color.a;
     
             if (colorCheck < 0.4)
             {
-                img.color = targetColor;
-                allowLerp = false;
+                image.color = targetColor;
+                allowColorLerp = false;
             }
         }
     }
@@ -89,18 +94,25 @@ public class MagthyliusPointerButton : MonoBehaviour
 
     void InjectDelegates(PointerEventData data, EventTriggerType type)
     {
-        allowLerp = true;
+        allowColorLerp = true;
         UIEventContainer e = GetEvents(type);
         if (e != null)
         {
             e.eventDelegates.Invoke();
             targetColor = e.color;
+
+            if (e.triggerObject != null)
+            {
+                if (currentObject != null) currentObject.SetActive(false);
+
+                currentObject = e.triggerObject;
+                currentObject.SetActive(true);
+            }
         }
     }
     #endregion
 
     #region Accessors
-    public Image Image => img;
-    public Color color => img.color;
+    public Color color => image.color;
     #endregion
 }
