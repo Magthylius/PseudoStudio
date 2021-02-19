@@ -505,7 +505,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6287583129589580556}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.55}
+  m_LocalPosition: {x: 0, y: 0, z: 0.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9038128208189092581}
@@ -816,6 +816,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d6759f0afb3b584e953b551930d1c09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PView: {fileID: 2206509022547154127}
+  PLagSimulGUI: {fileID: 8987875698388589135}
+  PStatsGUI: {fileID: 714413137101610856}
+  PTransViewClassic: {fileID: 3280870682642205277}
 --- !u!114 &2206509022547154127
 MonoBehaviour:
   m_ObjectHideFlags: 0
