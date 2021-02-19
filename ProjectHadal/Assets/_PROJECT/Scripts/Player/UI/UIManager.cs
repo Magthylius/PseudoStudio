@@ -72,8 +72,6 @@ namespace Hadal.Player
 
             lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
             lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
-
-            ToggleLights();
         }
 
         private void Update()
@@ -86,7 +84,7 @@ namespace Hadal.Player
             lightText.text = $"Light: {lightIs}";
 
             BalancerUpdate();
-            if (Input.GetKeyDown(KeyCode.J)) ToggleLights();
+            SetLights();
         }
 
         private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
@@ -98,6 +96,7 @@ namespace Hadal.Player
             player = target;
             _lamp = player.GetComponent<PlayerLamp>();
             _healthManager = player.GetComponent<PlayerHealthManager>();
+            SetLights();
         }
 
         #region Health
@@ -152,11 +151,9 @@ namespace Hadal.Player
             DebugLog(player.transform.localRotation + ", " + player.transform.localRotation.eulerAngles);
         }
 
-        void ToggleLights()
+        void SetLights()
         {
-            isLightOn = !isLightOn;
-
-            if (isLightOn) lightsTMP.text = lightsOnString;
+            if (_lamp.LightsOn) lightsTMP.text = lightsOnString;
             else lightsTMP.text = lightsOffString;
         }
         #endregion
