@@ -35,9 +35,8 @@ namespace Hadal.Inputs
     }
     public interface ILightInput
     {
-        float RangeAxis { get; }
-        float AngleAxis { get; }
         bool SwitchAxis { get; }
         bool SwitchTrigger { get; }
+        void Toggle();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Hadal.Player.Behaviours;
+using Photon.Pun;
 
 //Created by Jet
 namespace Hadal.Player
@@ -10,14 +11,16 @@ namespace Hadal.Player
         public PlayerInventory Inventory { get; private set; }
         public PlayerLamp Lamp { get; private set; }
         public PlayerShoot Shooter { get; private set; }
-        
-        public ControllerInfo(PlayerCameraController camControl, PlayerHealthManager healthM, PlayerInventory inventory, PlayerLamp lamp, PlayerShoot shooter)
+        public PhotonView PhotonView { get; private set; }
+
+        public ControllerInfo(PlayerCameraController camControl, PlayerHealthManager healthM, PlayerInventory inventory, PlayerLamp lamp, PlayerShoot shooter, PhotonView pView)
         {
             CameraController = camControl;
             HealthManager = healthM;
             Inventory = inventory;
             Lamp = lamp;
             Shooter = shooter;
+            PhotonView = pView;
         }
     }
 }

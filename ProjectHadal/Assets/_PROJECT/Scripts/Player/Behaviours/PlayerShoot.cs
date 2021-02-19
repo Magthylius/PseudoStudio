@@ -6,7 +6,7 @@ using static Hadal.FluentBool;
 
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerShoot : MonoBehaviourDebug
+    public class PlayerShoot : MonoBehaviourDebug, IPlayerComponent
     {
         [SerializeField] string debugKey;
 
@@ -159,6 +159,8 @@ namespace Hadal.Player.Behaviours
             usable.OnRestockInvoke();
         }
         private void SetCanUtilityFire() => _canUtilityFire = true;
+
+        public void Inject(PlayerController controller) { }
 
         #endregion
     }

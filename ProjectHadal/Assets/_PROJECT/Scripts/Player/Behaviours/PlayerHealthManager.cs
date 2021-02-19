@@ -5,7 +5,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerHealthManager : MonoBehaviour, IDamageable
+    public class PlayerHealthManager : MonoBehaviour, IDamageable, IPlayerComponent
     {
         [SerializeField] private int maxHealth;
         private int _currentHealth;
@@ -17,13 +17,6 @@ namespace Hadal.Player.Behaviours
         private void OnValidate()
         {
             if (maxHealth == 0) maxHealth += 1;
-        }
-
-        public void Inject(PhotonView pView, PlayerController controller, PlayerCameraController cameraControl)
-        {
-            _pView = pView;
-            _controller = controller;
-            _cameraController = cameraControl;
         }
 
         public GameObject Obj => gameObject;
@@ -61,6 +54,15 @@ namespace Hadal.Player.Behaviours
             ResetHealth();
             UIManager.InvokeOnHealthChange();
         }
+
+        public void Inject(PlayerController controller)
+        {
+            var info = controller.GetInfo;
+            _controller = controller;
+            _pView = info.PhotonView;
+            _cameraController = info.CameraController;
+        }
+
         public float GetHealthRatio => _currentHealth / maxHealth.AsFloat();
     }
 }
