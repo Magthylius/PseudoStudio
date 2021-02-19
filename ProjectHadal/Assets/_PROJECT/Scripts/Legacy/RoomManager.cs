@@ -38,13 +38,8 @@ namespace Hadal.Legacy
         void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             if (scene.buildIndex == 0) return;
-            string path1 = string.Empty, path2 = string.Empty;
-            path2 = "PlayerManager";
-            if (scene.buildIndex == 1) { path1 = "PhotonPrefabs"; }
-            else if (scene.buildIndex == 2) { path1 = "Prefabs/Player"; }
-            
-            PhotonNetwork.Instantiate(Path.Combine(path1, path2), Vector3.zero, Quaternion.identity); 
-            CreateAI();
+            PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity); 
+            //CreateAI();
         }
 
         void CreateAI()

@@ -17,7 +17,7 @@ namespace Hadal.Usables
         [Foldout(ReserveGroupName), SerializeField] private float reserveRegenerationTime;
         public int ReserveCount { get; private set; }
         public bool IsRegenerating { get; private set; }
-        public float ReserveRegenRatio => _reserveRegenTimer.GetCompletionRatio;
+        public float ReserveRegenRatio => (_reserveRegenTimer.IsCompleted) ? 0f : _reserveRegenTimer.GetCompletionRatio;
         public bool HasAnyReserves => ReserveCount > 0;
         public event Action<bool> OnReservesChanged;
         private Timer _reserveRegenTimer;
@@ -27,7 +27,7 @@ namespace Hadal.Usables
         [Foldout(ChamberGroupName), SerializeField] private bool maxOnLoadOut = true;
         public int ChamberCount { get; private set; }
         public bool IsReloading { get; private set; }
-        public float ChamberReloadRatio => _chamberReloadTimer.GetCompletionRatio;
+        public float ChamberReloadRatio => (_chamberReloadTimer.IsCompleted && TotalTorpedoes is 0) ? 0f : _chamberReloadTimer.GetCompletionRatio;
         public bool IsChamberLoaded => ChamberCount > 0;
         public event Action<bool> OnChamberChanged;
         private Timer _chamberReloadTimer;

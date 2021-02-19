@@ -5,7 +5,7 @@ namespace Hadal
 {
     public class MonoBehaviourDebug : MonoBehaviour
     {
-        bool allowDebug;
+        protected bool allowDebug;
 
         protected void DoDebugEnabling(string keyCode)
         {

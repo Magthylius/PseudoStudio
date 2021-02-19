@@ -45,14 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 49312724e43f40546a6afcbd3c28a755, type: 2}
-  maxReserveCapacity: 0
-  reserveRegenerationTime: 0
-  _reserveCount: 0
-  _reserveRegenTimer: 0
-  chamberCapacity: 0
-  chamberReloadTime: 0
-  _chamberCount: 0
-  _chamberReloadTimer: 0
+  maxReserveCapacity: 3
+  reserveRegenerationTime: 7
+  maxChamberCapacity: 1
+  chamberReloadTime: 2
+  maxOnLoadOut: 1
 --- !u!1 &5043902262581939361
 GameObject:
   m_ObjectHideFlags: 0

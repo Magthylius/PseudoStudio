@@ -105,6 +105,11 @@ namespace Hadal.Player.Behaviours
                 DebugLog("Torpedo Flooded!");
                 return;
             }
+
+            if (tLauncher.ChamberCount == 0)
+            {
+                UpdateUIFloodRatio(0f);
+            }
             DebugLog("Torpedo Fired!");
         }
         private void OnReserveChangedMethod(bool isIncrement)

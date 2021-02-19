@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using Magthylius.LerpFunctions;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 //! C: Jon
 namespace Hadal.Legacy

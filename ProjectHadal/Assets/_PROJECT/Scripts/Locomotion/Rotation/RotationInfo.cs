@@ -1,6 +1,6 @@
 ﻿using Hadal.Inputs;
-using Hadal.Utility;
 using UnityEngine;
+using NaughtyAttributes;
 
 //Created by Jet
 namespace Hadal.Locomotion
@@ -14,26 +14,25 @@ namespace Hadal.Locomotion
         public float XAxisClamp;
         public float ClampTolerance;
         public float PullBackSpeed;
-        public float CurrentXAxis;
+        [ReadOnly] public float CurrentXAxis;
 
-        [Header("Z Rotation")]
+        [Header("Z Rotation Stabiliser")]
         public float ZDampingSpeed;
         public float ZActiveRotationSpeed;
         public float SnapAngle;
-        public float ZClampAngle;
+        [ReadOnly] public float ZClampAngle;
+        
         private float _currentDampSpeed = 0.0f;
         private bool _isVerticallyObserving = false;
-        private const float UprightAngle = 0.0f;
-        private const float UpsideDownAngle = 180.0f;
         private const float TiltAngle = 90.0f;
         private const float FullAngle = 360.0f;
 
         public void Initialise()
         {
-            XAxisClamp = Mathf.Abs(XAxisClamp);
+            XAxisClamp = XAxisClamp.Abs();
             CurrentXAxis = 0.0f;
-            ZClampAngle = UprightAngle;
-            SnapAngle = Mathf.Abs(SnapAngle);
+            ZClampAngle = 0.0f;
+            SnapAngle = SnapAngle.Abs();
         }
 
         public void DoRotationWithLerp(in IRotationInput input, in float deltaTime, Transform target)
@@ -89,20 +88,7 @@ namespace Hadal.Locomotion
             bool SnapDistanceReached() => z.NormalisedAngle().DiffFrom(ZClampAngle.NormalisedAngle()).IsLowerThan(SnapAngle);
             #endregion
         }
-
-        private float HandleZAxisInput(in IRotationInput input, in float deltaTime, float z)
-        {
-            if (input.ZAxis.Abs() > 0.0f)
-            {
-                z -= input.ZAxis * ZActiveRotationSpeed * Sensitivity * Acceleration * deltaTime;
-                ZClampAngle = UpsideDownAngle * IsEligibleToFlip().AsFloat() + UprightAngle * (!IsEligibleToFlip()).AsFloat();
-            }
-            return z;
-
-            #region Local Shorthands
-            bool IsEligibleToFlip() => z < FullAngle - TiltAngle && z > TiltAngle;
-            #endregion
-        }
+        
         private bool HandleZAxisClamp(Vector3 rotation, in float deltaTime, float z)
         {
             CurrentXAxis = rotation.x;
