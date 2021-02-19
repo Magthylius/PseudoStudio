@@ -374,8 +374,8 @@ MonoBehaviour:
   lightColour: {r: 1, g: 1, b: 1, a: 1}
   switchSpeed: 2
   switchSnap: 0.1
-  maxRange: 100
-  maxAngle: 200
+  maxRange: 500
+  maxAngle: 300
   rangeIncrementSpeed: 5
   angleIncrementSpeed: 5
 --- !u!114 &6636654184727369356
@@ -818,10 +818,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 20
-  m_Range: 18
-  m_SpotAngle: 90
-  m_InnerSpotAngle: 1
+  m_Intensity: 200
+  m_Range: 900
+  m_SpotAngle: 109.14756
+  m_InnerSpotAngle: 20.147453
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
