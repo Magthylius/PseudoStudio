@@ -202,7 +202,7 @@ namespace Hadal.Legacy
 
         public void BTN_StartActualLevel()
         {
-            SceneManager.LoadScene(nextLevelName);
+            if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
         }
 
         public void BTN_LeaveRoom()
