@@ -6,6 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class UnderwaterEffect : MonoBehaviour
 {
+    public bool enabled;
     public Material _mat; // set this material to UnderwaterImageEffect material
 
     [Range(0.001f, 0.1f)]
@@ -27,12 +28,24 @@ public class UnderwaterEffect : MonoBehaviour
 
     void Update()
     {
-        _mat.SetFloat("_NoiseFrequency", _noiseFrequency);
-        _mat.SetFloat("_NoiseSpeed", _noiseSpeed);
-        _mat.SetFloat("_NoiseScale", _noiseScale);
-        _mat.SetFloat("_PixelOffset", _pixelOffset);
-        _mat.SetFloat("_DepthStart", _depthStart);
-        _mat.SetFloat("_DepthDistance", _depthDistance);
+        if(enabled)
+        {
+            _mat.SetFloat("_NoiseFrequency", _noiseFrequency);
+            _mat.SetFloat("_NoiseSpeed", _noiseSpeed);
+            _mat.SetFloat("_NoiseScale", _noiseScale);
+            _mat.SetFloat("_PixelOffset", _pixelOffset);
+            _mat.SetFloat("_DepthStart", _depthStart);
+            _mat.SetFloat("_DepthDistance", _depthDistance);
+        } 
+        else
+        {
+            _mat.SetFloat("_NoiseFrequency", 0);
+            _mat.SetFloat("_NoiseSpeed", 0);
+            _mat.SetFloat("_NoiseScale", 0);
+            _mat.SetFloat("_PixelOffset", 0);
+            _mat.SetFloat("_DepthStart", 0);
+            _mat.SetFloat("_DepthDistance", 1000);
+        }
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)

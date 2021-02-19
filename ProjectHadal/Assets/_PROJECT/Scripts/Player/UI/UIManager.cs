@@ -94,8 +94,9 @@ namespace Hadal.Player
         public void SetPlayer(PlayerController target)
         {
             player = target;
-            _lamp = player.GetComponent<PlayerLamp>();
-            _healthManager = player.GetComponent<PlayerHealthManager>();
+            var info = player.GetInfo;
+            _lamp = info.Lamp;
+            _healthManager = info.HealthManager;
             SetLights();
         }
 

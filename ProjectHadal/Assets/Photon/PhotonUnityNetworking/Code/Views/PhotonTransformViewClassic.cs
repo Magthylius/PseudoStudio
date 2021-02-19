@@ -31,6 +31,10 @@ namespace Photon.Pun
         //configure in the inspector while the "control" objects below are actually moving
         //the object and calculating all the inter- and extrapolation
 
+        [SerializeField] private bool useCustomTransform;
+        [SerializeField] private Transform customTrans;
+        private Transform _trans;
+
         [HideInInspector]
         public PhotonTransformViewPositionModel m_PositionModel = new PhotonTransformViewPositionModel();
 
@@ -60,6 +64,9 @@ namespace Photon.Pun
             this.m_PositionControl = new PhotonTransformViewPositionControl(this.m_PositionModel);
             this.m_RotationControl = new PhotonTransformViewRotationControl(this.m_RotationModel);
             this.m_ScaleControl = new PhotonTransformViewScaleControl(this.m_ScaleModel);
+
+            if (useCustomTransform) _trans = customTrans;
+            else _trans = transform;
         }
 
         void OnEnable()
@@ -86,7 +93,7 @@ namespace Photon.Pun
                 return;
             }
 
-            transform.localPosition = this.m_PositionControl.UpdatePosition(transform.localPosition);
+            _trans.localPosition = this.m_PositionControl.UpdatePosition(_trans.localPosition);
         }
 
         void UpdateRotation()
@@ -96,7 +103,7 @@ namespace Photon.Pun
                 return;
             }
 
-            transform.localRotation = this.m_RotationControl.GetRotation(transform.localRotation);
+            _trans.localRotation = this.m_RotationControl.GetRotation(_trans.localRotation);
         }
 
         void UpdateScale()
@@ -106,7 +113,7 @@ namespace Photon.Pun
                 return;
             }
 
-            transform.localScale = this.m_ScaleControl.GetScale(transform.localScale);
+            _trans.localScale = this.m_ScaleControl.GetScale(_trans.localScale);
         }
 
         /// <summary>
@@ -125,9 +132,9 @@ namespace Photon.Pun
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            this.m_PositionControl.OnPhotonSerializeView(transform.localPosition, stream, info);
-            this.m_RotationControl.OnPhotonSerializeView(transform.localRotation, stream, info);
-            this.m_ScaleControl.OnPhotonSerializeView(transform.localScale, stream, info);
+            this.m_PositionControl.OnPhotonSerializeView(_trans.localPosition, stream, info);
+            this.m_RotationControl.OnPhotonSerializeView(_trans.localRotation, stream, info);
+            this.m_ScaleControl.OnPhotonSerializeView(_trans.localScale, stream, info);
 
             if (stream.IsReading == true)
             {
@@ -140,17 +147,17 @@ namespace Photon.Pun
 
                     if (this.m_PositionModel.SynchronizeEnabled)
                     {
-                        this.transform.localPosition = this.m_PositionControl.GetNetworkPosition();
+                        this._trans.localPosition = this.m_PositionControl.GetNetworkPosition();
                     }
 
                     if (this.m_RotationModel.SynchronizeEnabled)
                     {
-                        this.transform.localRotation = this.m_RotationControl.GetNetworkRotation();
+                        this._trans.localRotation = this.m_RotationControl.GetNetworkRotation();
                     }
 
                     if (this.m_ScaleModel.SynchronizeEnabled)
                     {
-                        this.transform.localScale = this.m_ScaleControl.GetNetworkScale();
+                        this._trans.localScale = this.m_ScaleControl.GetNetworkScale();
                     }
                 }
             }

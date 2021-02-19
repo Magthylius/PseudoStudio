@@ -5,15 +5,21 @@ using Hadal.Interactables;
 //edited by Jin
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerCollisions : MonoBehaviour
+    public class PlayerCollisions : MonoBehaviour, IPlayerComponent
     {
-        [Header("References")]
-        [SerializeField] private PlayerController _playerController;
-        [SerializeField] private PlayerCameraController _cameraController;
-
         [Header("Layer Collisions")]
         [SerializeField] private string obstacleLayer = string.Empty;
         [SerializeField] private string interactLayer = string.Empty;
+        
+        private PlayerController _playerController;
+        private PlayerCameraController _cameraController;
+
+        public void Inject(PlayerController controller)
+        {
+            var info = controller.GetInfo;
+            _playerController = controller;
+            _cameraController = info.CameraController;
+        }
 
         private void OnCollisionEnter(Collision collision)
         {

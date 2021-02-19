@@ -205,20 +205,6 @@
             },
             "m_InputSlot": {
                 "m_Node": {
-                    "m_Id": "04ee982b0e904b0f8830c2bc7eb0c8c8"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "63509e26483c410bb89360346c8534d2"
-                },
-                "m_SlotId": 1
-            },
-            "m_InputSlot": {
-                "m_Node": {
                     "m_Id": "9968583b74cd4987af3cbf04d6c3f52e"
                 },
                 "m_SlotId": 0
@@ -278,6 +264,20 @@
                     "m_Id": "ac5e797af62f4b9ca8bf16445f660201"
                 },
                 "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "9968583b74cd4987af3cbf04d6c3f52e"
+                },
+                "m_SlotId": 3
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "04ee982b0e904b0f8830c2bc7eb0c8c8"
+                },
+                "m_SlotId": 0
             }
         },
         {
@@ -510,8 +510,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 990.0000610351563,
-            "y": 246.00001525878907,
+            "x": 993.0000610351563,
+            "y": 245.00003051757813,
             "width": 126.0,
             "height": 118.0
         }
@@ -808,7 +808,7 @@
     "m_ShaderOutputName": "Min",
     "m_StageCapability": 3,
     "m_Value": {
-        "x": 0.0,
+        "x": 0.05000000074505806,
         "y": 0.0,
         "z": 0.0,
         "w": 0.0
@@ -1465,9 +1465,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 762.0000610351563,
-            "y": 462.0,
-            "width": 208.00001525878907,
+            "x": 613.0,
+            "y": 451.99993896484377,
+            "width": 207.99998474121095,
             "height": 278.0
         }
     },
@@ -2153,9 +2153,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 1087.0,
-            "y": 464.0000305175781,
-            "width": 208.00001525878907,
+            "x": 859.0,
+            "y": 431.9999694824219,
+            "width": 207.99998474121095,
             "height": 326.0
         }
     },

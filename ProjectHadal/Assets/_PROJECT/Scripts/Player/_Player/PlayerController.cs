@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Hadal.Player.Behaviours;
 using NaughtyAttributes;
 using Photon.Pun;
@@ -16,13 +17,15 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] private PlayerInventory inventory;
         [Foldout("Components"), SerializeField] private PlayerLamp lamp;
         [Foldout("Components"), SerializeField] private PlayerShoot shooter;
-        [Foldout("Settings"), SerializeField] private SmoothNetworkPlayer networkPlayer;
+        [Foldout("Photon"), SerializeField] private PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] private string localPlayerLayer;
         [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
         [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
-        public static event Action<PlayerController> OnInitialiseComplete;
         private PhotonView _pView;
         private PlayerManager _manager;
+        
+        public static event Action<PlayerController> OnInitialiseComplete;
+        internal static event Action<PlayerController> OnInjectEvent;
 
         #endregion
 
@@ -31,12 +34,15 @@ namespace Hadal.Player
         protected override void Awake()
         {
             base.Awake();
-            _pView = GetComponent<PhotonView>();
-            InjectAwakeDependencies();
+            var s = GetComponentsInChildren<IPlayerComponent>();
+            s.ToList().ForEach(i => OnInjectEvent += i.Inject);
         }
+
         private void Start()
         {
-            InjectStartDependencies();
+            _pView = photonInfo.PView;
+            OnInjectEvent?.Invoke(this); OnInjectEvent = null;
+            TryInjectDependencies();
             HandlePhotonView(_pView.IsMine);
             OnInitialiseComplete?.Invoke(this);
         }
@@ -44,8 +50,7 @@ namespace Hadal.Player
         protected override void Update()
         {
             DoAllUpdate(DeltaTime);
-            DoOtherUpdate(DeltaTime);
-            DoUpdate(DeltaTime);
+            DoLocalUpdate(DeltaTime);
         }
 
         #endregion
@@ -62,7 +67,7 @@ namespace Hadal.Player
         public void Die() => _manager.TryToDie();
         public void ResetController()
         {
-            healthManager.Inject(_pView, this, cameraController);
+            healthManager.Inject(this);
             healthManager.ResetManager();
         }
 
@@ -75,13 +80,7 @@ namespace Hadal.Player
             DebugCursor();
         }
 
-        private void DoOtherUpdate(in float deltaTime)
-        {
-            if (_pView.IsMine || networkPlayer == null) return;
-            networkPlayer.DoUpdate(deltaTime);
-        }
-
-        private void DoUpdate(in float deltaTime)
+        private void DoLocalUpdate(in float deltaTime)
         {
             if (!_pView.IsMine) return;
             cameraController.CameraTransition(deltaTime, IsBoosted);
@@ -96,9 +95,8 @@ namespace Hadal.Player
         {
             if (isMine)
             {
-                if(UIManager.Instance != null) UIManager.Instance.SetPlayer(this);
+                if (UIManager.Instance != null) UIManager.Instance.SetPlayer(this);
                 gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
-                Destroy(networkPlayer);
             }
             else
             {
@@ -107,6 +105,11 @@ namespace Hadal.Player
             }
 
             Cursor.lockState = CursorLockMode.Locked;
+            SetGraphics();
+        }
+
+        private void SetGraphics()
+        {
             wraithGraphic.SetActive(true);
             PhotonNetwork.RemoveBufferedRPCs(_pView.ViewID, nameof(RPC_SetPlayerGraphics));
             int randomIndex = UnityEngine.Random.Range(0, graphics.Length);
@@ -130,15 +133,9 @@ namespace Hadal.Player
             }
         }
 
-        private void InjectAwakeDependencies()
-        {
-            healthManager.Inject(_pView, this, cameraController);
-            lamp.Inject(_pView);
-        }
-        private void InjectStartDependencies()
+        private void TryInjectDependencies()
         {
             _manager ??= PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
-            inventory.Inject(_pView, this);
         }
 
         [PunRPC]
@@ -155,7 +152,8 @@ namespace Hadal.Player
         private float BoostInputSpeed => mover.Input.BoostAxis * mover.Accel.Boost + 1.0f;
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
-        public ControllerInfo GetInfo => new ControllerInfo(cameraController, healthManager, inventory, lamp, shooter);
+        public PlayerControllerInfo GetInfo
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo);
 
         #endregion
     }

@@ -5,47 +5,39 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerLamp : MonoBehaviour
+    public class PlayerLamp : MonoBehaviour, IUnityServicer, IPlayerComponent
     {
         [Header("Light")]
-        [SerializeField] private Light playerLight;
-        [SerializeField] private Color lightColour;
-        [SerializeField] private float switchSpeed;
-        [SerializeField] private float switchSnap;
+        [SerializeField] private new Light light;
+        [SerializeField] private Color colour;
+        [SerializeField] private float toggleSpeed;
+        [SerializeField] private float toggleLerpSnap;
 
         [Header("Settings")]
-        [SerializeField] private float maxRange;
-        [SerializeField] private float maxAngle;
-        [SerializeField] private float rangeIncrementSpeed;
-        [SerializeField] private float angleIncrementSpeed;
+        [SerializeField] private bool startLightsOn = false;
+        [SerializeField] private bool enableLightToggle = true;
+        [SerializeField] private bool enableStartupOverride = false;
+        [SerializeField] private float startingIntensity;
+        [SerializeField] private float startingRange;
+        [SerializeField] private float innerSpotAngle;
+        [SerializeField] private float outerSpotAngle;
 
         private ILightInput _input;
         private PhotonView _pView;
-        private float _defaultRange;
-        private float _defaultAngle;
         private float _defaultIntensity;
-        private Color _defaultColour;
         private bool _isOn;
 
         private void Awake()
         {
             _input = new StandardLightControlInput();
-            _defaultRange = playerLight.range;
-            _defaultAngle = playerLight.spotAngle;
-            _defaultIntensity = playerLight.intensity;
-            _defaultColour = playerLight.color;
-            _isOn = false;
-            switchSnap = Mathf.Abs(switchSnap);
-            playerLight.color = lightColour;
-            playerLight.intensity = 0.0f;
+            SetCustomLightSettings();
+            SetDefaultLightSettings();
         }
-
-        public void Inject(PhotonView pView) => _pView = pView;
 
         public void DoUpdate(in float deltaTime)
         {
+            if (!enableLightToggle) return;
             SetLightEnabled(_input.SwitchAxis, deltaTime);
-            //UpdateRangeAndAngle();
         }
 
         public void SetLightEnabled(in bool statement, in float deltaTime)
@@ -61,29 +53,55 @@ namespace Hadal.Player.Behaviours
                 _pView.RPC(nameof(RPC_SetLightEnabled), RpcTarget.OthersBuffered, state);
             }
             _isOn = statement;
-            playerLight.intensity = Mathf.Lerp(playerLight.intensity, destination, switchSpeed * deltaTime);
+            light.intensity = Mathf.Lerp(light.intensity, destination, toggleSpeed * deltaTime);
         }
 
-        private void UpdateRangeAndAngle()
-        {
-            if (!_isOn) return;
-            playerLight.range = Mathf.Clamp(playerLight.range + RangeIncrement, _defaultRange, maxRange);
-            playerLight.spotAngle = Mathf.Clamp(playerLight.spotAngle + AngleIncrement, _defaultAngle, maxAngle);
-        }
-
-        private float DeltaTime => Time.deltaTime;
-
-        private float RangeIncrement => _input.RangeAxis * rangeIncrementSpeed * Time.deltaTime;
-        private float AngleIncrement => _input.AngleAxis * angleIncrementSpeed;
-
+        public float DeltaTime => Time.deltaTime;
+        public float ElapsedTime => Time.time;
         public bool LightsOn => _isOn;
 
         [PunRPC]
         private void RPC_SetLightEnabled(bool statement)
         {
             _isOn = statement;
-            if(statement) playerLight.intensity = _defaultIntensity;
-            else playerLight.intensity = 0.0f;
+            if(statement) light.intensity = _defaultIntensity;
+            else light.intensity = 0.0f;
+        }
+
+        private void SetDefaultLightSettings()
+        {
+            _defaultIntensity = light.intensity;
+            _isOn = false;
+            toggleLerpSnap = toggleLerpSnap.Abs();
+            light.color = colour;
+            light.intensity = 0.0f;
+
+            if (startLightsOn)
+            {
+                _isOn = true;
+                _input.Toggle();
+                light.intensity = startingIntensity;
+            }
+        }
+
+        private void SetCustomLightSettings()
+        {
+            if (!enableStartupOverride) return;
+            light.innerSpotAngle = innerSpotAngle;
+            light.spotAngle = outerSpotAngle;
+            light.intensity = startingIntensity;
+            light.range = startingRange;
+        }
+
+        private void OnValidate()
+        {
+            if (!enableLightToggle) startLightsOn = true;
+        }
+
+        public void Inject(PlayerController controller)
+        {
+            var info = controller.GetInfo;
+            _pView = info.PhotonInfo.PView;
         }
     }
 }

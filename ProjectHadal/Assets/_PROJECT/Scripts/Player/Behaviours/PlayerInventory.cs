@@ -8,7 +8,7 @@ using Castle.Core.Internal;
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerInventory : MonoBehaviourPunCallbacks
+    public class PlayerInventory : MonoBehaviourPunCallbacks, IPlayerComponent
     {
         [SerializeField] private UsableObject[] utilities;
         private IEquipmentInput _eInput;
@@ -17,7 +17,7 @@ namespace Hadal.Player.Behaviours
         private int _previousSelectedItem = -1;
         private PhotonView _pView;
         private PlayerController _controller;
-        private ControllerInfo _controllerInfo;
+        private PlayerControllerInfo _controllerInfo;
 
         private void Awake()
         {
@@ -25,9 +25,10 @@ namespace Hadal.Player.Behaviours
             _uInput = new StandardUseableInput();
         }
 
-        public void Inject(PhotonView pView, PlayerController controller)
+        public void Inject(PlayerController controller)
         {
-            _pView = pView;
+            var info = controller.GetInfo;
+            _pView = info.PhotonInfo.PView;
             _controller = controller;
             GetControllerInfo();
             InjectDependencies();

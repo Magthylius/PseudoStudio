@@ -5,7 +5,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerCameraController : CameraController
+    public class PlayerCameraController : CameraController, IPlayerComponent
     {
         #region Variable Definitions
 
@@ -29,7 +29,6 @@ namespace Hadal.Player.Behaviours
         private void Awake()
         {
             _originalCameraFOV = selfCamera.fieldOfView;
-            _pView = GetComponent<PhotonView>();
         }
 
         #endregion
@@ -90,6 +89,12 @@ namespace Hadal.Player.Behaviours
             _isDisabled = true;
             selfCamera.enabled = false;
             selfCamera.GetComponent<AudioListener>().enabled = false;
+        }
+
+        public void Inject(PlayerController controller)
+        {
+            var info = controller.GetInfo;
+            _pView = info.PhotonInfo.PView;
         }
 
         #endregion
