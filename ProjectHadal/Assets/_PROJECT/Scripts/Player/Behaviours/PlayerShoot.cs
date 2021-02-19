@@ -122,7 +122,6 @@ namespace Hadal.Player.Behaviours
         {
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
-            print($"CHamber ratio: {tLauncher.ChamberReloadRatio}");
         }
         private void UpdateUITorpedoCount()
         {
