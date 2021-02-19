@@ -7,9 +7,6 @@ namespace Hadal.Inputs
     public class StandardLightControlInput : ILightInput
     {
         private bool _isOn = false;
-
-        public float RangeAxis => Input.GetAxis("LightRange");
-        public float AngleAxis => Input.mouseScrollDelta.y;
         public bool SwitchTrigger => Input.GetKeyDown(KeyCode.C);
         public bool SwitchAxis
         {
@@ -21,6 +18,11 @@ namespace Hadal.Inputs
                 }
                 return _isOn;
             }
+        }
+
+        public void Toggle()
+        {
+            _isOn = !_isOn;
         }
     }
 }

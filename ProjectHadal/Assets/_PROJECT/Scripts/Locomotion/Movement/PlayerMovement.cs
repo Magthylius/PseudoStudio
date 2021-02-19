@@ -8,6 +8,7 @@ namespace Hadal.Locomotion
     [System.Serializable]
     public class PlayerMovement : Mover
     {
+        [Header("Debug"), SerializeField] private string debugKey;
         private Vector3 _lastPosition;
         private Vector3 _currentPosition;
         private bool _isLocal = true;
@@ -21,6 +22,7 @@ namespace Hadal.Locomotion
             Input = new RawKeyboardInput();
             _lastPosition = target.position;
             _currentPosition = target.position;
+            DoDebugEnabling(debugKey);
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -30,7 +32,7 @@ namespace Hadal.Locomotion
             AddVelocity();
             LoseVelocity(deltaTime);
             Move(deltaTime);
-            //CalculateSpeed(deltaTime);
+            CalculateSpeed(deltaTime);
         }
 
         public void SetIsLocal(bool state) => _isLocal = state;
@@ -71,6 +73,8 @@ namespace Hadal.Locomotion
 
         private void CalculateSpeed(in float deltaTime)
         {
+            if (!allowDebug) return;
+
             _lastPosition = _currentPosition;
             _currentPosition = target.localPosition;
             float distance = Vector3.Distance(_currentPosition, _lastPosition);
@@ -79,6 +83,12 @@ namespace Hadal.Locomotion
             Speed.Forward = (velocity.z / deltaTime).Abs();
             Speed.Strafe = (velocity.x / deltaTime).Abs();
             Speed.Hover = (velocity.y / deltaTime).Abs();
+
+            string log = $"\nNormalised spd: {Speed.Normalised}\n" +
+                         $"Forward spd: {Speed.Forward}\n" +
+                         $"Strafe (lft,rght) spd: {Speed.Strafe}\n" +
+                         $"Hover (up,down) spd: {Speed.Hover}";
+            DebugLog(log);
         }
 
         private void Move(in float deltaTime) => target.position += Velocity.Total * deltaTime;

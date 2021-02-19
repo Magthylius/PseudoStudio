@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Hadal.Locomotion
 {
 	[System.Serializable]
-    public abstract class Mover : MonoBehaviour
+    public abstract class Mover : MonoBehaviourDebug
     {
         public IMovementInput Input { get; set; }
         public SpeedInfo Speed;
