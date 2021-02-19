@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using NaughtyAttributes;
 
 //Created by Jet
 namespace Hadal.Locomotion
@@ -13,10 +14,10 @@ namespace Hadal.Locomotion
         public float InputHover;
 
         [Header("Reporting Stats")]
-        public float Normalised;
-        public float Forward;
-        public float Strafe;
-        public float Hover;
+        [ReadOnly] public float Normalised;
+        [ReadOnly] public float Forward;
+        [ReadOnly] public float Strafe;
+        [ReadOnly] public float Hover;
 
         public void Initialise()
         {
@@ -36,7 +37,7 @@ namespace Hadal.Locomotion
         public float MaxCummulation;
 
         [Header("Reporting Stats")]
-        public float CummulatedAcceleration;
+        [ReadOnly] public float CummulatedAcceleration;
 
         public void Initialise()
         {
@@ -48,9 +49,9 @@ namespace Hadal.Locomotion
     public class VelocityInfo
     {
         [Header("Reporting Stats")]
-        public Vector3 Total;
-        public float SquareSpeed;
-        public float Speed;
+        [ReadOnly] public Vector3 Total;
+        [ReadOnly] public float SquareSpeed;
+        [ReadOnly] public float Speed;
 
         public void Initialise()
         {

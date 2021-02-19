@@ -9,15 +9,14 @@ namespace Hadal.Player
     {
         [SerializeField, ReadOnly] GameObject _controller;
         [Foldout("Settings"), SerializeField] bool isOfflineMode = true;
-        [Foldout("Settings"), SerializeField] Vector3 spawnPosition;
-        [Foldout("Settings"), SerializeField] Quaternion spawnRotation;
+        [Foldout("Settings"), SerializeField] Transform spawnHereTransform;
 
         private void Awake()
         {
             PhotonNetwork.OfflineMode = isOfflineMode;
             var prefab = Resources.Load(PathManager.PlayerManagerPrefabPath);
             if(prefab is null) return;
-            _controller = (GameObject)Instantiate(prefab, spawnPosition, spawnRotation);
+            _controller = (GameObject)Instantiate(prefab, spawnHereTransform.position, spawnHereTransform.rotation);
             _controller.GetComponent<PlayerM>().IsOnNetwork = !isOfflineMode;
         }
     }
