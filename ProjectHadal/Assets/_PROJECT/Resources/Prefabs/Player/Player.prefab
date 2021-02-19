@@ -211,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 2719752003713521068}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 20, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.0222254, y: 2.0222254, z: 2.0222254}
   m_Children:
   - {fileID: 645128014938939248}
   - {fileID: 4580219286401982579}
@@ -374,8 +374,8 @@ MonoBehaviour:
   lightColour: {r: 1, g: 1, b: 1, a: 1}
   switchSpeed: 2
   switchSnap: 0.1
-  maxRange: 25
-  maxAngle: 120
+  maxRange: 100
+  maxAngle: 200
   rangeIncrementSpeed: 5
   angleIncrementSpeed: 5
 --- !u!114 &6636654184727369356
