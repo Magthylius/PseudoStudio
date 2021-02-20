@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7174095259673885248}
   - component: {fileID: 9221942647745312698}
   - component: {fileID: 4796224872909606946}
-  - component: {fileID: 7792923309456487407}
   - component: {fileID: 2907895230473192679}
   m_Layer: 0
   m_Name: Projectile ObjectPools
@@ -63,21 +62,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
   initialCount: 4
-  data: {fileID: 0}
---- !u!114 &7792923309456487407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7174095259673885249}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb0438b785aef484d8abe3d380c2d7ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  initialCount: 5
   data: {fileID: 0}
 --- !u!114 &2907895230473192679
 MonoBehaviour:

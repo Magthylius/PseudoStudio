@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using UnityEngine;
 
 namespace Hadal.Utility
@@ -83,7 +82,7 @@ namespace Hadal.Utility
 
         public float GetElapsedTime()
         {
-            if (IsCompleted || GetTime.IsGreaterOrEqualTo(GetTriggerTime))
+            if (IsCompleted || GetTime >= GetTriggerTime)
                 return Duration;
 
             return _timeElapsedBeforeStop ?? _timeElapsedBeforePause ?? DefaultElapsed;
@@ -93,7 +92,7 @@ namespace Hadal.Utility
         {
             if (IsDone || HandlePause()) return;
             UpdateTick();
-            if (GetTime.IsGreaterOrEqualTo(GetTriggerTime)) HandleTimerCompleteEvent();
+            if (GetTime >= GetTriggerTime) HandleTimerCompleteEvent();
             PostUpdateTick();
         }
 

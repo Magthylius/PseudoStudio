@@ -1,5 +1,5 @@
+using Tenshi.UnitySoku;
 using System;
-using Hadal.Utility;
 using UnityEngine;
 
 //Created by Jet, Edited by Jon

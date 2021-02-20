@@ -1,5 +1,4 @@
-﻿using Hadal.Utility;
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 //Created by Jet
@@ -63,6 +62,6 @@ namespace Hadal.Player.Behaviours
             _cameraController = info.CameraController;
         }
 
-        public float GetHealthRatio => _currentHealth / maxHealth.AsFloat();
+        public float GetHealthRatio => _currentHealth / (float)maxHealth;
     }
 }

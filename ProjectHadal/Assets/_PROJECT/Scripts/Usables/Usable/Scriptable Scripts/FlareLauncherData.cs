@@ -4,7 +4,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables
 {
-    [CreateAssetMenu(menuName = "Items/Flare")]
+    [CreateAssetMenu(menuName = "Usables/Flare Launcher")]
     public class FlareLauncherData : UsableLauncherData
     {
         public override void DoEffect(UsableHandlerInfo info)

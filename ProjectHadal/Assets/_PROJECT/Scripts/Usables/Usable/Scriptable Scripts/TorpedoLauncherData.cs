@@ -4,7 +4,7 @@ using UnityEngine;
 //Created by Jey, edited by Jon
 namespace Hadal.Usables
 {
-    [CreateAssetMenu(menuName = "Items/Torpedo")]
+    [CreateAssetMenu(menuName = "Usables/Torpedo Launcher")]
     public class TorpedoLauncherData : UsableLauncherData
     {
         public override void DoEffect(UsableHandlerInfo info)

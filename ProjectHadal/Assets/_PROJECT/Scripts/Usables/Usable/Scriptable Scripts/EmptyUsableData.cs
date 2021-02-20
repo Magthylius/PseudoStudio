@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Hadal.Usables
 {
-    [CreateAssetMenu(menuName = "Items/Empty Data")]
+    [CreateAssetMenu(menuName = "Usables/Empty Data")]
     public class EmptyUsableData : UsableLauncherData
     {
         public override void DoEffect(UsableHandlerInfo info) { }

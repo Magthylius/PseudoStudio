@@ -1,5 +1,5 @@
 ﻿using Hadal.Inputs;
-using Hadal.Utility;
+using Tenshi;
 using UnityEngine;
 
 //Created by Jet

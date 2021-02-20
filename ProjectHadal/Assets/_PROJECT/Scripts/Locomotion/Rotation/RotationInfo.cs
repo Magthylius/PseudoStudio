@@ -1,4 +1,5 @@
-﻿using Hadal.Inputs;
+﻿using Tenshi;
+using Hadal.Inputs;
 using UnityEngine;
 using NaughtyAttributes;
 

@@ -1,4 +1,5 @@
-﻿using Hadal.Utility;
+﻿using Tenshi;
+using Tenshi.UnitySoku;
 using Photon.Pun;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Hadal.Player.Behaviours
         [SerializeField] private float fovRecoverTransitionSpeed;
 
         [Header("Special Effects")]
-        [SerializeField] private CameraUtility.CameraShakeProperties shakeProperties;
+        [SerializeField] private CameraShakeProperties shakeProperties;
 
         private float _originalCameraFOV;
         private float _sqrSpeed = 0;
@@ -70,9 +71,9 @@ namespace Hadal.Player.Behaviours
             var sProp = ShakePropertiesWithSpeed(_sqrSpeed);
             this.ShakeCamera(selfCamera, sProp, true);
         }
-        private CameraUtility.CameraShakeProperties ShakePropertiesWithSpeed(float speed)
+        private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
         {
-            var newShakeProperties = new CameraUtility.CameraShakeProperties(shakeProperties.Angle, shakeProperties.Strength + speed * 20,
+            var newShakeProperties = new CameraShakeProperties(shakeProperties.Angle, shakeProperties.Strength + speed * 20,
                 shakeProperties.MaxSpeed + speed * 500, shakeProperties.MinSpeed, shakeProperties.Duration + speed * 50,
                 shakeProperties.NoisePercent + speed * 20, shakeProperties.DampingPercent - speed * 10, shakeProperties.RotationPercent);
 

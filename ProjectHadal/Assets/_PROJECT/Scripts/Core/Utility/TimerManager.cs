@@ -3,11 +3,21 @@ using UnityEngine;
 
 namespace Hadal.Utility
 {
-    public class TimerManager : Singleton<TimerManager>
+    public class TimerManager : MonoBehaviour
     {
+        public static TimerManager Instance { get; private set; }
         private List<Timer> _timers = new List<Timer>();
         private List<Timer> _timersToAdd = new List<Timer>();
 
+        private void Awake()
+        {
+            if (Instance == null) Instance = this;
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
         private void Update() => UpdateAllTimers();
         private void OnApplicationQuit() => StopAllTimers();
 
@@ -36,7 +46,7 @@ namespace Hadal.Utility
         public void ToggleAllTimers()
         {
             int i = -1;
-            while(++i < _timers.Count)
+            while (++i < _timers.Count)
                 _timers[i].ToggleState();
         }
         public void RestartAllTimers()
@@ -53,7 +63,7 @@ namespace Hadal.Utility
             int i = -1;
             while (++i < _timers.Count)
                 _timers[i].DoUpdate();
-            
+
             PostUpdateTick();
         }
 

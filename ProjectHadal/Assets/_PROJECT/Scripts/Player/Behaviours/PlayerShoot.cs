@@ -2,7 +2,6 @@
 using UnityEngine;
 using Hadal.Usables;
 using Hadal.Utility;
-using static Hadal.FluentBool;
 
 namespace Hadal.Player.Behaviours
 {
@@ -129,7 +128,7 @@ namespace Hadal.Player.Behaviours
         private void OnReserveChangedMethod(bool isIncrement)
         {
             UpdateUITorpedoCount();
-            if (Not(isIncrement)) return;
+            if (!isIncrement) return;
             DebugLog("Torpedo Regenerated (Loaded)!");
         }
         private void OnUnityUpdateUI()
@@ -145,12 +144,12 @@ namespace Hadal.Player.Behaviours
         private void UpdateUIRegenRatio(in float ratio)
         {
             UIManager.Instance
-            .UpdateReload(ratio.Clamp01(), tLauncher.IsRegenerating);
+            .UpdateReload(ratio, tLauncher.IsRegenerating);
         }
         private void UpdateUIFloodRatio(in float ratio)
         {
             UIManager.Instance
-            .UpdateFlooding(ratio.Clamp01(), tLauncher.IsReloading);
+            .UpdateFlooding(ratio, tLauncher.IsReloading);
         }
 
         #endregion

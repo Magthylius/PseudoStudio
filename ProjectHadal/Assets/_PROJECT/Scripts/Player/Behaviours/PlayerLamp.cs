@@ -72,7 +72,7 @@ namespace Hadal.Player.Behaviours
         {
             _defaultIntensity = light.intensity;
             _isOn = false;
-            toggleLerpSnap = toggleLerpSnap.Abs();
+            toggleLerpSnap = Mathf.Abs(toggleLerpSnap);
             light.color = colour;
             light.intensity = 0.0f;
 

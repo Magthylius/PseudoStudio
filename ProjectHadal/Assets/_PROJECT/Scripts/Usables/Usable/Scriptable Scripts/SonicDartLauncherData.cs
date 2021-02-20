@@ -4,7 +4,7 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables
 {
-    [CreateAssetMenu(menuName = "Items/Sonic Dart")]
+    [CreateAssetMenu(menuName = "Usables/Sonic Dart Launcher (Sonic Tracker)")]
     public class SonicDartLauncherData : UsableLauncherData
     {
         public override void DoEffect(UsableHandlerInfo info)
@@ -14,7 +14,7 @@ namespace Hadal.Usables
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);
-            projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
+            //projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)

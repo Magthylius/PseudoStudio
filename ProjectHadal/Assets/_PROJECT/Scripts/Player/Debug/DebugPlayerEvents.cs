@@ -49,9 +49,6 @@ namespace Hadal.Player
                 case FlareLauncherObject f:
                     DebugLog("Flare Fire SFX");
                     return;
-                case SonarDartLauncherObject s1:
-                    DebugLog("Sonar Fire SFX");
-                    return;
                 case SonicDartLauncherObject s2:
                     DebugLog("Sonic Fire SFX");
                     return;

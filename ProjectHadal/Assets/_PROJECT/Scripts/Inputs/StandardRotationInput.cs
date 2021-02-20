@@ -12,8 +12,8 @@ namespace Hadal.Inputs
         public float YAxis => Input.GetAxis("Mouse Y");
         public float ZAxis => Input.GetAxis("ZRotate");
 
-        public bool XTrigger => XAxis.Abs() > TriggerRange;
-        public bool YTrigger => YAxis.Abs() > TriggerRange;
-        public bool ZTrigger => ZAxis.Abs() > TriggerRange;
+        public bool XTrigger => Mathf.Abs(XAxis) > TriggerRange;
+        public bool YTrigger => Mathf.Abs(YAxis) > TriggerRange;
+        public bool ZTrigger => Mathf.Abs(ZAxis) > TriggerRange;
     }
 }
