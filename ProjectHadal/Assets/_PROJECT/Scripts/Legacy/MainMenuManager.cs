@@ -25,7 +25,7 @@ namespace Hadal.Legacy
         [SerializeField] Menu startMenu;
         [SerializeField] Menu nicknameMenu;
         [SerializeField] Menu lobbyMenu;
-        [SerializeField] Menu loadingMenu;
+        [SerializeField] Menu connectingMenu;
         [SerializeField] Menu roomMenu;
 
         [Header("Start settings")]
@@ -40,6 +40,10 @@ namespace Hadal.Legacy
         [Header("Nickname settings")]
         [SerializeField] TMP_InputField nicknameTMPInput;
         [SerializeField] TextMeshProUGUI lobbyNicknameTMP;
+        [Min(0)] public int nicknameMaxLength;
+        [SerializeField] GameObject warningNicknameTooLong;
+
+        bool allowNickname;
 
         [Header("Lobby settings")]
         [SerializeField] Menu gameOptions;
@@ -49,10 +53,16 @@ namespace Hadal.Legacy
         [Min(0f)] public float roomPanelLerpSpeed;
         [SerializeField] RectTransform createRoomPanel;
         [SerializeField] RectTransform findRoomPanel;
-        [SerializeField] TMP_InputField createRoomTMPInput;
-
+       
         FlexibleRect createRoomFR;
         FlexibleRect findRoomFR;
+
+        [Header("Room Creation settings")]
+        [Min(0)] public int roomNameMaxLength;
+        [SerializeField] TMP_InputField createRoomTMPInput;
+        [SerializeField] GameObject warningRoomNameTooLong;
+
+        bool allowRoomCreation;
 
         [Header("Room Ready settings")]
         public GameObject startGameButton;
@@ -70,6 +80,8 @@ namespace Hadal.Legacy
 
         void Start()
         {
+            EnsureSetup();
+
             versionTMP.text = "V " + Application.version;
 
             startIF = new ImageFiller(startFiller, startFillerSpeed, 1f);
@@ -86,13 +98,6 @@ namespace Hadal.Legacy
             confirmQuitFR = new FlexibleRect(confirmQuitPanel);
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
             confirmQuitFR.MoveToEnd();
-
-            OpenMenu(startMenu);
-            OpenMenu(gameOptions);
-            CloseMenu(nicknameMenu);
-            CloseMenu(lobbyMenu);
-            CloseMenu(roomOptions);
-            CloseMenu(loadingMenu);
         }
 
         void Update()
@@ -112,6 +117,24 @@ namespace Hadal.Legacy
 
         #region Main Menu 
         void ChangePhase(MenuPhase phase) => menuPhase = phase;
+
+        //! make sure objects are active and inactive
+        void EnsureSetup()
+        {
+            OpenMenu(startMenu);
+            OpenMenu(gameOptions);
+            CloseMenu(nicknameMenu);
+            CloseMenu(lobbyMenu);
+            CloseMenu(roomOptions);
+            CloseMenu(connectingMenu);
+
+            createRoomPanel.gameObject.SetActive(true);
+            findRoomPanel.gameObject.SetActive(true);
+            confirmQuitPanel.gameObject.SetActive(true);
+
+            warningNicknameTooLong.gameObject.SetActive(false);
+            warningRoomNameTooLong.gameObject.SetActive(false);
+        }
 
         #region Start phase
         public void PNTR_ChargeStartFiller() => startIF.StartCharge();
@@ -136,6 +159,8 @@ namespace Hadal.Legacy
         #region Nickname phase
         public void BTN_ApplyName()
         {
+            if (!allowNickname) return;
+
             PlayerPrefs.SetString("PlayerName", nicknameTMPInput.text);
             UpdateLobbyNickname();
 
@@ -147,6 +172,14 @@ namespace Hadal.Legacy
         {
             lobbyNicknameTMP.text = PlayerPrefs.GetString("PlayerName").ToUpper();
             launcher.ChangeNickname(PlayerPrefs.GetString("PlayerName"));
+        }
+
+        public void TMP_CheckNicknameEligibility()
+        {
+            if (nicknameTMPInput.text.Length <= nicknameMaxLength) allowNickname = true;
+            else allowNickname = false;
+
+            warningNicknameTooLong.SetActive(!allowNickname);
         }
         #endregion
 
@@ -180,7 +213,8 @@ namespace Hadal.Legacy
 
         public void BTN_CreateActualRoom()
         {
-            launcher.CreateRoom(createRoomTMPInput.text, loadingMenu);
+            if (!allowRoomCreation) return;
+            launcher.CreateRoom(createRoomTMPInput.text, connectingMenu);
         }
 
         public void BTN_QuitGame()
@@ -197,13 +231,21 @@ namespace Hadal.Legacy
         {
             Application.Quit();
         }
+
+        public void TMP_CheckRoomNameEligibility()
+        {
+            if (createRoomTMPInput.text.Length <= roomNameMaxLength) allowRoomCreation = true;
+            else allowRoomCreation = false;
+
+            warningRoomNameTooLong.SetActive(!allowRoomCreation);
+        }
         #endregion
 
         #region Room Phase
         public void StartRoomPhase()
         {
             OpenMenu(roomMenu);
-            CloseMenu(loadingMenu);
+            CloseMenu(connectingMenu);
             CloseMenu(lobbyMenu);
 
             findRoomFR.StartLerp(true);
