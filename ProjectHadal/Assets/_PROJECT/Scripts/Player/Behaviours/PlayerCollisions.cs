@@ -21,7 +21,7 @@ namespace Hadal.Player.Behaviours
             _cameraController = info.CameraController;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        internal void CollisionEnter(Collision collision)
         {
             LayerMask layer = LayerMask.NameToLayer(obstacleLayer);
             if (collision.gameObject.layer == layer.value)
@@ -33,7 +33,7 @@ namespace Hadal.Player.Behaviours
             }
         }
 
-        private void OnCollisionStay(Collision collision)
+        internal void CollisionStay(Collision collision)
         {
 			if(Input.GetKeyDown(KeyCode.T))
 			{
@@ -44,5 +44,11 @@ namespace Hadal.Player.Behaviours
 				}
 			}
         }
+
+        internal void CollisionExit(Collision collision) { }
+
+        internal void TriggerEnter(Collider collider) { }
+        internal void TriggerStay(Collider collider) { }
+        internal void TriggerExit(Collider collider) { }
     }
 }
