@@ -17,6 +17,7 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] private PlayerInventory inventory;
         [Foldout("Components"), SerializeField] private PlayerLamp lamp;
         [Foldout("Components"), SerializeField] private PlayerShoot shooter;
+        [Foldout("Components"), SerializeField] private PlayerCollisions collisions;
         [Foldout("Photon"), SerializeField] private PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] private string localPlayerLayer;
         [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
@@ -52,6 +53,9 @@ namespace Hadal.Player
             DoAllUpdate(DeltaTime);
             DoLocalUpdate(DeltaTime);
         }
+
+        private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
+        private void OnCollisionStay(Collision collision) => collisions.CollisionStay(collision);
 
         #endregion
 
