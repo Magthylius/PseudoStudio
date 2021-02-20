@@ -4,13 +4,13 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables
 {
-    public class UsableObject : MonoBehaviour, IUsable, IUnityServicer
+    public class UsableLauncherObject : MonoBehaviour, IUsable, IUnityServicer
     {
-        [SerializeField] private UsableData data;
-        public virtual UsableData Data { get => data; set => data = value; }
-        public event Action<UsableObject> OnFire;
-        public event Action<UsableObject> OnRestock;
-        public event Action<UsableObject, bool> OnSwitch;
+        [SerializeField] private UsableLauncherData data;
+        public virtual UsableLauncherData Data { get => data; set => data = value; }
+        public event Action<UsableLauncherObject> OnFire;
+        public event Action<UsableLauncherObject> OnRestock;
+        public event Action<UsableLauncherObject, bool> OnSwitch;
         protected Camera PCamera { get; set; } = null;
         protected bool IsActive { get; set; } = false;
 

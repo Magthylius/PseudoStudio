@@ -1,9 +1,9 @@
 //Created by Jet
 namespace Hadal.Usables
 {
-    public class EmptyUsable : UsableObject
+    public class EmptyUsable : UsableLauncherObject
     {
-        public override UsableData Data => EmptyUsableData.Get();
+        public override UsableLauncherData Data => EmptyUsableData.Get();
         public override bool Use(UsableHandlerInfo info) => false;
     }
 }

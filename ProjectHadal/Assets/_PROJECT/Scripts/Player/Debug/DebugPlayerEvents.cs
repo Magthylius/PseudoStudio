@@ -39,7 +39,7 @@ namespace Hadal.Player
             _shoot.GetTorpedoLauncher.OnFire += CallOnFire;
         }
 
-        void CallOnFire(UsableObject obj)
+        void CallOnFire(UsableLauncherObject obj)
         {
             switch (obj)
             {

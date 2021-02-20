@@ -10,7 +10,7 @@ namespace Hadal.Player.Behaviours
 {
     public class PlayerInventory : MonoBehaviourPunCallbacks, IPlayerComponent
     {
-        [SerializeField] private UsableObject[] utilities;
+        [SerializeField] private UsableLauncherObject[] utilities;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
         private int _selectedItem;
@@ -124,8 +124,8 @@ namespace Hadal.Player.Behaviours
 
         #region Shorthand
 
-        public UsableObject[] GetUsableObjects => utilities;
-        private UsableObject EquippedUsable => utilities[_selectedItem];
+        public UsableLauncherObject[] GetUsableObjects => utilities;
+        private UsableLauncherObject EquippedUsable => utilities[_selectedItem];
 
         #endregion
     }

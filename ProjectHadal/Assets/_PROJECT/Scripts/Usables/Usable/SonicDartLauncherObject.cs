@@ -1,7 +1,7 @@
 ﻿//Created by Jet
 namespace Hadal.Usables
 {
-    public class SonicDartLauncherObject : UsableObject
+    public class SonicDartLauncherObject : UsableLauncherObject
     {
         
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Hadal.Usables
 {
     [CreateAssetMenu(menuName = "Items/Sonic Dart")]
-    public class SonicDartLauncherData : UsableData
+    public class SonicDartLauncherData : UsableLauncherData
     {
         public override void DoEffect(UsableHandlerInfo info)
         {

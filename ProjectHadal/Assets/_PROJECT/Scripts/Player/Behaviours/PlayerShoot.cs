@@ -90,7 +90,7 @@ namespace Hadal.Player.Behaviours
             HandleTorpedoObject();
         }
 
-        public void FireUtility(UsableObject usable)
+        public void FireUtility(UsableLauncherObject usable)
         {
             if (!_canUtilityFire) return;
             HandleUtilityReloadTimer(usable);
@@ -166,7 +166,7 @@ namespace Hadal.Player.Behaviours
                         .WithShouldPersist(true);
             _utilityReloadTimer.PausedOnStart();
         }
-        private void HandleUtilityReloadTimer(UsableObject usable)
+        private void HandleUtilityReloadTimer(UsableLauncherObject usable)
         {
             _canUtilityFire = false;
             _utilityReloadTimer.Restart();

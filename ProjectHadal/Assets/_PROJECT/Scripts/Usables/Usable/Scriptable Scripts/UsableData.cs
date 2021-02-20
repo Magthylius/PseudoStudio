@@ -4,13 +4,9 @@ using UnityEngine;
 //Created by Jet
 namespace Hadal.Usables
 {
-    public abstract class UsableData : ScriptableObject
+    public abstract class UsableLauncherData : ScriptableObject
     {
-        public int ID;
         public string Name;
-        public bool IsDamaging;
-        public Vector3 ItemOffset;
-        public GameObject UsablePrefab;
         public ProjectileData ProjectileData;
 
         public virtual void DoEffect(UsableHandlerInfo info)

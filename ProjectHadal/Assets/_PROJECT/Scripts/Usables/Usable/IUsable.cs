@@ -4,10 +4,10 @@ namespace Hadal.Usables
 {
     public interface IUsable
     {
-        UsableData Data { get; }
+        UsableLauncherData Data { get; }
         bool Use(UsableHandlerInfo info);
-        event Action<UsableObject> OnFire;
-        event Action<UsableObject> OnRestock;
-        event Action<UsableObject, bool> OnSwitch;
+        event Action<UsableLauncherObject> OnFire;
+        event Action<UsableLauncherObject> OnRestock;
+        event Action<UsableLauncherObject, bool> OnSwitch;
     }
 }

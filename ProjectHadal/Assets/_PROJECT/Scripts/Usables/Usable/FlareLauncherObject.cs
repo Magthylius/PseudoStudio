@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Hadal.Usables
 {
-    public class FlareLauncherObject : UsableObject
+    public class FlareLauncherObject : UsableLauncherObject
     {
         
     }

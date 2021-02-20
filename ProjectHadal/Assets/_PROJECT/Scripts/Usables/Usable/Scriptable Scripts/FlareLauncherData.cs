@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Hadal.Usables
 {
     [CreateAssetMenu(menuName = "Items/Flare")]
-    public class FlareLauncherData : UsableData
+    public class FlareLauncherData : UsableLauncherData
     {
         public override void DoEffect(UsableHandlerInfo info)
         {

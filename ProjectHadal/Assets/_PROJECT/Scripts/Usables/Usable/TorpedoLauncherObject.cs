@@ -6,7 +6,7 @@ using System;
 //Created by Jey
 namespace Hadal.Usables
 {
-    public class TorpedoLauncherObject : UsableObject
+    public class TorpedoLauncherObject : UsableLauncherObject
     {
         private const string ReserveGroupName = "Reserves";
         private const string ChamberGroupName = "Chamber";

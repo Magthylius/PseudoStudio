@@ -3,10 +3,10 @@ using UnityEngine;
 namespace Hadal.Usables
 {
     [CreateAssetMenu(menuName = "Items/Empty Data")]
-    public class EmptyUsableData : UsableData
+    public class EmptyUsableData : UsableLauncherData
     {
         public override void DoEffect(UsableHandlerInfo info) { }
-        public static UsableData Get()
-            => (UsableData)Resources.Load(PathManager.EmptyUsableDataPath);
+        public static UsableLauncherData Get()
+            => (UsableLauncherData)Resources.Load(PathManager.EmptyUsableDataPath);
     }
 }
