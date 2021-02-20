@@ -5,7 +5,7 @@ using Hadal.Interactables;
 //edited by Jin
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerCollisions : MonoBehaviour, IPlayerComponent
+    public class PlayerCollisions : MonoBehaviourDebug, IPlayerComponent
     {
         [Header("Layer Collisions")]
         [SerializeField] private string obstacleLayer = string.Empty;
@@ -21,9 +21,10 @@ namespace Hadal.Player.Behaviours
             _cameraController = info.CameraController;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        internal void CollisionEnter(Collision collision)
         {
             LayerMask layer = LayerMask.NameToLayer(obstacleLayer);
+            DebugLog(layer.ToString());
             if (collision.gameObject.layer == layer.value)
             {
                 if (_playerController.SqrSpeed >= 0.02f)
@@ -33,7 +34,7 @@ namespace Hadal.Player.Behaviours
             }
         }
 
-        private void OnCollisionStay(Collision collision)
+        internal void CollisionStay(Collision collision)
         {
 			if(Input.GetKeyDown(KeyCode.T))
 			{
@@ -44,5 +45,11 @@ namespace Hadal.Player.Behaviours
 				}
 			}
         }
+
+        internal void CollisionExit(Collision collision) { }
+
+        internal void TriggerEnter(Collider collider) { }
+        internal void TriggerStay(Collider collider) { }
+        internal void TriggerExit(Collider collider) { }
     }
 }
