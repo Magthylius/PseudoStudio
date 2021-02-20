@@ -39,6 +39,8 @@ namespace Hadal.Usables
 
         #region Use Method
 
+        /// <summary> Abstract method that does what the usable launcher object should do. Can be overriden by subclasses. </summary>
+        /// <param name="info"></param>
         public virtual bool Use(UsableHandlerInfo info)
         {
             if (!IsActive) return false;
@@ -51,9 +53,13 @@ namespace Hadal.Usables
 
         #endregion
 
+        #region Interface Implementations
+
         public void OnRestockInvoke() => OnRestock?.Invoke(this);
         public virtual void DoUpdate(in float deltaTime) { }
         public float ElapsedTime => Time.time;
         public float DeltaTime => Time.deltaTime;
+
+        #endregion
     }
 }
