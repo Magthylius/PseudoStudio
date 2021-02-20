@@ -4,6 +4,7 @@ using Hadal.Player.Behaviours;
 using NaughtyAttributes;
 using Photon.Pun;
 using UnityEngine;
+using Hadal.Inputs;
 
 //Created by Jet
 namespace Hadal.Player
@@ -148,7 +149,8 @@ namespace Hadal.Player
         #endregion
 
         #region Shorthands
-
+        public IMovementInput MovementInput => mover.Input;
+        public IRotationInput RotationInput => rotator.Input;
         private float BoostInputSpeed => mover.Input.BoostAxis * mover.Accel.Boost + 1.0f;
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;

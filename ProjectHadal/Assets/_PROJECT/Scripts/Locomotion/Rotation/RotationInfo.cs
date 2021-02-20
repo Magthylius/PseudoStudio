@@ -2,7 +2,7 @@
 using UnityEngine;
 using NaughtyAttributes;
 
-//Created by Jet
+//Created by Jet, E: Jon
 namespace Hadal.Locomotion
 {
     [System.Serializable]
@@ -12,9 +12,14 @@ namespace Hadal.Locomotion
         public float Sensitivity;
         public float Acceleration;
         public float XAxisClamp;
+        public float ZAxisClamp;
         public float ClampTolerance;
         public float PullBackSpeed;
         [ReadOnly] public float CurrentXAxis;
+
+        [Space(10f)]
+        public float XAxisInputClamp;
+        public float YAxisInputClamp;
 
         [Header("Z Rotation Stabiliser")]
         public float ZDampingSpeed;
@@ -58,6 +63,22 @@ namespace Hadal.Locomotion
             rotation.z = RotateZAxisWithLerpClamp(input, rotation, deltaTime);
             target.localRotation = Quaternion.Euler(rotation);
             target.Rotate(-mouseDistance.y, mouseDistance.x, 0.0f, Space.Self);
+        }
+
+        public void DoLocalRotation(in IRotationInput input, in float deltaTime, Transform target)
+        {
+            Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
+            mouseDistance *= (Sensitivity * Acceleration * deltaTime);
+
+            Vector3 rotation = target.localRotation.eulerAngles;
+            rotation.x -= mouseDistance.y;
+            rotation.y += mouseDistance.x;
+
+            target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
+
+            rotation = target.rotation.eulerAngles;
+            rotation.z = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
+            target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
         }
 
         private static Vector3 ReverseZAxis(Vector3 rotation)

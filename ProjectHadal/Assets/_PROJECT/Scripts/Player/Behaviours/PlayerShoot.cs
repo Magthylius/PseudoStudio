@@ -14,6 +14,9 @@ namespace Hadal.Player.Behaviours
         public Transform aimParentObject;
         public Transform aimPoint;
 
+        float aimPointYDelta;
+        Ray aimingRay;
+
         [Header("Torpedo")]
         [SerializeField] TorpedoLauncherObject tLauncher;
         [SerializeField] Transform torpedoFirePoint;
@@ -40,6 +43,9 @@ namespace Hadal.Player.Behaviours
         {
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             DoDebugEnabling(debugKey);
+
+            aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
+            aimPointYDelta = aimParentObject.position.y - aimPoint.position.y;
         }
 
         private void OnDestroy()
@@ -50,25 +56,33 @@ namespace Hadal.Player.Behaviours
 
         void OnDrawGizmos()
         {
-            Ray ray = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-            {
 
-            }
-
-            Gizmos.DrawRay(ray);
+            Gizmos.DrawRay(aimingRay);
             Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
         }
 
         public void DoUpdate(in float deltaTime)
         {
             OnUnityUpdateUI();
+            CalculateTorpedoAngle();
         }
 
         #endregion
 
         #region Handler Methods
+        public void CalculateTorpedoAngle()
+        {
+            RaycastHit aimHit;
+            if (Physics.Raycast(aimingRay, out aimHit, Mathf.Infinity))
+            {
+                float angle = Mathf.Atan2(aimHit.point.y - aimPoint.position.y, aimHit.point.x - aimPoint.position.x);
+                DebugLog(angle);
+                return;
+            }
+
+            DebugLog("No angle");
+        }
+
 
         public void FireTorpedo()
         {
