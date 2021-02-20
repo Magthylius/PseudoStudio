@@ -5,106 +5,115 @@ using Hadal;
 using NaughtyAttributes;
 using Magthylius.DataFunctions;
 
-// C: Jon
-public class ProjectilePhysics : MonoBehaviourDebug
+// C: Jon, Edited by: Jet
+namespace Hadal.Usables.Projectiles
 {
-    public string debugKey;
-
-    [Header("References")]
-    public Transform rootTransform;
-    public Rigidbody projectileRigidbody;
-    [ReadOnly] public List<ProjectileMode> projectileModeList;
-
-    public delegate void PhysicsFinishedEvent();
-    public event PhysicsFinishedEvent PhysicsFinished;
-
-    int modeIndex;
-    Timer projectileTimer = new Timer(0);
-    bool allowLaunch;
-
-    void OnValidate()
+    public class ProjectilePhysics : MonoBehaviourDebug
     {
-        SetupProjectileModes();
-    }
+        public string debugKey;
 
-    void Start()
-    {
-        SetupProjectileModes();
+        [Header("References")]
+        public Transform rootTransform;
+        public Rigidbody projectileRigidbody;
+        [ReadOnly] public List<ProjectileMode> projectileModeList;
 
-        modeIndex = 0;
+        public delegate void PhysicsFinishedEvent();
+        public event PhysicsFinishedEvent PhysicsFinished;
 
-        projectileTimer = new Timer(projectileModeList[0].endTime);
-        projectileTimer.TargetTickedEvent.AddListener(SwapModes);
+        int modeIndex;
+        Timer projectileTimer = new Timer(0);
+        bool allowLaunch;
+        ProjectileBehaviour behaviour;
 
-        DoDebugEnabling(debugKey);
-    }
-
-    void Update()
-    {
-        if (allowLaunch)
+        void OnValidate()
         {
-            projectileTimer.Tick(Time.deltaTime); 
+            SetupProjectileModes();
         }
-    }
 
-    void FixedUpdate()
-    {
-        if (allowLaunch)
+        void Start()
         {
-            projectileModeList[modeIndex].DoUpdate();
-        }    
-    }
+            SetupProjectileModes();
 
-    //! Trigger projectile launch
-    public void LaunchProjectile()
-    {
-        allowLaunch = true;
-    }
+            modeIndex = 0;
 
-    //! Finished physics event
-    void OnPhysicsFinished()
-    {
-        DebugLog("Projectile Physics finished!");
+            projectileTimer = new Timer(projectileModeList[0].endTime);
+            projectileTimer.TargetTickedEvent.AddListener(SwapModes);
 
-        PhysicsFinished?.Invoke();
-        ResetTimer();
-    }
-
-    //! Swap modes when one stage is complete
-    void SwapModes()
-    {
-        modeIndex++;
-        if (modeIndex >= projectileModeList.Count)
-        {
-            OnPhysicsFinished();
-            allowLaunch = false;
+            DoDebugEnabling(debugKey);
         }
-        else
+
+        void Update()
         {
-            DebugLog("Projectile Mode: " + projectileModeList[modeIndex].mode.ToString());
+            if (allowLaunch)
+            {
+                projectileTimer.Tick(Time.deltaTime); 
+            }
+        }
+
+        void FixedUpdate()
+        {
+            if (allowLaunch)
+            {
+                projectileModeList[modeIndex].DoUpdate();
+            }    
+        }
+
+        //! Trigger projectile launch
+        public void LaunchProjectile()
+        {
+            allowLaunch = true;
+        }
+
+        public void SetBehaviour(ProjectileBehaviour behaviour)
+        {
+            this.behaviour = behaviour;
+        }
+
+        //! Finished physics event
+        void OnPhysicsFinished()
+        {
+            DebugLog("Projectile Physics finished!");
+
+            PhysicsFinished?.Invoke();
+            ResetTimer();
+        }
+
+        //! Swap modes when one stage is complete
+        void SwapModes()
+        {
+            modeIndex++;
+            if (modeIndex >= projectileModeList.Count)
+            {
+                OnPhysicsFinished();
+                allowLaunch = false;
+            }
+            else
+            {
+                DebugLog("Projectile Mode: " + projectileModeList[modeIndex].mode.ToString());
+                projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
+            }
+        }
+
+        //! Initialization
+        void SetupProjectileModes()
+        {
+            foreach (ProjectileMode proj in projectileModeList)
+            {
+                if (proj == null)
+                {
+                    projectileModeList.Remove(proj);
+                    SetupProjectileModes();
+                    return;
+                }
+                proj.Setup(projectileRigidbody, rootTransform);
+            }
+        }
+
+        void ResetTimer()
+        {
+            modeIndex = 0;
+            projectileTimer.Reset();
             projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
         }
-    }
-
-    //! Initialization
-    void SetupProjectileModes()
-    {
-        foreach (ProjectileMode proj in projectileModeList)
-        {
-            if (proj == null)
-            {
-                projectileModeList.Remove(proj);
-                SetupProjectileModes();
-                return;
-            }
-            proj.Setup(projectileRigidbody, rootTransform);
-        }
-    }
-
-    void ResetTimer()
-    {
-        modeIndex = 0;
-        projectileTimer.Reset();
-        projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
     }
 }
