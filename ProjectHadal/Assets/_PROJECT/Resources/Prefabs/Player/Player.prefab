@@ -545,12 +545,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rotary:
-    Sensitivity: 10
-    Acceleration: 6
+    Sensitivity: 50
+    Acceleration: 10
     XAxisClamp: 55
+    ZAxisClamp: 30
     ClampTolerance: 10
     PullBackSpeed: 5
     CurrentXAxis: 0
+    XAxisInputClamp: 0
+    YAxisInputClamp: 0
     ZDampingSpeed: 5
     ZActiveRotationSpeed: 8
     SnapAngle: 0.25
@@ -662,7 +665,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_RenderPostProcessing: 0
-  m_Antialiasing: 0
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -760,13 +763,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   light: {fileID: 2897252121386762477}
-  colour: {r: 1, g: 1, b: 1, a: 0.78431374}
+  colour: {r: 1, g: 1, b: 0.5896226, a: 0.78431374}
   toggleSpeed: 4
   toggleLerpSnap: 1
   startLightsOn: 1
   enableLightToggle: 0
   enableStartupOverride: 1
-  startingIntensity: 200
+  startingIntensity: 100
   startingRange: 900
   innerSpotAngle: 20
   outerSpotAngle: 110

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Hadal.Inputs;
+using Magthylius.LerpFunctions;
 
 //Created by Jet
 namespace Hadal.Player
@@ -15,9 +17,15 @@ namespace Hadal.Player
 
         public string debugKey;
 
-        [Header("Position Info")]
-        public RectTransform uiRotators;
+        [Header("Position Settings")]
+        [SerializeField] RectTransform uiRotators;
+        [SerializeField] float rotatorVerticalMovementDistance = 1.2f;
+        [SerializeField] float rotatorHorizontalMovementDistance = 0.4f;
+        [SerializeField] float rotatorReactionSpeed = 5f;
 
+        FlexibleRect uiRotatorsFR;
+
+        [Header("Player Settings")]
         [SerializeField] private float highestPoint;
         [SerializeField] private PlayerController player;
         [SerializeField] private Text depthText;
@@ -26,7 +34,7 @@ namespace Hadal.Player
         [SerializeField] private Image healthBar;
         public static event OnHealthChange OnHealthChange;
 
-        [Header("Shooting Info")]
+        [Header("Shooting Settings")]
         public int torpCount;
         public List<Image> floodIndicators;
         public GameObject fireReticle;
@@ -36,7 +44,7 @@ namespace Hadal.Player
         public List<Image> reloadProgressors;
         public GameObject reloadText;
 
-        [Header("Module Info")]
+        [Header("Module Settings")]
         public TextMeshProUGUI lightsTMP;
         public string lightsPrefix;
         public Color lightsOnColor;
@@ -72,6 +80,8 @@ namespace Hadal.Player
 
             lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
             lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
+
+            uiRotatorsFR = new FlexibleRect(uiRotators);
         }
 
         private void Update()
@@ -140,16 +150,18 @@ namespace Hadal.Player
         #region Modules
         void BalancerUpdate()
         {
-            /*Quaternion rotatorAngles = Quaternion.identity;
-            rotatorAngles.z = Mathf.Abs(player.Rotator.localRotation.z);
-            rotatorAngles.w = player.Rotator.localRotation.w;*/
+            //float xMovement = player.MovementInput.HorizontalAxis;
+            //float yMovement = player.MovementInput.HoverAxis;
+
+            //DebugLog(xMovement + ", " + yMovement);
+            //uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(xMovement * rotatorHorizontalMovementDistance, yMovement * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
 
             Vector3 balancerAngles = new Vector3();
             balancerAngles.z = player.Rotator.localRotation.eulerAngles.z;
 
-            uiRotators.rotation = Quaternion.Euler(balancerAngles);
-
-            DebugLog(player.transform.localRotation + ", " + player.transform.localRotation.eulerAngles);
+            uiRotators.rotation = Quaternion.Slerp(uiRotators.rotation, Quaternion.Euler(balancerAngles), rotatorReactionSpeed * Time.deltaTime);
+            uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(0f, player.RotationInput.YAxis * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
+            //DebugLog(player.transform.localRotation + ", " + player.transform.localRotation.eulerAngles);
         }
 
         void SetLights()

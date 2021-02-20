@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.4.3
+// Version 1.4.4
 namespace Magthylius
 {
     namespace LerpFunctions
@@ -161,6 +161,13 @@ namespace Magthylius
 
                 MoveTo(destination);
                 return false;
+            }
+
+            public void NormalLerp(Vector2 targetPosition, float progress)
+            {
+                Vector2 destination = Vector2.Lerp(center, targetPosition, progress);
+
+                MoveTo(destination);
             }
 
             //! Movement

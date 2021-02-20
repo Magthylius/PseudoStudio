@@ -1,7 +1,7 @@
 ﻿using Hadal.Inputs;
 using UnityEngine;
 
-//Created by Jet
+//Created by Jet, E: Jon
 namespace Hadal.Locomotion
 {
     public class PlayerRotation : Rotator
@@ -15,8 +15,9 @@ namespace Hadal.Locomotion
 
         public override void DoUpdate(in float deltaTime)
         {
-            Rotary.DoSmoothRotation(Input, deltaTime, target);
+            //Rotary.DoSmoothRotation(Input, deltaTime, target);
             //Rotary.DoRotationWithLerp(Input, deltaTime, target);
+            Rotary.DoLocalRotation(Input, deltaTime, target);
         }
     }
 }
