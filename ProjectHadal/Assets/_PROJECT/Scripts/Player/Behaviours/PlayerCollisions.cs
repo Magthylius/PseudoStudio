@@ -5,7 +5,7 @@ using Hadal.Interactables;
 //edited by Jin
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerCollisions : MonoBehaviour, IPlayerComponent
+    public class PlayerCollisions : MonoBehaviourDebug, IPlayerComponent
     {
         [Header("Layer Collisions")]
         [SerializeField] private string obstacleLayer = string.Empty;
@@ -24,6 +24,7 @@ namespace Hadal.Player.Behaviours
         private void OnCollisionEnter(Collision collision)
         {
             LayerMask layer = LayerMask.NameToLayer(obstacleLayer);
+            DebugLog(layer.ToString());
             if (collision.gameObject.layer == layer.value)
             {
                 if (_playerController.SqrSpeed >= 0.02f)
