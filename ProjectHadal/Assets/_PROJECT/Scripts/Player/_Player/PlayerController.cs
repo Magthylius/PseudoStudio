@@ -26,7 +26,6 @@ namespace Hadal.Player
         private PlayerManager _manager;
         
         public static event Action<PlayerController> OnInitialiseComplete;
-        internal static event Action<PlayerController> OnInjectEvent;
 
         #endregion
 
@@ -35,14 +34,12 @@ namespace Hadal.Player
         protected override void Awake()
         {
             base.Awake();
-            var s = GetComponentsInChildren<IPlayerComponent>();
-            s.ToList().ForEach(i => OnInjectEvent += i.Inject);
+            _pView = photonInfo.PView;
+            GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
         }
 
         private void Start()
         {
-            _pView = photonInfo.PView;
-            OnInjectEvent?.Invoke(this); OnInjectEvent = null;
             TryInjectDependencies();
             HandlePhotonView(_pView.IsMine);
             OnInitialiseComplete?.Invoke(this);
