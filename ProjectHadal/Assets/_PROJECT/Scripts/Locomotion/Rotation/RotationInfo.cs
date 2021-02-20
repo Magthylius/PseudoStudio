@@ -80,6 +80,10 @@ namespace Hadal.Locomotion
             rotation = target.rotation.eulerAngles;
             rotation.z = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
             target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
+
+            //target.Rotate(mouseDistance.y, mouseDistance.x, 0.0f, Space.World);
+
+            //float tilt = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
         }
 
         private static Vector3 ReverseZAxis(Vector3 rotation)
