@@ -4,6 +4,7 @@ using UnityEngine;
 using Hadal.Usables;
 using Hadal.Inputs;
 using Castle.Core.Internal;
+using Photon.Realtime;
 
 //Created by Jet
 namespace Hadal.Player.Behaviours
@@ -19,10 +20,35 @@ namespace Hadal.Player.Behaviours
         private PlayerController _controller;
         private PlayerControllerInfo _controllerInfo;
 
+        [Header("Event Code")]
+        private const byte PLAYER_UTI_LAUNCH_EVENT = 1;
+
         private void Awake()
         {
             _eInput = new StandardEquipmentInput();
             _uInput = new StandardUseableInput();
+        }
+
+        private void OnEnable()
+        {
+            PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+        }
+
+        private void OnDisable()
+        {
+            PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+        }
+
+        private void NetworkingClient_EventReceived(EventData obj)
+        {
+            if (obj.Code == PLAYER_UTI_LAUNCH_EVENT)
+            {
+                object[] data = (object[])obj.CustomData;
+                if ((int)data[0] == _pView.ViewID)
+                {
+                    _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]]);
+                }
+            }
         }
 
         public void Inject(PlayerController controller)
@@ -62,6 +88,8 @@ namespace Hadal.Player.Behaviours
             if (_uInput.FireKey2)
             {
                 _controllerInfo.Shooter.FireUtility(EquippedUsable);
+                object[] content = new object[] { _pView.ViewID, _selectedItem};
+                PhotonNetwork.RaiseEvent(PLAYER_UTI_LAUNCH_EVENT, content, RaiseEventOptions.Default, SendOptions.SendUnreliable);
             }
         }
 
