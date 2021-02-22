@@ -105,6 +105,13 @@ namespace Hadal.Player.Behaviours
 
         private void EquipItem(int _index)
         {
+            bool sameIndex = _index == _previousSelectedItem;
+            if (EquippedUsable.HasToggleAmmo && sameIndex)
+            {
+                EquippedUsable.ToggleAmmo();
+                return;
+            }
+
             if (_index == _previousSelectedItem) return;
             _selectedItem = _index;
             ToggleItemActiveState();

@@ -19,6 +19,7 @@ namespace Hadal.Usables
         /// <br/>
         /// The boolean returns true if the usable object has been <strong>equipped</strong>. </summary>
         public event Action<UsableLauncherObject, bool> OnSwitch;
+        public bool HasToggleAmmo { get; private set; } = false;
         protected Camera PCamera { get; set; } = null;
         protected bool IsActive { get; set; } = false;
 
@@ -42,6 +43,10 @@ namespace Hadal.Usables
             IsActive = false;
             OnSwitch?.Invoke(this, IsActive);
         }
+        public virtual void ToggleAmmo()
+        {
+            Data.ToggleProjectile(HasToggleAmmo);
+        }
 
         #endregion
 
@@ -57,9 +62,9 @@ namespace Hadal.Usables
             return true;
         }
 
-        /// <summary> Calls <see cref="Data"/> after adding a camera reference. </summary>
+        /// <summary> Calls <see cref="UsableLauncherObject.Data"/>'s DoEffect. </summary>
         protected virtual void LaunchToDestination(UsableHandlerInfo info)
-            => Data.DoEffect(info.WithCamera(PCamera));
+            => Data.DoEffect(info);
 
         #endregion
 

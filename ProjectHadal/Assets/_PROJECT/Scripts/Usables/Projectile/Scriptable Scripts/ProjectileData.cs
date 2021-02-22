@@ -9,6 +9,7 @@ namespace Hadal.Usables.Projectiles
         public int BaseDamage;
         public LayerMask TargetLayer;
         public GameObject ProjectilePrefab;
+        public bool UseOriginal { get; set; } = true;
         
         private void OnValidate()
         {

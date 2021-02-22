@@ -22,13 +22,11 @@ namespace Hadal.Player.Behaviours
         [Header("Torpedo")]
         [SerializeField] TorpedoLauncherObject tLauncher;
         [SerializeField] Transform torpedoFirePoint;
-        [SerializeField] float torpedoForce;
         public TorpedoLauncherObject GetTorpedoLauncher => tLauncher;
 
         [Header("Utility")]
         [SerializeField] Transform utilityFirePoint;
         [SerializeField] float utilityFireDelay;
-        [SerializeField] float utilityForce;
         private Timer _utilityReloadTimer;
         private bool _canUtilityFire;
 
@@ -133,8 +131,8 @@ namespace Hadal.Player.Behaviours
             tLauncher.Use(CreateInfoForTorpedo());
         }
 
-        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformInfo(torpedoFirePoint).WithForce(torpedoForce);
-        private UsableHandlerInfo CreateInfoForUtility() => new UsableHandlerInfo().WithTransformInfo(utilityFirePoint).WithForce(utilityForce);
+        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformInfo(torpedoFirePoint);
+        private UsableHandlerInfo CreateInfoForUtility() => new UsableHandlerInfo().WithTransformInfo(utilityFirePoint);
 
         #endregion
 
