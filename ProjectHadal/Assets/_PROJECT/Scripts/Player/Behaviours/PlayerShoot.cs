@@ -32,7 +32,31 @@ namespace Hadal.Player.Behaviours
         private Timer _utilityReloadTimer;
         private bool _canUtilityFire;
 
+        [Header("Event")]
+        private PhotonView _pView;
+        private const byte PLAYER_TOR_LAUNCH_EVENT = 1;
+
         #region Unity Lifecycle
+        private void OnEnable()
+        {
+            PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+        }
+
+        private void OnDisable()
+        {
+            PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+        }
+
+        private void NetworkingClient_EventReceived(EventData obj)
+        {
+            if (obj.Code == PLAYER_TOR_LAUNCH_EVENT)
+            {
+                if ((int)obj.CustomData == _pView.ViewID)
+                {
+                    FireTorpedo();
+                }
+            }
+        }
 
         private void Awake()
         {
@@ -58,7 +82,6 @@ namespace Hadal.Player.Behaviours
 
         void OnDrawGizmos()
         {
-
             Gizmos.DrawRay(aimingRay);
             Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
         }
@@ -90,6 +113,7 @@ namespace Hadal.Player.Behaviours
         {
             if (!tLauncher.IsChamberLoaded) return;
             HandleTorpedoObject();
+            PhotonNetwork.RaiseEvent(PLAYER_TOR_LAUNCH_EVENT, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
         }
 
         public void FireUtility(UsableLauncherObject usable)
@@ -176,7 +200,11 @@ namespace Hadal.Player.Behaviours
         }
         private void SetCanUtilityFire() => _canUtilityFire = true;
 
-        public void Inject(PlayerController controller) { }
+        public void Inject(PlayerController controller)
+        {
+            var info = controller.GetInfo;
+            _pView = info.PhotonInfo.PView;
+        }
 
         #endregion
     }

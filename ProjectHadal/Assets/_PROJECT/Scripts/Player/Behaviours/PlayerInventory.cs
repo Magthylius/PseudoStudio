@@ -21,7 +21,7 @@ namespace Hadal.Player.Behaviours
         private PlayerControllerInfo _controllerInfo;
 
         [Header("Event Code")]
-        private const byte PLAYER_UTI_LAUNCH_EVENT = 1;
+        private const byte PLAYER_UTI_LAUNCH_EVENT = 2;
 
         private void Awake()
         {
