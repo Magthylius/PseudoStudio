@@ -27,7 +27,7 @@ namespace Hadal.Usables
         [Foldout(ChamberGroupName), SerializeField] private bool maxOnLoadOut = true;
         public int ChamberCount { get; private set; }
         public bool IsReloading { get; private set; }
-        public float ChamberReloadRatio => (_chamberReloadTimer.IsCompleted && TotalTorpedoes is 0) ? 0f : _chamberReloadTimer.GetCompletionRatio;
+        public float ChamberReloadRatio => (_chamberReloadTimer.IsCompleted && TotalTorpedoes == 0) ? 0f : _chamberReloadTimer.GetCompletionRatio;
         public bool IsChamberLoaded => ChamberCount > 0;
         public event Action<bool> OnChamberChanged;
         private Timer _chamberReloadTimer;
@@ -66,6 +66,7 @@ namespace Hadal.Usables
         private void IncrementChamber()
         {
             IsReloading = false;
+            _chamberReloadTimer.Restart(); _chamberReloadTimer.Pause();
             DecrementReserve();
             UpdateChamberCount(ChamberCount + 1);
             OnChamberChanged?.Invoke(true);
