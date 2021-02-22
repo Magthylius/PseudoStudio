@@ -6,7 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class UnderwaterEffect : MonoBehaviour
 {
-    public bool enabled;
+    public new bool enabled;
     public Material _mat; // set this material to UnderwaterImageEffect material
 
     [Range(0.001f, 0.1f)]

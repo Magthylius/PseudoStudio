@@ -111,7 +111,7 @@ namespace Hadal.Locomotion
             return z * (!SnapDistanceReached()).AsFloat() + ZClampAngle * SnapDistanceReached().AsFloat();
 
             #region Local Shorthands
-            bool SnapDistanceReached() => z.NormalisedAngle().DiffFrom(ZClampAngle.NormalisedAngle()).IsLowerThan(SnapAngle);
+            bool SnapDistanceReached() => z.NormalisedAngle().DiffBetween(ZClampAngle.NormalisedAngle()).IsLessThan(SnapAngle);
             #endregion
         }
         
