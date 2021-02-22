@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -277,3 +278,4 @@ namespace UnityEditor.AI
         }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor.Experimental.SceneManagement;
@@ -332,3 +333,4 @@ namespace UnityEditor.AI
         }
     }
 }
+#endif

@@ -8,7 +8,7 @@ namespace Hadal.Player.Behaviours
     public class PlayerLamp : MonoBehaviour, IUnityServicer, IPlayerComponent
     {
         [Header("Light")]
-        [SerializeField] private new Light light;
+        [SerializeField] private Light light;
         [SerializeField] private Color colour;
         [SerializeField] private float toggleSpeed;
         [SerializeField] private float toggleLerpSnap;

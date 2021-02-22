@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -86,8 +87,8 @@ namespace Tenshi
         public static bool IsLowerThan(this int thisNum, int otherNum) => thisNum < otherNum;
         public static bool IsLowerOrEqualTo(this int thisNum, int otherNum) => thisNum <= otherNum;
 
-        public static bool IsEmpty<T>(this Queue<T> q) => q.Count == 0;
-        public static bool IsEmpty<T>(this List<T> l) => l.Count == 0;
+        public static bool IsEmpty<T>(this IEnumerable<T> e) => e.Count() == 0;
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) ? e is null : e.Count() == 0;
     }
 
     public static class ClampExtensions

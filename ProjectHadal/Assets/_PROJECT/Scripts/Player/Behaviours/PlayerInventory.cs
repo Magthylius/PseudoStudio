@@ -1,9 +1,9 @@
-﻿using ExitGames.Client.Photon;
+﻿using Tenshi;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using UnityEngine;
 using Hadal.Usables;
 using Hadal.Inputs;
-using Castle.Core.Internal;
 using Photon.Realtime;
 
 //Created by Jet
@@ -29,13 +29,15 @@ namespace Hadal.Player.Behaviours
             _uInput = new StandardUseableInput();
         }
 
-        private void OnEnable()
+        public override void OnEnable()
         {
+            base.OnEnable();
             PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
         }
 
-        private void OnDisable()
+        public override void OnDisable()
         {
+            base.OnDisable();
             PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
         }
 
