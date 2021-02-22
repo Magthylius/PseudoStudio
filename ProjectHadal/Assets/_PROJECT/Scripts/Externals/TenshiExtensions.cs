@@ -45,6 +45,15 @@ namespace Tenshi
 
     public static class ConversionExtensions
     {
+        public static byte AsByte(this object obj) => (byte) obj;
+        public static bool AsBool(this object obj) => (bool) obj;
+        public static int AsInt(this object obj) => (int) obj;
+        public static uint AsUint(this object obj) => (uint) obj;
+        public static float AsFloat(this object obj) => (float) obj;
+        public static Vector3 AsVector3(this object obj) => (Vector3) obj;
+        public static Quaternion AsQuaternion(this object obj) => (Quaternion) obj;
+        public static object[] AsObjArray(this object obj) => (object[]) obj;
+
         public static int Round(this float number) => Mathf.RoundToInt(number);
         public static byte AsByte(this int number) => Convert.ToByte(number);
         public static byte AsByte(this bool statement) => Convert.ToByte(statement);
