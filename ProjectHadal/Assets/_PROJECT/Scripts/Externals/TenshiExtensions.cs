@@ -76,19 +76,20 @@ namespace Tenshi
         public static bool Not(bool statement) => !statement;
 
         public static bool NotNull<T>(this T item) where T : class => item != null;
+        public static bool IsNot<T>(this T item, T other) where T : IComparable<T> => !item.Equals(other);
 
-        public static bool IsGreaterThan(this float thisNum, float otherNum) => thisNum > otherNum;
-        public static bool IsGreaterOrEqualTo(this float thisNum, float otherNum) => thisNum >= otherNum;
-        public static bool IsLowerThan(this float thisNum, float otherNum) => thisNum < otherNum;
-        public static bool IsLowerOrEqualTo(this float thisNum, float otherNum) => thisNum <= otherNum;
+        public static bool IsMoreThan(this float thisNum, float otherNum) => thisNum > otherNum;
+        public static bool IsMoreOrEqualTo(this float thisNum, float otherNum) => thisNum >= otherNum;
+        public static bool IsLessThan(this float thisNum, float otherNum) => thisNum < otherNum;
+        public static bool IsLessOrEqualTo(this float thisNum, float otherNum) => thisNum <= otherNum;
         
-        public static bool IsGreaterThan(this int thisNum, int otherNum) => thisNum > otherNum;
-        public static bool IsGreaterOrEqualTo(this int thisNum, int otherNum) => thisNum >= otherNum;
-        public static bool IsLowerThan(this int thisNum, int otherNum) => thisNum < otherNum;
-        public static bool IsLowerOrEqualTo(this int thisNum, int otherNum) => thisNum <= otherNum;
+        public static bool IsMoreThan(this int thisNum, int otherNum) => thisNum > otherNum;
+        public static bool IsMoreOrEqualTo(this int thisNum, int otherNum) => thisNum >= otherNum;
+        public static bool IsLessThan(this int thisNum, int otherNum) => thisNum < otherNum;
+        public static bool IsLessOrEqualTo(this int thisNum, int otherNum) => thisNum <= otherNum;
 
         public static bool IsEmpty<T>(this IEnumerable<T> e) => e.Count() == 0;
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) ? e is null : e.Count() == 0;
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) ? e is null : e.IsEmpty();
     }
 
     public static class ClampExtensions
@@ -96,7 +97,7 @@ namespace Tenshi
         public static int Clamp0(this int number) => Mathf.Max(number, 0);
         public static float Clamp0(this float number) => Mathf.Max(number, 0.0f);
         public static float Clamp01(this float number) => Mathf.Clamp01(number);
-        public static float DiffFrom(this float thisNum, float otherNum) => (thisNum - otherNum).Abs();
+        public static float DiffBetween(this float thisNum, float otherNum) => (thisNum - otherNum).Abs();
     }
 
     public static class MathExtensions
@@ -131,6 +132,8 @@ namespace Tenshi
         public static float DeltaTime(this float number) => number * Time.deltaTime;
         public static float UnscaledDeltaTime(this float number) => number * Time.deltaTime;
         public static float FixedDeltaTime(this float number) => number * Time.fixedDeltaTime;
+
+        public static void Print(this object item) => Debug.Log(item);
 
         public static int ToLayer(this LayerMask mask)
         {
