@@ -113,6 +113,10 @@ namespace Hadal.Player.Behaviours
         {
             if (!tLauncher.IsChamberLoaded) return;
             HandleTorpedoObject();
+        }
+
+        public void SendTorpedoEvent()
+        {
             PhotonNetwork.RaiseEvent(PLAYER_TOR_LAUNCH_EVENT, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
         }
 

@@ -86,6 +86,7 @@ namespace Hadal.Player.Behaviours
             if (_uInput.FireKey1)
             {
                 _controllerInfo.Shooter.FireTorpedo();
+                _controllerInfo.Shooter.SendTorpedoEvent();
             }
             if (_uInput.FireKey2)
             {
