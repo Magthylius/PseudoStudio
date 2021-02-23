@@ -92,6 +92,8 @@ namespace Hadal.Player.Behaviours
             {
                 _controllerInfo.Shooter.FireUtility(EquippedUsable);
                 object[] content = new object[] { _pView.ViewID, _selectedItem};
+
+                //! Event Firing
                 PhotonNetwork.RaiseEvent(PLAYER_UTI_LAUNCH_EVENT, content, RaiseEventOptions.Default, SendOptions.SendUnreliable);
             }
         }
