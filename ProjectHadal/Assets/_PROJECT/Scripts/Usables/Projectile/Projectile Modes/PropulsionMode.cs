@@ -27,4 +27,6 @@ public class PropulsionMode : ProjectileMode
         rigidbody.AddForce(rootTransform.forward * force, ForceMode.Force);
         //rigidbody.AddRelativeForce(transform.forward * force, ForceMode.Force);
     }
+
+    public void OverrideForce(float overridingForce) => force = overridingForce;
 }

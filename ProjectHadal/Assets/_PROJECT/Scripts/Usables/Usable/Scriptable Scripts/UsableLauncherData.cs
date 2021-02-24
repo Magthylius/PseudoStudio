@@ -1,5 +1,6 @@
 using Hadal.Usables.Projectiles;
 using UnityEngine;
+using Tenshi;
 
 //Created by Jet, editted by Jin
 namespace Hadal.Usables
@@ -9,8 +10,8 @@ namespace Hadal.Usables
         public string Name;
         public ProjectileData ProjectileData;
         public bool isChargable;
-        public float MaxChargeTimer;
-
+        [Range(0f, 1f)] public float ChargingSpeed;
+        public float MaxForce;
         public void ToggleProjectile(bool shouldToggle)
         {
             if (!shouldToggle) return;
@@ -25,8 +26,10 @@ namespace Hadal.Usables
             projectileObj.Data = ProjectileData;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
-            projectileObj.GetComponentInChildren<ImpulseMode>().force 
             projectileObj.WithGObjectSetActive(true);
+
+            projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
+                (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce);
             projectileObj.PPhysics.LaunchProjectile();
         }
 

@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6f162d9fe27f3b439cf5299ec692172, type: 3}
   m_Name: Torpedo Launcher Data
   m_EditorClassIdentifier: 
-  ID: 0
   Name: Torpedo Launcher
-  IsDamaging: 0
-  ItemOffset: {x: 0, y: 0, z: 0}
-  UsablePrefab: {fileID: 4014725249324593813, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
   ProjectileData: {fileID: 11400000, guid: 1df29012d22e0df448f6b8943fba7f4f, type: 2}
+  isChargable: 0
+  ChargingSpeed: 0
+  MaxForce: 0.25

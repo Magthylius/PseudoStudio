@@ -16,7 +16,6 @@ namespace Hadal.Player.Behaviours
         private IUseableInput _uInput;
         private int _selectedItem;
         private int _previousSelectedItem = -1;
-        private float _chargeTimer = 0f;
         private PhotonView _pView;
         private PlayerController _controller;
         private PlayerControllerInfo _controllerInfo;
@@ -77,15 +76,15 @@ namespace Hadal.Player.Behaviours
             {
                 if (_uInput.FireKey2Held)
                 {
-                    if (_chargeTimer < EquippedUsable.Data.MaxChargeTimer)
+                    if (EquippedUsable.ChargedTime < 1f)
                     {
-                        _chargeTimer += Time.deltaTime;
+                        EquippedUsable.ChargedTime += EquippedUsable.Data.ChargingSpeed * Time.deltaTime;
                     }
                 }
                 if (_uInput.FireKey2Release)
                 {
-                    EquippedUsable.ChargeForce = _chargeTimer;
                     FireUtility();
+                    EquippedUsable.ChargedTime = 0f;
                 }
             }
             else if (_uInput.FireKey2)
