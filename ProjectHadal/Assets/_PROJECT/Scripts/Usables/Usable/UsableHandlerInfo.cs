@@ -1,6 +1,6 @@
 using UnityEngine;
 
-//Created by Jet
+//Created by Jet, editted by Jin
 namespace Hadal.Usables
 {
     public struct UsableHandlerInfo
@@ -18,10 +18,11 @@ namespace Hadal.Usables
         }
 
         #region Mini Builder
-        public UsableHandlerInfo WithTransformInfo(Transform fireTransform)
+        public UsableHandlerInfo WithTransformForceInfo(Transform fireTransform, float ChargedForce)
         {
             FirePoint = fireTransform.position;
             Orientation = fireTransform.rotation;
+            this.ChargedForce = ChargedForce;
             return this;
         }
         #endregion

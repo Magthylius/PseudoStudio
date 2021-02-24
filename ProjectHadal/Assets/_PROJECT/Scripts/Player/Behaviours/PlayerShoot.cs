@@ -132,8 +132,8 @@ namespace Hadal.Player.Behaviours
             tLauncher.Use(CreateInfoForTorpedo());
         }
 
-        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformInfo(torpedoFirePoint);
-        private UsableHandlerInfo CreateInfoForUtility() => new UsableHandlerInfo().WithTransformInfo(utilityFirePoint);
+        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformForceInfo(torpedoFirePoint,0f);
+        private UsableHandlerInfo CreateInfoForUtility() => new UsableHandlerInfo().WithTransformForceInfo(utilityFirePoint,0f);
 
         #endregion
 

@@ -1,7 +1,7 @@
 using Hadal.Usables.Projectiles;
 using UnityEngine;
 
-//Created by Jet
+//Created by Jet, editted by Jin
 namespace Hadal.Usables
 {
     public abstract class UsableLauncherData : ScriptableObject
@@ -25,6 +25,7 @@ namespace Hadal.Usables
             projectileObj.Data = ProjectileData;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
+            projectileObj.GetComponentInChildren<ImpulseMode>().force 
             projectileObj.WithGObjectSetActive(true);
             projectileObj.PPhysics.LaunchProjectile();
         }
