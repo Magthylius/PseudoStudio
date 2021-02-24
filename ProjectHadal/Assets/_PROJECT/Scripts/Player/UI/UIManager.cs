@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Hadal.Inputs;
 using Magthylius.LerpFunctions;
+using Hadal.Legacy;
 
 //Created by Jet
 namespace Hadal.Player
@@ -56,11 +57,18 @@ namespace Hadal.Player
         string lightsOnString;
         string lightsOffString;
 
+        [Header("Pause Menu Settings")]
+        [SerializeField] Menu pauseMenu;
+        StandardUseableInput playerInput;
+
+        bool pauseMenuOpen = false;
+        //! blur out the screen
+
         private PlayerLamp _lamp;
         private PlayerHealthManager _healthManager;
 
         #region Unity Lifecycle
-        private void Awake()
+        void Awake()
         {
             if (Instance == null)
             {
@@ -74,17 +82,14 @@ namespace Hadal.Player
             }
         }
 
-        private void Start()
+        void Start()
         {
             DoDebugEnabling(debugKey);
-
-            lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
-            lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
-
-            uiRotatorsFR = new FlexibleRect(uiRotators);
+            SetupModules();
+            SetupPauseMenu();
         }
 
-        private void Update()
+        void Update()
         {
             if (player == null) return;
             string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - player.transform.position.y)).ToString("#,#");
@@ -93,13 +98,14 @@ namespace Hadal.Player
             string lightIs = _lamp.LightsOn ? "ON" : "OFF";
             lightText.text = $"Light: {lightIs}";
 
+            if (playerInput.EscKeyDown) TriggerPauseMenu();
+
             BalancerUpdate();
             SetLights();
         }
 
         private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
         #endregion
-
 
         public void SetPlayer(PlayerController target)
         {
@@ -148,6 +154,14 @@ namespace Hadal.Player
         #endregion
 
         #region Modules
+        void SetupModules()
+        {
+            lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
+            lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
+
+            uiRotatorsFR = new FlexibleRect(uiRotators);
+        }
+
         void BalancerUpdate()
         {
             //float xMovement = player.MovementInput.HorizontalAxis;
@@ -168,6 +182,29 @@ namespace Hadal.Player
         {
             if (_lamp.LightsOn) lightsTMP.text = lightsOnString;
             else lightsTMP.text = lightsOffString;
+        }
+        #endregion
+
+        #region Pause menu
+        void SetupPauseMenu()
+        {
+            playerInput = new StandardUseableInput();
+            pauseMenu.Close();
+        }
+
+        void TriggerPauseMenu()
+        {
+            pauseMenuOpen = !pauseMenuOpen;
+            if (pauseMenuOpen)
+            {
+                pauseMenu.Open();
+                Cursor.visible = true;
+            }
+            else
+            {
+                pauseMenu.Close();
+                Cursor.visible = false;
+            }
         }
         #endregion
     }
