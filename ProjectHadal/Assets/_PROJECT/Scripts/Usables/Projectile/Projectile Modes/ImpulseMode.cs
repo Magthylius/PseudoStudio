@@ -27,4 +27,6 @@ public class ImpulseMode : ProjectileMode
     {
         if (!frameSetupCompleted) FirstFrameSetup();
     }
+
+    public void OverrideForce(float overridingForce) => force = overridingForce;
 }

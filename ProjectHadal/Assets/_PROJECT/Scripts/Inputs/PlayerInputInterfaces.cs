@@ -6,6 +6,9 @@ namespace Hadal.Inputs
         bool FireKey1 { get; }
         bool FireKey2 { get; }
         bool FireKey2Held { get; }
+        bool FireKey2Release { get; }
+        bool EscKeyDown { get; }
+        bool EscKeyUp { get; }
     }
     public interface IEquipmentInput
     {
