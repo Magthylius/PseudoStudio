@@ -29,6 +29,7 @@ namespace Hadal
         public float SqrSpeed => mover.SqrSpeed;
 
         public Rotator Rotator => rotator;
+        public Mover Mover => mover;
     }
     [System.Serializable]
     public abstract class CameraController : MonoBehaviour
