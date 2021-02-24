@@ -5,6 +5,7 @@ namespace Hadal.Inputs
     {
         bool FireKey1 { get; }
         bool FireKey2 { get; }
+        bool FireKey2Held { get; }
     }
     public interface IEquipmentInput
     {
