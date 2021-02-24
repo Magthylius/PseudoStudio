@@ -8,6 +8,8 @@ namespace Hadal.Usables
     {
         public string Name;
         public ProjectileData ProjectileData;
+        public bool isChargable;
+        public float MaxChargeTimer;
 
         public void ToggleProjectile(bool shouldToggle)
         {

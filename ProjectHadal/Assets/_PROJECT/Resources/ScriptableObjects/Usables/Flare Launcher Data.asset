@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d809837dd6d453546aa06a8ab8dd9b76, type: 3}
   m_Name: Flare Launcher Data
   m_EditorClassIdentifier: 
-  ID: 0
   Name: Flare Launcher
-  IsDamaging: 0
-  ItemOffset: {x: 0, y: 0, z: 0}
-  UsablePrefab: {fileID: 8169745952537890376, guid: a94f52cb227f4c84b9c73431db2208f8, type: 3}
   ProjectileData: {fileID: 11400000, guid: a0cc79636f887d842bb474b7aea7cd44, type: 2}
+  isChargable: 1
+  MaxChargeTimer: 3

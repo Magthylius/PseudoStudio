@@ -6,7 +6,7 @@ using Hadal.Usables;
 using Hadal.Inputs;
 using Photon.Realtime;
 
-//Created by Jet
+//Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
 {
     public class PlayerInventory : MonoBehaviourPunCallbacks, IPlayerComponent
@@ -16,6 +16,7 @@ namespace Hadal.Player.Behaviours
         private IUseableInput _uInput;
         private int _selectedItem;
         private int _previousSelectedItem = -1;
+        private float _chargeTimer = 0f;
         private PhotonView _pView;
         private PlayerController _controller;
         private PlayerControllerInfo _controllerInfo;
@@ -34,18 +35,7 @@ namespace Hadal.Player.Behaviours
         void Start()
         {
             neManager = NetworkEventManager.Instance;
-            neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, FireUtility);
-        }
-
-        void FireUtility(EventData eventData)
-        {
-            object[] data = (object[])eventData.CustomData;
-            if ((int)data[0] == _pView.ViewID)
-            {
-                //print("test");
-                //Debug.Log("test");
-                _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]]);
-            }
+            neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
         }
 
         public void Inject(PlayerController controller)
@@ -83,15 +73,44 @@ namespace Hadal.Player.Behaviours
                 _controllerInfo.Shooter.FireTorpedo();
                 _controllerInfo.Shooter.SendTorpedoEvent();
             }
-            if (_uInput.FireKey2)
+            if (EquippedUsable.Data.isChargable)
             {
-                _controllerInfo.Shooter.FireUtility(EquippedUsable);
-                object[] content = new object[] { _pView.ViewID, _selectedItem};
-
-                //! Event Firing
-                //PhotonNetwork.RaiseEvent(PLAYER_UTI_LAUNCH_EVENT, content, RaiseEventOptions.Default, SendOptions.SendUnreliable);
-                neManager.RaiseEvent(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
+                if (_uInput.FireKey2Held)
+                {
+                    if (_chargeTimer < EquippedUsable.Data.MaxChargeTimer)
+                    {
+                        _chargeTimer += Time.deltaTime;
+                    }
+                }
+                if (_uInput.FireKey2Release)
+                {
+                    EquippedUsable.ChargeForce = _chargeTimer;
+                    FireUtility();
+                }
             }
+            else if (_uInput.FireKey2)
+            {
+                FireUtility();
+            }
+           
+        }
+        
+        //Fire when received Event
+        void REFireUtility(EventData eventData)
+        {
+            object[] data = (object[])eventData.CustomData;
+            if ((int)data[0] == _pView.ViewID)
+            {
+                _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]]);
+            }
+        }
+
+        //Fire when pressed locally, send event
+        void FireUtility()
+        {
+            _controllerInfo.Shooter.FireUtility(EquippedUsable);
+            object[] content = new object[] { _pView.ViewID, _selectedItem };
+            neManager.RaiseEvent(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
         }
 
         private void UpdateUsables(in float deltaTime)

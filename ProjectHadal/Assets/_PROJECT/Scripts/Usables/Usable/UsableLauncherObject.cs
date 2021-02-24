@@ -20,6 +20,8 @@ namespace Hadal.Usables
         /// The boolean returns true if the usable object has been <strong>equipped</strong>. </summary>
         public event Action<UsableLauncherObject, bool> OnSwitch;
         public bool HasToggleAmmo { get; private set; } = false;
+
+        public float ChargeForce;
         protected Camera PCamera { get; set; } = null;
         protected bool IsActive { get; set; } = false;
 
