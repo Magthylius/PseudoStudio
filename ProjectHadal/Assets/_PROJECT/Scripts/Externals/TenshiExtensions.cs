@@ -74,6 +74,7 @@ namespace Tenshi
     public static class FluentBool
     {
         public static bool Not(bool statement) => !statement;
+        public static bool Flip(this ref bool statement) => statement = !statement;
 
         public static bool NotNull<T>(this T item) where T : class => item != null;
         public static bool IsNot<T>(this T item, T other) where T : IComparable<T> => !item.Equals(other);
@@ -89,7 +90,7 @@ namespace Tenshi
         public static bool IsLessOrEqualTo(this int thisNum, int otherNum) => thisNum <= otherNum;
 
         public static bool IsEmpty<T>(this IEnumerable<T> e) => e.Count() == 0;
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) ? e is null : e.IsEmpty();
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) || e.IsEmpty();
     }
 
     public static class ClampExtensions

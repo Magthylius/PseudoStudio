@@ -9,7 +9,7 @@ using Photon.Realtime;
 //Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerInventory : MonoBehaviourPunCallbacks, IPlayerComponent
+    public class PlayerInventory : MonoBehaviourPunCallbacks, IPlayerComponent, IPlayerEnabler
     {
         [SerializeField] private UsableLauncherObject[] utilities;
         private IEquipmentInput _eInput;
@@ -49,6 +49,7 @@ namespace Hadal.Player.Behaviours
 
         public void DoUpdate(in float deltaTime)
         {
+            if (!AllowUpdate) return;
             SelectItem();
             HandleItemInput();
             UpdateUsables(deltaTime);
@@ -173,6 +174,15 @@ namespace Hadal.Player.Behaviours
             if (_pView.IsMine || targetPlayer != _pView.Owner) return;
             EquipItem((int)changedProps[nameof(_selectedItem)]);
         }
+
+        #endregion
+
+        #region Enabling Component Methods
+
+        public bool AllowUpdate { get; private set; }
+        public void Enable() => AllowUpdate = true;
+        public void Disable() => AllowUpdate = false;
+        public void ToggleEnablility() => AllowUpdate = !AllowUpdate;
 
         #endregion
 
