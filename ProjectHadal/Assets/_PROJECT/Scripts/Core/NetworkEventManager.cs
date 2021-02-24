@@ -20,14 +20,7 @@ namespace Hadal
             TOTAL_EVENTS
         }
 
-        //public Action<EventData> EventReciever;
-
-        public delegate void EventRecievedInvoker();
-        public event EventRecievedInvoker EventReciever;
-
-        List<EventRecievedInvoker> eventRecieverList;
         Dictionary<ByteEvents, Action<EventData>> recieverDict;
-        //Dictionary<ByteEvents, UnityEvent> recieverDict;
 
         void Awake()
         {
@@ -48,7 +41,6 @@ namespace Hadal
         {
             recieverDict = new Dictionary<ByteEvents, Action<EventData>>();
 
-            eventRecieverList = new List<EventRecievedInvoker>();
             for (int i = 0; i < (int)ByteEvents.TOTAL_EVENTS; i++)
             {
                 //! init dict
@@ -59,7 +51,6 @@ namespace Hadal
         public override void OnEnable()
         {
             base.OnEnable();
-            //PhotonNetwork.NetworkingClient.AddCallbackTarget(EventReciever);
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
         }
 
@@ -76,7 +67,6 @@ namespace Hadal
 
         void InvokeRecievedEvents(EventData eventObject)
         {
-           
             for (int i = 0; i < (int)ByteEvents.TOTAL_EVENTS; i++)
             {
                 if (eventObject.Code == (byte)(ByteEvents)i)

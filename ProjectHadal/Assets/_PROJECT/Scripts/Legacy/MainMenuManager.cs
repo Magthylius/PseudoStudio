@@ -144,7 +144,7 @@ namespace Hadal.Legacy
             ChangePhase(MenuPhase.MAIN);
             CloseMenu(startMenu);
 
-            if (PlayerPrefs.HasKey("PlayerName") || true)
+            if (PlayerPrefs.HasKey("PlayerName"))
             {
                 UpdateLobbyNickname();
                 OpenMenu(lobbyMenu);
