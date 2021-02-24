@@ -123,7 +123,7 @@ namespace Hadal.Player.Behaviours
         {
             if (!_canUtilityFire) return;
             HandleUtilityReloadTimer(usable);
-            usable.Use(CreateInfoForUtility());
+            usable.Use(CreateInfoForUtility(usable.ChargedTime));
         }
 
         private void HandleTorpedoObject()
@@ -132,8 +132,8 @@ namespace Hadal.Player.Behaviours
             tLauncher.Use(CreateInfoForTorpedo());
         }
 
-        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformInfo(torpedoFirePoint);
-        private UsableHandlerInfo CreateInfoForUtility() => new UsableHandlerInfo().WithTransformInfo(utilityFirePoint);
+        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformForceInfo(torpedoFirePoint,0f);
+        private UsableHandlerInfo CreateInfoForUtility(float chargedTime) => new UsableHandlerInfo().WithTransformForceInfo(utilityFirePoint, chargedTime);
 
         #endregion
 

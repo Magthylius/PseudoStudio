@@ -1,5 +1,6 @@
 using Hadal.Usables.Projectiles;
 using UnityEngine;
+using Tenshi;
 
 //Created by Jey, edited by Jon
 namespace Hadal.Usables
@@ -15,6 +16,8 @@ namespace Hadal.Usables
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);
 
+            projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
+               (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce);
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
             //else projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
             else Debug.LogWarning("PPhysics didnt init");
