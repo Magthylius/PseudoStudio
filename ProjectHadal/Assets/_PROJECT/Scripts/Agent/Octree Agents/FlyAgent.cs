@@ -218,7 +218,7 @@ namespace FlyAgent.Agents
 			{
 				Texture2D grayTexture = new Texture2D(1, 1, TextureFormat.ARGB32, false, false);
 				grayTexture.SetPixel(1, 1, Color.gray.CloneAlpha(0.5f));
-				grayTexture.alphaIsTransparency = true;
+				// grayTexture.alphaIsTransparency = true;
 				grayTexture.anisoLevel = 0;
 				grayTexture.Apply();
 				InfoStyle = new GUIStyle()
