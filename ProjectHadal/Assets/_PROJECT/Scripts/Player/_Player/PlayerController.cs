@@ -5,11 +5,12 @@ using NaughtyAttributes;
 using Photon.Pun;
 using UnityEngine;
 using Hadal.Inputs;
+using Tenshi;
 
 //Created by Jet
 namespace Hadal.Player
 {
-    public class PlayerController : Controller
+    public class PlayerController : Controller, IPlayerEnabler
     {
         #region Variable Definitions
 
@@ -37,6 +38,8 @@ namespace Hadal.Player
             base.Awake();
             _pView = photonInfo.PView;
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
+            enablerArray = GetComponentsInChildren<IPlayerEnabler>();
+            Enable();
         }
 
         private void Start()
@@ -145,6 +148,39 @@ namespace Hadal.Player
         {
             if (!_pView.IsMine) return;
             graphics[0].SetActive(true);
+        }
+
+        #endregion
+
+        #region IPlayerEnabler Methods
+
+        public bool AllowUpdate { get; private set; }
+        private IPlayerEnabler[] enablerArray;
+        public void Enable()
+        {
+            if (enablerArray.IsNullOrEmpty()) return;
+            AllowUpdate = true;
+            enablerArray.ToList().ForEach(i => i.Enable());
+            mover.Enable();
+            rotator.Enable();
+        }
+        public void Disable()
+        {
+            if (enablerArray.IsNullOrEmpty()) return;
+            AllowUpdate = false;
+            enablerArray.ToList().ForEach(i => i.Disable());
+            mover.Disable();
+            rotator.Disable();
+        }
+        public void ToggleEnablility()
+        {
+            AllowUpdate = !AllowUpdate;
+            if (AllowUpdate)
+            {
+                Enable();
+                return;
+            }
+            Disable();
         }
 
         #endregion

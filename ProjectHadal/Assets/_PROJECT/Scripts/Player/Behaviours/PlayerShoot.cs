@@ -8,7 +8,7 @@ using ExitGames.Client.Photon;
 
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerShoot : MonoBehaviourDebug, IPlayerComponent
+    public class PlayerShoot : MonoBehaviourDebug, IPlayerComponent, IPlayerEnabler
     {
         [SerializeField] string debugKey;
 
@@ -86,6 +86,7 @@ namespace Hadal.Player.Behaviours
 
         public void DoUpdate(in float deltaTime)
         {
+            if (!AllowUpdate) return;
             OnUnityUpdateUI();
             CalculateTorpedoAngle();
         }
@@ -106,34 +107,42 @@ namespace Hadal.Player.Behaviours
             DebugLog("No angle");
         }
 
-
-        public void FireTorpedo()
-        {
-            if (!tLauncher.IsChamberLoaded) return;
-            HandleTorpedoObject();
-        }
-
         //! Event Firing
         public void SendTorpedoEvent()
         {
+            if (!AllowUpdate) return;
             PhotonNetwork.RaiseEvent(PLAYER_TOR_LAUNCH_EVENT, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
         }
 
-        public void FireUtility(UsableLauncherObject usable)
+        public void FireTorpedo()
         {
-            if (!_canUtilityFire) return;
-            HandleUtilityReloadTimer(usable);
-            usable.Use(CreateInfoForUtility(usable.ChargedTime));
+            if (!tLauncher.IsChamberLoaded || !AllowUpdate) return;
+            HandleTorpedoObject();
         }
-
         private void HandleTorpedoObject()
         {
             tLauncher.DecrementChamber();
             tLauncher.Use(CreateInfoForTorpedo());
         }
 
+        public void FireUtility(UsableLauncherObject usable)
+        {
+            if (!_canUtilityFire || !AllowUpdate) return;
+            HandleUtilityReloadTimer(usable);
+            usable.Use(CreateInfoForUtility(usable.ChargedTime));
+        }
+        
         private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformForceInfo(torpedoFirePoint,0f);
         private UsableHandlerInfo CreateInfoForUtility(float chargedTime) => new UsableHandlerInfo().WithTransformForceInfo(utilityFirePoint, chargedTime);
+
+        #endregion
+
+        #region Enabling Component Methods
+
+        public bool AllowUpdate { get; private set; }
+        public void Enable() => AllowUpdate = true;
+        public void Disable() => AllowUpdate = false;
+        public void ToggleEnablility() => AllowUpdate = !AllowUpdate;
 
         #endregion
 
