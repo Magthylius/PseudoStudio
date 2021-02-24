@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using TMPro;
 
-//! Version 1.0.0
+//! Version 1.1.0
 [RequireComponent(typeof(EventTrigger), typeof(Image))]
 public class MagthyliusPointerButton : MonoBehaviour
 {
@@ -26,10 +27,15 @@ public class MagthyliusPointerButton : MonoBehaviour
         }
     }
 
-    EventTrigger et;
+    [Header("References")]
     public Image image;
-
     [Min(0f)] public float colorFadeSpeed;
+
+    EventTrigger et;
+
+    [Header("TMP Settings")]
+    [SerializeField] string TMPText;
+    [SerializeField] TextMeshProUGUI[] TMPObjects;
 
     [Header("Pointer events")]
     [SerializeField] UIEventContainer pointerEnterEvent = new UIEventContainer(EventTriggerType.PointerEnter);
@@ -47,6 +53,12 @@ public class MagthyliusPointerButton : MonoBehaviour
     bool allowColorLerp;
     Color targetColor;
     GameObject currentObject;
+
+    void OnValidate()
+    {
+        TMPObjects = GetComponentsInChildren<TextMeshProUGUI>(true);
+        foreach (TextMeshProUGUI text in TMPObjects) text.text = TMPText;
+    }
 
     void Start()
     {

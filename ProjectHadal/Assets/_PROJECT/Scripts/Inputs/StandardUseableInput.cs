@@ -11,6 +11,8 @@ namespace Hadal.Inputs
         public bool FireKey2Release => MBUp(1);
         public bool EscKeyDown => KDown(KeyCode.Escape);
         public bool EscKeyUp => KUp(KeyCode.Escape);
+        public bool TabKeyDown => KDown(KeyCode.Tab);
+        public bool TabKeyUp => KUp(KeyCode.Tab);
 
         bool MB(int button) => Input.GetMouseButton(button);
         bool MBDown(int button) => Input.GetMouseButtonDown(button);
