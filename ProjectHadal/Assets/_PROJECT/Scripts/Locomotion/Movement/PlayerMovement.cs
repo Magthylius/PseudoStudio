@@ -15,6 +15,7 @@ namespace Hadal.Locomotion
 
         public override void Initialise(Transform target)
         {
+            Enable();
             this.target = target;
             Speed.Initialise();
             Accel.Initialise();
@@ -27,6 +28,7 @@ namespace Hadal.Locomotion
 
         public override void DoUpdate(in float deltaTime)
         {
+            if (!allowUpdate) return;
             LerpCummulatedAcceleration(deltaTime);
             HandleAcceleration(deltaTime);
             AddVelocity();
