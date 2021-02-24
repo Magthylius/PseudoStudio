@@ -189,22 +189,42 @@ namespace Hadal.Player
         void SetupPauseMenu()
         {
             playerInput = new StandardUseableInput();
+            pauseMenuOpen = false;
             pauseMenu.Close();
         }
 
         void TriggerPauseMenu()
         {
+            DebugLog("Pause Menu triggered");
             pauseMenuOpen = !pauseMenuOpen;
-            if (pauseMenuOpen)
-            {
-                pauseMenu.Open();
-                Cursor.visible = true;
-            }
-            else
-            {
-                pauseMenu.Close();
-                Cursor.visible = false;
-            }
+
+            if (pauseMenuOpen) PNTR_Pause();
+            else PNTR_Resume();
+        }
+
+        public void PNTR_Debug()
+        {
+            DebugLog("Pointer entered");
+        }
+
+        public void PNTR_Resume()
+        {
+            pauseMenu.Close();
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
+            player.Rotator.Enable();
+            player.Mover.Enable();
+        }
+
+        public void PNTR_Pause()
+        {
+            pauseMenu.Open();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
+
+            player.Rotator.Disable();
+            player.Mover.Disable();
         }
         #endregion
     }
