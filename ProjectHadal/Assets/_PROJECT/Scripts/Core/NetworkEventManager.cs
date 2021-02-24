@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
@@ -13,20 +14,20 @@ namespace Hadal
     {
         public static NetworkEventManager Instance;
 
+        public enum ByteEvents
+        {
+            PLAYER_UTILITIES_LAUNCH = 0,
+            TOTAL_EVENTS
+        }
+
         //public Action<EventData> EventReciever;
 
         public delegate void EventRecievedInvoker();
         public event EventRecievedInvoker EventReciever;
 
         List<EventRecievedInvoker> eventRecieverList;
-
-        #region Byte Declarations
-        public enum ByteEvents
-        {
-            PLAYER_UTILITIES_LAUNCH = 0,
-            TOTAL_EVENTS
-        }
-        #endregion
+        Dictionary<ByteEvents, Action<EventData>> recieverDict;
+        //Dictionary<ByteEvents, UnityEvent> recieverDict;
 
         void Awake()
         {
@@ -45,10 +46,13 @@ namespace Hadal
 
         void Start()
         {
+            recieverDict = new Dictionary<ByteEvents, Action<EventData>>();
+
             eventRecieverList = new List<EventRecievedInvoker>();
             for (int i = 0; i < (int)ByteEvents.TOTAL_EVENTS; i++)
             {
-                //! init list
+                //! init dict
+                recieverDict.Add((ByteEvents)i, null);
             }
         }
 
@@ -59,20 +63,42 @@ namespace Hadal
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
         }
 
-        public void Event(ByteEvents eventCode, object dataContent)
+        public override void OnDisable()
+        {
+            base.OnDisable();
+            PhotonNetwork.NetworkingClient.EventReceived -= InvokeRecievedEvents;
+        }
+
+        public void RaiseEvent(ByteEvents eventCode, object dataContent)
         {
             PhotonNetwork.RaiseEvent((byte)eventCode, dataContent, RaiseEventOptions.Default, SendOptions.SendUnreliable);
         }
 
-        public EventRecievedInvoker FindInvoker(ByteEvents eventCode)
+        void InvokeRecievedEvents(EventData eventObject)
         {
-            //! return fire event
-            return null;
+           
+            for (int i = 0; i < (int)ByteEvents.TOTAL_EVENTS; i++)
+            {
+                if (eventObject.Code == (byte)(ByteEvents)i)
+                {
+                    if (recieverDict.ContainsKey((ByteEvents)eventObject.Code))
+                    {
+                        recieverDict[(ByteEvents)eventObject.Code].Invoke(eventObject);
+                        return;
+                    }
+                }
+            }
         }
 
-        void InvokeRecievedEvents(EventData obj)
+        public void AddListener(ByteEvents eventCode, Action<EventData> action)
         {
+            if (recieverDict.ContainsKey(eventCode))
+            {
+                if (recieverDict[eventCode] == null) recieverDict[eventCode] = action;
+                else recieverDict[eventCode] += action;
 
+                return;
+            }
         }
 
         //! implement INetworkObject

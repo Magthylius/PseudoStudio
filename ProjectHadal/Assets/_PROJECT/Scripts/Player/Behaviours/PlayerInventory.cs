@@ -23,33 +23,28 @@ namespace Hadal.Player.Behaviours
         [Header("Event Code")]
         private const byte PLAYER_UTI_LAUNCH_EVENT = 2;
 
+        NetworkEventManager neManager;
+
         private void Awake()
         {
             _eInput = new StandardEquipmentInput();
             _uInput = new StandardUseableInput();
         }
 
-        public override void OnEnable()
+        void Start()
         {
-            base.OnEnable();
-            PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+            neManager = NetworkEventManager.Instance;
+            neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, FireUtility);
         }
 
-        public override void OnDisable()
+        void FireUtility(EventData eventData)
         {
-            base.OnDisable();
-            PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
-        }
-
-        private void NetworkingClient_EventReceived(EventData obj)
-        {
-            if (obj.Code == PLAYER_UTI_LAUNCH_EVENT)
+            object[] data = (object[])eventData.CustomData;
+            if ((int)data[0] == _pView.ViewID)
             {
-                object[] data = (object[])obj.CustomData;
-                if ((int)data[0] == _pView.ViewID)
-                {
-                    _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]]);
-                }
+                //print("test");
+                //Debug.Log("test");
+                _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]]);
             }
         }
 
@@ -94,7 +89,8 @@ namespace Hadal.Player.Behaviours
                 object[] content = new object[] { _pView.ViewID, _selectedItem};
 
                 //! Event Firing
-                PhotonNetwork.RaiseEvent(PLAYER_UTI_LAUNCH_EVENT, content, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+                //PhotonNetwork.RaiseEvent(PLAYER_UTI_LAUNCH_EVENT, content, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+                neManager.RaiseEvent(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
             }
         }
 
