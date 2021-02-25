@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
@@ -15,14 +14,7 @@ namespace Hadal
     {
         public static NetworkEventManager Instance;
 
-        public enum ByteEvents
-        {
-            PLAYER_UTILITIES_LAUNCH = 0,
-            TOTAL_EVENTS
-        }
-
-        Dictionary<ByteEvents, Action<EventData>> recieverDict;
-
+        #region Unity Lifecycle
         void Awake()
         {
             if (Instance != null)
@@ -33,19 +25,13 @@ namespace Hadal
             else
             {
                 Instance = this;
-                //DontDestroyOnLoad(gameObject);
             }
         }
 
         void Start()
         {
-            recieverDict = new Dictionary<ByteEvents, Action<EventData>>();
-
-            for (int i = 0; i < (int)ByteEvents.TOTAL_EVENTS; i++)
-            {
-                //! init dict
-                recieverDict.Add((ByteEvents)i, null);
-            }
+            SetupEventRaising();
+            SetupNetworking();
         }
 
         public override void OnEnable()
@@ -59,8 +45,32 @@ namespace Hadal
             base.OnDisable();
             PhotonNetwork.NetworkingClient.EventReceived -= InvokeRecievedEvents;
         }
+        #endregion
+
+        #region Essentials
+        GameManager gameManager;
+        #endregion
 
         #region Raising Events
+        public enum ByteEvents
+        {
+            PLAYER_UTILITIES_LAUNCH = 0,
+            TOTAL_EVENTS
+        }
+
+        Dictionary<ByteEvents, Action<EventData>> recieverDict;
+
+        void SetupEventRaising()
+        {
+            recieverDict = new Dictionary<ByteEvents, Action<EventData>>();
+
+            for (int i = 0; i < (int)ByteEvents.TOTAL_EVENTS; i++)
+            {
+                //! init dict
+                recieverDict.Add((ByteEvents)i, null);
+            }
+        }
+
         /// <summary>
         /// Raise default event.
         /// </summary>
@@ -111,42 +121,25 @@ namespace Hadal
         }
         #endregion
 
-        #region Room Events
-        void LeaveRoom()
+        #region Photon Networking Overrides
+        void SetupNetworking()
         {
-            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.ConnectUsingSettings();
+        }
+
+        public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
+        public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName);
+        public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
+        public void LeaveRoom() => PhotonNetwork.LeaveRoom();
+        public void LoadLevel(int index) => PhotonNetwork.LoadLevel(index);
+        public void LoadLevel(string levelName) => PhotonNetwork.LoadLevel(levelName);
+
+        #region Connection Functions
+        public override void OnConnectedToMaster()
+        {
         }
 
         public override void OnConnected()
-        {
-        }
-
-        public override void OnLeftRoom()
-        {
-            //! If not in mainmenu, return to mainmenu
-        }
-
-        public override void OnMasterClientSwitched(Player newMasterClient)
-        {
-        }
-
-        public override void OnCreateRoomFailed(short returnCode, string message)
-        {
-        }
-
-        public override void OnJoinRoomFailed(short returnCode, string message)
-        {
-        }
-
-        public override void OnCreatedRoom()
-        {
-        }
-
-        public override void OnJoinedLobby()
-        {
-        }
-
-        public override void OnLeftLobby()
         {
         }
 
@@ -154,15 +147,24 @@ namespace Hadal
         {
         }
 
-        public override void OnRegionListReceived(RegionHandler regionHandler)
+        public override void OnMasterClientSwitched(Player newMasterClient)
+        {
+        } 
+        #endregion
+
+        #region Room Functions
+        public override void OnCreatedRoom()
         {
         }
-
-        public override void OnRoomListUpdate(List<RoomInfo> roomList)
+        public override void OnCreateRoomFailed(short returnCode, string message)
         {
         }
 
         public override void OnJoinedRoom()
+        {
+        }
+
+        public override void OnJoinRoomFailed(short returnCode, string message)
         {
         }
 
@@ -174,14 +176,35 @@ namespace Hadal
         {
         }
 
+        public override void OnLeftRoom()
+        {
+            //! If not in mainmenu, return to mainmenu
+        }
+        #endregion
+
+        #region Lobby Functions
+        public override void OnJoinedLobby()
+        {
+        }
+
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
         }
 
-        public override void OnConnectedToMaster()
+        public override void OnLeftLobby()
         {
         }
 
+        public override void OnRegionListReceived(RegionHandler regionHandler)
+        {
+        }
+
+        public override void OnRoomListUpdate(List<RoomInfo> roomList)
+        {
+        }
+        #endregion
+
+        #region Data Functions
         public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
         }
@@ -212,7 +235,8 @@ namespace Hadal
 
         public override void OnErrorInfo(ErrorInfo errorInfo)
         {
-        }
+        } 
+        #endregion
         #endregion
     }
 }
