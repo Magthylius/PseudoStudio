@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
@@ -27,5 +25,11 @@ namespace Hadal
 
         public void ChangeGameState(GameState state) => currentGameState = state;
         public GameState CurrentGameState => currentGameState;
+        public bool IsInMainMenu => currentGameState == GameState.MAIN_MENU_LOBBY ||
+                                    currentGameState == GameState.MAIN_MENU_ROOM ||
+                                    currentGameState == GameState.MAIN_MENU_CONNECTING;
+        public bool IsInGame => currentGameState == GameState.IN_GAME_PREPARATION ||
+                                currentGameState == GameState.IN_GAME_HUNTING;
+
     }
 }

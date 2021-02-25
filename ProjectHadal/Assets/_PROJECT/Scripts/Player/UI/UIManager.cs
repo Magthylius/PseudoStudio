@@ -92,16 +92,19 @@ namespace Hadal.Player
         void Update()
         {
             if (player == null) return;
-            string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - player.transform.position.y)).ToString("#,#");
-            depthText.text = $"Depth: -{depth}";
 
-            string lightIs = _lamp.LightsOn ? "ON" : "OFF";
-            lightText.text = $"Light: {lightIs}";
-
+        #if UNITY_EDITOR
+            if (playerInput.TabKeyDown) TriggerPauseMenu();
+        #else
             if (playerInput.EscKeyDown) TriggerPauseMenu();
+        #endif
 
-            BalancerUpdate();
-            SetLights();
+            if (!pauseMenuOpen)
+            {
+                InformationUpdate();
+                BalancerUpdate();
+                SetLights();
+            }
         }
 
         private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
@@ -162,6 +165,15 @@ namespace Hadal.Player
             uiRotatorsFR = new FlexibleRect(uiRotators);
         }
 
+        void InformationUpdate()
+        {
+            string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - player.transform.position.y)).ToString("#,#");
+            depthText.text = $"Depth: -{depth}";
+
+            string lightIs = _lamp.LightsOn ? "ON" : "OFF";
+            lightText.text = $"Light: {lightIs}";
+        }
+
         void BalancerUpdate()
         {
             //float xMovement = player.MovementInput.HorizontalAxis;
@@ -195,7 +207,6 @@ namespace Hadal.Player
 
         void TriggerPauseMenu()
         {
-            DebugLog("Pause Menu triggered");
             pauseMenuOpen = !pauseMenuOpen;
 
             if (pauseMenuOpen) PNTR_Pause();

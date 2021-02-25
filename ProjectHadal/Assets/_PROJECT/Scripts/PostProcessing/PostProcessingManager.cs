@@ -1,4 +1,4 @@
-//Created by Harry
+//Created by Harry, E: Jon
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,122 +9,84 @@ namespace Hadal.PostProcess
 {
     public class PostProcessingManager : MonoBehaviour // put this script on the post process volume
     {
-        // Post Process Volume
-        private Volume volume;
-        private Tonemapping tone;
-        private Bloom bloom;
-        private Vignette vignette;
-        private ChromaticAberration chroma;
-        private DepthOfField depth;
-        private FilmGrain grain;
-        // Underwater Image Effect
-        public Material underwaterMat; // assign mat "UnderwaterImageEffect"
-        [Range(0.001f, 0.1f)]
-        public float pixelOffset;
-        [Range(0.1f, 20f)]
-        public float noiseScale;
-        [Range(0.1f, 20f)]
-        public float noiseFrequency;
-        [Range(0.1f, 30f)]
-        public float noiseSpeed;
+        public static PostProcessingManager Instance;
 
-        public float depthStart = 0;
-        public float depthDistance = 100;
+        Volume volume;
 
-        public bool UnderwaterEffect = true; // toggle this
+        [Header("Underwater Image Effect")]
+        public Material underwaterMat; 
+        public bool underwaterEffectEnabled = true;
+        [SerializeField] UnderwaterEffectData UEDataEnabled;
+        [SerializeField] UnderwaterEffectData UEDataDisabled;
+
+        void Awake()
+        {
+            if (Instance == null) Instance = this;
+            else Destroy(this);
+        }
 
         void Start()
         {
             //Get profiles
             volume = GetComponent<Volume>();
-            volume.profile.TryGet(out tone);
-            volume.profile.TryGet(out bloom);
-            volume.profile.TryGet(out vignette);
-            volume.profile.TryGet(out chroma);
-            volume.profile.TryGet(out depth);
-            volume.profile.TryGet(out grain);
-
-            if(UnderwaterEffect)
-                SetUnderwaterEffectSettings(noiseFrequency, noiseSpeed, noiseScale, pixelOffset, depthStart, depthDistance);
-            else
-                SetUnderwaterEffectSettings(0, 0, 0, 0, 0, 1000);
+            SetUnderwaterEffectSettings(underwaterEffectEnabled);
         }
 
-        //private void Update() //uncomment this if you wanna change the values real time
-        //{
-        //    SetUnderwaterEffectSettings(noiseFrequency, noiseSpeed, noiseScale, pixelOffset, depthStart, depthDistance);
-        //}
-
-        public void SetUnderwaterEffectSettings(float _noiseFrequency, float _noiseSpeed, float _noiseScale, float _pixelOffset, float _depthStart, float _depthDistance) // set settings
+        private void Update()
         {
-            underwaterMat.SetFloat("_NoiseFrequency", _noiseFrequency);
-            underwaterMat.SetFloat("_NoiseSpeed", _noiseSpeed);
-            underwaterMat.SetFloat("_NoiseScale", _noiseScale);
-            underwaterMat.SetFloat("_PixelOffset", _pixelOffset);
-            underwaterMat.SetFloat("_DepthStart", _depthStart);
-            underwaterMat.SetFloat("_DepthDistance", _depthDistance);
+            //! Debug use
+            /*if (Input.GetKeyDown(KeyCode.H))
+            {
+                ToggleUnderwaterEffect();
+            }*/
         }
 
-        public void DisableUnderwaterEffect() // disable the effect
-        {
-            UnderwaterEffect = false;
-            SetUnderwaterEffectSettings(0, 0, 0, 0, 0, 1000);
-        }
-
-        public void ToggleToneMapping() // toggles tone
-        {
-            if (tone.active)
-                tone.active = false;
-            else
-                tone.active = true;
-        }
-        public void ToggleBloom() // toggles bloom
-        {
-            if (bloom.active)
-                bloom.active = false;
-            else
-                bloom.active = true;
-        }
-        public void ToggleVignette() // toggles... you get it
-        {
-            if (vignette.active)
-                vignette.active = false;
-            else
-                vignette.active = true;
-        }
-        public void ToggleChromaticAberration()
-        {
-            if (chroma.active)
-                chroma.active = false;
-            else
-                chroma.active = true;
-        }
-        public void ToggleDepthOfField()
-        {
-            if (depth.active)
-                depth.active = false;
-            else
-                depth.active = true;
-        }
-        public void ToggleFilmGrain()
-        {
-            if (grain.active)
-                grain.active = false;
-            else
-                grain.active = true;
-        }
-
-        public void ToggleFog() // toggles fog duhhhh
-        {
-            if (RenderSettings.fog == true)
-                RenderSettings.fog = false;
-            else
-                RenderSettings.fog = true;
-        }
-
-        private void OnRenderImage(RenderTexture source, RenderTexture destination) // don't touch
+        void OnRenderImage(RenderTexture source, RenderTexture destination) // don't touch
         {
             Graphics.Blit(source, destination, underwaterMat);
         }
+
+        public void ToggleEffect<T>() where T : VolumeComponent
+        {
+            T component;
+            if (volume.profile.TryGet(out component))
+                component.active = !component.active;
+        }
+
+        #region Underwater Effect
+        public void ToggleUnderwaterEffect()
+        {
+            underwaterEffectEnabled = !underwaterEffectEnabled;
+            SetUnderwaterEffectSettings(underwaterEffectEnabled);
+        }
+
+        public void SetUnderwaterEffectSettings(bool enable)
+        {
+            underwaterEffectEnabled = enable;
+
+            if (underwaterEffectEnabled) SetUnderwaterEffectSettings(UEDataEnabled);
+            else SetUnderwaterEffectSettings(UEDataDisabled);
+        }
+
+        public void SetUnderwaterEffectSettings(UnderwaterEffectData data)
+        {
+            SetUnderwaterEffectSettings(data.effectMaterial, data.noiseFrequency, data.noiseSpeed, data.noiseScale, data.pixelOffset, data.depthStart, data.depthDistance);
+        }
+
+        public void SetUnderwaterEffectSettings(Material mat, float _noiseFrequency, float _noiseSpeed, float _noiseScale, float _pixelOffset, float _depthStart, float _depthDistance)
+        {
+            mat.SetFloat("_NoiseFrequency", _noiseFrequency);
+            mat.SetFloat("_NoiseSpeed", _noiseSpeed);
+            mat.SetFloat("_NoiseScale", _noiseScale);
+            mat.SetFloat("_PixelOffset", _pixelOffset);
+            mat.SetFloat("_DepthStart", _depthStart);
+            mat.SetFloat("_DepthDistance", _depthDistance);
+        } 
+        #endregion
+
+        public void ToggleFog() 
+        {
+            RenderSettings.fog = !RenderSettings.fog;
+        }        
     }
 }

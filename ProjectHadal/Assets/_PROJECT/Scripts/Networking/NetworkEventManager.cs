@@ -14,6 +14,7 @@ namespace Hadal.Networking
     public class NetworkEventManager : MonoBehaviourPunCallbacks
     {
         public static NetworkEventManager Instance;
+        public bool isOfflineMode;
 
         #region Unity Lifecycle
         void Awake()
@@ -133,7 +134,8 @@ namespace Hadal.Networking
         #region Photon Networking Overrides
         void SetupNetworking()
         {
-            PhotonNetwork.ConnectUsingSettings();
+            if (isOfflineMode) PhotonNetwork.OfflineMode = true;
+            else PhotonNetwork.ConnectUsingSettings();
         }
 
         public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
@@ -223,6 +225,7 @@ namespace Hadal.Networking
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
+            if (!gameManager.IsInMainMenu) return;
             mainMenuManager.UpdateRoomList(roomList);
         }
         #endregion
