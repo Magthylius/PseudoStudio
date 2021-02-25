@@ -223,7 +223,6 @@ namespace Hadal.Networking
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
-            Debug.Log("wtf");
             mainMenuManager.UpdateRoomList(roomList);
         }
         #endregion
