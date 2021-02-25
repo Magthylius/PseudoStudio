@@ -1177,6 +1177,7 @@ GameObject:
   m_Component:
   - component: {fileID: 543050608}
   - component: {fileID: 543050607}
+  - component: {fileID: 543050609}
   m_Layer: 0
   m_Name: Post-process Volume
   m_TagString: Untagged
@@ -1215,6 +1216,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &543050609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543050606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e272aa90abd9060418c71da704f3c648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabled: 1
+  _mat: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
+  _pixelOffset: 0.002
+  _noiseScale: 3.8
+  _noiseFrequency: 3
+  _noiseSpeed: 4
+  _depthStart: 0
+  _depthDistance: 100
 --- !u!1 &596144570
 GameObject:
   m_ObjectHideFlags: 0
@@ -3667,7 +3688,6 @@ GameObject:
   - component: {fileID: 1784624798}
   - component: {fileID: 1784624796}
   - component: {fileID: 1784624802}
-  - component: {fileID: 1784624797}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3707,26 +3727,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &1784624797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1784624795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e272aa90abd9060418c71da704f3c648, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enabled: 1
-  _mat: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
-  _pixelOffset: 0.002
-  _noiseScale: 3.8
-  _noiseFrequency: 3
-  _noiseSpeed: 4
-  _depthStart: 0
-  _depthDistance: 100
 --- !u!81 &1784624798
 AudioListener:
   m_ObjectHideFlags: 0
