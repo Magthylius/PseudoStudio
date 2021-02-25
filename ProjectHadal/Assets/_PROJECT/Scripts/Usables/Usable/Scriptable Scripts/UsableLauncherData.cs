@@ -10,6 +10,7 @@ namespace Hadal.Usables
         public string Name;
         public ProjectileData ProjectileData;
         public bool isChargable;
+        [Range(0f, 1f)] public float ModeToggleTreshold;
         [Range(0f, 1f)] public float ChargingSpeed;
         public float MaxForce;
         public void ToggleProjectile(bool shouldToggle)

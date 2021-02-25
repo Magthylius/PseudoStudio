@@ -1,6 +1,7 @@
 using UnityEngine;
-
-// C: Jon
+using Hadal;
+using Hadal.Usables.Projectiles;
+// C: Jon E:Jin
 [System.Serializable]
 public class ImpulseMode : ProjectileMode
 {
@@ -8,6 +9,8 @@ public class ImpulseMode : ProjectileMode
     public Vector3 direction;
     public float force;
     public float linearDrag;
+    public delegate void ModeSwapEvent();
+    public event ModeSwapEvent ModeSwapped;
 
     public override void Setup(Rigidbody rb, Transform rTransform)
     {
@@ -29,4 +32,13 @@ public class ImpulseMode : ProjectileMode
     }
 
     public void OverrideForce(float overridingForce) => force = overridingForce;
+    public void OverrideForce(float overridingForce, bool isModeSwap)
+    {
+        if(isModeSwap)
+        {
+            ModeSwapped?.Invoke();
+            Debug.LogError("Event called");
+        }     
+        force = overridingForce;
+    }
 }

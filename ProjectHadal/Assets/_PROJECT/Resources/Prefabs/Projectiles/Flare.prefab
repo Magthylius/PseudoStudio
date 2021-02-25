@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 4
-  endTime: 60
+  endTime: 900
   armsProjectile: 0
   skipsOnContact: 0
   destroyObject: 0
@@ -311,6 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: Projectile Physics
+  wallLayer: Wall
 --- !u!114 &2273389915342579660
 MonoBehaviour:
   m_ObjectHideFlags: 0

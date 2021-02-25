@@ -16,8 +16,10 @@ namespace Hadal.Usables
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);
 
+            bool isModeSwap = info.ChargedTime.Clamp01() > ModeToggleTreshold;
+
             projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
-                (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce);
+                (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce, isModeSwap);
 
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
         }
