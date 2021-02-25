@@ -19,7 +19,7 @@ RenderSettings:
   m_FogMode: 1
   m_FogDensity: 0.01
   m_LinearFogStart: 0
-  m_LinearFogEnd: 60
+  m_LinearFogEnd: 200
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
@@ -1225,17 +1225,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 543050606}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e272aa90abd9060418c71da704f3c648, type: 3}
+  m_Script: {fileID: 11500000, guid: b1da955959622b64b8c64b468a98377f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enabled: 1
-  _mat: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
-  _pixelOffset: 0.002
-  _noiseScale: 3.8
-  _noiseFrequency: 3
-  _noiseSpeed: 4
-  _depthStart: 0
-  _depthDistance: 100
+  underwaterMat: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
+  pixelOffset: 0.001
+  noiseScale: 2
+  noiseFrequency: 3
+  noiseSpeed: 4
+  depthStart: 0
+  depthDistance: 100
+  UnderwaterEffect: 1
 --- !u!1 &596144570
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 
-namespace Hadal.Legacy
+namespace Hadal.Networking
 {
     public class PlayerListItem : MonoBehaviourPunCallbacks
     {

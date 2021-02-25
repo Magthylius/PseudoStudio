@@ -4,9 +4,10 @@ using UnityEngine.UI;
 using Magthylius.LerpFunctions;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Photon.Realtime;
 
 //! C: Jon
-namespace Hadal.Legacy
+namespace Hadal.Networking
 {
     public class MainMenuManager : MenuManager
     {
@@ -19,7 +20,7 @@ namespace Hadal.Legacy
         }
 
         MenuPhase menuPhase = MenuPhase.START;
-        [SerializeField] Launcher launcher;
+        NetworkEventManager neManager;
 
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
@@ -51,6 +52,8 @@ namespace Hadal.Legacy
 
         [Header("Room Joining settings")]
         [Min(0f)] public float roomPanelLerpSpeed;
+        [SerializeField] Transform playerListContent;
+        [SerializeField] GameObject playerListItemPrefab;
         [SerializeField] RectTransform createRoomPanel;
         [SerializeField] RectTransform findRoomPanel;
        
@@ -65,6 +68,7 @@ namespace Hadal.Legacy
         bool allowRoomCreation;
 
         [Header("Room Ready settings")]
+        [SerializeField] TextMeshProUGUI roomNameText;
         public GameObject startGameButton;
         [SerializeField] string nextLevelName;
 
@@ -80,6 +84,8 @@ namespace Hadal.Legacy
 
         void Start()
         {
+            neManager = NetworkEventManager.Instance;
+
             EnsureSetup();
 
             versionTMP.text = "V " + Application.version;
@@ -171,7 +177,7 @@ namespace Hadal.Legacy
         void UpdateLobbyNickname()
         {
             lobbyNicknameTMP.text = PlayerPrefs.GetString("PlayerName").ToUpper();
-            launcher.ChangeNickname(PlayerPrefs.GetString("PlayerName"));
+            neManager.ChangeNickname(PlayerPrefs.GetString("PlayerName"));
         }
 
         public void TMP_CheckNicknameEligibility()
@@ -214,7 +220,8 @@ namespace Hadal.Legacy
         public void BTN_CreateActualRoom()
         {
             if (!allowRoomCreation) return;
-            launcher.CreateRoom(createRoomTMPInput.text, connectingMenu);
+            neManager.CreateRoom(createRoomTMPInput.text);
+            connectingMenu.Open();
         }
 
         public void BTN_QuitGame()
@@ -242,14 +249,34 @@ namespace Hadal.Legacy
         #endregion
 
         #region Room Phase
-        public void StartRoomPhase()
+        public void StartRoomPhase(string roomName)
         {
+            roomNameText.text = roomName;
+
             OpenMenu(roomMenu);
             CloseMenu(connectingMenu);
             CloseMenu(lobbyMenu);
 
             findRoomFR.StartLerp(true);
             createRoomFR.StartLerp(true);
+        }
+
+        public void UpdatePlayerList(Player[] playerList)
+        {
+            foreach (Transform child in playerListContent)
+            {
+                Destroy(child.gameObject);
+            }
+
+            for (int i = 0; i < playerList.Length; i++)
+            {
+                AddIntoPlayerList(playerList[i]);
+            }
+        }
+
+        public void AddIntoPlayerList(Player player)
+        {
+            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(player);
         }
 
         public void BTN_StartActualLevel()
@@ -264,7 +291,7 @@ namespace Hadal.Legacy
             CloseMenu(roomOptions);
             OpenMenu(gameOptions);
 
-            launcher.LeaveRoom();
+            neManager.LeaveRoom();
         }
         #endregion
 

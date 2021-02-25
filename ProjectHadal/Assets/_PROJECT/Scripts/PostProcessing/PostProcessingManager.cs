@@ -31,7 +31,7 @@ namespace Hadal.PostProcess
         public float depthStart = 0;
         public float depthDistance = 100;
 
-        public bool UnderwaterEffect; // toggle this
+        public bool UnderwaterEffect = true; // toggle this
 
         void Start()
         {
