@@ -21,9 +21,11 @@ namespace Hadal
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
             }
-
-            DoDebugEnabling(debugKey);
         }
 
+        void Start()
+        {
+            DoDebugEnabling(debugKey);
+        }
     }
 }
