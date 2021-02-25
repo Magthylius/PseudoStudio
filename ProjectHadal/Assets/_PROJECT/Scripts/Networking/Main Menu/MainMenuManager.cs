@@ -5,6 +5,7 @@ using Magthylius.LerpFunctions;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 
 //! C: Jon
 namespace Hadal.Networking
@@ -54,6 +55,8 @@ namespace Hadal.Networking
         [Min(0f)] public float roomPanelLerpSpeed;
         [SerializeField] Transform playerListContent;
         [SerializeField] GameObject playerListItemPrefab;
+        [SerializeField] Transform roomListContent;
+        [SerializeField] GameObject roomListItemPrefab;
         [SerializeField] RectTransform createRoomPanel;
         [SerializeField] RectTransform findRoomPanel;
        
@@ -277,6 +280,21 @@ namespace Hadal.Networking
         public void AddIntoPlayerList(Player player)
         {
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(player);
+        }
+
+        public void UpdateRoomList(List<RoomInfo> roomList)
+        {
+            foreach (Transform trans in roomListContent)
+            {
+                Destroy(trans.gameObject);
+            }
+            for (int i = 0; i < roomList.Count; i++)
+            {
+                //! If room have removed from the list
+                if (roomList[i].RemovedFromList)
+                    continue;
+                Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
+            }
         }
 
         public void BTN_StartActualLevel()

@@ -144,7 +144,7 @@ namespace Hadal.Legacy
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
-            foreach (Transform trans in roomListContent)
+            /*foreach (Transform trans in roomListContent)
             {
                 Destroy(trans.gameObject);
             }
@@ -154,7 +154,7 @@ namespace Hadal.Legacy
                 if (roomList[i].RemovedFromList)
                     continue;
                 Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
-            }
+            }*/
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)

@@ -216,6 +216,7 @@ namespace Hadal.Networking
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
+            mainMenuManager.UpdateRoomList(roomList);
         }
         #endregion
 

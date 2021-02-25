@@ -2,7 +2,7 @@
 using Photon.Realtime;
 using TMPro;
 
-namespace Hadal.Legacy
+namespace Hadal.Networking
 {
     public class RoomListItem : MonoBehaviour
     {
@@ -17,7 +17,7 @@ namespace Hadal.Legacy
 
         public void OnClick()
         {
-            Launcher.Instance.JoinRoom(info);
+            NetworkEventManager.Instance.JoinRoom(info);
         }
     }
 }
