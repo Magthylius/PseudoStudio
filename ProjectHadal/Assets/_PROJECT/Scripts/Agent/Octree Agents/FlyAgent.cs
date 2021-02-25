@@ -388,14 +388,14 @@ namespace FlyAgent.Agents
 			Vector3 predictPos = CurrentFrameCache.position + CurrentFrameCache.deltaPosition;
 			Bounds nearlyBounds = m_Size.GetBounds();
 			nearlyBounds.extents += Vector3.one * (m_Radius * config.m_InSightDistanceBias);
-			List<Octree.Node> flees = MapBaker.GetInstance().GetNearlyByObstacle(predictPos, nearlyBounds);
-			cnt = flees.Count;
-			for (int i = 0; i < cnt; i++)
-			{
-				StaticObstacleFlee soflee = new StaticObstacleFlee(this, flees[i].bounds.center, flees[i].bounds.extents.x + config.m_InSightDistanceBias, config);
-				m_StaticObstacleFlee.Add(soflee);
-				m_SteeringFactors.Add(soflee);
-			}
+			// List<Octree.Node> flees = MapBaker.GetInstance().GetNearlyByObstacle(predictPos, nearlyBounds);
+			// cnt = flees.Count;
+			// for (int i = 0; i < cnt; i++)
+			// {
+			// 	StaticObstacleFlee soflee = new StaticObstacleFlee(this, flees[i].bounds.center, flees[i].bounds.extents.x + config.m_InSightDistanceBias, config);
+			// 	m_StaticObstacleFlee.Add(soflee);
+			// 	m_SteeringFactors.Add(soflee);
+			// }
 		}
 
 		

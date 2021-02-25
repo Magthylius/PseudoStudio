@@ -81,7 +81,7 @@ namespace FlyAgent.Agents
 			Fail_NullEndPoint,
 			Fail_PathEmpty,
 		}
-		private LazyThetaStar<Octree.Node>.PathFinder m_PathFinder = null;
+		// private LazyThetaStar<Octree.Node>.PathFinder m_PathFinder = null;
 
 		public Pilot(FlyAgent _agent)
 		{
@@ -94,8 +94,8 @@ namespace FlyAgent.Agents
 		public void Reset()
 		{
 			m_ArrivedFlag = true;
-			if (m_PathFinder != null)
-				m_PathFinder.Dispose();
+			// if (m_PathFinder != null)
+			// 	m_PathFinder.Dispose();
 			m_WaypointParams.Reset();
 			m_PathState = ePathState.Idle;
 			m_NextGoalRequest = 0f;
@@ -154,21 +154,21 @@ namespace FlyAgent.Agents
 				m_GoalPoint = _point;
 				m_ArrivedFlag = false;
 
-				List<Octree.Node> startNodes, endNodes;
-				if (SpaceNodeLookup(out startNodes, out endNodes))
-				{
-					Octree.Node start, end;
-					InitStartEndNodes(startNodes, endNodes, out start, out end);
-					if (start.Equals(end))
-					{
-						// same node travel(space), just move toward.
-						m_PathState = ePathState.Patrol_SameNode;
-					}
-					else
-					{
-						FindPathBetween(start, end);
-					}
-				}
+				// List<Octree.Node> startNodes, endNodes;
+				// if (SpaceNodeLookup(out startNodes, out endNodes))
+				// {
+				// 	Octree.Node start, end;
+				// 	InitStartEndNodes(startNodes, endNodes, out start, out end);
+				// 	if (start.Equals(end))
+				// 	{
+				// 		// same node travel(space), just move toward.
+				// 		m_PathState = ePathState.Patrol_SameNode;
+				// 	}
+				// 	else
+				// 	{
+				// 		FindPathBetween(start, end);
+				// 	}
+				// }
 			}
 			Profiler.EndSample();
 			return !m_ArrivedFlag;
@@ -178,118 +178,118 @@ namespace FlyAgent.Agents
 		/// <param name="startNodes">A list of nodes that could be start node</param>
 		/// <param name="endNodes">A list of nodes that could be end node</param>
 		/// <returns>true = all process success</returns>
-		private bool SpaceNodeLookup(out List<Octree.Node> startNodes, out List<Octree.Node> endNodes)
-		{
-			m_PathState = ePathState.OctreeLookup;
+		// private bool SpaceNodeLookup(out List<Octree.Node> startNodes, out List<Octree.Node> endNodes)
+		// {
+		// 	m_PathState = ePathState.OctreeLookup;
 
-			// agent's size.
-			Bounds agentBounds = m_Agent.Size.GetBounds();
-			agentBounds.extents += Vector3.one * m_Agent.m_Radius;
+		// 	// agent's size.
+		// 	Bounds agentBounds = m_Agent.Size.GetBounds();
+		// 	agentBounds.extents += Vector3.one * m_Agent.m_Radius;
 
-			startNodes = new List<Octree.Node>(8);
-			endNodes = new List<Octree.Node>(8);
+		// 	startNodes = new List<Octree.Node>(8);
+		// 	endNodes = new List<Octree.Node>(8);
 
-			MapBaker.GetInstance().OctreeStatic.GetCollidingLeafNode(startNodes, agentBounds);
-			startNodes.RemoveAll(n => n.HasObstacle());
-			if (startNodes.Count == 0)
-			{
-				m_PathState = ePathState.Fail_NullStartPoint;
-				return false;
-			}
-			MapBaker.Instance.OctreeStatic.GetCollidingLeafNode(endNodes, new Bounds(m_GoalPoint, agentBounds.size));
-			endNodes.RemoveAll(n => n.HasObstacle());
-			if (endNodes.Count == 0)
-			{
-				m_PathState = ePathState.Fail_NullEndPoint;
-				return false;
-			}
-			return true;
-		}
+		// 	MapBaker.GetInstance().OctreeStatic.GetCollidingLeafNode(startNodes, agentBounds);
+		// 	startNodes.RemoveAll(n => n.HasObstacle());
+		// 	if (startNodes.Count == 0)
+		// 	{
+		// 		m_PathState = ePathState.Fail_NullStartPoint;
+		// 		return false;
+		// 	}
+		// 	MapBaker.Instance.OctreeStatic.GetCollidingLeafNode(endNodes, new Bounds(m_GoalPoint, agentBounds.size));
+		// 	endNodes.RemoveAll(n => n.HasObstacle());
+		// 	if (endNodes.Count == 0)
+		// 	{
+		// 		m_PathState = ePathState.Fail_NullEndPoint;
+		// 		return false;
+		// 	}
+		// 	return true;
+		// }
 
 		/// <summary>Found out the most suitable node for path finding usage.</summary>
 		/// <param name="startNodes"></param>
 		/// <param name="endNodes"></param>
 		/// <param name="start"></param>
 		/// <param name="end"></param>
-		private void InitStartEndNodes(List<Octree.Node> startNodes, List<Octree.Node> endNodes, out Octree.Node start, out Octree.Node end)
-		{
-			m_PathState = ePathState.PathInit;
-			// choose closer node to the goal, so the agent no move backward on start
-			start = ClosestToPoint(m_GoalPoint, startNodes);
+		// private void InitStartEndNodes(List<Octree.Node> startNodes, List<Octree.Node> endNodes, out Octree.Node start, out Octree.Node end)
+		// {
+		// 	m_PathState = ePathState.PathInit;
+		// 	// choose closer node to the goal, so the agent no move backward on start
+		// 	start = ClosestToPoint(m_GoalPoint, startNodes);
 
-			// found node that contain goal point.
-			end = ClosestToPoint(m_GoalPoint, endNodes);
-		}
+		// 	// found node that contain goal point.
+		// 	end = ClosestToPoint(m_GoalPoint, endNodes);
+		// }
 
-		private void FindPathBetween(Octree.Node start, Octree.Node end)
-		{
-			Profiler.BeginSample("FindPathBetween");
-			// path finding waypoints
-			Bounds agentBounds = m_Agent.Size.GetBounds(true);
-			float agentSize = agentBounds.size.sqrMagnitude;
-			m_PathFinder = LazyThetaStar<Octree.Node>.FindPath(start, end, agentSize);
-			m_PathFinder.maxIterations = 200;
-			m_PathFinder.heuristicWeight = 1f; // ?? 1.5f vertex nodes movement request more cost.
+// 		private void FindPathBetween(Octree.Node start, Octree.Node end)
+// 		{
+// 			Profiler.BeginSample("FindPathBetween");
+// 			// path finding waypoints
+// 			Bounds agentBounds = m_Agent.Size.GetBounds(true);
+// 			float agentSize = agentBounds.size.sqrMagnitude;
+// 			m_PathFinder = LazyThetaStar<Octree.Node>.FindPath(start, end, agentSize);
+// 			m_PathFinder.maxIterations = 200;
+// 			m_PathFinder.heuristicWeight = 1f; // ?? 1.5f vertex nodes movement request more cost.
 
-			m_PathState = ePathState.PathCalculating;
-#if BACKGROUND_THREAD
-			m_PathFinder.AsyncFind(_PathResultAnalisys);
-#else
-			// Org version Heavy cost!
-			_PathResultAnalisys(m_PathFinder.QuickFind().Cast<Octree.Node>().ToList());
-#endif
+// 			m_PathState = ePathState.PathCalculating;
+// #if BACKGROUND_THREAD
+// 			m_PathFinder.AsyncFind(_PathResultAnalisys);
+// #else
+// 			// Org version Heavy cost!
+// 			_PathResultAnalisys(m_PathFinder.QuickFind().Cast<Octree.Node>().ToList());
+// #endif
 
-			Profiler.EndSample();
-		}
+// 			Profiler.EndSample();
+// 		}
 
-		private void _PathResultAnalisys(List<Octree.Node> waypoints)
-		{
-			m_WaypointParams.Reset();
-			if (waypoints == null)
-				m_PathState = ePathState.Patrol_WithoutPath;
-			else if (waypoints.Count == 0)
-				m_PathState = ePathState.Fail_PathEmpty;
-			else if (waypoints.Count == 1)
-				m_PathState = ePathState.Patrol_SameNode;
-			else if (waypoints.Count > 1)
-			{
-				m_PathState = ePathState.Patrol_Waypoint;
-				m_WaypointParams.SetWaypoints(waypoints.Select(n => n.bounds));
-			}
-			else
-			{
-				throw new System.InvalidProgramException("Missing case.");
-			}
-		}
+		// private void _PathResultAnalisys(List<Octree.Node> waypoints)
+		// {
+		// 	m_WaypointParams.Reset();
+		// 	if (waypoints == null)
+		// 		m_PathState = ePathState.Patrol_WithoutPath;
+		// 	else if (waypoints.Count == 0)
+		// 		m_PathState = ePathState.Fail_PathEmpty;
+		// 	else if (waypoints.Count == 1)
+		// 		m_PathState = ePathState.Patrol_SameNode;
+		// 	else if (waypoints.Count > 1)
+		// 	{
+		// 		m_PathState = ePathState.Patrol_Waypoint;
+		// 		m_WaypointParams.SetWaypoints(waypoints.Select(n => n.bounds));
+		// 	}
+		// 	else
+		// 	{
+		// 		throw new System.InvalidProgramException("Missing case.");
+		// 	}
+		// }
 		
 		/// <summary>Find the closest node, Assume 2 nodes are different</summary>
 		/// <param name="lhs"></param>
 		/// <param name="rhs"></param>
 		/// <param name="point">reference node</param>
 		/// <returns></returns>
-		private Octree.Node ClosestToPoint(Vector3 point, List<Octree.Node> nodes)
-		{
-			int cnt = nodes.Count;
-			Octree.Node rst = nodes[0];
-			while (cnt-- > 0)
-			{
-				rst = CloserToPoint(m_GoalPoint, rst, nodes[cnt]);
-			}
-			return rst;
-		}
+		// private Octree.Node ClosestToPoint(Vector3 point, List<Octree.Node> nodes)
+		// {
+		// 	int cnt = nodes.Count;
+		// 	Octree.Node rst = nodes[0];
+		// 	while (cnt-- > 0)
+		// 	{
+		// 		rst = CloserToPoint(m_GoalPoint, rst, nodes[cnt]);
+		// 	}
+		// 	return rst;
+		// }
 
 		/// <summary>Find the closer node, Assume 2 nodes are different</summary>
 		/// <param name="point">reference point</param>
 		/// <param name="lhs"></param>
 		/// <param name="rhs"></param>
 		/// <returns></returns>
-		private Octree.Node CloserToPoint(Vector3 point, Octree.Node lhs, Octree.Node rhs)
-		{
-			if ((lhs.center - point).sqrMagnitude < (rhs.center - point).sqrMagnitude)
-				return lhs;
-			else
-				return rhs;
-		}
+		// private Octree.Node CloserToPoint(Vector3 point, Octree.Node lhs, Octree.Node rhs)
+		// {
+		// 	if ((lhs.center - point).sqrMagnitude < (rhs.center - point).sqrMagnitude)
+		// 		return lhs;
+		// 	else
+		// 		return rhs;
+		// }
 		#endregion // PathFinding
 
 		#region Debug Gizmos
