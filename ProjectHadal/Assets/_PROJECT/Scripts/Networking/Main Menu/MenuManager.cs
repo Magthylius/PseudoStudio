@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 //! E: Jon
-namespace Hadal.Legacy
+namespace Hadal.Networking
 {
     public class MenuManager : MonoBehaviour
     {

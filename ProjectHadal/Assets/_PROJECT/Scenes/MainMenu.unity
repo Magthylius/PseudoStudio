@@ -838,7 +838,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1235797654}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: CreateRoom
         m_Mode: 1
@@ -2190,7 +2190,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1235797654}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: StartGame
         m_Mode: 3
@@ -7993,7 +7993,6 @@ GameObject:
   - component: {fileID: 1235797651}
   - component: {fileID: 1235797650}
   - component: {fileID: 1235797649}
-  - component: {fileID: 1235797654}
   - component: {fileID: 1235797653}
   m_Layer: 5
   m_Name: Canvas
@@ -8105,7 +8104,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menus:
   - {fileID: 1338690457}
-  launcher: {fileID: 1235797654}
   startMenu: {fileID: 1033813288}
   nicknameMenu: {fileID: 617406914}
   lobbyMenu: {fileID: 1060153296}
@@ -8121,37 +8119,17 @@ MonoBehaviour:
   gameOptions: {fileID: 1923328612}
   roomOptions: {fileID: 962969510}
   roomPanelLerpSpeed: 10
+  playerListContent: {fileID: 711146080}
+  playerListItemPrefab: {fileID: 7489279939491328962, guid: c3b73ef8429c45b4b9d34ce4ea9c844f, type: 3}
   createRoomPanel: {fileID: 1893263246}
   findRoomPanel: {fileID: 381476224}
   roomNameMaxLength: 16
   createRoomTMPInput: {fileID: 1516011223}
   warningRoomNameTooLong: {fileID: 1779058081}
+  roomNameText: {fileID: 784008223}
   startGameButton: {fileID: 1031088488}
   nextLevelName: JonPrePOC
   confirmQuitPanel: {fileID: 1916658571}
---- !u!114 &1235797654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1235797648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64063b99b66d20a4f9c91e7a418a8736, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomMenu: {fileID: 715049121}
-  lobbyMenu: {fileID: 0}
-  roomNameInputField: {fileID: 488988946}
-  errorText: {fileID: 1278513565}
-  roomNameText: {fileID: 784008223}
-  roomListContent: {fileID: 222333009}
-  playerListContent: {fileID: 711146080}
-  roomListItemPrefab: {fileID: 219584002387196212, guid: ae358823431376c4dba8f19482875210, type: 3}
-  playerListItemPrefab: {fileID: 7489279939491328962, guid: c3b73ef8429c45b4b9d34ce4ea9c844f, type: 3}
-  startGameNicoButton: {fileID: 1515281334}
-  startGameJeyButton: {fileID: 336435484}
 --- !u!1 &1278513563
 GameObject:
   m_ObjectHideFlags: 0
@@ -9136,7 +9114,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1235797654}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: LeaveRoom
         m_Mode: 1
@@ -9694,7 +9672,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1235797654}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: StartGame
         m_Mode: 3
@@ -11160,7 +11138,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1235797654}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: LeaveRoom
         m_Mode: 1

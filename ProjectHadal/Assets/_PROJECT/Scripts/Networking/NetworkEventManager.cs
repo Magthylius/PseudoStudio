@@ -8,7 +8,7 @@ using System;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 //! C: Jon
-namespace Hadal
+namespace Hadal.Networking
 {
     public class NetworkEventManager : MonoBehaviourPunCallbacks
     {
@@ -30,6 +30,7 @@ namespace Hadal
 
         void Start()
         {
+            SetupEssentials();
             SetupEventRaising();
             SetupNetworking();
         }
@@ -49,6 +50,13 @@ namespace Hadal
 
         #region Essentials
         GameManager gameManager;
+        MainMenuManager mainMenuManager;
+
+        void SetupEssentials()
+        {
+            gameManager = GameManager.Instance;
+            mainMenuManager = MainMenuManager.Instance;
+        }
         #endregion
 
         #region Raising Events
@@ -162,6 +170,12 @@ namespace Hadal
 
         public override void OnJoinedRoom()
         {
+            mainMenuManager.StartRoomPhase(PhotonNetwork.CurrentRoom.Name);
+
+            Player[] players = PhotonNetwork.PlayerList;
+            mainMenuManager.UpdatePlayerList(players);
+
+            mainMenuManager.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
@@ -170,6 +184,7 @@ namespace Hadal
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
+            mainMenuManager.AddIntoPlayerList(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)

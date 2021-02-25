@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Hadal.Legacy
+namespace Hadal.Networking
 {
     public class Menu : MonoBehaviour
     {

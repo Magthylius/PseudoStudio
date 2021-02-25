@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Hadal.Inputs;
 using Magthylius.LerpFunctions;
-using Hadal.Legacy;
+using Hadal.Networking;
 
 //Created by Jet
 namespace Hadal.Player

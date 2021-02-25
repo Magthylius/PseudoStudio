@@ -4,7 +4,7 @@ using Photon.Pun;
 using UnityEngine;
 using Hadal.Usables;
 using Hadal.Inputs;
-using Photon.Realtime;
+using Hadal.Networking;
 
 //Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
