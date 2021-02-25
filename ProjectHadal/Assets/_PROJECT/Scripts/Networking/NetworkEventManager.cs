@@ -6,6 +6,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using System;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Random = UnityEngine.Random;
 
 //! C: Jon
 namespace Hadal.Networking
@@ -145,6 +146,9 @@ namespace Hadal.Networking
         #region Connection Functions
         public override void OnConnectedToMaster()
         {
+            Debug.Log("Connected to Master");
+            PhotonNetwork.JoinLobby();
+            PhotonNetwork.AutomaticallySyncScene = true;
         }
 
         public override void OnConnected()
@@ -153,6 +157,7 @@ namespace Hadal.Networking
 
         public override void OnDisconnected(DisconnectCause cause)
         {
+            Debug.Log("Disconnected from server for reason " + cause.ToString());
         }
 
         public override void OnMasterClientSwitched(Player newMasterClient)
@@ -200,6 +205,8 @@ namespace Hadal.Networking
         #region Lobby Functions
         public override void OnJoinedLobby()
         {
+            Debug.Log("Joined Lobby");
+            PhotonNetwork.NickName = "Player " + Random.Range(0, 10).ToString("00");
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)
@@ -216,6 +223,7 @@ namespace Hadal.Networking
 
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
+            Debug.Log("wtf");
             mainMenuManager.UpdateRoomList(roomList);
         }
         #endregion
