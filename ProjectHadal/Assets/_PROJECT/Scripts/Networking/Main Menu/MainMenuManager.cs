@@ -19,7 +19,7 @@ namespace Hadal.Legacy
         }
 
         MenuPhase menuPhase = MenuPhase.START;
-        [SerializeField] Launcher launcher;
+        //[SerializeField] Launcher launcher;
 
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
@@ -171,7 +171,7 @@ namespace Hadal.Legacy
         void UpdateLobbyNickname()
         {
             lobbyNicknameTMP.text = PlayerPrefs.GetString("PlayerName").ToUpper();
-            launcher.ChangeNickname(PlayerPrefs.GetString("PlayerName"));
+            //launcher.ChangeNickname(PlayerPrefs.GetString("PlayerName"));
         }
 
         public void TMP_CheckNicknameEligibility()
@@ -214,7 +214,7 @@ namespace Hadal.Legacy
         public void BTN_CreateActualRoom()
         {
             if (!allowRoomCreation) return;
-            launcher.CreateRoom(createRoomTMPInput.text, connectingMenu);
+            //launcher.CreateRoom(createRoomTMPInput.text, connectingMenu);
         }
 
         public void BTN_QuitGame()
@@ -264,7 +264,7 @@ namespace Hadal.Legacy
             CloseMenu(roomOptions);
             OpenMenu(gameOptions);
 
-            launcher.LeaveRoom();
+            //launcher.LeaveRoom();
         }
         #endregion
 
