@@ -41,6 +41,11 @@ namespace Hadal.Player
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
+
+            // var f = FindObjectOfType<PlayerLookTarget>();
+            // if (f != null) f.SetTarget(pTrans);
+            // var r = FindObjectOfType<RobotMovementController>();
+            // if (r != null) r.SetTarget(pTrans);
         }
 
         private void Start()
