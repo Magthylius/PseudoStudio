@@ -213,8 +213,7 @@ namespace Hadal.Player
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
-            player.Rotator.Enable();
-            player.Mover.Enable();
+            player.Enable();
         }
 
         public void PNTR_Pause()
@@ -223,8 +222,7 @@ namespace Hadal.Player
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
 
-            player.Rotator.Disable();
-            player.Mover.Disable();
+            player.Disable();
         }
         #endregion
     }
