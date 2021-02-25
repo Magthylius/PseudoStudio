@@ -341,7 +341,7 @@ namespace FlyAgent.Navigation
 		}
 
 		/// <summary>
-        /// Quick way to get a path finding object. It gets called here <see cref="FlyAgent.Agents.Pilot.FindPathBetween(Octree.Node, Octree.Node)"/>.
+        // /// Quick way to get a path finding object. It gets called here <see cref="FlyAgent.Agents.Pilot.FindPathBetween(Octree.Node, Octree.Node)"/>.
         /// </summary>
 		public static PathFinder FindPath(IPF start, IPF end, float sizeRef)
 		{
