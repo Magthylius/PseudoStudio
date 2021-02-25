@@ -38,7 +38,8 @@ namespace Hadal.Player
             base.Awake();
             _pView = photonInfo.PView;
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
-            enablerArray = GetComponentsInChildren<IPlayerEnabler>();
+            var self = GetComponent<IPlayerEnabler>();
+            enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
         }
 
