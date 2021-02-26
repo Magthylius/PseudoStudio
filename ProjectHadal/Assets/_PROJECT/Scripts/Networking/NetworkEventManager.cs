@@ -7,6 +7,7 @@ using ExitGames.Client.Photon;
 using System;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
+using NaughtyAttributes;
 
 //! C: Jon
 namespace Hadal.Networking
@@ -14,7 +15,13 @@ namespace Hadal.Networking
     public class NetworkEventManager : MonoBehaviourPunCallbacks
     {
         public static NetworkEventManager Instance;
+
+        [Header("Network Settings")]
         public bool isOfflineMode;
+
+        [Header("Scene References")]
+        [Scene] public string MainMenuScene;
+        [Scene] public string InGameScene;
 
         #region Unity Lifecycle
         void Awake()
@@ -137,11 +144,22 @@ namespace Hadal.Networking
             if (isOfflineMode) PhotonNetwork.OfflineMode = true;
             else PhotonNetwork.ConnectUsingSettings();
         }
-
+        public void Disconnect()
+        {
+            PhotonNetwork.Disconnect();
+        }
         public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
         public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName);
         public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
-        public void LeaveRoom() => PhotonNetwork.LeaveRoom();
+        public void LeaveRoom(bool returnsToMainMenu = false)
+        {
+            PhotonNetwork.LeaveRoom();
+
+            /*if (returnsToMainMenu)
+            {
+                LoadLevel(MainMenuScene);
+            }*/
+        }
         public void LoadLevel(int index) => PhotonNetwork.LoadLevel(index);
         public void LoadLevel(string levelName) => PhotonNetwork.LoadLevel(levelName);
 
@@ -160,6 +178,8 @@ namespace Hadal.Networking
         public override void OnDisconnected(DisconnectCause cause)
         {
             Debug.Log("Disconnected from server for reason " + cause.ToString());
+            //print(MainMenuScene);
+            LoadLevel(MainMenuScene);
         }
 
         public override void OnMasterClientSwitched(Player newMasterClient)

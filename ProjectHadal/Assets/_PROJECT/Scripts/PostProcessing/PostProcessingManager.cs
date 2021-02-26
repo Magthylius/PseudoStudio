@@ -87,6 +87,15 @@ namespace Hadal.PostProcess
         public void ToggleFog() 
         {
             RenderSettings.fog = !RenderSettings.fog;
-        }        
+        }
+
+        public void EditDepthOfField()
+        {
+            DepthOfField dof;
+            if (volume.profile.TryGet(out dof))
+            {
+                
+            }
+        }
     }
 }

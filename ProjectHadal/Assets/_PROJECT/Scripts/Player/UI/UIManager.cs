@@ -6,6 +6,7 @@ using TMPro;
 using Hadal.Inputs;
 using Magthylius.LerpFunctions;
 using Hadal.Networking;
+using Hadal.PostProcess;
 
 //Created by Jet
 namespace Hadal.Player
@@ -17,6 +18,9 @@ namespace Hadal.Player
         public static UIManager Instance;
 
         public string debugKey;
+
+        NetworkEventManager neManager;
+        PostProcessingManager ppManager;
 
         [Header("Position Settings")]
         [SerializeField] RectTransform uiRotators;
@@ -57,15 +61,15 @@ namespace Hadal.Player
         string lightsOnString;
         string lightsOffString;
 
+        PlayerLamp _lamp;
+        PlayerHealthManager _healthManager;
+
         [Header("Pause Menu Settings")]
         [SerializeField] Menu pauseMenu;
         StandardUseableInput playerInput;
 
         bool pauseMenuOpen = false;
         //! blur out the screen
-
-        private PlayerLamp _lamp;
-        private PlayerHealthManager _healthManager;
 
         #region Unity Lifecycle
         void Awake()
@@ -84,7 +88,11 @@ namespace Hadal.Player
 
         void Start()
         {
+            neManager = NetworkEventManager.Instance;
+            ppManager = PostProcessingManager.Instance;
+
             DoDebugEnabling(debugKey);
+
             SetupModules();
             SetupPauseMenu();
         }
@@ -234,6 +242,11 @@ namespace Hadal.Player
             Cursor.lockState = CursorLockMode.Confined;
 
             player.Disable();
+        }
+
+        public void PNTR_Disconnect()
+        {
+            neManager.Disconnect();
         }
         #endregion
     }

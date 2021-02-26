@@ -2,8 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Magthylius.LerpFunctions;
-using UnityEngine.SceneManagement;
-using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 
@@ -73,7 +71,6 @@ namespace Hadal.Networking
         [Header("Room Ready settings")]
         [SerializeField] TextMeshProUGUI roomNameText;
         public GameObject startGameButton;
-        [SerializeField] string nextLevelName;
 
         [Header("Quit Settings")]
         [SerializeField] RectTransform confirmQuitPanel;
@@ -299,7 +296,8 @@ namespace Hadal.Networking
 
         public void BTN_StartActualLevel()
         {
-            if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
+            //if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
+            neManager.LoadLevel(neManager.InGameScene);
         }
 
         public void BTN_LeaveRoom()
