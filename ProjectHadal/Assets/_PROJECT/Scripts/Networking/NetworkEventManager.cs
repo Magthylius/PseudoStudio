@@ -35,13 +35,15 @@ namespace Hadal.Networking
             {
                 Instance = this;
             }
+
+            SetupNetworking();
         }
 
         void Start()
         {
             SetupEssentials();
             SetupEventRaising();
-            SetupNetworking();
+            
         }
 
         public override void OnEnable()

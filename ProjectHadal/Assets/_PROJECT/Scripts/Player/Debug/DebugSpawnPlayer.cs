@@ -12,15 +12,19 @@ namespace Hadal.Player
         [Foldout("Settings"), SerializeField] bool isOfflineMode = true;
         [Foldout("Settings"), SerializeField] Transform spawnHereTransform;
 
-        private void Start()
-        {
-            GameManager.Instance.ChangeGameState(GameManager.GameState.IN_GAME_HUNTING);
+        private void Awake()
+        {   
             isOfflineMode = NetworkEventManager.Instance.isOfflineMode;
             PhotonNetwork.OfflineMode = isOfflineMode;
             var prefab = Resources.Load(PathManager.PlayerManagerPrefabPath);
             if(prefab is null) return;
             _controller = (GameObject)Instantiate(prefab, spawnHereTransform.position, spawnHereTransform.rotation);
             _controller.GetComponent<PlayerM>().IsOnNetwork = !isOfflineMode;
+        }
+
+        void Start()
+        {
+            GameManager.Instance.ChangeGameState(GameManager.GameState.IN_GAME_HUNTING);
         }
     }
 }

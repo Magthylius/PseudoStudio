@@ -7,6 +7,7 @@ namespace Hadal.PostProcess
     public class DynamicDepthOfField : MonoBehaviour // put on the player
     {
         PostProcessingManager ppManager; // assign post processingmanager to this
+        DebugManager debugManager;
 
         [Header("Dynamic Depth of Field")]
         public Transform postprocessFirePoint;
@@ -17,11 +18,15 @@ namespace Hadal.PostProcess
         RaycastHit hit;
         [ReadOnly] public bool isHit;
         float hitDistance;
-        
+
+        int debugFocalDistance;
 
         void Start()
         {
             ppManager = PostProcessingManager.Instance;
+            debugManager = DebugManager.Instance;
+
+            debugFocalDistance = debugManager.CreateScreenLogger();
         }
 
         void Update()
@@ -40,6 +45,8 @@ namespace Hadal.PostProcess
                     hitDistance++;
             }
             ppManager.EditDepthOfField(hitDistance, focusSpeed);
+
+            debugManager.SLog(debugFocalDistance, "FocalDistance", hitDistance);
         }
 
         void OnDrawGizmos()

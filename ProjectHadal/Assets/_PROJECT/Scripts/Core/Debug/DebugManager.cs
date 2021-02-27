@@ -1,4 +1,7 @@
 using UnityEngine;
+using NaughtyAttributes;
+using System.Collections.Generic;
+using TMPro;
 
 //! Created by Jon
 namespace Hadal
@@ -12,26 +15,38 @@ namespace Hadal
             public bool allowDebug;
         }
 
+        [System.Serializable]
+        public struct ScreenLogger
+        {
+            public TextMeshProUGUI tmp;
+            public ScreenLogger(GameObject gameObject) => tmp = gameObject.GetComponent<TextMeshProUGUI>();
+            public void Log(string text) => tmp.text = text;
+        }
+
         public static DebugManager Instance;
 
-        public bool debugEnabled = true;
-        public System.Collections.Generic.List<DebugKey> debugKeyList;
+        [Header("Debug Log Settings")]
+        [SerializeField] bool debugLoggingEnabled = true;
+
+        [Header("Screen Log Settings")]
+        [SerializeField] bool screenLoggingEnabled = true;
+        public GameObject screenLoggerPrefab;
+        public GameObject screenLoggerCanvas;
+        public Transform screenLoggerParent;
+
+        [Header("Key List")]
+        public List<DebugKey> debugKeyList;
+
+        [Header("Logger List")]
+        [ReadOnly] public List<ScreenLogger> ScreenLoggers;
 
         void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                //DontDestroyOnLoad(gameObject);
-            }
+            if (Instance == null) Instance = this;
             else Destroy(gameObject);
 
-            #if UNITY_EDITOR
-                if (debugEnabled) Debug.unityLogger.logEnabled = true;
-                else Debug.unityLogger.logEnabled = false;
-            #else
-                Debug.unityLogger.logEnabled = false;
-            #endif
+            ScreenLoggers = new List<ScreenLogger>();
+            DetermineLogs();
         }
 
         public bool EnableDebugging(string keyCode)
@@ -42,6 +57,54 @@ namespace Hadal
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Creates an instance of screen logger.
+        /// </summary>
+        /// <returns>Index of screen logger</returns>
+        public int CreateScreenLogger()
+        {
+            GameObject logger = Instantiate(screenLoggerPrefab, screenLoggerParent);
+            ScreenLoggers.Add(new ScreenLogger(logger));
+            return ScreenLoggers.Count - 1;
+        }
+
+        /// <summary>
+        /// Updates screen logger with given text.
+        /// </summary>
+        /// <param name="index">Index of logger.</param>
+        /// <param name="update">Updated text.</param>
+        public void SLog(int index, object update) => ScreenLoggers[index].Log(update.ToString());
+        /// <summary>
+        /// Updates screen logger with given text.
+        /// </summary>
+        /// <param name="index">Index of logger.</param>
+        /// <param name="prefix">Prefix before update.</param>
+        /// <param name="update">Updated text.</param>
+        public void SLog(int index, string prefix, object update) => ScreenLoggers[index].Log(prefix + ": " + update.ToString());
+
+        public void SetDebugLogState(bool state)
+        {
+            debugLoggingEnabled = state;
+            DetermineLogs();
+        }
+
+        public void SetScreenLogState(bool state)
+        {
+            screenLoggingEnabled = state;
+            DetermineLogs();
+        }
+
+        void DetermineLogs()
+        {
+#if UNITY_EDITOR
+            if (debugLoggingEnabled) Debug.unityLogger.logEnabled = true;
+            else Debug.unityLogger.logEnabled = false;
+#else
+                Debug.unityLogger.logEnabled = false;
+#endif
+            if (!screenLoggingEnabled) screenLoggerCanvas.SetActive(false);
         }
     }
 }
