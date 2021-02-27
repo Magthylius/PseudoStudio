@@ -1,43 +1,51 @@
-//Created by Harry
-using System.Collections;
-using System.Collections.Generic;
+//Created by Harry, E: Jon
 using UnityEngine;
+using NaughtyAttributes;
 
 namespace Hadal.PostProcess
 {
     public class DynamicDepthOfField : MonoBehaviour // put on the player
     {
-        public PostProcessingManager Instance; // assign post processingmanager to this
+        PostProcessingManager ppManager; // assign post processingmanager to this
 
         [Header("Dynamic Depth of Field")]
-        Ray raycast;
-        RaycastHit hit;
-        [SerializeField]bool isHit;
-        float hitDistance;
+        public Transform postprocessFirePoint;
         public float focusSpeed = 8;
         public float maxFocusDistance = 100;
 
-        private void Start()
-        {
+        Ray raycast;
+        RaycastHit hit;
+        [ReadOnly] public bool isHit;
+        float hitDistance;
+        
 
+        void Start()
+        {
+            ppManager = PostProcessingManager.Instance;
         }
 
         void Update()
         {
-            raycast = new Ray(transform.position, transform.forward * 100);
+            raycast = new Ray(postprocessFirePoint.position, postprocessFirePoint.forward * 100);
             isHit = false;
 
             if (Physics.Raycast(raycast, out hit, maxFocusDistance))
             {
                 isHit = true;
-                hitDistance = Vector3.Distance(transform.position, hit.point);
+                hitDistance = hit.distance;
             }
             else
             {
                 if (hitDistance < 100f)
                     hitDistance++;
             }
-            Instance.EditDepthOfField(hitDistance, focusSpeed);
+            ppManager.EditDepthOfField(hitDistance, focusSpeed);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(raycast);
         }
     }
 }

@@ -8145,7 +8145,6 @@ MonoBehaviour:
   warningRoomNameTooLong: {fileID: 1779058081}
   roomNameText: {fileID: 784008223}
   startGameButton: {fileID: 1031088488}
-  nextLevelName: JonPrePOC
   confirmQuitPanel: {fileID: 1916658571}
 --- !u!1 &1278513563
 GameObject:
@@ -8834,6 +8833,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 346575959947983435, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5787285943007508242, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: underwaterEffectEnabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
