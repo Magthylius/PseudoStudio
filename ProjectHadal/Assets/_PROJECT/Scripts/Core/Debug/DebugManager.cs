@@ -59,6 +59,7 @@ namespace Hadal
             return false;
         }
 
+        #region Screen Logging
         /// <summary>
         /// Creates an instance of screen logger.
         /// </summary>
@@ -69,7 +70,6 @@ namespace Hadal
             ScreenLoggers.Add(new ScreenLogger(logger));
             return ScreenLoggers.Count - 1;
         }
-
         /// <summary>
         /// Updates screen logger with given text.
         /// </summary>
@@ -82,20 +82,20 @@ namespace Hadal
         /// <param name="index">Index of logger.</param>
         /// <param name="prefix">Prefix before update.</param>
         /// <param name="update">Updated text.</param>
-        public void SLog(int index, string prefix, object update) => ScreenLoggers[index].Log(prefix + ": " + update.ToString());
+        public void SLog(int index, string prefix, object update) => ScreenLoggers[index].Log(prefix + ": " + update.ToString()); 
+        #endregion
 
+        #region Accessors
         public void SetDebugLogState(bool state)
         {
             debugLoggingEnabled = state;
             DetermineLogs();
         }
-
         public void SetScreenLogState(bool state)
         {
             screenLoggingEnabled = state;
             DetermineLogs();
         }
-
         void DetermineLogs()
         {
 #if UNITY_EDITOR
@@ -105,6 +105,7 @@ namespace Hadal
                 Debug.unityLogger.logEnabled = false;
 #endif
             if (!screenLoggingEnabled) screenLoggerCanvas.SetActive(false);
-        }
+        } 
+        #endregion
     }
 }
