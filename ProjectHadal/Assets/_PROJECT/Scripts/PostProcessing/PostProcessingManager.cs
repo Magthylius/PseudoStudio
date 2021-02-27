@@ -39,6 +39,8 @@ namespace Hadal.PostProcess
             {
                 ToggleUnderwaterEffect();
             }*/
+
+            
         }
 
         void OnRenderImage(RenderTexture source, RenderTexture destination) // don't touch
@@ -89,12 +91,12 @@ namespace Hadal.PostProcess
             RenderSettings.fog = !RenderSettings.fog;
         }
 
-        public void EditDepthOfField()
+        public void EditDepthOfField(float _hitDistance, float _focusSpeed)
         {
             DepthOfField dof;
             if (volume.profile.TryGet(out dof))
             {
-                
+                dof.focusDistance.value = Mathf.Lerp(dof.focusDistance.value, _hitDistance, Time.deltaTime * _focusSpeed);
             }
         }
     }

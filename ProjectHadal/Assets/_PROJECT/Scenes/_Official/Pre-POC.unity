@@ -4908,6 +4908,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOfflineMode: 0
+  MainMenuScene: 
+  InGameScene: 
 --- !u!1 &656214119
 GameObject:
   m_ObjectHideFlags: 0
@@ -8493,8 +8495,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   underwaterMat: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
   underwaterEffectEnabled: 1
-  UEDataEnabled: {fileID: 0}
-  UEDataDisabled: {fileID: 0}
+  UEDataEnabled: {fileID: 11400000, guid: 6bd0b94de8d4b7d44b3bcdf428bc01dd, type: 2}
+  UEDataDisabled: {fileID: 11400000, guid: 99af4bdea846c9b4b90c7ab4a5ddabc8, type: 2}
+  focusSpeed: 8
+  maxFocusDistance: 100
 --- !u!4 &1091112301 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: d9d1fbfcf69364ffd8f9c6ade9ce90fe, type: 3}
