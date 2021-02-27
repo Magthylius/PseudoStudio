@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using NaughtyAttributes;
 
 namespace Hadal.PostProcess
 {
@@ -56,6 +57,7 @@ namespace Hadal.PostProcess
         }
 
         #region Underwater Effect
+        [Button("Toggle Underwater Effect")]
         public void ToggleUnderwaterEffect()
         {
             underwaterEffectEnabled = !underwaterEffectEnabled;

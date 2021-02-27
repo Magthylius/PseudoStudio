@@ -52,7 +52,7 @@ namespace Hadal.PostProcess
                     focusDistance++;
             }
 
-            float focalRatio = focusDistance / focusDistanceRange.x;
+            float focalRatio = focusDistance / focusDistanceRange.y;
             float focalLength = Mathf.Lerp(focalLengthRange.x, focalLengthRange.y, focalRatio);
 
             ppManager.EditDepthOfField(focusDistance, focalLength, focusSpeed);
