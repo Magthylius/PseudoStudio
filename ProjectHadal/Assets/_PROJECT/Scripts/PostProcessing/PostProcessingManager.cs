@@ -91,12 +91,13 @@ namespace Hadal.PostProcess
             RenderSettings.fog = !RenderSettings.fog;
         }
 
-        public void EditDepthOfField(float _hitDistance, float _focusSpeed)
+        public void EditDepthOfField(float targetFocusDistance, float targetFocalLength, float _focusSpeed)
         {
             DepthOfField dof;
             if (volume.profile.TryGet(out dof))
             {
-                dof.focusDistance.value = Mathf.Lerp(dof.focusDistance.value, _hitDistance, Time.deltaTime * _focusSpeed);
+                dof.focusDistance.value = Mathf.Lerp(dof.focusDistance.value, targetFocusDistance, Time.deltaTime * _focusSpeed);
+                dof.focalLength.value = Mathf.Lerp(dof.focalLength.value, targetFocalLength, Time.deltaTime * _focusSpeed);
             }
         }
     }

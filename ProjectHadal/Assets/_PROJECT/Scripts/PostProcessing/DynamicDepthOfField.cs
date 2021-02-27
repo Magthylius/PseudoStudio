@@ -13,20 +13,25 @@ namespace Hadal.PostProcess
         public Transform postprocessFirePoint;
         public float focusSpeed = 8;
         public float maxFocusDistance = 100;
+        [MinMaxSlider(0, 100f)] public Vector2 focusDistanceRange;
+        [MinMaxSlider(1, 300f)] public Vector2 focalLengthRange;
 
         Ray raycast;
         RaycastHit hit;
-        [ReadOnly] public bool isHit;
-        float hitDistance;
+        [ReadOnly, SerializeField] bool isHit;
 
-        int debugFocalDistance;
+        float focusDistance;
+
+        int sLog_FocusDistance;
+        int sLog_FocalLength;
 
         void Start()
         {
             ppManager = PostProcessingManager.Instance;
             debugManager = DebugManager.Instance;
 
-            debugFocalDistance = debugManager.CreateScreenLogger();
+            sLog_FocusDistance = debugManager.CreateScreenLogger();
+            sLog_FocalLength = debugManager.CreateScreenLogger();
         }
 
         void Update()
@@ -34,19 +39,26 @@ namespace Hadal.PostProcess
             raycast = new Ray(postprocessFirePoint.position, postprocessFirePoint.forward * 100);
             isHit = false;
 
-            if (Physics.Raycast(raycast, out hit, maxFocusDistance))
+            if (Physics.Raycast(raycast, out hit, focusDistanceRange.y))
             {
                 isHit = true;
-                hitDistance = hit.distance;
+                focusDistance = hit.distance;
+
+                if (focusDistance < focusDistanceRange.x) focusDistance = focusDistanceRange.x;
             }
             else
             {
-                if (hitDistance < 100f)
-                    hitDistance++;
+                if (focusDistance < focusDistanceRange.y)
+                    focusDistance++;
             }
-            ppManager.EditDepthOfField(hitDistance, focusSpeed);
 
-            debugManager.SLog(debugFocalDistance, "FocalDistance", hitDistance);
+            float focalRatio = focusDistance / focusDistanceRange.x;
+            float focalLength = Mathf.Lerp(focalLengthRange.x, focalLengthRange.y, focalRatio);
+
+            ppManager.EditDepthOfField(focusDistance, focalLength, focusSpeed);
+
+            debugManager.SLog(sLog_FocusDistance, "FocalDistance", focusDistance);
+            debugManager.SLog(sLog_FocalLength, "FocalLength", focalLength);
         }
 
         void OnDrawGizmos()
