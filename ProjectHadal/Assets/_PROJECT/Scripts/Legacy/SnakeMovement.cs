@@ -35,7 +35,8 @@ public class SnakeMovement : MonoBehaviour
     {
         float curspeed = speed;
         Vector3 direction = NextPos.position - BodyParts[0].position;
-        Quaternion rotation = Quaternion.LookRotation(direction);
+        Quaternion rotation = Quaternion.identity;
+        if (direction.sqrMagnitude != 0f) rotation = Quaternion.LookRotation(direction); 
 
         if (BodyParts[0].position == NextPos.position)
         {
