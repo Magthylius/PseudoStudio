@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 4
-  endTime: 900
+  endTime: 5
   armsProjectile: 0
   skipsOnContact: 0
   destroyObject: 0
@@ -312,6 +312,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugKey: Projectile Physics
   wallLayer: Wall
+  IsAttach: 0
+  impulseMode: {fileID: 0}
 --- !u!114 &2273389915342579660
 MonoBehaviour:
   m_ObjectHideFlags: 0
