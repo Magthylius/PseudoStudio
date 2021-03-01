@@ -2,8 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Magthylius.LerpFunctions;
-using UnityEngine.SceneManagement;
-using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 
@@ -22,6 +20,8 @@ namespace Hadal.Networking
 
         MenuPhase menuPhase = MenuPhase.START;
         NetworkEventManager neManager;
+
+        bool mainMenuInitiated = false;
 
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
@@ -73,19 +73,42 @@ namespace Hadal.Networking
         [Header("Room Ready settings")]
         [SerializeField] TextMeshProUGUI roomNameText;
         public GameObject startGameButton;
-        [SerializeField] string nextLevelName;
 
         [Header("Quit Settings")]
         [SerializeField] RectTransform confirmQuitPanel;
 
         FlexibleRect confirmQuitFR;
 
-        private void Awake()
+        void Awake()
         {
             Instance = this;
+            mainMenuInitiated = false;
         }
 
         void Start()
+        {
+            //SetupMainMenu();
+        }
+
+        void Update()
+        {
+            if (!mainMenuInitiated) return;
+
+            switch (menuPhase)
+            {
+                case MenuPhase.START:
+                    startIF.Step(Time.unscaledDeltaTime);
+                    break;
+                case MenuPhase.MAIN:
+                    createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    break;
+            }
+        }
+
+        #region Main Menu 
+        public void InitMainMenu()
         {
             neManager = NetworkEventManager.Instance;
 
@@ -107,24 +130,10 @@ namespace Hadal.Networking
             confirmQuitFR = new FlexibleRect(confirmQuitPanel);
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
             confirmQuitFR.MoveToEnd();
+
+            mainMenuInitiated = true;
         }
 
-        void Update()
-        {
-            switch (menuPhase)
-            {
-                case MenuPhase.START:
-                    startIF.Step(Time.unscaledDeltaTime);
-                    break;
-                case MenuPhase.MAIN:
-                    createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    break;
-            }
-        }
-
-        #region Main Menu 
         void ChangePhase(MenuPhase phase) => menuPhase = phase;
 
         //! make sure objects are active and inactive
@@ -299,7 +308,8 @@ namespace Hadal.Networking
 
         public void BTN_StartActualLevel()
         {
-            if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
+            //if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
+            neManager.LoadLevel(neManager.InGameScene);
         }
 
         public void BTN_LeaveRoom()

@@ -9,14 +9,6 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] private bool IsAttach;
         public ImpulseMode impulseMode;
 
-        protected override void Start()
-        {
-            base.Start();
-            impulseMode = GetComponentInChildren<ImpulseMode>();
-//            Debug.LogError(impulseMode);
-            impulseMode.ModeSwapped += ModeToggle;
-        }
-
         private void OnCollisionEnter(Collision collision)
         {
             LayerMask layer = LayerMask.NameToLayer(wallLayer);
@@ -30,13 +22,17 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
+        public void SubscribeModeEvent()
+        {
+            impulseMode = GetComponentInChildren<ImpulseMode>();
+            impulseMode.ModeSwapped += ModeToggle;
+        }
+
         public void ModeToggle()
         {
             IsAttach = !IsAttach;
-            Debug.LogError("MODE SAWPPED");
         }
 
         private void ModeToggle(bool IsAttach) => this.IsAttach = IsAttach;
-
     }
 }

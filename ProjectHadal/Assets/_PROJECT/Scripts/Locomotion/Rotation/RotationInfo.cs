@@ -2,6 +2,7 @@
 using Hadal.Inputs;
 using UnityEngine;
 using NaughtyAttributes;
+using ReadOnly = NaughtyAttributes.ReadOnlyAttribute;
 
 //Created by Jet, E: Jon
 namespace Hadal.Locomotion
@@ -13,7 +14,6 @@ namespace Hadal.Locomotion
         public float Sensitivity;
         public float Acceleration;
         public float XAxisClamp;
-        public float ZAxisClamp;
         public float ClampTolerance;
         public float PullBackSpeed;
         [ReadOnly] public float CurrentXAxis;
@@ -23,6 +23,7 @@ namespace Hadal.Locomotion
         public float YAxisInputClamp;
 
         [Header("Z Rotation Stabiliser")]
+        public float ZAxisClamp;
         public float ZDampingSpeed;
         public float ZActiveRotationSpeed;
         public float SnapAngle;
@@ -30,6 +31,9 @@ namespace Hadal.Locomotion
         
         private float _currentDampSpeed = 0.0f;
         private bool _isVerticallyObserving = false;
+        private bool _isFlipped = false;
+        private const float UprightAngle = 0.0f;
+        private const float UpsideDownAngle = 180.0f;
         private const float TiltAngle = 90.0f;
         private const float FullAngle = 360.0f;
 
@@ -37,8 +41,9 @@ namespace Hadal.Locomotion
         {
             XAxisClamp = XAxisClamp.Abs();
             CurrentXAxis = 0.0f;
-            ZClampAngle = 0.0f;
+            ZClampAngle = UprightAngle;
             SnapAngle = SnapAngle.Abs();
+            _isFlipped = false;
         }
 
         public void DoRotationWithLerp(in IRotationInput input, in float deltaTime, Transform target)
@@ -72,38 +77,26 @@ namespace Hadal.Locomotion
             mouseDistance *= (Sensitivity * Acceleration * deltaTime);
 
             Vector3 rotation = target.localRotation.eulerAngles;
-            rotation.x -= mouseDistance.y;
-            rotation.y += mouseDistance.x;
+            if (!_isFlipped) rotation.x -= mouseDistance.y;
+            else rotation.x += mouseDistance.y;
+            if (!_isFlipped) rotation.y += mouseDistance.x;
+            else rotation.y -= mouseDistance.x;
 
             target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
             rotation = target.rotation.eulerAngles;
-            rotation.z = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
+            rotation.z = RotateZAxisWithLerpXClamp(input, rotation.z, -mouseDistance.x, deltaTime);
+            // rotation.z = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
             target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
             //target.Rotate(mouseDistance.y, mouseDistance.x, 0.0f, Space.World);
-
             //float tilt = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
-        }
-
-        private static Vector3 ReverseZAxis(Vector3 rotation)
-        {
-            Vector3 postRot = rotation;
-            if (postRot.z >= 0f && postRot.z < 180f)
-            {
-                postRot.z = 360f - postRot.z;
-            }
-            else// if (postRot.z < 360f && postRot.z > 180f)
-            {
-                postRot.z = 0f + (360f - postRot.z.Abs());
-            }
-            return postRot;
         }
 
         private float RotateZAxisWithLerpClamp(in IRotationInput input, in Vector3 euler, in float deltaTime)
         {
             float z = euler.z;
-            if (HandleZAxisClamp(euler, deltaTime, z))
+            if (HandleZAxisClamp(euler, deltaTime, z) && !input.ZTrigger)
             {
                 z = Mathf.SmoothDampAngle(z, ZClampAngle, ref _currentDampSpeed, SmoothingTime, MaxDampSpeed, SmoothDampStep * deltaTime);
             }
@@ -112,6 +105,40 @@ namespace Hadal.Locomotion
 
             #region Local Shorthands
             bool SnapDistanceReached() => z.NormalisedAngle().DiffBetween(ZClampAngle.NormalisedAngle()).IsLessThan(SnapAngle);
+            #endregion
+        }
+
+        private float RotateZAxisWithLerpXClamp(in IRotationInput input, in float eulerZ, in float xMouseOffset, in float deltaTime)
+        {
+            float z = eulerZ;
+            z = HandleZAxisInput(input, deltaTime, z);
+            if (!_isFlipped)
+            {
+                if (xMouseOffset < -ZClampAngle || xMouseOffset > ZClampAngle)
+                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * Sensitivity * Acceleration * deltaTime);
+            }
+            else
+            {
+                if (xMouseOffset < -ZClampAngle || xMouseOffset > ZClampAngle)
+                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * Sensitivity * Acceleration * deltaTime);
+            }
+            return z;
+        }
+
+        private float HandleZAxisInput(in IRotationInput input, in float deltaTime, float z)
+        {
+            if (input.ZTrigger)
+            {
+                z -= input.ZAxis * ZActiveRotationSpeed * Sensitivity * Acceleration * deltaTime;
+                ZClampAngle = UpsideDownAngle * IsEligibleToFlip().AsFloat() + UprightAngle * (!IsEligibleToFlip()).AsFloat();
+                _isFlipped = IsEligibleToFlip();
+                return z;
+            }
+            // _isFlipped = IsEligibleToFlip();
+            return Mathf.Lerp(z, ZClampAngle, ZActiveRotationSpeed * Acceleration * deltaTime);
+
+            #region Local Shorthands
+            bool IsEligibleToFlip() => z.NormalisedAngle() < FullAngle - TiltAngle && z.NormalisedAngle() > TiltAngle;
             #endregion
         }
         

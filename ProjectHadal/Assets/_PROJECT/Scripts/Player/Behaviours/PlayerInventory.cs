@@ -34,7 +34,7 @@ namespace Hadal.Player.Behaviours
         void Start()
         {
             neManager = NetworkEventManager.Instance;
-            neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
+            if (neManager) neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
         }
 
         public void Inject(PlayerController controller)
