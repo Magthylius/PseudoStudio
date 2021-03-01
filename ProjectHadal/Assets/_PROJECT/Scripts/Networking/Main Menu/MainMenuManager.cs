@@ -21,6 +21,8 @@ namespace Hadal.Networking
         MenuPhase menuPhase = MenuPhase.START;
         NetworkEventManager neManager;
 
+        bool mainMenuInitiated = false;
+
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
         [SerializeField] Menu nicknameMenu;
@@ -77,12 +79,36 @@ namespace Hadal.Networking
 
         FlexibleRect confirmQuitFR;
 
-        private void Awake()
+        void Awake()
         {
             Instance = this;
+            mainMenuInitiated = false;
         }
 
         void Start()
+        {
+            //SetupMainMenu();
+        }
+
+        void Update()
+        {
+            if (!mainMenuInitiated) return;
+
+            switch (menuPhase)
+            {
+                case MenuPhase.START:
+                    startIF.Step(Time.unscaledDeltaTime);
+                    break;
+                case MenuPhase.MAIN:
+                    createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    break;
+            }
+        }
+
+        #region Main Menu 
+        public void InitMainMenu()
         {
             neManager = NetworkEventManager.Instance;
 
@@ -104,24 +130,10 @@ namespace Hadal.Networking
             confirmQuitFR = new FlexibleRect(confirmQuitPanel);
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
             confirmQuitFR.MoveToEnd();
+
+            mainMenuInitiated = true;
         }
 
-        void Update()
-        {
-            switch (menuPhase)
-            {
-                case MenuPhase.START:
-                    startIF.Step(Time.unscaledDeltaTime);
-                    break;
-                case MenuPhase.MAIN:
-                    createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    break;
-            }
-        }
-
-        #region Main Menu 
         void ChangePhase(MenuPhase phase) => menuPhase = phase;
 
         //! make sure objects are active and inactive
