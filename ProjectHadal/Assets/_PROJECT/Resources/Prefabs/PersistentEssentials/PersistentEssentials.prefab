@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   underwaterMat: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
-  underwaterEffectEnabled: 1
+  underwaterEffectEnabled: 0
   UEDataEnabled: {fileID: 11400000, guid: 6bd0b94de8d4b7d44b3bcdf428bc01dd, type: 2}
   UEDataDisabled: {fileID: 11400000, guid: 99af4bdea846c9b4b90c7ab4a5ddabc8, type: 2}
 --- !u!114 &1086192625
@@ -213,7 +213,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6154099161309653026}
   - component: {fileID: 2345048154679118498}
-  - component: {fileID: 3160824680593463597}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -247,28 +246,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93afb261c068a3d4bb94c0b8a49fb325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3160824680593463597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7603188132447148180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  observableSearch: 2
-  Synchronization: 3
-  OwnershipTransfer: 0
-  ObservedComponents: []
-  viewIdField: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1001 &6576420977376858108
 PrefabInstance:
   m_ObjectHideFlags: 0
