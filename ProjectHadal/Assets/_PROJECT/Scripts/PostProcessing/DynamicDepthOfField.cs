@@ -55,7 +55,7 @@ namespace Hadal.PostProcess
             float focalRatio = focusDistance / focusDistanceRange.y;
             float focalLength = Mathf.Lerp(focalLengthRange.x, focalLengthRange.y, focalRatio);
 
-            ppManager.EditDepthOfField(focusDistance, focalLength, focusSpeed);
+            if (ppManager) ppManager.EditDepthOfField(focusDistance, focalLength, focusSpeed);
 
             debugManager.SLog(sLog_FocusDistance, "FocalDistance", focusDistance);
             debugManager.SLog(sLog_FocalLength, "FocalLength", focalLength);
