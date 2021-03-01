@@ -35,10 +35,8 @@ public class ImpulseMode : ProjectileMode
     public void OverrideForce(float overridingForce, bool isModeSwap)
     {
         if(isModeSwap)
-        {
-            Debug.LogError(ModeSwapped.GetInvocationList().Length);  
+        {  
             ModeSwapped?.Invoke();
-            Debug.LogError("Event called");
         }     
         force = overridingForce;
     }
