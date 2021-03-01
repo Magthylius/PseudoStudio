@@ -36,6 +36,7 @@ public class ImpulseMode : ProjectileMode
     {
         if(isModeSwap)
         {
+            Debug.LogError(ModeSwapped.GetInvocationList().Length);  
             ModeSwapped?.Invoke();
             Debug.LogError("Event called");
         }     

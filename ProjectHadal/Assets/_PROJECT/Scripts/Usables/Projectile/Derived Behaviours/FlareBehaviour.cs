@@ -12,9 +12,6 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            impulseMode = GetComponentInChildren<ImpulseMode>();
-//            Debug.LogError(impulseMode);
-            impulseMode.ModeSwapped += ModeToggle;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -30,10 +27,16 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
+        public void SubscribeModeEvent()
+        {
+            impulseMode = GetComponentInChildren<ImpulseMode>();
+            impulseMode.ModeSwapped += ModeToggle;
+        }
+
         public void ModeToggle()
         {
             IsAttach = !IsAttach;
-            Debug.LogError("MODE SAWPPED");
+            Debug.LogError("MODE SWAPPED");
         }
 
         private void ModeToggle(bool IsAttach) => this.IsAttach = IsAttach;
