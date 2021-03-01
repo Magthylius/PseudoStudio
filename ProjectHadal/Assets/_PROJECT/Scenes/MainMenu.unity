@@ -6769,7 +6769,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1043523914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8835,6 +8835,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3160824680593463597, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: viewIdField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5787285943007508242, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: underwaterEffectEnabled
       value: 0
@@ -8842,6 +8846,10 @@ PrefabInstance:
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
       value: PersistentEssentials
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: isOfflineMode
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}

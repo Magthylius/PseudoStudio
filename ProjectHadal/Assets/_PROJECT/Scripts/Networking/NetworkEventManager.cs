@@ -30,6 +30,7 @@ namespace Hadal.Networking
             {
                 gameObject.name += " (Deprecated)";
                 Destroy(this);
+                return;
             }
             else
             {
@@ -43,7 +44,6 @@ namespace Hadal.Networking
         {
             SetupEssentials();
             SetupEventRaising();
-            
         }
 
         public override void OnEnable()
@@ -143,8 +143,10 @@ namespace Hadal.Networking
         #region Photon Networking Overrides
         void SetupNetworking()
         {
-            if (isOfflineMode) PhotonNetwork.OfflineMode = true;
-            else PhotonNetwork.ConnectUsingSettings();
+            /*if (isOfflineMode) PhotonNetwork.OfflineMode = true;
+            else PhotonNetwork.ConnectUsingSettings();*/
+
+            PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
         }
         public void Disconnect()
         {

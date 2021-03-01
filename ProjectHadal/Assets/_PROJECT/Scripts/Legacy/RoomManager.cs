@@ -57,11 +57,5 @@ namespace Hadal.Legacy
             }
         
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
     }
 }

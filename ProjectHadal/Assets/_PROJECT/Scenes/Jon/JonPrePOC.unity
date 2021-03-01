@@ -16060,7 +16060,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6118134940986891786, guid: ffe2416e071e28547a6343d7d6e1c341, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6118134940986891829, guid: ffe2416e071e28547a6343d7d6e1c341, type: 3}
       propertyPath: m_RootOrder
@@ -16193,6 +16193,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: isOfflineMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576420978336463561, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
