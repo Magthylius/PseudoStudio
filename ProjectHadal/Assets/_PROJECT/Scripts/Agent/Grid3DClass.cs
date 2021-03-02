@@ -20,47 +20,58 @@ namespace Hadal.AI
         [SerializeField, Tenshi.ReadOnly] Vector3 centre = Vector3.zero;
         [SerializeField] float cellSize;
         BoxCollider _collider;
-        [SerializeField] List<GameObject> obstacleList;
+        [SerializeField] List<Collider> obstacleList;
         [SerializeField] LayerMask obstacleMask;
-        private bool enableGridGizmo = false;
+        private bool enableGridGizmo = true;
+
 
         private void Awake()
         {
+            //Get box collider
             _collider = gameObject.GetComponent<BoxCollider>();
-            grid = new Node[x, y, z];
             var nodePrefab = Resources.Load(PathManager.GridNodePrefabPath);
-            
+            grid = new Node[x, y, z];
             int valX = 0, valY = 0, valZ = 0;
             int halfX = (int)(grid.GetLength(0) * 0.5f);
             int halfY = (int)(grid.GetLength(1) * 0.5f);
             int halfZ = (int)(grid.GetLength(2) * 0.5f);
             for (int xx = -halfX; xx <= halfX; xx++)
             {
-                if (valX >= grid.GetLength(0)) valX--;
+                if (valX >= grid.GetLength(0))
+                    valX--;
+
                 valY = 0;
                 for (int yy = -halfY; yy <= halfY; yy++)
                 {
-                    if (valY >= grid.GetLength(1)) valY--;
+                    if (valY >= grid.GetLength(1))
+                        valY--;
+
                     valZ = 0;
                     for (int zz = -halfZ; zz <= halfZ; zz++)
                     {
-                        if (valZ >= grid.GetLength(2)) valZ--;
-                        grid[valX, valY, valZ] = new Node();
+                        if (valZ >= grid.GetLength(2))
+                            valZ--;
+
+                        var node = new Node();
                         var position = (new Vector3(xx, yy, zz) * cellSize) + GetCentre;
-                        grid[valX, valY, valZ].GObject = Instantiate(nodePrefab, position, Quaternion.identity, transform).AsGObject();
-                        grid[valX, valY, valZ].GObject.name += $" {valX},{valY},{valZ}";
+                        node.Position = position;
+                        node.Bounds = new Bounds(position, new Vector3(cellSize, cellSize, cellSize));
+                        node.HasObstacle = false;
+                        grid[valX, valY, valZ] = node;
                         valZ++;
                     }
                     valY++;
                 }
                 valX++;
             }
+
+            GetAllObstaclesInScene();
+            CheckObstacles();
         }
 
         private void Update()
         {
-            CheckObstacles();
-            Draw();
+
         }
 
         private void LoopGrid(Action<int, int, int> method)
@@ -94,28 +105,31 @@ namespace Hadal.AI
             }
         }
 
-        void Draw()
-        {
-            
-        }
-
         void CheckObstacles()
         {
-            for (int i = 0; i < obstacleList.Count; i++)
+            int i = 1;
+            LoopGrid((x, y, z) =>
             {
-                if(_collider.bounds.Contains(obstacleList[i].transform.position))
+                Node g = grid[x, y, z];
+                Bounds b = g.Bounds;
+                obstacleList.ForEach(o =>
                 {
-                    "Obstacle".Msg();
-                }
-            }
+                    if (b.Intersects(o.bounds))
+                    {
+                        g.HasObstacle = true;
+                        $"Obstacle Count: {i}".Msg();
+                        i++;
+                    }
+                });
+            });
+            obstacleList.Clear();
         }
-
-        [Button(nameof(GetAllObstaclesInScene))]
+        
         private void GetAllObstaclesInScene()
         {
             if (obstacleList.IsNullOrEmpty())
             {
-                obstacleList = FindObjectsOfType<GameObject>().Where(o => o.layer == obstacleMask.ToLayer()).ToList();
+                obstacleList = FindObjectsOfType<Collider>().Where(o => o.gameObject.layer == obstacleMask.ToLayer()).ToList();
             }
         }
 
@@ -126,16 +140,16 @@ namespace Hadal.AI
         {
             //Visualization
             Gizmos.DrawWireCube(GetCentre, GetSize);
-            
+            Gizmos.color = Color.red;
             if (Application.isPlaying && enableGridGizmo)
             {
-                LoopGridOffset((x, y, z) =>
+                LoopGrid((x, y, z) =>
                 {
-                    if (x.IsPrime() || y.IsPrime() || z.IsPrime())
+                    var g = grid[x, y, z];
+                    var b = g.Bounds;
+                    if (g.HasObstacle)
                     {
-                        var position = new Vector3(x, y, z) * cellSize;
-                        Gizmos.color = Color.red;
-                        Gizmos.DrawWireCube(position + GetCentre, new Vector3(cellSize,cellSize,cellSize));
+                        Gizmos.DrawWireCube(b.center, b.size);
                     }
                 });
             }
@@ -178,8 +192,9 @@ namespace Hadal.AI
 
     public class Node
     {
-        public Vector3 Index { get; set; }
-        public GameObject GObject { get; set; } = null;
+        public bool HasObstacle { get; set; } = false;
+        public Bounds Bounds { get; set; }
+        public Vector3 Position { get; set; }
         public Node() { }
     }
 }

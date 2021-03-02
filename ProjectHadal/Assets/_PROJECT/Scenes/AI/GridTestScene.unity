@@ -1638,7 +1638,7 @@ GameObject:
   - component: {fileID: 227441305}
   - component: {fileID: 227441304}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GridGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1657,11 +1657,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dimensions: {x: 0, y: 0, z: 0}
-  x: 10
-  y: 10
-  z: 10
+  x: 100
+  y: 30
+  z: 100
   centre: {x: 0, y: 0, z: 0}
-  cellSize: 1
+  cellSize: 30
   obstacleList: []
   obstacleMask:
     serializedVersion: 2
