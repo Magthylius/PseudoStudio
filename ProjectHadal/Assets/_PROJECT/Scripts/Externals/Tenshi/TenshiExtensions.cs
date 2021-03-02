@@ -71,6 +71,7 @@ namespace Tenshi
         public static object[] AsObjArray(this object obj) => (object[]) obj;
 
         public static int Round(this float number) => Mathf.RoundToInt(number);
+        public static int Floor(this float number) => Mathf.FloorToInt(number);
         public static byte AsByte(this int number) => Convert.ToByte(number);
         public static byte AsByte(this bool statement) => Convert.ToByte(statement);
         public static int AsInt(this bool statement) => Convert.ToInt32(statement);
@@ -117,6 +118,8 @@ namespace Tenshi
 
     public static class MathExtensions
     {
+        public static float ToDegrees(this float radian) => radian * Mathf.Rad2Deg;
+        public static float ToRadians(this float degree) => degree * Mathf.Deg2Rad;
         public static float Abs(this float number) => Mathf.Abs(number);
         
         public static void LerpSpeed(this ref float speed, in float directionalSpeed, in float acceleration, in float deltaTime)
