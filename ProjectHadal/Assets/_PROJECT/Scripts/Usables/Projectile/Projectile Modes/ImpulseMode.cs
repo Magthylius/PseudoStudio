@@ -9,7 +9,7 @@ public class ImpulseMode : ProjectileMode
     public Vector3 direction;
     public float force;
     public float linearDrag;
-    public delegate void ModeSwapEvent();
+    public delegate void ModeSwapEvent(bool isSwap);
     public event ModeSwapEvent ModeSwapped;
 
     public override void Setup(Rigidbody rb, Transform rTransform)
@@ -36,7 +36,8 @@ public class ImpulseMode : ProjectileMode
     {
         if(isModeSwap)
         {  
-            ModeSwapped?.Invoke();
+            ModeSwapped?.Invoke(isModeSwap);
+            Debug.Log("Event called");
         }     
         force = overridingForce;
     }

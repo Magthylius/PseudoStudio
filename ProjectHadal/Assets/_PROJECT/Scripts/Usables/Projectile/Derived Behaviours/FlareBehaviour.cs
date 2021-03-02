@@ -14,8 +14,10 @@ namespace Hadal.Usables.Projectiles
             LayerMask layer = LayerMask.NameToLayer(wallLayer);
             if (collision.gameObject.layer == layer.value)
             {
-                if(IsAttach == true)
+                Debug.Log("I have collided with the cube");
+                if (IsAttach == true)
                 {
+                    Debug.Log("Sticked!");
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                 }                 
@@ -25,7 +27,7 @@ namespace Hadal.Usables.Projectiles
         public void SubscribeModeEvent()
         {
             impulseMode = GetComponentInChildren<ImpulseMode>();
-            impulseMode.ModeSwapped += ModeToggle;
+            impulseMode.ModeSwapped += ModeSwap;
         }
 
         public void ModeToggle()
@@ -33,6 +35,6 @@ namespace Hadal.Usables.Projectiles
             IsAttach = !IsAttach;
         }
 
-        private void ModeToggle(bool IsAttach) => this.IsAttach = IsAttach;
+        private void ModeSwap(bool IsAttach) => this.IsAttach = IsAttach;
     }
 }
