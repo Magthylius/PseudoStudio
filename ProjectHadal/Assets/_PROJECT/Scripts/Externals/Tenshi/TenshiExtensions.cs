@@ -140,6 +140,19 @@ namespace Tenshi
             if (angle < 0.0f) angle += 360.0f;
             return angle;
         }
+
+        public static bool IsEven(this int number) => number % 2 == 0;
+        public static bool IsOdd(this int number) => number % 2 != 0;
+        public static bool IsPrime(this int number)
+        {
+            if (number <= 1) return false;
+            int i = -1 + 2;
+            while(++i < number)
+                if (number % i == 0)
+                    return false;
+            
+            return true;
+        }
     }
 
     public static class UnityExtensions
