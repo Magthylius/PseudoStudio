@@ -9,7 +9,6 @@ using NaughtyAttributes;
 
 namespace Hadal.AI
 {
-    [RequireComponent(typeof(BoxCollider))]
     public class Grid3DClass : MonoBehaviour
     {
         private Node[,,] grid;
@@ -21,9 +20,8 @@ namespace Hadal.AI
         [SerializeField] float cellSize;
         BoxCollider _collider;
         [SerializeField] List<Collider> obstacleList;
-        [SerializeField] LayerMask obstacleMask;
+        [SerializeField] LayerMask obstacleMask =  LayerMask.GetMask("Obstacle");
         private bool enableGridGizmo = true;
-
 
         private void Awake()
         {
