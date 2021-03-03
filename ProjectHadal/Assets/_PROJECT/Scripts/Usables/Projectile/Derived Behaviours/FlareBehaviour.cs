@@ -8,6 +8,15 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] private string wallLayer = string.Empty;
         [SerializeField] private bool IsAttach;
         public ImpulseMode impulseMode;
+        public SelfDeactivationMode selfDeactivation;
+
+        public void SubscribeModeEvent()
+        {
+            impulseMode = GetComponentInChildren<ImpulseMode>();
+            impulseMode.ModeSwapped += ModeSwap;
+            selfDeactivation = GetComponentInChildren<SelfDeactivationMode>();
+            selfDeactivation.selfDeactivated += ModeSwap;
+        }
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -20,12 +29,6 @@ namespace Hadal.Usables.Projectiles
                     Rigidbody.isKinematic = true;
                 }                 
             }
-        }
-
-        public void SubscribeModeEvent()
-        {
-            impulseMode = GetComponentInChildren<ImpulseMode>();
-            impulseMode.ModeSwapped += ModeSwap;
         }
 
         public void ModeToggle()
