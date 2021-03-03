@@ -14,10 +14,8 @@ namespace Hadal.Usables.Projectiles
             LayerMask layer = LayerMask.NameToLayer(wallLayer);
             if (collision.gameObject.layer == layer.value)
             {
-                Debug.Log("I have collided with the cube");
                 if (IsAttach == true)
                 {
-                    Debug.Log("Sticked!");
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                 }                 
