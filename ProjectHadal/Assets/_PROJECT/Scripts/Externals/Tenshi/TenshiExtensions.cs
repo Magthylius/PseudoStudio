@@ -105,6 +105,7 @@ namespace Tenshi
         public static bool IsLessOrEqualTo(this int thisNum, int otherNum) => thisNum <= otherNum;
 
         public static bool IsEmpty<T>(this IEnumerable<T> e) => e.Count() == 0;
+        public static bool IsNotEmpty<T>(this IEnumerable<T> e) => e.Count() != 0;
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) ? e is null : e.IsEmpty();
     }
 
@@ -156,6 +157,11 @@ namespace Tenshi
             
             return true;
         }
+    }
+
+    public static class CollectionExtensions
+    {
+        public static T RandomElement<T>(this IEnumerable<T> e) => e.ElementAt(UnityEngine.Random.Range(0, e.Count()));
     }
 
     public static class UnityExtensions

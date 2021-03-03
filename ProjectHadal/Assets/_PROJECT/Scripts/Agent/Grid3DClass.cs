@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,9 +8,57 @@ using NaughtyAttributes;
 
 namespace Hadal.AI
 {
+    public class Grid
+    {
+        public Grid(Node[,,] grid) => this.grid = grid;
+        public Node[,,] grid;
+        public Node[,,] Get => grid;
+        public Node GetNodeAt(Vector3Int pos) => Get[pos.x, pos.y, pos.z];
+
+        public void Loop(Action<int, int, int> method)
+        {
+            for (int x = 0; x < Get.GetLength(0); x++)
+            {
+                for (int y = 0; y < Get.GetLength(1); y++)
+                {
+                    for (int z = 0; z < Get.GetLength(2); z++)
+                    {
+                        method.Invoke(x, y, z);
+                    }
+                }
+            }
+        }
+        public void LoopNode(Action<Node> method)
+        {
+            for (int x = 0; x < Get.GetLength(0); x++)
+            {
+                for (int y = 0; y < Get.GetLength(1); y++)
+                {
+                    for (int z = 0; z < Get.GetLength(2); z++)
+                    {
+                        method.Invoke(Get[x, y, z]);
+                    }
+                }
+            }
+        }
+        public void LoopFull(Action<int, int, int, Node> method)
+        {
+            for (int x = 0; x < Get.GetLength(0); x++)
+            {
+                for (int y = 0; y < Get.GetLength(1); y++)
+                {
+                    for (int z = 0; z < Get.GetLength(2); z++)
+                    {
+                        method.Invoke(x, y, z, Get[x, y, z]);
+                    }
+                }
+            }
+        }
+    }
+
     public class Grid3DClass : MonoBehaviour
     {
-        private Node[,,] grid;
+        private Grid grid;
         [SerializeField] Vector3 dimensions;
         [SerializeField] int x;
         [SerializeField] int y;
@@ -29,26 +76,26 @@ namespace Hadal.AI
             //Get box collider
             _collider = gameObject.GetComponent<BoxCollider>();
             var nodePrefab = Resources.Load(PathManager.GridNodePrefabPath);
-            grid = new Node[x, y, z];
+            grid = new Grid(new Node[x, y, z]);
             int valX = 0, valY = 0, valZ = 0;
-            int halfX = (int)(grid.GetLength(0) * 0.5f);
-            int halfY = (int)(grid.GetLength(1) * 0.5f);
-            int halfZ = (int)(grid.GetLength(2) * 0.5f);
+            int halfX = (int)(grid.Get.GetLength(0) * 0.5f);
+            int halfY = (int)(grid.Get.GetLength(1) * 0.5f);
+            int halfZ = (int)(grid.Get.GetLength(2) * 0.5f);
             for (int xx = -halfX; xx <= halfX; xx++)
             {
-                if (valX >= grid.GetLength(0))
+                if (valX >= grid.Get.GetLength(0))
                     valX--;
 
                 valY = 0;
                 for (int yy = -halfY; yy <= halfY; yy++)
                 {
-                    if (valY >= grid.GetLength(1))
+                    if (valY >= grid.Get.GetLength(1))
                         valY--;
 
                     valZ = 0;
                     for (int zz = -halfZ; zz <= halfZ; zz++)
                     {
-                        if (valZ >= grid.GetLength(2))
+                        if (valZ >= grid.Get.GetLength(2))
                             valZ--;
 
                         var node = new Node();
@@ -56,7 +103,8 @@ namespace Hadal.AI
                         node.Position = position;
                         node.Bounds = new Bounds(position, new Vector3(cellSize, cellSize, cellSize));
                         node.HasObstacle = false;
-                        grid[valX, valY, valZ] = node;
+                        node.Index = new Vector3Int(valX, valY, valZ);
+                        grid.Get[valX, valY, valZ] = node;
                         valZ++;
                     }
                     valY++;
@@ -73,43 +121,12 @@ namespace Hadal.AI
 
         }
 
-        private void LoopGrid(Action<int, int, int> method)
-        {
-            for (int x = 0; x < grid.GetLength(0); x++)
-            {
-                for (int y = 0; y < grid.GetLength(1); y++)
-                {
-                    for (int z = 0; z < grid.GetLength(2); z++)
-                    {
-                        method.Invoke(x, y, z);
-                    }
-                }
-            }
-        }
-
-        private void LoopGridOffset(Action<int, int, int> method)
-        {
-            int halfX = (int)(grid.GetLength(0) * 0.5f);    
-            int halfY = (int)(grid.GetLength(1) * 0.5f);    
-            int halfZ = (int)(grid.GetLength(2) * 0.5f);    
-            for (int x = -halfX; x <= halfX; x++)
-            {
-                for (int y = -halfY; y <= halfY; y++)
-                {
-                    for (int z = -halfZ; z <= halfZ; z++)
-                    {
-                        method.Invoke(x, y, z);
-                    }
-                }
-            }
-        }
-
         void CheckObstacles()
         {
             int i = 1;
-            LoopGrid((x, y, z) =>
+            grid.LoopNode(node =>
             {
-                Node g = grid[x, y, z];
+                Node g = node;
                 Bounds b = g.Bounds;
                 obstacleList.ForEach(o =>
                 {
@@ -142,9 +159,9 @@ namespace Hadal.AI
             Gizmos.color = Color.red;
             if (Application.isPlaying && enableGridGizmo)
             {
-                LoopGrid((x, y, z) =>
+                grid.LoopNode(node =>
                 {
-                    var g = grid[x, y, z];
+                    var g = node;
                     var b = g.Bounds;
                     if (g.HasObstacle)
                     {
@@ -194,6 +211,15 @@ namespace Hadal.AI
         public bool HasObstacle { get; set; } = false;
         public Bounds Bounds { get; set; }
         public Vector3 Position { get; set; }
-        public Node() { }
+        public Vector3Int Index { get; set; }
+
+        public Node Parent { get; set; } = null;
+        public float GCost { get; set; }
+        public float FCost { get; set; }
+        public void ResetCosts()
+        {
+            GCost = Mathf.Infinity;
+            FCost = Mathf.Infinity;
+        }
     }
 }
