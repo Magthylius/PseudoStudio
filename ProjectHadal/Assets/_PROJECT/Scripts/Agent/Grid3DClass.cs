@@ -20,11 +20,12 @@ namespace Hadal.AI
         [SerializeField] float cellSize;
         BoxCollider _collider;
         [SerializeField] List<Collider> obstacleList;
-        [SerializeField] LayerMask obstacleMask =  LayerMask.GetMask("Obstacle");
+        [SerializeField] LayerMask obstacleMask;  
         private bool enableGridGizmo = true;
 
         private void Awake()
         {
+            obstacleMask = LayerMask.GetMask("Obstacle");
             //Get box collider
             _collider = gameObject.GetComponent<BoxCollider>();
             var nodePrefab = Resources.Load(PathManager.GridNodePrefabPath);
