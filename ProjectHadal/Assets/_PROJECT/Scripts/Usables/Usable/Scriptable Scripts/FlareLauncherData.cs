@@ -17,9 +17,17 @@ namespace Hadal.Usables
             projectileObj.WithGObjectSetActive(true);
             projectileObj.SubscribeModeEvent();
 
-            bool isModeSwap = info.ChargedTime.Clamp01() > ModeToggleTreshold;
-            projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
-                (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce, isModeSwap);
+            ImpulseMode impluseMode = projectileObj.GetComponentInChildren<ImpulseMode>();
+
+            if (isChargable)
+            {
+                bool isModeSwap = info.ChargedTime.Clamp01() > ModeToggleTreshold;
+                impluseMode.OverrideForce(info.ChargedTime.Clamp01() * MaxForce, isModeSwap);
+            }
+            else
+            { 
+                impluseMode.OverrideForce(MaxForce);
+            }
 
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
         }
