@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace Tenshi.UnitySoku
 {
@@ -8,6 +9,9 @@ namespace Tenshi.UnitySoku
         private static readonly string Hr = "\n\n-------------------------------------------------------------------------------";
         private static readonly string Prefix = "=>    ";
         public static void Msg(this object msg) => (msg.ToString() + Hr).Print();
+        public static async Task MsgAsync(this object msg) => await Task.Run(() => Msg(msg));
+        public static void Mention(this object msg) => (msg.ToString() + Hr).Bold().Resize(18).Print();
+        public static async Task MentionAsync(this object msg) => await Task.Run(() => Mention(msg));
         public static void Warn(this object msg) => Debug.LogWarning(msg.ToString() + Hr);
         public static void Error(this object msg) => Debug.LogError(msg.ToString() + Hr);
 

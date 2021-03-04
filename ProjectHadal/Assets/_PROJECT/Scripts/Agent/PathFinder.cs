@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tenshi;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 namespace Hadal.AI
@@ -10,18 +11,29 @@ namespace Hadal.AI
     public class PathFinder : MonoBehaviour
     {
         Grid grid;
+        [SerializeField] GridGenerator gridGenerator;
 
         public void SetGrid(Grid grid) => this.grid = grid;
 
         public async Task<Stack<Node>> FindAsync(Vector3 from, Vector3 to)
         {
-            return await FindAsync(GetPositionToNode(from), GetPositionToNode(to));
+            return await FindAsync(GetNodePosition(from), GetNodePosition(to));
         }
+
+        /// <summary>
+        /// Do A* and find the path from start to end
+        /// </summary>
+        /// <param name="from">The AI starting position</param>
+        /// <param name="to">the ending position</param>
         public async Task<Stack<Node>> FindAsync(Node from, Node to)
         {
             //! Setup for A*
             Node theStart = from;
+            
             Node theEnd = to;
+            if (from == null || to == null)
+                return new Stack<Node>();
+            
             List<Node> open = new List<Node>();
             List<Node> closed = new List<Node>();
             List<Node> neighbours;
@@ -103,7 +115,7 @@ namespace Hadal.AI
         /// change that if we are deleting nodes that are empty space. </summary>
         private List<Node> GetNeighbours(Node n)
         {
-            const int MaxBound = 1;
+            const int MaxBound = 2; 
             const int MinBound = -MaxBound;
             List<Node> list = new List<Node>();
 
@@ -129,7 +141,7 @@ namespace Hadal.AI
             bool IsWithinBounds(int a, int dimen) => a >= 0 && a < grid.Get.GetLength(dimen);
         }
 
-        private Node GetPositionToNode(Vector3 position)
+        private Node GetNodePosition(Vector3 position)
         {
             Node foundNode = null;
             bool shouldBreak = false;
@@ -137,8 +149,10 @@ namespace Hadal.AI
             {
                 if (node.Bounds.Contains(position))
                 {
+                    $"Found position: {(position)}".Msg(); 
                     foundNode = node;
                     shouldBreak = true;
+                    return;
                 }
             }, () => shouldBreak);
             return foundNode;
