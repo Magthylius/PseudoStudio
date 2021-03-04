@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,10 @@ namespace Hadal.AI
 
         public void SetGrid(Grid grid) => this.grid = grid;
 
+        public async Task<Stack<Node>> FindAsync(Vector3 from, Vector3 to)
+        {
+            return await FindAsync(GetPositionToNode(from), GetPositionToNode(to));
+        }
         public async Task<Stack<Node>> FindAsync(Node from, Node to)
         {
             //! Setup for A*
@@ -33,7 +38,7 @@ namespace Hadal.AI
             {
                 current = open.First();
                 if (current == theEnd)
-                    return await ReconstructPath(current, theStart);
+                    return await ReconstructPathAsync(current, theStart);
                 
                 open.Remove(current);
                 closed.Add(current);
@@ -80,12 +85,12 @@ namespace Hadal.AI
         }
 
         /// <summary> Reconstructs a complete path from end node back to starting node in the form of a stack. </summary>
-        private async Task<Stack<Node>> ReconstructPath(Node node, Node start)
+        private async Task<Stack<Node>> ReconstructPathAsync(Node node, Node start)
         {
             return await Task.Run(() =>
             {
                 Stack<Node> path = new Stack<Node>();
-                while (node != start)
+                while (node != start && node != null)
                 {
                     path.Push(node);
                     node = node.Parent;
@@ -98,8 +103,8 @@ namespace Hadal.AI
         /// change that if we are deleting nodes that are empty space. </summary>
         private List<Node> GetNeighbours(Node n)
         {
-            const int MinBound = -1;
             const int MaxBound = 1;
+            const int MinBound = -MaxBound;
             List<Node> list = new List<Node>();
 
             for (int x = MinBound; x <= MaxBound; x++)
@@ -122,6 +127,21 @@ namespace Hadal.AI
             return list;
 
             bool IsWithinBounds(int a, int dimen) => a >= 0 && a < grid.Get.GetLength(dimen);
+        }
+
+        private Node GetPositionToNode(Vector3 position)
+        {
+            Node foundNode = null;
+            bool shouldBreak = false;
+            grid.LoopNode_Breakable(node =>
+            {
+                if (node.Bounds.Contains(position))
+                {
+                    foundNode = node;
+                    shouldBreak = true;
+                }
+            }, () => shouldBreak);
+            return foundNode;
         }
     }
 }

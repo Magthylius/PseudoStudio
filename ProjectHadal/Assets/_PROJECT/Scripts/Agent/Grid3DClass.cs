@@ -54,11 +54,27 @@ namespace Hadal.AI
                 }
             }
         }
+        public void LoopNode_Breakable(Action<Node> method, Func<bool> shouldBreak)
+        {
+            for (int x = 0; x < Get.GetLength(0); x++)
+            {
+                for (int y = 0; y < Get.GetLength(1); y++)
+                {
+                    for (int z = 0; z < Get.GetLength(2); z++)
+                    {
+                        method.Invoke(Get[x, y, z]);
+                        if (shouldBreak.Invoke())
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     public class Grid3DClass : MonoBehaviour
     {
         private Grid grid;
+        [SerializeField] PathFinder pathFinder;
         [SerializeField] Vector3 dimensions;
         [SerializeField] int x;
         [SerializeField] int y;
@@ -68,14 +84,13 @@ namespace Hadal.AI
         BoxCollider _collider;
         [SerializeField] List<Collider> obstacleList;
         [SerializeField] LayerMask obstacleMask;  
-        private bool enableGridGizmo = true;
+        [SerializeField] bool enableGridGizmo = true;
 
         private void Awake()
         {
             obstacleMask = LayerMask.GetMask("Obstacle");
             //Get box collider
             _collider = gameObject.GetComponent<BoxCollider>();
-            var nodePrefab = Resources.Load(PathManager.GridNodePrefabPath);
             grid = new Grid(new Node[x, y, z]);
             int valX = 0, valY = 0, valZ = 0;
             int halfX = (int)(grid.Get.GetLength(0) * 0.5f);
@@ -114,6 +129,8 @@ namespace Hadal.AI
 
             GetAllObstaclesInScene();
             CheckObstacles();
+            if (pathFinder != null)
+                pathFinder.SetGrid(grid);
         }
 
         private void Update()
@@ -130,7 +147,7 @@ namespace Hadal.AI
                 Bounds b = g.Bounds;
                 obstacleList.ForEach(o =>
                 {
-                    if (b.Intersects(o.bounds))
+                    if (o.bounds.Intersects(b))
                     {
                         g.HasObstacle = true;
                         $"Obstacle Count: {i}".Msg();
@@ -145,7 +162,11 @@ namespace Hadal.AI
         {
             if (obstacleList.IsNullOrEmpty())
             {
-                obstacleList = FindObjectsOfType<Collider>().Where(o => o.gameObject.layer == obstacleMask.ToLayer()).ToList();
+                Bounds gridBound = new Bounds(GetCentre, GetSize);
+                obstacleList = FindObjectsOfType<Collider>()
+                    .Where(o => o.gameObject.layer == obstacleMask.ToLayer())
+                    .Where(o => gridBound.Contains(o.transform.position))
+                    .ToList();
             }
         }
 
@@ -170,9 +191,6 @@ namespace Hadal.AI
                 });
             }
         }
-
-        [Button(nameof(ToggleEnableGridGizmo))]
-        private void ToggleEnableGridGizmo() => enableGridGizmo = !enableGridGizmo;
 
         void DrawBounds(Bounds b, float delay = 0)
         {

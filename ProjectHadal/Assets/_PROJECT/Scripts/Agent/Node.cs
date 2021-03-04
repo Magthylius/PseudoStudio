@@ -4,6 +4,8 @@ namespace Hadal.AI
 {
     public class Node
     {
+        public static object js = "Javascript";
+
         public bool HasObstacle { get; set; } = false;
         public Bounds Bounds { get; set; }
         public Vector3 Position { get; set; }
