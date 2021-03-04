@@ -105,7 +105,7 @@ namespace Tenshi.SaveHigan
 
         //! Async
         public static async Task<bool> SaveAsync<T>(T data, string pathKey) => await InternalSaveAsync<T>(data, pathKey);
-        public static async Task<T> LoadAsync<T>(string pathKey, string customNoSaveException) => await InternalLoadAsync<T>(pathKey, customNoSaveException);
+        public static async Task<T> LoadAsync<T>(string pathKey, string customNoSaveException = "") => await InternalLoadAsync<T>(pathKey, customNoSaveException);
         private static async Task<bool> InternalSaveAsync<T>(T data, string pathKey)
         {
             string rootPath = PersistentSavePath;
@@ -127,7 +127,7 @@ namespace Tenshi.SaveHigan
                 }
             });
         }
-        private static async Task<T> InternalLoadAsync<T>(string pathKey, string customNoSaveException)
+        private static async Task<T> InternalLoadAsync<T>(string pathKey, string customNoSaveException = "")
         {
             string rootPath = PersistentSavePath;
             string fullPath = GetFullPathFromKey(pathKey);

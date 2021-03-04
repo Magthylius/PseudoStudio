@@ -22,6 +22,18 @@ namespace Tenshi.SaveHigan
             return newVector;
         }
 
+        public static Vector3Int DeserialiseVectorInt(SerialisableVector sVec)
+        {
+            Vector3Int newVector = default;
+            if (sVec.Vector.Length == 2)
+            {
+                newVector = new Vector3Int(sVec.Vector[0].Round(), sVec.Vector[1].Round(), 0);
+                return newVector;
+            }
+            newVector = new Vector3Int(sVec.Vector[0].Round(), sVec.Vector[1].Round(), sVec.Vector[2].Round());
+            return newVector;
+        }
+
         public static Quaternion DeserialiseQuaternion(SerialisableQuaternion sQua)
         {
             return new Quaternion(sQua.Rotation[1], sQua.Rotation[2], sQua.Rotation[3], sQua.Rotation[0]);

@@ -1,7 +1,19 @@
+using System;
+using Tenshi.SaveHigan;
 using UnityEngine;
 
 namespace Hadal.AI
 {
+    [Serializable]
+    public class SerialisableNode
+    {
+        public bool HasObstacle { get; set; }
+        public SerialisableBounds Bounds { get; set; }
+        public SerialisableVector Position { get; set; }
+        public SerialisableVector Index { get; set; }
+        public SerialisableNode() { }
+    }
+
     public class Node
     {
         public static object js = "Javascript";
