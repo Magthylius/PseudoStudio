@@ -246,7 +246,8 @@ namespace Hadal.Player
 
         public void PNTR_Disconnect()
         {
-            neManager.Disconnect();
+            //neManager.Disconnect();
+            neManager.LeaveRoom(true);
         }
         #endregion
     }

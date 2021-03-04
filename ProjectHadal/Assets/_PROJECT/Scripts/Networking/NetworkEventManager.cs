@@ -23,6 +23,9 @@ namespace Hadal.Networking
         [Scene] public string MainMenuScene;
         [Scene] public string InGameScene;
 
+        //! internal references
+        bool loadsToMainMenu = false;
+
         #region Unity Lifecycle
         void Awake()
         {
@@ -30,6 +33,7 @@ namespace Hadal.Networking
             {
                 gameObject.name += " (Deprecated)";
                 Destroy(this);
+                return;
             }
             else
             {
@@ -43,7 +47,6 @@ namespace Hadal.Networking
         {
             SetupEssentials();
             SetupEventRaising();
-            
         }
 
         public override void OnEnable()
@@ -143,8 +146,10 @@ namespace Hadal.Networking
         #region Photon Networking Overrides
         void SetupNetworking()
         {
-            if (isOfflineMode) PhotonNetwork.OfflineMode = true;
-            else PhotonNetwork.ConnectUsingSettings();
+            /*if (isOfflineMode) PhotonNetwork.OfflineMode = true;
+            else PhotonNetwork.ConnectUsingSettings();*/
+            //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
+            PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
         }
         public void Disconnect()
         {
@@ -157,10 +162,11 @@ namespace Hadal.Networking
         {
             PhotonNetwork.LeaveRoom();
 
-            /*if (returnsToMainMenu)
+            if (returnsToMainMenu)
             {
-                LoadLevel(MainMenuScene);
-            }*/
+                //LoadLevel(MainMenuScene);
+                loadsToMainMenu = true;
+            }
         }
         public void LoadLevel(int index) => PhotonNetwork.LoadLevel(index);
         public void LoadLevel(string levelName) => PhotonNetwork.LoadLevel(levelName);
@@ -223,6 +229,11 @@ namespace Hadal.Networking
         public override void OnLeftRoom()
         {
             //! If not in mainmenu, return to mainmenu
+            if (loadsToMainMenu)
+            {
+                LoadLevel(MainMenuScene);
+                loadsToMainMenu = false;
+            }
         }
         #endregion
 
@@ -230,7 +241,13 @@ namespace Hadal.Networking
         public override void OnJoinedLobby()
         {
             Debug.Log("Joined Lobby");
-            PhotonNetwork.NickName = "Player " + Random.Range(0, 10).ToString("00");
+            //PhotonNetwork.NickName = "Player " + Random.Range(0, 10).ToString("00");
+            /*if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
+                SetupNetworking();*/
+
+            SetupNetworking();
+            mainMenuManager = MainMenuManager.Instance;
+            mainMenuManager.InitMainMenu();
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)

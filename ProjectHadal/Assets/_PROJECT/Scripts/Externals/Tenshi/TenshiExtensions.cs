@@ -42,6 +42,21 @@ namespace Tenshi
             return newText.ToString();
             void Append(char c) => newText.Append(c);
         }
+
+        public static string Bold(this string target) => $"<b>{target}</b>";
+        public static string Italic(this string target) => $"<i>{target}</i>";
+        public static string Resize(this string target, int size) => $"<size={ClampTextSize(size)}>{target}</size>";
+        public static string Recolour(this string target, Color colour) => $"<color=#{ColorUtility.ToHtmlStringRGBA(colour)}>{target}</color>";
+        public static string SwitchMaterial(this string target, int index) => $"<material={index}>{target}</material>";
+        public static string MakeQuad(this string target, int materialIndex, int textSize, Rect rectBounds) => $"<quad material={materialIndex} " +
+            $"size={ClampTextSize(textSize)} x={rectBounds.x} y={rectBounds.y} width={rectBounds.width} height={rectBounds.height}>{target}</quad>";
+
+        private static int ClampTextSize(int size)
+        {
+            if (size < 10) size = 10;
+            else if (size > 30) size = 30;
+            return size;
+        }
     }
 
     public static class ConversionExtensions
@@ -56,6 +71,7 @@ namespace Tenshi
         public static object[] AsObjArray(this object obj) => (object[]) obj;
 
         public static int Round(this float number) => Mathf.RoundToInt(number);
+        public static int Floor(this float number) => Mathf.FloorToInt(number);
         public static byte AsByte(this int number) => Convert.ToByte(number);
         public static byte AsByte(this bool statement) => Convert.ToByte(statement);
         public static int AsInt(this bool statement) => Convert.ToInt32(statement);
@@ -74,7 +90,6 @@ namespace Tenshi
     public static class FluentBool
     {
         public static bool Not(bool statement) => !statement;
-        public static bool Flip(this ref bool statement) => statement = !statement;
 
         public static bool NotNull<T>(this T item) where T : class => item != null;
         public static bool IsNot<T>(this T item, T other) where T : IComparable<T> => !item.Equals(other);
@@ -90,7 +105,8 @@ namespace Tenshi
         public static bool IsLessOrEqualTo(this int thisNum, int otherNum) => thisNum <= otherNum;
 
         public static bool IsEmpty<T>(this IEnumerable<T> e) => e.Count() == 0;
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) || e.IsEmpty();
+        public static bool IsNotEmpty<T>(this IEnumerable<T> e) => e.Count() != 0;
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) ? e is null : e.IsEmpty();
     }
 
     public static class ClampExtensions
@@ -103,6 +119,8 @@ namespace Tenshi
 
     public static class MathExtensions
     {
+        public static float ToDegrees(this float radian) => radian * Mathf.Rad2Deg;
+        public static float ToRadians(this float degree) => degree * Mathf.Deg2Rad;
         public static float Abs(this float number) => Mathf.Abs(number);
         
         public static void LerpSpeed(this ref float speed, in float directionalSpeed, in float acceleration, in float deltaTime)
@@ -126,6 +144,24 @@ namespace Tenshi
             if (angle < 0.0f) angle += 360.0f;
             return angle;
         }
+
+        public static bool IsEven(this int number) => number % 2 == 0;
+        public static bool IsOdd(this int number) => number % 2 != 0;
+        public static bool IsPrime(this int number)
+        {
+            if (number <= 1) return false;
+            int i = -1 + 2;
+            while(++i < number)
+                if (number % i == 0)
+                    return false;
+            
+            return true;
+        }
+    }
+
+    public static class CollectionExtensions
+    {
+        public static T RandomElement<T>(this IEnumerable<T> e) => e.ElementAt(UnityEngine.Random.Range(0, e.Count()));
     }
 
     public static class UnityExtensions

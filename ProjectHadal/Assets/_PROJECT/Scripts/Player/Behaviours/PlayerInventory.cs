@@ -20,6 +20,9 @@ namespace Hadal.Player.Behaviours
         private PlayerController _controller;
         private PlayerControllerInfo _controllerInfo;
 
+        [Header("Firing Variable")]
+        private float _chargeTime = 0.0f;
+
         [Header("Event Code")]
         private const byte PLAYER_UTI_LAUNCH_EVENT = 2;
 
@@ -34,7 +37,7 @@ namespace Hadal.Player.Behaviours
         void Start()
         {
             neManager = NetworkEventManager.Instance;
-            neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
+            if (neManager) neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
         }
 
         public void Inject(PlayerController controller)
@@ -77,15 +80,15 @@ namespace Hadal.Player.Behaviours
             {
                 if (_uInput.FireKey2Held)
                 {
-                    if (EquippedUsable.ChargedTime < 1f)
+                    if (_chargeTime < 1f)
                     {
-                        EquippedUsable.ChargedTime += EquippedUsable.Data.ChargingSpeed * Time.deltaTime;
+                        _chargeTime += EquippedUsable.Data.ChargingSpeed * Time.deltaTime;
                     }
                 }
                 if (_uInput.FireKey2Release)
                 {
                     FireUtility();
-                    EquippedUsable.ChargedTime = 0f;
+                    _chargeTime = 0f;
                 }
             }
             else if (_uInput.FireKey2)
@@ -101,15 +104,15 @@ namespace Hadal.Player.Behaviours
             object[] data = (object[])eventData.CustomData;
             if ((int)data[0] == _pView.ViewID)
             {
-                _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]]);
+                _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]],(float)data[2]);
             }
         }
 
         //Fire when pressed locally, send event
         void FireUtility()
         {
-            _controllerInfo.Shooter.FireUtility(EquippedUsable);
-            object[] content = new object[] { _pView.ViewID, _selectedItem };
+            _controllerInfo.Shooter.FireUtility(EquippedUsable, _chargeTime);
+            object[] content = new object[] { _pView.ViewID, _selectedItem, _chargeTime };
             neManager.RaiseEvent(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
         }
 

@@ -8,13 +8,14 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] private string wallLayer = string.Empty;
         [SerializeField] private bool IsAttach;
         public ImpulseMode impulseMode;
+        public SelfDeactivationMode selfDeactivation;
 
-        protected override void Start()
+        public void SubscribeModeEvent()
         {
-            base.Start();
             impulseMode = GetComponentInChildren<ImpulseMode>();
-//            Debug.LogError(impulseMode);
-            impulseMode.ModeSwapped += ModeToggle;
+            impulseMode.ModeSwapped += ModeSwap;
+            selfDeactivation = GetComponentInChildren<SelfDeactivationMode>();
+            selfDeactivation.selfDeactivated += ModeSwap;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -22,7 +23,7 @@ namespace Hadal.Usables.Projectiles
             LayerMask layer = LayerMask.NameToLayer(wallLayer);
             if (collision.gameObject.layer == layer.value)
             {
-                if(IsAttach == true)
+                if (IsAttach == true)
                 {
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
@@ -33,10 +34,8 @@ namespace Hadal.Usables.Projectiles
         public void ModeToggle()
         {
             IsAttach = !IsAttach;
-            Debug.LogError("MODE SAWPPED");
         }
 
-        private void ModeToggle(bool IsAttach) => this.IsAttach = IsAttach;
-
+        private void ModeSwap(bool IsAttach) => this.IsAttach = IsAttach;
     }
 }

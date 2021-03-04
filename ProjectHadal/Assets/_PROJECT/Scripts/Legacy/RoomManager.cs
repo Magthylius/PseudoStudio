@@ -12,21 +12,10 @@ namespace Hadal.Legacy
 
         void Awake()
         {
-            //!Singleton
-            /*if (Instance)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            //DontDestroyOnLoad(gameObject);
-            Instance = this;*/
-
             if (Instance == null) Instance = this;
             else Destroy(this);
         }
 
-        //!OnEnable and OnDisable is the central to photon functioning correctly
-        //!these two methods are the only base methods that needs to be called in order to override
         public override void OnEnable()
         {
             base.OnEnable();
@@ -56,12 +45,6 @@ namespace Hadal.Legacy
                                                 0);
             }
         
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            
         }
     }
 }

@@ -15,11 +15,19 @@ namespace Hadal.Usables
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);
+            projectileObj.SubscribeModeEvent();
 
-            bool isModeSwap = info.ChargedTime.Clamp01() > ModeToggleTreshold;
+            ImpulseMode impluseMode = projectileObj.GetComponentInChildren<ImpulseMode>();
 
-            projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
-                (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce, isModeSwap);
+            if (isChargable)
+            {
+                bool isModeSwap = info.ChargedTime.Clamp01() > ModeToggleTreshold;
+                impluseMode.OverrideForce(info.ChargedTime.Clamp01() * MaxForce, isModeSwap);
+            }
+            else
+            { 
+                impluseMode.OverrideForce(MaxForce);
+            }
 
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
         }
@@ -28,6 +36,8 @@ namespace Hadal.Usables
         {
             if (obj is FlareBehaviour flare)
             {
+                flare.Rigidbody.isKinematic = false;
+                flare.transform.SetParent(FlarePool.Instance.transform); 
                 FlarePool.Instance.Dump(flare);
             }
         }
