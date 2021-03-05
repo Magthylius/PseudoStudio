@@ -7,6 +7,8 @@ using NaughtyAttributes;
 using Tenshi.SaveHigan;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace Hadal.AI
 {
@@ -21,6 +23,8 @@ namespace Hadal.AI
         [SerializeField] int x, y, z;
         //! Cellsize of the grid
         [SerializeField] float cellSize;
+        //! This is to help merge the node obstacles through the amount of obstacle nodes. 
+        [SerializeField] float meshNodeSizeMultiplier;
 
         //! Layer mask for obstacle
         [SerializeField] LayerMask obstacleMask;
@@ -31,9 +35,6 @@ namespace Hadal.AI
         //! Enable saving debug logs
         [SerializeField] bool enableSavingDebugLogs = false;
 
-        //! These two list is to separate obstacles and non obstacles contained nodes.
-        public List<Node> emptyNodeList { get; private set; }
-        List<Node> obstacleNodeList;
         #endregion
 
         private void Awake()
@@ -48,6 +49,9 @@ namespace Hadal.AI
         [Button("Generate & Save Grid", EButtonEnableMode.Editor)]
         private async void GenerateGrid()
         {
+            //! stopwatch
+            Stopwatch watch = Stopwatch.StartNew();
+
             //! Setup obstacleMask & collider
             obstacleMask = LayerMask.GetMask("Obstacle");
 
@@ -103,6 +107,10 @@ namespace Hadal.AI
 
             //! Save all generated grid data to file
             await SaveGridToFileAsync();
+
+            //! end stopwatch
+            watch.Stop();
+            $"Elapsed time for Generate Grid: {watch.ElapsedMilliseconds}".Msg();
         }
         #endregion
 
@@ -241,7 +249,7 @@ namespace Hadal.AI
 
         #region Obstacles
 
-        Collider[] obstacleArray;
+        MeshFilter[] obstacleArray;
         /// <summary>
         /// Check obstacles that collide with each node's bounds and add it to a obstacleNodeList. Else, add to emptyNodeList</summary>
         async Task CheckObstacles()
@@ -249,19 +257,17 @@ namespace Hadal.AI
             await 1.MsgAsync();
             int i = 1;
 
-            obstacleNodeList = new List<Node>();
-            emptyNodeList = new List<Node>();
+            // int totalZombieCount = 0;
+            // int totalNodes = 0;
 
             grid.LoopNode((node) =>
             {
                 2.Msg();
+                // totalNodes++;
 
                 Bounds b = node.Bounds;
                 if (obstacleArray.IsNullOrEmpty())
-                {
-                    $"Empty!".Msg();
                     return;
-                }
 
                 int length = obstacleArray.Length;
                 for (int j = 0; j < length; j++)
@@ -270,24 +276,62 @@ namespace Hadal.AI
 
                     var col = obstacleArray[j];
                     if (col == null)
-                    {
-                        $"Collider is null".Msg();
                         continue;
-                    }
 
-                    if (b.Intersects(col.bounds))
+                    List<Node> meshNodes = GetNodesFromMeshFilter(col);
+                    foreach (var m in meshNodes)
                     {
-                        4.Msg();
-                        $"Unique Obstacle Count: {i}".Msg();
-                        node.HasObstacle = true;
-                        obstacleNodeList.Add(node);
-                        i++;
-                        return;
+                        if (b.Intersects(m.Bounds))
+                        {
+                            if (node.HasObstacle) return;
+                            4.Msg();
+                            $"Unique Obstacle Count: {i}".Msg();
+                            node.HasObstacle = true;
+                            i++;
+                            return;
+                        }
                     }
-                    else
-                    {
-                        emptyNodeList.Add(node);
-                    }
+                    meshNodes.Clear();
+
+                //     int obstacleNeighbourCount = 0;
+                //     int MaxBound = pathFinder != null ? pathFinder._MaxBound : 1;
+                //     int MinBound = -MaxBound;
+                //     for (int x = MinBound; x <= MaxBound; x++)
+                //     {
+                //         for (int y = MinBound; y <= MaxBound; y++)
+                //         {
+                //             for (int z = MinBound; z <= MaxBound; z++)
+                //             {
+                //                 var pos = new Vector3Int(x, y, z);
+                //                 if (pos == Vector3Int.zero) continue;
+                //                 pos += node.Index;
+
+                //                 if (IsWithinBounds(pos.x, 0) && IsWithinBounds(pos.y, 1) && IsWithinBounds(pos.z, 2))
+                //                 {
+                //                     if (grid.GetNodeAt(pos).HasObstacle)
+                //                     {
+                //                         obstacleNeighbourCount++;
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                //     bool IsWithinBounds(int a, int dimen) => a >= 0 && a < grid.Get.GetLength(dimen);
+
+                //     totalZombieCount += obstacleNeighbourCount;
+                //     $"I am attackd by {obstacleNeighbourCount} zombies".Msg();
+                //     foreach (var m in meshNodes)
+                //     {
+                //         if (obstacleNeighbourCount >= obstacleConversionIndex
+                //             && node.Bounds.Intersects(m.Bounds))
+                //         {
+                //             if (node.HasObstacle) return;
+                //             $"I converted into zombie".Msg();
+                //             node.HasObstacle = true;
+                //             return;
+                //         }
+                //     }
+                //     meshNodes.Clear();
                 }
 
                 // TODO: Check with vertices instead of AABB.
@@ -338,11 +382,7 @@ namespace Hadal.AI
                 #endregion
             });
 
-            if (enableSavingDebugLogs)
-            {
-                $"Obstacle Nodes: {obstacleNodeList.Count}".Msg();
-                $"Empty Nodes: {emptyNodeList.Count}".Msg();
-            }
+            // $"Average zombies: {totalZombieCount / totalNodes.AsFloat()}".Msg();
             obstacleArray = null;
         }
 
@@ -351,10 +391,32 @@ namespace Hadal.AI
         {
             Bounds gridBound = new Bounds(GetCentre, GetSize);
 
-            obstacleArray = FindObjectsOfType<Collider>()                   // Find all objects of type MeshFilter in scene
+            obstacleArray = FindObjectsOfType<MeshFilter>()                   // Find all objects of type MeshFilter in scene
                 .Where(o => o.gameObject.layer == obstacleMask.ToLayer())   // Determine if layer is obstacle layer
-                .Where(o => gridBound.Intersects(o.bounds))                 // If the obstacles is inside the grid
+                                                                            // .Where(o => gridBound.Contains(o.transform.position))                 
+                .Where(o => o.GetComponent<Collider>().bounds.Intersects(gridBound))    // If the obstacles is inside the grid
                 .ToArray();                                                 // Store in array
+
+            $"Found mesh filters: {obstacleArray.Length}".Msg();
+        }
+
+        private List<Node> GetNodesFromMeshFilter(MeshFilter meshFilter)
+        {
+            List<Node> points = new List<Node>();
+            List<Vector3> vertices = new List<Vector3>();
+            meshFilter.sharedMesh.GetVertices(vertices);
+
+            foreach (var v in vertices)
+            {
+                var position = (meshFilter.transform.rotation * Vector3.Scale(v, meshFilter.transform.localScale)) + meshFilter.transform.position;
+                points.Add(new Node
+                {
+                    HasObstacle = true,
+                    Position = position,
+                    Bounds = new Bounds(position, Vector3.one * (cellSize * meshNodeSizeMultiplier))
+                });
+            }
+            return points;
         }
 
         #endregion
@@ -370,6 +432,7 @@ namespace Hadal.AI
         private void OnDrawGizmos()
         {
             //Visualization
+            Gizmos.color = Color.green;
             Gizmos.DrawWireCube(GetCentre, GetSize);
 
             //! grid null check

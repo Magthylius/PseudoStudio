@@ -1,23 +1,31 @@
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Hadal.AI
 {
     public class PathFinder : MonoBehaviour
     {
+        [Header("Tweak maxBound for pathfinding.")]
+        [SerializeField] int maxBound;
+        public int _MaxBound { get => maxBound; }
         Grid grid;
+        [Header("Grid")]
+        [Space(5)]
         [SerializeField] GridGenerator gridGenerator;
+        Stopwatch watch;
 
         public void SetGrid(Grid grid) => this.grid = grid;
 
         public async Task<Stack<Node>> FindAsync(Vector3 from, Vector3 to)
         {
-            return await FindAsync(GetNodePosition(from), GetNodePosition(to));
+            return await FindAsync(GetNodePosition(from, "start"), GetNodePosition(to, "end"));
         }
 
         /// <summary>
@@ -27,13 +35,15 @@ namespace Hadal.AI
         /// <param name="to">the ending position</param>
         public async Task<Stack<Node>> FindAsync(Node from, Node to)
         {
+            watch = Stopwatch.StartNew();
+
             //! Setup for A*
             Node theStart = from;
-            
+
             Node theEnd = to;
             if (from == null || to == null)
                 return new Stack<Node>();
-            
+
             List<Node> open = new List<Node>();
             List<Node> closed = new List<Node>();
             List<Node> neighbours;
@@ -43,7 +53,7 @@ namespace Hadal.AI
             //! Setup node costs
             grid.LoopNode(node => node.ResetCosts());
             theStart.GCost = 0;
-            theStart.FCost = GetHeuristic(theStart);
+            theStart.FCost = GetHeuristic(theStart, theStart);
 
             //! Run A*
             while (open.IsNotEmpty())
@@ -51,7 +61,7 @@ namespace Hadal.AI
                 current = open.First();
                 if (current == theEnd)
                     return await ReconstructPathAsync(current, theStart);
-                
+
                 open.Remove(current);
                 closed.Add(current);
                 neighbours = GetNeighbours(current);
@@ -63,8 +73,8 @@ namespace Hadal.AI
                         if (NodeIsNeverEvaluated(n) && !n.HasObstacle)
                         {
                             n.Parent = current;
-                            n.GCost = current.GCost + GetAppendedGCost(n, theStart);
-                            n.FCost = n.GCost + GetHeuristic(n);
+                            n.GCost = current.GCost + GetAppendedGCost(n, current);
+                            n.FCost = n.GCost + GetHeuristic(n, theEnd);
                             open.Add(n);
                             open = open.OrderBy(node => node.FCost).ToList();
                         }
@@ -87,13 +97,15 @@ namespace Hadal.AI
         /// or the ending node (Djikstra), or something else entirely. </summary>
         private float GetAppendedGCost(Node node, Node comparingNode)
         {
-            return Vector3.Distance(node.Position, comparingNode.Position);
+            return (node.Position - comparingNode.Position).sqrMagnitude;
         }
 
         /// <summary> We can customise the heuristic here. </summary>
-        private float GetHeuristic(Node node)
+        private float GetHeuristic(Node node, Node comparingNode)
         {
-            return 1f; // sigmoid? ReLU?
+            return (node.Position.x - comparingNode.Position.x).Abs()
+                 + (node.Position.y - comparingNode.Position.y).Abs()
+                 + (node.Position.z - comparingNode.Position.z).Abs();
         }
 
         /// <summary> Reconstructs a complete path from end node back to starting node in the form of a stack. </summary>
@@ -107,6 +119,11 @@ namespace Hadal.AI
                     path.Push(node);
                     node = node.Parent;
                 }
+                if (watch != null)
+                {
+                    watch.Stop();
+                    $"Elapsed time for A Star: {watch.ElapsedMilliseconds}".Msg();
+                }
                 return path;
             });
         }
@@ -115,8 +132,9 @@ namespace Hadal.AI
         /// change that if we are deleting nodes that are empty space. </summary>
         private List<Node> GetNeighbours(Node n)
         {
-            const int MaxBound = 2; 
-            const int MinBound = -MaxBound;
+            //! Tweak this to change detection radius
+            int MaxBound = maxBound > 0 ? maxBound : 1;
+            int MinBound = -MaxBound;
             List<Node> list = new List<Node>();
 
             for (int x = MinBound; x <= MaxBound; x++)
@@ -130,7 +148,9 @@ namespace Hadal.AI
                         pos += n.Index;
                         if (IsWithinBounds(pos.x, 0) && IsWithinBounds(pos.y, 1) && IsWithinBounds(pos.z, 2))
                         {
-                            list.Add(grid.GetNodeAt(pos));
+                            var node = grid.GetNodeAt(pos);
+                            if (node != null && !node.HasObstacle)
+                                list.Add(node);
                         }
                     }
                 }
@@ -141,15 +161,15 @@ namespace Hadal.AI
             bool IsWithinBounds(int a, int dimen) => a >= 0 && a < grid.Get.GetLength(dimen);
         }
 
-        private Node GetNodePosition(Vector3 position)
+        private Node GetNodePosition(Vector3 position, string nName = "")
         {
             Node foundNode = null;
             bool shouldBreak = false;
             grid.LoopNode_Breakable(node =>
             {
-                if (node.Bounds.Contains(position))
+                if (node.Bounds.Contains(position) && !node.HasObstacle)
                 {
-                    $"Found position: {(position)}".Msg(); 
+                    $"Found position {nName}: {position}".Msg();
                     foundNode = node;
                     shouldBreak = true;
                     return;
