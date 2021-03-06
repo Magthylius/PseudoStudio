@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 10
+  radiusAdjustRate: 5
   checkObstacles: 1
   constantPing: 1
 --- !u!1 &705507993
@@ -585,9 +586,9 @@ GameObject:
   - component: {fileID: 1942455304}
   - component: {fileID: 1942455303}
   - component: {fileID: 1942455302}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
