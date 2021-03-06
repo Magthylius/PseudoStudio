@@ -43,12 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 908807a5dc2a533409a640d1bbfb00e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectResourcesPath: Assets/_PROJECT/Resources/
   pathFinder: {fileID: 0}
   x: 16
   y: 10
   z: 16
   cellSize: 8
-  obstacleConversionIndex: 9
+  meshNodeSizeMultiplier: 0
   obstacleMask:
     serializedVersion: 2
     m_Bits: 256

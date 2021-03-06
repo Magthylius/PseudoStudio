@@ -15,6 +15,9 @@ namespace Hadal.AI
     public class GridGenerator : MonoBehaviour
     {
         #region Variables
+        
+        [SerializeField] string projectResourcesPath;
+        
         //! Reference grid class
         public Grid grid { get; private set; }
         //! Reference pathfinder class
@@ -39,7 +42,11 @@ namespace Hadal.AI
 
         private void Awake()
         {
-            grid = null; //! Init null
+            grid = null;
+            #if !UNITY_EDITOR // Build
+            projectResourcesPath = $"{Application.productName}_Data/Resources/";
+            #endif
+
             SaveManager.LoadGameEvent += LoadGridFromFileAsync; //! Load grid save file during play
         }
 
@@ -121,7 +128,7 @@ namespace Hadal.AI
         /// <summary>Save X, Y, Z dimension of the grid </summary>
         const string GridInfoSaveName = "grid_Info";
         /// <summary>Used to load data, the list of nodes we have saved</summary>
-        const string NodePartitionSaveName = "parition_Info";
+        const string NodePartitionSaveName = "partition_Info";
         public event Action<Grid> GridLoadedEvent;
 
         /// <summary>Save grid to a file</summary>
@@ -179,14 +186,13 @@ namespace Hadal.AI
                 await $"Detecting {listOfNodesToSave.Sum(list => list.Count)} entries of nodes to save.".MsgAsync();
             }
 
-
-            //! Save relevant data to files
-            SaveManager.Save(data: partitionCount, pathKey: NodePartitionSaveName);
-            await SaveManager.SaveAsync(data: gridDimensions, pathKey: GridInfoSaveName);
+            //! Save relevant data to files to resources
+            SaveManager.SaveToResources(data: partitionCount, resourcePath: projectResourcesPath, subPathKey: NodePartitionSaveName);
+            await SaveManager.SaveToResourcesAsync(data: gridDimensions, resourcePath: projectResourcesPath, subPathKey: GridInfoSaveName);
             i = 1;
             foreach (var list in listOfNodesToSave)
             {
-                await SaveManager.SaveAsync(data: list, pathKey: $"{GridSavePathName}{i}");
+                await SaveManager.SaveToResourcesAsync(data: list, resourcePath: projectResourcesPath, subPathKey: $"{GridSavePathName}{i}");
                 i++;
             }
         }
@@ -205,12 +211,12 @@ namespace Hadal.AI
             grid = null;
 
             // load here
-            var sVector = await SaveManager.LoadAsync<SerialisableVector>(pathKey: GridInfoSaveName);
-            var sNodeListCount = await SaveManager.LoadAsync<int>(pathKey: NodePartitionSaveName);
+            var sVector = await SaveManager.LoadFromResourcesAsync<SerialisableVector>(resourcePath: projectResourcesPath, subPathKey: GridInfoSaveName);
+            var sNodeListCount = await SaveManager.LoadFromResourcesAsync<int>(resourcePath: projectResourcesPath, subPathKey: NodePartitionSaveName);
             List<List<SerialisableNode>> sListOfSNodes = new List<List<SerialisableNode>>();
             int i = -1;
             while (++i < sNodeListCount)
-                sListOfSNodes.Add(await SaveManager.LoadAsync<List<SerialisableNode>>(pathKey: $"{GridSavePathName}{i + 1}"));
+                sListOfSNodes.Add(await SaveManager.LoadFromResourcesAsync<List<SerialisableNode>>(resourcePath: projectResourcesPath, subPathKey: $"{GridSavePathName}{i + 1}"));
 
             // deserialise data into nodes for the grid
             Vector3Int dimensions = TenshiConverter.DeserialiseVectorInt(sVector);
@@ -257,14 +263,10 @@ namespace Hadal.AI
             await 1.MsgAsync();
             int i = 1;
 
-            // int totalZombieCount = 0;
-            // int totalNodes = 0;
-
             grid.LoopNode((node) =>
             {
                 2.Msg();
-                // totalNodes++;
-
+                
                 Bounds b = node.Bounds;
                 if (obstacleArray.IsNullOrEmpty())
                     return;
@@ -292,46 +294,6 @@ namespace Hadal.AI
                         }
                     }
                     meshNodes.Clear();
-
-                //     int obstacleNeighbourCount = 0;
-                //     int MaxBound = pathFinder != null ? pathFinder._MaxBound : 1;
-                //     int MinBound = -MaxBound;
-                //     for (int x = MinBound; x <= MaxBound; x++)
-                //     {
-                //         for (int y = MinBound; y <= MaxBound; y++)
-                //         {
-                //             for (int z = MinBound; z <= MaxBound; z++)
-                //             {
-                //                 var pos = new Vector3Int(x, y, z);
-                //                 if (pos == Vector3Int.zero) continue;
-                //                 pos += node.Index;
-
-                //                 if (IsWithinBounds(pos.x, 0) && IsWithinBounds(pos.y, 1) && IsWithinBounds(pos.z, 2))
-                //                 {
-                //                     if (grid.GetNodeAt(pos).HasObstacle)
-                //                     {
-                //                         obstacleNeighbourCount++;
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                //     bool IsWithinBounds(int a, int dimen) => a >= 0 && a < grid.Get.GetLength(dimen);
-
-                //     totalZombieCount += obstacleNeighbourCount;
-                //     $"I am attackd by {obstacleNeighbourCount} zombies".Msg();
-                //     foreach (var m in meshNodes)
-                //     {
-                //         if (obstacleNeighbourCount >= obstacleConversionIndex
-                //             && node.Bounds.Intersects(m.Bounds))
-                //         {
-                //             if (node.HasObstacle) return;
-                //             $"I converted into zombie".Msg();
-                //             node.HasObstacle = true;
-                //             return;
-                //         }
-                //     }
-                //     meshNodes.Clear();
                 }
 
                 // TODO: Check with vertices instead of AABB.
@@ -382,7 +344,6 @@ namespace Hadal.AI
                 #endregion
             });
 
-            // $"Average zombies: {totalZombieCount / totalNodes.AsFloat()}".Msg();
             obstacleArray = null;
         }
 
