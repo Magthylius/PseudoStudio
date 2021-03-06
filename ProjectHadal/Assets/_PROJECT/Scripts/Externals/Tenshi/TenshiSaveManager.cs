@@ -52,7 +52,7 @@ namespace Tenshi.SaveHigan
                 $"The root save path [{PersistentSavePath}] does not exist, please save first.".Msg();
             else
                 exception.Msg();
-            
+
             return default(T);
         }
 
@@ -111,9 +111,9 @@ namespace Tenshi.SaveHigan
             string rootPath = PersistentSavePath;
             string fullPath = GetFullPathFromKey(pathKey);
             Directory.CreateDirectory(rootPath);
-            return await Task.Run(() =>
+            using FileStream stream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
+            await Task.Run(() =>
             {
-                using FileStream stream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
                 try
                 {
                     Formatter.Serialize(stream, data);
@@ -126,6 +126,7 @@ namespace Tenshi.SaveHigan
                     return false;
                 }
             });
+            return false;
         }
         private static async Task<T> InternalLoadAsync<T>(string pathKey, string customNoSaveException = "")
         {
@@ -133,21 +134,19 @@ namespace Tenshi.SaveHigan
             string fullPath = GetFullPathFromKey(pathKey);
             if (!IsFileKeyExistent(pathKey)) return await Task.Run(() => HandleNoSaveException<T>(customNoSaveException));
 
-            return await Task.Run(() =>
+            using FileStream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
+            try
             {
-                using FileStream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
-                try
-                {
-                    T value = Formatter.Deserialize<T>(stream);
-                    $"Load Async success for /{pathKey}{Suffix}".Msg();
-                    return value;
-                }
-                catch (SerializationException ex)
-                {
-                    $"Load Async fail error: {ex.Message}".Error();
-                    return default(T);
-                }
-            });
+                await $"Loading...".MsgAsync();
+                T value = Formatter.Deserialize<T>(stream);
+                $"Load Async success for /{pathKey}{Suffix}".Msg();
+                return value;
+            }
+            catch (SerializationException ex)
+            {
+                $"Load Async fail error: {ex.Message}".Error();
+                return default(T);
+            }
         }
 
         #endregion

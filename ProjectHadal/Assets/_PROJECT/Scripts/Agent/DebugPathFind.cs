@@ -16,7 +16,7 @@ namespace Hadal.AI
         [SerializeField] LineRenderer line;
         [SerializeField] Transform start;
         [SerializeField] Transform end;
-        int speed = 15;
+        int speed = 5;
         List<Vector3> wayPoints;
         Queue<Vector3> pathQueue;
 
@@ -33,7 +33,13 @@ namespace Hadal.AI
         {
             pathFinder.SetGrid(gridClass.grid);
             Stack<Node> fullPath = await pathFinder.FindAsync(start.position, end.position);
+
             int count = fullPath.Count;
+            $"Waypoint count: {count}".Msg();
+            if (count == 0) return;
+            
+            wayPoints.Add(start.position);
+            pathQueue.Enqueue(start.position);
             int i = -1;
             while (++i < count)
             {
@@ -41,12 +47,10 @@ namespace Hadal.AI
                 wayPoints.Add(temp);
                 pathQueue.Enqueue(temp);
             }
-
-            $"Waypoint count: {wayPoints.Count}".Msg();
-            isFirstPath = true;
-
-            wayPoints = wayPoints.Prepend(start.position).ToList();
             wayPoints.Add(end.position);
+            pathQueue.Enqueue(end.position);
+
+            isFirstPath = true;
             line.positionCount = wayPoints.Count;
             for (i = 0; i < wayPoints.Count; i++)
                 line.SetPosition(i, wayPoints[i]);
@@ -76,7 +80,8 @@ namespace Hadal.AI
             }
 
             Vector3 direction = (curTarget - cubeTest.transform.position).normalized;
-            cubeTest.transform.position = Vector3.Lerp(cubeTest.transform.position, curTarget, speed * Time.deltaTime);
+            float multiplier = (Vector3.Distance(cubeTest.transform.position, end.position) + 1f);
+            cubeTest.transform.position = Vector3.Lerp(cubeTest.transform.position, curTarget, multiplier * Time.deltaTime);
         }
 
         private bool isFirstPath = true;
