@@ -46,10 +46,21 @@ namespace Tenshi.SaveHigan
                 return value;
             }
         }
-        private static T HandleNoSaveException<T>(string exception = "")
+        private static T HandleNoSaveException<T>(bool isResources, string exception = "")
         {
             if (string.IsNullOrWhiteSpace(exception))
-                $"The root save path [{PersistentSavePath}] does not exist, please save first.".Msg();
+            {
+                string thePath = string.Empty;
+                if (isResources)
+                {
+                    thePath = ProjectResourcesPath;
+                }
+                else
+                {
+                    thePath = PersistentSavePath;
+                }
+                $"The root save path [{thePath}] does not exist, please save first.".Msg();
+            }
             else
                 exception.Msg();
 
@@ -85,9 +96,8 @@ namespace Tenshi.SaveHigan
         }
         private static T InternalLoad<T>(string pathKey, string customNoSaveException = "")
         {
-            string rootPath = PersistentSavePath;
             string fullPath = GetFullPathFromKey(pathKey);
-            if (!IsFileKeyExistent(pathKey)) return HandleNoSaveException<T>(customNoSaveException);
+            if (!IsFileKeyExistent(pathKey)) return HandleNoSaveException<T>(false, customNoSaveException);
 
             T value = default(T);
             using FileStream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
@@ -95,6 +105,69 @@ namespace Tenshi.SaveHigan
             {
                 value = Formatter.Deserialize<T>(stream);
                 $"Load success for /{pathKey}{Suffix}".Msg();
+            }
+            catch (SerializationException ex)
+            {
+                $"Load fail error: {ex.Message}".Error();
+            }
+            return value;
+        }
+
+        public static string ProjectName { get; private set; }
+        public static string EditorResourcesPath => "_PROJECT/Resources";
+        public static string ProjectResourcesPath
+        {
+            get
+            {
+                #if UNITY_EDITOR
+                string path = $"Assets/{EditorResourcesPath}";
+                if (!path.EndsWith("/")) path += "/";
+                return path;
+                #else // Build
+                string path = $"{ProjectName}_Data/Resources";
+                if (!path.EndsWith("/")) path += "/";
+                return path;
+                #endif
+            }
+        }
+        public static void SetProjectName(string path) => ProjectName = path;
+        public static bool SaveToResources<T>(T data, string resourcePath, string subPathKey) => InternalSaveToResources<T>(data, resourcePath, subPathKey);
+        public static T LoadFromResources<T>(string resourcePath, string subPathKey, string customNoSaveException = "") => InternalLoadFromResources<T>(resourcePath, subPathKey, customNoSaveException);
+        private static bool InternalSaveToResources<T>(T data, string resourcePath, string subPathKey, bool emptyFile = false)
+        {
+            string fullPath = resourcePath + subPathKey + Suffix;
+
+            bool status = false;
+            using FileStream stream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
+            if (!emptyFile)
+            {
+                try
+                {
+                    Formatter.Serialize(stream, data);
+                    status = true;
+                    $"Save success for {fullPath}".Msg();
+                }
+                catch (SerializationException ex)
+                {
+                    $"Save fail error: {ex}".Error();
+                    status = false;
+                }
+            }
+            else status = true;
+            return status;
+        }
+        private static T InternalLoadFromResources<T>(string resourcePath, string subPathKey, string customNoSaveException = "")
+        {
+            string fullPath = resourcePath + subPathKey + Suffix;
+            $"{fullPath}".Msg();
+            if (!File.Exists(fullPath)) return HandleNoSaveException<T>(true, customNoSaveException);
+
+            T value = default(T);
+            using FileStream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
+            try
+            {
+                value = Formatter.Deserialize<T>(stream);
+                $"Load success for {fullPath}".Msg();
             }
             catch (SerializationException ex)
             {
@@ -132,13 +205,14 @@ namespace Tenshi.SaveHigan
         {
             string rootPath = PersistentSavePath;
             string fullPath = GetFullPathFromKey(pathKey);
-            if (!IsFileKeyExistent(pathKey)) return await Task.Run(() => HandleNoSaveException<T>(customNoSaveException));
+            if (!IsFileKeyExistent(pathKey)) return await Task.Run(() => HandleNoSaveException<T>(false, customNoSaveException));
 
             using FileStream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
             try
             {
+                T value = default(T);
                 await $"Loading...".MsgAsync();
-                T value = Formatter.Deserialize<T>(stream);
+                await Task.Run(() => value = Formatter.Deserialize<T>(stream));
                 $"Load Async success for /{pathKey}{Suffix}".Msg();
                 return value;
             }
@@ -147,6 +221,54 @@ namespace Tenshi.SaveHigan
                 $"Load Async fail error: {ex.Message}".Error();
                 return default(T);
             }
+        }
+
+        public static async Task<bool> SaveToResourcesAsync<T>(T data, string resourcePath, string subPathKey) => await InternalSaveToResourcesAsync<T>(data, resourcePath, subPathKey);
+        public static async Task<T> LoadFromResourcesAsync<T>(string resourcePath, string subPathKey, string customNoSaveException = "") => await InternalLoadFromResourcesAsync<T>(resourcePath, subPathKey, customNoSaveException);
+        private static async Task<bool> InternalSaveToResourcesAsync<T>(T data, string resourcePath, string subPathKey, bool emptyFile = false)
+        {
+            string fullPath = resourcePath + subPathKey + Suffix;
+
+            bool status = false;
+            await Task.Run(() =>
+            {
+                using FileStream stream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
+                if (!emptyFile)
+                {
+                    try
+                    {
+                        Formatter.Serialize(stream, data);
+                        status = true;
+                        $"Save success for {fullPath}".Msg();
+                    }
+                    catch (SerializationException ex)
+                    {
+                        $"Save fail error: {ex}".Error();
+                        status = false;
+                    }
+                }
+                else status = true;
+            });
+            return status;
+        }
+        private static async Task<T> InternalLoadFromResourcesAsync<T>(string resourcePath, string subPathKey, string customNoSaveException = "")
+        {
+            string fullPath = resourcePath + subPathKey + Suffix;
+            if (!File.Exists(fullPath)) return await Task.Run(() => HandleNoSaveException<T>(true, customNoSaveException));
+
+            T value = default(T);
+            using FileStream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
+            try
+            {
+                await $"Loading from Resources... {fullPath}".MsgAsync();
+                await Task.Run(() => value = Formatter.Deserialize<T>(stream));
+                $"Load success for {fullPath}".Msg();
+            }
+            catch (SerializationException ex)
+            {
+                $"Load fail error: {ex.Message}".Error();
+            }
+            return value;
         }
 
         #endregion
