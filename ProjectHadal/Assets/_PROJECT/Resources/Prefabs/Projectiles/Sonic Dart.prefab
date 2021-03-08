@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 9019930035885817092}
   - component: {fileID: 5627941608468223027}
   - component: {fileID: 6971419611592527743}
-  - component: {fileID: 2676370855624002848}
+  - component: {fileID: 880114878162419551}
+  - component: {fileID: 4943504598434740513}
   m_Layer: 0
   m_Name: ProjectileData
   m_TagString: Untagged
@@ -48,9 +49,11 @@ MonoBehaviour:
   debugKey: Projectile Physics
   rootTransform: {fileID: 5118692649966226049}
   projectileRigidbody: {fileID: 5112791235449951143}
+  projectileBehavior: {fileID: 0}
   projectileModeList:
   - {fileID: 6971419611592527743}
-  - {fileID: 2676370855624002848}
+  - {fileID: 880114878162419551}
+  - {fileID: 4943504598434740513}
 --- !u!114 &6971419611592527743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,7 +73,24 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 3}
   force: 0.25
   linearDrag: 1
---- !u!114 &2676370855624002848
+--- !u!114 &880114878162419551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344514979514167435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437baf2f5863d8f44b5ffd6c053f2215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 3
+  endTime: 10
+  armsProjectile: 0
+  skipsOnContact: 0
+  attachTime: 0
+--- !u!114 &4943504598434740513
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -82,8 +102,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8744ad15030187d4e84f934c35b5d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 4
-  endTime: 10
+  mode: 5
+  endTime: 0
   armsProjectile: 0
   skipsOnContact: 0
   destroyObject: 0

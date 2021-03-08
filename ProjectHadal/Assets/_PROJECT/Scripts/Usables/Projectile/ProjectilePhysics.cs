@@ -5,7 +5,7 @@ using Hadal;
 using NaughtyAttributes;
 using Magthylius.DataFunctions;
 
-// C: Jon, Edited by: Jet
+// C: Jon, Edited by: Jet, Jin
 namespace Hadal.Usables.Projectiles
 {
     public class ProjectilePhysics : MonoBehaviourDebug
@@ -15,6 +15,7 @@ namespace Hadal.Usables.Projectiles
         [Header("References")]
         public Transform rootTransform;
         public Rigidbody projectileRigidbody;
+        public ProjectileBehaviour projectileBehavior;
         [ReadOnly] public List<ProjectileMode> projectileModeList;
 
         public delegate void PhysicsFinishedEvent();
@@ -38,6 +39,8 @@ namespace Hadal.Usables.Projectiles
 
             projectileTimer = new Timer(projectileModeList[0].endTime);
             projectileTimer.TargetTickedEvent.AddListener(SwapModes);
+
+            projectileBehavior = GetComponentInParent<ProjectileBehaviour>();
 
             DoDebugEnabling(debugKey);
         }
@@ -90,6 +93,18 @@ namespace Hadal.Usables.Projectiles
             else
             {
                 DebugLog("Projectile Mode: " + projectileModeList[modeIndex].mode.ToString());
+                if(projectileModeList[modeIndex].mode == ProjectileMode.ProjectileModeEnum.ATTACH)
+                {
+                    if(projectileBehavior.IsAttached)
+                    {
+                        projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
+                        return;
+                    }
+                    else
+                    {
+                        modeIndex++;
+                    }
+                }
                 projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
             }
         }

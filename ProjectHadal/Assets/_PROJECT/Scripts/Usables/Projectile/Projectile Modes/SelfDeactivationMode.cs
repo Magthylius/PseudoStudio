@@ -5,6 +5,7 @@ using UnityEngine;
 public class SelfDeactivationMode : ProjectileMode
 {
     [Header("Deactivation settings")]
+    public float attachTimer;
     public bool destroyObject;
     public delegate void SelfDeactivateEvent(bool isSwap);
     public event SelfDeactivateEvent selfDeactivated;

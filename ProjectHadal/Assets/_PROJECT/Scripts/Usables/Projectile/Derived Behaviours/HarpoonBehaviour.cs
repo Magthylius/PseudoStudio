@@ -7,8 +7,16 @@ namespace Hadal.Usables.Projectiles
     {
         [SerializeField] private string[] validLayer;
 
+        public void OnDisable()
+        {
+            IsAttached = false;
+        }
+
         private void OnCollisionEnter(Collision collision)
         {
+            if (IsAttached)
+                return;
+
             foreach (string layerName in validLayer)
             {
                 LayerMask layer = LayerMask.NameToLayer(layerName);
@@ -16,6 +24,7 @@ namespace Hadal.Usables.Projectiles
                 {
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
+                    IsAttached = true;
                 }
             }
         }

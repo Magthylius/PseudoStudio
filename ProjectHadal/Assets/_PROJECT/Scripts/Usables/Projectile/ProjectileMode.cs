@@ -10,6 +10,7 @@ public abstract class ProjectileMode : MonoBehaviour
         PROPULSION = 0,
         IMPULSE,
         IDLE,
+        ATTACH,
         SELF_DESTRUCT,
         SELF_DEACTIVATE
     }

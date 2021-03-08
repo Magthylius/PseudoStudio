@@ -10,6 +10,11 @@ namespace Hadal.Usables.Projectiles
         public ImpulseMode impulseMode;
         public SelfDeactivationMode selfDeactivation;
 
+        public void OnDisable()
+        {
+            IsAttached = false;
+        }
+
         public void SubscribeModeEvent()
         {
             impulseMode = GetComponentInChildren<ImpulseMode>();
@@ -20,7 +25,7 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!isAttach)
+            if (!isAttach || IsAttached)
                 return;
 
             foreach (string layerName in validLayer)
@@ -30,7 +35,7 @@ namespace Hadal.Usables.Projectiles
                 {
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
-                    isAttach = false;
+                    IsAttached = true;
                 }
             }
         }
