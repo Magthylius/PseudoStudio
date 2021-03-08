@@ -17,14 +17,19 @@ namespace Hadal.Usables
 
             projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
                 (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce);
+
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
-            //projectileObj.Rigidbody.AddForce(info.Direction * (info.Force * ProjectileData.Movespeed));
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)
         {
             if (obj is SonicDartBehaviour sonicDart)
             {
+                if (!obj.GetComponentInParent<SonicDartPool>())
+                {
+                    sonicDart.Rigidbody.isKinematic = false;
+                    sonicDart.transform.SetParent(SonicDartPool.Instance.transform); ;
+                }
                 SonicDartPool.Instance.Dump(sonicDart);
             }
         }

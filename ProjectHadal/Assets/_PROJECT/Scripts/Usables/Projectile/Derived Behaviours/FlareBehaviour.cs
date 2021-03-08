@@ -5,8 +5,8 @@ namespace Hadal.Usables.Projectiles
 {
     public class FlareBehaviour : ProjectileBehaviour
     {
-        [SerializeField] private string wallLayer = string.Empty;
-        [SerializeField] private bool IsAttach;
+        [SerializeField] private string[] validLayer;
+        [SerializeField] private bool isAttach;
         public ImpulseMode impulseMode;
         public SelfDeactivationMode selfDeactivation;
 
@@ -20,22 +20,27 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            LayerMask layer = LayerMask.NameToLayer(wallLayer);
-            if (collision.gameObject.layer == layer.value)
+            if (!isAttach)
+                return;
+
+            foreach (string layerName in validLayer)
             {
-                if (IsAttach == true)
+                LayerMask layer = LayerMask.NameToLayer(layerName);
+                if (collision.gameObject.layer == layer.value)
                 {
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
-                }                 
+                    isAttach = false;
+                }
             }
         }
 
         public void ModeToggle()
         {
-            IsAttach = !IsAttach;
+            isAttach = !isAttach;
         }
 
-        private void ModeSwap(bool IsAttach) => this.IsAttach = IsAttach;
+        private void ModeSwap(bool isAttach) => this.isAttach = isAttach;
+        public bool IsAttach { get => isAttach; set => isAttach = value; }
     }
 }

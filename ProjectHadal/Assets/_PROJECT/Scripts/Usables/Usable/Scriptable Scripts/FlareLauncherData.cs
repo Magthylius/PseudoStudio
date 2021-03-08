@@ -36,8 +36,11 @@ namespace Hadal.Usables
         {
             if (obj is FlareBehaviour flare)
             {
-                flare.Rigidbody.isKinematic = false;
-                flare.transform.SetParent(FlarePool.Instance.transform); 
+                if(!obj.GetComponentInParent<FlarePool>())
+                {
+                    flare.Rigidbody.isKinematic = false;
+                    flare.transform.SetParent(FlarePool.Instance.transform);
+                }
                 FlarePool.Instance.Dump(flare);
             }
         }

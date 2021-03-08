@@ -26,6 +26,11 @@ namespace Hadal.Usables
         {
             if (obj is HarpoonBehaviour harpoon)
             {
+                if (!obj.GetComponentInParent<HarpoonPool>())
+                {
+                    harpoon.Rigidbody.isKinematic = false;
+                    harpoon.transform.SetParent(HarpoonPool.Instance.transform);
+                }
                 HarpoonPool.Instance.Dump(harpoon);
             }
         }
