@@ -26,32 +26,32 @@ namespace Tenshi.AIDolls
         public bool SetState(IState newState)
         {
             if (newState == _currState) return false;
-            _currState?.OnEnd();
+            _currState?.OnStateEnd();
             _currState = newState;
             AllTransitions.TryGetValue(_currState.GetType(), out SequentialTransitions);
             if (SequentialTransitions.IsNullOrEmpty()) SequentialTransitions = Transition.Null;
-            _currState?.OnStart();
+            _currState?.OnStateStart();
             return true;
         }
 
         /// <summary> Used to add a sequential transition. A sequential transition must have a <paramref name="from"/> state
         /// to transition to the <paramref name="to"/> state. This transition will automatically happen when the passed in
-        /// <paramref name="condition"/> evaluates to true at any point in the program. </summary>
-        public void AddSequentialTransition(IState from, IState to, Func<bool> condition)
+        /// <paramref name="withCondition"/> evaluates to true at any point in the program. </summary>
+        public void AddSequentialTransition(IState from, IState to, Func<bool> withCondition)
         {
             if (!AllTransitions.TryGetValue(from.GetType(), out var transitions))
             {
                 transitions = new List<Transition>();
                 AllTransitions[from.GetType()] = transitions;
             }
-            transitions.Add(new Transition(to, condition));
+            transitions.Add(new Transition(to, withCondition));
         }
 
         /// <summary> Used to add an event transition. An event transition only has a <paramref name="to"/> state as it can
         /// transition from any other state in the machine (something like a 'drop everything and do that' transition). This
-        /// transition will automatically happen when the passed in <paramref name="condition"/> evaluates to true at any 
+        /// transition will automatically happen when the passed in <paramref name="withCondition"/> evaluates to true at any 
         /// point in the program. </summary>
-        public void AddEventTransition(IState to, Func<bool> condition) => EventTransitions.Add(new Transition(to, condition));
+        public void AddEventTransition(IState to, Func<bool> withCondition) => EventTransitions.Add(new Transition(to, withCondition));
 
         private Transition GetActiveTransition()
         {
@@ -84,13 +84,14 @@ namespace Tenshi.AIDolls
         }
     }
 
-    public class ArtificialState : IState
+    public class ArtificialBehaviourState : IState
     {
         private readonly ArtificialBehaviour _behaviour = null;
-        public ArtificialState(ArtificialBehaviour behaviour) => _behaviour = behaviour;
-        public void OnStart() => _behaviour.OnStart();
+        public ArtificialBehaviourState(ArtificialBehaviour behaviour) => _behaviour = behaviour;
+        public void OnStateStart() => _behaviour.OnStart();
         public void StateTick() => _behaviour.OnUpdate();
-        public void OnEnd() => _behaviour.OnEnd();
+        public void OnStateEnd() => _behaviour.OnEnd();
+        public Func<bool> ShouldTerminate() => () => false;
     }
 
     public abstract class ArtificialBehaviour : MonoBehaviour
@@ -106,9 +107,14 @@ namespace Tenshi.AIDolls
         void StateTick();
         
         /// <summary> This will be called when the state becomes the active state (transitioned into from another state). </summary>
-        void OnStart();
+        void OnStateStart();
         
         /// <summary> This will be called when the state becomes inactive (transitioned out to another state). </summary>
-        void OnEnd();
+        void OnStateEnd();
+
+        /// <summary> Can be used to specify a 'self termination' condition if this state needs to end itself at some point. 
+        /// This is so that individual state can tell the machine that they should terminate without the machine needing to
+        /// knowing the details. </summary>
+        Func<bool> ShouldTerminate();
     }
 }

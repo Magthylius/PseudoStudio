@@ -44,15 +44,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectResourcesPath: Assets/_PROJECT/Resources/
-  pathFinder: {fileID: 0}
-  x: 16
-  y: 10
-  z: 16
-  cellSize: 8
-  meshNodeSizeMultiplier: 0
+  x: 20
+  y: 20
+  z: 20
+  cellSize: 20
+  meshNodeSizeMultiplier: 3
   obstacleMask:
     serializedVersion: 2
     m_Bits: 256
-  enableObstacleGridGizmo: 1
+  enableObstacleGridGizmo: 0
   enableAllElseGridGizmo: 0
   enableSavingDebugLogs: 0
