@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 260296791}
   - component: {fileID: 260296790}
   - component: {fileID: 260296789}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -859,6 +859,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a98fab7c6eb41243b2be5cf3c3b9fe0, type: 3}
+--- !u!1001 &1071805508
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20.724178
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.06199
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.527013
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013519, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1177389023455013552, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
+      propertyPath: m_Name
+      value: TimerManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 303e03feb085c804aaf7f6ac97a6387f, type: 3}
 --- !u!1 &1099760455
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1243,7 @@ MonoBehaviour:
   destinationChangeTimer: 5
   detectionRadius: 50
   wallDetectionRadius: 100
-  pinSpeed: 2
+  pinSpeed: 40
   playerMask:
     serializedVersion: 2
     m_Bits: 128
