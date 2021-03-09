@@ -9,10 +9,11 @@ using System;
 using System.Linq;
 using Hadal.AI.GeneratorGrid;
 
-namespace Hadal.AI
+namespace Hadal.AI.States
 {
     public class IdleState : IState
     {
+        #region Variables
         AIBrain brain;
         Queue<Vector3> pathQueue;
         Vector3 curDestination;
@@ -22,6 +23,7 @@ namespace Hadal.AI
         float newDestTimeDelay;
         bool isFirstPath;
         bool isGridInitialised;
+        #endregion
 
         public IdleState(AIBrain brain, float destinationChangeTimer)
         {
@@ -34,7 +36,7 @@ namespace Hadal.AI
         }
         public void OnStateStart()
         {
-            "I am idling now".Msg();
+           
         }
         public void StateTick()
         {
@@ -43,7 +45,7 @@ namespace Hadal.AI
         }
         public void OnStateEnd()
         {
-            "I am exiting idle".Msg();
+            
         }
 
         void WalkPath()
@@ -72,6 +74,12 @@ namespace Hadal.AI
             brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, multiplier * Time.deltaTime);
         }
 
+        void CancelPath()
+        {
+            pathQueue.Clear();
+            isFirstPath = false;
+        }
+
         void ChooseRandomDestination()
         {
             newDestTimer -= Time.deltaTime;
@@ -87,6 +95,7 @@ namespace Hadal.AI
 
                 Stack<Node> fullPath = PathFinder.Instance.Find(brain.transform.position, curDestination);
                 if (fullPath.IsNullOrEmpty()) return;
+
                 pathQueue.Enqueue(brain.transform.position);
                 while (fullPath.IsNotEmpty())
                     pathQueue.Enqueue(fullPath.Pop().Position);
