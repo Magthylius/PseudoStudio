@@ -20,7 +20,7 @@ namespace Hadal.Usables.Projectiles
             impulseMode = GetComponentInChildren<ImpulseMode>();
             impulseMode.ModeSwapped += ModeSwap;
             selfDeactivation = GetComponentInChildren<SelfDeactivationMode>();
-            selfDeactivation.selfDeactivated += ModeSwap;
+            selfDeactivation.selfDeactivated += ModeOff;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -40,12 +40,8 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
-        public void ModeToggle()
-        {
-            isAttach = !isAttach;
-        }
-
         private void ModeSwap(bool isAttach) => this.isAttach = isAttach;
+        private void ModeOff() => isAttach = false;
         public bool IsAttach { get => isAttach; set => isAttach = value; }
     }
 }
