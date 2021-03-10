@@ -6,6 +6,7 @@ using System.Linq;
 using Tenshi.AIDolls;
 using Hadal.AI.States;
 using NaughtyAttributes;
+using Hadal.AI.GeneratorGrid;
 
 namespace Hadal.AI
 {
@@ -14,6 +15,7 @@ namespace Hadal.AI
         StateMachine stateMachine;
         public List<Transform> destinations;
         public List<Transform> playerTransforms;
+        bool isGridInitialised = false;
 
         [Header("Idle Setting")]
         IState idle;
@@ -30,24 +32,22 @@ namespace Hadal.AI
 
         private void Awake()
         {
-            InitialiseStates();
+            GridGenerator.GridLoadedEvent += InitialiseStates;
+            isGridInitialised = false;
             playerMask = LayerMask.GetMask("Player");
             obstacleMask = LayerMask.GetMask("Obstacle");
         }
 
-        private void Start()
-        {
-            //! set default state
-            stateMachine.SetState(idle);
-        }
-
         private void Update()
         {
-            stateMachine.MachineTick();
+            HandlePseudoStart();
+            stateMachine?.MachineTick();
         }
 
-        private void InitialiseStates()
+        private void InitialiseStates(Grid grid)
         {
+            GridGenerator.GridLoadedEvent -= InitialiseStates;
+
             //! instantiate classes
             stateMachine = new StateMachine();
             idle = new IdleState(this, destinationChangeTimer);
@@ -56,6 +56,17 @@ namespace Hadal.AI
             //! setup custom transitions
             stateMachine.AddSequentialTransition(from: idle, to: engagement, withCondition: EngagePlayer());
             stateMachine.AddSequentialTransition(from: engagement, to: idle, withCondition: LostTarget());
+
+            isGridInitialised = true;
+        }
+
+        private void HandlePseudoStart()
+        {
+            if (!isGridInitialised) return;
+            
+            isGridInitialised = false;
+            //! set default state
+            stateMachine.SetState(idle);
         }
 
         //! transition conditions (insert our design conditions here)

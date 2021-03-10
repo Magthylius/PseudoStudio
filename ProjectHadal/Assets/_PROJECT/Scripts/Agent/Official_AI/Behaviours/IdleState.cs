@@ -6,6 +6,7 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.AI.AStarPathfinding;
 using System;
+using System.Threading.Tasks;
 using System.Linq;
 using Hadal.AI.GeneratorGrid;
 
@@ -22,7 +23,8 @@ namespace Hadal.AI.States
         float newDestTimer = 0f;
         float newDestTimeDelay;
         bool isFirstPath;
-        bool isGridInitialised;
+        bool isFindingPath;
+        
         #endregion
 
         public IdleState(AIBrain brain, float destinationChangeTimer)
@@ -31,21 +33,22 @@ namespace Hadal.AI.States
             pathQueue = new Queue<Vector3>();
             newDestTimeDelay = destinationChangeTimer;
             isFirstPath = false;
-            isGridInitialised = false;
-            GridGenerator.GridLoadedEvent += OnGridLoaded;
+            isFindingPath = false;
         }
-        public void OnStateStart()
+        public async void OnStateStart()
         {
-           
+            CancelPath();
+            ResetNewDestinationTimer();
+            await SelectRandomPathAsync();
         }
-        public void StateTick()
+        public async void StateTick()
         {
-            ChooseRandomDestination();
+            await CheckForNewDestinationTimerCompletedAsync();
             WalkPath();
         }
         public void OnStateEnd()
         {
-            
+            CancelPath();
         }
 
         void WalkPath()
@@ -80,36 +83,70 @@ namespace Hadal.AI.States
             isFirstPath = false;
         }
 
-        void ChooseRandomDestination()
+        void CheckForNewDestinationTimerCompleted()
         {
             newDestTimer -= Time.deltaTime;
-            if (newDestTimer < 0.0f && isGridInitialised)
+            if (newDestTimer < 0.0f)
             {
-                newDestTimer = newDestTimeDelay;
-                
-                var list = brain.destinations.Select(i => i.position).ToList();
-                list.Remove(prevDest);
-                curDestination = list.RandomElement();
-                
-                prevDest = curDestination;
-
-                Stack<Node> fullPath = PathFinder.Instance.Find(brain.transform.position, curDestination);
-                if (fullPath.IsNullOrEmpty()) return;
-
-                pathQueue.Enqueue(brain.transform.position);
-                while (fullPath.IsNotEmpty())
-                    pathQueue.Enqueue(fullPath.Pop().Position);
-                pathQueue.Enqueue(curDestination);
-
-                isFirstPath = true;
+                ResetNewDestinationTimer();
+                SelectRandomPath();
             }
         }
 
-        private void OnGridLoaded(Grid grid)
+        async Task CheckForNewDestinationTimerCompletedAsync()
         {
-            GridGenerator.GridLoadedEvent -= OnGridLoaded;
-            isGridInitialised = true;
+            newDestTimer -= Time.deltaTime;
+            if (newDestTimer < 0.0f)
+            {
+                ResetNewDestinationTimer();
+                await SelectRandomPathAsync();
+            }
         }
+
+        void SelectRandomPath()
+        {
+            var list = brain.destinations.Select(i => i.position).ToList();
+            list.Remove(prevDest);
+            curDestination = list.RandomElement();
+
+            prevDest = curDestination;
+            Stack<Node> fullPath = PathFinder.Instance.Find(brain.transform.position, curDestination);
+            if (fullPath.IsNullOrEmpty()) return;
+
+            pathQueue.Enqueue(brain.transform.position);
+            while (fullPath.IsNotEmpty())
+                pathQueue.Enqueue(fullPath.Pop().Position);
+            pathQueue.Enqueue(curDestination);
+
+            isFirstPath = true;
+        }
+
+        async Task SelectRandomPathAsync()
+        {
+            if (isFindingPath) return;
+            isFindingPath = true;
+
+            var list = brain.destinations.Select(i => i.position).ToList();
+            list.Remove(prevDest);
+            curDestination = list.RandomElement();
+
+            prevDest = curDestination;
+
+            
+            Stack<Node> fullPath = await PathFinder.Instance.FindAsync(brain.transform.position, curDestination);
+            if (fullPath.IsNullOrEmpty()) return;
+
+            pathQueue.Enqueue(brain.transform.position);
+            while (fullPath.IsNotEmpty())
+                pathQueue.Enqueue(fullPath.Pop().Position);
+            pathQueue.Enqueue(curDestination);
+
+
+            isFindingPath = false;
+            isFirstPath = true;
+        }
+
+        void ResetNewDestinationTimer() => newDestTimer = newDestTimeDelay;
 
         public Func<bool> ShouldTerminate() => () => false;
     }
