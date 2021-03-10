@@ -78,8 +78,13 @@ namespace Tenshi
         public static uint AsUint(this bool statement) => Convert.ToUInt32(statement);
         public static uint AsUint(this float number) => Convert.ToUInt32(number);
         public static uint AsUint(this int number) => Convert.ToUInt32(number);
+        public static long AsLong(this int number) => Convert.ToInt64(number);
+        public static ulong AsUlong(this int number) => Convert.ToUInt64(number);
         public static float AsFloat(this bool statement) => statement.AsInt();
         public static float AsFloat(this int number) => number;
+        public static float AsFloat(this double number) => Convert.ToSingle(number);
+        public static double AsDouble(this long number) => Convert.ToDouble(number);
+        public static double AsDouble(this ulong number) => Convert.ToDouble(number);
         public static bool AsBool(this byte bitSet) => Convert.ToBoolean(bitSet);
         public static bool AsBool(this uint number) => Convert.ToBoolean(number);
         public static T AsType<T>(this GameObject gameObject) where T : UnityEngine.Component => gameObject.GetComponent<T>();
