@@ -25,6 +25,9 @@ public abstract class ProjectileMode : MonoBehaviour
     protected Transform rootTransform;
     protected bool frameSetupCompleted = false;
 
+    public void OnEnable() => frameSetupCompleted = false;
+    public void OnDisable() => frameSetupCompleted = true;
+
     public virtual void Setup(Rigidbody rb, Transform rTransform)
     {
         if (armsProjectile)
