@@ -8,6 +8,7 @@ using System;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
 using NaughtyAttributes;
+using Hadal.Networking.UI.MainMenu;
 
 //! C: Jon
 namespace Hadal.Networking
@@ -170,6 +171,16 @@ namespace Hadal.Networking
         }
         public void LoadLevel(int index) => PhotonNetwork.LoadLevel(index);
         public void LoadLevel(string levelName) => PhotonNetwork.LoadLevel(levelName);
+        public AsyncOperation LoadLevelAsync(int index)
+        {
+            PhotonNetwork.LoadLevel(index);
+            return PhotonNetwork._AsyncLevelLoadingOperation;
+        }
+        public AsyncOperation LoadLevelAsync(string levelName)
+        {
+            PhotonNetwork.LoadLevel(levelName);
+            return PhotonNetwork._AsyncLevelLoadingOperation;
+        }
 
         #region Connection Functions
         public override void OnConnectedToMaster()
