@@ -5,7 +5,9 @@ using NaughtyAttributes;
 using Photon.Pun;
 using UnityEngine;
 using Hadal.Inputs;
+using Hadal.UI;
 using Tenshi;
+
 
 //Created by Jet
 namespace Hadal.Player
@@ -101,8 +103,8 @@ namespace Hadal.Player
         {
             if (isMine)
             {
-                if (UIManager.Instance != null) UIManager.Instance.SetPlayer(this);
                 gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
+                UIManager.Instance.InjectPlayer(pTrans, rotator, RotationInput);
             }
             else
             {

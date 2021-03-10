@@ -1,5 +1,4 @@
-﻿using Hadal.Player.Behaviours;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,9 +6,13 @@ using Hadal.Inputs;
 using Magthylius.LerpFunctions;
 using Hadal.Networking;
 using Hadal.PostProcess;
+using Hadal.Locomotion;
 
-//Created by Jet
-namespace Hadal.Player
+// Required Event 
+// TODO PLAYER DISABLE/ENABLE EVENT 
+
+//Created by Jet, Edited by Jon Jon Thong
+namespace Hadal.UI
 {
     public delegate void OnHealthChange();
 
@@ -32,7 +35,9 @@ namespace Hadal.Player
 
         [Header("Player Settings")]
         [SerializeField] private float highestPoint;
-        [SerializeField] private PlayerController player;
+        [SerializeField] private Rotator playerRotator;
+        [SerializeField] private IRotationInput playerRotationInput;
+        [SerializeField] private Transform playerTransform;
         [SerializeField] private Text depthText;
         [SerializeField] private Text lightText;
         [SerializeField] private Image reticle;
@@ -61,9 +66,6 @@ namespace Hadal.Player
         string lightsOnString;
         string lightsOffString;
 
-        PlayerLamp _lamp;
-        PlayerHealthManager _healthManager;
-
         [Header("Pause Menu Settings")]
         [SerializeField] Menu pauseMenu;
         StandardUseableInput playerInput;
@@ -77,7 +79,7 @@ namespace Hadal.Player
             if (Instance == null)
             {
                 Instance = this;
-                OnHealthChange += UpdateHealthBar;
+                //OnHealthChange += UpdateHealthBar;
             }
             else
             {
@@ -99,7 +101,7 @@ namespace Hadal.Player
 
         void Update()
         {
-            if (player == null) return;
+            if (playerTransform == null) return;
 
         #if UNITY_EDITOR
             if (playerInput.TabKeyDown) TriggerPauseMenu();
@@ -111,29 +113,13 @@ namespace Hadal.Player
             {
                 InformationUpdate();
                 BalancerUpdate();
-                SetLights();
             }
         }
 
-        private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
+        //private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
         #endregion
 
-        public void SetPlayer(PlayerController target)
-        {
-            player = target;
-            var info = player.GetInfo;
-            _lamp = info.Lamp;
-            _healthManager = info.HealthManager;
-            SetLights();
-        }
-
         #region Health
-        private void UpdateHealthBar()
-        {
-            if (player == null) return;
-            healthBar.fillAmount = _healthManager.GetHealthRatio;
-        }
-
         public static void InvokeOnHealthChange() => OnHealthChange?.Invoke();
         #endregion
 
@@ -165,6 +151,14 @@ namespace Hadal.Player
         #endregion
 
         #region Modules
+        
+        public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput)
+        {
+            playerTransform = Transform;
+            playerRotator = Rotator;
+            playerRotationInput = RotationInput;
+        }
+
         void SetupModules()
         {
             lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
@@ -175,11 +169,8 @@ namespace Hadal.Player
 
         void InformationUpdate()
         {
-            string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - player.transform.position.y)).ToString("#,#");
+            string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
             depthText.text = $"Depth: -{depth}";
-
-            string lightIs = _lamp.LightsOn ? "ON" : "OFF";
-            lightText.text = $"Light: {lightIs}";
         }
 
         void BalancerUpdate()
@@ -191,18 +182,13 @@ namespace Hadal.Player
             //uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(xMovement * rotatorHorizontalMovementDistance, yMovement * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
 
             Vector3 balancerAngles = new Vector3();
-            balancerAngles.z = player.Rotator.localRotation.eulerAngles.z;
+            balancerAngles.z = playerRotator.localRotation.eulerAngles.z; 
 
             uiRotators.rotation = Quaternion.Slerp(uiRotators.rotation, Quaternion.Euler(balancerAngles), rotatorReactionSpeed * Time.deltaTime);
-            uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(0f, player.RotationInput.YAxis * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
+            uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(0f, playerRotationInput.YAxis * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
             //DebugLog(player.transform.localRotation + ", " + player.transform.localRotation.eulerAngles);
         }
 
-        void SetLights()
-        {
-            if (_lamp.LightsOn) lightsTMP.text = lightsOnString;
-            else lightsTMP.text = lightsOffString;
-        }
         #endregion
 
         #region Pause menu
@@ -232,7 +218,7 @@ namespace Hadal.Player
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
-            player.Enable();
+            //player.Enable();
         }
 
         public void PNTR_Pause()
@@ -241,12 +227,12 @@ namespace Hadal.Player
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
 
-            player.Disable();
+            //player.Disable();
         }
 
         public void PNTR_Disconnect()
         {
-            //neManager.Disconnect();
+            //neManager.Disconnect(); 
             neManager.LeaveRoom(true);
         }
         #endregion
