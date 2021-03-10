@@ -36,7 +36,6 @@ namespace Hadal.AI.GeneratorGrid
         [SerializeField] bool enableAllElseGridGizmo = false;
         //! Enable saving debug logs
         [SerializeField] bool enableSavingDebugLogs = false;
-
         #endregion
 
         private void Awake()
@@ -109,7 +108,7 @@ namespace Hadal.AI.GeneratorGrid
 
             //! Handle obstacle detection
             GetAllObstaclesInScene();
-            await CheckObstacles();
+            CheckObstacles();
 
             //! Save all generated grid data to file
             await SaveGridToFileAsync();
@@ -255,38 +254,35 @@ namespace Hadal.AI.GeneratorGrid
         MeshFilter[] obstacleArray;
         /// <summary>
         /// Check obstacles that collide with each node's bounds and add it to a obstacleNodeList. Else, add to emptyNodeList</summary>
-        async Task CheckObstacles()
+        void CheckObstacles()
         {
             int i = 1;
-            await Task.Run(() =>
+            grid.LoopNode((node) =>
             {
-                grid.LoopNode((node) =>
+                Bounds b = node.Bounds;
+                if (obstacleArray.IsNullOrEmpty())
+                    return;
+
+                int length = obstacleArray.Length;
+                for (int j = 0; j < length; j++)
                 {
-                    Bounds b = node.Bounds;
-                    if (obstacleArray.IsNullOrEmpty())
-                        return;
+                    var col = obstacleArray[j];
+                    if (col == null)
+                        continue;
 
-                    int length = obstacleArray.Length;
-                    for (int j = 0; j < length; j++)
+                    List<Node> meshNodes = GetNodesFromMeshFilter(col);
+                    foreach (var m in meshNodes)
                     {
-                        var col = obstacleArray[j];
-                        if (col == null)
-                            continue;
-
-                        List<Node> meshNodes = GetNodesFromMeshFilter(col);
-                        foreach (var m in meshNodes)
+                        if (b.Intersects(m.Bounds))
                         {
-                            if (b.Intersects(m.Bounds))
-                            {
-                                if (node.HasObstacle) return;
-                                node.HasObstacle = true;
-                                i++;
-                                return;
-                            }
+                            if (node.HasObstacle) return;
+                            node.HasObstacle = true;
+                            i++;
+                            return;
                         }
-                        meshNodes.Clear();
                     }
-                });
+                    meshNodes.Clear();
+                }
             });
 
             obstacleArray = null;
