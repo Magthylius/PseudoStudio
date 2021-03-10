@@ -70,9 +70,8 @@ namespace Hadal.AI.States
             Vector3 currentVector = (closestWall - b.transform.position).normalized;
             parent.Brain.transform.position += currentVector * (b.pinSpeed * Time.deltaTime);
 
-            if ((closestWall - b.transform.position).magnitude < 0.05f)
+            if ((closestWall - b.transform.position).magnitude < 50f)
             {
-                b.transform.position = closestWall;
                 isPinning = false;
                 "No longer pinning".Msg();
             }
@@ -92,7 +91,11 @@ namespace Hadal.AI.States
             {
                 MoveToClosestWall(); //! Move to closest wall
                 if(Vector3.Distance(closestWall, b.transform.position) > 0.05f)
-                    parent.TargetPlayer.position = b.transform.position; //!Instant teleport player to the wall with AI
+                {                  
+                    parent.TargetPlayer.position = b.transform.position + (b.transform.forward * 20f);
+                }
+                    
+                
             }
         }
         
@@ -201,8 +204,9 @@ namespace Hadal.AI.States
         internal void ChaseTargetPlayer()
         {
             Vector3 direction = (TargetPlayer.position - Brain.transform.position).normalized;
-            float multiplier = 2f; // (Vector3.Distance(Brain.transform.position, curDestination) + 0.1f);
-            Brain.transform.position = Vector3.Lerp(Brain.transform.position, TargetPlayer.position, multiplier * Time.deltaTime);
+            float speed = 2f;
+            var target = TargetPlayer.position - (Brain.transform.forward * 5f);
+            Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, speed * Time.deltaTime);
         }
 
         internal bool TargetPlayerIsInRange()

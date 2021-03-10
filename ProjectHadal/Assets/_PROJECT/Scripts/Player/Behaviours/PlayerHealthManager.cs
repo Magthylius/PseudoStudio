@@ -1,6 +1,6 @@
 ﻿using Photon.Pun;
 using UnityEngine;
-
+using Hadal.UI;
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
