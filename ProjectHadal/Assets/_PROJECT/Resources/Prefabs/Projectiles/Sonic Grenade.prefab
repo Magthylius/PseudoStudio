@@ -48,6 +48,7 @@ MonoBehaviour:
   debugKey: Projectile Physics
   rootTransform: {fileID: 5118692649966226049}
   projectileRigidbody: {fileID: 1726207187124534749}
+  projectileBehavior: {fileID: 0}
   projectileModeList:
   - {fileID: 7249430743949414952}
   - {fileID: 1614410750506823944}
@@ -82,10 +83,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8744ad15030187d4e84f934c35b5d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 4
-  endTime: 60
+  mode: 5
+  endTime: 0.2
   armsProjectile: 0
   skipsOnContact: 0
+  attachTimer: 0
   destroyObject: 0
 --- !u!1 &536731445565263428
 GameObject:
@@ -194,6 +196,7 @@ GameObject:
   - component: {fileID: 3327857578645411838}
   - component: {fileID: 1726207187124534749}
   - component: {fileID: -5423433650376497601}
+  - component: {fileID: 2162494160188478927}
   m_Layer: 0
   m_Name: Sonic Grenade
   m_TagString: Untagged
@@ -309,3 +312,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: 
+  selfDeactivation: {fileID: 0}
+--- !u!114 &2162494160188478927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7351274592407701336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f81fa4b4a0c0da49b42819f4c6fcc1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 10
+  radiusAdjustRate: 1
+  checkObstacles: 0
+  constantPing: 0
