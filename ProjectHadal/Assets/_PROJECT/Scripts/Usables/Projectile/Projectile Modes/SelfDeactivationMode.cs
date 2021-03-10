@@ -18,6 +18,7 @@ public class SelfDeactivationMode : ProjectileMode
 
     public override void FirstFrameSetup()
     {
+        Debug.Log("First FrameEvent called");
         frameSetupCompleted = true;
         selfDeactivated?.Invoke();
     }

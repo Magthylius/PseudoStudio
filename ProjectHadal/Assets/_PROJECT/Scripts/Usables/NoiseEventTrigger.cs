@@ -19,19 +19,10 @@ namespace Hadal.Usables
         [SerializeField] bool checkObstacles = false; // if true, raycast to check for obstacles 
         [SerializeField] bool constantPing = false; // if true, ping constantly
         Collider[] detectedObjects; // for storing nearby colliders
-
-        private bool isUtility;
-        private ProjectileBehaviour utilityBhv;
-
+    
         void Start()
         {
-            currentRadius = radius;
-
-            if(isUtility)
-            {
-                utilityBhv = GetComponent<ProjectileBehaviour>();
-            }
-                
+            currentRadius = radius;                
         }
 
         void FixedUpdate()
