@@ -25,10 +25,15 @@ namespace Hadal.AI
         public float FCost { get; set; }
         public bool IsVisited { get; set; } = false;
         public bool IsPath { get; set; } = false;
+        public bool IsStart { get; set; } = false;
+        public bool IsEnd { get; set; } = false;
         public void ResetPathfindingInfo()
         {
+            Parent = null;
             IsVisited = false;
             IsPath = false;
+            IsStart = false;
+            IsEnd = false;
             GCost = Mathf.Infinity;
             FCost = Mathf.Infinity;
         }

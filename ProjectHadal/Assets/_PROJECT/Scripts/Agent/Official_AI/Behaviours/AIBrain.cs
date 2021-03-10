@@ -7,6 +7,7 @@ using Tenshi.AIDolls;
 using Hadal.AI.States;
 using NaughtyAttributes;
 using Hadal.AI.GeneratorGrid;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -36,6 +37,11 @@ namespace Hadal.AI
             isGridInitialised = false;
             playerMask = LayerMask.GetMask("Player");
             obstacleMask = LayerMask.GetMask("Obstacle");
+        }
+
+        private void OnDestroy()
+        {
+            "I have been unalived!!!".Msg();
         }
 
         private void Update()

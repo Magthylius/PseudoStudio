@@ -105,8 +105,9 @@ namespace Hadal.AI.AStarPathfinding
             watch = Stopwatch.StartNew();
 
             //! Setup for A*
-            Node theStart = from;
+            float weight = 1f;
 
+            Node theStart = from;
             Node theEnd = to;
             if (from == null || to == null)
                 return new Stack<Node>();
@@ -120,34 +121,54 @@ namespace Hadal.AI.AStarPathfinding
             //! Setup node costs
             grid.LoopNode(node => node.ResetPathfindingInfo());
             theStart.GCost = 0;
-            theStart.FCost = GetHeuristic(theStart, theStart);
+            theStart.FCost = theStart.GCost + GetHeuristic(theStart, theEnd);
+            theStart.IsStart = true;
+            theEnd.IsEnd = true;
 
             //! Run A*
             while (open.IsNotEmpty())
             {
                 await "A Star is running...".MsgAsync();
 
-                current = open.First();
+                current = open.OrderBy(node => node.FCost).First();
+                current.IsVisited = true;
                 if (current == theEnd)
+                {
+                    await "I have returned".MsgAsync();
                     return await ReconstructPathAsync(current, theStart);
+                }
 
                 open.Remove(current);
                 closed.Add(current);
                 neighbours = GetNeighbours(current);
 
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
+                    await 1.MsgAsync();
                     foreach (Node n in neighbours)
                     {
-                        if (NodeIsNeverEvaluated(n) && !n.HasObstacle)
+                        await 2.MsgAsync();
+                        if (n.IsVisited || n.HasObstacle)
+                            continue;
+
+                        await 3.MsgAsync();
+
+                        float potentialCost = current.GCost + GetAppendedGCost(n, current);
+                        if (potentialCost < n.GCost)
                         {
+                            await 4.MsgAsync();
                             n.Parent = current;
-                            n.GCost = current.GCost + GetAppendedGCost(n, current);
-                            n.FCost = n.GCost + GetHeuristic(n, theEnd);
-                            n.IsVisited = true;
-                            open.Add(n);
-                            open = open.OrderBy(node => node.FCost).ToList();
+                            n.GCost = potentialCost;
+                            n.FCost = n.GCost + (weight * GetHeuristic(n, theEnd));
+                            
+                            if (!open.Contains(n))
+                            {
+                                await 5.MsgAsync();
+                                open.Add(n);
+                            }
                         }
+
+                        
                     }
                 });
                 neighbours.Clear();
@@ -167,15 +188,22 @@ namespace Hadal.AI.AStarPathfinding
         /// or the ending node (Djikstra), or something else entirely. </summary>
         private float GetAppendedGCost(Node node, Node comparingNode)
         {
-            return (node.Position - comparingNode.Position).sqrMagnitude;
+            return (node.Position - comparingNode.Position).magnitude;
         }
 
+        private const int MOVE_STRAIGHT_COST = 10;
+        private const int MOVE_DIAGONAL_COST = 14;
+        private const int MOVE_ZDIAGONAL_COST = 14;
         /// <summary> We can customise the heuristic here. </summary>
         private float GetHeuristic(Node node, Node comparingNode)
         {
-            return (node.Position.x - comparingNode.Position.x).Abs()
-                 + (node.Position.y - comparingNode.Position.y).Abs()
-                 + (node.Position.z - comparingNode.Position.z).Abs();
+            float dx = (node.Position.x - comparingNode.Position.x).Abs();
+            float dy = (node.Position.y - comparingNode.Position.y).Abs();
+            float dz = (node.Position.z - comparingNode.Position.z).Abs();
+            float dmin = Mathf.Min(dx, Mathf.Min(dy, dz));
+            float dmax = Mathf.Max(dx, Mathf.Max(dy, dz));
+            float dmid = dx + dy + dz - dmin - dmax;
+            return (MOVE_ZDIAGONAL_COST - MOVE_DIAGONAL_COST) * dmin + (MOVE_DIAGONAL_COST - MOVE_STRAIGHT_COST) * dmid * MOVE_STRAIGHT_COST * dmax;
         }
 
         private Stack<Node> ReconstructPath(Node node, Node start)
@@ -203,6 +231,7 @@ namespace Hadal.AI.AStarPathfinding
                 Stack<Node> path = new Stack<Node>();
                 while (node != start && node != null)
                 {
+                    node.IsPath = true;
                     path.Push(node);
                     node = node.Parent;
                 }

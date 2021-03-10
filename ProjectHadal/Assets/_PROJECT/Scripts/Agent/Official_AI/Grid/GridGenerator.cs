@@ -11,6 +11,11 @@ using System.Threading;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using Hadal.AI.AStarPathfinding;
+using UnityEngine.Jobs;
+using Unity.Collections;
+using Unity.Burst;
+using Unity.Jobs;
+using Unity.Mathematics;
 
 namespace Hadal.AI.GeneratorGrid
 {
@@ -262,7 +267,7 @@ namespace Hadal.AI.GeneratorGrid
                             node.Bounds = new Bounds(position, new Vector3(cellSize, cellSize, cellSize));
                             node.Index = new Vector3Int(valX, valY, valZ);
                             nodeMultiArray[valX, valY, valZ] = node;
-                            
+
                             valZ++;
                         }
                         valY++;
@@ -280,6 +285,59 @@ namespace Hadal.AI.GeneratorGrid
         #endregion
 
         #region Obstacles
+
+        #region Obstacle Jobs
+
+        struct NativeObstacleInfo
+        {
+            public MeshFilter Filter { get; set; }
+            public NativeList<Bounds> VertexBounds { get; set; }
+
+            public bool IsNull() => Filter == null;
+        }
+
+        struct CheckObstaclesJob : IJobParallelFor
+        {
+            public NativeList<NativeObstacleInfo> infos;
+
+            public void Execute(int i)
+            {
+                
+            }
+
+            void HandleNodesToObstacleComparison(Node node, float completionRatio)
+            {
+                if (node == null) return;
+
+                $"Checking Obstacles... {completionRatio.ToString("F2")}%".Msg();
+
+                if (infos.Length == 0)
+                    return;
+
+                Bounds b = node.Bounds;
+                int length = infos.Length;
+                for (int j = 0; j < length; j++)
+                {
+                    var col = infos[j];
+                    if (col.IsNull())
+                        continue;
+
+                    NativeList<Bounds> meshBounds = col.VertexBounds;
+                    foreach (var m in meshBounds)
+                    {
+                        if (b.Intersects(m))
+                        {
+                            if (node.HasObstacle) return;
+                            node.HasObstacle = true;
+                            return;
+                        }
+                    }
+                    meshBounds.Clear();
+                }
+            }
+        }
+
+        #endregion
 
         struct ObstacleInfo
         {
@@ -492,7 +550,20 @@ namespace Hadal.AI.GeneratorGrid
             {
                 grid.LoopNode(node =>
                 {
-                    if (node.IsVisited)
+                    if (node.IsStart)
+                    {
+                        Gizmos.color = Color.cyan;
+                        Gizmos.DrawWireCube(node.Bounds.center, node.Bounds.size);
+                        return;
+                    }
+                    else if (node.IsEnd)
+                    {
+                        Gizmos.color = Color.magenta;
+                        Gizmos.DrawWireCube(node.Bounds.center, node.Bounds.size);
+                        return;
+                    }
+
+                    if (node.IsVisited && !node.IsPath)
                     {
                         Gizmos.color = Color.red;
                         Gizmos.DrawWireCube(node.Bounds.center, node.Bounds.size);

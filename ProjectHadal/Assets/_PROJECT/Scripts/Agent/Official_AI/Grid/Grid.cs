@@ -12,6 +12,22 @@ namespace Hadal.AI
         public Node[,,] grid;
         public Node[,,] Get => grid;
         public Node GetNodeAt(Vector3Int pos) => Get[pos.x, pos.y, pos.z];
+        public Node[] GetAs1DArray()
+        {
+            Node[] nodes = new Node[Get.Length];
+            int i = 0;
+            for (int x = 0; x < Get.GetLength(0); x++)
+            {
+                for (int y = 0; y < Get.GetLength(1); y++)
+                {
+                    for (int z = 0; z < Get.GetLength(2); z++)
+                    {
+                        nodes[i++] = Get[x, y, z];
+                    }
+                }
+            }
+            return nodes;
+        }
 
         public void Loop(Action<int, int, int> method)
         {
@@ -95,21 +111,10 @@ namespace Hadal.AI
         }
         public async Task LoopAs1DArray_XNodesPerIterationAsync(Action<Node[]> method, CancellationToken tolkien, int steps)
         {
-            Node[] nodes = new Node[Get.Length];
-            int i = 0;
-            for (int x = 0; x < Get.GetLength(0); x++)
-            {
-                for (int y = 0; y < Get.GetLength(1); y++)
-                {
-                    for (int z = 0; z < Get.GetLength(2); z++)
-                    {
-                        nodes[i++] = Get[x, y, z];
-                    }
-                }
-            }
+            Node[] nodes = GetAs1DArray();
 
             int step = steps;
-            for (i = 0; i < nodes.Length; i += step)
+            for (int i = 0; i < nodes.Length; i += step)
             {
                 Node[] abcdefghij = new Node[step];
                 for (int s = 0; s < step; s++)
