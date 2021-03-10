@@ -7,7 +7,7 @@ public class SelfDeactivationMode : ProjectileMode
     [Header("Deactivation settings")]
     public float attachTimer;
     public bool destroyObject;
-    public delegate void SelfDeactivateEvent(bool isSwap);
+    public delegate void SelfDeactivateEvent();
     public event SelfDeactivateEvent selfDeactivated;
 
     public override void Setup(Rigidbody rb, Transform rTransform)
@@ -19,7 +19,7 @@ public class SelfDeactivationMode : ProjectileMode
     public override void FirstFrameSetup()
     {
         frameSetupCompleted = true;
-        selfDeactivated?.Invoke(false);
+        selfDeactivated?.Invoke();
     }
 
     public override void DoUpdate()

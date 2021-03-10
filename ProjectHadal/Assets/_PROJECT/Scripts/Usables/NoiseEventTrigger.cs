@@ -1,9 +1,10 @@
-// Created by Harry
+// Created by Harry, edited by Jin
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hadal.Usables.Projectiles;
 
-namespace Hadal.Player
+namespace Hadal.Usables
 {
     public class NoiseEventTrigger : MonoBehaviour
     {
@@ -19,9 +20,18 @@ namespace Hadal.Player
         [SerializeField] bool constantPing = false; // if true, ping constantly
         Collider[] detectedObjects; // for storing nearby colliders
 
+        private bool isUtility;
+        private ProjectileBehaviour utilityBhv;
+
         void Start()
         {
             currentRadius = radius;
+
+            if(isUtility)
+            {
+                utilityBhv = GetComponent<ProjectileBehaviour>();
+            }
+                
         }
 
         void FixedUpdate()
@@ -48,7 +58,7 @@ namespace Hadal.Player
 
         public void NoisePing() // ping for nearby colliders
         {
-            LayerMask dectectionMask = LayerMask.GetMask("Player"); // change this mask to AI
+            LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
 
             detectedObjects = Physics.OverlapSphere(this.transform.position, currentRadius, dectectionMask);
 
@@ -58,6 +68,7 @@ namespace Hadal.Player
                     CheckObstacles(col.gameObject.transform);
                 else
                     AIDetected();
+                    Debug.Log("Enemy Detected");
             }
         }
 
