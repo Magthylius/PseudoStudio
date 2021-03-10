@@ -40,6 +40,7 @@ namespace Hadal.Legacy
             if (PV.IsMine)
             {
                 EquipItem(0);
+                
             }
             else
             {

@@ -5,15 +5,14 @@ namespace Hadal.Usables.Projectiles
 {
     public class SonicGrenadeBehaviour : ProjectileBehaviour
     {
-        private NoiseEventTrigger noiseTrigger;
         public SelfDeactivationMode selfDeactivation;
-        public delegate void SonicExplodeEvent();
-        public event SonicExplodeEvent sonicExploded;
+
+        private float radius = 10;
+        private Collider[] detectedObjects;
 
         protected override void Start()
         {
             base.Start();
-            noiseTrigger = GetComponent<NoiseEventTrigger>();
         }
 
         public void SubscribeModeEvent()
@@ -24,7 +23,15 @@ namespace Hadal.Usables.Projectiles
 
         private void SonicExplode()
         {
-            noiseTrigger.NoisePing();
+            Debug.Log("Event called");
+            LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
+
+            detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
+
+            foreach (Collider col in detectedObjects)
+            {
+                Debug.Log("Enemy Detected");
+            }
         }
     }
 }

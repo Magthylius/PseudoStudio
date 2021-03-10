@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.4.4
+// Version 1.4.5
 namespace Magthylius
 {
     namespace LerpFunctions
@@ -448,11 +448,11 @@ namespace Magthylius
             CanvasState state;
             bool allowFade;
 
-            public CanvasGroupFader(CanvasGroup canvasGroup, bool setFadeInState, bool canAffectTouch, float alphaPrecision = 0.001f)
+            public CanvasGroupFader(CanvasGroup canvasGroup, bool startFadeInState, bool canAffectTouch, float alphaPrecision = 0.001f)
             {
                 canvas = canvasGroup;
                 affectsTouch = canAffectTouch;
-                if (setFadeInState) SetStateFadeIn();
+                if (startFadeInState) SetStateFadeIn();
                 else SetStateFadeOut();
 
                 allowFade = false;
