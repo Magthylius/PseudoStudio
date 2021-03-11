@@ -10,7 +10,7 @@ namespace Hadal.Usables
         public virtual UsableLauncherData Data { get => data; set => data = value; }
         
         /// <summary> Event is called when <see cref="Use"/> is called succesfully. Can be used to cue sfx or animations. </summary>
-        public event Action<UsableLauncherObject> OnFire;
+        public virtual event Action<UsableLauncherObject> OnFire;
 
         /// <summary> Event is called when any ammunition/charges are restored (if any). </summary>
         public event Action<UsableLauncherObject> OnRestock;

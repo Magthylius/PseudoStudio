@@ -73,7 +73,7 @@ namespace Hadal.Usables.Projectiles
         }
 
         //! Finished physics event
-        void OnPhysicsFinished()
+        public void OnPhysicsFinished()
         {
             DebugLog("Projectile Physics finished!");
 

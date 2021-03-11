@@ -94,8 +94,7 @@ namespace Hadal.Player.Behaviours
             else if (_uInput.FireKey2)
             {
                 FireUtility();
-            }
-           
+            }           
         }
         
         //Fire when received Event
