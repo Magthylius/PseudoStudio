@@ -102,7 +102,6 @@ namespace Hadal.AI
         {
             if (index >= 0 && index < nodes.Length)
                 return nodes[index];
-
             return null;
         }
     }
