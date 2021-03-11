@@ -61,6 +61,13 @@ namespace Hadal.Player
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
         private void OnCollisionStay(Collision collision) => collisions.CollisionStay(collision);
 
+        void OnDestroy()
+        {
+            //! Might need to uninject player
+            UIManager.Instance.PauseMenuOpened -= Disable;
+            UIManager.Instance.PauseMenuClosed -= Enable;
+        }
+
         #endregion
 
         #region Public Methods
@@ -105,6 +112,8 @@ namespace Hadal.Player
             {
                 gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
                 UIManager.Instance.InjectPlayer(pTrans, rotator, RotationInput);
+                UIManager.Instance.PauseMenuOpened += Disable;
+                UIManager.Instance.PauseMenuClosed += Enable;
             }
             else
             {

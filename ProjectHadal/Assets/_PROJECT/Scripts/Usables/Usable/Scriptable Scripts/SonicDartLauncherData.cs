@@ -1,7 +1,9 @@
 using Hadal.Usables.Projectiles;
 using UnityEngine;
 using Tenshi;
-//Created by Jet
+using Hadal.UI;
+
+//Created by Jet, E: Jon
 namespace Hadal.Usables
 {
     [CreateAssetMenu(menuName = "Usables/Sonic Dart Launcher (Sonic Tracker)")]
@@ -19,6 +21,10 @@ namespace Hadal.Usables
                 (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce);
 
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
+
+            //! pass in transform data to uimanager
+            UIManager.Instance.TrackProjectile(projectileObj.transform, TrackerType.SONIC_DART);
+             
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)
@@ -30,6 +36,7 @@ namespace Hadal.Usables
                     sonicDart.Rigidbody.isKinematic = false;
                     sonicDart.transform.SetParent(SonicDartPool.Instance.transform); ;
                 }
+                UIManager.Instance.UntrackProjectile(obj.transform, TrackerType.SONIC_DART);
                 SonicDartPool.Instance.Dump(sonicDart);
             }
         }
