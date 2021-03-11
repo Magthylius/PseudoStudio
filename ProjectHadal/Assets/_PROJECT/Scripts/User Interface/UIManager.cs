@@ -64,7 +64,7 @@ namespace Hadal.UI
         public GameObject reloadText;
 
         [Header("Module Settings")]
-        UITrackerHandler trackerHandler;
+        [SerializeField] UITrackerHandler trackerHandler;
         List<Transform> sonicDartTransforms;
 
         [Header("Pause Menu Settings")]
@@ -214,19 +214,14 @@ namespace Hadal.UI
                 case TrackerType.SONIC_DART:
                     //sonicDartTransforms.Add(projectileTransform);
                     trackerHandler.Scoop(projectileType).TrackTransform(projectileTransform);
+                    //if (trackerHandler.Scoop(projectileType) == null) print("balls");
                     break;
             }
         }
 
-        public void UntrackProjectile(Transform projectileTransform, TrackerType projectileType)
+        public void UntrackProjectile(Transform projectileTransform)
         {
-            switch (projectileType)
-            {
-                case TrackerType.SONIC_DART:
-                    foreach (Transform sonicDart in sonicDartTransforms)
-                        if (sonicDart == projectileTransform) sonicDartTransforms.Remove(sonicDart);
-                    break;
-            }
+            trackerHandler.Dump(projectileTransform);
         }
 
         #endregion
