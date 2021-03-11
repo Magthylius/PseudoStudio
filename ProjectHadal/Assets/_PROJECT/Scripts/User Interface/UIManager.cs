@@ -5,16 +5,23 @@ using TMPro;
 using Hadal.Inputs;
 using Magthylius.LerpFunctions;
 using Hadal.Networking;
+using Hadal.Networking.UI.Loading;
 using Hadal.PostProcess;
 using Hadal.Locomotion;
 
 // Required Event 
 // TODO PLAYER DISABLE/ENABLE EVENT 
 
-//Created by Jet, Edited by Jon Jon Thong
+//Created by Jet, Edited by Jon 
 namespace Hadal.UI
 {
     public delegate void OnHealthChange();
+    public delegate void OnPauseMenuAction();
+
+    public enum TrackerType
+    {
+        SONIC_DART = 0,
+    }
 
     public class UIManager : MonoBehaviourDebug
     {
@@ -24,6 +31,7 @@ namespace Hadal.UI
 
         NetworkEventManager neManager;
         PostProcessingManager ppManager;
+        LoadingManager loadingManager;
 
         [Header("Position Settings")]
         [SerializeField] RectTransform uiRotators;
@@ -34,15 +42,16 @@ namespace Hadal.UI
         FlexibleRect uiRotatorsFR;
 
         [Header("Player Settings")]
-        [SerializeField] private float highestPoint;
-        [SerializeField] private Rotator playerRotator;
-        [SerializeField] private IRotationInput playerRotationInput;
-        [SerializeField] private Transform playerTransform;
+        [SerializeField] private float highestPoint;  
         [SerializeField] private Text depthText;
         [SerializeField] private Text lightText;
         [SerializeField] private Image reticle;
         [SerializeField] private Image healthBar;
         public static event OnHealthChange OnHealthChange;
+
+        Rotator playerRotator;
+        IRotationInput playerRotationInput;
+        Transform playerTransform;
 
         [Header("Shooting Settings")]
         public int torpCount;
@@ -55,20 +64,14 @@ namespace Hadal.UI
         public GameObject reloadText;
 
         [Header("Module Settings")]
-        public TextMeshProUGUI lightsTMP;
-        public string lightsPrefix;
-        public Color lightsOnColor;
-        public Color lightsOffColor;
-        public string lightsOnSuffix;
-        public string lightsOffSuffix;
-
-        bool isLightOn;
-        string lightsOnString;
-        string lightsOffString;
+        UITrackerHandler trackerHandler;
+        List<Transform> sonicDartTransforms;
 
         [Header("Pause Menu Settings")]
         [SerializeField] Menu pauseMenu;
         StandardUseableInput playerInput;
+        public event OnPauseMenuAction PauseMenuOpened;
+        public event OnPauseMenuAction PauseMenuClosed;
 
         bool pauseMenuOpen = false;
         //! blur out the screen
@@ -92,6 +95,7 @@ namespace Hadal.UI
         {
             neManager = NetworkEventManager.Instance;
             ppManager = PostProcessingManager.Instance;
+            loadingManager = LoadingManager.Instance;
 
             DoDebugEnabling(debugKey);
 
@@ -105,15 +109,22 @@ namespace Hadal.UI
 
         #if UNITY_EDITOR
             if (playerInput.TabKeyDown) TriggerPauseMenu();
-        #else
+#else
             if (playerInput.EscKeyDown) TriggerPauseMenu();
-        #endif
+#endif
+        }
+
+        void FixedUpdate()
+        {
+            if (playerTransform == null) return;
 
             if (!pauseMenuOpen)
             {
                 InformationUpdate();
                 BalancerUpdate();
+                ProjectileTrackingUpdate();
             }
+
         }
 
         //private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
@@ -161,10 +172,12 @@ namespace Hadal.UI
 
         void SetupModules()
         {
-            lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
-            lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
+            //lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
+            //lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
 
             uiRotatorsFR = new FlexibleRect(uiRotators);
+
+            sonicDartTransforms = new List<Transform>();
         }
 
         void InformationUpdate()
@@ -187,6 +200,33 @@ namespace Hadal.UI
             uiRotators.rotation = Quaternion.Slerp(uiRotators.rotation, Quaternion.Euler(balancerAngles), rotatorReactionSpeed * Time.deltaTime);
             uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(0f, playerRotationInput.YAxis * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
             //DebugLog(player.transform.localRotation + ", " + player.transform.localRotation.eulerAngles);
+        }
+
+        void ProjectileTrackingUpdate()
+        {
+
+        }
+
+        public void TrackProjectile(Transform projectileTransform, TrackerType projectileType)
+        {
+            switch (projectileType)
+            {
+                case TrackerType.SONIC_DART:
+                    //sonicDartTransforms.Add(projectileTransform);
+                    trackerHandler.Scoop(projectileType).TrackTransform(projectileTransform);
+                    break;
+            }
+        }
+
+        public void UntrackProjectile(Transform projectileTransform, TrackerType projectileType)
+        {
+            switch (projectileType)
+            {
+                case TrackerType.SONIC_DART:
+                    foreach (Transform sonicDart in sonicDartTransforms)
+                        if (sonicDart == projectileTransform) sonicDartTransforms.Remove(sonicDart);
+                    break;
+            }
         }
 
         #endregion
@@ -218,7 +258,7 @@ namespace Hadal.UI
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
-            //player.Enable();
+            if (PauseMenuClosed != null) PauseMenuClosed.Invoke();
         }
 
         public void PNTR_Pause()
@@ -227,12 +267,11 @@ namespace Hadal.UI
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
 
-            //player.Disable();
+            if (PauseMenuOpened != null) PauseMenuOpened.Invoke();
         }
 
         public void PNTR_Disconnect()
         {
-            //neManager.Disconnect(); 
             neManager.LeaveRoom(true);
         }
         #endregion

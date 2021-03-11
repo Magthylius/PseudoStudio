@@ -46,8 +46,6 @@ namespace Hadal.Networking.UI.Loading
             continueCGF = new CanvasGroupFader(continueCG, true, false);
 
             ResetLoadingElements();
-
-            
         }
 
         void FixedUpdate()
@@ -104,8 +102,7 @@ namespace Hadal.Networking.UI.Loading
             FadeIn();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
-            nextLoadLevelName = levelName;
-            
+            nextLoadLevelName = levelName; 
         }
 
         [Button("Fade In")]
