@@ -42,6 +42,7 @@ namespace Hadal.Networking.UI.Loading
 
             loadingCG = GetComponent<CanvasGroup>();
             loadingCGF = new CanvasGroupFader(loadingCG, true, true);
+            loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             continueCGF = new CanvasGroupFader(continueCG, true, false);
 
@@ -62,7 +63,6 @@ namespace Hadal.Networking.UI.Loading
                     allowContinue = true;
 
                     loadingCGF.fadeEndedEvent.RemoveAllListeners();
-                    Debug.LogWarning("test");
                 }
             }
 
@@ -80,7 +80,7 @@ namespace Hadal.Networking.UI.Loading
         void ResetLoadingElements()
         {
             loadingCGF.fadeEndedEvent.RemoveAllListeners();
-            loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
+            
 
             continueCGF.SetTransparent();
             loadingCGF.SetTransparent();
@@ -90,9 +90,8 @@ namespace Hadal.Networking.UI.Loading
 
         void ActualLoad()
         {
-            Debug.LogWarning("call");
             //if (allowLoading)
-
+            print("called");
         }
 
         /// <summary>
