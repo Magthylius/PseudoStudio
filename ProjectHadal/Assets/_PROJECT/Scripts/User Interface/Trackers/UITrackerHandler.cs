@@ -14,10 +14,20 @@ public class UITrackerHandler : MonoBehaviour
     {
         public GameObject trackerPrefab;
         public Transform spawnParent;
+        public TrackerType trackerType;
         public int poolCount;
+
+        public TrackerPool(TrackerPool other)
+        {
+            trackerPrefab = other.trackerPrefab;
+            spawnParent = other.spawnParent;
+            trackerType = other.trackerType;
+            poolCount = other.poolCount;
+        }
     }
 
     [SerializeField] Camera playerCamera;
+    [SerializeField] Transform playerTransform;
     [SerializeField] List<TrackerPool> trackerPoolList;
 
     List<UITrackerBehaviour> trackerList;
@@ -43,6 +53,7 @@ public class UITrackerHandler : MonoBehaviour
         {
             var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
             trackerList.Add(track.GetComponent<UITrackerBehaviour>());
+            track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform);
 
             yield return new WaitForEndOfFrame();
             count++;
@@ -54,6 +65,17 @@ public class UITrackerHandler : MonoBehaviour
         foreach (UITrackerBehaviour tracker in trackerList)
             if (tracker.Type == type && !tracker.isActiveAndEnabled) return tracker;
 
+        foreach (TrackerPool tracker in trackerPoolList)
+        {
+            if (tracker.trackerType == type) 
+            {
+                var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
+                trackerList.Add(track.GetComponent<UITrackerBehaviour>());
+                return track.GetComponent<UITrackerBehaviour>();
+            }
+        }
+
+        Debug.LogWarning("Tracker type not found!");
         return null;
     }
 
@@ -61,5 +83,19 @@ public class UITrackerHandler : MonoBehaviour
     {
         tracker.Untrack();
         tracker.Disable();
+    }
+
+    public void Dump(Transform trackerTransform)
+    {
+        foreach (UITrackerBehaviour tracker in trackerList)
+        {
+            if (tracker.TrackingTransform == trackerTransform)
+            {
+                Dump(tracker);
+                return;
+            }
+        }
+
+        Debug.LogWarning("Tracker not found, cannot dump!");
     }
 }

@@ -1,48 +1,79 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Magthylius.LerpFunctions;
-using Hadal.UI;
 
 //! C: Jon
 /// <summary>
 /// Parent class for UI Trackers
 /// </summary>
-public class UITrackerBehaviour : MonoBehaviour
+namespace Hadal.UI
 {
-    public TrackerType Type;
-    [SerializeField] bool startsEnabled = false;
-
-    Image image;
-    RectTransform rectTransform;
-    Transform trackingTransform;
-    Camera playerCamera;
-
-    FlexibleRect flexRect;
-
-    void Start()
+    public class UITrackerBehaviour : MonoBehaviour
     {
-        image = GetComponent<Image>();
-        rectTransform = GetComponent<RectTransform>();
+        public TrackerType Type;
+        [SerializeField] bool startsEnabled = false;
 
-        flexRect = new FlexibleRect(rectTransform);
-        if (!startsEnabled) Disable();
-    }
+        Image image;
+        RectTransform rectTransform;
+        Transform trackingTransform;
+        Camera playerCamera;
+        Transform playerTransform;
 
-    void FixedUpdate()
-    {
-        if (!gameObject.activeInHierarchy) return;
-        if (trackingTransform != null && playerCamera != null) flexRect.MoveTo(playerCamera.WorldToScreenPoint(trackingTransform.position));
-    }
+        FlexibleRect flexRect;
 
-    public void InjectDependencies(Camera playerCamera) => this.playerCamera = playerCamera;
-    public void TrackTransform(Transform transform) => trackingTransform = transform;
-    public void Untrack()
-    {
-        trackingTransform = null;
-        flexRect.MoveTo(Vector2.zero);
+        void Start()
+        {
+            image = GetComponent<Image>();
+            rectTransform = GetComponent<RectTransform>();
+
+            flexRect = new FlexibleRect(rectTransform);
+            if (!startsEnabled) Disable();
+        }
+
+        void Update()
+        {
+            if (!gameObject.activeInHierarchy) return;
+            //if (trackingTransform != null && playerCamera != null) flexRect.MoveTo(playerCamera.WorldToScreenPoint(trackingTransform.position));
+            if (trackingTransform == null || playerCamera == null) return;
+
+            float minX = image.GetPixelAdjustedRect().width * 0.5f;
+            float minY = image.GetPixelAdjustedRect().height * 0.5f;
+
+            float maxX = Screen.width - minX;
+            float maxY = Screen.height - minY;
+
+            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position);
+
+            //print(Vector3.Dot((trackingTransform.position - transform.position), playerTransform.forward));
+            if (Vector3.Dot((trackingTransform.position - playerTransform.position), playerTransform.forward) < 0)
+            {
+                if (pos.x < Screen.width * 0.5f) pos.x = maxX;
+                else pos.x = minX;
+            }
+
+            pos.x = Mathf.Clamp(pos.x, minX, maxX);
+            pos.y = Mathf.Clamp(pos.y, minY, maxY);
+            transform.position = pos;
+        }
+
+        public void InjectDependencies(Camera playerCamera, Transform playerTransform)
+        {
+            this.playerCamera = playerCamera;
+            this.playerTransform = playerTransform;
+        }
+        public void TrackTransform(Transform transform)
+        {
+            Enable();
+            trackingTransform = transform;
+        }
+        public void Untrack()
+        {
+            trackingTransform = null;
+            flexRect.MoveTo(Vector2.zero);
+            Disable();
+        }
+        public void Enable() => gameObject.SetActive(true);
+        public void Disable() => gameObject.SetActive(false);
+        public Transform TrackingTransform => trackingTransform;
     }
-    public void Enable() => gameObject.SetActive(true);
-    public void Disable() => gameObject.SetActive(false);
 }
