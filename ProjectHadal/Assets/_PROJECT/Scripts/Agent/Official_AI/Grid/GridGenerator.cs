@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
-using Hadal.AI.AStarPathfinding;
 using UnityEngine.Jobs;
 using Unity.Collections;
 using Unity.Burst;
@@ -19,6 +18,7 @@ using Unity.Mathematics;
 
 namespace Hadal.AI.GeneratorGrid
 {
+    [ExecuteInEditMode]
     public class GridGenerator : MonoBehaviour
     {
         #region Variables
@@ -48,12 +48,26 @@ namespace Hadal.AI.GeneratorGrid
 
         private void Awake()
         {
+            if (!Application.isPlaying && Application.isEditor) return;
+
             grid = null;
 #if !UNITY_EDITOR // Build
             projectResourcesPath = $"{Application.productName}_Data/Resources/";
 #endif
 
             SaveManager.LoadGameEvent += LoadGridFromFileAsync; //! Load grid save file during play
+        }
+
+        private void Update()
+        {
+            if (Application.isPlaying && Application.isEditor) return;
+            ScheduleObstacleCheckJob();
+        }
+
+        private void LateUpdate()
+        {
+            if (Application.isPlaying && Application.isEditor) return;
+            CompleteObstacleCheckJob();
         }
 
         #region Grid Generator
@@ -288,52 +302,142 @@ namespace Hadal.AI.GeneratorGrid
 
         #region Obstacle Jobs
 
+        bool enableObstacleJobs;
+        JobHandle obstacleJobHandle;
+        CheckObstaclesJob obstaclesJob;
+        int obstacleJobPartitionsPerThread = 64;
+
+        void ScheduleObstacleCheckJob()
+        {
+            if (!enableObstacleJobs) return;
+            obstaclesJob = new CheckObstaclesJob(grid.Get.Length)
+            {
+                ObstacleInfos = ConvertObstaclesToNative(obstacleInfos),
+                Nodes = ConvertNodesToNative(grid.GetAs1DArray())
+            };
+
+            obstacleJobHandle = obstaclesJob.Schedule(obstaclesJob.Nodes.Length, obstacleJobPartitionsPerThread);
+        }
+        void CompleteObstacleCheckJob()
+        {
+            if (!enableObstacleJobs) return;
+            obstacleJobHandle.Complete();
+            obstacleInfos = ConvertObstaclesToReference(obstaclesJob.ObstacleInfos);
+            obstaclesJob.ObstacleInfos.NativeForEach(o => o.Dispose());
+            $"Checking Obstacles... {obstaclesJob.CompletionRatio:F2}%".Msg();
+        }
+
+        NativeList<NativeObstacleInfo> ConvertObstaclesToNative(ObstacleInfo[] infos)
+        {
+            var list = new NativeList<NativeObstacleInfo>();
+            foreach (var o in infos)
+            {
+                NativeObstacleInfo i = new NativeObstacleInfo { Filter = o.Filter, VertexBounds = o.VertexBounds.ToNativeList(Allocator.TempJob) };
+                list.Add(i);
+            }
+            return list;
+        }
+
+        ObstacleInfo[] ConvertObstaclesToReference(NativeList<NativeObstacleInfo> infos)
+        {
+            var list = new List<ObstacleInfo>();
+            foreach (var o in infos)
+            {
+                ObstacleInfo i = new ObstacleInfo { Filter = o.Filter, VertexBounds = o.VertexBounds.ToList() };
+                list.Add(i);
+            }
+            return list.ToArray();
+        }
+
+        NativeList<NativeNode> ConvertNodesToNative(Node[] nodes)
+        {
+            var list = new NativeList<NativeNode>();
+            foreach (var n in nodes)
+            {
+                NativeNode node = new NativeNode { Bounds = n.Bounds, HasObstacle = n.HasObstacle, Index = n.Index };
+                list.Add(node);
+            }
+            return list;
+        }
+
+        Node[] ConvertNodesToReference(NativeList<NativeNode> nodes)
+        {
+            var list = new List<Node>();
+            foreach (var n in nodes)
+            {
+                Node node = new Node { Bounds = n.Bounds, HasObstacle = n.HasObstacle, Index = n.Index };
+                list.Add(node);
+            }
+            return list.ToArray();
+        }
+
+        struct NativeNode
+        {
+            public Bounds Bounds { get; set; }
+            public bool HasObstacle { get; set; }
+            public Vector3Int Index { get; set; }
+            public bool IsNull => Bounds == null;
+        }
+
         struct NativeObstacleInfo
         {
             public MeshFilter Filter { get; set; }
             public NativeList<Bounds> VertexBounds { get; set; }
-
-            public bool IsNull() => Filter == null;
+            public bool IsNull => Filter == null;
+            public void Dispose() => VertexBounds.Dispose();
         }
 
+        [BurstCompile]
         struct CheckObstaclesJob : IJobParallelFor
         {
-            public NativeList<NativeObstacleInfo> infos;
+            public NativeList<NativeObstacleInfo> ObstacleInfos;
+            public NativeList<NativeNode> Nodes;
+            public float CompletionRatio;
+            private float MaxCount;
+            private int ElapsedCount;
 
             public void Execute(int i)
             {
-                
+                Nodes[i] = HandleNodesToObstacleComparison(Nodes[i], 100f * (ElapsedCount++ / MaxCount));
             }
 
-            void HandleNodesToObstacleComparison(Node node, float completionRatio)
+            NativeNode HandleNodesToObstacleComparison(NativeNode node, float completionRatio)
             {
-                if (node == null) return;
+                if (node.IsNull) return node;
 
-                $"Checking Obstacles... {completionRatio.ToString("F2")}%".Msg();
+                CompletionRatio = completionRatio;
 
-                if (infos.Length == 0)
-                    return;
+                if (ObstacleInfos.Length == 0)
+                    return node;
 
                 Bounds b = node.Bounds;
-                int length = infos.Length;
+                int length = ObstacleInfos.Length;
                 for (int j = 0; j < length; j++)
                 {
-                    var col = infos[j];
-                    if (col.IsNull())
+                    var col = ObstacleInfos[j];
+                    if (col.IsNull)
                         continue;
 
-                    NativeList<Bounds> meshBounds = col.VertexBounds;
-                    foreach (var m in meshBounds)
+                    foreach (var m in col.VertexBounds)
                     {
                         if (b.Intersects(m))
                         {
-                            if (node.HasObstacle) return;
+                            if (node.HasObstacle) return node;
                             node.HasObstacle = true;
-                            return;
+                            return node;
                         }
                     }
-                    meshBounds.Clear();
                 }
+                return node;
+            }
+
+            public CheckObstaclesJob(int maxCount)
+            {
+                ObstacleInfos = new NativeList<NativeObstacleInfo>();
+                Nodes = new NativeList<NativeNode>();
+                CompletionRatio = 0f;
+                ElapsedCount = 1;
+                MaxCount = maxCount;
             }
         }
 
@@ -356,7 +460,7 @@ namespace Hadal.AI.GeneratorGrid
         {
             if (node == null) return;
 
-            await $"Checking Obstacles... {completionRatio.ToString("F2")}%".MsgAsync();
+            await $"Checking Obstacles... {completionRatio:F2}%".MsgAsync();
             token?.Token.ThrowIfCancellationRequested();
 
             Bounds b = node.Bounds;
@@ -609,5 +713,14 @@ namespace Hadal.AI.GeneratorGrid
             Debug.DrawLine(p4, p8, Color.cyan, delay);
         }
         #endregion
+    }
+
+    static class JobNativeExtens
+    {
+        public static void NativeForEach<T>(this IEnumerable<T> list, Action<T> method) where T : struct
+        {
+            foreach (var i in list)
+                method.Invoke(i);
+        }
     }
 }

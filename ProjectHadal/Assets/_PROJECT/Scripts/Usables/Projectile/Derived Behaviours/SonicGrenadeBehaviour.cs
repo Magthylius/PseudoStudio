@@ -23,14 +23,13 @@ namespace Hadal.Usables.Projectiles
 
         private void SonicExplode()
         {
-            Debug.Log("Event called");
             LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
 
             detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
 
             foreach (Collider col in detectedObjects)
             {
-                Debug.Log("Enemy Detected");
+                Debug.Log("Sonic : Enemy Detected");
             }
         }
     }

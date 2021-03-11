@@ -13,6 +13,10 @@ namespace Hadal.Usables
         [Range(0f, 1f)] public float ModeToggleTreshold;
         [Range(0f, 1f)] public float ChargingSpeed;
         public float MaxForce;
+
+        public delegate void projectileScoopEvent(ProjectileBehaviour projectileBehavior);
+        public virtual event projectileScoopEvent projectileScooped;
+
         public void ToggleProjectile(bool shouldToggle)
         {
             if (!shouldToggle) return;

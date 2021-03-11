@@ -48,6 +48,7 @@ MonoBehaviour:
   debugKey: Projectile Physics
   rootTransform: {fileID: 5118692649966226049}
   projectileRigidbody: {fileID: 1726207187124534749}
+  projectileBehavior: {fileID: 0}
   projectileModeList:
   - {fileID: 7249430743949414952}
   - {fileID: 1614410750506823944}
@@ -82,10 +83,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8744ad15030187d4e84f934c35b5d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 4
+  mode: 5
   endTime: 60
   armsProjectile: 0
   skipsOnContact: 0
+  attachTimer: 0
   destroyObject: 0
 --- !u!1 &536731445565263428
 GameObject:
@@ -244,7 +246,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1271004af8fceaf42a40b3fb1420984d, type: 2}
+  - {fileID: 2100000, guid: e3ae06a3979f53046aa05330d69de1fa, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

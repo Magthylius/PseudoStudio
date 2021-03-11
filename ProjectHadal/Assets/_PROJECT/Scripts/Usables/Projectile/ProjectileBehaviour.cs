@@ -29,6 +29,12 @@ namespace Hadal.Usables.Projectiles
 
         #region Behavioural Methods
 
+        //For triggering utility (trap) the bool indicates if the utilty is successfully triggered or not.
+        public virtual bool TriggerBehavior()
+        {
+            return false;
+        }
+
         public virtual bool ImpactBehaviour(Collision collision)
         {
             var damageable = collision.transform.GetComponent<IDamageable>();
