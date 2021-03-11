@@ -9,30 +9,22 @@ namespace Hadal.Usables
     {
         [SerializeField] ProjectileBehaviour activeTrap;
         public override event Action<UsableLauncherObject> OnFire;
-
-        private void Start()
-        {
-            Data.projectileScooped += updateActiveTrap;
-        }
-
-        private void updateActiveTrap(ProjectileBehaviour trapBehaviour)
-        {
-            activeTrap = trapBehaviour;
-        }
-
+        
         public override bool Use(UsableHandlerInfo info)
         {
-            if(activeTrap)
+            if (!IsActive) return false;
+    
+            if (activeTrap && activeTrap.gameObject.activeSelf)
             {
                 bool triggered = activeTrap.TriggerBehavior();
                 if(triggered) activeTrap = null;
                 return true;
             }
+            
+            info.Trap = TrapPool.Instance.Scoop();
+            activeTrap = info.Trap;
 
-            if (!IsActive) return false;
-            OnFire?.Invoke(this);
-            LaunchToDestination(info);
-            return true;
+            return base.Use(info);
         }
     }
 }

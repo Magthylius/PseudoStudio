@@ -8,10 +8,9 @@ namespace Hadal.Usables
     [CreateAssetMenu(menuName = "Usables/Trap Launcher")]
     public class TrapLauncherData : UsableLauncherData
     {
-        public override event projectileScoopEvent projectileScooped;
         public override void DoEffect(UsableHandlerInfo info)
         {
-            var projectileObj = TrapPool.Instance.Scoop();
+            var projectileObj = info.Trap;
             projectileObj.Data = ProjectileData;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
@@ -31,8 +30,11 @@ namespace Hadal.Usables
             }
 
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
+        }
 
-            projectileScooped.Invoke(projectileObj);
+        public void DoEffect(UsableHandlerInfo info, GameObject trap)
+        {
+
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)
