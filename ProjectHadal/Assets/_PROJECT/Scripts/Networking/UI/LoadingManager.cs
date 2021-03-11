@@ -46,6 +46,8 @@ namespace Hadal.Networking.UI.Loading
             continueCGF = new CanvasGroupFader(continueCG, true, false);
 
             ResetLoadingElements();
+
+            
         }
 
         void FixedUpdate()
@@ -62,7 +64,6 @@ namespace Hadal.Networking.UI.Loading
                     allowContinue = true;
 
                     loadingCGF.fadeEndedEvent.RemoveAllListeners();
-                    Debug.LogWarning("test");
                 }
             }
 
@@ -80,19 +81,18 @@ namespace Hadal.Networking.UI.Loading
         void ResetLoadingElements()
         {
             loadingCGF.fadeEndedEvent.RemoveAllListeners();
-            loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             continueCGF.SetTransparent();
             loadingCGF.SetTransparent();
+
             allowLoading = false;
             allowContinue = false;
         }
 
         void ActualLoad()
         {
-            Debug.LogWarning("call");
-            //if (allowLoading)
-
+            allowLoading = true;
+            loadingAO = neManager.LoadLevelAsync(nextLoadLevelName);
         }
 
         /// <summary>
@@ -101,12 +101,11 @@ namespace Hadal.Networking.UI.Loading
         /// <param name="levelName">Name of level.</param>
         public void LoadLevel(string levelName)
         {
-            allowLoading = true;
-            loadingCGF.SetOpaque();
-            Play();
+            FadeIn();
+            loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             nextLoadLevelName = levelName;
-            loadingAO = neManager.LoadLevelAsync(nextLoadLevelName);
+            
         }
 
         [Button("Fade In")]
