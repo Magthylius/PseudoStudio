@@ -88,11 +88,11 @@ namespace Hadal.AI
             Node[] nodes = GetAs1DArray();
             for (int i = 0; i < nodes.Length; i += steps)
             {
-                Node[] abcdefghijklmnopqrstuvwsyz = new Node[steps];
+                Node[] abcdefghijklmnopqrstuvwxyz = new Node[steps];
                 for (int s = 0; s < steps; s++)
-                    abcdefghijklmnopqrstuvwsyz[s] = GetPositionIfAny(i + s);
+                    abcdefghijklmnopqrstuvwxyz[s] = GetPositionIfAny(i + s);
 
-                await Task.Run(() => method.Invoke(abcdefghijklmnopqrstuvwsyz), tolkien);
+                await Task.Run(() => method.Invoke(abcdefghijklmnopqrstuvwxyz), tolkien);
             }
 
             Node GetPositionIfAny(int index)
