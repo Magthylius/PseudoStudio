@@ -26,6 +26,7 @@ namespace Hadal.Networking.UI.Loading
         CanvasGroupFader continueCGF;
 
         AsyncOperation loadingAO;
+        string nextLoadLevelName;
         bool allowLoading = false;
         bool allowContinue = false;
 
@@ -54,11 +55,14 @@ namespace Hadal.Networking.UI.Loading
 
             if (allowLoading)
             {
-                if (loadingAO.isDone)
+                if (loadingAO != null && loadingAO.isDone)
                 {
                     allowLoading = false;
                     continueCGF.StartFadeIn();
                     allowContinue = true;
+
+                    loadingCGF.fadeEndedEvent.RemoveAllListeners();
+                    Debug.LogWarning("test");
                 }
             }
 
@@ -76,10 +80,19 @@ namespace Hadal.Networking.UI.Loading
         void ResetLoadingElements()
         {
             loadingCGF.fadeEndedEvent.RemoveAllListeners();
+            loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
+
             continueCGF.SetTransparent();
             loadingCGF.SetTransparent();
             allowLoading = false;
             allowContinue = false;
+        }
+
+        void ActualLoad()
+        {
+            Debug.LogWarning("call");
+            //if (allowLoading)
+
         }
 
         /// <summary>
@@ -89,11 +102,11 @@ namespace Hadal.Networking.UI.Loading
         public void LoadLevel(string levelName)
         {
             allowLoading = true;
-            //FadeIn();
             loadingCGF.SetOpaque();
             Play();
 
-            loadingAO = neManager.LoadLevelAsync(levelName);
+            nextLoadLevelName = levelName;
+            loadingAO = neManager.LoadLevelAsync(nextLoadLevelName);
         }
 
         [Button("Fade In")]
@@ -111,7 +124,6 @@ namespace Hadal.Networking.UI.Loading
             loadingAnimator.Play(loadingStateName, 0, 0);
             loadingAnimator.speed = 1f;
         }
-
         [Button("Stop Animation")]
         public void Stop()
         {

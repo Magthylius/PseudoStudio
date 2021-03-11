@@ -30,8 +30,8 @@ namespace Hadal.PostProcess
             ppManager = PostProcessingManager.Instance;
             debugManager = DebugManager.Instance;
 
-            sLog_FocusDistance = debugManager.CreateScreenLogger();
-            sLog_FocalLength = debugManager.CreateScreenLogger();
+            //sLog_FocusDistance = debugManager.CreateScreenLogger();
+            //sLog_FocalLength = debugManager.CreateScreenLogger();
         }
 
         void Update()
@@ -57,8 +57,8 @@ namespace Hadal.PostProcess
 
             if (ppManager) ppManager.EditDepthOfField(focusDistance, focalLength, focusSpeed);
 
-            debugManager.SLog(sLog_FocusDistance, "FocalDistance", focusDistance);
-            debugManager.SLog(sLog_FocalLength, "FocalLength", focalLength);
+            //debugManager.SLog(sLog_FocusDistance, "FocalDistance", focusDistance);
+            //debugManager.SLog(sLog_FocalLength, "FocalLength", focalLength);
         }
 
         void OnDrawGizmos()
