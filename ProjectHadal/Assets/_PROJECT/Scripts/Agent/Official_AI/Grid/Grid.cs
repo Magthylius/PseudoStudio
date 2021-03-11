@@ -86,23 +86,20 @@ namespace Hadal.AI
         public async Task LoopAs1DArray_XNodesPerIterationAsync(Action<Node[]> method, CancellationToken tolkien, int steps)
         {
             Node[] nodes = GetAs1DArray();
-
-            int step = steps;
-            for (int i = 0; i < nodes.Length; i += step)
+            for (int i = 0; i < nodes.Length; i += steps)
             {
-                Node[] abcdefghij = new Node[step];
-                for (int s = 0; s < step; s++)
-                    abcdefghij[s] = GetPositionIfAny(nodes, i + s);
+                Node[] abcdefghijklmnopqrstuvwsyz = new Node[steps];
+                for (int s = 0; s < steps; s++)
+                    abcdefghijklmnopqrstuvwsyz[s] = GetPositionIfAny(i + s);
 
-                await Task.Run(() => method.Invoke(abcdefghij), tolkien);
+                await Task.Run(() => method.Invoke(abcdefghijklmnopqrstuvwsyz), tolkien);
             }
-        }
 
-        Node GetPositionIfAny(Node[] nodes, int index)
-        {
-            if (index >= 0 && index < nodes.Length)
-                return nodes[index];
-            return null;
+            Node GetPositionIfAny(int index)
+            {
+                if (index >= 0 && index < nodes.Length) return nodes[index];
+                return null;
+            }
         }
     }
 }
