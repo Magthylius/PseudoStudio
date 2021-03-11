@@ -11,28 +11,23 @@ namespace Hadal.Player
         [SerializeField, ReadOnly] GameObject _controller;
         [Foldout("Settings"), SerializeField] bool isOfflineMode = true;
         [Foldout("Settings"), SerializeField] Transform spawnHereTransform;
-        bool unityEditor = true;
 
         private void Awake()
         {
-            unityEditor = true;
-            #if !UNITY_EDITOR
-            unityEditor = false;
-            #endif
-
-            if (!unityEditor)
-            {
-                gameObject.SetActive(false);
-                return;
-            }
-
-            if (NetworkEventManager.Instance)
+			if (Application.isEditor)
+			{
+				if (NetworkEventManager.Instance)
                 isOfflineMode = NetworkEventManager.Instance.isOfflineMode;
-            PhotonNetwork.OfflineMode = isOfflineMode;
-            var prefab = Resources.Load(PathManager.PlayerManagerPrefabPath);
-            if(prefab is null) return;
-            _controller = (GameObject)Instantiate(prefab, spawnHereTransform.position, spawnHereTransform.rotation);
-            _controller.GetComponent<PlayerM>().IsOnNetwork = !isOfflineMode;
+				PhotonNetwork.OfflineMode = isOfflineMode;
+				var prefab = Resources.Load(PathManager.PlayerManagerPrefabPath);
+				if(prefab is null) return;
+				_controller = (GameObject)Instantiate(prefab, spawnHereTransform.position, spawnHereTransform.rotation);
+				_controller.GetComponent<PlayerM>().IsOnNetwork = !isOfflineMode;
+			}
+			else
+			{
+				gameObject.SetActive(false);
+			}
         }
 
         void Start()

@@ -61,13 +61,13 @@ namespace Hadal.AI.GeneratorGrid
         private void Update()
         {
             if (Application.isPlaying && Application.isEditor) return;
-            ScheduleObstacleCheckJob();
+            //ScheduleObstacleCheckJob();
         }
 
         private void LateUpdate()
         {
             if (Application.isPlaying && Application.isEditor) return;
-            CompleteObstacleCheckJob();
+            //CompleteObstacleCheckJob();
         }
 
         #region Grid Generator
@@ -302,7 +302,7 @@ namespace Hadal.AI.GeneratorGrid
 
         #region Obstacle Jobs
 
-        bool enableObstacleJobs;
+        /*bool enableObstacleJobs;
         JobHandle obstacleJobHandle;
         CheckObstaclesJob obstaclesJob;
         int obstacleJobPartitionsPerThread = 64;
@@ -439,7 +439,7 @@ namespace Hadal.AI.GeneratorGrid
                 ElapsedCount = 1;
                 MaxCount = maxCount;
             }
-        }
+        }*/
 
         #endregion
 
