@@ -1,3 +1,4 @@
+using Hadal.UI;
 using UnityEngine;
 
 //Created by Jon, edited by Jin
@@ -28,6 +29,5 @@ namespace Hadal.Usables.Projectiles
                 }
             }
         }
-
     }
 }
