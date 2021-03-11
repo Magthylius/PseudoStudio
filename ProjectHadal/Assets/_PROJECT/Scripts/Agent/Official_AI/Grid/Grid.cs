@@ -83,32 +83,6 @@ namespace Hadal.AI
                 }
             }
         }
-        public void LoopAs1DArray_5NodesPerIteration(Action<Node, Node, Node, Node, Node> method)
-        {
-            Node[] nodes = new Node[Get.Length];
-            int i = 0;
-            for (int x = 0; x < Get.GetLength(0); x++)
-            {
-                for (int y = 0; y < Get.GetLength(1); y++)
-                {
-                    for (int z = 0; z < Get.GetLength(2); z++)
-                    {
-                        nodes[i++] = Get[x, y, z];
-                    }
-                }
-            }
-
-            for (i = 0; i < nodes.Length; i += 10)
-            {
-                Node A = GetPositionIfAny(nodes, i + 0);
-                Node B = GetPositionIfAny(nodes, i + 1);
-                Node C = GetPositionIfAny(nodes, i + 2);
-                Node D = GetPositionIfAny(nodes, i + 3);
-                Node E = GetPositionIfAny(nodes, i + 4);
-
-                method.Invoke(A, B, C, D, E);
-            }
-        }
         public async Task LoopAs1DArray_XNodesPerIterationAsync(Action<Node[]> method, CancellationToken tolkien, int steps)
         {
             Node[] nodes = GetAs1DArray();
