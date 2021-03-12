@@ -204,7 +204,7 @@ namespace Hadal.Player
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
-            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo);
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator);
 
         #endregion
     }
