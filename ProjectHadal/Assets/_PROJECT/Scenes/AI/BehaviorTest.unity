@@ -1559,6 +1559,14 @@ PrefabInstance:
       value: '#AI'
       objectReference: {fileID: 0}
     - target: {fileID: 6556157035893970501, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
+      propertyPath: timerToSwitchState
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
+      propertyPath: wallDetectionRadius
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
       propertyPath: destinations.Array.data[0]
       value: 
       objectReference: {fileID: 662223434}
