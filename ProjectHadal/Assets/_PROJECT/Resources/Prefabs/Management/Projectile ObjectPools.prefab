@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 9221942647745312698}
   - component: {fileID: 4796224872909606946}
   - component: {fileID: 2907895230473192679}
+  - component: {fileID: 2047123572}
+  - component: {fileID: 2047123573}
+  - component: {fileID: 2047123576}
   m_Layer: 0
   m_Name: Projectile ObjectPools
   m_TagString: Untagged
@@ -77,4 +80,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
   initialCount: 5
+  data: {fileID: 0}
+--- !u!114 &2047123572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174095259673885249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0179a4ca9dcf39d46ac0e222bdb5a41d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
+  initialCount: 4
+  data: {fileID: 0}
+--- !u!114 &2047123573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174095259673885249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f4c9d7f6a44944408bb549673b15c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
+  initialCount: 4
+  data: {fileID: 0}
+--- !u!114 &2047123576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174095259673885249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac1ea6412d2bc9e4a9fce87bf44e5af9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 0}
+  initialCount: 4
   data: {fileID: 0}

@@ -1,11 +1,11 @@
 using UnityEngine;
-
+using Hadal.AI;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
     public class TrapBehaviour : ProjectileBehaviour
     {
-        private float radius = 10;
+        private float radius = 30;
         private Collider[] detectedObjects;
 
         public SelfDeactivationMode selfDeactivation;
@@ -34,7 +34,10 @@ namespace Hadal.Usables.Projectiles
 
             foreach (Collider col in detectedObjects)
             {
-                Debug.Log("Trap : Enemy Detected");
+                if (col.GetComponent<AIBrain>())
+                {
+                    col.GetComponent<AIBrain>().SetIsStunned(true); 
+                }                  
             }
 
             PPhysics.OnPhysicsFinished();
