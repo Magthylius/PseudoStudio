@@ -18,7 +18,6 @@ using Unity.Mathematics;
 
 namespace Hadal.AI.GeneratorGrid
 {
-    [ExecuteInEditMode]
     public class GridGenerator : MonoBehaviour
     {
         #region Variables
@@ -48,9 +47,9 @@ namespace Hadal.AI.GeneratorGrid
 
         private void Awake()
         {
-            if (!Application.isPlaying && Application.isEditor) return;
 
             grid = null;
+
 #if !UNITY_EDITOR // Build
             projectResourcesPath = $"{Application.productName}_Data/Resources/";
 #endif
@@ -511,13 +510,13 @@ namespace Hadal.AI.GeneratorGrid
             int totalNodes = grid.Get.Length;
             totalJobCount = grid.Get.Length;
             jobCompletionCount = 0;
-            // await grid.LoopAs1DArray_XNodesPerIterationAsync(async (nodes) =>
-            // {
-            //     int c = -1;
-            //     while (++c < nodes.Length)
-            //         await HandleNodesToObstacleComparison(nodes[c], 100f * (i++ / totalNodes.AsFloat()));
+            await grid.LoopAs1DArray_XNodesPerIterationAsync(async (nodes) =>
+            {
+                int c = -1;
+                while (++c < nodes.Length)
+                    await HandleNodesToObstacleComparison(nodes[c], 100f * (i++ / totalNodes.AsFloat()));
 
-            // }, token.Token, 10);
+            }, token.Token, 50);
 
             #region Temp
             // await Task.Run(async () =>

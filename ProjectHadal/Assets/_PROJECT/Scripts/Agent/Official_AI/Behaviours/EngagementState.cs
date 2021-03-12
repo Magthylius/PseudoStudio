@@ -4,7 +4,8 @@ using Tenshi;
 using System;
 using Tenshi.UnitySoku;
 using Timer = Hadal.Utility.Timer;
-using System.IO.Compression;
+using System.Collections.Generic;
+using System.Linq;
 using Hadal.Utility;
 
 namespace Hadal.AI.States
@@ -33,7 +34,7 @@ namespace Hadal.AI.States
         }
         public void OnStateStart()
         {
-            parent.SetTargetPlayer(parent.ChooseRandomPlayer());
+            parent.SetTargetPlayer(parent.ChooseClosestRandomPlayer());
         }
         public void StateTick()
         {
@@ -196,9 +197,14 @@ namespace Hadal.AI.States
             TargetPlayer = player;
         }
 
-        internal Transform ChooseRandomPlayer()
+        internal Transform ChooseClosestRandomPlayer()
         {
-            return Brain.playerTransforms.RandomElement();
+            List<Transform> targets = Brain.playerTransforms
+                            .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.detectionRadius)
+                            .ToList();
+            if (targets.IsNullOrEmpty())
+                return null;
+            return targets.RandomElement();
         }
 
         internal void ChaseTargetPlayer()

@@ -49,6 +49,8 @@ namespace Hadal.AI.States
         public void OnStateEnd()
         {
             CancelPath();
+            ResetNewDestinationTimer();
+            isFindingPath = false;
         }
 
         void WalkPath()

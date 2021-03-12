@@ -16,6 +16,7 @@ namespace Hadal.Locomotion
         public override void Initialise(Transform target)
         {
             Enable();
+            EnableBoost();
             this.target = target;
             Speed.Initialise();
             Accel.Initialise();
@@ -109,7 +110,7 @@ namespace Hadal.Locomotion
         private float VerticalInputSpeed => Input.VerticalAxis * Speed.InputForward;
         private float HorizontalInputSpeed => Input.HorizontalAxis * Speed.InputStrafe;
         private float HoverInputSpeed => Input.HoverAxis * Speed.InputHover;
-        private float BoostInputSpeed => Input.BoostAxis * Accel.Boost + 1.0f;
+        private float BoostInputSpeed => allowBoost.AsFloat() * Input.BoostAxis * Accel.Boost + 1.0f;
         public override float SqrSpeed => Velocity.SquareSpeed;
 
         private bool IsMoving => VerticalInputSpeed.Abs() > float.Epsilon || HorizontalInputSpeed.Abs() > float.Epsilon || HoverInputSpeed.Abs() > float.Epsilon;

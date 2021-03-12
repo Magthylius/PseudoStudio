@@ -1,4 +1,5 @@
 using UnityEngine;
+using Hadal.AI;
 
 //Created by Jet
 namespace Hadal.Usables.Projectiles
@@ -25,6 +26,12 @@ namespace Hadal.Usables.Projectiles
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
+
+                    //if its AI.
+                    if (collision.gameObject.GetComponent<AIBrain>())
+                    {
+                        //  collision.gameObject.GetComponent<AIBrain>().SetIsStunned(true);
+                    }
                 }
             }
         }
