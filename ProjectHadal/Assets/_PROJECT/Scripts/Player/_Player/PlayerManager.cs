@@ -1,9 +1,10 @@
 ﻿using Hadal.Legacy;
+using Hadal.Networking;
 using Photon.Pun;
 using System.IO;
 using UnityEngine;
 
-//Created by Jet
+//! Created by Jet, E: Jon
 namespace Hadal.Player
 {
     public class PlayerManager : MonoBehaviour
@@ -12,23 +13,41 @@ namespace Hadal.Player
         private const string PrefabFolder = "Prefabs/Player";
         private const string PrefabName = "Player";
         private PhotonView _pView;
-        private GameObject _controller;
+        private GameObject player;
 
         private void Awake() => _pView = GetComponent<PhotonView>();
-        private void Start()
+        private void OnEnable()
         {
-            if(IsOnNetwork)
+            if (IsOnNetwork)
             {
-                if (_pView.IsMine) CreateNetworkController();
+                if (_pView.IsMine)
+                {
+                    CreateNetworkController();
+                    NetworkEventManager.Instance.LeftRoomEvent += TryToDie;
+                }
                 return;
             }
             CreateController();
         }
 
+        void OnDisable()
+        {
+            if (IsOnNetwork)
+            {
+                if (_pView.IsMine)
+                {
+                    NetworkEventManager.Instance.LeftRoomEvent -= TryToDie;
+                }
+                return;
+            }
+        }
+
         public void TryToDie()
         {
-            if(IsOnNetwork)
+            print("Try death");
+            if (IsOnNetwork)
             {
+                print("Networked death");
                 NetworkDie();
                 return;
             }
@@ -40,18 +59,18 @@ namespace Hadal.Player
         private void NetworkDie()
         {
             if (!IsOnNetwork) return;
-            PhotonNetwork.Destroy(_controller);
-            CreateNetworkController();
-            var c = _controller.GetComponent<PlayerController>();
+            PhotonNetwork.Destroy(player);
+            /*CreateNetworkController();
+            var c = player.GetComponent<PlayerController>();
             if (c == null) return;
-            c.ResetController();
+            c.ResetController();*/
         }
         private void CreateNetworkController()
         {
             if (!IsOnNetwork) return;
             Transform spawnTrans = SpawnManager.instance.GetSpawnPoint();
-            _controller = PhotonNetwork.Instantiate(GetPrefabPath(), spawnTrans.position, spawnTrans.rotation, 0, DefaultObjectArray());
-            _controller.GetComponent<PlayerController>().InjectManager(this);
+            player = PhotonNetwork.Instantiate(GetPrefabPath(), spawnTrans.position, spawnTrans.rotation, 0, DefaultObjectArray());
+            player.GetComponent<PlayerController>().InjectManager(this);
         }
 
         #endregion
@@ -61,19 +80,19 @@ namespace Hadal.Player
         private void Die()
         {
             if (IsOnNetwork) return;
-            Destroy(_controller);
-            CreateController();
-            var c = _controller.GetComponent<PlayerController>();
+            Destroy(player);
+            /*CreateController();
+            var c = player.GetComponent<PlayerController>();
             if (c is null) return;
-            c.ResetController();
+            c.ResetController();*/
         }
         private void CreateController()
         {
             if (IsOnNetwork) return;
             var prefab = Resources.Load(GetPrefabPath());
             if (prefab is null) return;
-            _controller = (GameObject)Instantiate(prefab, transform.position, transform.rotation);
-            _controller.GetComponent<PlayerController>().InjectManager(this);
+            player = (GameObject)Instantiate(prefab, transform.position, transform.rotation);
+            player.GetComponent<PlayerController>().InjectManager(this);
         }
 
         #endregion
