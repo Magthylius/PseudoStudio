@@ -270,7 +270,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOfflineMode: 0
   MainMenuScene: MainMenu
-  InGameScene: POC
+  InGameScene: JinPrePOC
+  maxPlayers: 4
+  playerTTL: 1000
+  emptyRoomTTL: 1000
+  cleanupCache: 0
 --- !u!1 &7603188132447148180
 GameObject:
   m_ObjectHideFlags: 0
