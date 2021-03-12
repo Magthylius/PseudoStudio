@@ -141,6 +141,7 @@ MonoBehaviour:
   debugKey: Projectile Physics
   rootTransform: {fileID: 5118692649966226049}
   projectileRigidbody: {fileID: 1726207187124534749}
+  projectileBehavior: {fileID: 0}
   projectileModeList:
   - {fileID: 472507857315160384}
   - {fileID: 7832137983088651165}
@@ -175,10 +176,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8744ad15030187d4e84f934c35b5d55a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 4
-  endTime: 10
+  mode: 5
+  endTime: 20
   armsProjectile: 0
   skipsOnContact: 0
+  attachTimer: 0
   destroyObject: 0
 --- !u!1 &7351274592407701336
 GameObject:
@@ -314,7 +316,7 @@ MonoBehaviour:
   validLayer:
   - Wall
   - Monster
-  IsAttach: 0
+  isAttach: 0
   impulseMode: {fileID: 0}
   selfDeactivation: {fileID: 0}
 --- !u!114 &2273389915342579660
