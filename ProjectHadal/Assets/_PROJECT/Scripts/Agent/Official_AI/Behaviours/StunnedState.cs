@@ -25,7 +25,7 @@ namespace Hadal.AI
                                 .WithOnUpdateEvent(_ =>
                                 {
                                     if (onThisState)
-                                        $"Stun timer: {(100f * stunTimer.GetCompletionRatio):F2}%".Msg()
+                                        $"Stun timer: {(100f * stunTimer.GetCompletionRatio):F2}%".Msg();
                                 })
                                 .WithShouldPersist(true);
             Brain.AttachTimer(stunTimer);
