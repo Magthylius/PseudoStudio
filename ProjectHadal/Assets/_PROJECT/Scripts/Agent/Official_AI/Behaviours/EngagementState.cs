@@ -63,7 +63,7 @@ namespace Hadal.AI.States
                 }
             }
         }
-        /// <summary>Move to the closest wall found</summary>
+        /// <summary>Move to the closest wall found and damage player</summary>
         void MoveToClosestWall()
         {
             SphereObstacleDetection(); 
@@ -74,6 +74,7 @@ namespace Hadal.AI.States
             if ((closestWall - b.transform.position).magnitude < 50f)
             {
                 isPinning = false;
+                b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Pin);
                 "No longer pinning".Msg();
             }
         }
@@ -91,8 +92,8 @@ namespace Hadal.AI.States
             if (isPinning)
             {
                 MoveToClosestWall(); //! Move to closest wall
-                if(Vector3.Distance(closestWall, b.transform.position) > 0.05f)
-                {                  
+                if(Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f)) < 0.05f)
+                {
                     parent.TargetPlayer.position = b.transform.position + (b.transform.forward * 20f);
                 }
                     
@@ -209,7 +210,6 @@ namespace Hadal.AI.States
 
         internal void ChaseTargetPlayer()
         {
-            Vector3 direction = (TargetPlayer.position - Brain.transform.position).normalized;
             float speed = 2f;
             var target = TargetPlayer.position - (Brain.transform.forward * 5f);
             Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, speed * Time.deltaTime);

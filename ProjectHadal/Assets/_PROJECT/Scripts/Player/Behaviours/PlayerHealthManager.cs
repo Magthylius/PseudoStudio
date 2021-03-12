@@ -1,6 +1,7 @@
 ﻿using Photon.Pun;
 using UnityEngine;
 using Hadal.UI;
+using Tenshi;
 using Tenshi.UnitySoku;
 
 //Created by Jet
@@ -23,7 +24,8 @@ namespace Hadal.Player.Behaviours
         public GameObject Obj => gameObject;
         public bool TakeDamage(int damage)
         {
-            TakeTheDamage(damage);
+            // TakeTheDamage(damage);
+            _currentHealth = (_currentHealth - damage).Clamp0();
             $"Player health left: {_currentHealth}".Msg();
             return true;
         }

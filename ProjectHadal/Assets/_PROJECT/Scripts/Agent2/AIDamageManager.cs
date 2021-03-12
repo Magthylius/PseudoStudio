@@ -15,6 +15,9 @@ namespace Hadal.AIComponents
     {
         public AIBrain Brain { get; private set; }
         public List<Transform> playerTransforms;
+        [Header("Damage Values")]
+        [Foldout("Damage Type"), SerializeField] int pinDamage;
+        [Foldout("Damage Type"), SerializeField] int tailWhipDamage;
 
         private void Awake()
         {
@@ -30,9 +33,8 @@ namespace Hadal.AIComponents
             {
                 Brain.InjectPlayerTransforms(GetPlayers());
             }
-            
         }
-        
+
         private void OnDestroy()
         {
             //! Unsubscribe damage player event
@@ -41,12 +43,20 @@ namespace Hadal.AIComponents
 
         /// <summary> Damages the chosen player</summary>
         /// <param name="player">Target player</param>
-        /// <param name="damage">The damage to deal</param>
-        private void DamagePlayer(Transform player, int damage)
+        /// <param name="type">The damage type</param>
+        private void DamagePlayer(Transform player, AIDamageType type)
         {
             if (player == null) return;
-            IDamageable pDamagable = player.GetComponent<IDamageable>();
+            IDamageable pDamagable = player.GetComponentInChildren<IDamageable>();
             if (pDamagable == null) return;
+
+            int damage = type switch
+            {
+                AIDamageType.Pin => pinDamage,
+                AIDamageType.Tail => tailWhipDamage,
+                _ => 0
+            };
+            
             pDamagable.TakeDamage(damage);
         }
 

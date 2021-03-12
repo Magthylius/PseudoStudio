@@ -152,13 +152,13 @@ namespace Hadal.AI.AStarPathfinding
 
                         //await 3.MsgAsync();
 
-                        float potentialCost = current.GCost + GetAppendedGCost(n, current);
+                        float potentialCost = current.GCost + GetAppendedGCost(n, current) + n.Penalty;
                         if (potentialCost < n.GCost)
                         {
                             //await 4.MsgAsync();
                             n.Parent = current;
                             n.GCost = potentialCost;
-                            n.FCost = n.GCost + (weight * GetHeuristic(n, theEnd));
+                            n.FCost = n.GCost + (weight + GetHeuristic(n, theEnd));
                             
                             if (!open.Contains(n))
                             {

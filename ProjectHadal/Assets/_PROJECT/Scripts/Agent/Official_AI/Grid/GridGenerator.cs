@@ -28,6 +28,7 @@ namespace Hadal.AI.GeneratorGrid
         public Grid grid { get; private set; }
         //! X, Y, Z of the grid
         [SerializeField] int x, y, z;
+        public TerrainType[] terrainRegions;
         //! Cellsize of the grid
         [SerializeField] float cellSize;
         //! This is to help merge the node obstacles through the amount of obstacle nodes. 
@@ -734,4 +735,11 @@ namespace Hadal.AI.GeneratorGrid
     //             method.Invoke(i);
     //     }
     // }
+
+    [Serializable]
+    public class TerrainType
+    {
+        public LayerMask terrainMask;
+        public int terrainPenalty;
+    }
 }

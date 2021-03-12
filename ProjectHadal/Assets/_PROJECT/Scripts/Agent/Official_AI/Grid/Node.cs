@@ -23,6 +23,7 @@ namespace Hadal.AI
         public Node Parent { get; set; } = null;
         public float GCost { get; set; }
         public float FCost { get; set; }
+        public float Penalty { get; set; }
         public bool IsVisited { get; set; } = false;
         public bool IsPath { get; set; } = false;
         public bool IsStart { get; set; } = false;
@@ -36,6 +37,7 @@ namespace Hadal.AI
             IsEnd = false;
             GCost = Mathf.Infinity;
             FCost = Mathf.Infinity;
+            Penalty = 0f;
         }
     }
 }

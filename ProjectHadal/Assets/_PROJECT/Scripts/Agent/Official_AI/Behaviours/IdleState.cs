@@ -64,7 +64,7 @@ namespace Hadal.AI.States
             }
 
             //Set the next (sub)destination by dequeueing the nodes
-            if (Vector3.Distance(brain.transform.position, pathDestination).IsLessThan(0.01f))
+            if (Vector3.Distance(brain.transform.position, pathDestination).IsLessThan(0.1f))
             {
                 if (pathQueue.Count == 0)
                 {
@@ -75,8 +75,15 @@ namespace Hadal.AI.States
             }
 
             Vector3 direction = (pathDestination - brain.transform.position).normalized;
-            float multiplier = (Vector3.Distance(brain.transform.position, curDestination) + 1f);
-            brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, multiplier * Time.deltaTime);
+            float multiplier = (Vector3.Distance(curDestination, brain.transform.position) + 0.1f) * brain.idleSpeed; 
+            // brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, brain.idleSpeed * Time.deltaTime);
+            // Vector3 randomThing = Vector3.zero;
+            // brain.transform.position = Vector3.SmoothDamp(brain.transform.position, pathDestination, ref randomThing, brain.idleSpeed * Time.deltaTime, brain.idleSpeed);
+            // if (pathQueue.Count > 1)
+            //     brain.transform.position += direction * (multiplier * Time.deltaTime);
+            // else
+            //     brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, multiplier * Time.deltaTime);
+            brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination,  multiplier);
         }
 
         void CancelPath()
@@ -101,6 +108,7 @@ namespace Hadal.AI.States
             if (newDestTimer < 0.0f)
             {
                 ResetNewDestinationTimer();
+                CancelPath();
                 await SelectRandomPathAsync();
             }
         }

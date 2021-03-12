@@ -25,6 +25,7 @@ namespace Hadal.AI
         [Header("Idle Setting")]
         IState idleState;
         [Foldout("Idle")] public float destinationChangeTimer;
+        [Foldout("Idle"), SerializeField] internal float idleSpeed;
 
         [Header("AI Engagement Setting")]
         IState engagementState;
@@ -41,8 +42,8 @@ namespace Hadal.AI
         [Foldout("Stun"), SerializeField] public float stunDuration;
 
         //! Events
-        public static event Action<Transform, int> DamagePlayerEvent;
-        internal void InvokeDamagePlayerEvent(Transform t, int d) => DamagePlayerEvent?.Invoke(t, d);
+        public static event Action<Transform, AIDamageType> DamagePlayerEvent;
+        internal void InvokeDamagePlayerEvent(Transform t, AIDamageType type) => DamagePlayerEvent?.Invoke(t, type);
 
         private void Awake()
         {
@@ -161,5 +162,11 @@ namespace Hadal.AI
             Gizmos.color = new Color(1, 0, 1, 0.1f);
             Gizmos.DrawSphere(transform.position, wallDetectionRadius);
         }
+    }
+
+    public enum AIDamageType
+    {
+        Pin,
+        Tail
     }
 }

@@ -943,6 +943,14 @@ PrefabInstance:
       propertyPath: enableObstacleGridGizmo
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 207021226471900658, guid: 8a98fab7c6eb41243b2be5cf3c3b9fe0, type: 3}
+      propertyPath: terrainRegions.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 207021226471900658, guid: 8a98fab7c6eb41243b2be5cf3c3b9fe0, type: 3}
+      propertyPath: terrainRegions.Array.data[0].terrainMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     - target: {fileID: 207021226471900659, guid: 8a98fab7c6eb41243b2be5cf3c3b9fe0, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1510,6 +1518,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4877694710611666416, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
+      propertyPath: pinDamage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6556157035893970498, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1557,6 +1569,18 @@ PrefabInstance:
     - target: {fileID: 6556157035893970500, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
       propertyPath: m_Name
       value: '#AI'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
+      propertyPath: pinSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
+      propertyPath: idleSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
+      propertyPath: detectionRadius
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6556157035893970501, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
       propertyPath: timerToSwitchState
