@@ -134,7 +134,6 @@ namespace Hadal.AI.AStarPathfinding
                 current.IsVisited = true;
                 if (current == theEnd)
                 {
-                    await "I have returned".MsgAsync();
                     return await ReconstructPathAsync(current, theStart);
                 }
 
@@ -144,26 +143,26 @@ namespace Hadal.AI.AStarPathfinding
 
                 await Task.Run(async () =>
                 {
-                    await 1.MsgAsync();
+                    //await 1.MsgAsync();
                     foreach (Node n in neighbours)
                     {
-                        await 2.MsgAsync();
+                        //await 2.MsgAsync();
                         if (n.IsVisited || n.HasObstacle)
                             continue;
 
-                        await 3.MsgAsync();
+                        //await 3.MsgAsync();
 
                         float potentialCost = current.GCost + GetAppendedGCost(n, current);
                         if (potentialCost < n.GCost)
                         {
-                            await 4.MsgAsync();
+                            //await 4.MsgAsync();
                             n.Parent = current;
                             n.GCost = potentialCost;
                             n.FCost = n.GCost + (weight * GetHeuristic(n, theEnd));
                             
                             if (!open.Contains(n))
                             {
-                                await 5.MsgAsync();
+                                //await 5.MsgAsync();
                                 open.Add(n);
                             }
                         }

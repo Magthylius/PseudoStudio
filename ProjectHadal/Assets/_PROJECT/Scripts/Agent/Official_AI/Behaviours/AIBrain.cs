@@ -19,17 +19,22 @@ namespace Hadal.AI
         bool isGridInitialised = false;
 
         [Header("Idle Setting")]
-        IState idle;
+        IState idleState;
         public float destinationChangeTimer;
 
         [Header("AI Engagement Setting")]
-        IState engagement;
+        IState engagementState;
         [Tooltip("Detection Radius"), Foldout("Aggressive")] public float detectionRadius;
         [Tooltip("Wall Detection Radius"), Foldout("Aggressive")] public float wallDetectionRadius;
         [Tooltip("Speed of Pin to Wall"), Foldout("Aggressive")] public int pinSpeed;
 
-        [Foldout("Aggressive")] [SerializeField] public LayerMask playerMask;
-        [Foldout("Aggressive")] [SerializeField] public LayerMask obstacleMask;
+        [Foldout("Aggressive"), SerializeField] public LayerMask playerMask;
+        [Foldout("Aggressive"), SerializeField] public LayerMask obstacleMask;
+
+        [Header("Stunned Setting")]
+        IState stunnedState;
+        bool isStunned;
+        [Foldout("Stun"), SerializeField] public float stunDuration;
 
         private void Awake()
         {
@@ -37,11 +42,7 @@ namespace Hadal.AI
             isGridInitialised = false;
             playerMask = LayerMask.GetMask("Player");
             obstacleMask = LayerMask.GetMask("Obstacle");
-        }
-
-        private void OnDestroy()
-        {
-            "I have been unalived!!!".Msg();
+            isStunned = false;
         }
 
         private void Update()
@@ -56,13 +57,21 @@ namespace Hadal.AI
 
             //! instantiate classes
             stateMachine = new StateMachine();
-            idle = new IdleState(this, destinationChangeTimer);
-            engagement = new EngagementState(this);
+            idleState = new IdleState(this, destinationChangeTimer);
+            engagementState = new EngagementState(this);
+            stunnedState = new StunnedState(this);
 
-            //! setup custom transitions
-            stateMachine.AddSequentialTransition(from: idle, to: engagement, withCondition: EngagePlayer());
-            stateMachine.AddSequentialTransition(from: engagement, to: idle, withCondition: LostTarget());
+            //! -setup custom transitions-
+            //! Idle to Engagement and vice versa
+            stateMachine.AddSequentialTransition(from: idleState, to: engagementState, withCondition: EngagePlayer());
+            stateMachine.AddSequentialTransition(from: engagementState, to: idleState, withCondition: LostTarget());
 
+            //! Any state can go into stunnedState
+            stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
+
+            //! StunState return to idleState
+            stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
+            
             isGridInitialised = true;
         }
 
@@ -72,10 +81,11 @@ namespace Hadal.AI
             
             isGridInitialised = false;
             //! set default state
-            stateMachine.SetState(idle);
+            stateMachine.SetState(idleState);
         }
 
-        //! transition conditions (insert our design conditions here)
+        #region Transition Conditions
+
         Func<bool> EngagePlayer() => () =>
         {
             return Input.GetMouseButtonDown(0);
@@ -84,6 +94,19 @@ namespace Hadal.AI
         {
             return Input.GetMouseButtonDown(1);
         };
+        Func<bool> IsStunned() => () =>
+        {
+            return Input.GetKeyDown(KeyCode.A);
+        };
+        
+        #endregion
+
+        #region Control Methods
+        /// <summary> Set the AI to stunstate</summary>
+        /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
+        public void SetIsStunned(bool statement) => isStunned = statement;
+        
+        #endregion
 
         void OnDrawGizmos()
         {
