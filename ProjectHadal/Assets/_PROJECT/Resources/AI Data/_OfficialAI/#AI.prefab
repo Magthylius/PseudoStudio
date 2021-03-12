@@ -69,10 +69,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   playerTransforms: []
-  destinationChangeTimer: 10000
+  destinationChangeTimer: 5
   detectionRadius: 1000
   wallDetectionRadius: 100
-  pinSpeed: 40
+  pinSpeed: 10
   playerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -80,7 +80,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   stunDuration: 5
-  timerToSwitchState: 40
+  timerToSwitchState: 1000
 --- !u!114 &6556157035893970499
 MonoBehaviour:
   m_ObjectHideFlags: 0
