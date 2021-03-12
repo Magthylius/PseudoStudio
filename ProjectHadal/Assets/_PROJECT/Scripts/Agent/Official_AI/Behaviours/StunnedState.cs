@@ -28,7 +28,6 @@ namespace Hadal.AI
                                         $"Stun timer: {(100f * stunTimer.GetCompletionRatio):F2}%".Msg();
                                 })
                                 .WithShouldPersist(true);
-            Brain.AttachTimer(stunTimer);
             stunTimer.Pause();
         }
         public void OnStateStart()

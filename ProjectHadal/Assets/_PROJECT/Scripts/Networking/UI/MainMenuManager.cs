@@ -308,7 +308,9 @@ namespace Hadal.Networking.UI.MainMenu
         {
             //if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
             //neManager.LoadLevel(neManager.InGameScene);
+            neManager.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
             loadingManager.LoadLevel(neManager.InGameScene);
+            
         }
 
         public void BTN_LeaveRoom()

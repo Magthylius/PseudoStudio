@@ -11,10 +11,10 @@ using System.Threading;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.Jobs;
-using Unity.Collections;
-using Unity.Burst;
-using Unity.Jobs;
-using Unity.Mathematics;
+// using Unity.Collections;
+// using Unity.Burst;
+// using Unity.Jobs;
+// using Unity.Mathematics;
 
 namespace Hadal.AI.GeneratorGrid
 {
@@ -60,13 +60,13 @@ namespace Hadal.AI.GeneratorGrid
         private void Update()
         {
             if (Application.isPlaying && Application.isEditor) return;
-            ScheduleObstacleCheckJob();
+            //ScheduleObstacleCheckJob();
         }
 
         private void LateUpdate()
         {
             if (Application.isPlaying && Application.isEditor) return;
-            CompleteObstacleCheckJob();
+            //CompleteObstacleCheckJob();
         }
 
         #region Grid Generator
@@ -301,154 +301,154 @@ namespace Hadal.AI.GeneratorGrid
 
         #region Obstacle Jobs
 
-        [SerializeField] bool enableObstacleJobs;
-        JobHandle obstacleJobHandle;
-        CheckObstaclesJob obstaclesJob;
-        int obstacleJobPartitionsPerThread = 64;
-        int jobCompletionCount = 0;
-        int totalJobCount = 0;
-        bool CanHandleJobs => enableObstacleJobs && jobCompletionCount < totalJobCount;
+        // [SerializeField] bool enableObstacleJobs;
+        // JobHandle obstacleJobHandle;
+        // CheckObstaclesJob obstaclesJob;
+        // int obstacleJobPartitionsPerThread = 64;
+        // int jobCompletionCount = 0;
+        // int totalJobCount = 0;
+        // bool CanHandleJobs => enableObstacleJobs && jobCompletionCount < totalJobCount;
 
-        void ScheduleObstacleCheckJob()
-        {
-            if (!CanHandleJobs) return;
-            $"Obstacle Check: Scheduling jobs...".Msg();
-            obstaclesJob = new CheckObstaclesJob()
-            {
-                ObstacleInfos = ConvertObstaclesToNative(obstacleInfos),
-                Nodes = ConvertNodesToNative(grid.GetAs1DArray())
-            };
+        // void ScheduleObstacleCheckJob()
+        // {
+        //     if (!CanHandleJobs) return;
+        //     $"Obstacle Check: Scheduling jobs...".Msg();
+        //     obstaclesJob = new CheckObstaclesJob()
+        //     {
+        //         ObstacleInfos = ConvertObstaclesToNative(obstacleInfos),
+        //         Nodes = ConvertNodesToNative(grid.GetAs1DArray())
+        //     };
 
-            obstacleJobHandle = obstaclesJob.Schedule(obstaclesJob.Nodes.Length, obstacleJobPartitionsPerThread);
-        }
-        void CompleteObstacleCheckJob()
-        {
-            if (!CanHandleJobs) return;
-            $"Obstacle Check: Completing jobs...".Msg();
-            obstacleJobHandle.Complete();
-            obstacleInfos = ConvertObstaclesToReference(obstaclesJob.ObstacleInfos);
-            obstaclesJob.ObstacleInfos.NativeForEach(o => o.Dispose());
+        //     obstacleJobHandle = obstaclesJob.Schedule(obstaclesJob.Nodes.Length, obstacleJobPartitionsPerThread);
+        // }
+        // void CompleteObstacleCheckJob()
+        // {
+        //     if (!CanHandleJobs) return;
+        //     $"Obstacle Check: Completing jobs...".Msg();
+        //     obstacleJobHandle.Complete();
+        //     obstacleInfos = ConvertObstaclesToReference(obstaclesJob.ObstacleInfos);
+        //     obstaclesJob.ObstacleInfos.NativeForEach(o => o.Dispose());
 
-            jobCompletionCount += obstaclesJob.ElapsedCount;
-            float completionRatio = jobCompletionCount / totalJobCount.AsFloat();
-            $"Checking Obstacles... {completionRatio:F2}%".Msg();
+        //     jobCompletionCount += obstaclesJob.ElapsedCount;
+        //     float completionRatio = jobCompletionCount / totalJobCount.AsFloat();
+        //     $"Checking Obstacles... {completionRatio:F2}%".Msg();
 
-            if (jobCompletionCount >= totalJobCount)
-            {
-                jobCompletionCount = 0;
-                totalJobCount = 0;
-                $"Obstacle Check: All jobs completed!".Msg();
-            }
-        }
+        //     if (jobCompletionCount >= totalJobCount)
+        //     {
+        //         jobCompletionCount = 0;
+        //         totalJobCount = 0;
+        //         $"Obstacle Check: All jobs completed!".Msg();
+        //     }
+        // }
 
-        NativeList<NativeObstacleInfo> ConvertObstaclesToNative(ObstacleInfo[] infos)
-        {
-            var list = new NativeList<NativeObstacleInfo>();
-            foreach (var o in infos)
-            {
-                NativeObstacleInfo i = new NativeObstacleInfo { VertexBounds = o.VertexBounds.ToNativeList(Allocator.Temp) };
-                list.Add(i);
-            }
-            return list;
-        }
+        // NativeList<NativeObstacleInfo> ConvertObstaclesToNative(ObstacleInfo[] infos)
+        // {
+        //     var list = new NativeList<NativeObstacleInfo>();
+        //     foreach (var o in infos)
+        //     {
+        //         NativeObstacleInfo i = new NativeObstacleInfo { VertexBounds = o.VertexBounds.ToNativeList(Allocator.Temp) };
+        //         list.Add(i);
+        //     }
+        //     return list;
+        // }
 
-        ObstacleInfo[] ConvertObstaclesToReference(NativeList<NativeObstacleInfo> infos)
-        {
-            var list = new List<ObstacleInfo>();
-            foreach (var o in infos)
-            {
-                ObstacleInfo i = new ObstacleInfo { VertexBounds = o.VertexBounds.ToList() };
-                list.Add(i);
-            }
-            return list.ToArray();
-        }
+        // ObstacleInfo[] ConvertObstaclesToReference(NativeList<NativeObstacleInfo> infos)
+        // {
+        //     var list = new List<ObstacleInfo>();
+        //     foreach (var o in infos)
+        //     {
+        //         ObstacleInfo i = new ObstacleInfo { VertexBounds = o.VertexBounds.ToList() };
+        //         list.Add(i);
+        //     }
+        //     return list.ToArray();
+        // }
 
-        NativeList<NativeNode> ConvertNodesToNative(Node[] nodes)
-        {
-            var list = new NativeList<NativeNode>();
-            foreach (var n in nodes)
-            {
-                NativeNode node = new NativeNode { Bounds = n.Bounds, HasObstacle = n.HasObstacle, Index = n.Index };
-                list.Add(node);
-            }
-            return list;
-        }
+        // NativeList<NativeNode> ConvertNodesToNative(Node[] nodes)
+        // {
+        //     var list = new NativeList<NativeNode>();
+        //     foreach (var n in nodes)
+        //     {
+        //         NativeNode node = new NativeNode { Bounds = n.Bounds, HasObstacle = n.HasObstacle, Index = n.Index };
+        //         list.Add(node);
+        //     }
+        //     return list;
+        // }
 
-        Node[] ConvertNodesToReference(NativeList<NativeNode> nodes)
-        {
-            var list = new List<Node>();
-            foreach (var n in nodes)
-            {
-                Node node = new Node { Bounds = n.Bounds, HasObstacle = n.HasObstacle, Index = n.Index };
-                list.Add(node);
-            }
-            return list.ToArray();
-        }
+        // Node[] ConvertNodesToReference(NativeList<NativeNode> nodes)
+        // {
+        //     var list = new List<Node>();
+        //     foreach (var n in nodes)
+        //     {
+        //         Node node = new Node { Bounds = n.Bounds, HasObstacle = n.HasObstacle, Index = n.Index };
+        //         list.Add(node);
+        //     }
+        //     return list.ToArray();
+        // }
 
-        struct NativeNode
-        {
-            public Bounds Bounds { get; set; }
-            public bool HasObstacle { get; set; }
-            public Vector3Int Index { get; set; }
-            public bool IsNull => Bounds == null;
-        }
+        // struct NativeNode
+        // {
+        //     public Bounds Bounds { get; set; }
+        //     public bool HasObstacle { get; set; }
+        //     public Vector3Int Index { get; set; }
+        //     public bool IsNull => Bounds == null;
+        // }
 
-        struct NativeObstacleInfo
-        {
-            public NativeList<Bounds> VertexBounds { get; set; }
-            public bool IsNull => VertexBounds.Length == 0;
-            public void Dispose() => VertexBounds.Dispose();
-            public NativeObstacleInfo(List<Bounds> bList) => VertexBounds = bList.ToNativeList(Allocator.Temp);
-        }
+        // struct NativeObstacleInfo
+        // {
+        //     public NativeList<Bounds> VertexBounds { get; set; }
+        //     public bool IsNull => VertexBounds.Length == 0;
+        //     public void Dispose() => VertexBounds.Dispose();
+        //     public NativeObstacleInfo(List<Bounds> bList) => VertexBounds = bList.ToNativeList(Allocator.Temp);
+        // }
 
-        [BurstCompile]
-        struct CheckObstaclesJob : IJobParallelFor
-        {
-            public NativeList<NativeObstacleInfo> ObstacleInfos;
-            public NativeList<NativeNode> Nodes;
-            public int ElapsedCount;
+        // [BurstCompile]
+        // struct CheckObstaclesJob : IJobParallelFor
+        // {
+        //     public NativeList<NativeObstacleInfo> ObstacleInfos;
+        //     public NativeList<NativeNode> Nodes;
+        //     public int ElapsedCount;
 
-            public void Execute(int i)
-            {
-                Nodes[i] = HandleNodesToObstacleComparison(Nodes[i]);
-                ElapsedCount++;
-            }
+        //     public void Execute(int i)
+        //     {
+        //         Nodes[i] = HandleNodesToObstacleComparison(Nodes[i]);
+        //         ElapsedCount++;
+        //     }
 
-            NativeNode HandleNodesToObstacleComparison(NativeNode node)
-            {
-                if (node.IsNull) return node;
+        //     NativeNode HandleNodesToObstacleComparison(NativeNode node)
+        //     {
+        //         if (node.IsNull) return node;
                 
-                if (ObstacleInfos.Length == 0)
-                    return node;
+        //         if (ObstacleInfos.Length == 0)
+        //             return node;
 
-                Bounds b = node.Bounds;
-                int length = ObstacleInfos.Length;
-                for (int j = 0; j < length; j++)
-                {
-                    var col = ObstacleInfos[j];
-                    if (col.IsNull)
-                        continue;
+        //         Bounds b = node.Bounds;
+        //         int length = ObstacleInfos.Length;
+        //         for (int j = 0; j < length; j++)
+        //         {
+        //             var col = ObstacleInfos[j];
+        //             if (col.IsNull)
+        //                 continue;
 
-                    foreach (var m in col.VertexBounds)
-                    {
-                        if (b.Intersects(m))
-                        {
-                            if (node.HasObstacle) return node;
-                            node.HasObstacle = true;
-                            return node;
-                        }
-                    }
-                }
-                return node;
-            }
+        //             foreach (var m in col.VertexBounds)
+        //             {
+        //                 if (b.Intersects(m))
+        //                 {
+        //                     if (node.HasObstacle) return node;
+        //                     node.HasObstacle = true;
+        //                     return node;
+        //                 }
+        //             }
+        //         }
+        //         return node;
+        //     }
 
-            public CheckObstaclesJob(int uselessInt = 0)
-            {
-                ObstacleInfos = new NativeList<NativeObstacleInfo>();
-                Nodes = new NativeList<NativeNode>();
-                ElapsedCount = 1;
-            }
-        }
+        //     public CheckObstaclesJob(int uselessInt = 0)
+        //     {
+        //         ObstacleInfos = new NativeList<NativeObstacleInfo>();
+        //         Nodes = new NativeList<NativeNode>();
+        //         ElapsedCount = 1;
+        //     }
+        // }
 
         #endregion
 
@@ -508,8 +508,8 @@ namespace Hadal.AI.GeneratorGrid
 
             int i = 1;
             int totalNodes = grid.Get.Length;
-            totalJobCount = grid.Get.Length;
-            jobCompletionCount = 0;
+            // totalJobCount = grid.Get.Length;
+            // jobCompletionCount = 0;
             await grid.LoopAs1DArray_XNodesPerIterationAsync(async (nodes) =>
             {
                 int c = -1;
@@ -726,12 +726,12 @@ namespace Hadal.AI.GeneratorGrid
         #endregion
     }
 
-    static class JobNativeExtens
-    {
-        public static void NativeForEach<T>(this IEnumerable<T> list, Action<T> method) where T : struct
-        {
-            foreach (var i in list)
-                method.Invoke(i);
-        }
-    }
+    // static class JobNativeExtens
+    // {
+    //     public static void NativeForEach<T>(this IEnumerable<T> list, Action<T> method) where T : struct
+    //     {
+    //         foreach (var i in list)
+    //             method.Invoke(i);
+    //     }
+    // }
 }

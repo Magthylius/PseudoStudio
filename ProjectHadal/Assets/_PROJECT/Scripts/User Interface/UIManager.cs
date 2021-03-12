@@ -20,6 +20,7 @@ namespace Hadal.UI
 
     public enum TrackerType
     {
+        PLAYER_NAME = -1,
         SONIC_DART = 0,
     }
 

@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.Linq;
 using Tenshi.AIDolls;
 using Hadal.AI.States;
@@ -9,6 +9,7 @@ using Hadal.Utility;
 using NaughtyAttributes;
 using Hadal.AI.GeneratorGrid;
 using Tenshi.UnitySoku;
+using Tenshi;
 
 namespace Hadal.AI
 {
@@ -39,11 +40,15 @@ namespace Hadal.AI
         bool isStunned;
         [Foldout("Stun"), SerializeField] public float stunDuration;
 
+        //! Events
+        public static event Action<Transform, int> DamagePlayerEvent;
+        internal void InvokeDamagePlayerEvent(Transform t, int d) => DamagePlayerEvent?.Invoke(t, d);
+
         private void Awake()
         {
             GridGenerator.GridLoadedEvent += InitialiseStates;
             isGridInitialised = false;
-            if (playerMask == default) playerMask = LayerMask.GetMask("Player", "LocalPlayer");
+            if (playerMask == default) playerMask = LayerMask.GetMask("LocalPlayer");
             if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Obstacle");
             isStunned = false;
             InitialiseDebugStateSwitchTimer();
@@ -67,25 +72,30 @@ namespace Hadal.AI
 
             //! -setup custom transitions-
             //! Idle to Engagement and vice versa
-            stateMachine.AddSequentialTransition(from: idleState, to: engagementState, withCondition: idleState.ShouldTerminate());
-            stateMachine.AddSequentialTransition(from: engagementState, to: idleState, withCondition: engagementState.ShouldTerminate());
+            stateMachine.AddSequentialTransition(from: idleState, to: engagementState, withCondition: BeEngage());
+            stateMachine.AddSequentialTransition(from: engagementState, to: idleState, withCondition: BeIdle());
 
             //! Any state can go into stunnedState
             stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
 
             //! StunState return to idleState
             stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
-            
+
             isGridInitialised = true;
         }
 
         private void HandlePseudoStart()
         {
             if (!isGridInitialised) return;
-            
+
             isGridInitialised = false;
             //! set default state
             stateMachine.SetState(idleState);
+        }
+
+        public void InjectPlayerTransforms(List<Transform> players)
+        {
+            playerTransforms = players;
         }
 
         #region Transition Conditions
@@ -107,25 +117,43 @@ namespace Hadal.AI
             return isStunned;
         };
 
+        //TODO: Do the actual condition for switching states
+        /// <summary>Switch to different state when time's up</summary>
         private void InitialiseDebugStateSwitchTimer()
         {
             beIdle = true;
             switchTimer = this.Create_A_Timer().WithDuration(timerToSwitchState)
                                                .WithShouldPersist(true)
-                                               .WithOnCompleteEvent(() => beIdle = !beIdle)
+                                               .WithOnCompleteEvent(() =>
+                                               {
+                                                   beIdle = !beIdle;
+                                                   if (beIdle)
+                                                   {
+                                                       "I should be idle".Msg();
+                                                   }
+                                                   else
+                                                   {
+                                                       "I should be engage".Msg();
+                                                   }
+                                               })
                                                .WithLoop(true);
-            this.AttachTimer(switchTimer);
+            //    .WithOnUpdateEvent(_ =>
+            //    {
+            //        $"Switch state timer: {(100f * switchTimer.GetCompletionRatio):F2}%".Msg();
+            //    });
+            // this.AttachTimer(switchTimer);
         }
-        
+
         #endregion
 
         #region Control Methods
         /// <summary> Set the AI to stunstate</summary>
         /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
         public void SetIsStunned(bool statement) => isStunned = statement;
-        
+
         #endregion
 
+        /// <summary>Debug draw the radius</summary>
         void OnDrawGizmos()
         {
             Gizmos.color = new Color(1f, 0.92f, 0.016f, 0.1f);

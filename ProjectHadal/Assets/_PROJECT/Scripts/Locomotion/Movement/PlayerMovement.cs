@@ -16,6 +16,7 @@ namespace Hadal.Locomotion
         public override void Initialise(Transform target)
         {
             Enable();
+            EnableBoost();
             this.target = target;
             Speed.Initialise();
             Accel.Initialise();

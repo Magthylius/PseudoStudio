@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -16,9 +17,19 @@ namespace Hadal.AI
             ResetHealth();
         }
 
+        public void CheckHealth()
+        {
+            if (IsUnalive)
+            {
+                $"U.N. Owen has been unalived".Msg();
+                Obj.SetActive(false);
+            }
+        }
+
         public bool TakeDamage(int damage)
         {
             currentHealth = (currentHealth - damage).Clamp0();
+            $"AI health: {currentHealth}".Msg();
             return true;
         }
         public GameObject Obj => gameObject;

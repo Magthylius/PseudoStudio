@@ -145,19 +145,62 @@ namespace Hadal.Networking
         #endregion
 
         #region Photon Networking Overrides
+        public delegate void NetworkEventPlayer(Player player);
+        public delegate void NetworkEvent();
+        public event NetworkEventPlayer PlayerEnteredEvent;
+        public event NetworkEventPlayer PlayerLeftEvent;
+        public event NetworkEventPlayer MasterClientSwitchedEvent;
+        public event NetworkEvent LeftRoomEvent;
+
+        [Header("Room Options")]
+        [Tooltip("Max number of players in room")]
+        [SerializeField] int maxPlayers;
+        [Tooltip("Time To Live of players, in milliseconds")]
+        [SerializeField] int playerTTL;
+        [Tooltip("Time To Live of room when last player leaves, in milliseconds")]
+        [SerializeField] int emptyRoomTTL;
+        [Tooltip("Cleans up props of a player when player leave")]
+        [SerializeField] bool cleanupCache;
+
+        //! Used to check if a room is started
+        public enum RoomState
+        {
+            WAITING = 0,
+            STARTED,
+        }
+
+        RoomOptions roomOptionsDefault;
+
         void SetupNetworking()
         {
-            /*if (isOfflineMode) PhotonNetwork.OfflineMode = true;
-            else PhotonNetwork.ConnectUsingSettings();*/
-            //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
-            PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
+            if (!PhotonNetwork.IsConnected)
+                PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
+
+            roomOptionsDefault = new RoomOptions();
+            roomOptionsDefault.MaxPlayers = (byte)maxPlayers;
+            roomOptionsDefault.PlayerTtl = playerTTL;
+            roomOptionsDefault.EmptyRoomTtl = emptyRoomTTL;
+            roomOptionsDefault.CleanupCacheOnLeave = cleanupCache;
+
+            roomOptionsDefault.CustomRoomProperties = new Hashtable();
+            roomOptionsDefault.CustomRoomProperties.Add("s", (int)RoomState.WAITING); //! Documentation says short key names is better
         }
-        public void Disconnect()
+
+        public void SetCurrentRoomCustomProperty(Hashtable hashTable)
         {
-            PhotonNetwork.Disconnect();
+            PhotonNetwork.CurrentRoom.SetCustomProperties(hashTable);
         }
+        public void SetCurrentRoomCustomProperty(object key, object value)
+        {
+            print(PhotonNetwork.CurrentRoom);
+            Hashtable hashTable = new Hashtable();
+            hashTable.Add(key, value);
+            SetCurrentRoomCustomProperty(hashTable);
+        }
+
+        public void Disconnect() => PhotonNetwork.Disconnect();
         public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
-        public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName);
+        public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName, roomOptionsDefault);
         public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
         public void LeaveRoom(bool returnsToMainMenu = false)
         {
@@ -203,6 +246,7 @@ namespace Hadal.Networking
 
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
+            MasterClientSwitchedEvent.Invoke(newMasterClient);
         } 
         #endregion
 
@@ -216,12 +260,23 @@ namespace Hadal.Networking
 
         public override void OnJoinedRoom()
         {
-            mainMenuManager.StartRoomPhase(PhotonNetwork.CurrentRoom.Name);
+            object state;
+            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("s", out state);
+            RoomState roomState = (RoomState)state;
 
-            Player[] players = PhotonNetwork.PlayerList;
-            mainMenuManager.UpdatePlayerList(players);
+            if (roomState == RoomState.WAITING)
+            {
+                mainMenuManager.StartRoomPhase(PhotonNetwork.CurrentRoom.Name);
 
-            mainMenuManager.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+                Player[] players = PhotonNetwork.PlayerList;
+                mainMenuManager.UpdatePlayerList(players);
+
+                mainMenuManager.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+            }  
+            else
+            {
+                gameManager.ChangeGameState(GameManager.GameState.IN_GAME_HUNTING);
+            }
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
@@ -231,14 +286,18 @@ namespace Hadal.Networking
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             mainMenuManager.AddIntoPlayerList(newPlayer);
+            PlayerEnteredEvent.Invoke(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
+            PlayerLeftEvent.Invoke(otherPlayer);
         }
 
         public override void OnLeftRoom()
         {
+            LeftRoomEvent.Invoke();
+
             //! If not in mainmenu, return to mainmenu
             if (loadsToMainMenu)
             {

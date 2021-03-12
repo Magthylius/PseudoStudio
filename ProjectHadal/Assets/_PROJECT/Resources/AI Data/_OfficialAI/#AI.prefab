@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7709899577312776034}
   - component: {fileID: 6556157035893970501}
   - component: {fileID: 6556157035893970499}
+  - component: {fileID: 4877694710611666416}
   - component: {fileID: 6556157035893970558}
   - component: {fileID: 6556157035893970497}
   - component: {fileID: 6556157035893970496}
@@ -68,18 +69,18 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   playerTransforms: []
-  destinationChangeTimer: 10000
-  detectionRadius: 50
+  destinationChangeTimer: 5
+  detectionRadius: 1000
   wallDetectionRadius: 100
-  pinSpeed: 40
+  pinSpeed: 10
   playerMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 64
   obstacleMask:
     serializedVersion: 2
     m_Bits: 256
   stunDuration: 5
-  timerToSwitchState: 40
+  timerToSwitchState: 1000
 --- !u!114 &6556157035893970499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,6 +94,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxBound: 1
+--- !u!114 &4877694710611666416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6556157035893970500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaaffe75309867347a447d5cad18889c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTransforms: []
 --- !u!23 &6556157035893970558
 MeshRenderer:
   m_ObjectHideFlags: 0
