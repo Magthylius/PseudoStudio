@@ -202,6 +202,8 @@ namespace Hadal.AI.States
             List<Transform> targets = Brain.playerTransforms
                             .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.detectionRadius)
                             .ToList();
+            if (targets.IsNullOrEmpty())
+                return null;
             return targets.RandomElement();
         }
 

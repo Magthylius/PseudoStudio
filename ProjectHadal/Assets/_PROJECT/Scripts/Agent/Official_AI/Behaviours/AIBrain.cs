@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Tenshi.AIDolls;
 using Hadal.AI.States;
+using Hadal.Utility;
 using NaughtyAttributes;
 using Hadal.AI.GeneratorGrid;
 using Tenshi.UnitySoku;
@@ -13,6 +14,8 @@ namespace Hadal.AI
 {
     public class AIBrain : MonoBehaviour
     {
+        [SerializeField] AIHealthManager healthManager;
+        public AIHealthManager HealthManager => healthManager;
         StateMachine stateMachine;
         public List<Transform> destinations;
         public List<Transform> playerTransforms;
@@ -43,6 +46,7 @@ namespace Hadal.AI
             if (playerMask == default) playerMask = LayerMask.GetMask("Player", "LocalPlayer");
             if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Obstacle");
             isStunned = false;
+            InitialiseDebugStateSwitchTimer();
         }
 
         private void Update()
@@ -63,8 +67,8 @@ namespace Hadal.AI
 
             //! -setup custom transitions-
             //! Idle to Engagement and vice versa
-            stateMachine.AddSequentialTransition(from: idleState, to: engagementState, withCondition: EngagePlayer());
-            stateMachine.AddSequentialTransition(from: engagementState, to: idleState, withCondition: LostTarget());
+            stateMachine.AddSequentialTransition(from: idleState, to: engagementState, withCondition: idleState.ShouldTerminate());
+            stateMachine.AddSequentialTransition(from: engagementState, to: idleState, withCondition: engagementState.ShouldTerminate());
 
             //! Any state can go into stunnedState
             stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
@@ -86,18 +90,32 @@ namespace Hadal.AI
 
         #region Transition Conditions
 
-        Func<bool> EngagePlayer() => () =>
+        // TODO: POC timer(need to optimize)
+        [SerializeField] float timerToSwitchState = 40.0f;
+        Timer switchTimer;
+        bool beIdle;
+        Func<bool> BeEngage() => () =>
         {
-            return Input.GetMouseButtonDown(0);
+            return !beIdle;
         };
-        Func<bool> LostTarget() => () =>
+        Func<bool> BeIdle() => () =>
         {
-            return Input.GetMouseButtonDown(1);
+            return beIdle;
         };
         Func<bool> IsStunned() => () =>
         {
             return isStunned;
         };
+
+        private void InitialiseDebugStateSwitchTimer()
+        {
+            beIdle = true;
+            switchTimer = this.Create_A_Timer().WithDuration(timerToSwitchState)
+                                               .WithShouldPersist(true)
+                                               .WithOnCompleteEvent(() => beIdle = !beIdle)
+                                               .WithLoop(true);
+            this.AttachTimer(switchTimer);
+        }
         
         #endregion
 

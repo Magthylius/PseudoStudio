@@ -166,7 +166,7 @@ namespace Tenshi
 
     public static class CollectionExtensions
     {
-        public static T RandomElement<T>(this IEnumerable<T> e) => e.ElementAt(UnityEngine.Random.Range(0, e.Count()));
+        public static T RandomElement<T>(this IEnumerable<T> e) => e.ElementAt(UnityEngine.Random.Range(0, e.Count() - 1));
     }
 
     public static class UnityExtensions
