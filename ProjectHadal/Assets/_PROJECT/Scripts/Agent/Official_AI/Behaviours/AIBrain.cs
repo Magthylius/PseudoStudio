@@ -9,6 +9,7 @@ using Hadal.Utility;
 using NaughtyAttributes;
 using Hadal.AI.GeneratorGrid;
 using Tenshi.UnitySoku;
+using Tenshi;
 
 namespace Hadal.AI
 {
@@ -43,14 +44,43 @@ namespace Hadal.AI
         {
             GridGenerator.GridLoadedEvent += InitialiseStates;
             isGridInitialised = false;
-            if (playerMask == default) playerMask = LayerMask.GetMask("Player", "LocalPlayer");
+            if (playerMask == default) playerMask = LayerMask.GetMask("LocalPlayer");
             if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Obstacle");
             isStunned = false;
             InitialiseDebugStateSwitchTimer();
         }
 
+        private void Start()
+        {
+            GetPT();
+            // Invoke("GetPT", 5);
+            
+            void GetPT()
+            {
+                playerTransforms = FindObjectsOfType<GameObject>()
+                                            .Where(o => o.CompareTag("Player"))
+                                            // .Where(o => o.layer == LayerMask.GetMask("LocalPlayer") || o.layer == LayerMask.GetMask("Player"))
+                                            .Select(o => o.transform)
+                                            .ToList();
+
+                $"Found {playerTransforms.Count} players".Msg();
+            }
+        }
+
+        void GetPlayerTransform()
+        {
+            if (playerTransforms.IsNotEmpty()) return;
+            playerTransforms = new List<Transform>();
+            // playerTransforms = FindObjectsOfType<PlayerController>()
+            //                                 .Where(o => o.layer == LayerMask.GetMask("LocalPlayer"))
+            //                                 .Select(o => o.transform)
+            //                                 .ToList();
+            $"Found {playerTransforms.Count} players".Msg();
+        }
+
         private void Update()
         {
+            GetPlayerTransform();
             HandlePseudoStart();
             stateMachine?.MachineTick();
         }
@@ -75,14 +105,14 @@ namespace Hadal.AI
 
             //! StunState return to idleState
             stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
-            
+
             isGridInitialised = true;
         }
 
         private void HandlePseudoStart()
         {
             if (!isGridInitialised) return;
-            
+
             isGridInitialised = false;
             //! set default state
             stateMachine.SetState(idleState);
@@ -114,16 +144,20 @@ namespace Hadal.AI
                                                .WithShouldPersist(true)
                                                .WithOnCompleteEvent(() => beIdle = !beIdle)
                                                .WithLoop(true);
+            //    .WithOnUpdateEvent(_ =>
+            //    {
+            //        $"Switch state timer: {(100f * switchTimer.GetCompletionRatio):F2}%".Msg();
+            //    });
             this.AttachTimer(switchTimer);
         }
-        
+
         #endregion
 
         #region Control Methods
         /// <summary> Set the AI to stunstate</summary>
         /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
         public void SetIsStunned(bool statement) => isStunned = statement;
-        
+
         #endregion
 
         void OnDrawGizmos()

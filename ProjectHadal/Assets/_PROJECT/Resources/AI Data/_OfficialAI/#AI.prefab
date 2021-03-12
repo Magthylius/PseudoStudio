@@ -69,12 +69,12 @@ MonoBehaviour:
   - {fileID: 0}
   playerTransforms: []
   destinationChangeTimer: 10000
-  detectionRadius: 50
+  detectionRadius: 1000
   wallDetectionRadius: 100
   pinSpeed: 40
   playerMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 64
   obstacleMask:
     serializedVersion: 2
     m_Bits: 256
