@@ -96,7 +96,7 @@ namespace Hadal.AI
         };
         Func<bool> IsStunned() => () =>
         {
-            return Input.GetKeyDown(KeyCode.A);
+            return isStunned;
         };
         
         #endregion
