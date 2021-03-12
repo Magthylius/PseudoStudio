@@ -231,7 +231,6 @@ namespace Hadal.Networking.UI.MainMenu
         {
             if (!allowRoomCreation) return;
             neManager.CreateRoom(createRoomTMPInput.text);
-            neManager.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.WAITING);
             connectingMenu.Open();
         }
 

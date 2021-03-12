@@ -181,7 +181,7 @@ namespace Hadal.Networking
             roomOptionsDefault.CleanupCacheOnLeave = cleanupCache;
 
             roomOptionsDefault.CustomRoomProperties = new Hashtable();
-            roomOptionsDefault.CustomRoomProperties.Add("s", RoomState.WAITING); //! Documentation says short key names is better
+            roomOptionsDefault.CustomRoomProperties.Add("s", 0); //! Documentation says short key names is better
         }
 
         public void SetCurrentRoomCustomProperty(Hashtable hashTable)
@@ -190,6 +190,7 @@ namespace Hadal.Networking
         }
         public void SetCurrentRoomCustomProperty(object key, object value)
         {
+            print(PhotonNetwork.CurrentRoom);
             Hashtable hashTable = new Hashtable();
             hashTable.Add(key, value);
             SetCurrentRoomCustomProperty(hashTable);
@@ -260,14 +261,13 @@ namespace Hadal.Networking
             object state;
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("s", out state);
 
-            print("enumeration");
             foreach (object key in PhotonNetwork.CurrentRoom.CustomProperties.Values)
             {
-                print(key);
+                print("Try Get:" + key);
             }
 
-            print(state);
-            print((RoomState)state);
+            //print(state);
+           // print((RoomState)state);
             RoomState roomState = (RoomState)state;
 
             if (roomState == RoomState.WAITING)
