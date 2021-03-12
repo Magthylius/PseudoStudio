@@ -29,6 +29,7 @@ namespace Hadal.AI
         public bool TakeDamage(int damage)
         {
             currentHealth = (currentHealth - damage).Clamp0();
+            $"AI health: {currentHealth}".Msg();
             return true;
         }
         public GameObject Obj => gameObject;

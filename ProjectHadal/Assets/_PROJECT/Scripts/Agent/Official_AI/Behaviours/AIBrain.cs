@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.Linq;
 using Tenshi.AIDolls;
 using Hadal.AI.States;
@@ -40,6 +40,10 @@ namespace Hadal.AI
         bool isStunned;
         [Foldout("Stun"), SerializeField] public float stunDuration;
 
+        //! Events
+        public static event Action<Transform, int> DamagePlayerEvent;
+        internal void InvokeDamagePlayerEvent(Transform t, int d) => DamagePlayerEvent?.Invoke(t, d);
+
         private void Awake()
         {
             GridGenerator.GridLoadedEvent += InitialiseStates;
@@ -50,37 +54,8 @@ namespace Hadal.AI
             InitialiseDebugStateSwitchTimer();
         }
 
-        private void Start()
-        {
-            GetPT();
-            // Invoke("GetPT", 5);
-            
-            void GetPT()
-            {
-                playerTransforms = FindObjectsOfType<GameObject>()
-                                            .Where(o => o.CompareTag("Player"))
-                                            // .Where(o => o.layer == LayerMask.GetMask("LocalPlayer") || o.layer == LayerMask.GetMask("Player"))
-                                            .Select(o => o.transform)
-                                            .ToList();
-
-                $"Found {playerTransforms.Count} players".Msg();
-            }
-        }
-
-        void GetPlayerTransform()
-        {
-            if (playerTransforms.IsNotEmpty()) return;
-            playerTransforms = new List<Transform>();
-            // playerTransforms = FindObjectsOfType<PlayerController>()
-            //                                 .Where(o => o.layer == LayerMask.GetMask("LocalPlayer"))
-            //                                 .Select(o => o.transform)
-            //                                 .ToList();
-            $"Found {playerTransforms.Count} players".Msg();
-        }
-
         private void Update()
         {
-            GetPlayerTransform();
             HandlePseudoStart();
             stateMachine?.MachineTick();
         }
@@ -97,8 +72,8 @@ namespace Hadal.AI
 
             //! -setup custom transitions-
             //! Idle to Engagement and vice versa
-            stateMachine.AddSequentialTransition(from: idleState, to: engagementState, withCondition: idleState.ShouldTerminate());
-            stateMachine.AddSequentialTransition(from: engagementState, to: idleState, withCondition: engagementState.ShouldTerminate());
+            stateMachine.AddSequentialTransition(from: idleState, to: engagementState, withCondition: BeEngage());
+            stateMachine.AddSequentialTransition(from: engagementState, to: idleState, withCondition: BeIdle());
 
             //! Any state can go into stunnedState
             stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
@@ -116,6 +91,11 @@ namespace Hadal.AI
             isGridInitialised = false;
             //! set default state
             stateMachine.SetState(idleState);
+        }
+
+        public void InjectPlayerTransforms(List<Transform> players)
+        {
+            playerTransforms = players;
         }
 
         #region Transition Conditions
@@ -137,18 +117,31 @@ namespace Hadal.AI
             return isStunned;
         };
 
+        //TODO: Do the actual condition for switching states
+        /// <summary>Switch to different state when time's up</summary>
         private void InitialiseDebugStateSwitchTimer()
         {
             beIdle = true;
             switchTimer = this.Create_A_Timer().WithDuration(timerToSwitchState)
                                                .WithShouldPersist(true)
-                                               .WithOnCompleteEvent(() => beIdle = !beIdle)
+                                               .WithOnCompleteEvent(() =>
+                                               {
+                                                   beIdle = !beIdle;
+                                                   if (beIdle)
+                                                   {
+                                                       "I should be idle".Msg();
+                                                   }
+                                                   else
+                                                   {
+                                                       "I should be engage".Msg();
+                                                   }
+                                               })
                                                .WithLoop(true);
             //    .WithOnUpdateEvent(_ =>
             //    {
             //        $"Switch state timer: {(100f * switchTimer.GetCompletionRatio):F2}%".Msg();
             //    });
-            this.AttachTimer(switchTimer);
+            // this.AttachTimer(switchTimer);
         }
 
         #endregion
@@ -160,6 +153,7 @@ namespace Hadal.AI
 
         #endregion
 
+        /// <summary>Debug draw the radius</summary>
         void OnDrawGizmos()
         {
             Gizmos.color = new Color(1f, 0.92f, 0.016f, 0.1f);

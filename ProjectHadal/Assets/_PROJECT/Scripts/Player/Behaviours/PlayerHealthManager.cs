@@ -1,6 +1,8 @@
 ﻿using Photon.Pun;
 using UnityEngine;
 using Hadal.UI;
+using Tenshi.UnitySoku;
+
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
@@ -22,6 +24,7 @@ namespace Hadal.Player.Behaviours
         public bool TakeDamage(int damage)
         {
             TakeTheDamage(damage);
+            $"Player health left: {_currentHealth}".Msg();
             return true;
         }
         private void TakeTheDamage(int damage) => _pView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
