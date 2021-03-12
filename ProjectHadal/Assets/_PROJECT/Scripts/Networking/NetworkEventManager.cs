@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
@@ -54,12 +55,14 @@ namespace Hadal.Networking
         {
             base.OnEnable();
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         public override void OnDisable()
         {
             base.OnDisable();
             PhotonNetwork.NetworkingClient.EventReceived -= InvokeRecievedEvents;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
         #endregion
 
@@ -185,7 +188,6 @@ namespace Hadal.Networking
             roomOptionsDefault.CustomRoomProperties = new Hashtable();
             roomOptionsDefault.CustomRoomProperties.Add("s", (int)RoomState.WAITING); //! Documentation says short key names is better
         }
-
         public void SetCurrentRoomCustomProperty(Hashtable hashTable)
         {
             PhotonNetwork.CurrentRoom.SetCustomProperties(hashTable);
@@ -208,6 +210,7 @@ namespace Hadal.Networking
 
             if (returnsToMainMenu)
             {
+                if (LeftRoomEvent != null) LeftRoomEvent.Invoke();
                 //LoadLevel(MainMenuScene);
                 loadsToMainMenu = true;
             }
@@ -246,7 +249,7 @@ namespace Hadal.Networking
 
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
-            MasterClientSwitchedEvent.Invoke(newMasterClient);
+            //MasterClientSwitchedEvent.Invoke(newMasterClient);
         } 
         #endregion
 
@@ -286,17 +289,17 @@ namespace Hadal.Networking
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             mainMenuManager.AddIntoPlayerList(newPlayer);
-            PlayerEnteredEvent.Invoke(newPlayer);
+            //PlayerEnteredEvent.Invoke(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            PlayerLeftEvent.Invoke(otherPlayer);
+            //PlayerLeftEvent.Invoke(otherPlayer);
         }
 
         public override void OnLeftRoom()
         {
-            LeftRoomEvent.Invoke();
+            
 
             //! If not in mainmenu, return to mainmenu
             if (loadsToMainMenu)
@@ -370,8 +373,20 @@ namespace Hadal.Networking
 
         public override void OnErrorInfo(ErrorInfo errorInfo)
         {
-        } 
+        }
         #endregion
+        #endregion
+
+        #region Room Management
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (scene.name == InGameScene)
+            {
+                //! Create player manager
+                PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
+            }
+        }
         #endregion
     }
 }

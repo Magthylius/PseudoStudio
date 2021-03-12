@@ -1,9 +1,10 @@
 ﻿using Hadal.Legacy;
+using Hadal.Networking;
 using Photon.Pun;
 using System.IO;
 using UnityEngine;
 
-//Created by Jet
+//! Created by Jet, E: Jon
 namespace Hadal.Player
 {
     public class PlayerManager : MonoBehaviour
@@ -15,20 +16,38 @@ namespace Hadal.Player
         private GameObject player;
 
         private void Awake() => _pView = GetComponent<PhotonView>();
-        private void Start()
+        private void OnEnable()
         {
-            if(IsOnNetwork)
+            if (IsOnNetwork)
             {
-                if (_pView.IsMine) CreateNetworkController();
+                if (_pView.IsMine)
+                {
+                    CreateNetworkController();
+                    NetworkEventManager.Instance.LeftRoomEvent += TryToDie;
+                }
                 return;
             }
             CreateController();
         }
 
+        void OnDisable()
+        {
+            if (IsOnNetwork)
+            {
+                if (_pView.IsMine)
+                {
+                    NetworkEventManager.Instance.LeftRoomEvent -= TryToDie;
+                }
+                return;
+            }
+        }
+
         public void TryToDie()
         {
-            if(IsOnNetwork)
+            print("Try death");
+            if (IsOnNetwork)
             {
+                print("Networked death");
                 NetworkDie();
                 return;
             }

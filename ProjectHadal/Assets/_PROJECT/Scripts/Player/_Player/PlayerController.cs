@@ -45,8 +45,9 @@ namespace Hadal.Player
             Enable();
         }
 
-        private void Start()
+        void Start()
         {
+            //base.OnEnable();
             TryInjectDependencies();
             HandlePhotonView(_pView.IsMine);
             OnInitialiseComplete?.Invoke(this);
