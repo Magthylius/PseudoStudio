@@ -14,6 +14,7 @@ namespace Hadal.Player.Behaviours
         private PlayerController _playerController;
         private PlayerCameraController _cameraController;
 
+
         public void Inject(PlayerController controller)
         {
             var info = controller.GetInfo;
@@ -44,9 +45,18 @@ namespace Hadal.Player.Behaviours
 					collision.gameObject.GetComponent<Interactable>().Interact();
 				}
 			}
+
+            LayerMask ObstacleLayer = LayerMask.NameToLayer(obstacleLayer);
+            if(collision.gameObject.layer == ObstacleLayer.value)
+            {
+
+            }
         }
 
-        internal void CollisionExit(Collision collision) { }
+        internal void CollisionExit(Collision collision)
+        {
+
+        }
 
         internal void TriggerEnter(Collider collider) { }
         internal void TriggerStay(Collider collider) { }
