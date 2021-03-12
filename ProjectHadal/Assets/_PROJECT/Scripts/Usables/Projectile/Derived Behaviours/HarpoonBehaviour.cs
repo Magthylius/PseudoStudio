@@ -26,11 +26,12 @@ namespace Hadal.Usables.Projectiles
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
-                }
-                //if its AI.
-                if (collision.gameObject.GetComponent<AIBrain>())
-                {
-                  //  collision.gameObject.GetComponent<AIBrain>().SetIsStunned(true);
+
+                    //if its AI.
+                    if (collision.gameObject.GetComponent<AIBrain>())
+                    {
+                        //  collision.gameObject.GetComponent<AIBrain>().SetIsStunned(true);
+                    }
                 }
             }
         }
