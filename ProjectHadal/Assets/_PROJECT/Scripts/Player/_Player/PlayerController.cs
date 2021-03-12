@@ -60,6 +60,7 @@ namespace Hadal.Player
 
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
         private void OnCollisionStay(Collision collision) => collisions.CollisionStay(collision);
+        private void OnCollisionExit(Collision collision) => collisions.CollisionExit(collision);
 
         void OnDestroy()
         {
