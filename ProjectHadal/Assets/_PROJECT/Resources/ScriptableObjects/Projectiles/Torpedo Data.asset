@@ -12,11 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac03b340128569746bca7019359032a7, type: 3}
   m_Name: Torpedo Data
   m_EditorClassIdentifier: 
-  ID: 0
   Name: Torpedo
-  BaseDamage: 1
-  Movespeed: 1
-  ExpireTime: 9999
+  BaseDamage: 100
   TargetLayer:
     serializedVersion: 2
     m_Bits: 1

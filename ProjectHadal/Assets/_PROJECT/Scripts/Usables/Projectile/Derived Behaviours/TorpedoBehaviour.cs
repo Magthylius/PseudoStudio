@@ -13,11 +13,7 @@ namespace Hadal.Usables.Projectiles
             {
                 LayerMask layer = LayerMask.NameToLayer(layerName);
                 if (collision.gameObject.layer == layer.value)
-                {
-                    transform.parent = collision.gameObject.transform;
-                    Rigidbody.isKinematic = true;
-                    IsAttached = true;
-
+                {                 
                     //if its AI.
                     if (collision.gameObject.GetComponent<AIBrain>())
                     {
