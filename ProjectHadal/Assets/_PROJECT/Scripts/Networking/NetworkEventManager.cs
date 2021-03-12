@@ -145,10 +145,12 @@ namespace Hadal.Networking
         #endregion
 
         #region Photon Networking Overrides
-        public delegate void NetworkEvent(Player player);
-        public event NetworkEvent PlayerEnteredEvent;
-        public event NetworkEvent PlayerLeftEvent;
-        public event NetworkEvent MasterClientSwitchedEvent;
+        public delegate void NetworkEventPlayer(Player player);
+        public delegate void NetworkEvent();
+        public event NetworkEventPlayer PlayerEnteredEvent;
+        public event NetworkEventPlayer PlayerLeftEvent;
+        public event NetworkEventPlayer MasterClientSwitchedEvent;
+        public event NetworkEvent LeftRoomEvent;
 
         [Header("Room Options")]
         [Tooltip("Max number of players in room")]
@@ -181,7 +183,7 @@ namespace Hadal.Networking
             roomOptionsDefault.CleanupCacheOnLeave = cleanupCache;
 
             roomOptionsDefault.CustomRoomProperties = new Hashtable();
-            roomOptionsDefault.CustomRoomProperties.Add("s", 0); //! Documentation says short key names is better
+            roomOptionsDefault.CustomRoomProperties.Add("s", (int)RoomState.WAITING); //! Documentation says short key names is better
         }
 
         public void SetCurrentRoomCustomProperty(Hashtable hashTable)
@@ -260,14 +262,6 @@ namespace Hadal.Networking
         {
             object state;
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("s", out state);
-
-            foreach (object key in PhotonNetwork.CurrentRoom.CustomProperties.Values)
-            {
-                print("Try Get:" + key);
-            }
-
-            //print(state);
-           // print((RoomState)state);
             RoomState roomState = (RoomState)state;
 
             if (roomState == RoomState.WAITING)
@@ -279,6 +273,10 @@ namespace Hadal.Networking
 
                 mainMenuManager.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
             }  
+            else
+            {
+                gameManager.ChangeGameState(GameManager.GameState.IN_GAME_HUNTING);
+            }
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
@@ -288,14 +286,18 @@ namespace Hadal.Networking
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             mainMenuManager.AddIntoPlayerList(newPlayer);
+            PlayerEnteredEvent.Invoke(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
+            PlayerLeftEvent.Invoke(otherPlayer);
         }
 
         public override void OnLeftRoom()
         {
+            LeftRoomEvent.Invoke();
+
             //! If not in mainmenu, return to mainmenu
             if (loadsToMainMenu)
             {
