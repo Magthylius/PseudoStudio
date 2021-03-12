@@ -19,6 +19,11 @@ namespace Hadal.Locomotion
         public void Enable() => allowUpdate = true;
         public void Disable() => allowUpdate = false;
         public void ToggleEnablility() => allowUpdate = !allowUpdate;
+        
+        //Delete later
+        protected bool allowBoost;
+        public void EnableBoost() => allowBoost = true;
+        public void DisableBoost() => allowBoost = false;
     }
     [System.Serializable]
     public abstract class Rotator : MonoBehaviour

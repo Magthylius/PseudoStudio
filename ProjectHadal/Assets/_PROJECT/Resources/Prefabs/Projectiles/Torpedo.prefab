@@ -48,6 +48,7 @@ MonoBehaviour:
   debugKey: Projectile Physics
   rootTransform: {fileID: 5118692649966226049}
   projectileRigidbody: {fileID: 5112791235449951143}
+  projectileBehavior: {fileID: 0}
   projectileModeList:
   - {fileID: 3534986708049555734}
   - {fileID: 1637671488171667810}
@@ -138,6 +139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: 
+  validLayer:
+  - Monster
 --- !u!54 &5112791235449951143
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -13,8 +13,9 @@ namespace Hadal.UI
         public TrackerType Type;
         [SerializeField] bool startsEnabled = false;
         [SerializeField] bool screenBounded = true;
+        [SerializeField] Vector3 positionOffset = Vector3.zero;
 
-        Image image;
+        Graphic graphic;
         RectTransform rectTransform;
         Transform trackingTransform;
         Camera playerCamera;
@@ -24,7 +25,7 @@ namespace Hadal.UI
 
         void Start()
         {
-            image = GetComponent<Image>();
+            graphic = GetComponent<Graphic>();
             rectTransform = GetComponent<RectTransform>();
 
             flexRect = new FlexibleRect(rectTransform);
@@ -37,13 +38,13 @@ namespace Hadal.UI
             //if (trackingTransform != null && playerCamera != null) flexRect.MoveTo(playerCamera.WorldToScreenPoint(trackingTransform.position));
             if (trackingTransform == null || playerCamera == null) return;
 
-            float minX = image.GetPixelAdjustedRect().width * 0.5f;
-            float minY = image.GetPixelAdjustedRect().height * 0.5f;
+            float minX = graphic.GetPixelAdjustedRect().width * 0.5f;
+            float minY = graphic.GetPixelAdjustedRect().height * 0.5f;
 
             float maxX = Screen.width - minX;
             float maxY = Screen.height - minY;
 
-            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position);
+            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position + positionOffset);
 
             //! When tracker is behind player
             float dotProduct = Vector3.Dot((trackingTransform.position - playerTransform.position), playerTransform.forward);

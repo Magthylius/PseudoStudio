@@ -60,6 +60,7 @@ namespace Hadal.Player
 
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
         private void OnCollisionStay(Collision collision) => collisions.CollisionStay(collision);
+        private void OnCollisionExit(Collision collision) => collisions.CollisionExit(collision);
 
         void OnDestroy()
         {
@@ -204,7 +205,7 @@ namespace Hadal.Player
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
-            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo);
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator);
 
         #endregion
     }
