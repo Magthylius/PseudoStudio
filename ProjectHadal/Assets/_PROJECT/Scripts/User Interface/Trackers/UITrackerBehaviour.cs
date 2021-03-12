@@ -12,6 +12,7 @@ namespace Hadal.UI
     {
         public TrackerType Type;
         [SerializeField] bool startsEnabled = false;
+        [SerializeField] bool screenBounded = true;
 
         Image image;
         RectTransform rectTransform;
@@ -44,16 +45,26 @@ namespace Hadal.UI
 
             Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position);
 
-            //print(Vector3.Dot((trackingTransform.position - transform.position), playerTransform.forward));
-            if (Vector3.Dot((trackingTransform.position - playerTransform.position), playerTransform.forward) < 0)
+            //! When tracker is behind player
+            float dotProduct = Vector3.Dot((trackingTransform.position - playerTransform.position), playerTransform.forward);
+            if (dotProduct < 0)
             {
                 if (pos.x < Screen.width * 0.5f) pos.x = maxX;
                 else pos.x = minX;
             }
 
-            pos.x = Mathf.Clamp(pos.x, minX, maxX);
-            pos.y = Mathf.Clamp(pos.y, minY, maxY);
-            transform.position = pos;
+            if (screenBounded)
+            {
+                pos.x = Mathf.Clamp(pos.x, minX, maxX);
+                pos.y = Mathf.Clamp(pos.y, minY, maxY);
+
+                transform.position = pos;
+            }
+            else
+            {
+                transform.position = pos;
+                transform.position *= Mathf.Sign(dotProduct);
+            }
         }
 
         public void InjectDependencies(Camera playerCamera, Transform playerTransform)
