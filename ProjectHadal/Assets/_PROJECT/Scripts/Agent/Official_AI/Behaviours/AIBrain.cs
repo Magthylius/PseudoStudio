@@ -20,7 +20,7 @@ namespace Hadal.AI
 
         [Header("Idle Setting")]
         IState idleState;
-        public float destinationChangeTimer;
+        [Foldout("Idle")] public float destinationChangeTimer;
 
         [Header("AI Engagement Setting")]
         IState engagementState;
@@ -40,8 +40,8 @@ namespace Hadal.AI
         {
             GridGenerator.GridLoadedEvent += InitialiseStates;
             isGridInitialised = false;
-            playerMask = LayerMask.GetMask("Player");
-            obstacleMask = LayerMask.GetMask("Obstacle");
+            if (playerMask == default) playerMask = LayerMask.GetMask("Player", "LocalPlayer");
+            if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Obstacle");
             isStunned = false;
         }
 

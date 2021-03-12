@@ -13,6 +13,7 @@ namespace Hadal.AI
         public AIBrain Brain { get; private set; }
         Timer stunTimer;
         bool returnToDefaultState = false;
+        bool onThisState;
 
         public StunnedState(AIBrain brain)
         {
@@ -21,7 +22,11 @@ namespace Hadal.AI
             stunTimer = Brain.Create_A_Timer()
                                 .WithDuration(Brain.stunDuration)
                                 .WithOnCompleteEvent(() => returnToDefaultState = true)
-                                .WithOnUpdateEvent(_ => $"Stun timer: {(100f * stunTimer.GetCompletionRatio):F2}%".Msg())
+                                .WithOnUpdateEvent(_ =>
+                                {
+                                    if (onThisState)
+                                        $"Stun timer: {(100f * stunTimer.GetCompletionRatio):F2}%".Msg()
+                                })
                                 .WithShouldPersist(true);
             Brain.AttachTimer(stunTimer);
             stunTimer.Pause();
@@ -29,6 +34,7 @@ namespace Hadal.AI
         public void OnStateStart()
         {
             returnToDefaultState = false;
+            onThisState = true;
             stunTimer.Restart();
     
             $"stunned".Msg();
@@ -40,7 +46,9 @@ namespace Hadal.AI
         public void OnStateEnd()
         {
             returnToDefaultState = false;
+            onThisState = false;
             stunTimer.Pause();
+            Brain.SetIsStunned(false);
             $"no longer stunned".Msg();
         }
         public Func<bool> ShouldTerminate() => () => returnToDefaultState;
