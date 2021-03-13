@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using Hadal.UI;
+using Tenshi.UnitySoku;
 
 namespace Hadal.Player.Behaviours
 {
@@ -89,23 +90,20 @@ namespace Hadal.Player.Behaviours
         {
             if (!AllowUpdate) return;
             OnUnityUpdateUI();
-            CalculateTorpedoAngle();
         }
 
         #endregion
 
         #region Handler Methods
-        public void CalculateTorpedoAngle()
+        public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
         {
-            RaycastHit aimHit;
-            if (Physics.Raycast(aimingRay, out aimHit, Mathf.Infinity))
+            if (Physics.Raycast(aimingRay, out var aimHit, Mathf.Infinity))
             {
                 float angle = Mathf.Atan2(aimHit.point.y - aimPoint.position.y, aimHit.point.x - aimPoint.position.x);
-                DebugLog(angle);
-                return;
+                var eulerAngles = info.Orientation.eulerAngles;
+                info.Orientation = Quaternion.Euler(eulerAngles.x + angle, eulerAngles.y, eulerAngles.z);
             }
-
-            DebugLog("No angle");
+            return info;
         }
 
         //! Event Firing
@@ -123,7 +121,9 @@ namespace Hadal.Player.Behaviours
         private void HandleTorpedoObject()
         {
             tLauncher.DecrementChamber();
-            tLauncher.Use(CreateInfoForTorpedo());
+            UsableHandlerInfo info = CreateInfoForTorpedo();
+            info = CalculateTorpedoAngle(info);
+            tLauncher.Use(info);
         }
 
         public void FireUtility(UsableLauncherObject usable, float chargeTime)

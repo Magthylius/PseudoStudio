@@ -6,7 +6,7 @@ namespace Hadal.Usables
     public class UsableHandlerInfo
     {
         public Vector3 FirePoint { get; private set; }
-        public Quaternion Orientation { get; private set; }
+        public Quaternion Orientation { get; set; }
         public float ChargedTime { get; private set; }
         public TrapBehaviour Trap { get; set; }
         public static UsableHandlerInfo Null => new UsableHandlerInfo(null, 0.0f);

@@ -141,7 +141,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538790924821076008}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.49999976, z: 1.147}
+  m_LocalPosition: {x: 0, y: -0.786, z: 1.147}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9029537497506802271}
@@ -519,9 +519,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfCamera: {fileID: 327159386243980100}
-  additionalFOVOnBoost: 15
+  additionalFOVOnBoost: 8
   fovBoostTransitionSpeed: 5
   fovRecoverTransitionSpeed: 8
+  enableCameraShake: 0
   shakeProperties:
     Angle: 0
     Strength: 4
@@ -781,8 +782,8 @@ MonoBehaviour:
     Strafe: 1
     Hover: 1
     Boost: 1.5
-    CummulationSpeed: 1
-    MaxCummulation: 2
+    CummulationSpeed: 2
+    MaxCummulation: 4
     CummulatedAcceleration: 0
   Velocity:
     Total: {x: 0, y: 0, z: 0}
@@ -873,7 +874,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 80
+  field of view: 95
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -2102,7 +2103,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8db2d61fa77c4534abeabfa161b7900c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8db2d61fa77c4534abeabfa161b7900c, type: 3}

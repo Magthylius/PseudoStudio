@@ -16,6 +16,7 @@ namespace Hadal.Player.Behaviours
         [SerializeField] private float fovRecoverTransitionSpeed;
 
         [Header("Special Effects")]
+        [SerializeField] private bool enableCameraShake = true;
         [SerializeField] private CameraShakeProperties shakeProperties;
 
         private float _originalCameraFOV;
@@ -38,7 +39,7 @@ namespace Hadal.Player.Behaviours
 
         public void CameraTransition(in float deltaTime, in bool isBoosted)
         {
-            if (_isDisabled) return;
+            if (_isDisabled || true) return;
             if (isBoosted) LerpBoostedFOV(deltaTime);
             else LerpOriginalFOV(deltaTime);
         }
@@ -62,12 +63,12 @@ namespace Hadal.Player.Behaviours
         public void SetSqrSpeed(float speed) => _sqrSpeed = speed;
         public void ShakeCameraDefault()
         {
-            if (_isDisabled) return;
+            if (_isDisabled || !enableCameraShake) return;
             this.ShakeCamera(selfCamera, shakeProperties, true);
         }
         public void ShakeCamera()
         {
-            if (_isDisabled) return;
+            if (_isDisabled || !enableCameraShake) return;
             var sProp = ShakePropertiesWithSpeed(_sqrSpeed);
             this.ShakeCamera(selfCamera, sProp, true);
         }
