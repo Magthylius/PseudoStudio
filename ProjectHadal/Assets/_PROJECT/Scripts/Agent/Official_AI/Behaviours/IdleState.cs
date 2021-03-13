@@ -84,6 +84,7 @@ namespace Hadal.AI.States
             // else
             //     brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, multiplier * Time.deltaTime);
             brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination,  multiplier);
+            brain.transform.LookAt(curDestination);
         }
 
         void CancelPath()
