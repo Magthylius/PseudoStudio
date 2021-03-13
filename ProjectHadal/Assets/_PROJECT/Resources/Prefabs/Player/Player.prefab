@@ -769,9 +769,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed:
     Max: 100
-    InputForward: 8
-    InputStrafe: 6
-    InputHover: 4
+    InputForward: 16
+    InputStrafe: 12
+    InputHover: 8
     Normalised: 0
     Forward: 0
     Strafe: 0
@@ -802,8 +802,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rotary:
-    Sensitivity: 50
-    Acceleration: 10
+    Sensitivity: 60
+    Acceleration: 20
     XAxisClamp: 55
     ClampTolerance: 10
     PullBackSpeed: 5
