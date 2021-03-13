@@ -9,9 +9,6 @@ using Hadal.Networking.UI.Loading;
 using Hadal.PostProcess;
 using Hadal.Locomotion;
 
-// Required Event 
-// TODO PLAYER DISABLE/ENABLE EVENT 
-
 //Created by Jet, Edited by Jon 
 namespace Hadal.UI
 {
