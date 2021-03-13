@@ -507,15 +507,40 @@ namespace Hadal.AI.GeneratorGrid
         {
             await "Preparing to check obstacles...".MsgAsync();
 
-            int i = 1;
+            int curI = 1;
             int totalNodes = grid.Get.Length;
             // totalJobCount = grid.Get.Length;
             // jobCompletionCount = 0;
+            Stopwatch checkOWatch;
+            long cummulativeMS = 0;
+            long averageMSPerNode = 0L;
+            long estimateMSCompletionTime = 0;
+
             await grid.LoopAs1DArray_XNodesPerIterationAsync(async (nodes) =>
             {
+                checkOWatch = Stopwatch.StartNew();
+                
                 int c = -1;
                 while (++c < nodes.Length)
-                    await HandleNodesToObstacleComparison(nodes[c], 100f * (i++ / totalNodes.AsFloat()));
+                    await HandleNodesToObstacleComparison(nodes[c], 100f * (curI++ / totalNodes.AsFloat()));
+                
+                checkOWatch.Stop();
+
+                //! Calculate average & completion time
+                cummulativeMS += checkOWatch.ElapsedMilliseconds;
+                averageMSPerNode = cummulativeMS / (curI - 1);
+                estimateMSCompletionTime = totalNodes * averageMSPerNode.AsInt();
+                $"Average MS Per Node: {averageMSPerNode}".Msg();
+
+                //! COnvert completion time into days hours minutes seconds
+                int seconds = (estimateMSCompletionTime / 1_000).AsInt() % 60;
+                int minutes = (estimateMSCompletionTime / 60_000).AsInt() % 60;
+                int hours = (estimateMSCompletionTime / 3_600_000).AsInt() % 24;
+                int days = (estimateMSCompletionTime / 86_400_000).AsInt();
+                if (days < 0) days = 0;
+                $"Estimate Completion Time: {days} days, {hours} hours, {minutes} minutes & {seconds} seconds.".Msg();
+
+                checkOWatch = null;
 
             }, token.Token, 50);
 

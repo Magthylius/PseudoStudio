@@ -77,19 +77,17 @@ namespace Hadal.Locomotion
             mouseDistance *= (Sensitivity * Acceleration * deltaTime);
 
             Vector3 rotation = target.localRotation.eulerAngles;
-            // if (_isFlipped) rotation.x += mouseDistance.y;
-            // else 
-                rotation.x -= mouseDistance.y;
-            // if (_isFlipped) rotation.y -= mouseDistance.x;
-            // else
-                rotation.y += mouseDistance.x;
+            rotation.x -= mouseDistance.y;
+            rotation.y += mouseDistance.x;
 
             target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
             rotation = target.rotation.eulerAngles;
             // rotation.z = RotateZAxisWithLerpXClamp(input, rotation.z, -mouseDistance.x, deltaTime);
             rotation.z = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
-            target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
+            
+            target.rotation = Quaternion.Euler(rotation);
+            //target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
             //target.Rotate(mouseDistance.y, mouseDistance.x, 0.0f, Space.World);
             //float tilt = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
