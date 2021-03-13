@@ -79,14 +79,15 @@ namespace Hadal.Locomotion
             Vector3 rotation = target.localRotation.eulerAngles;
             rotation.x -= mouseDistance.y;
             rotation.y += mouseDistance.x;
+            rotation.z = Mathf.Clamp(-mouseDistance.x + mouseDistance.y, -ZAxisClamp, ZAxisClamp);
 
+            // target.rotation = Quaternion.Euler(rotation);
             target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
-            rotation = target.rotation.eulerAngles;
             // rotation.z = RotateZAxisWithLerpXClamp(input, rotation.z, -mouseDistance.x, deltaTime);
-            rotation.z = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
+            // rotation = target.rotation.eulerAngles;
             
-            target.rotation = Quaternion.Euler(rotation);
+            // target.rotation = Quaternion.Euler(rotation);
             //target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
             //target.Rotate(mouseDistance.y, mouseDistance.x, 0.0f, Space.World);
