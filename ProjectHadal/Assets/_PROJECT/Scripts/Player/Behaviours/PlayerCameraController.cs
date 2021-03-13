@@ -85,9 +85,14 @@ namespace Hadal.Player.Behaviours
 
         #region Photon
 
+        public void Destroy()
+        {
+            Destroy(gameObject);
+        }
+
         public void Deactivate()
         {
-            if (_pView.IsMine) return;
+            //if (_pView.IsMine) return;
             _isDisabled = true;
             selfCamera.enabled = false;
             selfCamera.GetComponent<AudioListener>().enabled = false;

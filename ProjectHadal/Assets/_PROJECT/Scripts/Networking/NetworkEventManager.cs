@@ -289,12 +289,12 @@ namespace Hadal.Networking
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             mainMenuManager.AddIntoPlayerList(newPlayer);
-            //PlayerEnteredEvent.Invoke(newPlayer);
+            if (PlayerLeftEvent != null) PlayerEnteredEvent.Invoke(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            //PlayerLeftEvent.Invoke(otherPlayer);
+            if (PlayerLeftEvent != null) PlayerLeftEvent.Invoke(otherPlayer);
         }
 
         public override void OnLeftRoom()
@@ -384,9 +384,18 @@ namespace Hadal.Networking
             if (scene.name == InGameScene)
             {
                 //! Create player manager
-                PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
+                }
             }
         }
+        #endregion
+
+        #region Accessors
+        public Room CurrentRoom => PhotonNetwork.CurrentRoom;
+        public Player LocalPlayer => PhotonNetwork.LocalPlayer;
+        public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;
         #endregion
     }
 }

@@ -7,9 +7,10 @@ using UnityEngine;
 using Hadal.Inputs;
 using Hadal.UI;
 using Tenshi;
+using Photon.Realtime;
 
 
-//Created by Jet
+// Created by Jet, E: Player
 namespace Hadal.Player
 {
     public class PlayerController : Controller, IPlayerEnabler
@@ -28,6 +29,9 @@ namespace Hadal.Player
         [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
         private PhotonView _pView;
         private PlayerManager _manager;
+
+        Photon.Realtime.Player attachedPlayer;
+        int pViewSelfID;
         
         public static event Action<PlayerController> OnInitialiseComplete;
 
@@ -74,14 +78,20 @@ namespace Hadal.Player
 
         #region Public Methods
 
-        public void InjectManager(PlayerManager playerManager) => _manager = playerManager;
+        public void InjectDependencies(PlayerManager playerManager, Photon.Realtime.Player photonPlayer)
+        {
+            _manager = playerManager;
+            attachedPlayer = photonPlayer;
+
+            pViewSelfID = _pView.ViewID;
+        }
 
         public void AddVelocity(float speed, Vector3 direction)
         {
             Vector3 addVelocity = direction.normalized * speed;
             mover.Velocity.AddVelocity(addVelocity);
         }
-        public void Die() => _manager.TryToDie();
+        public void Die() => _manager.TryToKill(attachedPlayer);
         public void ResetController()
         {
             healthManager.Inject(this);
@@ -108,7 +118,13 @@ namespace Hadal.Player
             shooter.DoUpdate(deltaTime);
         }
 
-        private void HandlePhotonView(bool isMine)
+        public void TransferOwnership(Photon.Realtime.Player newOwner)
+        {
+            _pView.TransferOwnership(newOwner);
+            //HandlePhotonView(_pView.IsMine);
+        }
+
+        public void HandlePhotonView(bool isMine)
         {
             if (isMine)
             {
@@ -119,6 +135,7 @@ namespace Hadal.Player
             }
             else
             {
+                print("Camera Deactivated");
                 Deactivate();
                 cameraController.Deactivate();
             }
@@ -207,7 +224,8 @@ namespace Hadal.Player
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
             => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator);
-
+        public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
+        public int ViewID => pViewSelfID;
         #endregion
     }
 }
