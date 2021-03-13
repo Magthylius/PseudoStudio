@@ -1,4 +1,6 @@
 ﻿//Created by Jet
+using UnityEngine;
+
 namespace Hadal.Inputs
 {
     public interface IUseableInput
