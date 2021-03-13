@@ -176,7 +176,7 @@ namespace Hadal.Networking
 
         void SetupNetworking()
         {
-            if (!PhotonNetwork.IsConnected)
+            //if (!PhotonNetwork.IsConnected)
                 PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
 
             roomOptionsDefault = new RoomOptions();
