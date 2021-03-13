@@ -17,9 +17,10 @@ namespace Hadal.Player.Behaviours
         [Header("Aiming")]
         public Transform aimParentObject;
         public Transform aimPoint;
+        public float torpedoMinAngle = 25f;
 
         float aimPointYDelta;
-        Ray aimingRay;
+        RaycastHit aimHit;
 
         [Header("Torpedo")]
         [SerializeField] TorpedoLauncherObject tLauncher;
@@ -70,8 +71,8 @@ namespace Hadal.Player.Behaviours
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             DoDebugEnabling(debugKey);
 
-            aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
-            aimPointYDelta = aimParentObject.position.y - aimPoint.position.y;
+            //aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
+            aimPointYDelta = (torpedoFirePoint.position - aimPoint.position).magnitude;
         }
 
         private void OnDestroy()
@@ -82,8 +83,18 @@ namespace Hadal.Player.Behaviours
 
         void OnDrawGizmos()
         {
-            Gizmos.DrawRay(aimingRay);
-            Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
+            //Gizmos.DrawRay(aimingRay);
+            //Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
+
+            /*if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
+            {
+                Gizmos.DrawLine(aimPoint.position, aimHit.point);
+                Gizmos.DrawLine(aimHit.point, torpedoFirePoint.position);
+
+                float o = (aimHit.point - aimPoint.position).magnitude;
+                torpedoAngle = Mathf.Atan(o / aimPointYDelta) * Mathf.Rad2Deg;
+               // DebugManager.Instance.SLog(sl_TorpedoAimer, "Torpedo aimer: ", Mathf.Atan(o / aimPointYDelta) * Mathf.Rad2Deg );
+            }*/
         }
 
         public void DoUpdate(in float deltaTime)
@@ -97,12 +108,15 @@ namespace Hadal.Player.Behaviours
         #region Handler Methods
         public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
         {
-            if (Physics.Raycast(aimingRay, out var aimHit, Mathf.Infinity))
+            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
             {
-                float angle = Mathf.Atan2(aimHit.point.y - aimPoint.position.y, aimHit.point.x - aimPoint.position.x);
-                var eulerAngles = info.Orientation.eulerAngles;
-                info.Orientation = Quaternion.Euler(eulerAngles.x + angle, eulerAngles.y, eulerAngles.z);
+                float o = (aimHit.point - aimPoint.position).magnitude;
+                float torpedoAngle = Mathf.Atan(o / aimPointYDelta) * Mathf.Rad2Deg;
+                if (torpedoAngle < torpedoMinAngle) torpedoAngle = torpedoMinAngle;
+                Vector3 newAngle = info.Orientation.eulerAngles - new Vector3(90f - torpedoAngle, 0f, 0f);
+                info.Orientation = Quaternion.Euler(newAngle);
             }
+
             return info;
         }
 
