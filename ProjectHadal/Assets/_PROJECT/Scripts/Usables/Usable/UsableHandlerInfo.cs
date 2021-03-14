@@ -23,6 +23,7 @@ namespace Hadal.Usables
         #region Mini Builder
         public UsableHandlerInfo WithTransformForceInfo(Transform fireTransform, float ChargedTime)
         {
+            if (fireTransform == null) return null;
             FirePoint = fireTransform.position;
             Orientation = fireTransform.rotation;
             this.ChargedTime = ChargedTime;

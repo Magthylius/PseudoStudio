@@ -117,14 +117,17 @@ namespace Hadal.Networking.UI.MainMenu
             startIF = new ImageFiller(startFiller, startFillerSpeed, 1f);
             startIF.OnFillComplete += EndStartPhase;
 
+            if (createRoomFR != null) createRoomFR.MoveToStart();
             createRoomFR = new FlexibleRect(createRoomPanel);
             createRoomFR.SetTargetPosition(createRoomFR.GetBodyOffset(Vector2.right));
             createRoomFR.MoveToEnd();
 
+            if (findRoomFR != null) findRoomFR.MoveToStart();
             findRoomFR = new FlexibleRect(findRoomPanel);
             findRoomFR.SetTargetPosition(findRoomFR.GetBodyOffset(Vector2.right));
             findRoomFR.MoveToEnd();
 
+            if (confirmQuitFR != null) confirmQuitFR.MoveToStart();
             confirmQuitFR = new FlexibleRect(confirmQuitPanel);
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
             confirmQuitFR.MoveToEnd();
@@ -148,6 +151,17 @@ namespace Hadal.Networking.UI.MainMenu
 
             warningNicknameTooLong.gameObject.SetActive(false);
             warningRoomNameTooLong.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// Used for reseting main menu when in main menu only
+        /// </summary>
+        public void ResetMainMenu()
+        {
+            if (GameManager.Instance.IsInGame) return;
+            startIF.ResetCharge(); 
+            //InitMainMenu();
+            menuPhase = MenuPhase.START;
         }
 
         void ChangePhase(MenuPhase phase) => menuPhase = phase;

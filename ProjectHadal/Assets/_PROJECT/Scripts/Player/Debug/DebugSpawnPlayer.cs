@@ -32,7 +32,7 @@ namespace Hadal.Player
 
         void Start()
         {
-            if (GameManager.Instance) GameManager.Instance.ChangeGameState(GameManager.GameState.IN_GAME_HUNTING);
+            if (GameManager.Instance) GameManager.Instance.ChangeGameState(GameManager.GameState.ONGOING);
         }
     }
 }

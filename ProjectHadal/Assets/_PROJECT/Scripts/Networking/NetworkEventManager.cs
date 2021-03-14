@@ -118,7 +118,7 @@ namespace Hadal.Networking
                 {
                     if (recieverDict.ContainsKey((ByteEvents)eventObject.Code))
                     {
-                        recieverDict[(ByteEvents)eventObject.Code].Invoke(eventObject);
+                        if (recieverDict[(ByteEvents)eventObject.Code] != null) recieverDict[(ByteEvents)eventObject.Code].Invoke(eventObject);
                         return;
                     }
                 }
@@ -278,7 +278,7 @@ namespace Hadal.Networking
             }  
             else
             {
-                gameManager.ChangeGameState(GameManager.GameState.IN_GAME_HUNTING);
+                gameManager.ChangeGameState(GameManager.GameState.ONGOING);
             }
         }
 
@@ -299,13 +299,15 @@ namespace Hadal.Networking
 
         public override void OnLeftRoom()
         {
-            
-
             //! If not in mainmenu, return to mainmenu
             if (loadsToMainMenu)
             {
                 LoadLevel(MainMenuScene);
                 loadsToMainMenu = false;
+            }
+            else if (!gameManager.IsInGame)
+            {
+                mainMenuManager.ResetMainMenu();
             }
         }
         #endregion
@@ -319,8 +321,12 @@ namespace Hadal.Networking
                 SetupNetworking();*/
 
             SetupNetworking();
+
+
             mainMenuManager = MainMenuManager.Instance;
             mainMenuManager.InitMainMenu();
+
+            gameManager.ChangeGameState(GameManager.GameState.IDLE);
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)

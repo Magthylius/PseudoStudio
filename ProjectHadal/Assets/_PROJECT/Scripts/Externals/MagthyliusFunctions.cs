@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.4.5
+// Version 1.4.6
 namespace Magthylius
 {
     namespace LerpFunctions
@@ -423,6 +423,8 @@ namespace Magthylius
             {
                 charge = 0f;
                 progress = charge / maxCharge;
+                isFilled = false;
+
                 UpdateImage();
             }
 
