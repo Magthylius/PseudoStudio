@@ -8,6 +8,10 @@ namespace Hadal.Player.Aesthetics
 {
     public class SubmarineFinHandler : MonoBehaviour
     {
+        [Header("Settings")]
+        [SerializeField, Min(0f)] float tweenSpeed = 10f;
+
+        [Header("References")]
         [SerializeField] SubmarineFinBehaviour leftFin;
         [SerializeField] SubmarineFinBehaviour rightFin;
         [SerializeField] Mover playerMover;
@@ -22,6 +26,9 @@ namespace Hadal.Player.Aesthetics
         {
             moveInput = playerMover.Input;
             rotateInput = playerRotator.Input;
+
+            leftFin.SetTweenSpeed(tweenSpeed);
+            rightFin.SetTweenSpeed(tweenSpeed);
 
             sl_MovementVec = DebugManager.Instance.CreateScreenLogger();
         }
