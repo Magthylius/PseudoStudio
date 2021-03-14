@@ -35,20 +35,24 @@ namespace Hadal.AI
             returnToDefaultState = false;
             onThisState = true;
             stunTimer.Restart();
-    
+
             $"stunned".Msg();
         }
         public void StateTick()
         {
-
+            Debug.Log("asd" + returnToDefaultState);
         }
         public void OnStateEnd()
         {
-            returnToDefaultState = false;
-            onThisState = false;
-            stunTimer.Pause();
-            Brain.SetIsStunned(false);
-            $"no longer stunned".Msg();
+            if (returnToDefaultState == true)
+            {
+                returnToDefaultState = false;
+                onThisState = false;
+                stunTimer.Pause();
+                Brain.SetIsStunned(false);
+                $"no longer stunned".Msg();
+            }
+
         }
         public Func<bool> ShouldTerminate() => () => returnToDefaultState;
     }

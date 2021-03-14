@@ -17,6 +17,11 @@ namespace Hadal.AI
             ResetHealth();
         }
 
+        void Update()
+        {
+            CheckHealth();
+        }
+
         public void CheckHealth()
         {
             if (IsUnalive)
