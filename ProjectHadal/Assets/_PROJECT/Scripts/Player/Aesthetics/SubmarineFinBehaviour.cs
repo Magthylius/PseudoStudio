@@ -21,9 +21,12 @@ namespace Hadal.Player.Aesthetics
 
         Quaternion targetRotation;
 
+        int sl_TotalMovementRot;
+
         void Start()
         {
             targetRotation = originalRotation;
+            sl_TotalMovementRot = DebugManager.Instance.CreateScreenLogger();
         }
 
         void Update()
@@ -31,20 +34,24 @@ namespace Hadal.Player.Aesthetics
             transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, tweenSpeed * Time.deltaTime);
         }
 
-        public void UpdateMovement(Vector3 movementVector)
+        public void UpdateMovement(Vector3 normalizedVector)
         {
-            if (movementVector.sqrMagnitude > 0)
+            if (normalizedVector.sqrMagnitude > 0)
             {
                 Vector3 totalMovement = Vector3.zero;
 
                 //! forwards backwards
-                if (movementVector.z < 0f) totalMovement += movementVector.x * forwardRotation.eulerAngles;
+                /*if (movementVector.z < 0f) totalMovement += movementVector.x * forwardRotation.eulerAngles;
                 else if (movementVector.z > 0f) totalMovement += Mathf.Abs(movementVector.x) * backwardRotation.eulerAngles;
 
                 if (movementVector.y < 0f) totalMovement += movementVector.y * upwardRotation.eulerAngles;
-                else if (movementVector.y > 0f) totalMovement += Mathf.Abs(movementVector.y) * downwardRotation.eulerAngles;
+                else if (movementVector.y > 0f) totalMovement += Mathf.Abs(movementVector.y) * downwardRotation.eulerAngles;*/
 
-                targetRotation = Quaternion.Euler(totalMovement.normalized * 360f);
+                float zProg = (normalizedVector.z + 1) * 0.5f;
+                Vector3 zAngle = Vector3.Lerp(backwardRotation.eulerAngles, forwardRotation.eulerAngles, zProg);
+
+                targetRotation = Quaternion.Euler(zAngle);
+                DebugManager.Instance.SLog(sl_TotalMovementRot, "Rot", zAngle);
             }
             else
             {

@@ -16,16 +16,22 @@ namespace Hadal.Player.Aesthetics
         IMovementInput moveInput;
         IRotationInput rotateInput;
 
+        int sl_MovementVec;
+
         void Start()
         {
             moveInput = playerMover.Input;
             rotateInput = playerRotator.Input;
+
+            sl_MovementVec = DebugManager.Instance.CreateScreenLogger();
         }
 
         void Update()
         {
             Vector3 movementVec = new Vector3(moveInput.HorizontalAxis, moveInput.HoverAxis, moveInput.VerticalAxis);
-            UpdateFins(movementVec);
+            UpdateFins(movementVec.normalized);
+
+            DebugManager.Instance.SLog(sl_MovementVec, "Movement", movementVec.normalized);
         }
 
         void UpdateFins(Vector3 movement)
