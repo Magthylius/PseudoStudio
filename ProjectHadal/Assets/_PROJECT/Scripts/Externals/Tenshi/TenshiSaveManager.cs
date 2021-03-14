@@ -279,6 +279,8 @@ namespace Tenshi.SaveHigan
         public static bool IsFullFilePathExistent(string fullPath) => File.Exists(fullPath);
         private static string GetFullPathFromKey(string pathKey) => PersistentSavePath + pathKey + Suffix;
 
+        public static long GetSizeOfFileAtPath(string pathKey) => new FileInfo(GetFullPathFromKey(pathKey)).Length;
+
         public static bool RecreateFileOrDirectory(string pathKey)
         {
             try
