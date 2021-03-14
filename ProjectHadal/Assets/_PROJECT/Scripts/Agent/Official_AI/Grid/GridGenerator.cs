@@ -83,7 +83,7 @@ namespace Hadal.AI.GeneratorGrid
             token = new CancellationTokenSource();
 
             //! Setup obstacleMask & collider
-            obstacleMask = LayerMask.GetMask("Obstacle");
+            obstacleMask = LayerMask.GetMask("Wall");
 
             //! X, Y or Z must be Even number
             if (x.IsOdd()) x++;
@@ -162,7 +162,7 @@ namespace Hadal.AI.GeneratorGrid
             List<List<SerialisableNode>> listOfNodesToSave = new List<List<SerialisableNode>>();
 
             //Amount of node count per partition(list)
-            int maxPartitionSize = 5000000;
+            int maxPartitionSize = 1000000;
 
             //total size of the grid
             int totalSize = x * y * z;
@@ -638,6 +638,38 @@ namespace Hadal.AI.GeneratorGrid
         }
 
         #endregion
+
+        [Button(nameof(DebugNodeSize))]
+        private async void DebugNodeSize()
+        {
+            List<SerialisableNode> nodes = new List<SerialisableNode>();
+            string tempKey = "debug_node_size_1";
+            int spawnCount = 3226080;
+            long actualFileSize = 48339354;
+            int i = -1;
+            await Task.Run(() =>
+            {
+                while (++i < spawnCount)
+                    nodes.Add(new SerialisableNode());
+            });
+            
+            SaveManager.Save(data: nodes, pathKey: tempKey);
+            if (SaveManager.IsFileKeyExistent(tempKey))
+            {
+                long size = SaveManager.GetSizeOfFileAtPath(tempKey);
+                decimal percent = actualFileSize / Convert.ToDecimal(size);
+                decimal oneNodeSize = size / Convert.ToDecimal(spawnCount);
+                long sizeOffset = size - actualFileSize;
+                $"---------------------------------Save Diagnosis Report---------------------------------".Msg();
+                $"Size of debugged save file for {spawnCount} nodes: {size}.".Msg();
+                $"Save accuracy of {Decimal.Multiply(100, percent)}% ({actualFileSize}/{size}).".Msg();
+                $"Missing size (in bytes): {sizeOffset}.".Msg();
+                $"Missing nodes: at least {Math.Floor(Convert.ToDecimal(sizeOffset) / oneNodeSize)}.".Msg();
+                $"---------------------------------Diagnosis Report---------------------------------".Msg();
+                SaveManager.DeleteFileOrDirectory(tempKey);
+            }
+            else $"File Key: ({tempKey}) does not exist.".Msg();
+        }
 
         #region Public getters
         /// <summary> Get center of the transform.position </summary>

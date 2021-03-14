@@ -50,7 +50,7 @@ namespace Hadal.AI
             GridGenerator.GridLoadedEvent += InitialiseStates;
             isGridInitialised = false;
             if (playerMask == default) playerMask = LayerMask.GetMask("LocalPlayer");
-            if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Obstacle");
+            if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Wall");
             isStunned = false;
             InitialiseDebugStateSwitchTimer();
         }
@@ -81,7 +81,7 @@ namespace Hadal.AI
 
             //! StunState return to idleState
             stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
-
+            
             isGridInitialised = true;
         }
 
