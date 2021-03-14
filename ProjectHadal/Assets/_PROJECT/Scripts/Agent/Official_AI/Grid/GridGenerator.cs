@@ -83,7 +83,7 @@ namespace Hadal.AI.GeneratorGrid
             token = new CancellationTokenSource();
 
             //! Setup obstacleMask & collider
-            obstacleMask = LayerMask.GetMask("Obstacle");
+            obstacleMask = LayerMask.GetMask("Wall");
 
             //! X, Y or Z must be Even number
             if (x.IsOdd()) x++;
@@ -162,7 +162,7 @@ namespace Hadal.AI.GeneratorGrid
             List<List<SerialisableNode>> listOfNodesToSave = new List<List<SerialisableNode>>();
 
             //Amount of node count per partition(list)
-            int maxPartitionSize = 5000000;
+            int maxPartitionSize = 1000000;
 
             //total size of the grid
             int totalSize = x * y * z;

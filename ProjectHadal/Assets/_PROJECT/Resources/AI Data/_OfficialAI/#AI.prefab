@@ -101,9 +101,19 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   playerTransforms: []
-  destinationChangeTimer: 5
-  idleSpeed: 0
+  destinationChangeTimer: 1.5
+  idleSpeed: 2
   detectionRadius: 1000
   wallDetectionRadius: 100
   pinSpeed: 10
@@ -141,8 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransforms: []
-  pinDamage: 0
-  tailWhipDamage: 0
+  pinDamage: 50
+  tailWhipDamage: 50
 --- !u!23 &6556157035893970558
 MeshRenderer:
   m_ObjectHideFlags: 0

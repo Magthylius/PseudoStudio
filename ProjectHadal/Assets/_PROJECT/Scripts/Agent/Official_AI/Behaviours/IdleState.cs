@@ -24,7 +24,7 @@ namespace Hadal.AI.States
         float newDestTimeDelay;
         bool isFirstPath;
         bool isFindingPath;
-        
+
         #endregion
 
         public IdleState(AIBrain brain, float destinationChangeTimer)
@@ -75,7 +75,7 @@ namespace Hadal.AI.States
             }
 
             Vector3 direction = (pathDestination - brain.transform.position).normalized;
-            float multiplier = (Vector3.Distance(curDestination, brain.transform.position) + 0.1f) * brain.idleSpeed; 
+            //float multiplier = (Vector3.Distance(curDestination, brain.transform.position)) * brain.idleSpeed * Time.deltaTime; 
             // brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, brain.idleSpeed * Time.deltaTime);
             // Vector3 randomThing = Vector3.zero;
             // brain.transform.position = Vector3.SmoothDamp(brain.transform.position, pathDestination, ref randomThing, brain.idleSpeed * Time.deltaTime, brain.idleSpeed);
@@ -83,8 +83,12 @@ namespace Hadal.AI.States
             //     brain.transform.position += direction * (multiplier * Time.deltaTime);
             // else
             //     brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, multiplier * Time.deltaTime);
-            brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination,  multiplier);
-            brain.transform.LookAt(curDestination);
+            if (Vector3.Distance(brain.transform.position, pathDestination) > 0)
+            {
+                brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, brain.idleSpeed * Time.deltaTime);
+                brain.transform.LookAt(curDestination);
+            }
+
         }
 
         void CancelPath()
@@ -143,7 +147,7 @@ namespace Hadal.AI.States
 
             prevDest = curDestination;
 
-            
+
             Stack<Node> fullPath = await PathFinder.Instance.FindAsync(brain.transform.position, curDestination);
             if (fullPath.IsNullOrEmpty()) return;
 

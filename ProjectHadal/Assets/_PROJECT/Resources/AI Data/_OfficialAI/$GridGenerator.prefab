@@ -47,11 +47,13 @@ MonoBehaviour:
   x: 20
   y: 20
   z: 20
+  terrainRegions: []
   cellSize: 20
   meshNodeSizeMultiplier: 3
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 4096
   enableObstacleGridGizmo: 0
   enableAllElseGridGizmo: 0
   enableSavingDebugLogs: 0
+  enablePathfindingGizmo: 0
