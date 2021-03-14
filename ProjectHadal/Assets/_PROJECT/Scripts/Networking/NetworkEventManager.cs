@@ -402,6 +402,7 @@ namespace Hadal.Networking
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
         public Player LocalPlayer => PhotonNetwork.LocalPlayer;
         public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;
+        public bool isConnected => PhotonNetwork.IsConnected;
         #endregion
     }
 }

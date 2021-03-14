@@ -31,6 +31,8 @@ namespace Hadal.Networking.UI.MainMenu
         [SerializeField] Menu lobbyMenu;
         [SerializeField] Menu connectingMenu;
         [SerializeField] Menu roomMenu;
+        [SerializeField] GameObject connectingTMP;
+        [SerializeField] GameObject loginTMP;
 
         [Header("Start settings")]
         [SerializeField] Image startFiller;
@@ -132,6 +134,7 @@ namespace Hadal.Networking.UI.MainMenu
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
             confirmQuitFR.MoveToEnd();
 
+
             mainMenuInitiated = true;
         }
 
@@ -144,6 +147,9 @@ namespace Hadal.Networking.UI.MainMenu
             CloseMenu(lobbyMenu);
             CloseMenu(roomOptions);
             CloseMenu(connectingMenu);
+
+            connectingTMP.SetActive(false);
+            loginTMP.SetActive(true);
 
             createRoomPanel.gameObject.SetActive(true);
             findRoomPanel.gameObject.SetActive(true);
