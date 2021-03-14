@@ -384,7 +384,6 @@ namespace Hadal.Networking
         #endregion
 
         #region Room Management
-
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (scene.name == InGameScene)
@@ -392,9 +391,14 @@ namespace Hadal.Networking
                 //! Create player manager
                 if (PhotonNetwork.IsMasterClient)
                 {
-                    PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
+                    SpawnPlayerManager();
                 }
             }
+        }
+
+        public void SpawnPlayerManager()
+        {
+            PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
         }
         #endregion
 

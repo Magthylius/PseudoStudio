@@ -3,6 +3,7 @@ using Hadal.Player.Behaviours;
 using Hadal.Usables;
 using Hadal.Usables.Projectiles;
 using UnityEngine;
+using Hadal.Networking;
 
 namespace Hadal.Player
 {
@@ -20,6 +21,7 @@ namespace Hadal.Player
         void Start()
         {
             DoDebugEnabling(debugKey);
+            Instantiate(Resources.Load(PathManager.PlayerManagerPrefabPath), Vector3.zero, Quaternion.identity);
         }
 
         void GetController(PlayerController controller)

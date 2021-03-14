@@ -10,7 +10,7 @@ namespace Hadal.Player
 {
     public class PlayerManager : MonoBehaviour
     {
-        public bool IsOnNetwork { get; set; } = true;
+        public bool IsOnNetwork { get; set; } = !NetworkEventManager.Instance.isOfflineMode;
         private const string PrefabFolder = "Prefabs/Player";
         private const string PrefabName = "Player";
         private PhotonView _pView;
@@ -24,11 +24,13 @@ namespace Hadal.Player
         {
             neManager = NetworkEventManager.Instance;
 
+            playerList = new List<PlayerController>();
+
             if (IsOnNetwork)
             {
                 if (_pView.IsMine)
                 {
-                    playerList = new List<PlayerController>();
+                    
 
                     foreach (KeyValuePair<int, Photon.Realtime.Player> playerDict in neManager.AllPlayers)
                     {
@@ -40,7 +42,7 @@ namespace Hadal.Player
                 }
                 return;
             }
-            //CreateController();
+
             SpawnPlayer(neManager.LocalPlayer);
         }
 
@@ -94,10 +96,7 @@ namespace Hadal.Player
             if (!IsOnNetwork || gameObject == null) return;
             playerList.Remove(GetController(player));
             PhotonNetwork.Destroy(player);
-            /*CreateNetworkController();
-            var c = player.GetComponent<PlayerController>();
-            if (c == null) return;
-            c.ResetController();*/
+
         }
         private void CreateNetworkController(Photon.Realtime.Player photonPlayer)
         {
@@ -133,10 +132,6 @@ namespace Hadal.Player
         {
             if (IsOnNetwork || gameObject == null) return;
             Destroy(player);
-            /*CreateController();
-            var c = player.GetComponent<PlayerController>();
-            if (c is null) return;
-            c.ResetController();*/
         }
         private void CreateLocalController(Photon.Realtime.Player photonPlayer)
         {
@@ -144,8 +139,10 @@ namespace Hadal.Player
             var prefab = Resources.Load(GetPrefabPath());
             if (prefab is null) return;
             GameObject player = (GameObject)Instantiate(prefab, transform.position, transform.rotation);
-            player.GetComponent<PlayerController>().InjectDependencies(this, photonPlayer);
-            playerList.Add(player.GetComponent<PlayerController>());
+            PlayerController controller = player.GetComponent<PlayerController>();
+
+            playerList.Add(controller);
+            controller.InjectDependencies(this, photonPlayer);
         }
 
         #endregion
