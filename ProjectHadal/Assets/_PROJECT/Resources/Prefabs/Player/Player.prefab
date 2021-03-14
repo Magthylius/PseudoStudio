@@ -130,7 +130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7af9a3be2235548458942f4fb0694f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tweenSpeed: 5
   leftFin: {fileID: 7318005172358396004}
   rightFin: {fileID: 2901750296828196401}
   playerMover: {fileID: 4295981784517134298}
@@ -385,10 +384,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d35b4e5ef0e1040ae64065674c2fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invertedFin: 1
+  tweenSpeed: 20
   originalRotation: {x: 0.579228, y: 0.579228, z: -0.40557984, w: -0.40557984}
-  forwardRotation: {x: 0.44957447, y: 0.84625113, z: -0.23748969, w: -0.15918699}
-  backwardRotation: {x: 0.36599824, y: 0.21130915, z: -0.7848856, w: -0.45315385}
+  forwardRotation: {x: 0.44957447, y: 0.8462512, z: -0.2374897, w: -0.15918697}
+  backwardRotation: {x: 0.43301278, y: 0.25, z: -0.75, w: -0.43301266}
   upwardRotation: {x: 0.32669193, y: 0.7647114, z: -0.51212406, w: -0.21498337}
   downwardRotation: {x: -0.73332834, y: -0.3920977, z: 0.16953065, w: 0.5289124}
   turnLeftRotation: {x: 0.41806313, y: 0.74842924, z: -0.40561846, w: -0.31709713}
@@ -1101,7 +1100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d35b4e5ef0e1040ae64065674c2fee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invertedFin: 0
+  tweenSpeed: 20
   originalRotation: {x: 0.5792279, y: -0.5792279, z: 0.4055799, w: -0.4055799}
   forwardRotation: {x: 0.44957453, y: -0.8462512, z: 0.23748973, w: -0.159187}
   backwardRotation: {x: 0.4330127, y: -0.25000003, z: 0.75, w: -0.43301275}
@@ -1438,10 +1437,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 97fab9907ddc6144fa25c8ff3ffd406a, type: 3}
       propertyPath: m_Name
       value: Left Fin
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 97fab9907ddc6144fa25c8ff3ffd406a, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97fab9907ddc6144fa25c8ff3ffd406a, type: 3}
