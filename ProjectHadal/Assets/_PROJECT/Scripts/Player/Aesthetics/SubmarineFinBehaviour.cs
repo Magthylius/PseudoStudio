@@ -27,7 +27,7 @@ namespace Hadal.Player.Aesthetics
         void Start()
         {
             targetRotation = originalRotation;
-            sl_TotalMovementRot = DebugManager.Instance.CreateScreenLogger();
+            //sl_TotalMovementRot = DebugManager.Instance.CreateScreenLogger();
         }
 
         void Update()
@@ -68,7 +68,7 @@ namespace Hadal.Player.Aesthetics
                 //targetRotation = Quaternion.Euler(yAngle) * Quaternion.Euler(zAngle);
                 //targetRotation = Quaternion.Lerp(Quaternion.Euler(yAngle), Quaternion.Euler(zAngle), (yProg + zProg) * 0.5f);
                 targetRotation = Quaternion.Euler(totalMovement);
-                DebugManager.Instance.SLog(sl_TotalMovementRot, "Rot", zAngle);
+                //DebugManager.Instance.SLog(sl_TotalMovementRot, "Rot", zAngle);
             }
             else
             {
