@@ -5,7 +5,7 @@ namespace Hadal
     {
         public const string PlayerManagerPrefabPath = "Prefabs/Player/PlayerManager";
         public const string PlayerPrefabPath = "Prefabs/Player/Player";
-        public const string AIPrefabPath = "Prefabs/AI Data/_OfficialAI/#AI";
+        public const string AIPrefabPath = "AI Data/_OfficialAI/#AI";
         public const string AIEssentialsPrefabPath = "Prefabs/Creature/AI/AI Essentials";
         public const string GenericPlayerSettingsDataPath = "";
         public const string EmptyUsableDataPath = "ScriptableObjects/Usables/EmptyUsableData";

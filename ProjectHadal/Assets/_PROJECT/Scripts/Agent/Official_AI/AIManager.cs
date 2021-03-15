@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hadal.Networking;
 
 namespace Hadal.AI
 {
@@ -8,7 +9,10 @@ namespace Hadal.AI
     {
         public static AIManager Instance;
 
+        NetworkEventManager neManager;
+
         public Transform patrolPositionParent;
+        public Transform spawnPosition;
 
         Transform[] patrolPositions;
 
@@ -20,7 +24,10 @@ namespace Hadal.AI
 
         void Start()
         {
+            neManager = NetworkEventManager.Instance;
+
             patrolPositions = patrolPositionParent.GetComponentsInChildren<Transform>();
+            if (neManager.IsMasterClient) neManager.SpawnAI(spawnPosition.position, spawnPosition.rotation);
         }
 
         public Transform[] GetPositions() => patrolPositions;

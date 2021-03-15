@@ -400,7 +400,7 @@ namespace Hadal.Networking
                     SpawnPlayerManager();
                 }
 
-                SpawnAIEssentials();
+                //SpawnAIEssentials();
             }
         }
 
@@ -415,6 +415,11 @@ namespace Hadal.Networking
         public void SpawnAIEssentials()
         {
             PhotonNetwork.Instantiate(PathManager.AIEssentialsPrefabPath, Vector3.zero, Quaternion.identity);
+        }
+
+        public void SpawnAI(Vector3 pos = new Vector3(), Quaternion rot = new Quaternion())
+        {
+            PhotonNetwork.Instantiate(PathManager.AIPrefabPath, pos, rot);
         }
         #endregion
 
