@@ -86,6 +86,7 @@ namespace Hadal.Networking
         {
             PLAYER_UTILITIES_LAUNCH = 0,
             AI_DAMAGE_EVENT = 1,
+            AI_PIN_EVENT,
             TOTAL_EVENTS
         }
 
