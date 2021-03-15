@@ -8,6 +8,9 @@ namespace Hadal.Usables
     {
         [SerializeField] private UsableLauncherData data;
         public virtual UsableLauncherData Data { get => data; set => data = value; }
+
+        /// <summary> For display usage of utility name. </summary>
+        public string UtilityName;
         
         /// <summary> Event is called when <see cref="Use"/> is called succesfully. Can be used to cue sfx or animations. </summary>
         public virtual event Action<UsableLauncherObject> OnFire;

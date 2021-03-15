@@ -65,6 +65,9 @@ namespace Hadal.UI
         [SerializeField] UITrackerHandler trackerHandler;
         List<Transform> sonicDartTransforms;
 
+        [Header("Utilities Settings")]
+        [SerializeField] UIUtilitiesHandler utilitiesHandler;
+
         [Header("Pause Menu Settings")]
         [SerializeField] Menu pauseMenu;
         StandardUseableInput playerInput;
@@ -222,6 +225,13 @@ namespace Hadal.UI
             trackerHandler.Dump(projectileTransform);
         }
 
+        #endregion
+
+        #region Utilities
+        public void UpdateCurrentUtility(string utilityName)
+        {
+            utilitiesHandler.UpdateCurrentUtilities(utilityName);
+        }
         #endregion
 
         #region Pause menu
