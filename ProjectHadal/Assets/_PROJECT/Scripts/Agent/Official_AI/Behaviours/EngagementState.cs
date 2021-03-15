@@ -100,7 +100,7 @@ namespace Hadal.AI.States
                 isPinning = false;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
                 parent.TargetPlayer.SetParent(null);
-                $"Am I the same person as before? {parent.TargetPlayer.name} sounds familiar... maybe so maybe not may be may however be the month of may.".Msg();
+                $"No longer pinnning.".Error();
             }
         }
         
@@ -267,6 +267,7 @@ namespace Hadal.AI.States
 
         internal Transform ChooseClosestRandomPlayer()
         {
+            if (Brain == null) return null;
             List<Transform> targets = Brain.playerTransforms
                             .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.detectionRadius)
                             .ToList();

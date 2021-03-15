@@ -16,13 +16,14 @@ namespace Hadal.Locomotion
 
         public override void Initialise(Transform target)
         {
+            base.Enable();
             Enable();
             EnableBoost();
             this.target = target;
             Speed.Initialise();
             Accel.Initialise();
             Velocity.Initialise();
-            Input = new RawKeyboardInput();
+            Input = DefaultInputs;
             _lastPosition = target.position;
             _currentPosition = target.position;
             DoDebugEnabling(debugKey);
@@ -30,7 +31,6 @@ namespace Hadal.Locomotion
 
         public override void DoUpdate(in float deltaTime)
         {
-            $"Allow update for movement: {allowUpdate}".Msg();
             if (!allowUpdate) return;
             LerpCummulatedAcceleration(deltaTime);
             HandleAcceleration(deltaTime);
@@ -41,6 +41,21 @@ namespace Hadal.Locomotion
         }
 
         public void SetIsLocal(bool state) => _isLocal = state;
+
+        static readonly IMovementInput DefaultInputs = new RawKeyboardInput();
+        static readonly IMovementInput DisabledInputs = new EmptyKeyboardInput();
+
+        public override void Enable()
+        {
+            $"Enable is called".Warn();
+            Input = DefaultInputs;
+        }
+
+        public override void Disable()
+        {
+            $"Disable is called".Warn();
+            Input = DisabledInputs;
+        }
 
         #region Private Methods
 

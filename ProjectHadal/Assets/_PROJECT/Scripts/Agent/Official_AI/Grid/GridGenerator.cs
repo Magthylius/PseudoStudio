@@ -275,7 +275,6 @@ namespace Hadal.AI.GeneratorGrid
                                 valZ--;
 
                             //! Recreate dequeued node with configurations and assign to appropriate index in grid
-                            if (nodeQ.IsEmpty()) continue;
                             var node = nodeQ.Dequeue();
                             var position = ((new Vector3(xx, yy, zz) * cellSize) + gridCentre) + (Vector3.one * 10f);
                             node.Position = position;

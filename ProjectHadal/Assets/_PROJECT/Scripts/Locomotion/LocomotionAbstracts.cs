@@ -16,8 +16,8 @@ namespace Hadal.Locomotion
         public abstract float SqrSpeed { get; }
         public abstract void Initialise(Transform transform);
         public abstract void DoUpdate(in float deltaTime);
-        public void Enable() => allowUpdate = true;
-        public void Disable() => allowUpdate = false;
+        public virtual void Enable() => allowUpdate = true;
+        public virtual void Disable() => allowUpdate = false;
         public void ToggleEnablility() => allowUpdate = !allowUpdate;
         
         //Delete later
