@@ -1,22 +1,46 @@
 using UnityEngine;
 using Hadal.AI;
+using Magthylius.DataFunctions;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
     public class TrapBehaviour : ProjectileBehaviour
     {
+        [Header("AOE logic")]
         [SerializeField] private float radius = 70;
+        [SerializeField] private bool isSet;
         private Collider[] detectedObjects;
-
         public SelfDeactivationMode selfDeactivation;
 
-        [SerializeField] private bool isSet;
+        [Header("Explode Effect")]
+        [SerializeField] private GameObject particleEffect;
+        private Timer explodeDuration;
+        private bool isExploding;
+
+        #region Unity Lifecycle
+        protected override void Start()
+        {
+            base.Start();
+            explodeDuration = new Timer(1f);
+            explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
+        }
+
+        private void Update()
+        {
+            if(isExploding)
+            {
+                explodeDuration.Tick(Time.deltaTime);            
+            }     
+        }
 
         private void OnDisable()
         {
             isSet = false;
+            particleEffect.SetActive(false);
         }
+        #endregion
 
+        #region Trap Trigger Logic
         public void SubscribeModeEvent()
         {
             selfDeactivation = GetComponentInChildren<SelfDeactivationMode>();
@@ -39,10 +63,18 @@ namespace Hadal.Usables.Projectiles
                     col.GetComponent<AIBrain>().SetIsStunned(true); 
                 }                  
             }
-
-            PPhysics.OnPhysicsFinished();
+            isExploding = true;
+            particleEffect.SetActive(true);
             return true;   
         }
+
+        private void StopExplosion()
+        {
+            isExploding = false;
+            PPhysics.OnPhysicsFinished();
+        }
+        #endregion
+
         private void OnDrawGizmosSelected() // draw circle radius for debug
         {
             Gizmos.color = Color.white;
