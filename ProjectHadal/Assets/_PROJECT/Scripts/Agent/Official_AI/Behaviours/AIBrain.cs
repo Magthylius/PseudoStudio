@@ -58,6 +58,12 @@ namespace Hadal.AI
             InitialiseDebugStateSwitchTimer();
         }
 
+        private void Start()
+        {
+            destinations = new List<Transform>();
+            destinations = AIManager.Instance.GetPositions().ToList();
+        }
+
         private void Update()
         {
             if (!PhotonNetwork.IsMasterClient) return;
