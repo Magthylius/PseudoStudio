@@ -27,7 +27,7 @@ namespace Hadal.AI
             neManager = NetworkEventManager.Instance;
 
             patrolPositions = patrolPositionParent.GetComponentsInChildren<Transform>();
-            if (neManager.IsMasterClient) neManager.SpawnAI(spawnPosition.position, spawnPosition.rotation);
+            if (neManager.IsMasterClient) neManager.SpawnAIEssentials(spawnPosition.position, spawnPosition.rotation);
         }
 
         public Transform[] GetPositions() => patrolPositions;

@@ -234,7 +234,8 @@ namespace Hadal.AI.States
 
         internal void ChaseTargetPlayer()
         {
-            float speed = 2f;
+            if (TargetPlayer == null) return;
+            float speed = 5f;
             var target = TargetPlayer.position - (Brain.transform.forward * 5f);
             Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, speed * Time.deltaTime);
         }
