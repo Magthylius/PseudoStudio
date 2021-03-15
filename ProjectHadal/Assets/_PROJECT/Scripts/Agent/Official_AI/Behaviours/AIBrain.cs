@@ -10,6 +10,7 @@ using NaughtyAttributes;
 using Hadal.AI.GeneratorGrid;
 using Tenshi.UnitySoku;
 using Tenshi;
+using Photon.Pun;
 
 namespace Hadal.AI
 {
@@ -47,6 +48,8 @@ namespace Hadal.AI
 
         private void Awake()
         {
+            if (!PhotonNetwork.IsMasterClient) return;
+
             GridGenerator.GridLoadedEvent += InitialiseStates;
             isGridInitialised = false;
             if (playerMask == default) playerMask = LayerMask.GetMask("LocalPlayer");
@@ -57,6 +60,8 @@ namespace Hadal.AI
 
         private void Update()
         {
+            if (!PhotonNetwork.IsMasterClient) return;
+
             HandlePseudoStart();
             stateMachine?.MachineTick();
         }

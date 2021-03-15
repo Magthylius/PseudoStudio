@@ -249,7 +249,7 @@ namespace Hadal.Networking
 
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
-            //MasterClientSwitchedEvent.Invoke(newMasterClient);
+            if (MasterClientSwitchedEvent != null) MasterClientSwitchedEvent.Invoke(newMasterClient);
         } 
         #endregion
 
@@ -393,6 +393,8 @@ namespace Hadal.Networking
                 {
                     SpawnPlayerManager();
                 }
+
+                SpawnAIEssentials();
             }
         }
 
@@ -400,13 +402,19 @@ namespace Hadal.Networking
         {
             PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
         }
+
+        public void SpawnAIEssentials()
+        {
+            PhotonNetwork.Instantiate(PathManager.AIEssentialsPrefabPath, Vector3.zero, Quaternion.identity);
+        }
         #endregion
 
         #region Accessors
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
         public Player LocalPlayer => PhotonNetwork.LocalPlayer;
         public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;
-        public bool isConnected => PhotonNetwork.IsConnected;
+        public bool IsConnected => PhotonNetwork.IsConnected;
+        public bool IsMasterClient => PhotonNetwork.IsMasterClient;
         #endregion
     }
 }

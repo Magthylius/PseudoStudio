@@ -49,6 +49,8 @@ GameObject:
   - component: {fileID: 6556157035893970497}
   - component: {fileID: 6556157035893970559}
   - component: {fileID: 6310332050569391251}
+  - component: {fileID: 1310706807}
+  - component: {fileID: 1310706808}
   m_Layer: 14
   m_Name: '#AI'
   m_TagString: Untagged
@@ -112,7 +114,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   playerTransforms: []
-  destinationChangeTimer: 5
+  destinationChangeTimer: 1
   idleSpeed: 25
   detectionRadius: 1000
   wallDetectionRadius: 100
@@ -229,8 +231,66 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 45.24568, y: 39.748585, z: 150.3671}
-  m_Center: {x: -0.22652435, y: -1.1313457, z: -14.025299}
+  m_Size: {x: 45.24568, y: 39.748585, z: 173.00763}
+  m_Center: {x: -0.22652435, y: -1.1313457, z: -70.06033}
+--- !u!114 &1310706807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6556157035893970500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useCustomTransform: 0
+  customTrans: {fileID: 0}
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 2
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 0
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 2
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
+--- !u!114 &1310706808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6556157035893970500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 1310706807}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &1723724553450944948
 PrefabInstance:
   m_ObjectHideFlags: 0
