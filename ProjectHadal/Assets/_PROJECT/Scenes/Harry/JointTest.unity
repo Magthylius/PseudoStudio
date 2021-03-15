@@ -2258,6 +2258,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4730406684650028}
+  - component: {fileID: 1634154032717587}
   m_Layer: 0
   m_Name: BSpine_2
   m_TagString: Untagged
@@ -2265,6 +2266,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &1634154032717587
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634154032717586}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Center: {x: 0, y: 0, z: -0.3}
 --- !u!1 &1642793963923168
 GameObject:
   m_ObjectHideFlags: 0
@@ -2418,6 +2432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4041927150280118}
+  - component: {fileID: 1715219262984963}
   m_Layer: 0
   m_Name: BSpine_1
   m_TagString: Untagged
@@ -2425,6 +2440,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &1715219262984963
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715219262984962}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Center: {x: 0, y: 0, z: -0.3}
 --- !u!1 &1725285059502748
 GameObject:
   m_ObjectHideFlags: 0
@@ -5427,7 +5455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &8755077254166729927
 MonoBehaviour:
   m_ObjectHideFlags: 0
