@@ -103,17 +103,23 @@ namespace Hadal.Networking
             }
         }
 
-        /// <summary>
-        /// Raise default event.
-        /// </summary>
-        /// <remarks>
-        /// Be sure that event code needed is in the enumeration.
-        /// </remarks>
+        /// <summary>Raise default event.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
         /// <param name="eventCode">Event code defined in enum to call events.</param>
         /// <param name="dataContent">Custom data object to pass through events.</param>
         public void RaiseEvent(ByteEvents eventCode, object dataContent)
         {
             PhotonNetwork.RaiseEvent((byte)eventCode, dataContent, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+        }
+
+        /// <summary>Raise event, with options.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
+        /// <param name="eventCode">Event code defined in enum to call events.</param>
+        /// <param name="dataContent">Custom data object to pass through events.</param>
+        /// <param name="raiseEventOptions">Raise event options to define.</param>
+        public void RaiseEvent(ByteEvents eventCode, object dataContent, RaiseEventOptions raiseEventOptions)
+        {
+            PhotonNetwork.RaiseEvent((byte)eventCode, dataContent, raiseEventOptions, SendOptions.SendUnreliable);
         }
 
         void InvokeRecievedEvents(EventData eventObject)
