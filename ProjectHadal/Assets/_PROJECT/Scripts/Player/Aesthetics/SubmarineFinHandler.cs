@@ -30,7 +30,7 @@ namespace Hadal.Player.Aesthetics
             leftFin.SetTweenSpeed(tweenSpeed);
             rightFin.SetTweenSpeed(tweenSpeed);
 
-            sl_MovementVec = DebugManager.Instance.CreateScreenLogger();
+            //sl_MovementVec = DebugManager.Instance.CreateScreenLogger();
         }
 
         void Update()
@@ -38,7 +38,7 @@ namespace Hadal.Player.Aesthetics
             Vector3 movementVec = new Vector3(moveInput.HorizontalAxis, moveInput.HoverAxis, moveInput.VerticalAxis);
             UpdateFins(movementVec.normalized);
 
-            DebugManager.Instance.SLog(sl_MovementVec, "Movement", movementVec.normalized);
+            //DebugManager.Instance.SLog(sl_MovementVec, "Movement", movementVec.normalized);
         }
 
         void UpdateFins(Vector3 movement)
