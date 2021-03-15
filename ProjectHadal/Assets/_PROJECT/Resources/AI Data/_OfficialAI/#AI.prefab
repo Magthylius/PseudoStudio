@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4051509890257475117}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -51.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1180329186606358111}
@@ -112,8 +112,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   playerTransforms: []
-  destinationChangeTimer: 1.5
-  idleSpeed: 2
+  destinationChangeTimer: 5
+  idleSpeed: 25
   detectionRadius: 1000
   wallDetectionRadius: 100
   pinSpeed: 10
