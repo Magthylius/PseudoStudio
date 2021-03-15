@@ -5,7 +5,7 @@ namespace Hadal.Usables.Projectiles
 {
     public class TrapBehaviour : ProjectileBehaviour
     {
-        private float radius = 30;
+        [SerializeField] private float radius = 100;
         private Collider[] detectedObjects;
 
         public SelfDeactivationMode selfDeactivation;
