@@ -155,12 +155,8 @@ namespace Hadal.Networking
             }
         }
 
-        /// <summary>
-        /// Attach invoked functions to listen to events as specified.
-        /// </summary>
-        /// <remarks>
-        /// Be sure that event code needed is in the enumeration.
-        /// </remarks>
+        /// <summary>Attach invoked functions to listen to events as specified.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
         /// <param name="eventCode">Event code defined in enum to call events.</param>
         /// <param name="action">Attached listener function.</param>
         public void AddListener(ByteEvents eventCode, Action<EventData> action)
@@ -174,6 +170,24 @@ namespace Hadal.Networking
             }
 
             Debug.LogWarning(eventCode.ToString() + " is not found, listener unattached.");
+        }
+
+        /// <summary>Remove attached functions from listener.</summary>
+        /// <param name="eventCode">Event code defined in enum to call events.</param>
+        /// <param name="action">Target remove listener function.</param>
+        public void RemoveListener(ByteEvents eventCode, Action<EventData> action)
+        {
+            if (recieverDict.ContainsKey(eventCode))
+            {
+                if (recieverDict[eventCode] != null)
+                {
+                    recieverDict[eventCode] -= action;
+                    recieverDict.Remove(eventCode);
+                    return;
+                }
+            }
+
+            Debug.LogWarning(eventCode.ToString() + " is not found, unable to remove listener.");
         }
         #endregion
 
