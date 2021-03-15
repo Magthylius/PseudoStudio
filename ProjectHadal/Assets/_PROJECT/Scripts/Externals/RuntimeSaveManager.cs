@@ -1,5 +1,6 @@
 using Tenshi.SaveHigan;
 using UnityEngine;
+using Tenshi.UnitySoku;
 
 namespace Hadal
 {

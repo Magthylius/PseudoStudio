@@ -30,19 +30,30 @@ namespace Hadal.AIComponents
             players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
             Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
 
-            //! Subcribes damage player event
+            //! Subcribes player events
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
+            Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
             NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
         }
 
         private void OnDestroy()
         {
-            //! Unsubscribe damage player event
+            //! Unsubscribe player events
             AIBrain.DamagePlayerEvent -= Send_DamagePlayer;
+            Brain.FreezePlayerMovementEvent -= HandlePlayerMovementFreeze;
         }
 
         private void Send_DamagePlayer(Transform player, AIDamageType type)
         {
+            int damage = type switch
+            {
+                AIDamageType.Pin => pinDamage,
+                AIDamageType.Tail => tailWhipDamage,
+                _ => 0
+            };
+            player.GetComponentInChildren<IDamageable>().TakeDamage(damage);
+
+            /*
             //! compute data
             int targetViewID = GetViewIDFromTransform(player);
             int damage = type switch
@@ -55,6 +66,7 @@ namespace Hadal.AIComponents
             //! raise event with data
             object[] data = { targetViewID, damage };
             NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, data);
+            */
         }
         
         /// <summary> Damages the chosen player</summary>
@@ -72,6 +84,21 @@ namespace Hadal.AIComponents
                 .First()
                 .GetComponent<IDamageable>()
                 .TakeDamage(damage);
+        }
+
+        private void HandlePlayerMovementFreeze(Transform player, bool shouldFreeze)
+        {
+            var mover = player.GetComponent<PlayerController>().GetInfo.Mover;
+            if (shouldFreeze)
+            {
+                mover.Disable();
+                $"Disable movement".Msg();
+            }
+            else
+            {
+                mover.Enable();
+                $"Enable movement".Msg();
+            }
         }
 
         public int GetViewIDFromTransform(Transform trans)

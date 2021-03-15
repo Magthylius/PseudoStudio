@@ -30,7 +30,10 @@ namespace Hadal.AI.AStarPathfinding
             GridGenerator.GridLoadedEvent -= SetGrid;
         }
 
-        public void SetGrid(Grid grid) => this.grid = grid;
+        public void SetGrid(Grid grid)
+        {
+            this.grid = grid;
+        }
 
         public Stack<Node> Find(Vector3 from, Vector3 to)
         {
@@ -145,7 +148,7 @@ namespace Hadal.AI.AStarPathfinding
                 closed.Add(current);
                 neighbours = GetNeighbours(current);
 
-                await Task.Run(async () =>
+                await Task.Run(() =>
                 {
                     //await 1.MsgAsync();
                     foreach (Node n in neighbours)
@@ -182,7 +185,7 @@ namespace Hadal.AI.AStarPathfinding
 
             #region Local Methods
 
-            bool NodeIsNeverEvaluated(Node n) => !closed.Contains(n) && !open.Contains(n);
+            // bool NodeIsNeverEvaluated(Node n) => !closed.Contains(n) && !open.Contains(n);
 
             #endregion
         }
@@ -294,6 +297,7 @@ namespace Hadal.AI.AStarPathfinding
                     return;
                 }
             }, () => shouldBreak);
+            if (foundNode == null) $"Found position {nName}: not found!".Msg();
             return foundNode;
         }
     }

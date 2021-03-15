@@ -511,90 +511,39 @@ namespace Hadal.AI.GeneratorGrid
             int totalNodes = grid.Get.Length;
             // totalJobCount = grid.Get.Length;
             // jobCompletionCount = 0;
-            Stopwatch checkOWatch;
-            long cummulativeMS = 0;
-            long averageMSPerNode = 0L;
-            long estimateMSCompletionTime = 0;
+            int batchCount = 100;
+            // Stopwatch checkOWatch;
+            // long cummulativeMS = 0;
+            // long averageMSPerNode = 0L;
+            // long estimateMSCompletionTime = 0;
 
             await grid.LoopAs1DArray_XNodesPerIterationAsync(async (nodes) =>
             {
-                checkOWatch = Stopwatch.StartNew();
+                // checkOWatch = Stopwatch.StartNew();
                 
                 int c = -1;
                 while (++c < nodes.Length)
                     await HandleNodesToObstacleComparison(nodes[c], 100f * (curI++ / totalNodes.AsFloat()));
                 
-                checkOWatch.Stop();
+                // checkOWatch.Stop();
 
-                //! Calculate average & completion time
-                cummulativeMS += checkOWatch.ElapsedMilliseconds;
-                averageMSPerNode = cummulativeMS / (curI - 1);
-                estimateMSCompletionTime = totalNodes * averageMSPerNode.AsInt();
-                $"Average MS Per Node: {averageMSPerNode}".Msg();
+                // //! Calculate average & completion time
+                // cummulativeMS += checkOWatch.ElapsedMilliseconds;
+                // averageMSPerNode = cummulativeMS / (curI - 1);
+                // estimateMSCompletionTime = totalNodes * averageMSPerNode.AsInt();
+                // $"Average MS Per Node: {averageMSPerNode}".Msg();
 
-                //! COnvert completion time into days hours minutes seconds
-                int seconds = (estimateMSCompletionTime / 1_000).AsInt() % 60;
-                int minutes = (estimateMSCompletionTime / 60_000).AsInt() % 60;
-                int hours = (estimateMSCompletionTime / 3_600_000).AsInt() % 24;
-                int days = (estimateMSCompletionTime / 86_400_000).AsInt();
-                if (days < 0) days = 0;
-                $"Estimate Completion Time: {days} days, {hours} hours, {minutes} minutes & {seconds} seconds.".Msg();
+                // //! COnvert completion time into days hours minutes seconds
+                // int seconds = (estimateMSCompletionTime / 1_000).AsInt() % 60;
+                // int minutes = (estimateMSCompletionTime / 60_000).AsInt() % 60;
+                // int hours = (estimateMSCompletionTime / 3_600_000).AsInt() % 24;
+                // int days = (estimateMSCompletionTime / 86_400_000).AsInt();
+                // if (days < 0) days = 0;
+                // $"Estimate Completion Time: {days} days, {hours} hours, {minutes} minutes & {seconds} seconds.".Msg();
 
-                checkOWatch = null;
+                // checkOWatch = null;
 
-            }, token.Token, 50);
-
-            #region Temp
-            // await Task.Run(async () =>
-            // {
-            //     for (int x = 0; x < grid.Get.GetLength(0); x++)
-            //     {
-            //         for (int y = 0; y < grid.Get.GetLength(1); y++)
-            //         {
-            //             for (int z = 0; z < grid.Get.GetLength(2); z++)
-            //             {
-            //                 Node node = grid.GetNodeAt(new Vector3Int(x, y, z));
-
-            //                 await "Checking Obstacles...".MsgAsync();
-            //                 token?.Token.ThrowIfCancellationRequested();
-
-            //                 Bounds b = node.Bounds;
-            //                 if (obstacleInfos.IsNullOrEmpty())
-            //                     return;
-
-            //                 int length = obstacleInfos.Length;
-            //                 bool shouldBreak = false;
-            //                 for (int j = 0; j < length; j++)
-            //                 {
-            //                     var col = obstacleInfos[j];
-            //                     if (col.IsNull())
-            //                         continue;
-
-            //                     List<Bounds> meshBounds = new List<Bounds>(col.VertexBounds);
-            //                     foreach (var m in meshBounds)
-            //                     {
-            //                         if (b.Intersects(m))
-            //                         {
-            //                             if (node.HasObstacle) return;
-            //                             node.HasObstacle = true;
-            //                             //await UpdateObstacleCheckLoadingBar(meshBounds.Count);
-
-            //                             shouldBreak = true;
-            //                             break;
-            //                         }
-            //                     }
-            //                     meshBounds.Clear();
-            //                     if (shouldBreak)
-            //                         break;
-            //                 }
-            //             }
-            //         }
-            //     }
-            // });
-
-            #endregion
-
-            // grid.LoopNode(node => await DoSomething(node));
+            }, token.Token, batchCount);
 
             obstacleInfos = new ObstacleInfo[obstacleInfos.Length];
         }

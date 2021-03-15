@@ -39,6 +39,8 @@ namespace Hadal.AI
         [Foldout("Aggressive"), SerializeField] public LayerMask obstacleMask;
         public Func<Transform, int> GetViewIDMethod;
         public Func<Transform, int, bool> ViewIDBelongsToTransMethod;
+        public Action<Transform, bool> FreezePlayerMovementEvent;
+        public void InvokeFreezePlayerMovementEvent(Transform player, bool shouldFreeze) => FreezePlayerMovementEvent?.Invoke(player, shouldFreeze);
 
         [Header("Stunned Setting")]
         IState stunnedState;
