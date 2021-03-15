@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6971419611592527743}
   - component: {fileID: 5261640096164849296}
   - component: {fileID: 5713626374565208372}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: ProjectileData
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,6 @@ MonoBehaviour:
   endTime: 10
   armsProjectile: 0
   skipsOnContact: 0
-  attachTime: 0
 --- !u!114 &5713626374565208372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,6 +105,7 @@ MonoBehaviour:
   endTime: 2
   armsProjectile: 0
   skipsOnContact: 0
+  attachTimer: 0
   destroyObject: 0
 --- !u!1 &7351274592407701336
 GameObject:
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 3469789630877505846}
   - component: {fileID: 6884608929667329289}
   - component: {fileID: 4272147183127872304}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Harpoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 1110699958241314260}
   - component: {fileID: 8030627732480775998}
   - component: {fileID: 2719734465116126224}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
