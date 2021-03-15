@@ -22,7 +22,7 @@ namespace Hadal.AI
         public List<Transform> destinations;
         public List<Transform> playerTransforms;
         bool isGridInitialised = false;
-        Rigidbody rb;
+        internal Rigidbody rb;
 
         [Header("Idle Setting")]
         IState idleState;

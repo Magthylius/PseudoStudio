@@ -1,5 +1,6 @@
 ﻿using Hadal.Inputs;
 using Tenshi;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 //Created by Jet
@@ -29,6 +30,7 @@ namespace Hadal.Locomotion
 
         public override void DoUpdate(in float deltaTime)
         {
+            $"Allow update for movement: {allowUpdate}".Msg();
             if (!allowUpdate) return;
             LerpCummulatedAcceleration(deltaTime);
             HandleAcceleration(deltaTime);

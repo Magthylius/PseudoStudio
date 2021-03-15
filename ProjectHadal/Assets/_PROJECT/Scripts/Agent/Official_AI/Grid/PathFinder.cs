@@ -289,7 +289,7 @@ namespace Hadal.AI.AStarPathfinding
             bool shouldBreak = false;
             grid.LoopNode_Breakable(node =>
             {
-                if (node.Bounds.Contains(position) && !node.HasObstacle)
+                if (node.Bounds.Contains(position) && (!node.HasObstacle || nName.Equals("start")))
                 {
                     $"Found position {nName}: {position}".Msg();
                     foundNode = node;
@@ -297,7 +297,7 @@ namespace Hadal.AI.AStarPathfinding
                     return;
                 }
             }, () => shouldBreak);
-            if (foundNode == null) $"Found position {nName}: not found!".Msg();
+
             return foundNode;
         }
     }

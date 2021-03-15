@@ -37,7 +37,7 @@ namespace Hadal.AI.States
         }
         public async void OnStateStart()
         {
-            CancelPath();
+            ResetPath();
             ResetNewDestinationTimer();
             await SelectRandomPathAsync();
         }
@@ -48,7 +48,7 @@ namespace Hadal.AI.States
         }
         public void OnStateEnd()
         {
-            CancelPath();
+            ResetPath();
             ResetNewDestinationTimer();
             isFindingPath = false;
         }
@@ -91,7 +91,7 @@ namespace Hadal.AI.States
 
         }
 
-        void CancelPath()
+        void ResetPath()
         {
             pathQueue.Clear();
             isFirstPath = false;
@@ -113,7 +113,7 @@ namespace Hadal.AI.States
             if (newDestTimer < 0.0f)
             {
                 ResetNewDestinationTimer();
-                CancelPath();
+                ResetPath();
                 bool pathExists = await SelectRandomPathAsync();
                 if (!pathExists) newDestTimer = -1f;
             }

@@ -11,6 +11,7 @@ using Hadal.Utility;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
 using Debug = UnityEngine.Debug;
+using Photon.Realtime;
 
 namespace Hadal.AI.States
 {
@@ -52,71 +53,98 @@ namespace Hadal.AI.States
         {
             Collider[] results;
             results = Physics.OverlapSphere(b.transform.position, b.wallDetectionRadius, b.obstacleMask);
-            
+
             var distance = Mathf.Infinity;
+            Transform closestTrans = null;
             foreach (var points in results)
             {
                 var diff = (b.transform.position - points.transform.position).magnitude;
                 if (diff < distance)
                 {
+                    closestTrans = points.transform;
                     closestWall = points.transform.position;
                     distance = diff;
                 }
             }
+
+            var dir = (closestTrans.position - b.transform.position).normalized;
+            if (Physics.Raycast(b.transform.position, dir, out var hit, Mathf.Infinity, b.obstacleMask))
+            {
+                closestWall = hit.point;
+            }
         }
-        
+
         /// <summary>Move to the closest wall found and damage player</summary>
         void MoveToClosestWall()
         {
-            SphereObstacleDetection(); 
+            SphereObstacleDetection();
+            //b.transform.LookAt(closestWall);
+            // b.transform.position = Vector3.Lerp(b.transform.position, closestWall, b.pinSpeed * Time.deltaTime);
+            // Vector3 tempVect = (closestWall - b.transform.position);
+
+            Vector3 velo = closestWall - b.transform.position;
+            velo = velo.normalized;
+            velo *= (b.pinSpeed);
+            b.rb.AddRelativeForce(velo, ForceMode.VelocityChange);
             b.transform.LookAt(closestWall);
-            b.transform.position = Vector3.Lerp(b.transform.position, closestWall, b.pinSpeed * Time.deltaTime);
-            Vector3 tempVect = (closestWall - b.transform.position);
-            
             // b.transform.position = closestWall;
             // tempVect = tempVect * b.pinSpeed * Time.deltaTime;
             // b.rb.MovePosition(b.transform.position + tempVect);
-            
+
             // tempVect *= 100000000000f;
             // b.rb.AddForce(tempVect, ForceMode.Force);
             // b.rb.AddForceAtPosition(tempVect, b.transform.position, ForceMode.Force);
 
-            if ((closestWall - b.transform.position).sqrMagnitude < (50f * 50f))
+            if (Vector3.Distance(closestWall, b.transform.position) < 10f)
             {
                 isPinning = false;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
+                parent.TargetPlayer.SetParent(null);
                 $"Am I the same person as before? {parent.TargetPlayer.name} sounds familiar... maybe so maybe not may be may however be the month of may.".Msg();
             }
         }
+        
         /// <summary>Pin the target player to the wall</summary>
-        void PinTargetPlayer() 
+        void PinTargetPlayer()
         {
             //! Check if target player is in range && far from target wall
-            if(parent.TargetPlayerIsInRange() && canPin)
+            if (parent.TargetPlayerIsInRange() && canPin)
             {
                 b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Pin);
                 pinTimer.Restart();
                 canPin = false;
                 isPinning = true;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
-                
-                SphereObstacleDetection(); 
+
+                SphereObstacleDetection();
                 // b.InvokeForceSlamPlayerEvent(parent.TargetPlayer, closestWall);
+
+                var p = parent.TargetPlayer;
+                p.transform.position = b.transform.position + (b.transform.forward * 20f);
+                p.SetParent(b.transform);
             }
-            
+
             if (isPinning)
             {
-                MoveToClosestWall(); //! Move to closest wall
-                if(Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f)) < 0.5f)
-                {
-                    parent.TargetPlayer.position = b.transform.position + (b.transform.forward * 20f);
-                    
-                    int viewID = b.GetViewIDMethod(parent.TargetPlayer);
-                    Vector3 setPosition = b.transform.position + (b.transform.forward * 20f);
+                b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
+                MoveToClosestWall();
+                // if (Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f)) < 0.5f)
+                // {
+                //     var t = parent.TargetPlayer;
+                //     Vector3 velo = closestWall - b.transform.position;
+                //     velo = velo.normalized;
+                //     velo *= (b.pinSpeed * b.pinSpeed);
+                //     t.GetComponent<Rigidbody>().AddRelativeForce(velo, ForceMode.VelocityChange);
 
-                    object[] data = { isPinning, viewID, setPosition };
-                    NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_PIN_EVENT, data);
-                }
+                //     int viewID = b.GetViewIDMethod(parent.TargetPlayer);
+                //     Vector3 setPosition = b.transform.position + (b.transform.forward * 20f);
+
+                //     object[] data = { isPinning, viewID, setPosition };
+                //     RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                //     //NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_PIN_EVENT, data, options);
+                // }
+
+               
             }
         }
 
@@ -124,7 +152,7 @@ namespace Hadal.AI.States
         {
             object[] data = eventData.CustomData.AsObjArray();
             if (data == null) return;
-            
+
             bool shouldPin = data[0].AsBool();
             int viewID = data[1].AsInt();
             Vector3 setPosition = data[2].AsVector3();
@@ -138,7 +166,7 @@ namespace Hadal.AI.States
             //!do i test now? the transform view classic not working right? do we wanna use the transform view only?
             //! it is odd, because transform view classic should work :thinking: .
         }
-        
+
         public Func<bool> ShouldTerminate() => () => false;
     }
     public class AmbushSubState : IState
@@ -258,14 +286,14 @@ namespace Hadal.AI.States
         internal bool TargetPlayerIsInRange()
         {
             if (TargetPlayer == null) return false;
-            
+
             float dist = Vector3.Distance(Brain.transform.position, TargetPlayer.position);
             if (dist < Brain.detectionRadius)
             {
                 //! Detect if the player is not behind any obstacle.
                 Vector3 dir = (TargetPlayer.position - Brain.transform.position).normalized;
-                                    //TODO: Change the transform to head transform later on
-                
+                //TODO: Change the transform to head transform later on
+
                 Ray ray = new Ray();
                 ray.origin = Brain.transform.position;
                 if (dist == 0)
@@ -279,7 +307,7 @@ namespace Hadal.AI.States
 
                 Debug.DrawLine(ray.origin, ray.direction * 100000f, Color.red);
                 bool hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, Brain.playerMask, QueryTriggerInteraction.Collide);
-                if(hit)
+                if (hit)
                 {
                     if (hitInfo.transform.gameObject.layer == Brain.playerMask.ToLayer())
                     {

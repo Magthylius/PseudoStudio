@@ -49,14 +49,12 @@ namespace Hadal.Player.Behaviours
             LayerMask ObstacleLayer = LayerMask.NameToLayer(obstacleLayer);
             if(collision.gameObject.layer == ObstacleLayer.value)
             {
-                Debug.Log("Disabled Dash");
                 _playerController.GetInfo.Mover.DisableBoost();
             }
         }
 
         internal void CollisionExit(Collision collision)
         {
-            Debug.Log("Enabled Dash");
             _playerController.GetInfo.Mover.EnableBoost();
         }
 

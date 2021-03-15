@@ -162,7 +162,7 @@ namespace Hadal.AI.GeneratorGrid
             List<List<SerialisableNode>> listOfNodesToSave = new List<List<SerialisableNode>>();
 
             //Amount of node count per partition(list)
-            int maxPartitionSize = 1000000;
+            int maxPartitionSize = 500000;
 
             //total size of the grid
             int totalSize = x * y * z;
@@ -275,6 +275,7 @@ namespace Hadal.AI.GeneratorGrid
                                 valZ--;
 
                             //! Recreate dequeued node with configurations and assign to appropriate index in grid
+                            if (nodeQ.IsEmpty()) continue;
                             var node = nodeQ.Dequeue();
                             var position = ((new Vector3(xx, yy, zz) * cellSize) + gridCentre) + (Vector3.one * 10f);
                             node.Position = position;
@@ -418,7 +419,7 @@ namespace Hadal.AI.GeneratorGrid
         //     NativeNode HandleNodesToObstacleComparison(NativeNode node)
         //     {
         //         if (node.IsNull) return node;
-                
+
         //         if (ObstacleInfos.Length == 0)
         //             return node;
 
@@ -520,11 +521,11 @@ namespace Hadal.AI.GeneratorGrid
             await grid.LoopAs1DArray_XNodesPerIterationAsync(async (nodes) =>
             {
                 // checkOWatch = Stopwatch.StartNew();
-                
+
                 int c = -1;
                 while (++c < nodes.Length)
                     await HandleNodesToObstacleComparison(nodes[c], 100f * (curI++ / totalNodes.AsFloat()));
-                
+
                 // checkOWatch.Stop();
 
                 // //! Calculate average & completion time
@@ -588,20 +589,23 @@ namespace Hadal.AI.GeneratorGrid
 
         #endregion
 
+        [SerializeField] Vector3Int debug_gridDimensions;
+        [SerializeField] long debug_savedFileSizeInBytes;
+
         [Button(nameof(DebugNodeSize))]
         private async void DebugNodeSize()
         {
             List<SerialisableNode> nodes = new List<SerialisableNode>();
             string tempKey = "debug_node_size_1";
-            int spawnCount = 3226080;
-            long actualFileSize = 48339354;
+            int spawnCount = 3226080; spawnCount = debug_gridDimensions.x * debug_gridDimensions.y * debug_gridDimensions.z;
+            long actualFileSize = 48339354; actualFileSize = debug_savedFileSizeInBytes;
             int i = -1;
             await Task.Run(() =>
             {
                 while (++i < spawnCount)
                     nodes.Add(new SerialisableNode());
             });
-            
+
             SaveManager.Save(data: nodes, pathKey: tempKey);
             if (SaveManager.IsFileKeyExistent(tempKey))
             {
@@ -614,7 +618,7 @@ namespace Hadal.AI.GeneratorGrid
                 $"Save accuracy of {Decimal.Multiply(100, percent)}% ({actualFileSize}/{size}).".Msg();
                 $"Missing size (in bytes): {sizeOffset}.".Msg();
                 $"Missing nodes: at least {Math.Floor(Convert.ToDecimal(sizeOffset) / oneNodeSize)}.".Msg();
-                $"---------------------------------Diagnosis Report---------------------------------".Msg();
+                $"----------------------------------Diagnosis Report---------------------------------".Msg();
                 SaveManager.DeleteFileOrDirectory(tempKey);
             }
             else $"File Key: ({tempKey}) does not exist.".Msg();

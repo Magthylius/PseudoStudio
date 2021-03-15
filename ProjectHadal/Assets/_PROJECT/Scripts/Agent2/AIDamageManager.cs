@@ -10,6 +10,8 @@ using Photon.Pun;
 using NaughtyAttributes;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using Photon.Realtime;
+using System;
 
 namespace Hadal.AIComponents
 {
@@ -47,15 +49,6 @@ namespace Hadal.AIComponents
 
         private void Send_DamagePlayer(Transform player, AIDamageType type)
         {
-            int damage = type switch
-            {
-                AIDamageType.Pin => pinDamage,
-                AIDamageType.Tail => tailWhipDamage,
-                _ => 0
-            };
-            player.GetComponentInChildren<IDamageable>().TakeDamage(damage);
-
-            /*
             //! compute data
             int targetViewID = GetViewIDFromTransform(player);
             int damage = type switch
@@ -67,10 +60,10 @@ namespace Hadal.AIComponents
 
             //! raise event with data
             object[] data = { targetViewID, damage };
-            NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, data);
-            */
+            RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+            NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, data, options);
         }
-        
+
         /// <summary> Damages the chosen player</summary>
         /// <param name="player">Target player</param>
         /// <param name="type">The damage type</param>
@@ -80,25 +73,28 @@ namespace Hadal.AIComponents
             if (data == null) return;
             int viewID = data[0].AsInt();
             int damage = data[1].AsInt();
-            
+
+            if (players.IsNullOrEmpty())
+                players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
+
             players
                 .Where(i => i.GetInfo.PhotonInfo.PView.ViewID == viewID)
                 .First()
-                .GetComponent<IDamageable>()
+                .GetComponentInChildren<IDamageable>()
                 .TakeDamage(damage);
         }
 
         private void HandlePlayerMovementFreeze(Transform player, bool shouldFreeze)
         {
-            // var p = player.GetComponent<PlayerController>();
-            // if (shouldFreeze)
-            // {
-            //     p.Disable();
-            // }
-            // else
-            // {
-            //     p.Enable();
-            // }
+            var p = player.GetComponent<PlayerController>().Mover;
+            if (shouldFreeze)
+            {
+                p.Disable();
+            }
+            else
+            {
+                p.Enable();
+            }
         }
 
         private void HandlePlayerSlamEvent(Transform player, Vector3 destination)
@@ -110,7 +106,7 @@ namespace Hadal.AIComponents
 
         public int GetViewIDFromTransform(Transform trans)
             => trans.GetComponentInChildren<PlayerController>().GetInfo.PhotonInfo.PView.ViewID;
-        
+
         public bool ViewIDBelongsToTransform(int id, Transform trans)
             => GetViewIDFromTransform(trans) == id;
     }
