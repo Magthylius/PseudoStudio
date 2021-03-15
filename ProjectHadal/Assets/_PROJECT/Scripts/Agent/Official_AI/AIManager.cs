@@ -9,6 +9,8 @@ namespace Hadal.AI
     {
         public static AIManager Instance;
 
+        NetworkEventManager neManager;
+
         public Transform patrolPositionParent;
         public Transform spawnPosition;
 
@@ -22,8 +24,10 @@ namespace Hadal.AI
 
         void Start()
         {
+            neManager = NetworkEventManager.Instance;
+
             patrolPositions = patrolPositionParent.GetComponentsInChildren<Transform>();
-            NetworkEventManager.Instance.SpawnAI(spawnPosition.position, spawnPosition.rotation);
+            if (neManager.IsMasterClient) neManager.SpawnAI(spawnPosition.position, spawnPosition.rotation);
         }
 
         public Transform[] GetPositions() => patrolPositions;
