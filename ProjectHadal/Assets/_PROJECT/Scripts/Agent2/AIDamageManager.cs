@@ -16,18 +16,23 @@ namespace Hadal.AIComponents
     public class AIDamageManager : MonoBehaviour
     {
         public AIBrain Brain { get; private set; }
-        public List<Transform> playerTransforms;
         [Header("Damage Values")]
         [Foldout("Damage Type"), SerializeField] int pinDamage;
         [Foldout("Damage Type"), SerializeField] int tailWhipDamage;
+        List<PlayerController> players;
 
         private void Awake()
         {
             Brain = GetComponent<AIBrain>();
+            Brain.GetViewIDMethod = (trans) => GetViewIDFromTransform(trans);
+            Brain.ViewIDBelongsToTransMethod = (trans, id) => ViewIDBelongsToTransform(id, trans);
+            // TODO: A better way to get playercontroller? maybe another script
+            players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
+            Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
 
             //! Subcribes damage player event
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
-            //NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
+            NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
         }
 
         private void OnDestroy()
@@ -36,18 +41,10 @@ namespace Hadal.AIComponents
             AIBrain.DamagePlayerEvent -= Send_DamagePlayer;
         }
 
-        private void Update()
-        {
-            if (playerTransforms.IsNullOrEmpty())
-            {
-                Brain.InjectPlayerTransforms(GetPlayers());
-            }
-        }
-
         private void Send_DamagePlayer(Transform player, AIDamageType type)
         {
             //! compute data
-            int targetViewID = player.GetComponentInChildren<PlayerController>().GetInfo.PhotonInfo.PView.ViewID;
+            int targetViewID = GetViewIDFromTransform(player);
             int damage = type switch
             {
                 AIDamageType.Pin => pinDamage,
@@ -57,7 +54,7 @@ namespace Hadal.AIComponents
 
             //! raise event with data
             object[] data = { targetViewID, damage };
-            //NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, data);
+            NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, data);
         }
         
         /// <summary> Damages the chosen player</summary>
@@ -67,24 +64,20 @@ namespace Hadal.AIComponents
         {
             object[] data = eventData.CustomData.AsObjArray();
             if (data == null) return;
-            //NetworkEventManager.Instance.Pla
+            int viewID = data[0].AsInt();
+            int damage = data[1].AsInt();
             
-            // NetworkEventManager.
-            // pDamagable.TakeDamage(damage);
+            players
+                .Where(i => i.GetInfo.PhotonInfo.PView.ViewID == viewID)
+                .First()
+                .GetComponent<IDamageable>()
+                .TakeDamage(damage);
         }
 
-        [Button("GetPlayers")]
-        /// <summary>Find players using their transform</summary>
-        List<Transform> GetPlayers()
-        {
-            var pT = new List<Transform>();
-            pT = FindObjectsOfType<PlayerController>()
-                           .Select(o => o.transform)
-                           .ToList();
-            $"Found {pT.Count} players".Msg();
-
-            playerTransforms = new List<Transform>(pT);
-            return pT;
-        }
+        public int GetViewIDFromTransform(Transform trans)
+            => trans.GetComponentInChildren<PlayerController>().GetInfo.PhotonInfo.PView.ViewID;
+        
+        public bool ViewIDBelongsToTransform(int id, Transform trans)
+            => GetViewIDFromTransform(trans) == id;
     }
 }

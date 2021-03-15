@@ -7,6 +7,8 @@ using Timer = Hadal.Utility.Timer;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.Utility;
+using Hadal.Networking;
+using ExitGames.Client.Photon;
 
 namespace Hadal.AI.States
 {
@@ -31,6 +33,7 @@ namespace Hadal.AI.States
             parent.Brain.AttachTimer(pinTimer);
             canPin = true;
             isPinning = false;
+            NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_PIN_EVENT, Receive_PinTargetPlayer);
         }
         public void OnStateStart()
         {
@@ -94,11 +97,32 @@ namespace Hadal.AI.States
                 MoveToClosestWall(); //! Move to closest wall
                 if(Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f)) < 0.05f)
                 {
-                    parent.TargetPlayer.position = b.transform.position + (b.transform.forward * 20f);
+                    // parent.TargetPlayer.position = b.transform.position + (b.transform.forward * 20f);
+                    int viewID = b.GetViewIDMethod(parent.TargetPlayer);
+                    Vector3 setPosition = b.transform.position + (b.transform.forward * 20f);
+
+                    object[] data = { isPinning, viewID, setPosition };
+                    NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_PIN_EVENT, data);
                 }
-                    
-                
             }
+        }
+
+        private void Receive_PinTargetPlayer(EventData eventData)
+        {
+            object[] data = eventData.CustomData.AsObjArray();
+            if (data == null) return;
+            
+            bool shouldPin = data[0].AsBool();
+            int viewID = data[1].AsInt();
+            Vector3 setPosition = data[2].AsVector3();
+
+            //TODO: we probably need to make an information class in the other assembly, damagemanager is doing everything at the moment
+            Transform t = b.playerTransforms.Where(p => b.ViewIDBelongsToTransMethod(p, viewID)).SingleOrDefault();
+            if (t == null) return;
+            t.position = setPosition;
+
+            //!do i test now? the transform view classic not working right? do we wanna use the transform view only?
+            //! it is odd, because transform view classic should work :thinking: .
         }
         
         public Func<bool> ShouldTerminate() => () => false;

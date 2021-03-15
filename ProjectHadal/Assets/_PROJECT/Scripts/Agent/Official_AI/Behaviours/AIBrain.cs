@@ -34,8 +34,11 @@ namespace Hadal.AI
         [Tooltip("Wall Detection Radius"), Foldout("Aggressive")] public float wallDetectionRadius;
         [Tooltip("Speed of Pin to Wall"), Foldout("Aggressive")] public int pinSpeed;
 
+        [Header("AI Aggressive Setting")]
         [Foldout("Aggressive"), SerializeField] public LayerMask playerMask;
         [Foldout("Aggressive"), SerializeField] public LayerMask obstacleMask;
+        public Func<Transform, int> GetViewIDMethod;
+        public Func<Transform, int, bool> ViewIDBelongsToTransMethod;
 
         [Header("Stunned Setting")]
         IState stunnedState;
@@ -48,8 +51,6 @@ namespace Hadal.AI
 
         private void Awake()
         {
-            if (!PhotonNetwork.IsMasterClient) return;
-
             GridGenerator.GridLoadedEvent += InitialiseStates;
             isGridInitialised = false;
             if (playerMask == default) playerMask = LayerMask.GetMask("LocalPlayer");
