@@ -90,12 +90,22 @@ namespace Hadal.Player.Behaviours
             Destroy(gameObject);
         }
 
+        public void Activate()
+        {
+            _isDisabled = false;
+            selfCamera.enabled = true;
+            
+            var l = selfCamera.GetComponent<AudioListener>();
+            if (l == null) selfCamera.gameObject.AddComponent<AudioListener>();
+        }
+
         public void Deactivate()
         {
-            //if (_pView.IsMine) return;
             _isDisabled = true;
             selfCamera.enabled = false;
-            selfCamera.GetComponent<AudioListener>().enabled = false;
+            
+            var l = selfCamera.GetComponent<AudioListener>();
+            if (l != null) Destroy(l);
         }
 
         public void Inject(PlayerController controller)

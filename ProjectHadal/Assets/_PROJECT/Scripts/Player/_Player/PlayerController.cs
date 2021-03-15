@@ -126,18 +126,26 @@ namespace Hadal.Player
 
         public void HandlePhotonView(bool isMine)
         {
+            gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
             if (isMine)
             {
-                gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
                 UIManager.Instance.InjectPlayer(pTrans, rotator, RotationInput);
                 UIManager.Instance.PauseMenuOpened += Disable;
                 UIManager.Instance.PauseMenuClosed += Enable;
+                Activate();
+                cameraController.Activate();
             }
             else
             {
                 print("Camera Deactivated");
                 Deactivate();
                 cameraController.Deactivate();
+                try
+                {
+                    UIManager.Instance.PauseMenuClosed -= Disable;
+                    UIManager.Instance.PauseMenuClosed -= Enable;
+                }
+                catch { }
             }
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -150,6 +158,11 @@ namespace Hadal.Player
             // PhotonNetwork.RemoveBufferedRPCs(_pView.ViewID, nameof(RPC_SetPlayerGraphics));
             // int randomIndex = UnityEngine.Random.Range(0, graphics.Length);
             // _pView.RPC(nameof(RPC_SetPlayerGraphics), RpcTarget.AllBuffered, randomIndex);
+        }
+
+        private void Activate()
+        {
+
         }
 
         private void Deactivate()

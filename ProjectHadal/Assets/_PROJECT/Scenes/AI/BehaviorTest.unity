@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 42610736}
   - component: {fileID: 42610735}
   - component: {fileID: 42610734}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 282348477}
   - component: {fileID: 282348476}
   - component: {fileID: 282348475}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -941,7 +941,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 207021226471900658, guid: 8a98fab7c6eb41243b2be5cf3c3b9fe0, type: 3}
       propertyPath: enableObstacleGridGizmo
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 207021226471900658, guid: 8a98fab7c6eb41243b2be5cf3c3b9fe0, type: 3}
       propertyPath: terrainRegions.Array.size
@@ -1226,7 +1226,7 @@ GameObject:
   - component: {fileID: 1134416460}
   - component: {fileID: 1134416459}
   - component: {fileID: 1134416458}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1321,7 +1321,7 @@ GameObject:
   - component: {fileID: 1157005306}
   - component: {fileID: 1157005305}
   - component: {fileID: 1157005304}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1518,6 +1518,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1310706808, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
+      propertyPath: viewIdField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4877694710611666416, guid: f801e4e99f9fa834289bb07141b83ea3, type: 3}
       propertyPath: pinDamage
       value: 10

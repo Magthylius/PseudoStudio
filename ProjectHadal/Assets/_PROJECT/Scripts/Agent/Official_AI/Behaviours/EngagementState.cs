@@ -6,9 +6,11 @@ using Tenshi.UnitySoku;
 using Timer = Hadal.Utility.Timer;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Hadal.Utility;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using Debug = UnityEngine.Debug;
 
 namespace Hadal.AI.States
 {
@@ -52,12 +54,10 @@ namespace Hadal.AI.States
         {
             Collider[] results;
             results = Physics.OverlapSphere(b.transform.position, b.wallDetectionRadius, b.obstacleMask);
-            $"Result count: {results.Length}".Msg();
             
             var distance = Mathf.Infinity;
             foreach (var points in results)
             {
-                $"Walls: {points}".Msg();
                 var diff = (b.transform.position - points.transform.position).magnitude;
                 if (diff < distance)
                 {
@@ -66,19 +66,19 @@ namespace Hadal.AI.States
                 }
             }
         }
+        
         /// <summary>Move to the closest wall found and damage player</summary>
         void MoveToClosestWall()
         {
             SphereObstacleDetection(); 
             b.transform.LookAt(closestWall);
-            Vector3 currentVector = (closestWall - b.transform.position).normalized;
-            parent.Brain.transform.position += currentVector * (b.pinSpeed * Time.deltaTime);
+            b.transform.position = Vector3.Lerp(b.transform.position, closestWall, b.pinSpeed * Time.deltaTime);
 
-            if ((closestWall - b.transform.position).magnitude < 50f)
+            if ((closestWall - b.transform.position).sqrMagnitude < (50f * 50f))
             {
                 isPinning = false;
-                b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Pin);
-                "No longer pinning".Msg();
+                b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
+                parent.TargetPlayer.GetComponent<BoxCollider>().enabled = true;
             }
         }
         /// <summary>Pin the target player to the wall</summary>
@@ -87,9 +87,12 @@ namespace Hadal.AI.States
             //! Check if target player is in range && far from target wall
             if(parent.TargetPlayerIsInRange() && canPin)
             {
+                b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Pin);
                 pinTimer.Restart();
                 canPin = false;
                 isPinning = true;
+                b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
+                $"Hi, my name is {parent.TargetPlayer.name} and i am going to be pinned onto a whiteboard... HELP".Msg();
             }
             
             if (isPinning)
@@ -192,6 +195,7 @@ namespace Hadal.AI.States
         public void OnStateStart()
         {
             bfightTimer = true;
+            subStateMachine.CurrentState.OnStateStart();
         }
         public void StateTick()
         {
@@ -228,7 +232,10 @@ namespace Hadal.AI.States
                             .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.detectionRadius)
                             .ToList();
             if (targets.IsNullOrEmpty())
+            {
+                $"No closest player found".Error();
                 return null;
+            }
             return targets.RandomElement();
         }
 

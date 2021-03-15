@@ -114,7 +114,8 @@ namespace Hadal.AI.States
             {
                 ResetNewDestinationTimer();
                 CancelPath();
-                await SelectRandomPathAsync();
+                bool pathExists = await SelectRandomPathAsync();
+                if (!pathExists) newDestTimer = -1f;
             }
         }
 
@@ -136,9 +137,9 @@ namespace Hadal.AI.States
             isFirstPath = true;
         }
 
-        async Task SelectRandomPathAsync()
+        async Task<bool> SelectRandomPathAsync()
         {
-            if (isFindingPath) return;
+            if (isFindingPath) return true;
             isFindingPath = true;
 
             var list = brain.destinations.Select(i => i.position).ToList();
@@ -147,18 +148,20 @@ namespace Hadal.AI.States
 
             prevDest = curDestination;
 
-
             Stack<Node> fullPath = await PathFinder.Instance.FindAsync(brain.transform.position, curDestination);
-            if (fullPath.IsNullOrEmpty()) return;
+            bool finish = false;
+            if (fullPath.IsNotEmpty())
+            {
+                pathQueue.Enqueue(brain.transform.position);
+                while (fullPath.IsNotEmpty())
+                    pathQueue.Enqueue(fullPath.Pop().Position);
+                pathQueue.Enqueue(curDestination);
 
-            pathQueue.Enqueue(brain.transform.position);
-            while (fullPath.IsNotEmpty())
-                pathQueue.Enqueue(fullPath.Pop().Position);
-            pathQueue.Enqueue(curDestination);
-
-
+                finish = true;
+                isFirstPath = true;
+            }
             isFindingPath = false;
-            isFirstPath = true;
+            return finish;
         }
 
         void ResetNewDestinationTimer() => newDestTimer = newDestTimeDelay;
