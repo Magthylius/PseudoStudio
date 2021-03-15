@@ -103,17 +103,41 @@ namespace Hadal.Networking
             }
         }
 
-        /// <summary>
-        /// Raise default event.
-        /// </summary>
-        /// <remarks>
-        /// Be sure that event code needed is in the enumeration.
-        /// </remarks>
+        /// <summary>Raise default event.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
         /// <param name="eventCode">Event code defined in enum to call events.</param>
         /// <param name="dataContent">Custom data object to pass through events.</param>
         public void RaiseEvent(ByteEvents eventCode, object dataContent)
         {
             PhotonNetwork.RaiseEvent((byte)eventCode, dataContent, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+        }
+        /// <summary>Raise event, with raise event options.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
+        /// <param name="eventCode">Event code defined in enum to call events.</param>
+        /// <param name="dataContent">Custom data object to pass through events.</param>
+        /// <param name="raiseEventOptions">Raise event options to define.</param>
+        public void RaiseEvent(ByteEvents eventCode, object dataContent, RaiseEventOptions raiseEventOptions)
+        {
+            PhotonNetwork.RaiseEvent((byte)eventCode, dataContent, raiseEventOptions, SendOptions.SendUnreliable);
+        }
+        /// <summary>Raise event, with send options.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
+        /// <param name="eventCode">Event code defined in enum to call events.</param>
+        /// <param name="dataContent">Custom data object to pass through events.</param>
+        /// <param name="sendOptions">Send options to define</param>
+        public void RaiseEvent(ByteEvents eventCode, object dataContent, SendOptions sendOptions)
+        {
+            PhotonNetwork.RaiseEvent((byte)eventCode, dataContent, RaiseEventOptions.Default, sendOptions);
+        }
+        /// <summary>Raise event, with raise event and send options.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
+        /// <param name="eventCode">Event code defined in enum to call events.</param>
+        /// <param name="dataContent">Custom data object to pass through events.</param>
+        /// <param name="raiseEventOptions">Raise event options to define.</param>
+        /// <param name="sendOptions">Send options to define</param>
+        public void RaiseEvent(ByteEvents eventCode, object dataContent, RaiseEventOptions raiseEventOptions, SendOptions sendOptions)
+        {
+            PhotonNetwork.RaiseEvent((byte)eventCode, dataContent, raiseEventOptions, sendOptions);
         }
 
         void InvokeRecievedEvents(EventData eventObject)
@@ -131,12 +155,8 @@ namespace Hadal.Networking
             }
         }
 
-        /// <summary>
-        /// Attach invoked functions to listen to events as specified.
-        /// </summary>
-        /// <remarks>
-        /// Be sure that event code needed is in the enumeration.
-        /// </remarks>
+        /// <summary>Attach invoked functions to listen to events as specified.</summary>
+        /// <remarks>Be sure that event code needed is in the enumeration.</remarks>
         /// <param name="eventCode">Event code defined in enum to call events.</param>
         /// <param name="action">Attached listener function.</param>
         public void AddListener(ByteEvents eventCode, Action<EventData> action)
@@ -150,6 +170,24 @@ namespace Hadal.Networking
             }
 
             Debug.LogWarning(eventCode.ToString() + " is not found, listener unattached.");
+        }
+
+        /// <summary>Remove attached functions from listener.</summary>
+        /// <param name="eventCode">Event code defined in enum to call events.</param>
+        /// <param name="action">Target remove listener function.</param>
+        public void RemoveListener(ByteEvents eventCode, Action<EventData> action)
+        {
+            if (recieverDict.ContainsKey(eventCode))
+            {
+                if (recieverDict[eventCode] != null)
+                {
+                    recieverDict[eventCode] -= action;
+                    recieverDict.Remove(eventCode);
+                    return;
+                }
+            }
+
+            Debug.LogWarning(eventCode.ToString() + " is not found, unable to remove listener.");
         }
         #endregion
 

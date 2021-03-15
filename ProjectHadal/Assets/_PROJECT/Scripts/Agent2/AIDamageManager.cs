@@ -33,6 +33,7 @@ namespace Hadal.AIComponents
             //! Subcribes player events
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
+            Brain.ForceSlamPlayerEvent += HandlePlayerSlamEvent;
             NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
         }
 
@@ -41,6 +42,7 @@ namespace Hadal.AIComponents
             //! Unsubscribe player events
             AIBrain.DamagePlayerEvent -= Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent -= HandlePlayerMovementFreeze;
+            Brain.ForceSlamPlayerEvent -= HandlePlayerSlamEvent;
         }
 
         private void Send_DamagePlayer(Transform player, AIDamageType type)
@@ -88,17 +90,22 @@ namespace Hadal.AIComponents
 
         private void HandlePlayerMovementFreeze(Transform player, bool shouldFreeze)
         {
-            var mover = player.GetComponent<PlayerController>().GetInfo.Mover;
-            if (shouldFreeze)
-            {
-                mover.Disable();
-                $"Disable movement".Msg();
-            }
-            else
-            {
-                mover.Enable();
-                $"Enable movement".Msg();
-            }
+            // var p = player.GetComponent<PlayerController>();
+            // if (shouldFreeze)
+            // {
+            //     p.Disable();
+            // }
+            // else
+            // {
+            //     p.Enable();
+            // }
+        }
+
+        private void HandlePlayerSlamEvent(Transform player, Vector3 destination)
+        {
+            var p = player.GetComponent<PlayerController>();
+            var direction = (player.position - destination).normalized;
+            p.AddVelocity(1000000f, direction);
         }
 
         public int GetViewIDFromTransform(Transform trans)

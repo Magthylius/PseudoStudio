@@ -5,6 +5,7 @@ using UnityEngine;
 using Hadal.Usables;
 using Hadal.Inputs;
 using Hadal.Networking;
+using Hadal.UI;
 
 //Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
@@ -38,6 +39,8 @@ namespace Hadal.Player.Behaviours
         {
             neManager = NetworkEventManager.Instance;
             if (neManager) neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
+
+            EquipItem(0);
         }
 
         public void Inject(PlayerController controller)
@@ -47,7 +50,6 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             GetControllerInfo();
             InjectDependencies();
-            EquipItem(0);
         }
 
         public void DoUpdate(in float deltaTime)
@@ -94,7 +96,7 @@ namespace Hadal.Player.Behaviours
             else if (_uInput.FireKey2)
             {
                 FireUtility();
-            }           
+            }
         }
         
         //Fire when received Event
@@ -138,6 +140,8 @@ namespace Hadal.Player.Behaviours
 
             if (!_pView.IsMine) return;
             UpdateNetworkItem();
+            print(UIManager.Instance);
+            UIManager.Instance.UpdateCurrentUtility(EquippedUsable.UtilityName);
         }
 
         private void ToggleItemActiveState()
