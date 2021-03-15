@@ -29,10 +29,8 @@ namespace Hadal.AI.States
             b = parent.Brain;
             pinTimer = parent.Brain.Create_A_Timer().WithDuration(10f)
                                                     .WithShouldPersist(true)
-                                                    .WithOnCompleteEvent(() => canPin = true)
-                                                    .Build()
-                                                    .PausedOnStart();
-            parent.Brain.AttachTimer(pinTimer);
+                                                    .WithOnCompleteEvent(() => canPin = true);
+            pinTimer.Pause();
             canPin = true;
             isPinning = false;
             NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_PIN_EVENT, Receive_PinTargetPlayer);
@@ -73,6 +71,15 @@ namespace Hadal.AI.States
             SphereObstacleDetection(); 
             b.transform.LookAt(closestWall);
             b.transform.position = Vector3.Lerp(b.transform.position, closestWall, b.pinSpeed * Time.deltaTime);
+            Vector3 tempVect = (closestWall - b.transform.position);
+            
+            // b.transform.position = closestWall;
+            // tempVect = tempVect * b.pinSpeed * Time.deltaTime;
+            // b.rb.MovePosition(b.transform.position + tempVect);
+            
+            // tempVect *= 100000000000f;
+            // b.rb.AddForce(tempVect, ForceMode.Force);
+            // b.rb.AddForceAtPosition(tempVect, b.transform.position, ForceMode.Force);
 
             if ((closestWall - b.transform.position).sqrMagnitude < (50f * 50f))
             {
@@ -92,15 +99,18 @@ namespace Hadal.AI.States
                 canPin = false;
                 isPinning = true;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
-                $"Hi, my name is {parent.TargetPlayer.name} and i am going to be pinned onto a whiteboard... HELP".Msg();
+                
+                SphereObstacleDetection(); 
+                // b.InvokeForceSlamPlayerEvent(parent.TargetPlayer, closestWall);
             }
             
             if (isPinning)
             {
                 MoveToClosestWall(); //! Move to closest wall
-                if(Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f)) < 0.05f)
+                if(Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f)) < 0.5f)
                 {
-                    // parent.TargetPlayer.position = b.transform.position + (b.transform.forward * 20f);
+                    parent.TargetPlayer.position = b.transform.position + (b.transform.forward * 20f);
+                    
                     int viewID = b.GetViewIDMethod(parent.TargetPlayer);
                     Vector3 setPosition = b.transform.position + (b.transform.forward * 20f);
 
@@ -123,6 +133,7 @@ namespace Hadal.AI.States
             Transform t = b.playerTransforms.Where(p => b.ViewIDBelongsToTransMethod(p, viewID)).SingleOrDefault();
             if (t == null) return;
             t.position = setPosition;
+            $"pin position set to {t.position}".Msg();
 
             //!do i test now? the transform view classic not working right? do we wanna use the transform view only?
             //! it is odd, because transform view classic should work :thinking: .
@@ -232,10 +243,7 @@ namespace Hadal.AI.States
                             .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.detectionRadius)
                             .ToList();
             if (targets.IsNullOrEmpty())
-            {
-                $"No closest player found".Error();
                 return null;
-            }
             return targets.RandomElement();
         }
 

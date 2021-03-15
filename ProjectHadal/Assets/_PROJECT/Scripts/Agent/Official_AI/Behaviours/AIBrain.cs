@@ -22,6 +22,7 @@ namespace Hadal.AI
         public List<Transform> destinations;
         public List<Transform> playerTransforms;
         bool isGridInitialised = false;
+        Rigidbody rb;
 
         [Header("Idle Setting")]
         IState idleState;
@@ -41,6 +42,8 @@ namespace Hadal.AI
         public Func<Transform, int, bool> ViewIDBelongsToTransMethod;
         public Action<Transform, bool> FreezePlayerMovementEvent;
         public void InvokeFreezePlayerMovementEvent(Transform player, bool shouldFreeze) => FreezePlayerMovementEvent?.Invoke(player, shouldFreeze);
+        public Action<Transform, Vector3> ForceSlamPlayerEvent;
+        public void InvokeForceSlamPlayerEvent(Transform player, Vector3 destination) => ForceSlamPlayerEvent?.Invoke(player, destination);
 
         [Header("Stunned Setting")]
         IState stunnedState;
@@ -57,6 +60,7 @@ namespace Hadal.AI
             isGridInitialised = false;
             if (playerMask == default) playerMask = LayerMask.GetMask("LocalPlayer");
             if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Wall");
+            rb = this.GetComponent<Rigidbody>();
             isStunned = false;
             InitialiseDebugStateSwitchTimer();
         }
