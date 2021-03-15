@@ -5,7 +5,7 @@ namespace Hadal.Usables.Projectiles
 {
     public class TrapBehaviour : ProjectileBehaviour
     {
-        [SerializeField] private float radius = 100;
+        [SerializeField] private float radius = 70;
         private Collider[] detectedObjects;
 
         public SelfDeactivationMode selfDeactivation;
@@ -42,6 +42,11 @@ namespace Hadal.Usables.Projectiles
 
             PPhysics.OnPhysicsFinished();
             return true;   
+        }
+        private void OnDrawGizmosSelected() // draw circle radius for debug
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, radius);
         }
 
         private void ModeOn() => isSet = true;
