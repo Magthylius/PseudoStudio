@@ -412,9 +412,9 @@ namespace Hadal.Networking
             PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
         }
 
-        public void SpawnAIEssentials()
+        public void SpawnAIEssentials(Vector3 pos = new Vector3(), Quaternion rot = new Quaternion())
         {
-            PhotonNetwork.Instantiate(PathManager.AIEssentialsPrefabPath, Vector3.zero, Quaternion.identity);
+            PhotonNetwork.Instantiate(PathManager.AIEssentialsPrefabPath, pos, rot);
         }
 
         public void SpawnAI(Vector3 pos = new Vector3(), Quaternion rot = new Quaternion())
