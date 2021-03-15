@@ -30,8 +30,6 @@ namespace Hadal.Player
             {
                 if (_pView.IsMine)
                 {
-                    
-
                     foreach (KeyValuePair<int, Photon.Realtime.Player> playerDict in neManager.AllPlayers)
                     {
                         SpawnPlayer(playerDict.Value);
@@ -95,8 +93,8 @@ namespace Hadal.Player
         {
             if (!IsOnNetwork || gameObject == null) return;
             playerList.Remove(GetController(player));
+            neManager.RemovePlayer(player);
             PhotonNetwork.Destroy(player);
-
         }
         private void CreateNetworkController(Photon.Realtime.Player photonPlayer)
         {
@@ -122,6 +120,8 @@ namespace Hadal.Player
                     pControl.HandlePhotonView(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
                 }
             }
+
+            neManager.AddPlayer(player);
         }
 
         #endregion
@@ -131,6 +131,7 @@ namespace Hadal.Player
         private void Kill(GameObject player)
         {
             if (IsOnNetwork || gameObject == null) return;
+            neManager.RemovePlayer(player);
             Destroy(player);
         }
         private void CreateLocalController(Photon.Realtime.Player photonPlayer)
@@ -143,6 +144,8 @@ namespace Hadal.Player
 
             playerList.Add(controller);
             controller.InjectDependencies(this, photonPlayer);
+
+            neManager.AddPlayer(player);
         }
 
         #endregion
