@@ -78,7 +78,7 @@ namespace Hadal.AI.States
             {
                 isPinning = false;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
-                parent.TargetPlayer.GetComponent<BoxCollider>().enabled = true;
+                $"Am I the same person as before? {parent.TargetPlayer.name} sounds familiar... maybe so maybe not may be may however be the month of may.".Msg();
             }
         }
         /// <summary>Pin the target player to the wall</summary>
