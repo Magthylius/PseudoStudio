@@ -25,6 +25,8 @@ namespace Hadal.Networking
         [Scene] public string MainMenuScene;
         [Scene] public string InGameScene;
 
+        List<GameObject> playerObjects;
+
         //! internal references
         bool loadsToMainMenu = false;
 
@@ -47,6 +49,8 @@ namespace Hadal.Networking
 
         void Start()
         {
+            playerObjects = new List<GameObject>();
+
             SetupEssentials();
             SetupEventRaising();
         }
@@ -81,6 +85,7 @@ namespace Hadal.Networking
         public enum ByteEvents
         {
             PLAYER_UTILITIES_LAUNCH = 0,
+            AI_DAMAGE_EVENT = 1,
             TOTAL_EVENTS
         }
 
@@ -398,6 +403,9 @@ namespace Hadal.Networking
             }
         }
 
+        public void AddPlayer(GameObject playerObject) => playerObjects.Add(playerObject);
+        public void RemovePlayer(GameObject playerObject) => playerObjects.Remove(playerObject);
+
         public void SpawnPlayerManager()
         {
             PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
@@ -413,6 +421,7 @@ namespace Hadal.Networking
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
         public Player LocalPlayer => PhotonNetwork.LocalPlayer;
         public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;
+        public List<GameObject> PlayerObjects => playerObjects;
         public bool IsConnected => PhotonNetwork.IsConnected;
         public bool IsMasterClient => PhotonNetwork.IsMasterClient;
         #endregion
