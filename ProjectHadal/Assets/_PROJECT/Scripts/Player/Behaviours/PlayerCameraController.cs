@@ -94,7 +94,8 @@ namespace Hadal.Player.Behaviours
         {
             _isDisabled = false;
             selfCamera.enabled = true;
-            
+            selfCamera.gameObject.SetActive(true);
+
             var l = selfCamera.GetComponent<AudioListener>();
             if (l == null) selfCamera.gameObject.AddComponent<AudioListener>();
         }
