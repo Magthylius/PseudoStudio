@@ -8,6 +8,7 @@ using Hadal.Inputs;
 using Hadal.UI;
 using Tenshi;
 using Photon.Realtime;
+using Hadal.Networking;
 
 
 // Created by Jet, E: Player
@@ -53,8 +54,9 @@ namespace Hadal.Player
         {
             //base.OnEnable();
             TryInjectDependencies();
-            //HandlePhotonView(_pView.IsMine);
+            //HandlePhotonView(false);
             OnInitialiseComplete?.Invoke(this);
+            //Deactivate();
         }
 
         protected override void Update()
@@ -121,12 +123,20 @@ namespace Hadal.Player
         public void TransferOwnership(Photon.Realtime.Player newOwner)
         {
             _pView.TransferOwnership(newOwner);
-            //HandlePhotonView(_pView.IsMine);
+            /*print("Transfer: " + newOwner.NickName + ", " + _pView.IsMine);
+            print(NetworkEventManager.Instance.LocalPlayer.NickName);
+            print(newOwner.NickName);
+            if (NetworkEventManager.Instance.LocalPlayer == newOwner)
+            {
+                print("Transfer: " + newOwner.NickName + " handling");
+                HandlePhotonView(true);
+            }*/
         }
 
         public void HandlePhotonView(bool isMine)
         {
             gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
+
             if (isMine)
             {
                 UIManager.Instance.InjectPlayer(pTrans, rotator, RotationInput);
