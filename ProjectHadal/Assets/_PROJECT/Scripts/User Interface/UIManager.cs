@@ -102,6 +102,7 @@ namespace Hadal.UI
 
             SetupModules();
             SetupPauseMenu();
+            PNTR_Resume();
         }
 
         void Update()
