@@ -40,13 +40,13 @@ namespace Hadal.AI.States
         }
         public void OnStateStart()
         {
-            
+
         }
         public void StateTick()
         {
             if (parent.TargetPlayer == null)
                 parent.SetTargetPlayer(parent.ChooseClosestRandomPlayer());
-            
+
             PinTargetPlayer();
         }
         public void LateStateTick()
@@ -116,7 +116,7 @@ namespace Hadal.AI.States
                 parent.TargetPlayer.SetParent(null);
             }
         }
-        
+
         /// <summary>Pin the target player to the wall</summary>
         void PinTargetPlayer()
         {
@@ -135,7 +135,7 @@ namespace Hadal.AI.States
 
                 // b.InvokeForceSlamPlayerEvent(parent.TargetPlayer, closestWall);
             }
-            
+
             if (isPinning)
             {
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
@@ -146,29 +146,18 @@ namespace Hadal.AI.States
                 if (distanceBetween < 30f)
                 {
                     var p = parent.TargetPlayer;
-                    
+
                     Vector3 pleaseMoveHere = b.transform.position + (b.transform.forward * 30f);
                     p.position = pleaseMoveHere;
 
                     if (p.parent == null) p.SetParent(b.transform);
 
-                    // var t = parent.TargetPlayer;
-                    // Vector3 velo = closestWall - b.transform.position;
-                    // velo = velo.normalized;
-                    // velo *= (b.pinSpeed * b.pinSpeed);
-                    // t.GetComponent<Rigidbody>().AddRelativeForce(velo, ForceMode.VelocityChange);
+                    int viewID = b.GetViewIDMethod(parent.TargetPlayer);
 
-                    //! <<<<<<<<<<<<<<<<<<<<<<<<<<<This is network code>>>>>>>>>>>>>>>>>>>>>>>>>>>
-                    // int viewID = b.GetViewIDMethod(parent.TargetPlayer);
-                    // Vector3 setPosition = b.transform.position + (b.transform.forward * 20f);
-
-                    // object[] data = { isPinning, viewID, setPosition };
-                    // RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                    //NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_PIN_EVENT, data, options);
-
+                    object[] data = { isPinning, viewID, pleaseMoveHere };
+                    RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_PIN_EVENT, data, options);
                 }
-
-
             }
         }
 
@@ -186,9 +175,6 @@ namespace Hadal.AI.States
             if (t == null) return;
             t.position = setPosition;
             $"pin position set to {t.position}".Msg();
-
-            //!do i test now? the transform view classic not working right? do we wanna use the transform view only?
-            //! it is odd, because transform view classic should work :thinking: .
         }
 
         public Func<bool> ShouldTerminate() => () => false;

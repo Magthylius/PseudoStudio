@@ -79,7 +79,7 @@ namespace Hadal.Locomotion
             Vector3 rotation = target.localEulerAngles;
             rotation.x -= mouseDistance.y;
             rotation.y += mouseDistance.x;
-            rotation.z = Mathf.Clamp(-target.localEulerAngles.x, -ZAxisClamp, ZAxisClamp);
+            rotation.z = Mathf.Clamp(-mouseDistance.x / deltaTime, -ZAxisClamp, ZAxisClamp);
 
             // target.localEulerAngles = Vector3.Lerp(target.localEulerAngles, rotation, 5f * deltaTime);
             

@@ -37,6 +37,7 @@ namespace Hadal.AI.States
         }
         public async void OnStateStart()
         {
+            "Idle State Start".Error();
             ResetPath();
             ResetNewDestinationTimer();
             await SelectRandomPathAsync();
@@ -54,6 +55,7 @@ namespace Hadal.AI.States
         }
         public void OnStateEnd()
         {
+            "Idle State End".Error();
             ResetPath();
             ResetNewDestinationTimer();
             isFindingPath = false;
