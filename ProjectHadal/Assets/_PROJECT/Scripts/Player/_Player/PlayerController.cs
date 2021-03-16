@@ -8,6 +8,7 @@ using Hadal.Inputs;
 using Hadal.UI;
 using Tenshi;
 using Photon.Realtime;
+using Hadal.Networking;
 
 
 // Created by Jet, E: Player
@@ -122,7 +123,8 @@ namespace Hadal.Player
         public void TransferOwnership(Photon.Realtime.Player newOwner)
         {
             _pView.TransferOwnership(newOwner);
-            HandlePhotonView(_pView.IsMine);
+            print("Transfer: " + newOwner.NickName + ", " + _pView.IsMine);
+            if (NetworkEventManager.Instance.LocalPlayer == newOwner) HandlePhotonView(true);
         }
 
         public void HandlePhotonView(bool isMine)
