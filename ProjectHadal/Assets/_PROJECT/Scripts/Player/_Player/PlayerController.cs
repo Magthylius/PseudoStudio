@@ -145,7 +145,7 @@ namespace Hadal.Player
 
                 try
                 {
-                    UIManager.Instance.PauseMenuClosed -= Disable;
+                    UIManager.Instance.PauseMenuOpened -= Disable;
                     UIManager.Instance.PauseMenuClosed -= Enable;
                 }
                 catch { }

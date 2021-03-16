@@ -109,7 +109,7 @@ namespace Hadal.UI
         {
             if (playerTransform == null) return;
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (playerInput.TabKeyDown) TriggerPauseMenu();
 #else
             if (playerInput.EscKeyDown) TriggerPauseMenu();

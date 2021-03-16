@@ -28,15 +28,19 @@ namespace Hadal.AIComponents
             Brain = GetComponent<AIBrain>();
             Brain.GetViewIDMethod = (trans) => GetViewIDFromTransform(trans);
             Brain.ViewIDBelongsToTransMethod = (trans, id) => ViewIDBelongsToTransform(id, trans);
-            // TODO: A better way to get playercontroller? maybe another script
-            players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
-            Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
 
             //! Subcribes player events
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
             Brain.ForceSlamPlayerEvent += HandlePlayerSlamEvent;
             NetworkEventManager.Instance.AddListener(ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
+        }
+
+        private void Start()
+        {
+            // TODO: A better way to get playercontroller? maybe another script
+            players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
+            Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
         }
 
         private void OnDestroy()
