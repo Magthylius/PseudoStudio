@@ -137,7 +137,7 @@ namespace Hadal.Player
             }
             else
             {
-                print("Camera Deactivated");
+                //print("Camera Deactivated");
                 Deactivate();
                 cameraController.Deactivate();
                 try

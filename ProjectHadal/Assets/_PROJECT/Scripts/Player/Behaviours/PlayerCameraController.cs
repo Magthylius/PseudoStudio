@@ -103,6 +103,7 @@ namespace Hadal.Player.Behaviours
         {
             _isDisabled = true;
             selfCamera.enabled = false;
+            selfCamera.gameObject.SetActive(false);
             
             var l = selfCamera.GetComponent<AudioListener>();
             if (l != null) Destroy(l);
