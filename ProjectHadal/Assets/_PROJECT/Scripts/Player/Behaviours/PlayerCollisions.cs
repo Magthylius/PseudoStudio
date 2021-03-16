@@ -32,6 +32,7 @@ namespace Hadal.Player.Behaviours
                 {
                     _cameraController.ShakeCamera();
                 }
+                _playerController.GetInfo.Mover.Speed.Max = 10;
             }
         }
 
@@ -56,6 +57,7 @@ namespace Hadal.Player.Behaviours
         internal void CollisionExit(Collision collision)
         {
             _playerController.GetInfo.Mover.EnableBoost();
+            _playerController.GetInfo.Mover.Speed.Max = 75;
         }
 
         internal void TriggerEnter(Collider collider) { }

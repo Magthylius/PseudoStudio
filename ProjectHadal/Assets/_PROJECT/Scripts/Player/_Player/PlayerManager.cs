@@ -111,7 +111,7 @@ namespace Hadal.Player
                 controller.TransferOwnership(photonPlayer);
             }
 
-            if (playerList.Count > 1)
+            if (playerList.Count > 0)
             {
                 foreach (PlayerController pControl in playerList)
                 {
