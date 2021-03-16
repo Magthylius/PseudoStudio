@@ -36,7 +36,7 @@ namespace Hadal.AIComponents
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
             Brain.ForceSlamPlayerEvent += HandlePlayerSlamEvent;
-            NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
+            NetworkEventManager.Instance.AddListener(ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
         }
 
         private void OnDestroy()
@@ -61,7 +61,7 @@ namespace Hadal.AIComponents
             //! raise event with data
             object[] data = { targetViewID, damage };
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_DAMAGE_EVENT, data, options);
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_DAMAGE_EVENT, data, options);
         }
 
         /// <summary> Damages the chosen player</summary>

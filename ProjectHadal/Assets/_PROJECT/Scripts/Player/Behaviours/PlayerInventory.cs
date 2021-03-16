@@ -38,7 +38,7 @@ namespace Hadal.Player.Behaviours
         void Start()
         {
             neManager = NetworkEventManager.Instance;
-            if (neManager) neManager.AddListener(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
+            if (neManager) neManager.AddListener(ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
 
             EquipItem(0);
         }
@@ -114,7 +114,7 @@ namespace Hadal.Player.Behaviours
         {
             _controllerInfo.Shooter.FireUtility(EquippedUsable, _chargeTime);
             object[] content = new object[] { _pView.ViewID, _selectedItem, _chargeTime };
-            neManager.RaiseEvent(NetworkEventManager.ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
+            neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
         }
 
         private void UpdateUsables(in float deltaTime)

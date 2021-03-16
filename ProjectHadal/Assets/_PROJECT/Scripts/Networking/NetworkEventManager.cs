@@ -14,6 +14,15 @@ using Hadal.Networking.UI.MainMenu;
 //! C: Jon
 namespace Hadal.Networking
 {
+    public enum ByteEvents
+    {
+        PLAYER_UTILITIES_LAUNCH = 0,
+        PLAYER_TORPEDO_LAUNCH,
+        AI_DAMAGE_EVENT,
+        AI_PIN_EVENT,
+        TOTAL_EVENTS
+    }
+
     public class NetworkEventManager : MonoBehaviourPunCallbacks
     {
         public static NetworkEventManager Instance;
@@ -82,13 +91,7 @@ namespace Hadal.Networking
         #endregion
 
         #region Raising Events
-        public enum ByteEvents
-        {
-            PLAYER_UTILITIES_LAUNCH = 0,
-            AI_DAMAGE_EVENT = 1,
-            AI_PIN_EVENT,
-            TOTAL_EVENTS
-        }
+        
 
         Dictionary<ByteEvents, Action<EventData>> recieverDict;
 

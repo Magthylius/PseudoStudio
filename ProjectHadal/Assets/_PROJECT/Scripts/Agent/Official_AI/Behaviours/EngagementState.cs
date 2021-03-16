@@ -34,7 +34,7 @@ namespace Hadal.AI.States
             pinTimer.Pause();
             canPin = true;
             isPinning = false;
-            NetworkEventManager.Instance.AddListener(NetworkEventManager.ByteEvents.AI_PIN_EVENT, Receive_PinTargetPlayer);
+            NetworkEventManager.Instance.AddListener(ByteEvents.AI_PIN_EVENT, Receive_PinTargetPlayer);
         }
         public void OnStateStart()
         {
