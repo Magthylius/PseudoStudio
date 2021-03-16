@@ -82,7 +82,7 @@ namespace Hadal.Player
         #region Player
         void SpawnPlayer(Photon.Realtime.Player player)
         {
-            if (!player.IsMasterClient) return;
+            //if (!player.IsMasterClient) return;
             if (IsOnNetwork) CreateNetworkController(player);
             else CreateLocalController(player);
         }
