@@ -123,8 +123,12 @@ namespace Hadal.Player
         public void TransferOwnership(Photon.Realtime.Player newOwner)
         {
             _pView.TransferOwnership(newOwner);
-            print("Transfer: " + newOwner.NickName + ", " + _pView.IsMine);
-            if (NetworkEventManager.Instance.LocalPlayer == newOwner) HandlePhotonView(true);
+            //print("Transfer: " + newOwner.NickName + ", " + _pView.IsMine);
+            if (NetworkEventManager.Instance.LocalPlayer == newOwner)
+            {
+                print("Transfer: " + newOwner.NickName + " handling");
+                HandlePhotonView(true);
+            }
         }
 
         public void HandlePhotonView(bool isMine)
