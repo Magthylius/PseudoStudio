@@ -29,7 +29,7 @@ namespace Hadal.AI.States
         {
             this.parent = parent;
             b = parent.Brain;
-            pinTimer = parent.Brain.Create_A_Timer().WithDuration(10f)
+            pinTimer = parent.Brain.Create_A_Timer().WithDuration(40f)
                                                     .WithShouldPersist(true)
                                                     .WithOnCompleteEvent(() => canPin = true);
             pinTimer.Pause();
@@ -58,6 +58,7 @@ namespace Hadal.AI.States
         }
         public void OnStateEnd()
         {
+            
         }
         /// <summary>Detection for wall</summary>
         void SphereObstacleDetection()
@@ -81,6 +82,7 @@ namespace Hadal.AI.States
             }
 
             // Get the surface of the chosen wall
+            if (closestTrans == null) return;
             var dir = closestTrans.position - b.transform.position;
             if (Physics.Raycast(b.transform.position, dir, out var hit, Mathf.Infinity, b.obstacleMask))
             {
@@ -101,6 +103,27 @@ namespace Hadal.AI.States
             velo *= (b.pinSpeed);
             b.rb.AddRelativeForce(velo, ForceMode.VelocityChange);
             b.transform.LookAt(closestWall);
+
+            float speed = Vector3.Magnitude (b.rb.velocity);  // test current object speed
+      
+            if (speed > 5f)
+            
+            {
+                float brakeSpeed = speed - 10f;  // calculate the speed decrease
+            
+                Vector3 normalisedVelocity = b.rb.velocity.normalized;
+                Vector3 brakeVelocity = normalisedVelocity * brakeSpeed;  // make the brake Vector3 value
+            
+               b.rb.AddForce(-brakeVelocity);  // apply opposing brake force
+            }
+
+             if(b.rb.velocity.sqrMagnitude > 5f)
+             {
+                 //smoothness of the slowdown is controlled by the 0.99f, 
+                 //0.5f is less smooth, 0.9999f is more smooth
+                     b.rb.velocity *= 0.99f;
+             }
+
             // b.transform.position = closestWall;
             // tempVect = tempVect * b.pinSpeed * Time.deltaTime;
             // b.rb.MovePosition(b.transform.position + tempVect);
@@ -112,8 +135,10 @@ namespace Hadal.AI.States
             if (Vector3.Distance(closestWall, b.transform.position) < 10f)
             {
                 isPinning = false;
+                //TODO : Another way of setting parent null, this is just a hotfix
+                b.transform.GetChild(1).SetParent(null);
+                b.transform.GetChild(1).parent = null;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
-                parent.TargetPlayer.SetParent(null);
             }
         }
 
@@ -307,10 +332,9 @@ namespace Hadal.AI.States
         internal void ChaseTargetPlayer()
         {
             if (TargetPlayer == null) return;
-            float speed = 5f;
             var target = TargetPlayer.position - (Brain.transform.forward * 5f);
             Brain.transform.LookAt(target);
-            Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, speed * Time.deltaTime);
+            Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, Brain.pinSpeed * Time.deltaTime);
         }
 
         internal bool TargetPlayerIsInRange()
