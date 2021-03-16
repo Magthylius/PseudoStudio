@@ -14,13 +14,20 @@ namespace Tenshi.AIDolls
         private IState _currState;
         public IState CurrentState => _currState;
 
-        /// <summary> Should be called in an update function. It is this state machine's update method. </summary>
+        /// <summary> Should be called in an update function. It is this state machine's update method. It must be called
+        /// on any state machine implementation as it handles state switching. </summary>
         public void MachineTick()
         {
             var transition = GetActiveTransition();
             if (transition != null) SetState(transition.Target);
             _currState?.StateTick();
         }
+
+        /// <summary> Should be called in a late update function. It is this state machine's update method. </summary>
+        public void LateMachineTick() => _currState?.LateStateTick();
+
+        /// <summary> Should be called in a fixed update function. Should be used for physics or network handling. </summary>
+        public void FixedMachineTick() => _currState?.FixedStateTick();
 
         /// <summary> Used to force a state change. Aside from setting a default state, try not to use this for anything else. </summary>
         public bool SetState(IState newState)
@@ -90,6 +97,8 @@ namespace Tenshi.AIDolls
         public ArtificialBehaviourState(ArtificialBehaviour behaviour) => _behaviour = behaviour;
         public void OnStateStart() => _behaviour.OnStart();
         public void StateTick() => _behaviour.OnUpdate();
+        public void LateStateTick() { }
+        public void FixedStateTick() { }
         public void OnStateEnd() => _behaviour.OnEnd();
         public Func<bool> ShouldTerminate() => () => false;
     }
@@ -105,7 +114,13 @@ namespace Tenshi.AIDolls
     {
         /// <summary> This is the Update method of the state. If it is the active state, it will be called by <see cref="StateMachine.MachineTick"/>. </summary>
         void StateTick();
-        
+
+        /// <summary> This is the Late Update method of the state. If it is the active state, it will be called by <see cref="StateMachine.LateMachineTick"/>. </summary>
+        void LateStateTick();
+
+        /// <summary> This is the Fixed Update method of the state. If it is the active state, it will be called by <see cref="StateMachine.FixedMachineTick"/>. </summary>
+        void FixedStateTick();
+
         /// <summary> This will be called when the state becomes the active state (transitioned into from another state). </summary>
         void OnStateStart();
         

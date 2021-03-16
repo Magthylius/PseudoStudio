@@ -10,6 +10,12 @@ namespace Hadal.AI
     {
         public void OnStateStart() { }
         public void StateTick() { }
+        public void LateStateTick()
+        {
+        }
+        public void FixedStateTick()
+        {
+        }
         public void OnStateEnd() { }
         public Func<bool> ShouldTerminate() => () => false;
     }

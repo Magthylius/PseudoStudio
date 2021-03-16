@@ -135,7 +135,6 @@ namespace Hadal.AI.AStarPathfinding
             //! Run A*
             while (open.IsNotEmpty())
             {
-                await "A Star is running...".MsgAsync();
 
                 current = open.OrderBy(node => node.FCost).First();
                 current.IsVisited = true;
