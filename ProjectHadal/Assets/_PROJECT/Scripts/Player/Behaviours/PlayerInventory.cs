@@ -140,7 +140,6 @@ namespace Hadal.Player.Behaviours
 
             if (!_pView.IsMine) return;
             UpdateNetworkItem();
-            print(UIManager.Instance);
             UIManager.Instance.UpdateCurrentUtility(EquippedUsable.UtilityName);
         }
 
