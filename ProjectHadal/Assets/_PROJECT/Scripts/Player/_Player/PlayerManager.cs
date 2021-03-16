@@ -115,8 +115,8 @@ namespace Hadal.Player
             {
                 foreach (PlayerController pControl in playerList)
                 {
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID + ", " + GetController(neManager.LocalPlayer).ViewID);
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
+                    print(pControl.GetInfo.PhotonInfo.PView.ViewID + ", " + GetController(neManager.LocalPlayer).ViewID);
+                    print(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
                     pControl.HandlePhotonView(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
                 }
             }

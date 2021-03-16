@@ -134,12 +134,15 @@ namespace Hadal.Player
                 UIManager.Instance.PauseMenuClosed += Enable;
                 Activate();
                 cameraController.Activate();
+
+                print("Camera Activated");
             }
             else
             {
-                //print("Camera Deactivated");
                 Deactivate();
                 cameraController.Deactivate();
+                print("Camera Deactivated");
+
                 try
                 {
                     UIManager.Instance.PauseMenuClosed -= Disable;
