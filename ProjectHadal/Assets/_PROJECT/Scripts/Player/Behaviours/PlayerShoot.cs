@@ -124,7 +124,7 @@ namespace Hadal.Player.Behaviours
         public void SendTorpedoEvent()
         {
             if (!AllowUpdate) return;
-            PhotonNetwork.RaiseEvent(PLAYER_TOR_LAUNCH_EVENT, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+            //PhotonNetwork.RaiseEvent(PLAYER_TOR_LAUNCH_EVENT, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
         }
 
         public void FireTorpedo()
