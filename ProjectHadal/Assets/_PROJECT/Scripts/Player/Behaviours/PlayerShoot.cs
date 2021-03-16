@@ -35,7 +35,7 @@ namespace Hadal.Player.Behaviours
 
         [Header("Event")]
         private PhotonView _pView;
-        private const byte PLAYER_TOR_LAUNCH_EVENT = 1;
+        //private const byte PLAYER_TOR_LAUNCH_EVENT = 1;
 
         #region Unity Lifecycle
         private void OnEnable()
@@ -50,13 +50,13 @@ namespace Hadal.Player.Behaviours
 
         private void NetworkingClient_EventReceived(EventData obj)
         {
-            if (obj.Code == PLAYER_TOR_LAUNCH_EVENT)
+            /*if (obj.Code == PLAYER_TOR_LAUNCH_EVENT)
             {
                 if ((int)obj.CustomData == _pView.ViewID)
                 {
                     FireTorpedo();
                 }
-            }
+            }*/
         }
 
         private void Awake()
