@@ -110,8 +110,12 @@ namespace Hadal.Player
             {
                 controller.TransferOwnership(photonPlayer);
             }
+            else
+            {
+                controller.HandlePhotonView(true);
+            }
 
-            if (playerList.Count > 0)
+            /*if (playerList.Count > 0)
             {
                 foreach (PlayerController pControl in playerList)
                 {
@@ -119,7 +123,8 @@ namespace Hadal.Player
                     //print(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
                     pControl.HandlePhotonView(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
                 }
-            }
+            }*/
+
 
             neManager.AddPlayer(player);
         }

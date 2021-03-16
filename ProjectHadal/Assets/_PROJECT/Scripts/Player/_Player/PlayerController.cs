@@ -53,8 +53,9 @@ namespace Hadal.Player
         {
             //base.OnEnable();
             TryInjectDependencies();
-            //HandlePhotonView(_pView.IsMine);
+            HandlePhotonView(false);
             OnInitialiseComplete?.Invoke(this);
+            //Deactivate();
         }
 
         protected override void Update()
@@ -121,12 +122,13 @@ namespace Hadal.Player
         public void TransferOwnership(Photon.Realtime.Player newOwner)
         {
             _pView.TransferOwnership(newOwner);
-            //HandlePhotonView(_pView.IsMine);
+            HandlePhotonView(_pView.IsMine);
         }
 
         public void HandlePhotonView(bool isMine)
         {
             gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
+
             if (isMine)
             {
                 UIManager.Instance.InjectPlayer(pTrans, rotator, RotationInput);
