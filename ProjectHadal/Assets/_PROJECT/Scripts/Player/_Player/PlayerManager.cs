@@ -110,6 +110,7 @@ namespace Hadal.Player
             if (photonPlayer != neManager.LocalPlayer)
             {
                 controller.TransferOwnership(photonPlayer);
+                controller.HandlePhotonView(false);
             }
             else
             {
