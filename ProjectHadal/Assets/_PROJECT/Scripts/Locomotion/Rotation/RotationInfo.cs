@@ -76,11 +76,13 @@ namespace Hadal.Locomotion
             Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
             mouseDistance *= (Sensitivity * Acceleration * deltaTime);
 
-            Vector3 rotation = target.localRotation.eulerAngles;
+            Vector3 rotation = target.localEulerAngles;
             rotation.x -= mouseDistance.y;
             rotation.y += mouseDistance.x;
-            rotation.z = Mathf.Clamp(-mouseDistance.x + mouseDistance.y, -ZAxisClamp, ZAxisClamp);
+            rotation.z = Mathf.Clamp(-mouseDistance.x / deltaTime, -ZAxisClamp, ZAxisClamp);
 
+            // target.localEulerAngles = Vector3.Lerp(target.localEulerAngles, rotation, 5f * deltaTime);
+            
             // target.rotation = Quaternion.Euler(rotation);
             target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
 

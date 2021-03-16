@@ -23,6 +23,7 @@ namespace Hadal.AI.States
         Timer pinTimer;
         bool canPin;
         bool isPinning;
+        bool foundWall;
 
         public AggressiveSubState(EngagementState parent)
         {
@@ -34,16 +35,26 @@ namespace Hadal.AI.States
             pinTimer.Pause();
             canPin = true;
             isPinning = false;
+            foundWall = false;
             NetworkEventManager.Instance.AddListener(ByteEvents.AI_PIN_EVENT, Receive_PinTargetPlayer);
         }
         public void OnStateStart()
         {
-            parent.SetTargetPlayer(parent.ChooseClosestRandomPlayer());
+
         }
         public void StateTick()
         {
-            parent.ChaseTargetPlayer();
+            if (parent.TargetPlayer == null)
+                parent.SetTargetPlayer(parent.ChooseClosestRandomPlayer());
+
             PinTargetPlayer();
+        }
+        public void LateStateTick()
+        {
+            foundWall = false;
+        }
+        public void FixedStateTick()
+        {
         }
         public void OnStateEnd()
         {
@@ -51,6 +62,7 @@ namespace Hadal.AI.States
         /// <summary>Detection for wall</summary>
         void SphereObstacleDetection()
         {
+            // Check for which wall is closest
             Collider[] results;
             results = Physics.OverlapSphere(b.transform.position, b.wallDetectionRadius, b.obstacleMask);
 
@@ -64,20 +76,22 @@ namespace Hadal.AI.States
                     closestTrans = points.transform;
                     closestWall = points.transform.position;
                     distance = diff;
+                    foundWall = true;
                 }
             }
 
-            var dir = (closestTrans.position - b.transform.position).normalized;
+            // Get the surface of the chosen wall
+            var dir = closestTrans.position - b.transform.position;
             if (Physics.Raycast(b.transform.position, dir, out var hit, Mathf.Infinity, b.obstacleMask))
             {
                 closestWall = hit.point;
+                foundWall = true;
             }
         }
 
         /// <summary>Move to the closest wall found and damage player</summary>
         void MoveToClosestWall()
         {
-            SphereObstacleDetection();
             //b.transform.LookAt(closestWall);
             // b.transform.position = Vector3.Lerp(b.transform.position, closestWall, b.pinSpeed * Time.deltaTime);
             // Vector3 tempVect = (closestWall - b.transform.position);
@@ -100,51 +114,50 @@ namespace Hadal.AI.States
                 isPinning = false;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
                 parent.TargetPlayer.SetParent(null);
-                $"No longer pinnning.".Error();
             }
         }
-        
+
         /// <summary>Pin the target player to the wall</summary>
         void PinTargetPlayer()
         {
             //! Check if target player is in range && far from target wall
             if (parent.TargetPlayerIsInRange() && canPin)
             {
-                b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Pin);
-                pinTimer.Restart();
-                canPin = false;
-                isPinning = true;
-                b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
-
                 SphereObstacleDetection();
-                // b.InvokeForceSlamPlayerEvent(parent.TargetPlayer, closestWall);
+                if (foundWall)
+                {
+                    b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Pin);
+                    pinTimer.Restart();
+                    canPin = false;
+                    isPinning = true;
+                    b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
+                }
 
-                var p = parent.TargetPlayer;
-                p.transform.position = b.transform.position + (b.transform.forward * 20f);
-                p.SetParent(b.transform);
+                // b.InvokeForceSlamPlayerEvent(parent.TargetPlayer, closestWall);
             }
 
             if (isPinning)
             {
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
                 MoveToClosestWall();
-                // if (Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f)) < 0.5f)
-                // {
-                //     var t = parent.TargetPlayer;
-                //     Vector3 velo = closestWall - b.transform.position;
-                //     velo = velo.normalized;
-                //     velo *= (b.pinSpeed * b.pinSpeed);
-                //     t.GetComponent<Rigidbody>().AddRelativeForce(velo, ForceMode.VelocityChange);
+                parent.ChaseTargetPlayer();
 
-                //     int viewID = b.GetViewIDMethod(parent.TargetPlayer);
-                //     Vector3 setPosition = b.transform.position + (b.transform.forward * 20f);
+                float distanceBetween = Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f));
+                if (distanceBetween < 30f)
+                {
+                    var p = parent.TargetPlayer;
 
-                //     object[] data = { isPinning, viewID, setPosition };
-                //     RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                //     //NetworkEventManager.Instance.RaiseEvent(NetworkEventManager.ByteEvents.AI_PIN_EVENT, data, options);
-                // }
+                    Vector3 pleaseMoveHere = b.transform.position + (b.transform.forward * 30f);
+                    p.position = pleaseMoveHere;
 
-               
+                    if (p.parent == null) p.SetParent(b.transform);
+
+                    int viewID = b.GetViewIDMethod(parent.TargetPlayer);
+
+                    object[] data = { isPinning, viewID, pleaseMoveHere };
+                    RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_PIN_EVENT, data, options);
+                }
             }
         }
 
@@ -162,9 +175,6 @@ namespace Hadal.AI.States
             if (t == null) return;
             t.position = setPosition;
             $"pin position set to {t.position}".Msg();
-
-            //!do i test now? the transform view classic not working right? do we wanna use the transform view only?
-            //! it is odd, because transform view classic should work :thinking: .
         }
 
         public Func<bool> ShouldTerminate() => () => false;
@@ -175,6 +185,12 @@ namespace Hadal.AI.States
         {
         }
         public void StateTick()
+        {
+        }
+        public void LateStateTick()
+        {
+        }
+        public void FixedStateTick()
         {
         }
         public void OnStateEnd()
@@ -188,6 +204,12 @@ namespace Hadal.AI.States
         {
         }
         public void StateTick()
+        {
+        }
+        public void LateStateTick()
+        {
+        }
+        public void FixedStateTick()
         {
         }
         public void OnStateEnd()
@@ -244,6 +266,12 @@ namespace Hadal.AI.States
                 fightTimer += Time.deltaTime;
             }
         }
+        public void LateStateTick()
+        {
+        }
+        public void FixedStateTick()
+        {
+        }
         public void OnStateEnd()
         {
             fightTimer = 0f;
@@ -281,6 +309,7 @@ namespace Hadal.AI.States
             if (TargetPlayer == null) return;
             float speed = 5f;
             var target = TargetPlayer.position - (Brain.transform.forward * 5f);
+            Brain.transform.LookAt(target);
             Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, speed * Time.deltaTime);
         }
 

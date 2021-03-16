@@ -44,6 +44,12 @@ namespace Hadal.AI
         {
 
         }
+        public void LateStateTick()
+        {
+        }
+        public void FixedStateTick()
+        {
+        }
         public void OnStateEnd()
         {
             returnToDefaultState = false;

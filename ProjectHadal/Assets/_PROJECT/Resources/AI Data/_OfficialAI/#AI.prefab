@@ -102,10 +102,10 @@ MonoBehaviour:
   healthManager: {fileID: 7709899577312776034}
   destinations: []
   playerTransforms: []
-  destinationChangeTimer: 1
+  destinationChangeTimer: 3
   idleSpeed: 25
-  detectionRadius: 1000
-  wallDetectionRadius: 500
+  detectionRadius: 400
+  wallDetectionRadius: 300
   pinSpeed: 10
   playerMask:
     serializedVersion: 2
@@ -420,6 +420,10 @@ PrefabInstance:
     - target: {fileID: 1458463172637317433, guid: d2a12e71f6c172344bb5277f80cbf5d7, type: 3}
       propertyPath: m_Name
       value: Rigged Creature
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458463172637317433, guid: d2a12e71f6c172344bb5277f80cbf5d7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3793684088536983740, guid: d2a12e71f6c172344bb5277f80cbf5d7, type: 3}
       propertyPath: m_RootOrder
