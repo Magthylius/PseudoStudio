@@ -7,12 +7,15 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using Hadal.UI;
 using Tenshi.UnitySoku;
+using Hadal.Networking;
 
 namespace Hadal.Player.Behaviours
 {
     public class PlayerShoot : MonoBehaviourDebug, IPlayerComponent, IPlayerEnabler
     {
         [SerializeField] string debugKey;
+
+        NetworkEventManager neManager;
 
         [Header("Aiming")]
         public Transform aimParentObject;
@@ -40,23 +43,25 @@ namespace Hadal.Player.Behaviours
         #region Unity Lifecycle
         private void OnEnable()
         {
-            PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+            //PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
+            neManager = NetworkEventManager.Instance;
+            neManager.AddListener(ByteEvents.PLAYER_TORPEDO_LAUNCH, NetworkingClient_EventReceived);
         }
 
         private void OnDisable()
         {
-            PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
+            //PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
         }
 
         private void NetworkingClient_EventReceived(EventData obj)
         {
-            /*if (obj.Code == PLAYER_TOR_LAUNCH_EVENT)
+            if (obj.Code == (byte)ByteEvents.PLAYER_TORPEDO_LAUNCH)
             {
                 if ((int)obj.CustomData == _pView.ViewID)
                 {
                     FireTorpedo();
                 }
-            }*/
+            }
         }
 
         private void Awake()
@@ -124,7 +129,8 @@ namespace Hadal.Player.Behaviours
         public void SendTorpedoEvent()
         {
             if (!AllowUpdate) return;
-            //PhotonNetwork.RaiseEvent(PLAYER_TOR_LAUNCH_EVENT, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+            //PhotonNetwork.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
+            neManager.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, _pView.ViewID);
         }
 
         public void FireTorpedo()
