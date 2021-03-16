@@ -46,6 +46,12 @@ namespace Hadal.AI.States
             await CheckForNewDestinationTimerCompletedAsync();
             WalkPath();
         }
+        public void LateStateTick()
+        {
+        }
+        public void FixedStateTick()
+        {
+        }
         public void OnStateEnd()
         {
             ResetPath();
@@ -109,7 +115,7 @@ namespace Hadal.AI.States
 
         async Task CheckForNewDestinationTimerCompletedAsync()
         {
-            newDestTimer -= Time.deltaTime;
+            if (pathQueue.IsEmpty()) newDestTimer -= Time.deltaTime;
             if (newDestTimer < 0.0f)
             {
                 ResetNewDestinationTimer();

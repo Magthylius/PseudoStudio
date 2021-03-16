@@ -74,9 +74,18 @@ namespace Hadal.AI
         private void Update()
         {
             if (!PhotonNetwork.IsMasterClient) return;
-
             HandlePseudoStart();
             stateMachine?.MachineTick();
+        }
+        private void LateUpdate()
+        {
+            if (!PhotonNetwork.IsMasterClient) return;
+            stateMachine?.LateMachineTick();
+        }
+        private void FixedUpdate()
+        {
+            if (!PhotonNetwork.IsMasterClient) return;
+            stateMachine?.FixedMachineTick();
         }
 
         private void InitialiseStates(Grid grid)
