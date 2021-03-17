@@ -447,12 +447,17 @@ namespace Hadal.Networking
 
         public void AddPlayer(GameObject playerObject)
         {
+            print("player added");
             foreach (GameObject player in playerObjects) if (player == playerObject) return;
             playerObjects.Add(playerObject);
         }
         public void RemovePlayer(GameObject playerObject)
         {
             foreach (GameObject player in playerObjects) if (player == playerObject) playerObjects.Remove(playerObject);
+        }
+        public void SyncPlayerObjects(List<GameObject> playerObjectLists)
+        {
+            playerObjects = new List<GameObject>(playerObjectLists);
         }
 
         public void SpawnPlayerManager()

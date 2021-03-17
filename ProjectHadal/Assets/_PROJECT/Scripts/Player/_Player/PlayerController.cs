@@ -56,6 +56,7 @@ namespace Hadal.Player
             TryInjectDependencies();
             //HandlePhotonView(false);
             OnInitialiseComplete?.Invoke(this);
+            NetworkEventManager.Instance.AddPlayer(gameObject);
             //Deactivate();
         }
 

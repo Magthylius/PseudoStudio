@@ -131,10 +131,8 @@ namespace Hadal.Player
                 }
             }*/
 
-
-            neManager.AddPlayer(player);
             AddPlayerEvent?.Invoke();
-            Debug.Log("Added a player "); 
+            //Debug.Log("Added a player "); 
         }
 
         #endregion
@@ -157,8 +155,6 @@ namespace Hadal.Player
 
             playerList.Add(controller);
             controller.InjectDependencies(this, photonPlayer);
-
-            neManager.AddPlayer(player);
         }
 
         #endregion
