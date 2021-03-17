@@ -32,8 +32,6 @@ namespace Hadal.AIComponents
             Brain.ViewIDBelongsToTransMethod = (trans, id) => ViewIDBelongsToTransform(id, trans);
             
             //! Subcribes player events
-            // TODO: a better way to add player
-            PlayerManager.AddPlayerEvent += UpdatePlayerControllers;
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
             Brain.ForceSlamPlayerEvent += HandlePlayerSlamEvent;
@@ -42,24 +40,12 @@ namespace Hadal.AIComponents
 
         private void Start()
         {
-            PlayerManager.AddPlayerEvent += UpdatePlayerControllers;
-            playerObjects = NetworkEventManager.Instance.PlayerObjects;
-            // players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
-            // Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
-        }
-
-        private void Update()
-        {
-            if (players.IsNullOrEmpty())
-            {
-                UpdatePlayerControllers();
-            }
+            UpdatePlayerControllers();
         }
 
         private void OnDestroy()
         {
             //! Unsubscribe player events
-            PlayerManager.AddPlayerEvent -= UpdatePlayerControllers;
             AIBrain.DamagePlayerEvent -= Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent -= HandlePlayerMovementFreeze;
             Brain.ForceSlamPlayerEvent -= HandlePlayerSlamEvent;
@@ -124,8 +110,8 @@ namespace Hadal.AIComponents
 
         private void UpdatePlayerControllers()
         {
+            playerObjects = NetworkEventManager.Instance.PlayerObjects;
             players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
-            $"PlayerOBjects Count: {NetworkEventManager.Instance.PlayerObjects.Count}".Msg();
             Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
         }
 
