@@ -29,12 +29,6 @@ namespace Hadal.AIComponents
             Brain.GetViewIDMethod = (trans) => GetViewIDFromTransform(trans);
             Brain.ViewIDBelongsToTransMethod = (trans, id) => ViewIDBelongsToTransform(id, trans);
             
-            // TODO: A better way to get playercontroller? maybe another script
-            players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
-            $"Netowrk manager is null: {NetworkEventManager.Instance == null}".Msg();
-            $"Playerobject list count: {NetworkEventManager.Instance.PlayerObjects.Count}".Msg();
-            Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
-
             //! Subcribes player events
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
@@ -44,7 +38,11 @@ namespace Hadal.AIComponents
 
         private void Start()
         {
-            
+            // TODO: A better way to get playercontroller? maybe another script
+            players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
+            Debug.Log($"Netowrk manager is null: {NetworkEventManager.Instance == null}");
+            Debug.Log($"Playerobject list count: {NetworkEventManager.Instance.PlayerObjects.Count}");
+            Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
         }
 
         private void OnDestroy()
