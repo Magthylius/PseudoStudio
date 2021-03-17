@@ -172,7 +172,7 @@ namespace Tenshi
     public static class UnityExtensions
     {
         public static float DeltaTime(this float number) => number * Time.deltaTime;
-        public static float UnscaledDeltaTime(this float number) => number * Time.deltaTime;
+        public static float UnscaledDeltaTime(this float number) => number * Time.unscaledDeltaTime;
         public static float FixedDeltaTime(this float number) => number * Time.fixedDeltaTime;
 
         public static void Print(this object item) => Debug.Log(item);
