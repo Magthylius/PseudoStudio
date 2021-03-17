@@ -132,7 +132,7 @@ namespace Hadal.Player
             }*/
 
             AddPlayerEvent?.Invoke();
-            Debug.Log("Added a player "); 
+            //Debug.Log("Added a player "); 
         }
 
         #endregion
