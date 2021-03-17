@@ -24,20 +24,11 @@ namespace Hadal.Player.Behaviours
         public GameObject Obj => gameObject;
         public bool TakeDamage(int damage)
         {
-            // TakeTheDamage(damage);
             _currentHealth = (_currentHealth - damage).Clamp0();
             $"Player health left: {_currentHealth}".Msg();
-            return true;
-        }
-        private void TakeTheDamage(int damage) => _pView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
-
-        [PunRPC]
-        private void RPC_TakeDamage(int damage)
-        {
-            if (!_pView.IsMine) return;
-            _currentHealth -= damage;
             DoOnHitEffects();
             CheckCurrentHealth();
+            return true;
         }
 
         private void DoOnHitEffects()

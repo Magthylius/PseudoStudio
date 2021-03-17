@@ -10,6 +10,9 @@ namespace Hadal.Player
 {
     public class PlayerManager : MonoBehaviour
     {
+        public delegate void AddAPlayerEvent();
+        public static event AddAPlayerEvent AddPlayerEvent;
+
         public bool IsOnNetwork { get; set; } = !NetworkEventManager.Instance.isOfflineMode;
         private const string PrefabFolder = "Prefabs/Player";
         private const string PrefabName = "Player";
@@ -42,6 +45,7 @@ namespace Hadal.Player
             }
 
             SpawnPlayer(neManager.LocalPlayer);
+            
         }
 
         void OnDisable()
@@ -114,7 +118,7 @@ namespace Hadal.Player
             }
             else
             {
-                controller.HandlePhotonView(true);
+                controller.HandlePhotonView(true); 
             }
 
             /*if (playerList.Count > 0)
@@ -129,6 +133,8 @@ namespace Hadal.Player
 
 
             neManager.AddPlayer(player);
+            AddPlayerEvent?.Invoke();
+            Debug.Log("Added a player "); 
         }
 
         #endregion
