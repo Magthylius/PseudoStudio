@@ -132,13 +132,18 @@ namespace Hadal.AI.States
             // b.rb.AddForce(tempVect, ForceMode.Force);
             // b.rb.AddForceAtPosition(tempVect, b.transform.position, ForceMode.Force);
 
-            if (Vector3.Distance(closestWall, b.transform.position) < 10f)
+            if (Vector3.Distance(closestWall, b.transform.position) < 15f)
             {
                 isPinning = false;
-                //TODO : Another way of setting parent null, this is just a hotfix
-                b.transform.GetChild(1).SetParent(null);
-                b.transform.GetChild(1).parent = null;
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
+                //TODO : Another way of setting parent null, this is just a hotfix
+                // b.transform.GetChild(1).SetParent(null);
+                // b.transform.GetChild(1).parent = null;
+                // if(b.transform.GetChild(1).parent == null)
+                //     return;
+                var child = b.transform.Find("Player(Clone)");
+                child.SetParent(null);
+                child.parent = null;
             }
         }
 
