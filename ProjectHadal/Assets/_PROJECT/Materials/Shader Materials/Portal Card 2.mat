@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3951745306761923073
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 4
 --- !u!21 &2100000
 Material:
   serializedVersion: 6
@@ -7,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MushroomInner
-  m_Shader: {fileID: -6465566751694194690, guid: bf788fe64bf7ec64bb804ebe9af9d032, type: 3}
+  m_Name: Portal Card 2
+  m_Shader: {fileID: -6465566751694194690, guid: 8ac714a6fde720e498c864cbc2229a3e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,10 +32,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_a16bd6cfa2ce401c895ed77fa7c2246f:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -80,9 +89,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_6c48c5e4947647c684ebfd308b8606c5: -2
-    - Vector1_b3c732c9f0f54427ae9f3eeaad5630a1: 100
-    - Vector1_fb65d1e149a04c55a2883372df4c7d27: 1.01
+    - Vector1_14f63a212df24a6ab777126e5f4bf6b8: 0.3
+    - Vector1_820ce48168164dc383016491cec9ea2b: 0.6
+    - Vector1_9e39f487d249460e84070116a7c3e4c9: 200
+    - Vector1_f856fd5d1fb04b3aa98a3e915d16c76d: 30
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -110,24 +120,9 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_136748cdebd8460abfdc482295dcf681: {r: 0, g: 1.8352941, b: 1.4117647, a: 0}
-    - Vector2_13d3a9353c7944d0a88b033007e5652d: {r: 0, g: 0, b: 0, a: 0}
-    - Vector2_5ea17635d03c4a80bd25b76ad9b6d290: {r: 0, g: 0, b: 0, a: 0}
+    - Color_3d4f870df5224c41a9759b6a3d5a31cc: {r: 0, g: 1, b: 0.7942071, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &8060802145903233603
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 4
