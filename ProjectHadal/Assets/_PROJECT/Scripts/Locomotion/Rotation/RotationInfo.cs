@@ -73,18 +73,21 @@ namespace Hadal.Locomotion
 
         public void DoLocalRotation(in IRotationInput input, in float deltaTime, Transform target)
         {
-            Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
-            mouseDistance *= (Sensitivity * Acceleration * deltaTime);
+            // Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
+            // mouseDistance *= (Sensitivity * Acceleration * deltaTime);
 
-            Vector3 rotation = target.localEulerAngles;
-            rotation.x -= mouseDistance.y;
-            rotation.y += mouseDistance.x;
-            rotation.z = Mathf.Clamp(-mouseDistance.x / deltaTime, -ZAxisClamp, ZAxisClamp);
+            //Vector3 rotation = target.localEulerAngles;
+            Vector3 rotation = new Vector3();
+            rotation.x -= (input.YAxis * Mathf.Cos(rotation.z) + input.XAxis * Mathf.Sin(rotation.z)) * Sensitivity * Acceleration * deltaTime;
+            rotation.y += (input.XAxis * Mathf.Cos(rotation.z) + input.YAxis * Mathf.Sin(rotation.z)) * Sensitivity * Acceleration * deltaTime;
+            rotation.z -= input.ZAxis * Sensitivity * Acceleration * deltaTime;
+            //rotation.z = Mathf.Clamp(-mouseDistance.x / deltaTime, -ZAxisClamp, ZAxisClamp); 
 
+            //DebugManager.Instance.SLog(sl_rotationInput, "Rot Input: ", new Vector3(input.XAxis, input.YAxis, input.ZAxis));
             // target.localEulerAngles = Vector3.Lerp(target.localEulerAngles, rotation, 5f * deltaTime);
             
             // target.rotation = Quaternion.Euler(rotation);
-            target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
+            //target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
             // rotation.z = RotateZAxisWithLerpXClamp(input, rotation.z, -mouseDistance.x, deltaTime);
             // rotation = target.rotation.eulerAngles;
@@ -92,7 +95,7 @@ namespace Hadal.Locomotion
             // target.rotation = Quaternion.Euler(rotation);
             //target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
 
-            //target.Rotate(mouseDistance.y, mouseDistance.x, 0.0f, Space.World);
+            target.Rotate(rotation.x, rotation.y, rotation.z);
             //float tilt = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
         }
 
