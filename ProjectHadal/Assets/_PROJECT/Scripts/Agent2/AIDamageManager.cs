@@ -12,6 +12,7 @@ using Hadal.Networking;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using System;
+using ReadOnly = Tenshi.ReadOnlyAttribute;
 
 namespace Hadal.AIComponents
 {
@@ -21,15 +22,18 @@ namespace Hadal.AIComponents
         [Header("Damage Values")]
         [Foldout("Damage Type"), SerializeField] int pinDamage;
         [Foldout("Damage Type"), SerializeField] int tailWhipDamage;
-        List<PlayerController> players;
+        [ReadOnly, SerializeField] List<PlayerController> players;
+        [ReadOnly, SerializeField] List<GameObject> playerObjects;
 
         private void Awake()
         {
             Brain = GetComponent<AIBrain>();
             Brain.GetViewIDMethod = (trans) => GetViewIDFromTransform(trans);
             Brain.ViewIDBelongsToTransMethod = (trans, id) => ViewIDBelongsToTransform(id, trans);
-
+            
             //! Subcribes player events
+            // TODO: a better way to add player
+            PlayerManager.AddPlayerEvent += UpdatePlayerControllers;
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
             Brain.ForceSlamPlayerEvent += HandlePlayerSlamEvent;
@@ -38,14 +42,24 @@ namespace Hadal.AIComponents
 
         private void Start()
         {
-            // TODO: A better way to get playercontroller? maybe another script
-            players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
-            Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
+            PlayerManager.AddPlayerEvent += UpdatePlayerControllers;
+            playerObjects = NetworkEventManager.Instance.PlayerObjects;
+            // players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
+            // Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
+        }
+
+        private void Update()
+        {
+            if (players.IsNullOrEmpty())
+            {
+                UpdatePlayerControllers();
+            }
         }
 
         private void OnDestroy()
         {
             //! Unsubscribe player events
+            PlayerManager.AddPlayerEvent -= UpdatePlayerControllers;
             AIBrain.DamagePlayerEvent -= Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent -= HandlePlayerMovementFreeze;
             Brain.ForceSlamPlayerEvent -= HandlePlayerSlamEvent;
@@ -106,6 +120,13 @@ namespace Hadal.AIComponents
             var p = player.GetComponent<PlayerController>();
             var direction = (player.position - destination).normalized;
             p.AddVelocity(1000000f, direction);
+        }
+
+        private void UpdatePlayerControllers()
+        {
+            players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
+            $"PlayerOBjects Count: {NetworkEventManager.Instance.PlayerObjects.Count}".Msg();
+            Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
         }
 
         public int GetViewIDFromTransform(Transform trans)

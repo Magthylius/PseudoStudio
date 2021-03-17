@@ -54,12 +54,12 @@ namespace Hadal.Networking
             }
 
             SetupNetworking();
+
+            playerObjects = new List<GameObject>();
         }
 
         void Start()
         {
-            playerObjects = new List<GameObject>();
-
             SetupEssentials();
             SetupEventRaising();
         }
@@ -445,8 +445,15 @@ namespace Hadal.Networking
             }
         }
 
-        public void AddPlayer(GameObject playerObject) => playerObjects.Add(playerObject);
-        public void RemovePlayer(GameObject playerObject) => playerObjects.Remove(playerObject);
+        public void AddPlayer(GameObject playerObject)
+        {
+            foreach (GameObject player in playerObjects) if (player == playerObject) return;
+            playerObjects.Add(playerObject);
+        }
+        public void RemovePlayer(GameObject playerObject)
+        {
+            foreach (GameObject player in playerObjects) if (player == playerObject) playerObjects.Remove(playerObject);
+        }
 
         public void SpawnPlayerManager()
         {

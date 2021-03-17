@@ -58,7 +58,7 @@ namespace Hadal.AI.States
         }
         public void OnStateEnd()
         {
-            
+
         }
         /// <summary>Detection for wall</summary>
         void SphereObstacleDetection()
@@ -104,25 +104,25 @@ namespace Hadal.AI.States
             b.rb.AddRelativeForce(velo, ForceMode.VelocityChange);
             b.transform.LookAt(closestWall);
 
-            float speed = Vector3.Magnitude (b.rb.velocity);  // test current object speed
-      
+            float speed = Vector3.Magnitude(b.rb.velocity);  // test current object speed
+
             if (speed > 5f)
-            
+
             {
                 float brakeSpeed = speed - 10f;  // calculate the speed decrease
-            
+
                 Vector3 normalisedVelocity = b.rb.velocity.normalized;
                 Vector3 brakeVelocity = normalisedVelocity * brakeSpeed;  // make the brake Vector3 value
-            
-               b.rb.AddForce(-brakeVelocity);  // apply opposing brake force
+
+                b.rb.AddForce(-brakeVelocity);  // apply opposing brake force
             }
 
-             if(b.rb.velocity.sqrMagnitude > 5f)
-             {
-                 //smoothness of the slowdown is controlled by the 0.99f, 
-                 //0.5f is less smooth, 0.9999f is more smooth
-                     b.rb.velocity *= 0.99f;
-             }
+            if (b.rb.velocity.sqrMagnitude > 5f)
+            {
+                //smoothness of the slowdown is controlled by the 0.99f, 
+                //0.5f is less smooth, 0.9999f is more smooth
+                b.rb.velocity *= 0.99f;
+            }
 
             // b.transform.position = closestWall;
             // tempVect = tempVect * b.pinSpeed * Time.deltaTime;
@@ -135,15 +135,16 @@ namespace Hadal.AI.States
             if (Vector3.Distance(closestWall, b.transform.position) < 15f)
             {
                 isPinning = false;
+
+                $"Before unparent: player's parent is null {parent.TargetPlayer.parent == null}".Msg();
+
+                parent.TargetPlayer.SetParent(null);
+                parent.TargetPlayer.parent = null;
+
+                $"After unparent: player's parent is null {parent.TargetPlayer.parent == null}".Msg();
+
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
-                //TODO : Another way of setting parent null, this is just a hotfix
-                // b.transform.GetChild(1).SetParent(null);
-                // b.transform.GetChild(1).parent = null;
-                // if(b.transform.GetChild(1).parent == null)
-                //     return;
-                var child = b.transform.Find("Player(Clone)");
-                child.SetParent(null);
-                child.parent = null;
+                
             }
         }
 
@@ -169,9 +170,7 @@ namespace Hadal.AI.States
             if (isPinning)
             {
                 b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
-                MoveToClosestWall();
-                parent.ChaseTargetPlayer();
-
+                
                 float distanceBetween = Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f));
                 if (distanceBetween < 30f)
                 {
@@ -188,6 +187,9 @@ namespace Hadal.AI.States
                     RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_PIN_EVENT, data, options);
                 }
+
+                MoveToClosestWall();
+                parent.ChaseTargetPlayer();
             }
         }
 
