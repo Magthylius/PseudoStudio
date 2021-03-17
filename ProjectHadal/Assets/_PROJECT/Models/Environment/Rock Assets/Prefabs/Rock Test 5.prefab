@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7801754469233252635}
-  - component: {fileID: 1527708129}
   - component: {fileID: 1371445329959675125}
   - component: {fileID: 2822743320708111692}
+  - component: {fileID: 1527708129}
+  - component: {fileID: 6068606301755059612}
   m_Layer: 0
   m_Name: Rock Test 5
   m_TagString: Untagged
@@ -33,19 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1527708129
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7801754469233252632}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 88.54448, y: 112.11681, z: 105.75331}
-  m_Center: {x: 0.5751629, y: 51.26457, z: -0.09011841}
 --- !u!33 &1371445329959675125
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -95,3 +83,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1527708129
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801754469233252632}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 50.946766, y: 106.56094, z: 63.00499}
+  m_Center: {x: 7.638616, y: 48.74485, z: -1.445235}
+--- !u!65 &6068606301755059612
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801754469233252632}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 75.54265, y: 43.076828, z: 94.895546}
+  m_Center: {x: 0.8882676, y: 80.486916, z: -0.57774544}
