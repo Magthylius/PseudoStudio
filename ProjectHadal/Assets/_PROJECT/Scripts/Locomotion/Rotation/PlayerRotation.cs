@@ -21,5 +21,15 @@ namespace Hadal.Locomotion
             //Rotary.DoRotationWithLerp(Input, deltaTime, target);
             Rotary.DoLocalRotation(Input, deltaTime, target);
         }
+
+        public override void DoFixedUpdate(in float fixedDeltaTime)
+        {
+            
+        }
+
+        public override void DoLateUpdate(in float deltaTime)
+        {
+            
+        }
     }
 }

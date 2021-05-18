@@ -40,6 +40,16 @@ namespace Hadal.Locomotion
             CalculateSpeed(deltaTime);
         }
 
+        public override void DoFixedUpdate(in float fixedDeltaTime)
+        {
+            
+        }
+
+        public override void DoLateUpdate(in float deltaTime)
+        {
+            
+        }
+
         public void SetIsLocal(bool state) => _isLocal = state;
 
         static readonly IMovementInput DefaultInputs = new RawKeyboardInput();

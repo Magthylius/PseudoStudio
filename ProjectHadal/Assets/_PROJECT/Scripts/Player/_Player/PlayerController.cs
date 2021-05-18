@@ -62,8 +62,27 @@ namespace Hadal.Player
 
         protected override void Update()
         {
-            DoAllUpdate(DeltaTime);
-            DoLocalUpdate(DeltaTime);
+            DoDebugUpdate(DeltaTime);
+
+            if (!_pView.IsMine) return;
+            cameraController.CameraTransition(DeltaTime, IsBoosted);
+            inventory.DoUpdate(DeltaTime);
+            lamp.DoUpdate(DeltaTime);
+            mover.DoUpdate(DeltaTime);
+            rotator.DoUpdate(DeltaTime);
+            shooter.DoUpdate(DeltaTime);
+        }
+
+        protected override void FixedUpdate()
+        {
+            mover.DoFixedUpdate(FixedDeltaTime);
+            rotator.DoFixedUpdate(FixedDeltaTime);
+        }
+
+        protected override void LateUpdate()
+        {
+            mover.DoLateUpdate(DeltaTime);
+            rotator.DoLateUpdate(DeltaTime);
         }
 
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
@@ -105,20 +124,9 @@ namespace Hadal.Player
 
         #region Private Methods
 
-        private void DoAllUpdate(in float deltaTime)
+        private void DoDebugUpdate(in float deltaTime)
         {
             DebugCursor();
-        }
-
-        private void DoLocalUpdate(in float deltaTime)
-        {
-            if (!_pView.IsMine) return;
-            cameraController.CameraTransition(deltaTime, IsBoosted);
-            inventory.DoUpdate(deltaTime);
-            lamp.DoUpdate(deltaTime);
-            mover.DoUpdate(deltaTime);
-            rotator.DoUpdate(deltaTime);
-            shooter.DoUpdate(deltaTime);
         }
 
         public void TransferOwnership(Photon.Realtime.Player newOwner)
