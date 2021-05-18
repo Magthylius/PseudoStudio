@@ -31,13 +31,18 @@ namespace Hadal.UI
         PostProcessingManager ppManager;
         LoadingManager loadingManager;
 
-        [Header("Position Settings")]
-        [SerializeField] RectTransform uiRotators;
+        [Header("Reticle Settings")]
+        [SerializeField] RectTransform reticleDirectors;
+        [SerializeField] float maxDirectorRadius = 10f;
+        [SerializeField] float directorSensitivity = 0.5f;
+        [SerializeField] float directorReactionSpeed = 5f;
+
+        //! legacy
         [SerializeField] float rotatorVerticalMovementDistance = 1.2f;
         [SerializeField] float rotatorHorizontalMovementDistance = 0.4f;
         [SerializeField] float rotatorReactionSpeed = 5f;
 
-        FlexibleRect uiRotatorsFR;
+        FlexibleRect reticleDirectorsFR;
 
         [Header("Player Settings")]
         [SerializeField] private float highestPoint;  
@@ -98,6 +103,8 @@ namespace Hadal.UI
             ppManager = PostProcessingManager.Instance;
             loadingManager = LoadingManager.Instance;
 
+            reticleDirectorsFR = new FlexibleRect(reticleDirectors);
+
             DoDebugEnabling(debugKey);
 
             SetupModules();
@@ -123,7 +130,8 @@ namespace Hadal.UI
             if (!pauseMenuOpen)
             {
                 InformationUpdate();
-                BalancerUpdate();
+                //BalancerUpdate();
+                UpdateReticle();
                 ProjectileTrackingUpdate();
             }
 
@@ -164,7 +172,6 @@ namespace Hadal.UI
         #endregion
 
         #region Modules
-        
         public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput)
         {
             playerTransform = Transform;
@@ -177,8 +184,6 @@ namespace Hadal.UI
             //lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
             //lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
 
-            uiRotatorsFR = new FlexibleRect(uiRotators);
-
             sonicDartTransforms = new List<Transform>();
         }
 
@@ -186,22 +191,6 @@ namespace Hadal.UI
         {
             string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
             depthText.text = $"Depth: -{depth}";
-        }
-
-        void BalancerUpdate()
-        {
-            //float xMovement = player.MovementInput.HorizontalAxis;
-            //float yMovement = player.MovementInput.HoverAxis;
-
-            //DebugLog(xMovement + ", " + yMovement);
-            //uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(xMovement * rotatorHorizontalMovementDistance, yMovement * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
-
-            Vector3 balancerAngles = new Vector3();
-            balancerAngles.z = playerRotator.localRotation.eulerAngles.z; 
-
-            uiRotators.rotation = Quaternion.Slerp(uiRotators.rotation, Quaternion.Euler(balancerAngles), rotatorReactionSpeed * Time.deltaTime);
-            uiRotatorsFR.NormalLerp(uiRotatorsFR.GetBodyOffset(-new Vector2(0f, playerRotationInput.YAxis * rotatorVerticalMovementDistance)), rotatorReactionSpeed * Time.deltaTime);
-            //DebugLog(player.transform.localRotation + ", " + player.transform.localRotation.eulerAngles);
         }
 
         void ProjectileTrackingUpdate()
@@ -226,6 +215,17 @@ namespace Hadal.UI
             trackerHandler.Dump(projectileTransform);
         }
 
+        #endregion
+
+        #region Reticles
+        void UpdateReticle()
+        {
+            Vector2 playerInput = new Vector2(playerRotationInput.XAxis, playerRotationInput.YAxis);
+            playerInput = playerInput.normalized * maxDirectorRadius;
+
+            reticleDirectorsFR.StartLerp(playerInput);
+            reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
+        }
         #endregion
 
         #region Utilities
