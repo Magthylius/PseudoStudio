@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Hadal.Locomotion
 {
     [System.Serializable]
-    public class PlayerMovement : Mover
+    public class PlayerMovementV : Mover
     {
         [Header("Debug"), SerializeField] private string debugKey;
         private Vector3 _lastPosition;
@@ -38,6 +38,16 @@ namespace Hadal.Locomotion
             LoseVelocity(deltaTime);
             Move(deltaTime);
             CalculateSpeed(deltaTime);
+        }
+
+        public override void DoFixedUpdate(in float fixedDeltaTime)
+        {
+            
+        }
+
+        public override void DoLateUpdate(in float deltaTime)
+        {
+            
         }
 
         public void SetIsLocal(bool state) => _isLocal = state;

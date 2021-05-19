@@ -25,7 +25,20 @@ namespace Hadal
             rotator.DoUpdate(DeltaTime);
         }
 
+        protected virtual void FixedUpdate()
+        {
+            mover.DoFixedUpdate(FixedDeltaTime);
+            rotator.DoFixedUpdate(FixedDeltaTime);
+        }
+
+        protected virtual void LateUpdate()
+        {
+            mover.DoLateUpdate(DeltaTime);
+            rotator.DoLateUpdate(DeltaTime);
+        }
+
         public float DeltaTime => Time.deltaTime;
+        public float FixedDeltaTime => Time.fixedDeltaTime;
         public float SqrSpeed => mover.SqrSpeed;
 
         public Rotator Rotator => rotator;

@@ -18,8 +18,19 @@ namespace Hadal.Locomotion
         {
             if (!allowUpdate) return;
             //Rotary.DoSmoothRotation(Input, deltaTime, target);
-            //Rotary.DoRotationWithLerp(Input, deltaTime, target);
-            Rotary.DoLocalRotation(Input, deltaTime, target);
+            Rotary.DoRotationWithLerp(Input, deltaTime, target);
+           // Rotary.DoLocalRotation(Input, deltaTime, target);
+        }
+
+        public override void DoFixedUpdate(in float fixedDeltaTime)
+        {
+            if (!allowUpdate) return;
+            Rotary.DoRotationWithLerp(Input, fixedDeltaTime, target);
+        }
+
+        public override void DoLateUpdate(in float deltaTime)
+        {
+            
         }
     }
 }
