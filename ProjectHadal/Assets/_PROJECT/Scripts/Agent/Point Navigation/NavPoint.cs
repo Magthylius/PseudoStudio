@@ -10,13 +10,25 @@ namespace Hadal.AI
         public Vector3 GetPosition => transform.position;
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
         public Vector3 GetDirectionTo(Vector3 position) => (GetPosition - position).normalized;
+
+        public void AttachTo(Transform target)
+        {
+            if (target == null)
+            {
+                transform.SetParent(null);
+                return;
+            }
+            transform.position = target.position;
+            transform.SetParent(target);
+        }
     }
 
     public enum PointType
     {
-        Nest,
-        OpenField,
-        Volcanic,
-        Crystal
+        OpenArea,
+        LairGrounds,
+        HydrothermalCavern,
+        BioluminescentCavern,
+        Custom
     }
 }
