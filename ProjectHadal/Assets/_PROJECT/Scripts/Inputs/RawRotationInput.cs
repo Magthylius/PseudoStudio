@@ -15,5 +15,6 @@ namespace Hadal.Inputs
         public bool XTrigger => Mathf.Abs(XAxis) > TriggerRange;
         public bool YTrigger => Mathf.Abs(YAxis) > TriggerRange;
         public bool ZTrigger => Mathf.Abs(ZAxis) > TriggerRange;
+        public Vector3 AllInput => new Vector3(XAxis, YAxis, ZAxis);
     }
 }

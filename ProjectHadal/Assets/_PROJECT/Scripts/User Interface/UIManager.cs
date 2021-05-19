@@ -219,13 +219,10 @@ namespace Hadal.UI
         #region Reticles
         void UpdateReticle()
         {
-            //Vector2 playerInput = new Vector2(playerRotationInput.XAxis, playerRotationInput.YAxis);
-            //playerInput = playerInput.normalized * maxDirectorRadius;
-            Vector3 playerRot = playerRotator.LookDirection;
-            reticleDirectorsFR.MoveTo((Vector2)playerRot * maxDirectorRadius);
-            //print(playerRot);
-            //reticleDirectorsFR.StartLerp(playerInput);
-            //reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
+            reticleDirectorsFR.StartLerp((Vector2)playerRotationInput.AllInput * maxDirectorRadius);
+            reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
+
+            print((Vector2)playerRotationInput.AllInput);
         }
         #endregion
 

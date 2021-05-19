@@ -69,6 +69,6 @@ namespace Hadal.Locomotion
             DebugManager.Instance.SLog(sl_MP, currentEA);
         }
 
-        public override Vector3 LookDirection => lookDirection;
+        public override Vector3 LookDirection => targetEA;
     }
 }
