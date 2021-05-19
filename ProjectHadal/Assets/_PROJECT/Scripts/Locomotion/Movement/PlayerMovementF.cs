@@ -75,7 +75,9 @@ namespace Hadal.Locomotion
 
             Vector3 moveForce = target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed ;
             rigidBody.AddForce(moveForce * 50);
-            Debug.Log("Force Added " + moveForce.magnitude);
+
+            //! for fucks sakes jin, comment your debugs!
+            //Debug.Log("Force Added " + moveForce.magnitude);
         }
 
         private void CalculateSpeed()

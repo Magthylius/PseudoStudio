@@ -25,7 +25,8 @@ namespace Hadal.Player
             if (!NetworkEventManager.Instance.isOfflineMode) return;
 
             PlayerController.OnInitialiseComplete += GetController;
-            Instantiate(Resources.Load(PathManager.PlayerManagerPrefabPath), Vector3.zero, Quaternion.identity);
+            GameObject player = (GameObject)Instantiate(Resources.Load(PathManager.PlayerManagerPrefabPath), Vector3.zero, Quaternion.identity);
+
         }
 
         void GetController(PlayerController controller)

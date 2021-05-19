@@ -152,7 +152,7 @@ namespace Hadal.Player
             if (prefab is null) return;
             GameObject player = (GameObject)Instantiate(prefab, transform.position, transform.rotation);
             PlayerController controller = player.GetComponent<PlayerController>();
-
+            controller.HandlePhotonView(true);
             playerList.Add(controller);
             controller.InjectDependencies(this, photonPlayer);
         }

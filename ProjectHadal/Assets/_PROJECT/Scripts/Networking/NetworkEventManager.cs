@@ -447,7 +447,7 @@ namespace Hadal.Networking
 
         public void AddPlayer(GameObject playerObject)
         {
-            print("player added");
+            //print("player added");
             foreach (GameObject player in playerObjects) if (player == playerObject) return;
             playerObjects.Add(playerObject);
         }
