@@ -29,18 +29,18 @@ namespace Hadal.Locomotion
 
         public override void DoUpdate(in float deltaTime)
         {
-            if (!allowUpdate) return;
-     /*       LerpCummulatedAcceleration(deltaTime);
-            HandleAcceleration(deltaTime);
-            AddVelocity();
-            LoseVelocity(deltaTime);
-            Move(deltaTime);
-            CalculateSpeed(deltaTime);*/
+            /*      LerpCummulatedAcceleration(deltaTime);
+                   HandleAcceleration(deltaTime);
+                   AddVelocity();
+                   LoseVelocity(deltaTime);
+                   Move(deltaTime);
+                   CalculateSpeed(deltaTime);*/
         }
 
         public override void DoFixedUpdate(in float fixedDeltaTime)
         {
-
+            if (!allowUpdate) return;
+            HandleAcceleration(fixedDeltaTime);
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -65,11 +65,27 @@ namespace Hadal.Locomotion
             Input = DisabledInputs;
         }
 
+        #region Private Methods
+        private void HandleAcceleration(in float deltaTime)
+        {
+            _currentForwardSpeed = VerticalInputSpeed * BoostInputSpeed * Accel.Forward * deltaTime;
+            _currentStrafeSpeed = HorizontalInputSpeed * BoostInputSpeed * Accel.Strafe * deltaTime;
+            _currentHoverSpeed = HoverInputSpeed * BoostInputSpeed * Accel.Hover * deltaTime;
+
+            Vector3 moveForce = target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed ;
+            rigidBody.AddForce(moveForce * 20);
+            Debug.Log("Force Added " + moveForce.magnitude);
+        }
+
+        #endregion
 
         #region Shorthands
-
+        private float VerticalInputSpeed => Input.VerticalAxis * Speed.InputForward;
+        private float HorizontalInputSpeed => Input.HorizontalAxis * Speed.InputStrafe;
+        private float HoverInputSpeed => Input.HoverAxis * Speed.InputHover;
+        private float BoostInputSpeed => /*allowBoost*/ false.AsFloat() * Input.BoostAxis * Accel.Boost + 1.0f;
         public override float SqrSpeed => Velocity.SquareSpeed;
-
+        private Rigidbody rigidBody => target.GetComponent<Rigidbody>();
         #endregion
     }
 }
