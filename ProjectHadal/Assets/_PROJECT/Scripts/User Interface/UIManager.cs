@@ -223,7 +223,7 @@ namespace Hadal.UI
             //playerInput = playerInput.normalized * maxDirectorRadius;
             Vector3 playerRot = playerRotator.LookDirection;
             reticleDirectorsFR.MoveTo((Vector2)playerRot * maxDirectorRadius);
-            print(playerRot);
+            //print(playerRot);
             //reticleDirectorsFR.StartLerp(playerInput);
             //reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
         }
