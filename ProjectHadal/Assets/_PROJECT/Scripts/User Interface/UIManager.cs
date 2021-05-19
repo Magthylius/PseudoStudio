@@ -222,7 +222,7 @@ namespace Hadal.UI
             reticleDirectorsFR.StartLerp((Vector2)playerRotationInput.AllInput * maxDirectorRadius);
             reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
 
-            print((Vector2)playerRotationInput.AllInput);
+            //print((Vector2)playerRotationInput.AllInput);
         }
         #endregion
 
