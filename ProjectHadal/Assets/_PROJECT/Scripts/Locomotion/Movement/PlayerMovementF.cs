@@ -41,6 +41,7 @@ namespace Hadal.Locomotion
         {
             if (!allowUpdate) return;
             HandleAcceleration(fixedDeltaTime);
+            CalculateSpeed();
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -73,10 +74,18 @@ namespace Hadal.Locomotion
             _currentHoverSpeed = HoverInputSpeed * BoostInputSpeed * Accel.Hover * deltaTime;
 
             Vector3 moveForce = target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed ;
-            rigidBody.AddForce(moveForce * 20);
+            rigidBody.AddForce(moveForce * 50);
             Debug.Log("Force Added " + moveForce.magnitude);
         }
 
+        private void CalculateSpeed()
+        {
+            Speed.Normalised = rigidBody.velocity.magnitude;
+            Speed.Forward = rigidBody.velocity.x;
+            Speed.Strafe = rigidBody.velocity.z;
+            Speed.Hover = rigidBody.velocity.y;
+
+        }
         #endregion
 
         #region Shorthands
