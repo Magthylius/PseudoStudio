@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UILineRenderer : Graphic
+public class MagthyliusUILineRenderer : Graphic
 {
     public Vector2 gridSize;
     public List<Vector2> points;
@@ -17,15 +17,16 @@ public class UILineRenderer : Graphic
     public bool noBend = false;
     List<Vector2> bendPoints;
 
+    //! Used to force vertices
     float useless;
     float Useless
     {
         get { return useless; }
-        set 
+        set
         {
             useless = value;
-		    SetVerticesDirty();
-	    }
+            SetVerticesDirty();
+        }
     }
 
     protected override void OnPopulateMesh(VertexHelper vh)
