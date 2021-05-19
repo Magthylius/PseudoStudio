@@ -220,11 +220,12 @@ namespace Hadal.UI
         #region Reticles
         void UpdateReticle()
         {
-            Vector2 playerInput = new Vector2(playerRotationInput.XAxis, playerRotationInput.YAxis);
-            playerInput = playerInput.normalized * maxDirectorRadius;
-
-            reticleDirectorsFR.StartLerp(playerInput);
-            reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
+            //Vector2 playerInput = new Vector2(playerRotationInput.XAxis, playerRotationInput.YAxis);
+            //playerInput = playerInput.normalized * maxDirectorRadius;
+            Vector3 playerRot = playerRotator.LookDirection;
+            reticleDirectorsFR.MoveTo((Vector2)playerRot * maxDirectorRadius);
+            //reticleDirectorsFR.StartLerp(playerInput);
+            //reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
         }
         #endregion
 
@@ -260,8 +261,8 @@ namespace Hadal.UI
         {
             pauseMenu.Close();
             Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-
+            //Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Confined;
             if (PauseMenuClosed != null) PauseMenuClosed.Invoke();
         }
 

@@ -34,6 +34,7 @@ namespace Hadal.Locomotion
         public RotationInfo Rotary;
         protected Transform target;
         protected bool allowUpdate;
+
         public abstract void Initialise(Transform transform);
         public abstract void DoUpdate(in float deltaTime);
         public abstract void DoFixedUpdate(in float fixedDeltaTime);
@@ -44,5 +45,6 @@ namespace Hadal.Locomotion
 
         public Quaternion localRotation => target.localRotation;
         public Quaternion rotation => target.rotation;
+        public virtual Vector3 LookDirection => new Vector3(1, 1, 1);
     }
 }

@@ -37,6 +37,9 @@ namespace Hadal.Locomotion
         private const float TiltAngle = 90.0f;
         private const float FullAngle = 360.0f;
 
+        //! Data
+        protected Vector3 targetLerpRotation;
+
         public void Initialise()
         {
             XAxisClamp = XAxisClamp.Abs();
@@ -56,6 +59,10 @@ namespace Hadal.Locomotion
             rotation.y = Mathf.LerpAngle(rotation.y, targetY, Acceleration * deltaTime);
             rotation.z = RotateZAxisWithLerpClamp(input, rotation, deltaTime);
             target.rotation = Quaternion.Euler(rotation);
+
+            /*Vector3 rotation = target.rotation.eulerAngles;
+            Vector3 playerInput = new Vector3(-input.YAxis, input.XAxis, -input.ZAxis);
+            targetLerpRotation = rotation + playerInput;*/
         }
 
         public void DoSmoothRotation(in IRotationInput input, in float deltaTime, Transform target)
@@ -98,6 +105,22 @@ namespace Hadal.Locomotion
             target.Rotate(rotation.x, rotation.y, rotation.z);
             //float tilt = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
         }
+
+        public void DoLocalRotationFixedUpdate(in IRotationInput input, Transform target)
+        {
+            Vector3 rotation = new Vector3();
+            rotation.x -= input.YAxis * Sensitivity;
+            rotation.y += input.XAxis * Sensitivity;
+            rotation.z -= input.ZAxis * Sensitivity + (input.XAxis * 0.3f);
+
+            rotation *= Sensitivity * Time.deltaTime;
+
+            targetLerpRotation = rotation;
+
+            target.Rotate(rotation.x, rotation.y, rotation.z);
+        }
+
+        public Vector3 TargetRotation => targetLerpRotation;
 
         private float RotateZAxisWithLerpClamp(in IRotationInput input, in Vector3 euler, in float deltaTime)
         {
