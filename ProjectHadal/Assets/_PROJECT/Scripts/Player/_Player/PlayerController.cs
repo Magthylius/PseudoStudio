@@ -69,7 +69,7 @@ namespace Hadal.Player
             inventory.DoUpdate(DeltaTime);
             lamp.DoUpdate(DeltaTime);
             mover.DoUpdate(DeltaTime);
-            rotator.DoUpdate(DeltaTime);
+           // rotator.DoFixedUpdate(DeltaTime);
             shooter.DoUpdate(DeltaTime);
         }
 

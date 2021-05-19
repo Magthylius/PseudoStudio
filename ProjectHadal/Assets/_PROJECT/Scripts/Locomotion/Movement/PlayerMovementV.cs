@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Hadal.Locomotion
 {
     [System.Serializable]
-    public class PlayerMovement : Mover
+    public class PlayerMovementV : Mover
     {
         [Header("Debug"), SerializeField] private string debugKey;
         private Vector3 _lastPosition;
