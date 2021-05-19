@@ -6,12 +6,14 @@ namespace Hadal.Locomotion
 {
     public class PlayerRotation : Rotator
     {
-        Vector2 screenCenter = new Vector2();
-        float mouseControlMinPull = 75f;
-        float mouseControlMaxPull = 300f;
-        float rotationSensitivity = 3f;
+        float rotationSensitivity = 1.5f;
 
         Vector3 lookDirection;
+
+        Vector3 currentEA;
+        Vector3 targetEA;
+
+        public Ray lookRay;
 
         int sl_MP;
 
@@ -22,7 +24,11 @@ namespace Hadal.Locomotion
             Rotary.Initialise();
             Input = new StandardRotationInput();
 
-            screenCenter = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+
+            //lookRay = target.forward * lookObjectDistance;
+            lookRay = new Ray(target.position, target.forward);
+            currentEA = target.eulerAngles;
+            targetEA = currentEA;
 
             sl_MP = DebugManager.Instance.CreateScreenLogger();
         }
@@ -42,33 +48,10 @@ namespace Hadal.Locomotion
             //Rotary.DoLocalRotation(Input, 1, target);
             //Rotary.DoLocalRotationFixedUpdate(Input, target);
             //Rotary.SetTargetRotation(Input, fixedDeltaTime, target);
-            
 
-            Vector3 direction = ((Vector2)UnityEngine.Input.mousePosition - screenCenter).normalized;
-            float dist = ((Vector2)UnityEngine.Input.mousePosition - screenCenter).magnitude;
-            float power = Mathf.Clamp((dist - mouseControlMinPull) / (mouseControlMaxPull), 0f, 1f);
-
-            direction *= power;
-            lookDirection = direction;
-            direction.z = -Input.ZAxis;
-
-            //! flip for rotation
-            float temp = direction.x;
-            direction.x = -direction.y;
-            direction.y = temp;
-
-            direction *= rotationSensitivity;
-
-
-            //target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(targetRot), rotationSensitivity * Time.deltaTime);
-            //Vector3 selfRot = target.localRotation.eulerAngles;
-            //selfRot = Vector3.Lerp(selfRot, targetRot, 0.4f);
-
-            //target.localRotation = Quaternion.Euler(selfRot);
-            //target.localEulerAngles = selfRot;
-            target.Rotate(direction);
-
-            DebugManager.Instance.SLog(sl_MP, lookDirection);
+            //RotateByMouse();
+            //RotateByLookObject();
+            RotateByEA();
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -76,7 +59,16 @@ namespace Hadal.Locomotion
             
         }
 
+        void RotateByEA()
+        {
+            targetEA += new Vector3(-Input.YAxis, Input.XAxis, 0f) * rotationSensitivity;
+            currentEA = Vector3.Lerp(currentEA, targetEA, 5f * Time.deltaTime);
 
-        public override Vector3 LookDirection => lookDirection;
+            target.localEulerAngles = currentEA;
+
+            DebugManager.Instance.SLog(sl_MP, currentEA);
+        }
+
+        public override Vector3 LookDirection => targetEA;
     }
 }

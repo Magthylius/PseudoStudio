@@ -24,6 +24,7 @@ namespace Hadal.Inputs
         bool YTrigger { get; }
         float ZAxis { get; }
         bool ZTrigger { get; }
+        Vector3 AllInput { get; }
     }
     public interface IMovementInput
     {
