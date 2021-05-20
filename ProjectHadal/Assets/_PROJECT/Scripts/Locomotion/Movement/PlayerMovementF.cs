@@ -12,6 +12,8 @@ namespace Hadal.Locomotion
         private Vector3 _currentPosition;
         private bool _isLocal = true;
 
+        [SerializeField] private float drag;
+
         public override void Initialise(Transform target)
         {
             base.Enable();
@@ -58,6 +60,8 @@ namespace Hadal.Locomotion
         {
             $"Enable is called".Warn();
             Input = DefaultInputs;
+            drag = Accel.MaxCummulation / Speed.Max;
+            rigidBody.drag = drag;
         }
 
         public override void Disable()

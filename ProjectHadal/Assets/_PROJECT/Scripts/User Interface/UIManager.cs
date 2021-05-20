@@ -258,8 +258,8 @@ namespace Hadal.UI
         {
             pauseMenu.Close();
             Cursor.visible = false;
-            //Cursor.lockState = CursorLockMode.Locked;
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Confined;
             if (PauseMenuClosed != null) PauseMenuClosed.Invoke();
         }
 
