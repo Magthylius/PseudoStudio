@@ -107,9 +107,12 @@ namespace Hadal.AI
 
         public void StopCustomPath(bool instantlyFindNewNavPoint = false)
         {
-            isOnCustomPath = false;
             canAutoSelectNavPoints = true;
-            StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
+			if (isOnCustomPath)
+			{
+				isOnCustomPath = false;
+				StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
+			}
 
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
