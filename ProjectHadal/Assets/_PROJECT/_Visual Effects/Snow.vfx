@@ -93,7 +93,7 @@ MonoBehaviour:
   m_ImportDependencies: []
   m_GraphVersion: 6
   m_ResourceVersion: 1
-  m_saved: 1
+  m_saved: 0
   m_SubgraphDependencies: []
   m_CategoryPath: 
 --- !u!2058629511 &8926484042661614527
@@ -573,7 +573,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614583}
   - {fileID: 8926484042661614585}
   dataType: 0
-  capacity: 500
+  capacity: 100
   stripCapacity: 16
   particlePerStripCount: 16
   m_Space: 1
@@ -2666,7 +2666,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614683}
       inputSlot: {fileID: 8926484042661614557}
-    position: {x: 747.5672, y: -76.5464}
+    position: {x: 817, y: -79}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661614683
@@ -4074,8 +4074,8 @@ MonoBehaviour:
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Direction: 1
   m_LinkedSlots:
-  - {fileID: 8926484042661614791}
   - {fileID: 8926484042661614781}
+  - {fileID: 8926484042661614791}
 --- !u!114 &8926484042661614821
 MonoBehaviour:
   m_ObjectHideFlags: 0
