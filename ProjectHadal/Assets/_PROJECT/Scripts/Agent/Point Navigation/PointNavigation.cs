@@ -44,7 +44,7 @@ namespace Hadal.AI
 
         private void Awake() => Initialise();
         private void Update() => DoUpdate(DeltaTime);
-        private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime);
+        private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime, DeltaTime);
 
 
         #region Public Methods
@@ -66,6 +66,10 @@ namespace Hadal.AI
         }
         public void DoUpdate(in float deltaTime)
         {
+            
+        }
+        public void DoFixedUpdate(in float fixedDeltaTime, in float deltaTime)
+        {
             if (pilotTrans == null) return;
             if (canPath)
             {
@@ -73,10 +77,6 @@ namespace Hadal.AI
                 MoveTowardsCurrentNavPoint(deltaTime);
             }
             HandleObstacleAvoidance(deltaTime);
-        }
-        public void DoFixedUpdate(in float fixedDeltaTime)
-        {
-
         }
 
         public float ElapsedTime => Time.time;
@@ -103,6 +103,9 @@ namespace Hadal.AI
             isOnCustomPath = true;
             currentPoint = target;
             canAutoSelectNavPoints = !targetIsPlayer;
+            ResetLingerTimer();
+            ResetTimeoutTimer();
+            if (enableDebug) "Setting custom path".Msg();
         }
 
         public void StopCustomPath(bool instantlyFindNewNavPoint = false)
@@ -116,7 +119,8 @@ namespace Hadal.AI
 
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
-                Destroy(currentPoint);
+                Destroy(currentPoint.gameObject);
+                if (enableDebug) "Stopping custom path".Msg();
                 yield return null;
                 
                 if (justFindNewPoint)
@@ -147,11 +151,11 @@ namespace Hadal.AI
             Vector3 lookAt = rBody.velocity.normalized;
             pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
 
-            float closeRadius = obstacleDetectRadius + 1f;
-            if (currentPoint.GetSqrDistanceTo(pilotTrans.position) < closeRadius * closeRadius)
+            float closeRadius = obstacleDetectRadius - 2f;
+            if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < closeRadius * closeRadius)
             {
                 hasReachedPoint = true;
-                StopCustomPath();
+                if (enableDebug) "Point Reached".Msg();
             }
         }
 
@@ -167,6 +171,7 @@ namespace Hadal.AI
                                     .ToList();
             points.AddRange(navPoints.Select(n => n.GetPosition).Where(p => Vector3.Distance(p, pilotTrans.position) <= obstacleDetectRadius));
 
+            if (enableDebug) $"Obstacle count: {points.Count}".Bold().Msg();
             if (points.IsEmpty()) return;
             points.ForEach(p =>
             {
@@ -190,7 +195,7 @@ namespace Hadal.AI
 
         private void TrySelectNewNavPoint(in float deltaTime)
         {
-            if (isOnCustomPath || !canAutoSelectNavPoints) return;
+            if (!canAutoSelectNavPoints) return;
 
             if (hasReachedPoint)
                 lingerTimer -= deltaTime;
@@ -201,6 +206,7 @@ namespace Hadal.AI
             {
                 ResetLingerTimer();
                 ResetTimeoutTimer();
+                StopCustomPath();
                 SelectNewNavPoint();
             }
         }
@@ -228,6 +234,16 @@ namespace Hadal.AI
             if (!enableDebug || pilotTrans == null) return;
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(pilotTrans.position, obstacleDetectRadius);
+
+            /*
+            float closeRadius = obstacleDetectRadius + 2f;
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(pilotTrans.position, closeRadius * closeRadius);
+
+            if (currentPoint == null) return;
+            Gizmos.color = Color.gray;
+            Gizmos.DrawWireSphere(pilotTrans.position, currentPoint.GetSqrDistanceTo(pilotTrans.position));
+            */
         }
     }
 }
