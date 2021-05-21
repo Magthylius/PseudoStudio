@@ -150,7 +150,7 @@ namespace Hadal.Player
             if (IsOnNetwork) return;
             var prefab = Resources.Load(GetPrefabPath());
             if (prefab is null) return;
-            GameObject player = (GameObject)Instantiate(prefab, transform.position, transform.rotation);
+            GameObject player = (GameObject)Instantiate(prefab, neManager.LocalSpawn.position, neManager.LocalSpawn.rotation);
             PlayerController controller = player.GetComponent<PlayerController>();
             controller.HandlePhotonView(true);
             playerList.Add(controller);
