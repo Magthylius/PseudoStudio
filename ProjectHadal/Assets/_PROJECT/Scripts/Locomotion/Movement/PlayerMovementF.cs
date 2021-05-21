@@ -64,7 +64,7 @@ namespace Hadal.Locomotion
             Input = DefaultInputs;
             drag = Accel.MaxCummulation / Speed.Max;
            // rigidBody.drag = drag;
-           // rigidBody.drag = drag / (drag * Time.fixedDeltaTime +1);
+            rigidBody.drag = drag / (drag * Time.fixedDeltaTime +1);
         }
 
         public override void Disable()
@@ -76,17 +76,20 @@ namespace Hadal.Locomotion
         #region Private Methods
         private void HandleAcceleration(in float deltaTime)
         {
-            _currentForwardSpeed = VerticalInputSpeed * BoostInputSpeed * Accel.Forward * deltaTime;
-            _currentStrafeSpeed = HorizontalInputSpeed * BoostInputSpeed * Accel.Strafe * deltaTime;
-            _currentHoverSpeed = HoverInputSpeed * BoostInputSpeed * Accel.Hover * deltaTime;
+            _currentForwardSpeed = VerticalInputSpeed  * Accel.Forward * deltaTime;
+            _currentStrafeSpeed = HorizontalInputSpeed  * Accel.Strafe * deltaTime;
+            _currentHoverSpeed = HoverInputSpeed  * Accel.Hover * deltaTime;
 
-            Vector3 moveForce = target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed ;
+            Vector3 moveForce = (target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed) * 100 ;
 
-            rigidBody.AddForce(moveForce * 100,ForceMode.Force);
+            if(moveForce.magnitude > Accel.MaxCummulation)
+            {
+                moveForce = moveForce.normalized * Accel.MaxCummulation;
+            }
 
-            DebugManager.Instance.SLog(SL_Debug, moveForce.magnitude * 100);
-            //DebugManager.Instance.SLog(SL_Debug, rigidBody.velocity);
-            //Debug.Log("Force Added " + moveForce.magnitude);
+            rigidBody.AddForce(moveForce, ForceMode.Force);
+
+            // DebugManager.Instance.SLog(SL_Debug, moveForce.magnitude * 100);
         }
 
         private void CalculateSpeed()
