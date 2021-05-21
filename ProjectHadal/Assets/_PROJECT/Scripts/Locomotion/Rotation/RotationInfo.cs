@@ -11,16 +11,21 @@ namespace Hadal.Locomotion
     public class RotationInfo
     {
         [Header("Input Settings")]
-        public float Sensitivity;
+        [Min(0.1f)] public float OverallSensitivity;
+        [Min(0.1f)] public float PitchSensitivity;
+        [Min(0.1f)] public float YawSensitivity;
+        [Min(0.1f)] public float RollSensitivity;
         public float Acceleration;
-        public float XAxisClamp;
-        public float ClampTolerance;
-        public float PullBackSpeed;
-        [ReadOnly] public float CurrentXAxis;
 
         [Space(10f)]
         public float XAxisInputClamp;
         public float YAxisInputClamp;
+
+        [Header("X Axis Settings")]
+        public float XAxisClamp;
+        public float ClampTolerance;
+        public float PullBackSpeed;
+        [ReadOnly] public float CurrentXAxis;
 
         [Header("Z Rotation Stabiliser")]
         public float ZAxisClamp;
@@ -37,9 +42,6 @@ namespace Hadal.Locomotion
         private const float TiltAngle = 90.0f;
         private const float FullAngle = 360.0f;
 
-        //! Data
-        protected Vector3 targetLerpRotation;
-
         public void Initialise()
         {
             XAxisClamp = XAxisClamp.Abs();
@@ -52,7 +54,7 @@ namespace Hadal.Locomotion
         public void DoRotationWithLerp(in IRotationInput input, in float deltaTime, Transform target)
         {
             Vector3 rotation = target.rotation.eulerAngles;
-            float inputY = input.YAxis * Sensitivity, inputX = input.XAxis * Sensitivity;
+            float inputY = input.YAxis * OverallSensitivity, inputX = input.XAxis * OverallSensitivity;
             float targetX = rotation.x - inputY - float.Epsilon;
             float targetY = rotation.y + inputX - float.Epsilon;
             rotation.x = Mathf.LerpAngle(rotation.x, targetX, Acceleration * deltaTime);
@@ -68,7 +70,7 @@ namespace Hadal.Locomotion
         public void DoSmoothRotation(in IRotationInput input, in float deltaTime, Transform target)
         {
             Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
-            mouseDistance *= Sensitivity * Acceleration * deltaTime;
+            mouseDistance *= OverallSensitivity * Acceleration * deltaTime;
 
             Vector3 rotation = target.localRotation.eulerAngles;
             rotation.x = rotation.x.NormalisedAngle();
@@ -81,13 +83,13 @@ namespace Hadal.Locomotion
         public void DoLocalRotation(in IRotationInput input, in float deltaTime, Transform target)
         {
             // Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
-            // mouseDistance *= (Sensitivity * Acceleration * deltaTime);
+            // mouseDistance *= (OverallSensitivity * Acceleration * deltaTime);
 
             //Vector3 rotation = target.localEulerAngles;
             Vector3 rotation = new Vector3();
-            rotation.x -= (input.YAxis * Mathf.Cos(rotation.z) + input.XAxis * Mathf.Sin(rotation.z)) * Sensitivity * Acceleration * deltaTime;
-            rotation.y += (input.XAxis * Mathf.Cos(rotation.z) + input.YAxis * Mathf.Sin(rotation.z)) * Sensitivity * Acceleration * deltaTime;
-            rotation.z -= input.ZAxis * Sensitivity * Acceleration * deltaTime;
+            rotation.x -= (input.YAxis * Mathf.Cos(rotation.z) + input.XAxis * Mathf.Sin(rotation.z)) * OverallSensitivity * Acceleration * deltaTime;
+            rotation.y += (input.XAxis * Mathf.Cos(rotation.z) + input.YAxis * Mathf.Sin(rotation.z)) * OverallSensitivity * Acceleration * deltaTime;
+            rotation.z -= input.ZAxis * OverallSensitivity * Acceleration * deltaTime;
             //rotation.z = Mathf.Clamp(-mouseDistance.x / deltaTime, -ZAxisClamp, ZAxisClamp); 
 
             //DebugManager.Instance.SLog(sl_rotationInput, "Rot Input: ", new Vector3(input.XAxis, input.YAxis, input.ZAxis));
@@ -109,18 +111,14 @@ namespace Hadal.Locomotion
         public void DoLocalRotationFixedUpdate(in IRotationInput input, Transform target)
         {
             Vector3 rotation = new Vector3();
-            rotation.x -= input.YAxis * Sensitivity;
-            rotation.y += input.XAxis * Sensitivity;
-            rotation.z -= input.ZAxis * Sensitivity + (input.XAxis * 0.3f);
+            rotation.x -= input.YAxis * OverallSensitivity;
+            rotation.y += input.XAxis * OverallSensitivity;
+            rotation.z -= input.ZAxis * OverallSensitivity + (input.XAxis * 0.3f);
 
-            rotation *= Sensitivity * Time.deltaTime;
-
-            targetLerpRotation = rotation;
+            rotation *= OverallSensitivity * Time.deltaTime;
 
             target.Rotate(rotation.x, rotation.y, rotation.z);
         }
-
-        public Vector3 TargetRotation => targetLerpRotation;
 
         private float RotateZAxisWithLerpClamp(in IRotationInput input, in Vector3 euler, in float deltaTime)
         {
@@ -144,12 +142,12 @@ namespace Hadal.Locomotion
             if (!_isFlipped)
             {
                 if (xMouseOffset < -ZClampAngle || xMouseOffset > ZClampAngle)
-                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * Sensitivity * Acceleration * deltaTime);
+                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * OverallSensitivity * Acceleration * deltaTime);
             }
             else
             {
                 if (xMouseOffset < -ZClampAngle || xMouseOffset > ZClampAngle)
-                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * Sensitivity * Acceleration * deltaTime);
+                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * OverallSensitivity * Acceleration * deltaTime);
             }
             return z;
         }
@@ -158,7 +156,7 @@ namespace Hadal.Locomotion
         {
             if (input.ZTrigger)
             {
-                z -= input.ZAxis * ZActiveRotationSpeed * Sensitivity * Acceleration * deltaTime;
+                z -= input.ZAxis * ZActiveRotationSpeed * OverallSensitivity * Acceleration * deltaTime;
                 ZClampAngle = UpsideDownAngle * IsEligibleToFlip().AsFloat() + UprightAngle * (!IsEligibleToFlip()).AsFloat();
                 _isFlipped = IsEligibleToFlip();
                 return z;
@@ -217,7 +215,11 @@ namespace Hadal.Locomotion
         }
 
         private float MaxDampSpeed => ZActiveRotationSpeed * Acceleration;
-        private float SmoothingTime => MaxDampSpeed * Sensitivity;
-        private float SmoothDampStep => ZActiveRotationSpeed * Acceleration * Sensitivity * ZDampingSpeed;
+        private float SmoothingTime => MaxDampSpeed * OverallSensitivity;
+        private float SmoothDampStep => ZActiveRotationSpeed * Acceleration * OverallSensitivity * ZDampingSpeed;
+
+        public float GetPitchSensitivity => PitchSensitivity * OverallSensitivity;
+        public float GetYawSensitivity => YawSensitivity * OverallSensitivity;
+        public float GetRollSensivity => RollSensitivity * OverallSensitivity;
     }
 }

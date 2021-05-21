@@ -1168,14 +1168,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rotary:
-    Sensitivity: 5
+    OverallSensitivity: 1
+    PitchSensitivity: 1.5
+    YawSensitivity: 1.5
+    RollSensitivity: 3
     Acceleration: 1
+    XAxisInputClamp: 0
+    YAxisInputClamp: 0
     XAxisClamp: 55
     ClampTolerance: 10
     PullBackSpeed: 5
     CurrentXAxis: 0
-    XAxisInputClamp: 0
-    YAxisInputClamp: 0
     ZAxisClamp: 30
     ZDampingSpeed: 5
     ZActiveRotationSpeed: 5
@@ -1194,7 +1197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed:
-    Max: 75
+    Max: 10
     InputForward: 16
     InputStrafe: 16
     InputHover: 16
@@ -1208,7 +1211,7 @@ MonoBehaviour:
     Hover: 1
     Boost: 1.5
     CummulationSpeed: 2
-    MaxCummulation: 4
+    MaxCummulation: 100
     CummulatedAcceleration: 0
   Velocity:
     Total: {x: 0, y: 0, z: 0}
