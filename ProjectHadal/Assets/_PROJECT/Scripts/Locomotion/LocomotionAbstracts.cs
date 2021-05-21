@@ -45,6 +45,6 @@ namespace Hadal.Locomotion
 
         public Quaternion localRotation => target.localRotation;
         public Quaternion rotation => target.rotation;
-        public virtual Vector3 LookDirection => new Vector3(1, 1, 1);
+
     }
 }

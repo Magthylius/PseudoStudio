@@ -29,13 +29,14 @@ namespace Hadal.Networking
 
         [Header("Network Settings")]
         public bool isOfflineMode;
+        public Transform localPlayerSpawnTrans;
 
         [Header("Scene References")]
         [Scene] public string MainMenuScene;
         [Scene] public string InGameScene;
 
         List<GameObject> playerObjects;
-
+        
         //! internal references
         bool loadsToMainMenu = false;
 
@@ -61,7 +62,6 @@ namespace Hadal.Networking
         void Start()
         {
             SetupEssentials();
-            SetupEventRaising();
         }
 
         public override void OnEnable()
@@ -69,6 +69,7 @@ namespace Hadal.Networking
             base.OnEnable();
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
             SceneManager.sceneLoaded += OnSceneLoaded;
+            SetupEventRaising();
         }
 
         public override void OnDisable()
@@ -477,6 +478,7 @@ namespace Hadal.Networking
         #endregion
 
         #region Accessors
+        public Transform LocalSpawn => localPlayerSpawnTrans;
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
         public Player LocalPlayer => PhotonNetwork.LocalPlayer;
         public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;

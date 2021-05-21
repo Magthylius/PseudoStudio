@@ -6,14 +6,11 @@ namespace Hadal.Locomotion
 {
     public class PlayerRotation : Rotator
     {
-        float rotationSensitivity = 1.5f;
+        [SerializeField, Min(0f)] float maxInputAxisClamp = 5f;
+        [SerializeField, Range(0f, 1f)] float yawInfluenceOnRollFactor = 0.3f;
 
-        Vector3 lookDirection;
-
-        Vector3 currentEA;
-        Vector3 targetEA;
-
-        public Ray lookRay;
+        Quaternion currentQT;
+        Quaternion targetQT;
 
         int sl_MP;
 
@@ -24,11 +21,8 @@ namespace Hadal.Locomotion
             Rotary.Initialise();
             Input = new StandardRotationInput();
 
-
-            //lookRay = target.forward * lookObjectDistance;
-            lookRay = new Ray(target.position, target.forward);
-            currentEA = target.eulerAngles;
-            targetEA = currentEA;
+            currentQT = target.localRotation;
+            targetQT = currentQT;
 
             sl_MP = DebugManager.Instance.CreateScreenLogger();
         }
@@ -36,22 +30,14 @@ namespace Hadal.Locomotion
         public override void DoUpdate(in float deltaTime)
         {
             if (!allowUpdate) return;
-            //Rotary.DoSmoothRotation(Input, deltaTime, target);
-            //Rotary.DoRotationWithLerp(Input, deltaTime, target);
-            //Rotary.SetTargetRotation(Input, deltaTime, target);
-           // Rotary.DoLocalRotation(Input, deltaTime, target);
+
         }
 
         public override void DoFixedUpdate(in float fixedDeltaTime)
         {
             if (!allowUpdate) return;
-            //Rotary.DoLocalRotation(Input, 1, target);
-            //Rotary.DoLocalRotationFixedUpdate(Input, target);
-            //Rotary.SetTargetRotation(Input, fixedDeltaTime, target);
 
-            //RotateByMouse();
-            //RotateByLookObject();
-            RotateByEA();
+            RotateByQT();
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -59,16 +45,25 @@ namespace Hadal.Locomotion
             
         }
 
-        void RotateByEA()
+        void RotateByQT()
         {
-            targetEA += new Vector3(-Input.YAxis, Input.XAxis, 0f) * rotationSensitivity;
-            currentEA = Vector3.Lerp(currentEA, targetEA, 5f * Time.deltaTime);
+            Vector3 input = Input.AllInputClamped(-maxInputAxisClamp, maxInputAxisClamp);
+            float pitch = -input.y * Rotary.GetPitchSensitivity;
+            float yaw = input.x * Rotary.GetYawSensitivity;
+            float roll = input.z * Rotary.GetRollSensivity;
 
-            target.localEulerAngles = currentEA;
+            float yawInfluence = 0f;
+            if (yaw != 0)
+                yawInfluence = -90f * yawInfluenceOnRollFactor * yaw;
 
-            DebugManager.Instance.SLog(sl_MP, currentEA);
+            targetQT *= Quaternion.Euler(pitch, yaw, roll);
+            Quaternion yawInfluencedQT = targetQT * Quaternion.Euler(0f, 0f, yawInfluence);
+
+            currentQT = Quaternion.Lerp(currentQT, yawInfluencedQT, 5f * Time.deltaTime);
+            target.localRotation = currentQT;
+
+            //DebugManager.Instance.SLog(sl_MP, Mathf.Sign(yaw) + " | " + yawInfluence);
+            //DebugManager.Instance.SLog(sl_MP, "P: " + pitch + " | Y: " + yaw + " | CurZ: " + currentEA.z);
         }
-
-        public override Vector3 LookDirection => targetEA;
     }
 }
