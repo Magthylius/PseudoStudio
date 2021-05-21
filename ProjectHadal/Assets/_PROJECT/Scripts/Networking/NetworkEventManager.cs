@@ -61,7 +61,6 @@ namespace Hadal.Networking
         void Start()
         {
             SetupEssentials();
-            SetupEventRaising();
         }
 
         public override void OnEnable()
@@ -69,6 +68,7 @@ namespace Hadal.Networking
             base.OnEnable();
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
             SceneManager.sceneLoaded += OnSceneLoaded;
+            SetupEventRaising();
         }
 
         public override void OnDisable()

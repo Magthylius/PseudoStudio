@@ -58,15 +58,15 @@ namespace Hadal.Locomotion
 
         public override void Enable()
         {
-            $"Enable is called".Warn();
+            //$"Enable is called".Warn();
             Input = DefaultInputs;
             drag = Accel.MaxCummulation / Speed.Max;
-            rigidBody.drag = drag;
+            //rigidBody.drag = drag;
         }
 
         public override void Disable()
         {
-            $"Disable is called".Warn();
+            //$"Disable is called".Warn();
             Input = DisabledInputs;
         }
 
