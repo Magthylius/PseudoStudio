@@ -6,6 +6,9 @@ namespace Hadal.Locomotion
 {
     public class PlayerRotation : Rotator
     {
+        [SerializeField, Min(0f)] float maxInputAxisClamp = 5f;
+        [SerializeField, Range(0f, 1f)] float yawInfluenceOnRollFactor = 0.3f;
+
         Quaternion currentQT;
         Quaternion targetQT;
 
@@ -44,16 +47,22 @@ namespace Hadal.Locomotion
 
         void RotateByQT()
         {
-            float pitch = -Input.YAxis * Rotary.GetPitchSensitivity;
-            float yaw = Input.XAxis  * Rotary.GetYawSensitivity;
-            float roll = Input.ZAxis * Rotary.GetRollSensivity;
+            Vector3 input = Input.AllInputClamped(-maxInputAxisClamp, maxInputAxisClamp);
+            float pitch = -input.y * Rotary.GetPitchSensitivity;
+            float yaw = input.x * Rotary.GetYawSensitivity;
+            float roll = input.z * Rotary.GetRollSensivity;
 
-            targetQT *= Quaternion.Euler(pitch , yaw , roll);
-            currentQT = Quaternion.Lerp(currentQT, targetQT, 5f * Time.deltaTime);
+            float yawInfluence = 0f;
+            if (yaw != 0)
+                yawInfluence = -90f * yawInfluenceOnRollFactor * yaw;
 
+            targetQT *= Quaternion.Euler(pitch, yaw, roll);
+            Quaternion yawInfluencedQT = targetQT * Quaternion.Euler(0f, 0f, yawInfluence);
+
+            currentQT = Quaternion.Lerp(currentQT, yawInfluencedQT, 5f * Time.deltaTime);
             target.localRotation = currentQT;
 
-            //DebugManager.Instance.SLog(sl_MP, "Cos: " + Mathf.Cos(currentEA.z) + " | Sin: " + Mathf.Sin(currentEA.z));
+            //DebugManager.Instance.SLog(sl_MP, Mathf.Sign(yaw) + " | " + yawInfluence);
             //DebugManager.Instance.SLog(sl_MP, "P: " + pitch + " | Y: " + yaw + " | CurZ: " + currentEA.z);
         }
     }

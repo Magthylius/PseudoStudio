@@ -33,10 +33,15 @@ namespace Hadal.UI
 
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleDirectors;
-        [SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
+        //[SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
         [SerializeField] float maxDirectorRadius = 10f;
-        [SerializeField] float directorSensitivity = 0.5f;
         [SerializeField] float directorReactionSpeed = 5f;
+        [SerializeField] float directorInputCamp = 5f;
+
+        [Header("Reticle Line Settings")]
+        [SerializeField] Image reticleLineImage;
+        [SerializeField] float minPixelsPerUnit;
+        [SerializeField] float maxPixelsPerUnit;
 
         FlexibleRect reticleDirectorsFR;
 
@@ -220,17 +225,24 @@ namespace Hadal.UI
             linePoints.Add(Vector2.zero);
             linePoints.Add(Vector2.zero);
 
-            reticleLineRenderer.UpdatePoints(linePoints);
+            //reticleLineRenderer.UpdatePoints(linePoints);
         }
 
         void UpdateReticle()
         {
-            reticleDirectorsFR.StartLerp((Vector2)playerRotationInput.AllInput * maxDirectorRadius);
+            Vector2 destination = (Vector2)playerRotationInput.AllInput * maxDirectorRadius;
+            if (destination.sqrMagnitude >= maxDirectorRadius * maxDirectorRadius) destination = destination.normalized * maxDirectorRadius;
+            reticleDirectorsFR.StartLerp(destination);
             reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
 
-            reticleLineRenderer.SetPoint(1, reticleDirectorsFR.center);
+            float rdFRDist = reticleDirectorsFR.DistanceFromOrigin;
+            float linePPU = Mathf.Lerp(minPixelsPerUnit, maxPixelsPerUnit, rdFRDist / maxDirectorRadius);
+            reticleLineImage.pixelsPerUnitMultiplier = linePPU;
+            reticleLineImage.rectTransform.localRotation = Quaternion.Euler(0f, 0f, reticleDirectorsFR.AngleFromOriginDeg);
+            reticleLineImage.rectTransform.offsetMax = new Vector2(rdFRDist, reticleLineImage.rectTransform.offsetMax.y);
+            //reticleLineRenderer.SetPoint(1, reticleDirectorsFR.center);
 
-            //print((Vector2)playerRotationInput.AllInput);
+            //print(reticleDirectorsFR.AngleFromOrigin);
         }
         #endregion
 
