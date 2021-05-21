@@ -41,6 +41,7 @@ namespace Hadal.AI
         private bool canAutoSelectNavPoints;
         private bool isOnCustomPath;
         private bool canPath;
+        private List<Vector3> repulsionPoints;
 
         private void Awake() => Initialise();
         private void Update() => DoUpdate(DeltaTime);
@@ -82,6 +83,13 @@ namespace Hadal.AI
         public float ElapsedTime => Time.time;
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
+        public float ObstacleDetectionRadius => obstacleDetectRadius;
+        public Transform PilotTransform => pilotTrans;
+
+        public void AddRepulsionPoint(Vector3 point)
+        {
+            repulsionPoints.Add(point);
+        }
 
         public void SetCanPath(bool statement)
         {
@@ -165,27 +173,30 @@ namespace Hadal.AI
             if (obstacleCheckTimer > 0f) return;
 
             ResetObstacleCheckTimer();
-            List<Vector3> points = Physics.SphereCastAll(pilotTrans.position, obstacleDetectRadius, Vector3.zero)
-                                    .Where(r => obstacleMask == (obstacleMask | (1 << r.collider.gameObject.layer)))
-                                    .Select(r => r.point)
-                                    .ToList();
-            points.AddRange(navPoints.Select(n => n.GetPosition).Where(p => Vector3.Distance(p, pilotTrans.position) <= obstacleDetectRadius));
+            // List<Vector3> points = Physics.SphereCastAll(pilotTrans.position, obstacleDetectRadius, Vector3.zero)
+            //                         .Where(r => obstacleMask == (obstacleMask | (1 << r.collider.gameObject.layer)))
+            //                         .Select(r => r.point)
+            //                         .ToList();
+            repulsionPoints.AddRange(navPoints.Select(n => n.GetPosition).Where(p => Vector3.Distance(p, pilotTrans.position) <= obstacleDetectRadius));
 
-            if (enableDebug) $"Obstacle count: {points.Count}".Bold().Msg();
-            if (points.IsEmpty()) return;
-            points.ForEach(p =>
+            if (enableDebug) $"Obstacle count: {repulsionPoints.Count}".Bold().Msg();
+            repulsionPoints.ForEach(p =>
             {
+                //! The closer the point, the higher the repulsion multiplier
                 float dist = (pilotTrans.position - p).magnitude;
                 float multiplier = 1f;
                 if (dist < obstacleDetectRadius)
                     multiplier += ((obstacleDetectRadius - dist) / obstacleDetectRadius) * closeRepulsionForce;
 
+                //! Diversion force added if the AI is looking directly at the repulsion point
                 Vector3 force = (pilotTrans.position - p).normalized * avoidanceForce * multiplier;
                 Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
                 if (cross.magnitude.Abs() <= 0.5f)
                 {
                     if (enableDebug) "parralel".Msg();
                     Vector3 direction = force.normalized;
+
+                    //! Diversion force added is always towards the right
                     Vector3 relativeRight = new Vector3(direction.z, direction.y, -direction.x).normalized;
                     force += relativeRight * axisStalemateDeviationForce;
                 }
@@ -244,6 +255,18 @@ namespace Hadal.AI
             Gizmos.color = Color.gray;
             Gizmos.DrawWireSphere(pilotTrans.position, currentPoint.GetSqrDistanceTo(pilotTrans.position));
             */
+        }
+    }
+
+    public class CollisionPoint
+    {
+        public Collider Collider { get; private set; }
+        public Vector3 Point { get; private set; }
+
+        public CollisionPoint(Collider collider, Vector3 point)
+        {
+            Collider = collider;
+            Point = point;
         }
     }
 }
