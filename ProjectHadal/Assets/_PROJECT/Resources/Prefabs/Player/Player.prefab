@@ -977,7 +977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed:
-    Max: 75
+    Max: 10
     InputForward: 16
     InputStrafe: 16
     InputHover: 16
@@ -991,7 +991,7 @@ MonoBehaviour:
     Hover: 1
     Boost: 1.5
     CummulationSpeed: 2
-    MaxCummulation: 4
+    MaxCummulation: 100
     CummulatedAcceleration: 0
   Velocity:
     Total: {x: 0, y: 0, z: 0}
