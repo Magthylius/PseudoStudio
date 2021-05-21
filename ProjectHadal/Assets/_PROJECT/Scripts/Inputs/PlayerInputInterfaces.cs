@@ -25,6 +25,7 @@ namespace Hadal.Inputs
         float ZAxis { get; }
         bool ZTrigger { get; }
         Vector3 AllInput { get; }
+        Vector3 AllInputClamped(float min, float max);
     }
     public interface IMovementInput
     {

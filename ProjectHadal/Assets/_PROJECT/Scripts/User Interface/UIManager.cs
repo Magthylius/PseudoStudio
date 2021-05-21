@@ -35,8 +35,8 @@ namespace Hadal.UI
         [SerializeField] RectTransform reticleDirectors;
         //[SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
         [SerializeField] float maxDirectorRadius = 10f;
-        [SerializeField] float directorSensitivity = 0.5f;
         [SerializeField] float directorReactionSpeed = 5f;
+        [SerializeField] float directorInputCamp = 5f;
 
         [Header("Reticle Line Settings")]
         [SerializeField] Image reticleLineImage;
@@ -230,7 +230,9 @@ namespace Hadal.UI
 
         void UpdateReticle()
         {
-            reticleDirectorsFR.StartLerp((Vector2)playerRotationInput.AllInput * maxDirectorRadius);
+            Vector2 destination = (Vector2)playerRotationInput.AllInput * maxDirectorRadius;
+            if (destination.sqrMagnitude >= maxDirectorRadius * maxDirectorRadius) destination = destination.normalized * maxDirectorRadius;
+            reticleDirectorsFR.StartLerp(destination);
             reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
 
             float rdFRDist = reticleDirectorsFR.DistanceFromOrigin;
