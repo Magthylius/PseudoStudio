@@ -11,15 +11,16 @@ namespace Hadal.Locomotion
         private Vector3 _lastPosition;
         private Vector3 _currentPosition;
         private bool _isLocal = true;
+        private int SL_Debug;
 
         [SerializeField] private float drag;
 
         public override void Initialise(Transform target)
         {
             base.Enable();
+            this.target = target;
             Enable();
             EnableBoost();
-            this.target = target;
             Speed.Initialise();
             Accel.Initialise();
             Velocity.Initialise();
@@ -58,15 +59,17 @@ namespace Hadal.Locomotion
 
         public override void Enable()
         {
-            $"Enable is called".Warn();
+            //$"Enable is called".Warn();
+            SL_Debug = DebugManager.Instance.CreateScreenLogger();
             Input = DefaultInputs;
             drag = Accel.MaxCummulation / Speed.Max;
-            rigidBody.drag = drag;
+           // rigidBody.drag = drag;
+           // rigidBody.drag = drag / (drag * Time.fixedDeltaTime +1);
         }
 
         public override void Disable()
         {
-            $"Disable is called".Warn();
+            //$"Disable is called".Warn();
             Input = DisabledInputs;
         }
 
@@ -78,9 +81,11 @@ namespace Hadal.Locomotion
             _currentHoverSpeed = HoverInputSpeed * BoostInputSpeed * Accel.Hover * deltaTime;
 
             Vector3 moveForce = target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed ;
-            rigidBody.AddForce(moveForce * 50);
 
-            //! for fucks sakes jin, comment your debugs!
+            rigidBody.AddForce(moveForce * 100,ForceMode.Force);
+
+            DebugManager.Instance.SLog(SL_Debug, moveForce.magnitude * 100);
+            //DebugManager.Instance.SLog(SL_Debug, rigidBody.velocity);
             //Debug.Log("Force Added " + moveForce.magnitude);
         }
 

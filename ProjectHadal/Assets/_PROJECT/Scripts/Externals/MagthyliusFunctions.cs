@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.4.6
+// Version 1.4.7
 namespace Magthylius
 {
     namespace LerpFunctions
@@ -14,6 +14,14 @@ namespace Magthylius
             OPAQUE = 0,
             TRANSPARENT,
             FADING,
+        }
+
+        public enum LerpState
+        {
+            START = 0,
+            END,
+            TOWARDS_START,
+            TOWARDS_END
         }
 
         //! Data Struct
@@ -73,9 +81,11 @@ namespace Magthylius
         }
 
         [Serializable]
+        ///<summary>
+        ///For easy movement of RectTransform with lerp utilities.
+        ///</summary>
         public class FlexibleRect
         {
-
             public RectTransform rectTransform;
             public Vector2 originalPosition;
             public Vector2 targetPosition;
@@ -163,7 +173,7 @@ namespace Magthylius
                 return false;
             }
 
-            public void NormalLerp(Vector2 targetPosition, float progress)
+            public void LerpUnsnapped(Vector2 targetPosition, float progress)
             {
                 Vector2 destination = Vector2.Lerp(center, targetPosition, progress);
 

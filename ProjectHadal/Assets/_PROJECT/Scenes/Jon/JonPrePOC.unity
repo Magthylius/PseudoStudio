@@ -4408,6 +4408,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9d1fbfcf69364ffd8f9c6ade9ce90fe, type: 3}
+--- !u!4 &652615338 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4099844762844519294, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+  m_PrefabInstance: {fileID: 6576420978665215833}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &656214119
 GameObject:
   m_ObjectHideFlags: 0
@@ -16041,9 +16046,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4099844762844519294, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099844762844519294, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 8.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099844762844519294, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.19
+      objectReference: {fileID: 0}
     - target: {fileID: 5787285943007508242, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: underwaterEffectEnabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
@@ -16057,6 +16074,10 @@ PrefabInstance:
       propertyPath: isOfflineMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: localPlayerSpawnTrans
+      value: 
+      objectReference: {fileID: 652615338}
     - target: {fileID: 6576420978336463561, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_IsActive
       value: 1

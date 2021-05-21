@@ -33,14 +33,10 @@ namespace Hadal.UI
 
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleDirectors;
+        [SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
         [SerializeField] float maxDirectorRadius = 10f;
         [SerializeField] float directorSensitivity = 0.5f;
         [SerializeField] float directorReactionSpeed = 5f;
-
-        //! legacy
-        [SerializeField] float rotatorVerticalMovementDistance = 1.2f;
-        [SerializeField] float rotatorHorizontalMovementDistance = 0.4f;
-        [SerializeField] float rotatorReactionSpeed = 5f;
 
         FlexibleRect reticleDirectorsFR;
 
@@ -107,6 +103,7 @@ namespace Hadal.UI
 
             DoDebugEnabling(debugKey);
 
+            SetupReticle();
             SetupModules();
             SetupPauseMenu();
             PNTR_Resume();
@@ -129,10 +126,9 @@ namespace Hadal.UI
 
             if (!pauseMenuOpen)
             {
-                InformationUpdate();
-                //BalancerUpdate();
                 UpdateReticle();
-                ProjectileTrackingUpdate();
+                UpdateInformation();
+                UpdateProjectileTracking();
             }
         }
 
@@ -186,13 +182,13 @@ namespace Hadal.UI
             sonicDartTransforms = new List<Transform>();
         }
 
-        void InformationUpdate()
+        void UpdateInformation()
         {
             string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
             depthText.text = $"Depth: -{depth}";
         }
 
-        void ProjectileTrackingUpdate()
+        void UpdateProjectileTracking()
         {
 
         }
@@ -217,10 +213,22 @@ namespace Hadal.UI
         #endregion
 
         #region Reticles
+        void SetupReticle()
+        {
+            //! Make 2 points
+            List<Vector2> linePoints = new List<Vector2>();
+            linePoints.Add(Vector2.zero);
+            linePoints.Add(Vector2.zero);
+
+            reticleLineRenderer.UpdatePoints(linePoints);
+        }
+
         void UpdateReticle()
         {
             reticleDirectorsFR.StartLerp((Vector2)playerRotationInput.AllInput * maxDirectorRadius);
             reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
+
+            reticleLineRenderer.SetPoint(1, reticleDirectorsFR.center);
 
             //print((Vector2)playerRotationInput.AllInput);
         }

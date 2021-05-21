@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//! Version 1.1.0
 public class MagthyliusUILineRenderer : Graphic
 {
     public Vector2 gridSize;
@@ -18,13 +19,13 @@ public class MagthyliusUILineRenderer : Graphic
     List<Vector2> bendPoints;
 
     //! Used to force vertices
-    float useless;
-    float Useless
+    float refresher;
+    float Refresher
     {
-        get { return useless; }
+        get { return refresher; }
         set
         {
-            useless = value;
+            refresher = value;
             SetVerticesDirty();
         }
     }
@@ -130,7 +131,13 @@ public class MagthyliusUILineRenderer : Graphic
     public void UpdatePoints(List<Vector2> newPoints)
     {
         points = newPoints;
-        //Canvas.ForceUpdateCanvases();
-        Useless++;
+        Refresher++;
+    }
+
+    public void SetPoint(int index, Vector2 newPoint)
+    {
+        if (index >= points.Count || index < 0) return;
+        points[index] = newPoint;
+        Refresher++;
     }
 }
