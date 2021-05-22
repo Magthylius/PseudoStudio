@@ -8,6 +8,9 @@
         },
         {
             "m_Id": "96d2789477bd4966a4fff5fe89cb78ed"
+        },
+        {
+            "m_Id": "4c3590edca4c4aa1804f499643b60312"
         }
     ],
     "m_Keywords": [],
@@ -53,6 +56,9 @@
         },
         {
             "m_Id": "7b63599de37746bb93435fb25a091e83"
+        },
+        {
+            "m_Id": "cfef67afe4884b77828ff02497831093"
         }
     ],
     "m_GroupDatas": [],
@@ -140,6 +146,20 @@
                     "m_Id": "ea86bb1b110341979ef9ca0554cd6d6e"
                 },
                 "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "cfef67afe4884b77828ff02497831093"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "303c5403caea4bc5b99f1f8580ee6615"
+                },
+                "m_SlotId": 0
             }
         },
         {
@@ -596,6 +616,29 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "4c3590edca4c4aa1804f499643b60312",
+    "m_Guid": {
+        "m_GuidSerialized": "208ad567-466c-430f-b4db-35213573fb4a"
+    },
+    "m_Name": "Alpha",
+    "m_DefaultReferenceName": "Vector1_4c3590edca4c4aa1804f499643b60312",
+    "m_OverrideReferenceName": "_Alpha",
+    "m_GeneratePropertyBlock": true,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.9900000095367432,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.SamplerStateMaterialSlot",
     "m_ObjectId": "4ce65b1a54c0420389d624e43f308a4a",
@@ -853,7 +896,7 @@
     "m_ShaderOutputName": "Edge2",
     "m_StageCapability": 3,
     "m_Value": {
-        "x": 1.0,
+        "x": 0.5,
         "y": 1.0,
         "z": 1.0,
         "w": 1.0
@@ -926,8 +969,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 373.0,
-            "y": 290.0000305175781,
+            "x": 373.0000305175781,
+            "y": 352.0000305175781,
             "width": 208.00001525878907,
             "height": 326.0
         }
@@ -989,6 +1032,21 @@
     "m_RedChannel": true,
     "m_GreenChannel": false,
     "m_BlueChannel": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "864ef5a2565241ef89e56ef2a7f1a936",
+    "m_Id": 0,
+    "m_DisplayName": "Alpha",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
 }
 
 {
@@ -1058,7 +1116,7 @@
     },
     "m_Name": "Color",
     "m_DefaultReferenceName": "Color_96d2789477bd4966a4fff5fe89cb78ed",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "_Color",
     "m_GeneratePropertyBlock": true,
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
@@ -1232,7 +1290,7 @@
     },
     "m_SurfaceType": 1,
     "m_AlphaMode": 0,
-    "m_TwoSided": false,
+    "m_TwoSided": true,
     "m_AlphaClip": true,
     "m_CustomEditorGUI": ""
 }
@@ -1375,6 +1433,40 @@
     },
     "m_Modifiable": true,
     "m_DefaultType": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "cfef67afe4884b77828ff02497831093",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 562.0,
+            "y": 132.0,
+            "width": 126.0,
+            "height": 77.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "864ef5a2565241ef89e56ef2a7f1a936"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "4c3590edca4c4aa1804f499643b60312"
+    }
 }
 
 {

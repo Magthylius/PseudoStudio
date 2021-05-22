@@ -2,43 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Hadal.PostProcess;
+using NaughtyAttributes;
 
 public class ReticleHandler : MonoBehaviour
 {
     [Header("Primary Color")]
-    public Color primaryColor;
-    public bool overridePrimaryAlpha = true;
+    [SerializeField] ReticleEmissiveSettings currentSettings;
 
     [Header("Glow Color")]
     public Color glowColor;
     public bool overrideGlowAlpha = true;
 
-    [SerializeField] List<Image> primaryComponents;
+    [Header("Components")]
     [SerializeField] List<Image> glowComponents;
+    [SerializeField] List<Image> primaryComponents;
+    [SerializeField] List<Image> secondaryComponents;
+    [SerializeField] List<Image> tertiaryComponents;
 
     void OnValidate()
     {
-        foreach (Image img in primaryComponents)
-        {
-            if (!overridePrimaryAlpha)
-            {
-                img.color = primaryColor; 
-            }
-            else
-            {
-                Color newColor = primaryColor;
-                newColor.a = img.color.a;
-                img.color = newColor;
-            }
+        RefreshColors();
+    }
 
-            img.raycastTarget = false;
-        }
+    [Button("Force Color Refresh")]
+    void RefreshColors()
+    {
+        UpdateAllColors();
 
         foreach (Image img in glowComponents)
         {
             if (!overrideGlowAlpha)
             {
-                img.color = glowColor;   
+                img.color = glowColor;
             }
             else
             {
@@ -48,6 +44,27 @@ public class ReticleHandler : MonoBehaviour
             }
 
             img.raycastTarget = false;
+        }
+    }
+
+    void UpdateAllColors()
+    {
+        foreach (Image img in primaryComponents)
+        {
+            img.material.SetColor("_Color", currentSettings.primaryEmissiveColor);
+            img.material.SetFloat("_Alpha", currentSettings.primaryEmissiveAlpha);
+        }
+
+        foreach (Image img in secondaryComponents)
+        {
+            img.material.SetColor("_Color", currentSettings.secondaryEmissiveColor);
+            img.material.SetFloat("_Alpha", currentSettings.secondaryEmissiveAlpha);
+        }
+
+        foreach (Image img in tertiaryComponents)
+        {
+            img.material.SetColor("_Color", currentSettings.tertiaryEmissiveColor);
+            img.material.SetFloat("_Alpha", currentSettings.tertiaryEmissiveAlpha);
         }
     }
 }

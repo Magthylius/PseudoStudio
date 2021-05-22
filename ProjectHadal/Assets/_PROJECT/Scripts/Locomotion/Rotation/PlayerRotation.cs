@@ -24,7 +24,7 @@ namespace Hadal.Locomotion
             currentQT = target.localRotation;
             targetQT = currentQT;
 
-            sl_MP = DebugManager.Instance.CreateScreenLogger();
+            //sl_MP = DebugManager.Instance.CreateScreenLogger();
         }
 
         public override void DoUpdate(in float deltaTime)

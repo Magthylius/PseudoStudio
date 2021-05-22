@@ -48,6 +48,13 @@ namespace Hadal.UI
         [SerializeField] float minPixelsPerUnit;
         [SerializeField] float maxPixelsPerUnit;
 
+        [Header("Loader Filler Settings")]
+        [SerializeField] Image leftLoaderFiller;
+        [SerializeField] Image rightLoaderFiller;
+        [SerializeField, Range(0f, 1f)] float fillerMinFillClamp = 0.1f;
+        [SerializeField, Range(0f, 1f)] float fillerMaxFillClamp = 0.5f;
+        [SerializeField] float loaderFillLerpSpeed = 5f;
+
         FlexibleRect reticleDirectorsFR;
 
         [Header("Player Settings")]
@@ -196,8 +203,11 @@ namespace Hadal.UI
 
         void UpdateInformation()
         {
-            string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
-            depthText.text = $"Depth: -{depth}";
+            //string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
+            //depthText.text = $"Depth: -{depth}";
+
+            if (leftLoaderFiller.fillAmount >= 0.5f) leftLoaderFiller.fillAmount = 0.5f;
+            if (rightLoaderFiller.fillAmount >= 0.5f) rightLoaderFiller.fillAmount = 0.5f;
         }
 
         void UpdateProjectileTracking()
