@@ -31,6 +31,11 @@ namespace Hadal.UI
         PostProcessingManager ppManager;
         LoadingManager loadingManager;
 
+        [Header("Essentials")]
+        [SerializeField] Camera playerCamera;
+        [SerializeField] Canvas overlayCanvas;
+        [SerializeField] Canvas cameraCanvas;
+
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleDirectors;
         //[SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
@@ -105,6 +110,8 @@ namespace Hadal.UI
             loadingManager = LoadingManager.Instance;
 
             reticleDirectorsFR = new FlexibleRect(reticleDirectors);
+
+            cameraCanvas.worldCamera = playerCamera;
 
             DoDebugEnabling(debugKey);
 
