@@ -27,6 +27,7 @@ namespace Hadal.AI
         [Header("Internal Data")]
         [SerializeField] private float maxVelocity;
         [SerializeField] private float thrustForce;
+		[SerializeField] private float attractionForce;
         [SerializeField] private float avoidanceForce;
         [SerializeField] private float closeRepulsionForce;
         [SerializeField] private float axisStalemateDeviationForce;
@@ -64,6 +65,7 @@ namespace Hadal.AI
             rBody ??= GetComponent<Rigidbody>();
             if (numberOfClosestPointsToConsider > navPoints.Count - 1) numberOfClosestPointsToConsider = navPoints.Count - 1;
             currentPoint = GetClosestPointToSelf();
+            repulsionPoints = new List<Vector3>();
         }
         public void DoUpdate(in float deltaTime)
         {
@@ -75,6 +77,7 @@ namespace Hadal.AI
             if (canPath)
             {
                 TrySelectNewNavPoint(deltaTime);
+				MoveForwards(deltaTime);
                 MoveTowardsCurrentNavPoint(deltaTime);
             }
             HandleObstacleAvoidance(deltaTime);
@@ -88,7 +91,8 @@ namespace Hadal.AI
 
         public void AddRepulsionPoint(Vector3 point)
         {
-            repulsionPoints.Add(point);
+            if (!repulsionPoints.Contains(point))
+                repulsionPoints.Add(point);
         }
 
         public void SetCanPath(bool statement)
@@ -127,6 +131,7 @@ namespace Hadal.AI
 
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
+				currentPoint.Deselect();
                 Destroy(currentPoint.gameObject);
                 if (enableDebug) "Stopping custom path".Msg();
                 yield return null;
@@ -146,11 +151,17 @@ namespace Hadal.AI
 
         #region Private Methods
 
+		private void MoveForwards(in float deltaTime)
+		{
+			Vector3 force = pilotTrans.forward * (thrustForce * deltaTime);
+			rBody.AddForce(force, ForceMode.VelocityChange);
+		}
+
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
         {
             if (currentPoint == null) return;
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
-            Vector3 force = direction * (thrustForce * deltaTime);
+            Vector3 force = direction * (attractionForce * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
 
             if (rBody.velocity.magnitude > maxVelocity)
@@ -177,9 +188,9 @@ namespace Hadal.AI
             //                         .Where(r => obstacleMask == (obstacleMask | (1 << r.collider.gameObject.layer)))
             //                         .Select(r => r.point)
             //                         .ToList();
-            repulsionPoints.AddRange(navPoints.Select(n => n.GetPosition).Where(p => Vector3.Distance(p, pilotTrans.position) <= obstacleDetectRadius));
-
+            
             if (enableDebug) $"Obstacle count: {repulsionPoints.Count}".Bold().Msg();
+            float deltaOfTime = deltaTime;
             repulsionPoints.ForEach(p =>
             {
                 //! The closer the point, the higher the repulsion multiplier
@@ -191,7 +202,7 @@ namespace Hadal.AI
                 //! Diversion force added if the AI is looking directly at the repulsion point
                 Vector3 force = (pilotTrans.position - p).normalized * avoidanceForce * multiplier;
                 Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
-                if (cross.magnitude.Abs() <= 0.5f)
+                if (cross.magnitude.Abs() <= 0.2f)
                 {
                     if (enableDebug) "parralel".Msg();
                     Vector3 direction = force.normalized;
@@ -200,8 +211,35 @@ namespace Hadal.AI
                     Vector3 relativeRight = new Vector3(direction.z, direction.y, -direction.x).normalized;
                     force += relativeRight * axisStalemateDeviationForce;
                 }
-                rBody.AddForce(force, ForceMode.VelocityChange);
+                rBody.AddForce(force * deltaOfTime, ForceMode.VelocityChange);
             });
+
+            repulsionPoints.Clear();
+
+            // var defaultRepulsionPoints = navPoints.Select(n => n.GetPosition).Where(p => Vector3.Distance(p, pilotTrans.position) <= obstacleDetectRadius).ToList();
+            // defaultRepulsionPoints.ForEach(point =>
+            // {
+            //     //! The closer the point, the higher the repulsion multiplier
+            //     float dist = (pilotTrans.position - point).magnitude;
+            //     float multiplier = 1f;
+            //     if (dist < obstacleDetectRadius)
+            //         multiplier += ((obstacleDetectRadius - dist) / obstacleDetectRadius) * closeRepulsionForce;
+
+            //     //! Diversion force added if the AI is looking directly at the repulsion point
+            //     Vector3 force = (pilotTrans.position - point).normalized * avoidanceForce * multiplier;
+            //     Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
+            //     if (cross.magnitude.Abs() <= 0.5f)
+            //     {
+            //         if (enableDebug) "parralel".Msg();
+            //         Vector3 direction = force.normalized;
+
+            //         //! Diversion force added is always towards the right
+            //         Vector3 relativeRight = new Vector3(direction.z, direction.y, -direction.x).normalized;
+            //         force += relativeRight * axisStalemateDeviationForce;
+            //     }
+            //     rBody.AddForce(force, ForceMode.VelocityChange);
+            // });
+
         }
 
         private void TrySelectNewNavPoint(in float deltaTime)
@@ -226,7 +264,9 @@ namespace Hadal.AI
         {
             var points = navPoints.Where(o => o != currentPoint);
             List<NavPoint> potentialPoints = points.OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition)).Take(numberOfClosestPointsToConsider).ToList();
-            currentPoint = potentialPoints.RandomElement();
+            if (currentPoint != null) currentPoint.Deselect();
+			currentPoint = potentialPoints.RandomElement();
+			currentPoint.Select();
             hasReachedPoint = false;
 
             if (enableDebug) "Selecting new point".Msg();
@@ -258,6 +298,7 @@ namespace Hadal.AI
         }
     }
 
+    [System.Serializable]
     public class CollisionPoint
     {
         public Collider Collider { get; private set; }
