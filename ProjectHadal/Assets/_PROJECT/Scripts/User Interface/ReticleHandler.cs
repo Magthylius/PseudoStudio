@@ -5,33 +5,48 @@ using UnityEngine.UI;
 
 public class ReticleHandler : MonoBehaviour
 {
+    [Header("Primary Color")]
     public Color primaryColor;
+    public bool overridePrimaryAlpha = true;
+
+    [Header("Glow Color")]
     public Color glowColor;
+    public bool overrideGlowAlpha = true;
 
     [SerializeField] List<Image> primaryComponents;
     [SerializeField] List<Image> glowComponents;
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 
     void OnValidate()
     {
         foreach (Image img in primaryComponents)
         {
-            img.color = primaryColor;
+            if (!overridePrimaryAlpha)
+            {
+                img.color = primaryColor; 
+            }
+            else
+            {
+                Color newColor = primaryColor;
+                newColor.a = img.color.a;
+                img.color = newColor;
+            }
+
             img.raycastTarget = false;
         }
 
         foreach (Image img in glowComponents)
         {
-            img.color = glowColor;
+            if (!overrideGlowAlpha)
+            {
+                img.color = glowColor;   
+            }
+            else
+            {
+                Color newColor = glowColor;
+                newColor.a = img.color.a;
+                img.color = newColor;
+            }
+
             img.raycastTarget = false;
         }
     }
