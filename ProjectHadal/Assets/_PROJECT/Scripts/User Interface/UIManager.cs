@@ -111,7 +111,7 @@ namespace Hadal.UI
 
             reticleDirectorsFR = new FlexibleRect(reticleDirectors);
 
-            cameraCanvas.worldCamera = playerCamera;
+            //cameraCanvas.worldCamera = playerCamera;
 
             DoDebugEnabling(debugKey);
 
