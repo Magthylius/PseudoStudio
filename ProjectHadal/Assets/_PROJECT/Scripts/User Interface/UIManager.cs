@@ -161,10 +161,14 @@ namespace Hadal.UI
         #region Torpedoes
         public void UpdateFlooding(float progress, bool showFlooding)
         {
-            foreach (Image img in floodIndicators) img.fillAmount = progress;
+            /*foreach (Image img in floodIndicators) img.fillAmount = progress;
 
             if (progress < 1f) fireReticle.SetActive(false);
-            else fireReticle.SetActive(true);
+            else fireReticle.SetActive(true);*/
+
+            float fillProgress = Mathf.Lerp(fillerMinFillClamp, fillerMaxFillClamp, progress);
+            leftLoaderFiller.fillAmount = fillProgress;
+            rightLoaderFiller.fillAmount = fillProgress;
 
             floodText.SetActive(showFlooding);
 
@@ -180,7 +184,8 @@ namespace Hadal.UI
 
         public void UpdateReload(float progress, bool showReloading)
         {
-            foreach (Image reloaders in reloadProgressors) reloaders.fillAmount = progress;
+            //foreach (Image reloaders in reloadProgressors) reloaders.fillAmount = progress;
+            
             reloadText.SetActive(showReloading);
         }
         #endregion
