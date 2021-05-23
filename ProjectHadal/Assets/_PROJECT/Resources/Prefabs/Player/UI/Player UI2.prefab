@@ -2772,6 +2772,7 @@ GameObject:
   - component: {fileID: 4271000973088194830}
   - component: {fileID: 4271000973088194831}
   - component: {fileID: 1882966746592130942}
+  - component: {fileID: 5040592677610836346}
   m_Layer: 5
   m_Name: Center UI
   m_TagString: Untagged
@@ -2788,7 +2789,7 @@ RectTransform:
   m_GameObject: {fileID: 4271000973088194817}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
   - {fileID: 5985421404163151677}
   - {fileID: 8995398595602610920}
@@ -2821,6 +2822,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4271000973088194817}
   m_CullTransparentMesh: 1
+--- !u!114 &5040592677610836346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4271000973088194817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75b0d29b80d462247802122397b8b6a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explicitTransform: {fileID: 4271000973088194830}
+  ratio: {x: 1, y: 1, z: 1}
+  scale: 0.6
+  RefreshOnValidate: 1
 --- !u!1 &4271000973417778494
 GameObject:
   m_ObjectHideFlags: 0
