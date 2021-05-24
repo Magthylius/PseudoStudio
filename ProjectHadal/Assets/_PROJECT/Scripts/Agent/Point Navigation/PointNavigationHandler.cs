@@ -12,7 +12,7 @@ namespace Hadal.AI
         [Header("Debug")]
         [SerializeField] private bool enableDebug;
 
-        [Header("Timer")]
+        [Header("Timer Settings")]
         [SerializeField] private float minLingerTime;
         [SerializeField] private float maxLingerTime;
         [SerializeField] private float timeoutNewPointTime;
@@ -20,30 +20,32 @@ namespace Hadal.AI
         private float obstacleCheckTimer;
         private float timeoutTimer;
         private float lingerTimer;
-
-        [Header("Nav Settings")]
-        [SerializeField] private int numberOfClosestPointsToConsider;
-        [SerializeField] private List<NavPoint> navPoints;
-        [SerializeField] private Transform pilotTrans;
-        [SerializeField] private Rigidbody rBody;
-
-        [Header("Internal Data")]
-        [SerializeField] private float maxVelocity;
+		
+		[Header("Force Settings")]
+		[SerializeField] private float maxVelocity;
         [SerializeField] private float thrustForce;
 		[SerializeField] private float attractionForce;
         [SerializeField] private float avoidanceForce;
         [SerializeField] private float closeRepulsionForce;
         [SerializeField] private float axisStalemateDeviationForce;
         [SerializeField] private float obstacleDetectRadius;
-        [SerializeField] private LayerMask obstacleMask;
         [SerializeField] private float smoothLookAtSpeed;
-        private bool hasReachedPoint;
-        private bool canAutoSelectNavPoints;
-        private bool isOnCustomPath;
-        private bool canPath;
-        private NavPoint currentPoint;
-        private List<Vector3> repulsionPoints;
+		[SerializeField] private LayerMask obstacleMask;
 
+        [Header("Nav Components")]
+        [SerializeField] private int numberOfClosestPointsToConsider;
+        [SerializeField] private Transform pilotTrans;
+        [SerializeField] private Rigidbody rBody;
+
+        [Header("Internal Data")]
+		[SerializeField, ReadOnly] private List<NavPoint> navPoints;
+		[SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
+        [SerializeField, ReadOnly] private bool hasReachedPoint;
+        [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
+        [SerializeField, ReadOnly] private bool isOnCustomPath;
+        [SerializeField, ReadOnly] private bool canPath;
+        [SerializeField, ReadOnly] private NavPoint currentPoint;
+        
         private void Awake() => Initialise();
         private void Update() => DoUpdate(DeltaTime);
         private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime);
