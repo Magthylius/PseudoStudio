@@ -17,9 +17,6 @@ namespace Hadal.AI
         [SerializeField] private float maxLingerTime;
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
-        private float obstacleCheckTimer;
-        private float timeoutTimer;
-        private float lingerTimer;
 		
 		[Header("Force Settings")]
 		[SerializeField] private float maxVelocity;
@@ -38,6 +35,10 @@ namespace Hadal.AI
         [SerializeField] private Rigidbody rBody;
 
         [Header("Internal Data")]
+		[SerializeField, ReadOnly] private float obstacleCheckTimer;
+        [SerializeField, ReadOnly] private float timeoutTimer;
+        [SerializeField, ReadOnly] private float lingerTimer;
+		[Space(10)]
 		[SerializeField, ReadOnly] private List<NavPoint> navPoints;
 		[SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
         [SerializeField, ReadOnly] private bool hasReachedPoint;
