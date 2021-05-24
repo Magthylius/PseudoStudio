@@ -18,6 +18,7 @@ namespace Hadal.Player.Behaviours
         NetworkEventManager neManager;
 
         [Header("Aiming")]
+        public Rigidbody aimParentRb;
         public Transform aimParentObject;
         public Transform aimPoint;
         public float torpedoMinAngle = 25f;
@@ -153,8 +154,8 @@ namespace Hadal.Player.Behaviours
             usable.Use(CreateInfoForUtility(chargeTime));
         }
         
-        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformForceInfo(torpedoFirePoint,0f);
-        private UsableHandlerInfo CreateInfoForUtility(float chargedTime) => new UsableHandlerInfo().WithTransformForceInfo(utilityFirePoint, chargedTime);
+        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformForceInfo(torpedoFirePoint,0f, aimParentRb.velocity);
+        private UsableHandlerInfo CreateInfoForUtility(float chargedTime) => new UsableHandlerInfo().WithTransformForceInfo(utilityFirePoint, chargedTime, aimParentRb.velocity);
 
         #endregion
 

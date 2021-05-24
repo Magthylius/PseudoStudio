@@ -31,8 +31,8 @@ namespace Hadal.Usables
             projectileObj.Data = ProjectileData;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
+            projectileObj.Rigidbody.velocity = info.shooterVelocity;
             projectileObj.WithGObjectSetActive(true);
-
             projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
                 (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce);
             projectileObj.PPhysics.LaunchProjectile();

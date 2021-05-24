@@ -8,6 +8,7 @@ namespace Hadal.Locomotion
     public class PlayerMovementF : Mover
     {
         [Header("Debug"), SerializeField] private string debugKey;
+        [SerializeField] private Rigidbody rigidBody;
         private Vector3 _lastPosition;
         private Vector3 _currentPosition;
         private bool _isLocal = true;
@@ -99,7 +100,6 @@ namespace Hadal.Locomotion
         private float HoverInputSpeed => Input.HoverAxis * Speed.InputHover;
         private float BoostInputSpeed => /*allowBoost*/ false.AsFloat() * Input.BoostAxis * Accel.Boost + 1.0f;
         public override float SqrSpeed => Velocity.SquareSpeed;
-        private Rigidbody rigidBody => target.GetComponent<Rigidbody>();
         #endregion
     }
 }
