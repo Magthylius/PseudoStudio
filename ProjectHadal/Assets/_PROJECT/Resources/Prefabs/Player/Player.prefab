@@ -1185,6 +1185,7 @@ MonoBehaviour:
     SquareSpeed: 0
     Speed: 0
   debugKey: Speed
+  rigidBody: {fileID: 6419753948795626213}
   drag: 0
 --- !u!1 &6287583129589580556
 GameObject:
@@ -1671,6 +1672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugKey: Player
+  aimParentRb: {fileID: 6419753948795626213}
   aimParentObject: {fileID: 2719752003713521067}
   aimPoint: {fileID: 1085777647585770244}
   torpedoMinAngle: 40

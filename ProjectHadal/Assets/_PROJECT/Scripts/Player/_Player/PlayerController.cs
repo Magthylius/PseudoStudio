@@ -259,6 +259,8 @@ namespace Hadal.Player
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
             => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator);
+        public Rigidbody rigidbody
+            => GetComponent<Rigidbody>();
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => pViewSelfID;
         #endregion
