@@ -58,6 +58,10 @@ namespace Hadal.UI
         FlexibleRect reticleDirectorsFR;
 
         [Header("Player Settings")]
+        [SerializeField] RectTransform allUIParent;
+        [SerializeField, Min(0f)] float uiDisplacement;
+        [SerializeField, Min(0.1f)] float maxMovementInfluence;
+        [SerializeField, Min(0.1f)] float uiLerpReactionSpeed;
         [SerializeField] private float highestPoint;  
         [SerializeField] private Text depthText;
         [SerializeField] private Text lightText;
@@ -65,9 +69,12 @@ namespace Hadal.UI
         [SerializeField] private Image healthBar;
         public static event OnHealthChange OnHealthChange;
 
+        FlexibleRect allUIParentFR;
+
         Rotator playerRotator;
         IRotationInput playerRotationInput;
         Transform playerTransform;
+        Rigidbody playerRigidbody;
 
         [Header("Shooting Settings")]
         public int torpCount;
@@ -95,6 +102,9 @@ namespace Hadal.UI
         bool pauseMenuOpen = false;
         //! blur out the screen
 
+        //! Debug
+        int sl_UI;
+
         #region Unity Lifecycle
         void Awake()
         {
@@ -117,6 +127,7 @@ namespace Hadal.UI
             loadingManager = LoadingManager.Instance;
 
             reticleDirectorsFR = new FlexibleRect(reticleDirectors);
+            allUIParentFR = new FlexibleRect(allUIParent);
 
             //cameraCanvas.worldCamera = playerCamera;
 
@@ -126,6 +137,8 @@ namespace Hadal.UI
             SetupModules();
             SetupPauseMenu();
             PNTR_Resume();
+
+            //sl_UI = DebugManager.Instance.CreateScreenLogger();
         }
 
         void Update()
@@ -148,6 +161,7 @@ namespace Hadal.UI
                 UpdateReticle();
                 UpdateInformation();
                 UpdateProjectileTracking();
+                UpdateUIDisplacement();
             }
         }
 
@@ -196,6 +210,8 @@ namespace Hadal.UI
             playerTransform = Transform;
             playerRotator = Rotator;
             playerRotationInput = RotationInput;
+
+            playerRigidbody = playerTransform.GetComponent<Rigidbody>();
         }
 
         void SetupModules()
@@ -213,6 +229,15 @@ namespace Hadal.UI
 
             if (leftLoaderFiller.fillAmount >= 0.5f) leftLoaderFiller.fillAmount = 0.5f;
             if (rightLoaderFiller.fillAmount >= 0.5f) rightLoaderFiller.fillAmount = 0.5f;
+        }
+
+        void UpdateUIDisplacement()
+        {
+            Vector2 destination = playerTransform.InverseTransformDirection(playerRigidbody.velocity);
+            destination = -destination / maxMovementInfluence * uiDisplacement;
+            allUIParentFR.StartLerp(destination);
+            allUIParentFR.Step(uiLerpReactionSpeed * Time.deltaTime);
+            //DebugManager.Instance.SLog(sl_UI, playerTransform.InverseTransformDirection(playerRigidbody.velocity));
         }
 
         void UpdateProjectileTracking()
