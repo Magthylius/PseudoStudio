@@ -7,46 +7,48 @@ using UnityEngine;
 
 namespace Hadal.AI
 {
-    public class PointNavigation : MonoBehaviour, IUnityServicer
+    public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
         [Header("Debug")]
         [SerializeField] private bool enableDebug;
 
-        [Header("Timer")]
+        [Header("Timer Settings")]
         [SerializeField] private float minLingerTime;
         [SerializeField] private float maxLingerTime;
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
-
-        [Header("Nav Settings")]
-        [SerializeField] private int numberOfClosestPointsToConsider;
-        [SerializeField] private List<NavPoint> navPoints;
-        [SerializeField] private Transform pilotTrans;
-        [SerializeField] private Rigidbody rBody;
-
-        [Header("Internal Data")]
-        [SerializeField] private float maxVelocity;
+        private float obstacleCheckTimer;
+        private float timeoutTimer;
+        private float lingerTimer;
+		
+		[Header("Force Settings")]
+		[SerializeField] private float maxVelocity;
         [SerializeField] private float thrustForce;
 		[SerializeField] private float attractionForce;
         [SerializeField] private float avoidanceForce;
         [SerializeField] private float closeRepulsionForce;
         [SerializeField] private float axisStalemateDeviationForce;
         [SerializeField] private float obstacleDetectRadius;
-        [SerializeField] private LayerMask obstacleMask;
         [SerializeField] private float smoothLookAtSpeed;
-        private float obstacleCheckTimer;
-        private float timeoutTimer;
-        private float lingerTimer;
-        private bool hasReachedPoint;
-        private NavPoint currentPoint;
-        private bool canAutoSelectNavPoints;
-        private bool isOnCustomPath;
-        private bool canPath;
-        private List<Vector3> repulsionPoints;
+		[SerializeField] private LayerMask obstacleMask;
 
+        [Header("Nav Components")]
+        [SerializeField] private int numberOfClosestPointsToConsider;
+        [SerializeField] private Transform pilotTrans;
+        [SerializeField] private Rigidbody rBody;
+
+        [Header("Internal Data")]
+		[SerializeField, ReadOnly] private List<NavPoint> navPoints;
+		[SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
+        [SerializeField, ReadOnly] private bool hasReachedPoint;
+        [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
+        [SerializeField, ReadOnly] private bool isOnCustomPath;
+        [SerializeField, ReadOnly] private bool canPath;
+        [SerializeField, ReadOnly] private NavPoint currentPoint;
+        
         private void Awake() => Initialise();
         private void Update() => DoUpdate(DeltaTime);
-        private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime, DeltaTime);
+        private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime);
 
 
         #region Public Methods
@@ -54,6 +56,7 @@ namespace Hadal.AI
         public void Initialise()
         {
             navPoints = FindObjectsOfType<NavPoint>().ToList();
+            navPoints.ForEach(p => p.Initialise());
             ResetLingerTimer();
             ResetTimeoutTimer();
             obstacleCheckTimer = 0f;
@@ -71,16 +74,16 @@ namespace Hadal.AI
         {
             
         }
-        public void DoFixedUpdate(in float fixedDeltaTime, in float deltaTime)
+        public void DoFixedUpdate(in float fixedDeltaTime)
         {
             if (pilotTrans == null) return;
             if (canPath)
             {
-                TrySelectNewNavPoint(deltaTime);
-				MoveForwards(deltaTime);
-                MoveTowardsCurrentNavPoint(deltaTime);
+                TrySelectNewNavPoint(fixedDeltaTime);
+				MoveForwards(fixedDeltaTime);
+                MoveTowardsCurrentNavPoint(fixedDeltaTime);
             }
-            HandleObstacleAvoidance(deltaTime);
+            HandleObstacleAvoidance(fixedDeltaTime);
         }
 
         public float ElapsedTime => Time.time;
