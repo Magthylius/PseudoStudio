@@ -1302,8 +1302,4 @@ namespace Magthylius
             }
         }
     }
-
-    namespace Utilities
-    {
-    }
 }

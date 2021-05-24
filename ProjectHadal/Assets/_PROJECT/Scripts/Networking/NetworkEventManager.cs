@@ -55,6 +55,7 @@ namespace Hadal.Networking
             }
 
             SetupNetworking();
+            //print("awake");
 
             playerObjects = new List<GameObject>();
         }
@@ -434,12 +435,17 @@ namespace Hadal.Networking
         #region Room Management
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            //print("scene");
+
+            if (isOfflineMode) return;
+
             if (scene.name == InGameScene)
             {
                 //! Create player manager
                 if (PhotonNetwork.IsMasterClient)
                 {
                     SpawnPlayerManager();
+                    //print(PhotonNetwork.IsMasterClient);
                 }
 
                 //SpawnAIEssentials();

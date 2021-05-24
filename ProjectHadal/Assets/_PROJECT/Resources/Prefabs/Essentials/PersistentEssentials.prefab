@@ -298,9 +298,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a196a3c96192f0740b1cb8eedd736536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isOfflineMode: 0
+  isOfflineMode: 1
+  localPlayerSpawnTrans: {fileID: 4099844762844519294}
   MainMenuScene: MainMenu
-  InGameScene: MainMenu
+  InGameScene: Vertical Slice Smaller
   maxPlayers: 4
   playerTTL: 1000
   emptyRoomTTL: 1000

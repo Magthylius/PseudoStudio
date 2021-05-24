@@ -31,6 +31,11 @@ namespace Hadal.UI
         PostProcessingManager ppManager;
         LoadingManager loadingManager;
 
+        [Header("Essentials")]
+        [SerializeField] Camera playerCamera;
+        [SerializeField] Canvas overlayCanvas;
+        [SerializeField] Canvas cameraCanvas;
+
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleDirectors;
         //[SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
@@ -42,6 +47,13 @@ namespace Hadal.UI
         [SerializeField] Image reticleLineImage;
         [SerializeField] float minPixelsPerUnit;
         [SerializeField] float maxPixelsPerUnit;
+
+        [Header("Loader Filler Settings")]
+        [SerializeField] Image leftLoaderFiller;
+        [SerializeField] Image rightLoaderFiller;
+        [SerializeField, Range(0f, 1f)] float fillerMinFillClamp = 0.1f;
+        [SerializeField, Range(0f, 1f)] float fillerMaxFillClamp = 0.5f;
+        [SerializeField] float loaderFillLerpSpeed = 5f;
 
         FlexibleRect reticleDirectorsFR;
 
@@ -106,6 +118,8 @@ namespace Hadal.UI
 
             reticleDirectorsFR = new FlexibleRect(reticleDirectors);
 
+            //cameraCanvas.worldCamera = playerCamera;
+
             DoDebugEnabling(debugKey);
 
             SetupReticle();
@@ -147,10 +161,14 @@ namespace Hadal.UI
         #region Torpedoes
         public void UpdateFlooding(float progress, bool showFlooding)
         {
-            foreach (Image img in floodIndicators) img.fillAmount = progress;
+            /*foreach (Image img in floodIndicators) img.fillAmount = progress;
 
             if (progress < 1f) fireReticle.SetActive(false);
-            else fireReticle.SetActive(true);
+            else fireReticle.SetActive(true);*/
+
+            float fillProgress = Mathf.Lerp(fillerMinFillClamp, fillerMaxFillClamp, progress);
+            leftLoaderFiller.fillAmount = fillProgress;
+            rightLoaderFiller.fillAmount = fillProgress;
 
             floodText.SetActive(showFlooding);
 
@@ -166,7 +184,8 @@ namespace Hadal.UI
 
         public void UpdateReload(float progress, bool showReloading)
         {
-            foreach (Image reloaders in reloadProgressors) reloaders.fillAmount = progress;
+            //foreach (Image reloaders in reloadProgressors) reloaders.fillAmount = progress;
+            
             reloadText.SetActive(showReloading);
         }
         #endregion
@@ -189,8 +208,11 @@ namespace Hadal.UI
 
         void UpdateInformation()
         {
-            string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
-            depthText.text = $"Depth: -{depth}";
+            //string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
+            //depthText.text = $"Depth: -{depth}";
+
+            if (leftLoaderFiller.fillAmount >= 0.5f) leftLoaderFiller.fillAmount = 0.5f;
+            if (rightLoaderFiller.fillAmount >= 0.5f) rightLoaderFiller.fillAmount = 0.5f;
         }
 
         void UpdateProjectileTracking()

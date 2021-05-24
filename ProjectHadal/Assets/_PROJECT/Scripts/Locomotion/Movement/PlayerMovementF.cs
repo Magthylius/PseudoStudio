@@ -11,7 +11,6 @@ namespace Hadal.Locomotion
         private Vector3 _lastPosition;
         private Vector3 _currentPosition;
         private bool _isLocal = true;
-        private int SL_Debug;
 
         [SerializeField] private float drag;
 
@@ -32,12 +31,7 @@ namespace Hadal.Locomotion
 
         public override void DoUpdate(in float deltaTime)
         {
-            /*      LerpCummulatedAcceleration(deltaTime);
-                   HandleAcceleration(deltaTime);
-                   AddVelocity();
-                   LoseVelocity(deltaTime);
-                   Move(deltaTime);
-                   CalculateSpeed(deltaTime);*/
+
         }
 
         public override void DoFixedUpdate(in float fixedDeltaTime)
@@ -60,10 +54,8 @@ namespace Hadal.Locomotion
         public override void Enable()
         {
             //$"Enable is called".Warn();
-            SL_Debug = DebugManager.Instance.CreateScreenLogger();
             Input = DefaultInputs;
             drag = Accel.MaxCummulation / Speed.Max;
-           // rigidBody.drag = drag;
             rigidBody.drag = drag / (drag * Time.fixedDeltaTime +1);
         }
 
@@ -89,7 +81,6 @@ namespace Hadal.Locomotion
 
             rigidBody.AddForce(moveForce, ForceMode.Force);
 
-            // DebugManager.Instance.SLog(SL_Debug, moveForce.magnitude * 100);
         }
 
         private void CalculateSpeed()
