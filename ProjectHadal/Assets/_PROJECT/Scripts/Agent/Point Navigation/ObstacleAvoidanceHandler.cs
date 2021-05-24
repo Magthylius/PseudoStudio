@@ -5,7 +5,7 @@ namespace Hadal.AI
 {
     public class ObstacleAvoidanceHandler : MonoBehaviour
     {
-        [SerializeField] private PointNavigation navigator;
+        [SerializeField] private PointNavigationHandler navigator;
         private SphereCollider cCollider;
         
         private void Awake()
