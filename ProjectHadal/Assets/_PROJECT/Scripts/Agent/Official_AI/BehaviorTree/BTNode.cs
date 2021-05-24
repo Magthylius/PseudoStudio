@@ -12,10 +12,9 @@ namespace Hadal.AI
 
         public abstract NodeState Evaluate();
     }
-}
 
-
-public enum NodeState
-{
-    RUNNING, SUCCESS, FAILURE,
+    public enum NodeState
+    {
+        RUNNING, SUCCESS, FAILURE,
+    }
 }
