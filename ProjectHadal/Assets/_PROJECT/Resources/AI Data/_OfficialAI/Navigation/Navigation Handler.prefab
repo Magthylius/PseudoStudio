@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2618675678100472905}
   - component: {fileID: 2618675678100472903}
   m_Layer: 0
-  m_Name: Fishy
+  m_Name: Navigation Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,22 +51,28 @@ MonoBehaviour:
   minLingerTime: 4
   maxLingerTime: 10
   timeoutNewPointTime: 12
-  obstacleCheckTime: 0.2
-  numberOfClosestPointsToConsider: 4
-  navPoints: []
-  pilotTrans: {fileID: 2618675678100472902}
-  rBody: {fileID: 2618675678100472905}
+  obstacleCheckTime: 0.1
   maxVelocity: 50
   thrustForce: 20
   attractionForce: 15
-  avoidanceForce: 0.2
+  avoidanceForce: 0.5
   closeRepulsionForce: 3
   axisStalemateDeviationForce: 5
   obstacleDetectRadius: 25
+  smoothLookAtSpeed: 12
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4352
-  smoothLookAtSpeed: 12
+  numberOfClosestPointsToConsider: 4
+  pilotTrans: {fileID: 2618675678100472902}
+  rBody: {fileID: 2618675678100472905}
+  navPoints: []
+  repulsionPoints: []
+  hasReachedPoint: 0
+  canAutoSelectNavPoints: 0
+  isOnCustomPath: 0
+  canPath: 0
+  currentPoint: {fileID: 0}
 --- !u!54 &2618675678100472905
 Rigidbody:
   m_ObjectHideFlags: 0
