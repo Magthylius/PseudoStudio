@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Hadal.AI
 {
-    public class PointNavigation : MonoBehaviour, IUnityServicer
+    public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
         [Header("Debug")]
         [SerializeField] private bool enableDebug;
@@ -17,6 +17,9 @@ namespace Hadal.AI
         [SerializeField] private float maxLingerTime;
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
+        private float obstacleCheckTimer;
+        private float timeoutTimer;
+        private float lingerTimer;
 
         [Header("Nav Settings")]
         [SerializeField] private int numberOfClosestPointsToConsider;
@@ -34,19 +37,16 @@ namespace Hadal.AI
         [SerializeField] private float obstacleDetectRadius;
         [SerializeField] private LayerMask obstacleMask;
         [SerializeField] private float smoothLookAtSpeed;
-        private float obstacleCheckTimer;
-        private float timeoutTimer;
-        private float lingerTimer;
         private bool hasReachedPoint;
-        private NavPoint currentPoint;
         private bool canAutoSelectNavPoints;
         private bool isOnCustomPath;
         private bool canPath;
+        private NavPoint currentPoint;
         private List<Vector3> repulsionPoints;
 
         private void Awake() => Initialise();
         private void Update() => DoUpdate(DeltaTime);
-        private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime, DeltaTime);
+        private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime);
 
 
         #region Public Methods
@@ -54,6 +54,7 @@ namespace Hadal.AI
         public void Initialise()
         {
             navPoints = FindObjectsOfType<NavPoint>().ToList();
+            navPoints.ForEach(p => p.Initialise());
             ResetLingerTimer();
             ResetTimeoutTimer();
             obstacleCheckTimer = 0f;
@@ -71,16 +72,16 @@ namespace Hadal.AI
         {
             
         }
-        public void DoFixedUpdate(in float fixedDeltaTime, in float deltaTime)
+        public void DoFixedUpdate(in float fixedDeltaTime)
         {
             if (pilotTrans == null) return;
             if (canPath)
             {
-                TrySelectNewNavPoint(deltaTime);
-				MoveForwards(deltaTime);
-                MoveTowardsCurrentNavPoint(deltaTime);
+                TrySelectNewNavPoint(fixedDeltaTime);
+				MoveForwards(fixedDeltaTime);
+                MoveTowardsCurrentNavPoint(fixedDeltaTime);
             }
-            HandleObstacleAvoidance(deltaTime);
+            HandleObstacleAvoidance(fixedDeltaTime);
         }
 
         public float ElapsedTime => Time.time;
