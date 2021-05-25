@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hadal.AI
+namespace Hadal.AI.TreeNodes
 {
     [System.Serializable]
     public abstract class BTNode
