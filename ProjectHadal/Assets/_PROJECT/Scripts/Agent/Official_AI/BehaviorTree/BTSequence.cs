@@ -1,0 +1,46 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Hadal.AI
+{
+    public class BTSequence : BTNode
+    {
+        //! Children nodes that belong to this sequence
+        protected List<BTNode> nodes = new List<BTNode>();
+
+        //! Provide an initial set of children to work
+        public BTSequence(List<BTNode> nodes)
+        {
+            this.nodes = nodes;
+        }
+
+        //! If any child node returns a failure, the entire node fails. Whence all nodes return a success, the node reports a success.
+        public override NodeState Evaluate()
+        {
+            bool anyNodeRunning = false;
+            foreach(var node in nodes)
+            {
+                switch(node.Evaluate())
+                {
+                    //! if node is running, means there's a process happenning.
+                    case NodeState.RUNNING:
+                        anyNodeRunning = true;
+                        break;
+                    //! if node is a success, don't do anything and evaluate next child.
+                    case NodeState.SUCCESS:
+                        break;
+                    //! if node is a failure, then break us out of the method. 
+                    case NodeState.FAILURE:
+                        _nodeState = NodeState.FAILURE;
+                        return _nodeState;
+                    default:
+                        break;
+                }
+            }
+            //! If code reach here means all nodes is success, if not then it's running
+            _nodeState = anyNodeRunning ? NodeState.RUNNING : NodeState.SUCCESS;
+            return _nodeState;
+        }
+    }
+}

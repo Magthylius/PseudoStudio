@@ -20,7 +20,7 @@ public class ImpulseMode : ProjectileMode
 
     public override void FirstFrameSetup()
     {
-        frameSetupCompleted = false;
+        frameSetupCompleted = true;
         rigidbody.drag = linearDrag;
 
         rigidbody.AddRelativeForce(direction.normalized * force, ForceMode.Impulse);
