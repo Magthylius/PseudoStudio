@@ -34,12 +34,4 @@ namespace Hadal.AI
         public void OnStateEnd() { }
         public Func<bool> ShouldTerminate() => () => false;
     }
-
-    public enum Objective
-    {
-        None,
-        Ambush,
-        Aggressive,
-        Judgement
-    }
 }
