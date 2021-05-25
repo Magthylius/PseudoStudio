@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Tenshi.AIDolls;
 using System;
 
@@ -8,16 +5,41 @@ namespace Hadal.AI
 {
     public class AnticipationState : IState
     {
+        private AIBrain Brain;
+        private PointNavigationHandler NavigationHandler;
+        
+        public AnticipationState(AIBrain brain)
+        {
+            Brain = brain;
+            NavigationHandler = Brain.NavigationHandler;
+        }
+
         public void OnStateStart() { }
-        public void StateTick() { }
-        public void LateStateTick()
+        public void StateTick()
         {
+            Objective objective = Objective.None;
+            
+            //! Anticipation evaluation here
+            // ...
+
+            // if (ambush)
+            //     objective = AnticipationObjective.Ambush;
+            // else if (aggressive)
+            //     objective = AnticipationObjective.Aggressive;
+            
+            Brain.SetObjective(objective);
         }
-        public void FixedStateTick()
-        {
-        }
+        public void LateStateTick() { }
+        public void FixedStateTick() { }
         public void OnStateEnd() { }
         public Func<bool> ShouldTerminate() => () => false;
     }
 
+    public enum Objective
+    {
+        None,
+        Ambush,
+        Aggressive,
+        Judgement
+    }
 }

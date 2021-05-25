@@ -15,36 +15,22 @@ namespace Hadal.AI.States
     public class IdleState : IState
     {
         #region Variables
-        AIBrain brain;
-        Queue<Vector3> pathQueue;
-        Vector3 curDestination;
-        Vector3 pathDestination;
-        Vector3 prevDest;
-        float newDestTimer = 0f;
-        float newDestTimeDelay;
-        bool isFirstPath;
-        bool isFindingPath;
+        private AIBrain Brain;
+        private PointNavigationHandler NavigationHandler;
 
         #endregion
 
-        public IdleState(AIBrain brain, float destinationChangeTimer)
+        public IdleState(AIBrain brain)
         {
-            this.brain = brain;
-            pathQueue = new Queue<Vector3>();
-            newDestTimeDelay = destinationChangeTimer;
-            isFirstPath = false;
-            isFindingPath = false;
+            Brain = brain;
+            NavigationHandler = Brain.NavigationHandler;
         }
-        public async void OnStateStart()
+        public void OnStateStart()
         {
-            ResetPath();
-            ResetNewDestinationTimer();
-            await SelectRandomPathAsync();
+            NavigationHandler.SetCanPath(true);
         }
-        public async void StateTick()
+        public void StateTick()
         {
-            await CheckForNewDestinationTimerCompletedAsync();
-            WalkPath();
         }
         public void LateStateTick()
         {
@@ -54,123 +40,8 @@ namespace Hadal.AI.States
         }
         public void OnStateEnd()
         {
-            ResetPath();
-            ResetNewDestinationTimer();
-            isFindingPath = false;
+            
         }
-
-        void WalkPath()
-        {
-            if (pathQueue.IsNullOrEmpty()) return;
-
-            if (isFirstPath)
-            {
-                isFirstPath = false;
-                pathDestination = pathQueue.Dequeue();
-            }
-
-            //Set the next (sub)destination by dequeueing the nodes
-            if (Vector3.Distance(brain.transform.position, pathDestination).IsLessThan(0.1f))
-            {
-                if (pathQueue.Count == 0)
-                {
-                    pathQueue.Clear();
-                    return;
-                }
-                pathDestination = pathQueue.Dequeue();
-            }
-
-            Vector3 direction = (pathDestination - brain.transform.position).normalized;
-            //float multiplier = (Vector3.Distance(curDestination, brain.transform.position)) * brain.idleSpeed * Time.deltaTime; 
-            // brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, brain.idleSpeed * Time.deltaTime);
-            // Vector3 randomThing = Vector3.zero;
-            // brain.transform.position = Vector3.SmoothDamp(brain.transform.position, pathDestination, ref randomThing, brain.idleSpeed * Time.deltaTime, brain.idleSpeed);
-            // if (pathQueue.Count > 1)
-            //     brain.transform.position += direction * (multiplier * Time.deltaTime);
-            // else
-            //     brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, multiplier * Time.deltaTime);
-            if (Vector3.Distance(brain.transform.position, pathDestination) > 0)
-            {
-                brain.transform.position = Vector3.Lerp(brain.transform.position, pathDestination, brain.idleSpeed * Time.deltaTime);
-                brain.transform.LookAt(curDestination);
-            }
-
-        }
-
-        void ResetPath()
-        {
-            pathQueue.Clear();
-            isFirstPath = false;
-        }
-
-        void CheckForNewDestinationTimerCompleted()
-        {
-            newDestTimer -= Time.deltaTime;
-            if (newDestTimer < 0.0f)
-            {
-                ResetNewDestinationTimer();
-                SelectRandomPath();
-            }
-        }
-
-        async Task CheckForNewDestinationTimerCompletedAsync()
-        {
-            if (pathQueue.IsEmpty()) newDestTimer -= Time.deltaTime;
-            if (newDestTimer < 0.0f)
-            {
-                ResetNewDestinationTimer();
-                ResetPath();
-                bool pathExists = await SelectRandomPathAsync();
-                if (!pathExists) newDestTimer = -1f;
-            }
-        }
-
-        void SelectRandomPath()
-        {
-            var list = brain.destinations.Select(i => i.position).ToList();
-            list.Remove(prevDest);
-            curDestination = list.RandomElement();
-
-            prevDest = curDestination;
-            Stack<Node> fullPath = PathFinder.Instance.Find(brain.transform.position, curDestination);
-            if (fullPath.IsNullOrEmpty()) return;
-
-            pathQueue.Enqueue(brain.transform.position);
-            while (fullPath.IsNotEmpty())
-                pathQueue.Enqueue(fullPath.Pop().Position);
-            pathQueue.Enqueue(curDestination);
-
-            isFirstPath = true;
-        }
-
-        async Task<bool> SelectRandomPathAsync()
-        {
-            if (isFindingPath) return true;
-            isFindingPath = true;
-
-            var list = brain.destinations.Select(i => i.position).ToList();
-            list.Remove(prevDest);
-            curDestination = list.RandomElement();
-
-            prevDest = curDestination;
-
-            Stack<Node> fullPath = await PathFinder.Instance.FindAsync(brain.transform.position, curDestination);
-            bool finish = false;
-            if (fullPath.IsNotEmpty())
-            {
-                pathQueue.Enqueue(brain.transform.position);
-                while (fullPath.IsNotEmpty())
-                    pathQueue.Enqueue(fullPath.Pop().Position);
-                pathQueue.Enqueue(curDestination);
-
-                finish = true;
-                isFirstPath = true;
-            }
-            isFindingPath = false;
-            return finish;
-        }
-
-        void ResetNewDestinationTimer() => newDestTimer = newDestTimeDelay;
 
         public Func<bool> ShouldTerminate() => () => false;
     }

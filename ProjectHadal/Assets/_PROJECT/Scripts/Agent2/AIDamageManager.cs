@@ -20,7 +20,7 @@ namespace Hadal.AIComponents
     {
         public AIBrain Brain { get; private set; }
         [Header("Damage Values")]
-        [Foldout("Damage Type"), SerializeField] int pinDamage;
+        [Foldout("Damage Type"), SerializeField] int threshDamage;
         [Foldout("Damage Type"), SerializeField] int tailWhipDamage;
         [ReadOnly, SerializeField] List<PlayerController> players;
         [ReadOnly, SerializeField] List<GameObject> playerObjects;
@@ -34,7 +34,7 @@ namespace Hadal.AIComponents
             //! Subcribes player events
             AIBrain.DamagePlayerEvent += Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent += HandlePlayerMovementFreeze;
-            Brain.ForceSlamPlayerEvent += HandlePlayerSlamEvent;
+            Brain.ThreshPlayerEvent += HandlePlayerThreshEvent;
             NetworkEventManager.Instance.AddListener(ByteEvents.AI_DAMAGE_EVENT, Receive_DamagePlayer);
         }
 
@@ -48,7 +48,7 @@ namespace Hadal.AIComponents
             //! Unsubscribe player events
             AIBrain.DamagePlayerEvent -= Send_DamagePlayer;
             Brain.FreezePlayerMovementEvent -= HandlePlayerMovementFreeze;
-            Brain.ForceSlamPlayerEvent -= HandlePlayerSlamEvent;
+            Brain.ThreshPlayerEvent -= HandlePlayerThreshEvent;
         }
 
         private void Send_DamagePlayer(Transform player, AIDamageType type)
@@ -57,7 +57,7 @@ namespace Hadal.AIComponents
             int targetViewID = GetViewIDFromTransform(player);
             int damage = type switch
             {
-                AIDamageType.Pin => pinDamage,
+                AIDamageType.Thresh => threshDamage,
                 AIDamageType.Tail => tailWhipDamage,
                 _ => 0
             };
@@ -101,11 +101,10 @@ namespace Hadal.AIComponents
             }
         }
 
-        private void HandlePlayerSlamEvent(Transform player, Vector3 destination)
+        private void HandlePlayerThreshEvent(Transform player, Vector3 destination)
         {
             var p = player.GetComponent<PlayerController>();
-            var direction = (player.position - destination).normalized;
-            p.AddVelocity(1000000f, direction);
+            //! DoT?
         }
 
         private void UpdatePlayerControllers()

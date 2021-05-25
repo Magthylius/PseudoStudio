@@ -37,7 +37,7 @@ namespace Hadal.AI
             $"AI health: {currentHealth}".Msg();
             return true;
         }
-        public GameObject Obj => gameObject;
+        public GameObject Obj => transform.parent.gameObject;
         public bool IsUnalive => currentHealth <= 0;
         public float GetHealthRatio => currentHealth / maxHealth.AsFloat();
 

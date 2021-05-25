@@ -99,6 +99,8 @@ namespace Hadal.AI
                 repulsionPoints.Add(point);
         }
 
+        public List<Vector3> GetRepulsionPoints() => new List<Vector3>(repulsionPoints);
+
         public void SetCanPath(bool statement)
         {
             canPath = statement;

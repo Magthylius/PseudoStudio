@@ -6,8 +6,6 @@ using Tenshi.UnitySoku;
 using Timer = Hadal.Utility.Timer;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
-using Hadal.Utility;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
 using Debug = UnityEngine.Debug;
@@ -25,18 +23,21 @@ namespace Hadal.AI.States
         bool isPinning;
         bool foundWall;
 
-        public AggressiveSubState(EngagementState parent)
+        public AggressiveSubState()
         {
-            this.parent = parent;
-            b = parent.Brain;
-            pinTimer = parent.Brain.Create_A_Timer().WithDuration(40f)
-                                                    .WithShouldPersist(true)
-                                                    .WithOnCompleteEvent(() => canPin = true);
-            pinTimer.Pause();
+            // pinTimer = parent.Brain.Create_A_Timer().WithDuration(40f)
+            //                                         .WithShouldPersist(true)
+            //                                         .WithOnCompleteEvent(() => canPin = true);
+            // pinTimer.Pause();
             canPin = true;
             isPinning = false;
             foundWall = false;
-            NetworkEventManager.Instance.AddListener(ByteEvents.AI_PIN_EVENT, Receive_PinTargetPlayer);
+            // NetworkEventManager.Instance.AddListener(ByteEvents.AI_PIN_EVENT, Receive_PinTargetPlayer);
+        }
+        public void SetParent(EngagementState parent)
+        {
+            this.parent = parent;
+            b = parent.Brain;
         }
         public void OnStateStart()
         {
@@ -45,13 +46,46 @@ namespace Hadal.AI.States
         public void StateTick()
         {
             if (parent.TargetPlayer == null)
-                parent.SetTargetPlayer(parent.ChooseClosestRandomPlayer());
+            {
+                //! Based on design chart, AI has a list of possible randoms to choose a player from
+                // parent.SetTargetPlayer(parent.ChooseClosestRandomPlayer());
+            }
 
-            PinTargetPlayer();
+            //! cannot use PinTargetPlayer anymore in update
+            // PinTargetPlayer();
+
+            //! new logic
+            /*
+            if (parent.TargetPlayer is not within range)
+            {
+                path towards parent.TargetPlayer
+            }
+
+            if (distance between parent.TargetPlayer and b.transform.position < biteDistThreshold)
+            {
+                bite parent.TargetPlayer;
+                parent.TargetPlayer will follow the mouth of the AI;
+            }
+
+            if (parent.TargetPlayer is in mouth)
+            {
+                thresh parent.TargetPlayer in mouth until interupted or player unalive;
+                if (thresh is interupted before parent.TargetPlayer unalives)
+                {
+                    confidence--
+                    goto -> Judgement substate and evaluate normally
+                }
+                else if (thresh ends up killing parent.TargetPlayer in mouth)
+                {
+                    confidence++
+                    goto -> Judgement substate and evaluate 'Aggressive' branch
+                }
+            }
+            */
         }
         public void LateStateTick()
         {
-            foundWall = false;
+            
         }
         public void FixedStateTick()
         {
@@ -60,35 +94,11 @@ namespace Hadal.AI.States
         {
 
         }
+
         /// <summary>Detection for wall</summary>
         void SphereObstacleDetection()
         {
-            // Check for which wall is closest
-            Collider[] results;
-            results = Physics.OverlapSphere(b.transform.position, b.wallDetectionRadius, b.obstacleMask);
-
-            var distance = Mathf.Infinity;
-            Transform closestTrans = null;
-            foreach (var points in results)
-            {
-                var diff = (b.transform.position - points.transform.position).magnitude;
-                if (diff < distance)
-                {
-                    closestTrans = points.transform;
-                    closestWall = points.transform.position;
-                    distance = diff;
-                    foundWall = true;
-                }
-            }
-
-            // Get the surface of the chosen wall
-            if (closestTrans == null) return;
-            var dir = closestTrans.position - b.transform.position;
-            if (Physics.Raycast(b.transform.position, dir, out var hit, Mathf.Infinity, b.obstacleMask))
-            {
-                closestWall = hit.point;
-                foundWall = true;
-            }
+            //! use NavigationHandler's obstacle detection, but we do not need wall pinning anymore
         }
 
         /// <summary>Move to the closest wall found and damage player</summary>
@@ -98,31 +108,31 @@ namespace Hadal.AI.States
             // b.transform.position = Vector3.Lerp(b.transform.position, closestWall, b.pinSpeed * Time.deltaTime);
             // Vector3 tempVect = (closestWall - b.transform.position);
 
-            Vector3 velo = closestWall - b.transform.position;
-            velo = velo.normalized;
-            velo *= (b.pinSpeed);
-            b.rb.AddRelativeForce(velo, ForceMode.VelocityChange);
-            b.transform.LookAt(closestWall);
+            // Vector3 velo = closestWall - b.transform.position;
+            // velo = velo.normalized;
+            // velo *= (b.pinSpeed);
+            // b.rb.AddRelativeForce(velo, ForceMode.VelocityChange);
+            // b.transform.LookAt(closestWall);
 
-            float speed = Vector3.Magnitude(b.rb.velocity);  // test current object speed
+            // float speed = Vector3.Magnitude(b.rb.velocity);  // test current object speed
 
-            if (speed > 5f)
+            // if (speed > 5f)
 
-            {
-                float brakeSpeed = speed - 10f;  // calculate the speed decrease
+            // {
+            //     float brakeSpeed = speed - 10f;  // calculate the speed decrease
 
-                Vector3 normalisedVelocity = b.rb.velocity.normalized;
-                Vector3 brakeVelocity = normalisedVelocity * brakeSpeed;  // make the brake Vector3 value
+            //     Vector3 normalisedVelocity = b.rb.velocity.normalized;
+            //     Vector3 brakeVelocity = normalisedVelocity * brakeSpeed;  // make the brake Vector3 value
 
-                b.rb.AddForce(-brakeVelocity);  // apply opposing brake force
-            }
+            //     b.rb.AddForce(-brakeVelocity);  // apply opposing brake force
+            // }
 
-            if (b.rb.velocity.sqrMagnitude > 5f)
-            {
-                //smoothness of the slowdown is controlled by the 0.99f, 
-                //0.5f is less smooth, 0.9999f is more smooth
-                b.rb.velocity *= 0.99f;
-            }
+            // if (b.rb.velocity.sqrMagnitude > 5f)
+            // {
+            //     //smoothness of the slowdown is controlled by the 0.99f, 
+            //     //0.5f is less smooth, 0.9999f is more smooth
+            //     b.rb.velocity *= 0.99f;
+            // }
 
             // b.transform.position = closestWall;
             // tempVect = tempVect * b.pinSpeed * Time.deltaTime;
@@ -132,65 +142,65 @@ namespace Hadal.AI.States
             // b.rb.AddForce(tempVect, ForceMode.Force);
             // b.rb.AddForceAtPosition(tempVect, b.transform.position, ForceMode.Force);
 
-            if (Vector3.Distance(closestWall, b.transform.position) < 15f)
-            {
-                isPinning = false;
+            // if (Vector3.Distance(closestWall, b.transform.position) < 15f)
+            // {
+            //     isPinning = false;
 
-                $"Before unparent: player's parent is null {parent.TargetPlayer.parent == null}".Msg();
+            //     $"Before unparent: player's parent is null {parent.TargetPlayer.parent == null}".Msg();
 
-                parent.TargetPlayer.SetParent(null);
-                parent.TargetPlayer.parent = null;
+            //     parent.TargetPlayer.SetParent(null);
+            //     parent.TargetPlayer.parent = null;
 
-                $"After unparent: player's parent is null {parent.TargetPlayer.parent == null}".Msg();
+            //     $"After unparent: player's parent is null {parent.TargetPlayer.parent == null}".Msg();
 
-                b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
+            //     b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, false);
                 
-            }
+            // }
         }
 
-        /// <summary>Pin the target player to the wall</summary>
+        /// <summary>Convert this to thresh target player method</summary>
         void PinTargetPlayer()
         {
             //! Check if target player is in range && far from target wall
-            if (parent.TargetPlayerIsInRange() && canPin)
-            {
-                SphereObstacleDetection();
-                if (foundWall)
-                {
-                    b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Pin);
-                    pinTimer.Restart();
-                    canPin = false;
-                    isPinning = true;
-                    b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
-                }
+            // if (parent.TargetPlayerIsInRange() && canPin)
+            // {
+            //     SphereObstacleDetection();
+            //     if (foundWall)
+            //     {
+            //         b.InvokeDamagePlayerEvent(parent.TargetPlayer, AIDamageType.Thresh);
+            //         pinTimer.Restart();
+            //         canPin = false;
+            //         isPinning = true;
+            //         b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
+            //     }
 
-                // b.InvokeForceSlamPlayerEvent(parent.TargetPlayer, closestWall);
-            }
+            //     // b.InvokeForceSlamPlayerEvent(parent.TargetPlayer, closestWall);
+            // }
 
-            if (isPinning)
-            {
-                b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
+            // if (isPinning)
+            // {
+            //     b.InvokeFreezePlayerMovementEvent(parent.TargetPlayer, true);
                 
-                float distanceBetween = Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f));
-                if (distanceBetween < 30f)
-                {
-                    var p = parent.TargetPlayer;
+            //     float distanceBetween = Vector3.Distance(parent.TargetPlayer.position, b.transform.position + (b.transform.forward * 20f));
+            //     if (distanceBetween < 30f)
+            //     {
+            //         var p = parent.TargetPlayer;
 
-                    Vector3 pleaseMoveHere = b.transform.position + (b.transform.forward * 30f);
-                    p.position = pleaseMoveHere;
+            //         Vector3 pleaseMoveHere = b.transform.position + (b.transform.forward * 30f);
+            //         p.position = pleaseMoveHere;
 
-                    if (p.parent == null) p.SetParent(b.transform);
+            //         if (p.parent == null) p.SetParent(b.transform);
 
-                    int viewID = b.GetViewIDMethod(parent.TargetPlayer);
+            //         int viewID = b.GetViewIDMethod(parent.TargetPlayer);
 
-                    object[] data = { isPinning, viewID, pleaseMoveHere };
-                    RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_PIN_EVENT, data, options);
-                }
+            //         object[] data = { isPinning, viewID, pleaseMoveHere };
+            //         RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+            //         NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_PIN_EVENT, data, options);
+            //     }
 
-                MoveToClosestWall();
-                parent.ChaseTargetPlayer();
-            }
+            //     MoveToClosestWall();
+            //     parent.ChaseTargetPlayer();
+            // }
         }
 
         private void Receive_PinTargetPlayer(EventData eventData)
@@ -213,100 +223,136 @@ namespace Hadal.AI.States
     }
     public class AmbushSubState : IState
     {
-        public void OnStateStart()
+        EngagementState parent;
+        AIBrain b;
+
+        public AmbushSubState()
         {
+
         }
+        public void SetParent(EngagementState parent)
+        {
+            this.parent = parent;
+            b = parent.Brain;
+        }
+
+        public void OnStateStart() { }
         public void StateTick()
         {
+            //! new logic
+            /*
+            if (has not chosen ambush point)
+            {
+                find ambush location { closest to AI? closest to Players? }
+            }
+
+            if (has chosen ambush point)
+            {
+                path towards ambush point;
+                if (player interruption)
+                {
+                    confidence--
+                    goto -> Judgement substate and evaluate normally
+                }
+            }
+
+            if (is in ambush point)
+            {
+                if (any player is within bite range)
+                {
+                    try to bite that player;
+                    goto -> Judgement substate and evaluate normally
+                }
+                else
+                {
+                    tick wait timer;
+                    if (wait timer exceeded && no players in current cavern)
+                    {
+                        confidence++
+                        goto -> Anticipation state
+                    }
+                }
+            }
+            */
         }
-        public void LateStateTick()
-        {
-        }
-        public void FixedStateTick()
-        {
-        }
-        public void OnStateEnd()
-        {
-        }
+        public void LateStateTick() { }
+        public void FixedStateTick() { }
+        public void OnStateEnd() { }
         public Func<bool> ShouldTerminate() => () => false;
     }
     public class JudgementSubState : IState
     {
-        public void OnStateStart()
+        EngagementState parent;
+        AIBrain b;
+
+        public JudgementSubState()
         {
+
         }
+        public void SetParent(EngagementState parent)
+        {
+            this.parent = parent;
+            b = parent.Brain;
+        }
+
+        public void OnStateStart() { }
         public void StateTick()
         {
+            //behaviour tree?
+            // https://app.diagrams.net/#G1S3qrdiuVc7uVjAx3LYDiG1rLkVtIGEKE
         }
-        public void LateStateTick()
-        {
-        }
-        public void FixedStateTick()
-        {
-        }
-        public void OnStateEnd()
-        {
-        }
+        public void LateStateTick() { }
+        public void FixedStateTick() { }
+        public void OnStateEnd() { }
         public Func<bool> ShouldTerminate() => () => false;
     }
 
     public class EngagementState : IState
     {
         public AIBrain Brain { get; private set; }
-        StateMachine subStateMachine;
-        SubStateState subStateState;
+        public PointNavigationHandler NavigationHandler { get; private set; }
+        private StateMachine subStateMachine;
 
-        // Time elapsed after fight start
-        float fightTimer = 0f;
-
-        // To start fight timer
-        bool bfightTimer;
-
-        public EngagementState(AIBrain brain)
+        public EngagementState(AIBrain brain, AggressiveSubState aggressive, AmbushSubState ambush, JudgementSubState judgement)
         {
-            this.Brain = brain;
-            subStateState = SubStateState.Aggresive;
+            Brain = brain;
+            NavigationHandler = Brain.NavigationHandler;
             TargetPlayer = null;
 
             //! intialise sub machine and states
+            aggressive.SetParent(this);
+
             subStateMachine = new StateMachine();
-            var aggressive = new AggressiveSubState(this);
-            var ambush = new AmbushSubState();
-            var judgement = new JudgementSubState();
-
-            subStateMachine.AddSequentialTransition(from: aggressive, to: ambush, withCondition: OnAmbush());
-            subStateMachine.AddSequentialTransition(from: ambush, to: judgement, withCondition: OnJudgement());
-            subStateMachine.AddSequentialTransition(from: judgement, to: aggressive, withCondition: OnAggressive());
-
-            subStateMachine.SetState(aggressive); // default state
+            subStateMachine.AddEventTransition(to: ambush, withCondition: OnAmbush());
+            subStateMachine.AddEventTransition(to: aggressive, withCondition: OnAggressive());
+            subStateMachine.AddEventTransition(to: judgement, withCondition: OnJudgement());
+            
+            subStateMachine.SetState(judgement); // default state
 
             //! transition conditions
-            Func<bool> OnAmbush() => () => subStateState is SubStateState.Ambush;
-            Func<bool> OnJudgement() => () => subStateState is SubStateState.Judgement;
-            Func<bool> OnAggressive() => () => subStateState is SubStateState.Aggresive;
+            Func<bool> OnAmbush() => () => Brain.Objective == Objective.Ambush;
+            Func<bool> OnAggressive() => () => Brain.Objective == Objective.Aggressive;
+            Func<bool> OnJudgement() => () => Brain.Objective == Objective.Judgement;
         }
         public void OnStateStart()
         {
-            bfightTimer = true;
             subStateMachine.CurrentState.OnStateStart();
         }
         public void StateTick()
         {
             subStateMachine.MachineTick();
-            if (bfightTimer)
-            {
-                fightTimer += Time.deltaTime;
-            }
         }
         public void LateStateTick()
         {
+            subStateMachine.LateMachineTick();
         }
         public void FixedStateTick()
         {
+            subStateMachine.FixedMachineTick();
         }
         public void OnStateEnd()
         {
-            fightTimer = 0f;
+            
         }
 
         Vector3 curDestination;
@@ -315,9 +361,7 @@ namespace Hadal.AI.States
         bool isFirstPath;
         bool isGridInitialised;
 
-        /// <summary>
-        /// Set the target player once detected in AI's sphere range(its senses)
-        /// </summary>
+        /// <summary> Set the target player once detected in AI's sphere range(its senses) </summary>
         /// <param name="player">The transform of the player to target.</param>
         internal void SetTargetPlayer(Transform player)
         {
@@ -329,7 +373,7 @@ namespace Hadal.AI.States
         {
             if (Brain == null) return null;
             List<Transform> targets = Brain.playerTransforms
-                            .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.detectionRadius)
+                            .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.playerDetectionRadius)
                             .ToList();
             if (targets.IsNullOrEmpty())
                 return null;
@@ -338,10 +382,12 @@ namespace Hadal.AI.States
 
         internal void ChaseTargetPlayer()
         {
-            if (TargetPlayer == null) return;
-            var target = TargetPlayer.position - (Brain.transform.forward * 5f);
-            Brain.transform.LookAt(target);
-            Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, Brain.pinSpeed * Time.deltaTime);
+            // if (TargetPlayer == null) return;
+            // var target = TargetPlayer.position - (Brain.transform.forward * 5f);
+            // Brain.transform.LookAt(target);
+            // Brain.transform.position = Vector3.Lerp(Brain.transform.position, target, Brain.pinSpeed * Time.deltaTime);
+
+            //! use NavigationHandler
         }
 
         internal bool TargetPlayerIsInRange()
@@ -349,7 +395,7 @@ namespace Hadal.AI.States
             if (TargetPlayer == null) return false;
 
             float dist = Vector3.Distance(Brain.transform.position, TargetPlayer.position);
-            if (dist < Brain.detectionRadius)
+            if (dist < Brain.playerDetectionRadius)
             {
                 //! Detect if the player is not behind any obstacle.
                 Vector3 dir = (TargetPlayer.position - Brain.transform.position).normalized;
@@ -394,13 +440,5 @@ namespace Hadal.AI.States
         }
 
         public Func<bool> ShouldTerminate() => () => false;
-
-        enum SubStateState
-        {
-            Aggresive,
-            Ambush,
-            Judgement,
-            Total
-        }
     }
 }
