@@ -254,14 +254,15 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 128
-  targetChangeTimer: 0
+  targetChangeTimer: 5
   objective: 0
-  playerDetectionRadius: 0
-  playerDetectionAngle: 0
+  playerDetectionRadius: 40
+  playerDetectionAngle: 45
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4352
   ambushTimoutTime: 5
+  cummulativeDamageThreshold: 600
   judgeTickTime: 0.1
   judgementThreshold: 1
   jThreshold1Multiplier: 1

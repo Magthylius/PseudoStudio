@@ -49,6 +49,8 @@ namespace Hadal.AI
         AmbushSubState eAmbushState;
 
         [Header("E. Judgement Settings")]
+        [SerializeField] private float cummulativeDamageThreshold;
+        private float cummulativeDamage;
         [SerializeField] private float judgeTickTime;
         JudgementSubState eJudgementState;
         [SerializeField] private float judgementThreshold;
@@ -58,6 +60,9 @@ namespace Hadal.AI
         [SerializeField] private float jThreshold4Multiplier;
         private float judgementStoptimer;
         public void ResetJudgementTimer() => judgementStoptimer = 0.0f;
+        public void ResetCummulativeDamage() => cummulativeDamage = 0f;
+        public void AddCummulativeDamage(float damage) => cummulativeDamage += Mathf.Abs(damage);
+        public bool CummulativeDamageExceeded() => cummulativeDamage > cummulativeDamageThreshold;
 
         [Header("Recovery Settings")]
         [SerializeField] private float recoveryTimoutTime;
