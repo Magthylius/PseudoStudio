@@ -906,6 +906,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1086192624, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 346575959947983435, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -950,6 +954,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4099844762844519294, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 117.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4099844762844519294, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 52
+      objectReference: {fileID: 0}
+    - target: {fileID: 5787285943007508242, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: underwaterEffectEnabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
       value: PersistentEssentials
@@ -958,7 +974,12 @@ PrefabInstance:
       propertyPath: InGameScene
       value: POC
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8631276335166620515, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2378672680787277942, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
 --- !u!1 &449165281
 GameObject:
@@ -1762,15 +1783,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8423527041702846750, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -19.635372
+      value: 117.8
       objectReference: {fileID: 0}
     - target: {fileID: 8423527041702846750, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.1612158
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8423527041702846750, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15.54729
+      value: 52
       objectReference: {fileID: 0}
     - target: {fileID: 8423527041702846750, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
       propertyPath: m_LocalRotation.w
