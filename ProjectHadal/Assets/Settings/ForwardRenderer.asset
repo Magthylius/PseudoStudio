@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    Event: 450
+    Event: 550
     blitMaterial: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
     blitMaterialPassIndex: 0
     setInverseViewMatrix: 0
@@ -38,7 +38,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererFeatures:
   - {fileID: -2175915334453168368}
-  m_RendererFeatureMap: 10f797248898cde1
+  - {fileID: 6871624700251851988}
+  m_RendererFeatureMap: 10f797248898cde1d4cc4fe841ea5c5f
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -53,10 +54,10 @@ MonoBehaviour:
     materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32727
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32727
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -94,3 +95,42 @@ MonoBehaviour:
     extraFogHeightPower: 0.5
     directionalIntesity: 1
     directionalPower: 1
+--- !u!114 &6871624700251851988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    passTag: UI
+    Event: 550
+    filterSettings:
+      RenderQueueType: 1
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 32
+      PassNames: []
+    overrideMaterial: {fileID: 0}
+    overrideMaterialPassIndex: 0
+    overrideDepthState: 0
+    depthCompareFunction: 2
+    enableWrite: 0
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 5
+      passOperation: 0
+      failOperation: 1
+      zFailOperation: 1
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 1}
+      cameraFieldOfView: 90
