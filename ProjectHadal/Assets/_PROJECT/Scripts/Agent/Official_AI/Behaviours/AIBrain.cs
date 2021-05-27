@@ -36,6 +36,7 @@ namespace Hadal.AI
         [SerializeField] private float startingConfidence;
         [SerializeField, Tenshi.ReadOnly] private float confidence;
         public float Confidence => confidence;
+        public void UpdateConfidenceValue(int difference) => confidence += difference;
         
         IState idleState;
 
