@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5616816406272959209}
   - component: {fileID: 5616816406272959214}
+  - component: {fileID: 1308580479512961999}
   m_Layer: 0
   m_Name: Rock Cylinder
   m_TagString: Untagged
@@ -43,8 +44,22 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6, y: 11.4, z: 6}
-  m_Center: {x: 0, y: 5.11, z: 0}
+  m_Size: {x: 3.432089, y: 10.57992, z: 3.7062654}
+  m_Center: {x: 0.05873978, y: 5.230649, z: 0.0034902096}
+--- !u!136 &1308580479512961999
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5616816406272959215}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 2.76074
+  m_Height: 10.426695
+  m_Direction: 1
+  m_Center: {x: -0.012158632, y: 5.1752806, z: -0.017479658}
 --- !u!1001 &5616816406811394565
 PrefabInstance:
   m_ObjectHideFlags: 0

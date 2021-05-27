@@ -1738,6 +1738,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9038128208189092581}
     m_Modifications:
+    - target: {fileID: 369065444232633600, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1139320133791175466, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1798,6 +1802,30 @@ PrefabInstance:
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 2719752003713521067}
+    - target: {fileID: 6195234976191563366, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: glowColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6195234976191563366, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: glowColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6195234976191563366, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: glowColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6195234976191563366, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: currentSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: abd4d56f3271558439f7333633814b95, type: 2}
+    - target: {fileID: 6195234976191563366, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: overrideGlowAlpha
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8660655559423479317, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8622bac10001434d9cbd6760facb011, type: 3}
 --- !u!4 &800451621868672608 stripped
