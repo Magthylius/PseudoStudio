@@ -1349,6 +1349,9 @@ MonoBehaviour:
   reticleLineImage: {fileID: 1472484187993192902}
   minPixelsPerUnit: 1
   maxPixelsPerUnit: 5
+  upperMoverImage: {fileID: 2651874354900942236}
+  lowerMoverImage: {fileID: 7337658321353071409}
+  moverLerpSpeed: 10
   leftLoaderFiller: {fileID: 1579972997365460947}
   rightLoaderFiller: {fileID: 5249372145227359803}
   fillerMinFillClamp: 0.1
@@ -1358,11 +1361,6 @@ MonoBehaviour:
   uiDisplacement: 15
   maxMovementInfluence: 50
   uiLerpReactionSpeed: 25
-  highestPoint: 10000
-  depthText: {fileID: 8272613386260392843}
-  lightText: {fileID: 8272613386072686752}
-  reticle: {fileID: 0}
-  healthBar: {fileID: 874650557032027100}
   torpCount: 3
   floodIndicators:
   - {fileID: 6494197625475267514}
@@ -2258,7 +2256,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 30}
   m_SizeDelta: {x: 27.28, y: 3.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8589316667805628472
@@ -4006,7 +4004,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 27.28, y: 3.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1441158567775594669
@@ -6378,7 +6376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3552485454218322667
 RectTransform:
   m_ObjectHideFlags: 0

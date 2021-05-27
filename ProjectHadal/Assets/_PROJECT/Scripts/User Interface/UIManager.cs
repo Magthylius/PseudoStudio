@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using Hadal.Inputs;
 using Magthylius.LerpFunctions;
+using Magthylius.Utilities;
 using Hadal.Networking;
 using Hadal.Networking.UI.Loading;
 using Hadal.PostProcess;
@@ -48,6 +49,11 @@ namespace Hadal.UI
         [SerializeField] float minPixelsPerUnit;
         [SerializeField] float maxPixelsPerUnit;
 
+        [Header("Reticle Mover Settings")]
+        [SerializeField] Image upperMoverImage;
+        [SerializeField] Image lowerMoverImage;
+        [SerializeField] float moverLerpSpeed;
+
         [Header("Loader Filler Settings")]
         [SerializeField] Image leftLoaderFiller;
         [SerializeField] Image rightLoaderFiller;
@@ -62,11 +68,7 @@ namespace Hadal.UI
         [SerializeField, Min(0f)] float uiDisplacement;
         [SerializeField, Min(0.1f)] float maxMovementInfluence;
         [SerializeField, Min(0.1f)] float uiLerpReactionSpeed;
-        [SerializeField] private float highestPoint;  
-        [SerializeField] private Text depthText;
-        [SerializeField] private Text lightText;
-        [SerializeField] private Image reticle;
-        [SerializeField] private Image healthBar;
+
         public static event OnHealthChange OnHealthChange;
 
         FlexibleRect allUIParentFR;
@@ -238,6 +240,12 @@ namespace Hadal.UI
             allUIParentFR.StartLerp(destination);
             allUIParentFR.Step(uiLerpReactionSpeed * Time.deltaTime);
             //DebugManager.Instance.SLog(sl_UI, playerTransform.InverseTransformDirection(playerRigidbody.velocity));
+
+            if (destination.y > 0) ImageUtil.LerpAlpha(ref upperMoverImage, 1f, moverLerpSpeed);
+            else ImageUtil.LerpAlpha(ref upperMoverImage, 0f, moverLerpSpeed);
+
+            if (destination.y < 0) ImageUtil.LerpAlpha(ref lowerMoverImage, 1f, moverLerpSpeed);
+            else ImageUtil.LerpAlpha(ref lowerMoverImage, 0f, moverLerpSpeed);
         }
 
         void UpdateProjectileTracking()

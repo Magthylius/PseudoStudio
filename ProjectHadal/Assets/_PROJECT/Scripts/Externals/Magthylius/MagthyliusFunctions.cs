@@ -4,11 +4,43 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 
-// Version 1.4.7
+// Version 1.5.0
 namespace Magthylius
 {
+    namespace Utilities
+    {
+        public class MathUtil
+        {
+            public static bool Tolerance(Vector3 a, Vector3 b, float condition = 0.1f) => Vector3.Distance(a, b) < condition;
+            public static bool Tolerance(float a, float b, float condition = 0.1f) => Mathf.Abs(a - b) < condition;
+        }
+
+        public class ImageUtil : MathUtil
+        {
+            public static void SetAlpha(ref Image image, float targetAlpha)
+            {
+                Color imgNewCol = image.color;
+                imgNewCol.a = targetAlpha;
+                image.color = imgNewCol;
+            }
+
+            public static void LerpAlpha(ref Image image, float targetAlpha, float lerpAlpha, float toleranceSnap = 0.1f)
+            {
+                float newAlpha = Mathf.Lerp(image.color.a, targetAlpha, lerpAlpha);
+                
+
+                if (Tolerance(newAlpha, targetAlpha, toleranceSnap))
+                    SetAlpha(ref image, targetAlpha);
+                else
+                    SetAlpha(ref image, newAlpha);
+            }
+        }
+    }
+
     namespace LerpFunctions
     {
+        using Utilities;
+
         public enum FaderState
         {
             OPAQUE = 0,
@@ -837,7 +869,7 @@ namespace Magthylius
         #endregion
 
         #region Lerp Functions
-        public class Lerp : MonoBehaviour
+        public class Lerp : MathUtil
         {
             // rects
             public static bool Rect(OffsetGroup targetOffset, RectTransform movingObject, float lerpSpeed = 1f)
@@ -845,7 +877,7 @@ namespace Magthylius
                 Vector2 botLeft = Vector2.Lerp(movingObject.offsetMin, targetOffset.min, lerpSpeed * Time.deltaTime);
                 Vector2 topRight = Vector2.Lerp(movingObject.offsetMax, targetOffset.max, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(movingObject.offsetMin, targetOffset.min))
+                if (Tolerance(movingObject.offsetMin, targetOffset.min))
                 {
                     movingObject.offsetMin = targetOffset.min;
                     movingObject.offsetMax = targetOffset.max;
@@ -861,7 +893,7 @@ namespace Magthylius
                 Vector2 botLeft = Vector2.Lerp(movingObject.offsetMin, targetRect.offsetMin, lerpSpeed * Time.deltaTime);
                 Vector2 topRight = Vector2.Lerp(movingObject.offsetMax, targetRect.offsetMax, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(movingObject.offsetMin, targetRect.offsetMin))
+                if (Tolerance(movingObject.offsetMin, targetRect.offsetMin))
                 {
                     movingObject.offsetMin = targetRect.offsetMin;
                     movingObject.offsetMax = targetRect.offsetMax;
@@ -881,7 +913,7 @@ namespace Magthylius
                 else
                     a = Mathf.Lerp(a, b, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(a, b))
+                if (Tolerance(a, b))
                 {
                     a = b;
                     return true;
@@ -896,7 +928,7 @@ namespace Magthylius
                 obj.anchoredPosition = Vector2.Lerp(obj.anchoredPosition, targetPos, lerpSpeed * Time.deltaTime);
                 obj.anchoredPosition = new Vector2((float)Math.Round(obj.anchoredPosition.x, 1), (float)Math.Round(obj.anchoredPosition.y, 1));
 
-                if (NegligibleDistance(obj.anchoredPosition, targetPos))
+                if (Tolerance(obj.anchoredPosition, targetPos))
                 {
                     obj.anchoredPosition = targetPos;
                     return true;
@@ -911,7 +943,7 @@ namespace Magthylius
                 obj.position = Vector2.Lerp(obj.position, targetPos, lerpSpeed * Time.deltaTime);
                 obj.position = new Vector2((float)Math.Round(obj.position.x, 1), (float)Math.Round(obj.position.y, 1));
 
-                if (NegligibleDistance(obj.position, targetPos))
+                if (Tolerance(obj.position, targetPos))
                 {
                     obj.position = targetPos;
                     return true;
@@ -926,7 +958,7 @@ namespace Magthylius
                 target.offsetMin = Vector2.Lerp(target.offsetMin, destination.min, lerpSpeed * Time.deltaTime);
                 target.offsetMax = Vector2.Lerp(target.offsetMax, destination.max, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target.offsetMin, destination.min))
+                if (Tolerance(target.offsetMin, destination.min))
                 {
                     target.offsetMin = destination.min;
                     target.offsetMax = destination.max;
@@ -941,7 +973,7 @@ namespace Magthylius
             {
                 target = Vector2.Lerp(target, destination, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target, destination))
+                if (Tolerance(target, destination))
                 {
                     target = destination;
                     return true;
@@ -954,7 +986,7 @@ namespace Magthylius
             {
                 target = Vector3.Lerp(target, destination, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target, destination))
+                if (Tolerance(target, destination))
                 {
                     target = destination;
                 }
@@ -967,7 +999,7 @@ namespace Magthylius
             {
                 target.sizeDelta = Vector2.Lerp(target.sizeDelta, targetSizeDelta, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target.sizeDelta, targetSizeDelta))
+                if (Tolerance(target.sizeDelta, targetSizeDelta))
                 {
                     target.sizeDelta = targetSizeDelta;
                     return true;
@@ -985,7 +1017,7 @@ namespace Magthylius
                 target.offsetMin = Vector2.Lerp(target.offsetMin, minDest, lerpSpeed * Time.deltaTime);
                 target.offsetMax = Vector2.Lerp(target.offsetMax, maxDest, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target.offsetMin, minDest))
+                if (Tolerance(target.offsetMin, minDest))
                 {
                     target.offsetMin = minDest;
                     target.offsetMax = maxDest;
@@ -1002,7 +1034,7 @@ namespace Magthylius
                 target.offsetMin = Vector2.Lerp(target.offsetMin, minDest, lerpSpeed * Time.deltaTime);
                 target.offsetMax = Vector2.Lerp(target.offsetMax, maxDest, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target.offsetMin, minDest))
+                if (Tolerance(target.offsetMin, minDest))
                 {
                     target.offsetMin = minDest;
                     target.offsetMax = maxDest;
@@ -1051,16 +1083,13 @@ namespace Magthylius
             public static bool OnAPosition(RectTransform target1, RectTransform target2) => target1.anchoredPosition == target2.anchoredPosition;
             public static bool OnAPosition(RectTransform target1, Vector2 target2) => target1.anchoredPosition == target2;
             public static bool OnOFPosition(RectTransform target1, RectTransform target2) => target1.offsetMax == target2.offsetMax && target1.offsetMin == target2.offsetMin;
-            //public static bool NegligibleDistance(Vector2 a, Vector2 b, float condition = 0.1f) => Vector2.Distance(a, b) < condition;
-            public static bool NegligibleDistance(Vector3 a, Vector3 b, float condition = 0.1f) => Vector3.Distance(a, b) < condition;
-            public static bool NegligibleDistance(float a, float b, float condition = 0.1f) => Mathf.Abs(a - b) < condition;
 
             #region QUATENIONS
             public static bool Rotation(RectTransform target, Quaternion rotation, float lerpSpeed = 1f)
             {
                 target.rotation = Quaternion.Lerp(target.rotation, rotation, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target.rotation.x, rotation.x, 0.01f))
+                if (Tolerance(target.rotation.x, rotation.x, 0.01f))
                 {
                     target.rotation = rotation;
                     return true;
@@ -1077,7 +1106,7 @@ namespace Magthylius
                 float a = Mathf.Lerp(target.color.a, alpha, lerpSpeed * Time.deltaTime);
                 target.color = new Color(target.color.r, target.color.g, target.color.b, a);
 
-                if (NegligibleDistance(target.color.a, alpha, 0.01f))
+                if (Tolerance(target.color.a, alpha, 0.01f))
                 {
                     target.color = new Color(target.color.r, target.color.g, target.color.b, alpha);
                     return true;
@@ -1092,7 +1121,7 @@ namespace Magthylius
                 Color target = new Color(img.color.r, img.color.g, img.color.b, alpha);
                 img.color = Color.Lerp(img.color, target, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(img.color.a, target.a))
+                if (Tolerance(img.color.a, target.a))
                 {
                     img.color = target;
                     return true;
@@ -1106,7 +1135,7 @@ namespace Magthylius
             {
                 group.alpha = Mathf.Lerp(group.alpha, alpha, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(group.alpha, alpha, 0.01f))
+                if (Tolerance(group.alpha, alpha, 0.01f))
                 {
                     group.alpha = alpha;
                     return true;
@@ -1129,7 +1158,7 @@ namespace Magthylius
                 else
                     target.localScale = Vector3.Lerp(scaleSize, target.localScale, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target.localScale, scaleSize, negCondition))
+                if (Tolerance(target.localScale, scaleSize, negCondition))
                 {
                     target.localScale = scaleSize;
                     return true;
@@ -1146,7 +1175,7 @@ namespace Magthylius
                     target.localScale = Vector3.Lerp(scaleSize, target.localScale, lerpSpeed * Time.deltaTime);*/
                 target.localScale = Vector3.Lerp(target.localScale, scaleSize, lerpSpeed * Time.deltaTime);
 
-                if (NegligibleDistance(target.localScale, scaleSize, negCondition))
+                if (Tolerance(target.localScale, scaleSize, negCondition))
                 {
                     target.localScale = scaleSize;
                     return true;
