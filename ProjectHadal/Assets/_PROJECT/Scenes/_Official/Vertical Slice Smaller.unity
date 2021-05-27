@@ -2256,9 +2256,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2618675678100472905, guid: 1d377ef9196fcfb469374bf3ac2b3dee, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2618675678100472905, guid: 1d377ef9196fcfb469374bf3ac2b3dee, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2618675678100472907, guid: 1d377ef9196fcfb469374bf3ac2b3dee, type: 3}
       propertyPath: m_Name
       value: Navigation Handler
+      objectReference: {fileID: 0}
+    - target: {fileID: 2618675678283186402, guid: 1d377ef9196fcfb469374bf3ac2b3dee, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d377ef9196fcfb469374bf3ac2b3dee, type: 3}
