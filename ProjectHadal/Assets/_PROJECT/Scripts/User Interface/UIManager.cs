@@ -50,9 +50,17 @@ namespace Hadal.UI
         [SerializeField] float maxPixelsPerUnit;
 
         [Header("Reticle Mover Settings")]
-        [SerializeField] Image upperMoverImage;
-        [SerializeField] Image lowerMoverImage;
+        [SerializeField] RectTransform upperMoverGroup;
+        [SerializeField] RectTransform lowerMoverGroup;
+        [SerializeField, MinMaxSlider(0f, 1f)] Vector2 moverGroupOpacityBounds;
+        [SerializeField, MinMaxSlider(0f, 20f)] Vector2 moverGroupPaddingBounds;
+        [SerializeField, MinMaxSlider(0f, 20f)] Vector2 moverYVelocityBounds;
         [SerializeField] float moverLerpSpeed;
+
+        CanvasGroupFader umgCGF;
+        CanvasGroupFader lmgCGF;
+        VerticalLayoutGroup umgVLG;
+        VerticalLayoutGroup lmgVLG;
 
         [Header("Loader Filler Settings")]
         [SerializeField] Image leftLoaderFiller;
@@ -78,11 +86,13 @@ namespace Hadal.UI
         Transform playerTransform;
         Rigidbody playerRigidbody;
 
-        [Header("Shooting Settings")]
+        [Header("Torpedo Settings")]
         public int torpCount;
+        public List<GameObject> tubeIcons;
+
         public List<Image> floodIndicators;
         public GameObject fireReticle;
-        public List<GameObject> tubeIcons;
+        
         public GameObject floodText;
 
         public List<Image> reloadProgressors;
@@ -132,6 +142,11 @@ namespace Hadal.UI
             allUIParentFR = new FlexibleRect(allUIParent);
 
             //cameraCanvas.worldCamera = playerCamera;
+
+            umgCGF = new CanvasGroupFader(upperMoverGroup.GetComponent<CanvasGroup>(), true, false);
+            lmgCGF = new CanvasGroupFader(lowerMoverGroup.GetComponent<CanvasGroup>(), true, false);
+            umgVLG = upperMoverGroup.GetComponent<VerticalLayoutGroup>();
+            lmgVLG = lowerMoverGroup.GetComponent<VerticalLayoutGroup>();
 
             DoDebugEnabling(debugKey);
 
@@ -194,8 +209,29 @@ namespace Hadal.UI
         public void UpdateTubes(int torpedoCount)
         {
             torpCount = torpedoCount;
-            foreach (GameObject tube in tubeIcons) tube.SetActive(false);
-            for (int i = 0; i < torpedoCount - 1; i++) tubeIcons[i].SetActive(true);
+            //foreach (GameObject tube in tubeIcons) tube.SetActive(false);
+            //for (int i = 0; i < torpedoCount - 1; i++) tubeIcons[i].SetActive(true);
+
+            if (torpCount <= 0)
+            {
+                foreach (GameObject tube in tubeIcons) tube.SetActive(false);
+            }
+            else
+            {
+                foreach (GameObject tube in tubeIcons)
+                {
+                    int result = 0;
+                    if (int.TryParse(tube.name, out result))
+                    {
+                        if (result == torpCount)
+                        {
+                            tube.SetActive(true);
+                            continue;
+                        }
+                    }
+                    tube.SetActive(false);
+                }
+            }
         }
 
         public void UpdateReload(float progress, bool showReloading)
@@ -235,17 +271,35 @@ namespace Hadal.UI
 
         void UpdateUIDisplacement()
         {
-            Vector2 destination = playerTransform.InverseTransformDirection(playerRigidbody.velocity);
-            destination = -destination / maxMovementInfluence * uiDisplacement;
-            allUIParentFR.StartLerp(destination);
+            Vector2 velocity = playerTransform.InverseTransformDirection(playerRigidbody.velocity);
+            velocity = -velocity / maxMovementInfluence * uiDisplacement;
+            allUIParentFR.StartLerp(velocity);
             allUIParentFR.Step(uiLerpReactionSpeed * Time.deltaTime);
-            //DebugManager.Instance.SLog(sl_UI, playerTransform.InverseTransformDirection(playerRigidbody.velocity));
+/*
+            float velProgress = (Mathf.Abs(velocity.y) - moverYVelocityBounds.x) / moverYVelocityBounds.y;
 
-            if (destination.y > 0) ImageUtil.LerpAlpha(ref upperMoverImage, 1f, moverLerpSpeed);
-            else ImageUtil.LerpAlpha(ref upperMoverImage, 0f, moverLerpSpeed);
+            if (velocity.y > 0)
+            {
+                umgCGF.SetAlpha(Mathf.Lerp(moverGroupOpacityBounds.x, moverGroupOpacityBounds.y, velProgress));
+                umgVLG.spacing = Mathf.Lerp(moverGroupPaddingBounds.x, moverGroupPaddingBounds.y, velProgress);
+            }
+            else if (velocity.y < 0)
+            {
+                lmgCGF.SetAlpha(Mathf.Lerp(moverGroupOpacityBounds.x, moverGroupOpacityBounds.y, velProgress));
+                lmgVLG.spacing = Mathf.Lerp(moverGroupPaddingBounds.x, moverGroupPaddingBounds.y, velProgress);
+            }*/
 
-            if (destination.y < 0) ImageUtil.LerpAlpha(ref lowerMoverImage, 1f, moverLerpSpeed);
-            else ImageUtil.LerpAlpha(ref lowerMoverImage, 0f, moverLerpSpeed);
+
+           //DebugManager.Instance.SLog(sl_UI, velocity.y);
+
+            /*float upperShaderAlpha = upperMoverImage.material.GetFloat("_Alpha");
+            float lowerShaderAlpha = lowerMoverImage.material.GetFloat("_Alpha");
+
+            if (destination.y > moverYVelocityGate) upperMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(upperShaderAlpha, 1f, moverLerpSpeed));
+            else upperMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(upperShaderAlpha, 0f, moverLerpSpeed));
+
+            if (destination.y < -moverYVelocityGate) lowerMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(lowerShaderAlpha, 1f, moverLerpSpeed));
+            else lowerMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(lowerShaderAlpha, 0f, moverLerpSpeed));*/
         }
 
         void UpdateProjectileTracking()

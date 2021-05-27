@@ -19,6 +19,7 @@ public class ReticleHandler : MonoBehaviour
     [SerializeField] List<Image> primaryComponents;
     [SerializeField] List<Image> secondaryComponents;
     [SerializeField] List<Image> tertiaryComponents;
+    [SerializeField] List<Image> quarternaryComponents;
 
     void OnValidate()
     {
@@ -65,6 +66,12 @@ public class ReticleHandler : MonoBehaviour
         {
             img.material.SetColor("_Color", currentSettings.tertiaryEmissiveColor);
             img.material.SetFloat("_Alpha", currentSettings.tertiaryEmissiveAlpha);
+        }
+
+        foreach (Image img in quarternaryComponents)
+        {
+            img.material.SetColor("_Color", currentSettings.quarternaryEmissiveColor);
+            img.material.SetFloat("_Alpha", currentSettings.quarternaryEmissiveAlpha);
         }
     }
 }

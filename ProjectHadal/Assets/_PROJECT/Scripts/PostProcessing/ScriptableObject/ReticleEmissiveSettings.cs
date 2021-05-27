@@ -18,5 +18,9 @@ namespace Hadal.PostProcess
         [Header("Tertiary Color")]
         [ColorUsage(true, true)] public Color tertiaryEmissiveColor;
         [Range(0f, 1f)] public float tertiaryEmissiveAlpha;
+
+        [Header("Quarternary Color")]
+        [ColorUsage(true, true)] public Color quarternaryEmissiveColor;
+        [Range(0f, 1f)] public float quarternaryEmissiveAlpha;
     }
 }
