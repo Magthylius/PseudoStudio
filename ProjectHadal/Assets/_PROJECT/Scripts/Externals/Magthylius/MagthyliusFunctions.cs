@@ -28,7 +28,6 @@ namespace Magthylius
             {
                 float newAlpha = Mathf.Lerp(image.color.a, targetAlpha, lerpAlpha);
                 
-
                 if (Tolerance(newAlpha, targetAlpha, toleranceSnap))
                     SetAlpha(ref image, targetAlpha);
                 else
