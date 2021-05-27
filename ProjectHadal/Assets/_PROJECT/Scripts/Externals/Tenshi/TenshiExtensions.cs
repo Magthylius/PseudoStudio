@@ -127,6 +127,7 @@ namespace Tenshi
         public static float ToDegrees(this float radian) => radian * Mathf.Rad2Deg;
         public static float ToRadians(this float degree) => degree * Mathf.Deg2Rad;
         public static float Abs(this float number) => Mathf.Abs(number);
+        public static int Abs(this int number) => Mathf.Abs(number);
         
         public static void LerpSpeed(this ref float speed, in float directionalSpeed, in float acceleration, in float deltaTime)
         {
