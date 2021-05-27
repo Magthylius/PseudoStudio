@@ -17,10 +17,13 @@ namespace Hadal.Player
 			if (Application.isEditor)
 			{
 				if (NetworkEventManager.Instance)
-                isOfflineMode = NetworkEventManager.Instance.isOfflineMode;
+                    isOfflineMode = NetworkEventManager.Instance.isOfflineMode;
+
 				PhotonNetwork.OfflineMode = isOfflineMode;
 				var prefab = Resources.Load(PathManager.PlayerManagerPrefabPath);
-				if(prefab is null) return;
+
+				if (prefab is null) return;
+
 				_controller = (GameObject)Instantiate(prefab, spawnHereTransform.position, spawnHereTransform.rotation);
 				_controller.GetComponent<PlayerM>().IsOnNetwork = !isOfflineMode;
 			}
