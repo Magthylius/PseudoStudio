@@ -25,7 +25,7 @@ namespace Hadal.Player
 				if (prefab is null) return;
 
 				_controller = (GameObject)Instantiate(prefab, spawnHereTransform.position, spawnHereTransform.rotation);
-				_controller.GetComponent<PlayerM>().IsOnNetwork = !isOfflineMode;
+				_controller.GetComponent<PlayerM>().isOnNetwork = !isOfflineMode;
 			}
 			else
 			{

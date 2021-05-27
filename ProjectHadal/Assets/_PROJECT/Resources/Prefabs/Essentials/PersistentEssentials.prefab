@@ -175,8 +175,8 @@ Transform:
   - {fileID: 3189345546925591471}
   - {fileID: 6576420978336463563}
   - {fileID: 1086192626}
-  - {fileID: 2572319464389894201}
   - {fileID: 3558804987589490339}
+  - {fileID: 2572319464389894201}
   - {fileID: 912372329}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a196a3c96192f0740b1cb8eedd736536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isOfflineMode: 1
+  isOfflineMode: 0
   localPlayerSpawnTrans: {fileID: 4099844762844519294}
   MainMenuScene: MainMenu
   InGameScene: Vertical Slice Smaller
@@ -344,6 +344,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 346575959947983435}
     m_Modifications:
+    - target: {fileID: 882230663440883340, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4633874112791886494, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+      propertyPath: fpsUpdateCycle
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: debugKeyList.Array.size
       value: 6
@@ -362,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8716315643385868229, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8716315643385868229, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: m_LocalPosition.x
@@ -418,6 +426,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 346575959947983435}
     m_Modifications:
+    - target: {fileID: 4982535942677956896, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: m_SortingOrder
+      value: 998
+      objectReference: {fileID: 0}
     - target: {fileID: 4982535942677956897, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -428,7 +440,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4982535942677956897, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4982535942677956897, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: m_AnchorMax.x

@@ -13,7 +13,7 @@ namespace Hadal.Player
         public delegate void AddAPlayerEvent();
         public static event AddAPlayerEvent AddPlayerEvent;
 
-        public bool IsOnNetwork { get; set; } = !NetworkEventManager.Instance.isOfflineMode;
+        public bool isOnNetwork = false;
         private const string PrefabFolder = "Prefabs/Player";
         private const string PrefabName = "Player";
         private PhotonView _pView;
@@ -167,5 +167,7 @@ namespace Hadal.Player
             return null;
         }
         PlayerController GetController(GameObject playerObject) => playerObject.GetComponent<PlayerController>();
+
+        public bool IsOnNetwork => !NetworkEventManager.Instance.isOfflineMode;
     }
 }
