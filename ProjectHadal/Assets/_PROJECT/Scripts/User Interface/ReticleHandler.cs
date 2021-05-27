@@ -23,7 +23,7 @@ public class ReticleHandler : MonoBehaviour
 
     void OnValidate()
     {
-        RefreshColors();
+        //RefreshColors();
     }
 
     [Button("Force Color Refresh")]
