@@ -5,18 +5,31 @@ using UnityEngine;
 using Tenshi.AIDolls;
 using Hadal.AI.States;
 using Photon.Pun;
+using System.Linq;
 
 namespace Hadal.AI
 {
     public class AIBrain : MonoBehaviour
     {
-        [SerializeField] AIHealthManager healthManager;
+        [Header("Module Components")]
+        [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
+        [SerializeField] private AISenseDetection senseDetection;
+        [SerializeField] private AISightDetection sightDetection;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
+        public AISenseDetection SenseDetection => senseDetection;
+        public AISightDetection SightDetection => sightDetection;
 
         private StateMachine stateMachine;
-        public List<Transform> playerTransforms;
+        private List<ILeviathanComponent> allAIComponents;
+        private List<ILeviathanComponent> preUpdateComponents;
+        private List<ILeviathanComponent> mainUpdateComponents;
+
+        [Header("Information")]
+        [SerializeField] private List<Transform> playerTransforms;
+        public List<Transform> PlayerTransforms => playerTransforms;
+
         internal Rigidbody rb;
 
         [Header("Confidence Settings")]
@@ -92,10 +105,15 @@ namespace Hadal.AI
             rb = GetComponent<Rigidbody>();
             isStunned = false;
             objective = Objective.None;
+            
+            allAIComponents = GetComponentsInChildren<ILeviathanComponent>().ToList();
+            preUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
+            mainUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
         }
 
         private void Start()
         {
+            allAIComponents.ForEach(i => i.Initialise(this));
             InitialiseStates();
             stateMachine.SetState(idleState);
         }
@@ -103,17 +121,21 @@ namespace Hadal.AI
         private void Update()
         {
             if (!PhotonNetwork.IsMasterClient) return;
+            preUpdateComponents.ForEach(c => c.DoUpdate(DeltaTime));
             stateMachine?.MachineTick();
+            mainUpdateComponents.ForEach(c => c.DoUpdate(DeltaTime));
         }
         private void LateUpdate()
         {
             if (!PhotonNetwork.IsMasterClient) return;
             stateMachine?.LateMachineTick();
+            allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
         }
         private void FixedUpdate()
         {
             if (!PhotonNetwork.IsMasterClient) return;
             stateMachine?.FixedMachineTick();
+            allAIComponents.ForEach(c => c.DoFixedUpdate(FixedDeltaTime));
         }
 
         private void InitialiseStates()
@@ -217,6 +239,9 @@ namespace Hadal.AI
             // Gizmos.color = new Color(1, 0, 1, 0.1f);
             // Gizmos.DrawSphere(transform.position, wallDetectionRadius);
         }
+
+        public float DeltaTime => Time.deltaTime;
+        public float FixedDeltaTime => Time.fixedDeltaTime;
     }
 
     public enum AIDamageType
