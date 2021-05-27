@@ -52,6 +52,7 @@ public class ReticleHandler : MonoBehaviour
     {
         foreach (Image img in primaryComponents)
         {
+
             img.material.SetColor("_Color", currentSettings.primaryEmissiveColor);
             img.material.SetFloat("_Alpha", currentSettings.primaryEmissiveAlpha);
         }
