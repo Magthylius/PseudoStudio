@@ -213,7 +213,7 @@ namespace Hadal.AI.States
             Vector3 setPosition = data[2].AsVector3();
 
             //TODO: we probably need to make an information class in the other assembly, damagemanager is doing everything at the moment
-            Transform t = b.playerTransforms.Where(p => b.ViewIDBelongsToTransMethod(p, viewID)).SingleOrDefault();
+            Transform t = b.PlayerTransforms.Where(p => b.ViewIDBelongsToTransMethod(p, viewID)).SingleOrDefault();
             if (t == null) return;
             t.position = setPosition;
             $"pin position set to {t.position}".Msg();
@@ -372,7 +372,7 @@ namespace Hadal.AI.States
         internal Transform ChooseClosestRandomPlayer()
         {
             if (Brain == null) return null;
-            List<Transform> targets = Brain.playerTransforms
+            List<Transform> targets = Brain.PlayerTransforms
                             .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.playerDetectionRadius)
                             .ToList();
             if (targets.IsNullOrEmpty())

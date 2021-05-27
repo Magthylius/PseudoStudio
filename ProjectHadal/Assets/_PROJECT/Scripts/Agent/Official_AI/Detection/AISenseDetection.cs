@@ -4,32 +4,41 @@ using UnityEngine;
 
 namespace Hadal.AI
 {
-    public class AISenseDetection : MonoBehaviour
+    public class AISenseDetection : MonoBehaviour, ILeviathanComponent
     {
         [SerializeField] float overlapSphereDetectionRadius;
          [SerializeField] Vector3 detectPoint;
-        public int playerAmount { get; private set; }
-        //! Another way of doing this is making a big collider as a child and detect through ontriggerenter
-
-        void Start()
+        public int DetectedPlayersCount { get; private set; }
+        
+        public UpdateMode LeviathanUpdateMode => UpdateMode.PreUpdate;
+        
+        public void Initialise(AIBrain brain)
         {
-
         }
 
-        void Update()
+        public void DoUpdate(in float deltaTime)
         {
             SenseSurrondings();
         }
 
+        public void DoFixedUpdate(in float fixedDeltaTime)
+        {
+        }
+
+        public void DoLateUpdate(in float deltaTime)
+        {
+        }
+
+        //! Another way of doing this is making a big collider as a child and detect through ontriggerenter
         //! We probably gonna call this once the AI sees a player to detect its surrondings how many players are there
-        void SenseSurrondings()
+        private void SenseSurrondings()
         {
             Collider[] playerSphere = Physics.OverlapSphere(transform.position + detectPoint, overlapSphereDetectionRadius, LayerMask.GetMask("Player"));
             foreach (var player in playerSphere)
             {
                 Debug.Log("MY SPIDEY SENSE IS TINGLING");
-                playerAmount++;
-                Debug.Log("I SENSE:" + playerAmount);
+                DetectedPlayersCount++;
+                Debug.Log("I SENSE:" + DetectedPlayersCount);
                 
             }
         }
