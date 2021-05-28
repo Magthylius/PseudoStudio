@@ -89,15 +89,13 @@ namespace Hadal.UI
         [Header("Torpedo Settings")]
         public int torpCount;
         public List<GameObject> tubeIcons;
-        public ParticleSystem tubeEffects;
-
-        public List<Image> floodIndicators;
-        public GameObject fireReticle;
-        
-        public GameObject floodText;
-
         public List<Image> reloadProgressors;
+        public GameObject floodText;
         public GameObject reloadText;
+
+        [Header("VFX Settings")]
+        public ParticleSystem torpedoReloadedVFX;
+        public ParticleSystem torpedoEmptyVFX;
 
         [Header("Module Settings")]
         [SerializeField] UITrackerHandler trackerHandler;
@@ -212,13 +210,14 @@ namespace Hadal.UI
             //DebugLog("Flood Progress: " + progress);
         }
 
-        public void UpdateTubes(int torpedoCount)
+        public void UpdateTubes(int torpedoCount, bool reloadedEvent = false)
         {
             torpCount = torpedoCount;
 
             if (torpCount <= 0)
             {
                 foreach (GameObject tube in tubeIcons) tube.SetActive(false);
+                //torpedoEmptyVFX.Emit(1);
             }
             else
             {
@@ -230,20 +229,25 @@ namespace Hadal.UI
                         if (result == torpCount)
                         {
                             tube.SetActive(true);
+
+                            if (reloadedEvent)
+                            {
+                                torpedoReloadedVFX.Emit(1);
+                                //Invoke("StoptorpedoReloadedVFX", 0.5f);
+                            }
+                            
                             continue;
                         }
                     }
                     tube.SetActive(false);
-                }
-
-                tubeEffects.Play();
-                Invoke("StopTubeEffects", 0.5f);
+                }  
             }
         }
 
-        void StopTubeEffects()
+        void StoptorpedoReloadedVFX()
         {
-            tubeEffects.Stop();
+            torpedoReloadedVFX.Stop();
+            //torpedoReloadedVFX.
         }
 
         public void UpdateReload(float progress, bool showReloading)

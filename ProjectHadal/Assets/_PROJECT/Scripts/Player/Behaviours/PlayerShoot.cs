@@ -172,7 +172,7 @@ namespace Hadal.Player.Behaviours
 
         private void OnChamberChangedMethod(bool isIncrement)
         {
-            UpdateUITorpedoCount();
+            UpdateUITorpedoCount(false);
             if (isIncrement)
             {
                 UpdateUIFloodRatio(1f);
@@ -188,7 +188,7 @@ namespace Hadal.Player.Behaviours
         }
         private void OnReserveChangedMethod(bool isIncrement)
         {
-            UpdateUITorpedoCount();
+            UpdateUITorpedoCount(true);
             if (!isIncrement) return;
             DebugLog("Torpedo Regenerated (Loaded)!");
         }
@@ -197,10 +197,10 @@ namespace Hadal.Player.Behaviours
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
         }
-        private void UpdateUITorpedoCount()
+        private void UpdateUITorpedoCount(bool isReloadEvent)
         {
             UIManager.Instance
-            .UpdateTubes(tLauncher.TotalTorpedoes);
+            .UpdateTubes(tLauncher.TotalTorpedoes, isReloadEvent);
         }
         private void UpdateUIRegenRatio(in float ratio)
         {
