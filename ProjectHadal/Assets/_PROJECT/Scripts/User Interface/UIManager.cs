@@ -89,6 +89,7 @@ namespace Hadal.UI
         [Header("Torpedo Settings")]
         public int torpCount;
         public List<GameObject> tubeIcons;
+        public ParticleSystem tubeEffects;
 
         public List<Image> floodIndicators;
         public GameObject fireReticle;
@@ -173,13 +174,18 @@ namespace Hadal.UI
         {
             if (playerTransform == null) return;
 
-            if (!pauseMenuOpen)
+            /*if (!pauseMenuOpen)
             {
                 UpdateReticle();
                 UpdateInformation();
                 UpdateProjectileTracking();
                 UpdateUIDisplacement();
-            }
+            }*/
+
+            UpdateReticle();
+            UpdateInformation();
+            UpdateProjectileTracking();
+            UpdateUIDisplacement();
         }
 
         //private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
@@ -209,8 +215,6 @@ namespace Hadal.UI
         public void UpdateTubes(int torpedoCount)
         {
             torpCount = torpedoCount;
-            //foreach (GameObject tube in tubeIcons) tube.SetActive(false);
-            //for (int i = 0; i < torpedoCount - 1; i++) tubeIcons[i].SetActive(true);
 
             if (torpCount <= 0)
             {
@@ -231,14 +235,24 @@ namespace Hadal.UI
                     }
                     tube.SetActive(false);
                 }
+
+                tubeEffects.Play();
+                Invoke("StopTubeEffects", 0.5f);
             }
         }
 
-        public void UpdateReload(float progress, bool showReloading)
+        void StopTubeEffects()
         {
-            //foreach (Image reloaders in reloadProgressors) reloaders.fillAmount = progress;
-            
+            tubeEffects.Stop();
+        }
+
+        public void UpdateReload(float progress, bool showReloading)
+        {           
             reloadText.SetActive(showReloading);
+            foreach (Image progressors in reloadProgressors)
+            {
+                progressors.fillAmount = progress;
+            }
         }
         #endregion
 
@@ -254,17 +268,11 @@ namespace Hadal.UI
 
         void SetupModules()
         {
-            //lightsOnString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOnColor) + ">" + lightsOnSuffix + "</color>";
-            //lightsOffString = lightsPrefix + "<color=#" + ColorUtility.ToHtmlStringRGB(lightsOffColor) + ">" + lightsOffSuffix + "</color>";
-
             sonicDartTransforms = new List<Transform>();
         }
 
         void UpdateInformation()
         {
-            //string depth = Mathf.Abs(Mathf.RoundToInt(highestPoint - playerTransform.position.y)).ToString("#,#");
-            //depthText.text = $"Depth: -{depth}";
-
             if (leftLoaderFiller.fillAmount >= 0.5f) leftLoaderFiller.fillAmount = 0.5f;
             if (rightLoaderFiller.fillAmount >= 0.5f) rightLoaderFiller.fillAmount = 0.5f;
         }
@@ -312,9 +320,7 @@ namespace Hadal.UI
             switch (projectileType)
             {
                 case TrackerType.SONIC_DART:
-                    //sonicDartTransforms.Add(projectileTransform);
                     trackerHandler.Scoop(projectileType).TrackTransform(projectileTransform);
-                    //if (trackerHandler.Scoop(projectileType) == null) print("balls");
                     break;
             }
         }
@@ -339,7 +345,10 @@ namespace Hadal.UI
 
         void UpdateReticle()
         {
-            Vector2 destination = (Vector2)playerRotationInput.AllInput * maxDirectorRadius;
+            Vector2 rotInput = Vector2.zero;
+            if (!pauseMenuOpen) rotInput = (Vector2)playerRotationInput.AllInput;
+
+            Vector2 destination = rotInput * maxDirectorRadius;
             if (destination.sqrMagnitude >= maxDirectorRadius * maxDirectorRadius) destination = destination.normalized * maxDirectorRadius;
             reticleDirectorsFR.StartLerp(destination);
             reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
@@ -390,6 +399,8 @@ namespace Hadal.UI
             Cursor.lockState = CursorLockMode.Locked;
             //Cursor.lockState = CursorLockMode.Confined;
             if (PauseMenuClosed != null) PauseMenuClosed.Invoke();
+
+            pauseMenuOpen = false;
         }
 
         public void PNTR_Pause()
@@ -399,6 +410,8 @@ namespace Hadal.UI
             Cursor.lockState = CursorLockMode.Confined;
 
             if (PauseMenuOpened != null) PauseMenuOpened.Invoke();
+
+            pauseMenuOpen = true;
         }
 
         public void PNTR_Disconnect()

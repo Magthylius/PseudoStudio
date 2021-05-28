@@ -35,7 +35,7 @@ namespace Hadal.Locomotion
 
         public override void DoFixedUpdate(in float fixedDeltaTime)
         {
-            if (!allowUpdate) return;
+            //if (!allowUpdate) return;
 
             RotateByQT();
         }
@@ -47,7 +47,12 @@ namespace Hadal.Locomotion
 
         void RotateByQT()
         {
-            Vector3 input = Input.AllInputClamped(-maxInputAxisClamp, maxInputAxisClamp);
+            Vector3 input = Vector3.zero;
+
+            if (allowUpdate)
+                input = Input.AllInputClamped(-maxInputAxisClamp, maxInputAxisClamp);
+
+
             float pitch = -input.y * Rotary.GetPitchSensitivity;
             float yaw = input.x * Rotary.GetYawSensitivity;
             float roll = input.z * Rotary.GetRollSensivity;

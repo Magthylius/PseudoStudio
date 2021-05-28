@@ -449,6 +449,7 @@ namespace Magthylius
 
             public void UpdateImage()
             {
+                if (image == null) return;
                 image.fillAmount = progress;
             }
 
