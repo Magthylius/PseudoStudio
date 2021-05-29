@@ -51,6 +51,9 @@ namespace Hadal.AIComponents
             Brain.ThreshPlayerEvent -= HandlePlayerThreshEvent;
         }
 
+        /// <summary> Damages the chosen player</summary>
+        /// <param name="player">Target player</param>
+        /// <param name="type">The damage type</param>
         private void Send_DamagePlayer(Transform player, AIDamageType type)
         {
             //! compute data
@@ -68,9 +71,6 @@ namespace Hadal.AIComponents
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_DAMAGE_EVENT, data, options);
         }
 
-        /// <summary> Damages the chosen player</summary>
-        /// <param name="player">Target player</param>
-        /// <param name="type">The damage type</param>
         private void Receive_DamagePlayer(EventData eventData)
         {
             object[] data = eventData.CustomData.AsObjArray();
