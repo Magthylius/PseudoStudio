@@ -75,6 +75,7 @@ namespace Hadal.Player
 
         protected override void FixedUpdate()
         {
+            if (!_pView.IsMine) return;
             mover.DoFixedUpdate(FixedDeltaTime);
             rotator.DoFixedUpdate(FixedDeltaTime);
         }
