@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hadal.Player;
 
 namespace Hadal.AI
 {
+    public enum AggressiveTargetMode
+    {
+        HighestDMG = 0,
+        HighestHP,
+        Isolated,
+        TOTAL
+    }
+
     public class StateSettings : ScriptableObject
     {
 
@@ -38,15 +47,73 @@ namespace Hadal.AI
     public class EngagementStateSettings : StateSettings
     {
         [Header("Ambush Settings")]
-        [Min(0f)] public float AmbushTargetPlayerRange = 100f;
+        [Min(0f)] public float AM_TargetPlayerRange = 100f;
+        [Min(0f)] public float AM_MaxWaitTime = 120f;
 
         [Header("Aggressive Settings")]
-        [Min(0f)] public float AggressiveTargetPlayerRange = 100f;
-        public bool AllowTarget_HighestDMGDealer = true;
+        [Min(0f)] public float AG_TargetPlayerRange = 100f;
+        public bool AllowTarget_HighestDMGPlayer = true;
         public bool AllowTarget_HighestHPPlayer = true;
         public bool AllowTarget_IsolatedPlayer = true;
 
-        //public Player
+        public PlayerController AM_GetRandomAmbushPoint()
+        {
+            //! TODO: Cavern manager
+            return null;
+        }
+        public PlayerController AG_GetRandomTargetPlayer()
+        {
+            PlayerController[] allPlayers = FindObjectsOfType<PlayerController>();
+            PlayerController targetPlayer = allPlayers[Random.Range(0, allPlayers.Length)];
 
+            bool loopExit = true;
+            int loopFailSafe = 100;
+            do
+            {
+                AggressiveTargetMode mode = (AggressiveTargetMode)Random.Range((int)AggressiveTargetMode.HighestDMG, (int)AggressiveTargetMode.TOTAL);
+                bool cond1 = !AllowTarget_HighestDMGPlayer && mode == AggressiveTargetMode.HighestDMG;
+                bool cond2 = !AllowTarget_HighestHPPlayer && mode == AggressiveTargetMode.HighestHP;
+                bool cond3 = !AllowTarget_IsolatedPlayer && mode == AggressiveTargetMode.Isolated;
+
+                if (cond1 || cond2 || cond3) 
+                {
+                    loopExit = false;
+                    loopFailSafe++;
+                }
+                else
+                {
+                    int highestHp = int.MaxValue;
+
+                    switch (mode)
+                    {
+                        case AggressiveTargetMode.HighestDMG:
+                            //! TODO: Need player stats
+                            loopExit = false;
+                            loopFailSafe++;
+                            break;
+                        case AggressiveTargetMode.HighestHP:  
+                            foreach (PlayerController player in allPlayers)
+                            {
+                                if (player.GetInfo.HealthManager.GetCurrentHealth < highestHp)
+                                {
+                                    highestHp = player.GetInfo.HealthManager.GetCurrentHealth;
+                                    targetPlayer = player;
+                                }
+                            }
+                            break;
+                        case AggressiveTargetMode.Isolated:
+                            //! TODO: need cavern manager
+                            loopExit = false;
+                            loopFailSafe++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            } while (!loopExit);
+
+            return targetPlayer;
+        }
     }
 }

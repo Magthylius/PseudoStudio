@@ -59,5 +59,6 @@ namespace Hadal.Player.Behaviours
         }
 
         public float GetHealthRatio => _currentHealth / (float)maxHealth;
+        public int GetCurrentHealth => _currentHealth;
     }
 }
