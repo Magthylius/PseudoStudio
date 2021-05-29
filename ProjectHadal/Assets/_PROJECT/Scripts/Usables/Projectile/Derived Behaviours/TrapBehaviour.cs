@@ -1,5 +1,5 @@
 using UnityEngine;
-using Hadal.AI;
+//using Hadal.AI;
 using Magthylius.DataFunctions;
 //Created by Jet
 namespace Hadal.Usables.Projectiles
@@ -58,10 +58,10 @@ namespace Hadal.Usables.Projectiles
 
             foreach (Collider col in detectedObjects)
             {
-                if (col.GetComponent<AIBrain>())
+                /*if (col.GetComponent<AIBrain>())
                 {
                     col.GetComponent<AIBrain>().SetIsStunned(true); 
-                }                  
+                } */                 
             }
             isExploding = true;
             particleEffect.SetActive(true);

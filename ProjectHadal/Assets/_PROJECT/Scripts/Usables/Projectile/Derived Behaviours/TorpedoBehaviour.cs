@@ -1,5 +1,5 @@
 using UnityEngine;
-using Hadal.AI;
+//using Hadal.AI;
 
 namespace Hadal.Usables.Projectiles
 {
@@ -15,10 +15,10 @@ namespace Hadal.Usables.Projectiles
                 if (collision.gameObject.layer == layer.value)
                 {                 
                     //if its AI.
-                    if (collision.gameObject.GetComponent<AIBrain>())
+                    /*if (collision.gameObject.GetComponent<AIBrain>())
                     {
                         collision.gameObject.GetComponent<AIBrain>().HealthManager.TakeDamage(Data.BaseDamage);
-                    }
+                    }*/
                     PPhysics.OnPhysicsFinished();
                     break;
                 }
