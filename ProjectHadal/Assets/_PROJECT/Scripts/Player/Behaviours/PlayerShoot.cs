@@ -136,6 +136,9 @@ namespace Hadal.Player.Behaviours
 
         public void FireTorpedo()
         {
+            if (tLauncher.IsRegenerating)
+                UIManager.Instance.UpdateFiringVFX(true);
+
             if (!tLauncher.IsChamberLoaded || !AllowUpdate) return;
             HandleTorpedoObject();
         }
@@ -145,6 +148,8 @@ namespace Hadal.Player.Behaviours
             UsableHandlerInfo info = CreateInfoForTorpedo();
             info = CalculateTorpedoAngle(info);
             tLauncher.Use(info);
+
+            UIManager.Instance.UpdateFiringVFX(tLauncher.IsReloading || tLauncher.ReserveCount <= 0);
         }
 
         public void FireUtility(UsableLauncherObject usable, float chargeTime)
@@ -188,7 +193,7 @@ namespace Hadal.Player.Behaviours
         }
         private void OnReserveChangedMethod(bool isIncrement)
         {
-            UpdateUITorpedoCount(true);
+            UpdateUITorpedoCount(isIncrement);
             if (!isIncrement) return;
             DebugLog("Torpedo Regenerated (Loaded)!");
         }
