@@ -146,10 +146,12 @@ namespace Hadal.AI
 
             idleState = new IdleState(this);
             anticipationState = new AnticipationState(this);
+
             eAggressiveState = new AggressiveSubState();
             eAmbushState = new AmbushSubState();
             eJudgementState = new JudgementSubState();
             engagementState = new EngagementState(this, eAggressiveState, eAmbushState, eJudgementState);
+
             recoveryState = new RecoveryState(this);
             stunnedState = new StunnedState(this);
             

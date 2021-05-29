@@ -1,5 +1,5 @@
 using UnityEngine;
-using Hadal.AI;
+//using Hadal.AI;
 
 //Created by Jet
 namespace Hadal.Usables.Projectiles
@@ -28,10 +28,10 @@ namespace Hadal.Usables.Projectiles
                     IsAttached = true;
 
                     //if its AI.
-                    if (collision.gameObject.GetComponent<AIBrain>())
-                    {
+                    //if (collision.gameObject.GetComponent<AIBrain>())
+                   // {
                         //  collision.gameObject.GetComponent<AIBrain>().SetIsStunned(true);
-                    }
+                   // }
                 }
             }
         }
