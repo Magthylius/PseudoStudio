@@ -361,6 +361,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 67463452}
+  - component: {fileID: 67463454}
+  - component: {fileID: 67463453}
   m_Layer: 0
   m_Name: Egg Cavern
   m_TagString: Untagged
@@ -383,6 +385,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 31.523, z: 0}
+--- !u!114 &67463453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 67463451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cavernTag: 0
+--- !u!65 &67463454
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 67463451}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 300, y: 300, z: 300}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &77432192
 GameObject:
   m_ObjectHideFlags: 0
@@ -5358,6 +5386,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
+--- !u!1 &874894941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 874894942}
+  - component: {fileID: 874894943}
+  m_Layer: 0
+  m_Name: CavernManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &874894942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874894941}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 887499648}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &874894943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874894941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 083fcbf18a5bafa478ecabeeaa699192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &887499647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5423,6 +5494,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+--- !u!4 &887499648 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8423527041702846750, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+  m_PrefabInstance: {fileID: 887499647}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &895118840
 PrefabInstance:
   m_ObjectHideFlags: 0
