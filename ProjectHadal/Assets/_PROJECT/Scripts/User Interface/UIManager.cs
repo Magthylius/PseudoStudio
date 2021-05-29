@@ -244,10 +244,9 @@ namespace Hadal.UI
             }
         }
 
-        void StoptorpedoReloadedVFX()
+        public void UpdateFiringVFX(bool emptyChamber)
         {
-            torpedoReloadedVFX.Stop();
-            //torpedoReloadedVFX.
+            if (emptyChamber) torpedoEmptyVFX.Emit(1);
         }
 
         public void UpdateReload(float progress, bool showReloading)
