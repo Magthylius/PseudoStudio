@@ -10,7 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: AnticipationSettings
-  m_EditorClassIdentifier: Hadal.AI:Hadal.AI:AnticipationStateSettings
-  ConfidenceObjectiveGate: 0.5
-  RandomConfidenceInfluence: {x: 0, y: 0}
+  m_Name: EngagementSettings
+  m_EditorClassIdentifier: Hadal.AI:Hadal.AI:EngagementStateSettings
+  AM_TargetPlayerRange: 100
+  AM_MaxWaitTime: 120
+  AG_TargetPlayerRange: 100
+  AllowTarget_HighestDMGPlayer: 0
+  AllowTarget_HighestHPPlayer: 1
+  AllowTarget_IsolatedPlayer: 0
