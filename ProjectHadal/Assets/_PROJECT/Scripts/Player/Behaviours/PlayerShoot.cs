@@ -1,12 +1,11 @@
 //created by Jin, edited by Jon, edited by Jey
 using UnityEngine;
+using System.Collections;
 using Hadal.Usables;
 using Hadal.Utility;
 using Photon.Pun;
-using Photon.Realtime;
 using ExitGames.Client.Photon;
 using Hadal.UI;
-using Tenshi.UnitySoku;
 using Hadal.Networking;
 
 namespace Hadal.Player.Behaviours
@@ -136,9 +135,6 @@ namespace Hadal.Player.Behaviours
 
         public void FireTorpedo()
         {
-            if (tLauncher.IsRegenerating)
-                UIManager.Instance.UpdateFiringVFX(true);
-
             if (!tLauncher.IsChamberLoaded || !AllowUpdate) return;
             HandleTorpedoObject();
         }
@@ -149,7 +145,13 @@ namespace Hadal.Player.Behaviours
             info = CalculateTorpedoAngle(info);
             tLauncher.Use(info);
 
-            UIManager.Instance.UpdateFiringVFX(tLauncher.IsReloading || tLauncher.ReserveCount <= 0);
+            StartCoroutine(FireVFXRoutine());
+        }
+
+        private IEnumerator FireVFXRoutine()
+        {
+            yield return null;
+            UIManager.Instance.UpdateFiringVFX(tLauncher.IsReloading || tLauncher.IsRegenerating);
         }
 
         public void FireUtility(UsableLauncherObject usable, float chargeTime)

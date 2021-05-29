@@ -66,7 +66,6 @@ namespace Hadal.Usables
         private void IncrementChamber()
         {
             IsReloading = false;
-            // _chamberReloadTimer.Restart(); _chamberReloadTimer.Pause();
             DecrementReserve();
             UpdateChamberCount(ChamberCount + 1);
             OnChamberChanged?.Invoke(true);
