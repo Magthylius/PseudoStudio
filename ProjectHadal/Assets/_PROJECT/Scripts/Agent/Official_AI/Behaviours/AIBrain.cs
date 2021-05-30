@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tenshi.AIDolls;
 using Hadal.AI.States;
+using Hadal.AI.Caverns;
 using Photon.Pun;
 using System.Linq;
 
@@ -16,10 +17,12 @@ namespace Hadal.AI
         [SerializeField] private PointNavigationHandler navigationHandler;
         [SerializeField] private AISenseDetection senseDetection;
         [SerializeField] private AISightDetection sightDetection;
+        [SerializeField] private CavernManager cavernManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
         public AISenseDetection SenseDetection => senseDetection;
         public AISightDetection SightDetection => sightDetection;
+        public CavernManager CavernManager => cavernManager;
 
         private StateMachine stateMachine;
         private List<ILeviathanComponent> allAIComponents;
@@ -115,6 +118,7 @@ namespace Hadal.AI
         private void Start()
         {
             allAIComponents.ForEach(i => i.Initialise(this));
+            cavernManager = FindObjectOfType<CavernManager>();
             InitialiseStates();
             stateMachine.SetState(idleState);
         }
