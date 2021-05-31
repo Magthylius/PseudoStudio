@@ -38,6 +38,7 @@ namespace Hadal.UI
         [SerializeField] Canvas cameraCanvas;
 
         [Header("Reticle Settings")]
+        [SerializeField] RectTransform reticleGroup;
         [SerializeField] RectTransform reticleDirectors;
         //[SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
         [SerializeField] float maxDirectorRadius = 10f;
@@ -48,6 +49,9 @@ namespace Hadal.UI
         [SerializeField] Image reticleLineImage;
         [SerializeField] float minPixelsPerUnit;
         [SerializeField] float maxPixelsPerUnit;
+
+        [Header("Reticle Rotation Settings")]
+        [SerializeField, Min(0f)] float maxReticleRotation = 20f;
 
         [Header("Reticle Mover Settings")]
         [SerializeField] RectTransform upperMoverGroup;
@@ -141,7 +145,6 @@ namespace Hadal.UI
             allUIParentFR = new FlexibleRect(allUIParent);
 
             //cameraCanvas.worldCamera = playerCamera;
-
             umgCGF = new CanvasGroupFader(upperMoverGroup.GetComponent<CanvasGroup>(), true, false);
             lmgCGF = new CanvasGroupFader(lowerMoverGroup.GetComponent<CanvasGroup>(), true, false);
             umgVLG = upperMoverGroup.GetComponent<VerticalLayoutGroup>();
@@ -348,10 +351,10 @@ namespace Hadal.UI
 
         void UpdateReticle()
         {
-            Vector2 rotInput = Vector2.zero;
-            if (!pauseMenuOpen) rotInput = (Vector2)playerRotationInput.AllInput;
+            Vector3 rotInput = Vector3.zero;
+            if (!pauseMenuOpen) rotInput = playerRotationInput.AllInput;
 
-            Vector2 destination = rotInput * maxDirectorRadius;
+            Vector2 destination = (Vector2)rotInput * maxDirectorRadius;
             if (destination.sqrMagnitude >= maxDirectorRadius * maxDirectorRadius) destination = destination.normalized * maxDirectorRadius;
             reticleDirectorsFR.StartLerp(destination);
             reticleDirectorsFR.Step(directorReactionSpeed * Time.deltaTime);
@@ -363,7 +366,9 @@ namespace Hadal.UI
             reticleLineImage.rectTransform.offsetMax = new Vector2(rdFRDist, reticleLineImage.rectTransform.offsetMax.y);
             //reticleLineRenderer.SetPoint(1, reticleDirectorsFR.center);
 
-            //print(reticleDirectorsFR.AngleFromOrigin);
+            Quaternion targetQT = Quaternion.Euler(reticleGroup.localRotation.x, reticleGroup.localRotation.y, rotInput.z * maxReticleRotation);
+            reticleGroup.localRotation = Quaternion.Lerp(reticleGroup.localRotation, targetQT, 10f * Time.deltaTime);
+            
         }
         #endregion
 
