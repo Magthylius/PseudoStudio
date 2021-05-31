@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &64815186 stripped
 Transform:
@@ -398,6 +398,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cavernTag: 0
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  aiMask:
+    serializedVersion: 2
+    m_Bits: 0
+  ambushPoints: []
 --- !u!65 &67463454
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2531,7 +2538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &404032728 stripped
 Transform:
@@ -2994,7 +3001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1001 &455053765
 PrefabInstance:
@@ -3736,7 +3743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &576257395
 GameObject:
@@ -5386,49 +5393,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
---- !u!1 &874894941
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 874894942}
-  - component: {fileID: 874894943}
-  m_Layer: 0
-  m_Name: CavernManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &874894942
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874894941}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 887499648}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &874894943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874894941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 083fcbf18a5bafa478ecabeeaa699192, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &887499647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5436,6 +5400,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 800667446237500755, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 800667446237500755, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: initialCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3920942211973083851, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682368197355546126, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8423527041085883025, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8423527041085883036, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8423527041085883037, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8423527041321892510, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
       propertyPath: patrolPositionParent
       value: 
@@ -5488,17 +5480,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameplayEssentials
       objectReference: {fileID: 0}
-    - target: {fileID: 8423527041702846751, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
---- !u!4 &887499648 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8423527041702846750, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
-  m_PrefabInstance: {fileID: 887499647}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &895118840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6478,7 +6461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &1021829014 stripped
 Transform:
@@ -6773,7 +6756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &1065581743 stripped
 Transform:
@@ -7195,7 +7178,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &1180154794
 GameObject:
@@ -7652,7 +7635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &1326021204
 GameObject:
@@ -7699,7 +7682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1001 &1330580880
 PrefabInstance:
@@ -8121,7 +8104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1001 &1424146586
 PrefabInstance:
@@ -11303,7 +11286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &2119768628 stripped
 Transform:
