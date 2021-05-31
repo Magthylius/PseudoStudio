@@ -58,7 +58,7 @@ namespace Hadal.Player
             {
                 HandlePhotonView(_pView.IsMine);
             }
-            print("Start IsMine : " + _pView.IsMine);
+            //print("Start IsMine : " + _pView.IsMine);
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);
             //Deactivate();
@@ -69,12 +69,13 @@ namespace Hadal.Player
             DoDebugUpdate(DeltaTime);
 
             if (!_pView.IsMine) return;
-            print(_pView.GetInstanceID());
+            
+            //Order Test
+            //print(_pView.GetInstanceID());
             cameraController.CameraTransition(DeltaTime, IsBoosted);
             inventory.DoUpdate(DeltaTime);
             lamp.DoUpdate(DeltaTime);
             mover.DoUpdate(DeltaTime);
-           // rotator.DoFixedUpdate(DeltaTime);
             shooter.DoUpdate(DeltaTime);
         }
 
