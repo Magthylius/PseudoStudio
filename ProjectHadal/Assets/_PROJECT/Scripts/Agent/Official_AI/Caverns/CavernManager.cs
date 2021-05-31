@@ -24,6 +24,7 @@ namespace Hadal.AI.Caverns
     }
 
     public delegate void CavernHandlerReturn(CavernPlayerData data);
+    public delegate void CavernHandlerAIReturn(CavernHandler handler);
 
     /// <summary>
     /// For cavern identification.
@@ -44,6 +45,13 @@ namespace Hadal.AI.Caverns
     public class CavernManager : SingletonSoft<CavernManager>
     {
         List<CavernHandler> handlerList = new List<CavernHandler>();
+        CavernHandler aiAtHandler;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            aiAtHandler = null;
+        }
 
         void Start()
         {
@@ -58,6 +66,18 @@ namespace Hadal.AI.Caverns
         public void OnPlayerLeftCavern(CavernPlayerData data)
         {
             //return data;
+        }
+
+        public void OnAIEnterCavern(CavernHandler handler)
+        {
+            if (aiAtHandler != handler)
+                aiAtHandler = handler;
+        }
+
+        public void OnAILeaveCavern(CavernHandler handler)
+        {
+            if (aiAtHandler == handler)
+                aiAtHandler = null;
         }
 
         /// <summary>
@@ -82,16 +102,13 @@ namespace Hadal.AI.Caverns
 
         public CavernTag GetCavernTagOfAILocation()
         {
-            for (int i = handlerList.Count - 1; i >= 0; i--)
-            {
-                CavernHandler h = handlerList[i];
-                if (h.aiInCavern == null)
-                    continue;
-                
-                return h.cavernTag;
-            }
-            return CavernTag.Invalid;
+            if (aiAtHandler == null)
+                return CavernTag.Invalid;
+            return aiAtHandler.cavernTag;
         }
+
+        public CavernHandler GetHandlerOfAILocation()
+            => aiAtHandler;
 
         public void InjectHandler(CavernHandler handler) => handlerList.Add(handler);
         public CavernHandler GetHandlerOfTag(CavernTag tag) => handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
