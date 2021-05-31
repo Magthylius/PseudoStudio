@@ -22,9 +22,10 @@ namespace Hadal.AI.Caverns
         
         public event CavernHandlerReturn PlayerEnteredCavernEvent;
         public event CavernHandlerReturn PlayerLeftCavernEvent;
+        public event CavernHandlerAIReturn AIEnteredCavernEvent;
+        public event CavernHandlerAIReturn AILeftCavernEvent;
 
         new Collider collider;
-        public AIBrain aiInCavern;
         List<PlayerController> playersInCavern;
         
         void OnValidate()
@@ -47,12 +48,16 @@ namespace Hadal.AI.Caverns
 
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
+            AIEnteredCavernEvent += manager.OnAIEnterCavern;
+            AILeftCavernEvent += manager.OnAILeaveCavern;
         }
 
         void OnDestroy()
         {
             PlayerEnteredCavernEvent -= manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent -= manager.OnPlayerLeftCavern;
+            AIEnteredCavernEvent -= manager.OnAIEnterCavern;
+            AILeftCavernEvent -= manager.OnAILeaveCavern;
         }
 
         void OnTriggerEnter(Collider other)
@@ -71,7 +76,8 @@ namespace Hadal.AI.Caverns
             }
             else if (layerVal == aiMask.value)
             {
-                aiInCavern = other.GetComponent<AIBrain>();
+                if (other.GetComponent<AIBrain>() != null)
+                    AIEnteredCavernEvent?.Invoke(this);
             }
             else if (nPoint != null)
             {
@@ -94,7 +100,8 @@ namespace Hadal.AI.Caverns
             }
             else if (layerVal == aiMask.value)
             {
-                aiInCavern = null;
+                if (other.GetComponent<AIBrain>() != null)
+                    AILeftCavernEvent?.Invoke(this);
             }
         }
 
