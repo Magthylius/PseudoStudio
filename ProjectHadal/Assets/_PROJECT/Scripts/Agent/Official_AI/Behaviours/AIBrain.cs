@@ -7,6 +7,10 @@ using Hadal.AI.States;
 using Hadal.AI.Caverns;
 using Photon.Pun;
 using System.Linq;
+using Hadal.Player;
+using Tenshi;
+using NaughtyAttributes;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -31,15 +35,25 @@ namespace Hadal.AI
 
         [Header("Information")]
         [SerializeField] private List<Transform> playerTransforms;
+        [SerializeField] private PlayerController targetingPlayer;
+        [SerializeField] private PlayerController carriedPlayer;
         public List<Transform> PlayerTransforms => playerTransforms;
+        public PlayerController TargetingPlayer { get => targetingPlayer; set => targetingPlayer = value; }
+        public PlayerController CarriedPlayer { get => carriedPlayer; set => carriedPlayer = value; }
 
         internal Rigidbody rb;
 
         [Header("Confidence Settings")]
-        [SerializeField] private float startingConfidence;
-        [SerializeField, Tenshi.ReadOnly] private float confidence;
-        public float Confidence => confidence;
-        public void UpdateConfidenceValue(int difference) => confidence += difference;
+        [SerializeField] private bool randomiseOnStart;
+        [SerializeField] private int minConfidence;
+        [SerializeField] private int maxConfidence;
+        [SerializeField] private int startingConfidence;
+        [SerializeField, Tenshi.ReadOnly] private int confidence;
+        [SerializeField, Tenshi.ReadOnly] private int bonusConfidence;
+        public int ActualConfidenceValue => Mathf.Clamp(confidence + bonusConfidence, minConfidence, maxConfidence);
+        public float NormalisedConfidence => ActualConfidenceValue.NormaliseValue(minConfidence, maxConfidence);
+        public void UpdateConfidenceValue(int difference) => confidence = Mathf.Clamp(confidence + difference, minConfidence, maxConfidence);
+        public void UpdateBonusConfidence(int difference) => bonusConfidence += difference;
         
         IState idleState;
 
@@ -109,6 +123,8 @@ namespace Hadal.AI
             rb = GetComponent<Rigidbody>();
             isStunned = false;
             objective = Objective.None;
+            if (randomiseOnStart) confidence = UnityEngine.Random.Range(minConfidence, maxConfidence + 1);
+            else confidence = startingConfidence;
             
             allAIComponents = GetComponentsInChildren<ILeviathanComponent>().ToList();
             preUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();

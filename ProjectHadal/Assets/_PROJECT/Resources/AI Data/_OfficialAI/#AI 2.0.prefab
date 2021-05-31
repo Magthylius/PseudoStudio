@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1692377485682228084}
+  - component: {fileID: 6021279049498701051}
+  - component: {fileID: 9221971048963321059}
   m_Layer: 0
   m_Name: Radar Handlers
   m_TagString: Untagged
@@ -30,6 +32,34 @@ Transform:
   m_Father: {fileID: 2206939684412345072}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6021279049498701051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793168799261823607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2905221276de933438305f363fdb07c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlapSphereDetectionRadius: 0
+  detectPoint: {x: 0, y: 0, z: 0}
+--- !u!114 &9221971048963321059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793168799261823607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5375a488145582c4e95e857a1f336714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastRadius: 0
+  viewDistance: 0
 --- !u!1 &2206939683509102064
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,8 +120,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4352
   numberOfClosestPointsToConsider: 4
-  pilotTrans: {fileID: 0}
-  rBody: {fileID: 0}
+  pilotTrans: {fileID: 2206939684412345072}
+  rBody: {fileID: 2206939684412345074}
   obstacleCheckTimer: 0
   timeoutTimer: 0
   lingerTimer: 0
@@ -279,11 +309,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthManager: {fileID: 2206939684562575358}
   navigationHandler: {fileID: 2206939683509102030}
-  senseDetection: {fileID: 0}
-  sightDetection: {fileID: 0}
+  senseDetection: {fileID: 6021279049498701051}
+  sightDetection: {fileID: 9221971048963321059}
+  cavernManager: {fileID: 0}
   playerTransforms: []
+  targetingPlayer: {fileID: 0}
+  carriedPlayer: {fileID: 0}
+  randomiseOnStart: 0
+  minConfidence: 0
+  maxConfidence: 100
   startingConfidence: 50
   confidence: 0
+  bonusConfidence: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 128

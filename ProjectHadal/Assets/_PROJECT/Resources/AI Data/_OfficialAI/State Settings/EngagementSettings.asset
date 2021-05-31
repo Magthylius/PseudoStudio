@@ -9,12 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: cbea61f01ca1d4b4e965d2ecde50c4f0, type: 3}
   m_Name: EngagementSettings
-  m_EditorClassIdentifier: Hadal.AI:Hadal.AI:EngagementStateSettings
+  m_EditorClassIdentifier: 
+  PlayerDetectRange: 100
+  ConfidenceIncrementValue: 10
+  ConfidenceDecrementValue: 10
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 120
   AG_TargetPlayerRange: 100
-  AllowTarget_HighestDMGPlayer: 0
+  AG_AccumulatedDamageThresholdPercentage: 0.4
+  AllowTarget_HighestDMGPlayer: 1
   AllowTarget_HighestHPPlayer: 1
-  AllowTarget_IsolatedPlayer: 0
+  AllowTarget_IsolatedPlayer: 1
+  JudgementTimer1: 30
+  JudgementTimer2: 45
+  JudgementTimer3: 60
+  JudgementTimer4: 90

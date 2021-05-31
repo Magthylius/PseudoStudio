@@ -3,23 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//! C: Jon
 namespace Hadal.AI.Caverns
 {
+    /// <summary>
+    /// Used to handle a single cavern logic. 
+    /// </summary>
     [RequireComponent(typeof(Collider))]
     public class CavernHandler : MonoBehaviour
     {
-        new Collider collider;
-        [SerializeField] LayerMask playerMask;
-        [SerializeField] LayerMask aiMask;
-
-        public CavernTag cavernTag;
-        public event CavernHandlerReturn PlayerEnteredCavernEvent;
-        public event CavernHandlerReturn PlayerLeftCavernEvent;
-
-        public AIBrain aiInCavern;
-        List<PlayerController> playersInCavern;
         CavernManager manager;
 
+        public CavernTag cavernTag;
+
+        [SerializeField] LayerMask playerMask;
+        [SerializeField] LayerMask aiMask;
+        [SerializeField] List<AmbushPointBehaviour> ambushPoints;
+        
+        public event CavernHandlerReturn PlayerEnteredCavernEvent;
+        public event CavernHandlerReturn PlayerLeftCavernEvent;
+        public event CavernHandlerAIReturn AIEnteredCavernEvent;
+        public event CavernHandlerAIReturn AILeftCavernEvent;
+
+        new Collider collider;
+        List<PlayerController> playersInCavern;
+        
         void OnValidate()
         {
             collider = GetComponent<Collider>();
@@ -29,6 +37,8 @@ namespace Hadal.AI.Caverns
         void OnEnable()
         {
             playersInCavern = new List<PlayerController>();
+            collider = GetComponent<Collider>();
+            collider.isTrigger = true;
         }
 
         void Start()
@@ -38,12 +48,16 @@ namespace Hadal.AI.Caverns
 
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
+            AIEnteredCavernEvent += manager.OnAIEnterCavern;
+            AILeftCavernEvent += manager.OnAILeaveCavern;
         }
 
         void OnDestroy()
         {
             PlayerEnteredCavernEvent -= manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent -= manager.OnPlayerLeftCavern;
+            AIEnteredCavernEvent -= manager.OnAIEnterCavern;
+            AILeftCavernEvent -= manager.OnAILeaveCavern;
         }
 
         void OnTriggerEnter(Collider other)
@@ -62,7 +76,8 @@ namespace Hadal.AI.Caverns
             }
             else if (layerVal == aiMask.value)
             {
-                aiInCavern = other.GetComponent<AIBrain>();
+                if (other.GetComponent<AIBrain>() != null)
+                    AIEnteredCavernEvent?.Invoke(this);
             }
             else if (nPoint != null)
             {
@@ -85,7 +100,8 @@ namespace Hadal.AI.Caverns
             }
             else if (layerVal == aiMask.value)
             {
-                aiInCavern = null;
+                if (other.GetComponent<AIBrain>() != null)
+                    AILeftCavernEvent?.Invoke(this);
             }
         }
 

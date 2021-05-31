@@ -448,6 +448,8 @@ namespace Hadal.Networking
                     //print(PhotonNetwork.IsMasterClient);
                 }
 
+                GameManager.Instance.ChangeGameState(GameManager.GameState.ONGOING);
+
                 //SpawnAIEssentials();
             }
         }

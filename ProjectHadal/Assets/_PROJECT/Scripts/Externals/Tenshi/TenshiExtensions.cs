@@ -151,6 +151,11 @@ namespace Tenshi
             return angle;
         }
 
+        public static float NormaliseValue(this int value, int min, int max)
+        {
+            return (value - min) / (max - min).AsFloat();
+        }
+
         public static bool IsEven(this int number) => number % 2 == 0;
         public static bool IsOdd(this int number) => number % 2 != 0;
         public static bool IsPrime(this int number)
