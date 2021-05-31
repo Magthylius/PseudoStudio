@@ -15,7 +15,9 @@ namespace Hadal.AI
 
     public class StateSettings : ScriptableObject
     {
-
+        [Min(0f)] public float PlayerDetectRange = 100f;
+        [Min(0f)] public float ConfidenceIncrementValue = 10f;
+        [Min(0f)] public float ConfidenceDecrementValue = 10f;
     }
 
     [CreateAssetMenu(fileName = "AnticipationSettings", menuName = "StateSettings/Anticipation")]
@@ -130,8 +132,25 @@ namespace Hadal.AI
         }
         public float GetAccumulatedDamageThreshold(float aiCurrentHealth)
         {
-            return AG_AccumulatedDamageThresholdPercentage * aiCurrentHealth;
+            return aiCurrentHealth * AG_AccumulatedDamageThresholdPercentage;
         }
     }
 
+    public class RecoveryStateSettings : StateSettings
+    {
+        [Header("Escape Settings")]
+        [Min(0f)] public float MaxEscapeTime = 100f;
+        [Min(0f)] public float MaxEscapeDamageThresholdPercentage = 0.6f;
+
+        public float GetEscapeDamageThreshold(float aiCurrentHealth)
+        {
+            return aiCurrentHealth * MaxEscapeDamageThresholdPercentage;
+        }
+    }
+
+    public class CooldownStateSettings : StateSettings
+    {
+        [Header("Cooldown Settings")]
+        [Min(0f)] public float MaxCooldownTime = 60f;
+    }
 }
