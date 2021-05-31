@@ -18,8 +18,7 @@ namespace Hadal.Player
         private const string PrefabName = "Player";
         private PhotonView _pView;
         //private GameObject player;
-
-        List<PlayerController> playerList;
+        [SerializeField] List<PlayerController> playerList;
         NetworkEventManager neManager;
 
         private void Awake() => _pView = GetComponent<PhotonView>();
@@ -36,6 +35,7 @@ namespace Hadal.Player
                     foreach (KeyValuePair<int, Photon.Realtime.Player> playerDict in neManager.AllPlayers)
                     {
                         SpawnPlayer(playerDict.Value);
+                        print("Player Spawned");
                     }
 
                     NetworkEventManager.Instance.PlayerEnteredEvent += SpawnPlayer;
@@ -43,7 +43,6 @@ namespace Hadal.Player
                 }
                 return;
             }
-
             SpawnPlayer(neManager.LocalPlayer);
             
         }
@@ -114,11 +113,13 @@ namespace Hadal.Player
             if (photonPlayer != neManager.LocalPlayer)
             {
                 controller.TransferOwnership(photonPlayer);
+               // print("Created False Camera player");
                 controller.HandlePhotonView(false);
             }
             else
             {
-                controller.HandlePhotonView(true); 
+                //print("Created True Camera player");
+               controller.HandlePhotonView(true); 
             }
 
             /*if (playerList.Count > 0)
@@ -169,5 +170,9 @@ namespace Hadal.Player
         PlayerController GetController(GameObject playerObject) => playerObject.GetComponent<PlayerController>();
 
         public bool IsOnNetwork => !NetworkEventManager.Instance.isOfflineMode;
+
+        public PhotonView managerPView => _pView;
+
+        public List<PlayerController> playerControllers => playerList;
     }
 }
