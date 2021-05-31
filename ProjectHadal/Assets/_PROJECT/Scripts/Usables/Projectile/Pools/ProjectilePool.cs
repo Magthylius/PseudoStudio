@@ -1,6 +1,7 @@
 using Tenshi.UnitySoku;
 using NaughtyAttributes;
 using UnityEngine;
+using Hadal.Networking.UI.Loading;
 
 //Created by Jet
 namespace Hadal.Usables.Projectiles
@@ -13,6 +14,8 @@ namespace Hadal.Usables.Projectiles
         {
             prefab = data.ProjectilePrefab.GetComponent<T>();
             base.Start();
+
+            LoadingManager.Instance.CheckInObjectPool();
         }
     }
 }

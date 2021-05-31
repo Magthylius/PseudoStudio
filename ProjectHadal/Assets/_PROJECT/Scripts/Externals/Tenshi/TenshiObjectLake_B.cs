@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 
+//! C: Jet, E: Jon
 namespace Tenshi.UnitySoku
 {
     public interface IPoolable<T> where T : Component
@@ -19,6 +20,8 @@ namespace Tenshi.UnitySoku
         [SerializeField] protected bool instantiateWithCoroutine;
         private Queue<T> pool = new Queue<T>();
 
+        bool poolingFinished = false;
+
         protected virtual void Start()
         {
             if (instantiateWithCoroutine)
@@ -26,12 +29,19 @@ namespace Tenshi.UnitySoku
                 StartCoroutine(StartRoutine());
                 return;
             }
-            Add(initialCount.Clamp0());
+            Add(initialCount.Clamp0());            
         }
 
         private IEnumerator StartRoutine()
         {
-            Add(initialCount.Clamp0());
+            int i = -1;
+            while (++i < initialCount.Clamp0())
+            {
+                Dump(Instantiate(prefab, transform));
+                yield return null;
+            }
+
+            poolingFinished = true;
             yield return null;
         }
 
@@ -65,5 +75,7 @@ namespace Tenshi.UnitySoku
             while(++i < allPoolables.Length)
                 allPoolables[i].Dump();
         }
+
+        public bool PoolingFinished => poolingFinished;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 using Magthylius.LerpFunctions;
+using Tenshi.UnitySoku;
 
 namespace Hadal.Networking.UI.Loading
 {
@@ -20,6 +21,7 @@ namespace Hadal.Networking.UI.Loading
         CanvasGroupFader loadingCGF;
 
         [Header("Continue Settings")]
+        [SerializeField] bool allowPressAnyKey = true;
         [SerializeField] CanvasGroup continueCG;
         [SerializeField] float continueFadeSpeed = 5f;
 
@@ -29,6 +31,13 @@ namespace Hadal.Networking.UI.Loading
         string nextLoadLevelName;
         bool allowLoading = false;
         bool allowContinue = false;
+
+        [Header("Loading Checks")]
+        [SerializeField] int expectedObjectPoolersCount = 6;
+
+        int objectPoolersCompleted;
+
+        bool objectPoolersCheckedIn;
 
         void Awake()
         {
@@ -44,6 +53,7 @@ namespace Hadal.Networking.UI.Loading
             loadingCGF = new CanvasGroupFader(loadingCG, true, true);
 
             continueCGF = new CanvasGroupFader(continueCG, true, false);
+            if (!allowPressAnyKey) continueCGF.SetTransparent();
 
             ResetLoadingElements();
         }
@@ -58,16 +68,34 @@ namespace Hadal.Networking.UI.Loading
                 if (loadingAO != null && loadingAO.isDone)
                 {
                     allowLoading = false;
-                    continueCGF.StartFadeIn();
-                    allowContinue = true;
+                    
+                    if (allowPressAnyKey)
+                    {
+                        allowContinue = true;
+                        continueCGF.StartFadeIn();
+                    }
+                    else
+                    {
+                        StartCoroutine(CheckAllLoaded());
+                    }
 
                     loadingCGF.fadeEndedEvent.RemoveAllListeners();
                 }
             }
 
+
             if (allowContinue)
             {
-                if (Input.anyKeyDown)
+                if (allowPressAnyKey)
+                {
+                    if (Input.anyKeyDown)
+                    {
+                        allowContinue = false;
+                        FadeOut();
+                        loadingCGF.fadeEndedEvent.AddListener(ResetLoadingElements);
+                    }
+                }
+                else
                 {
                     allowContinue = false;
                     FadeOut();
@@ -75,6 +103,27 @@ namespace Hadal.Networking.UI.Loading
                 }
             }
         }
+
+        #region Load Checks
+        IEnumerator CheckAllLoaded()
+        {
+            while (!objectPoolersCheckedIn)
+            {
+                yield return null;
+            }
+
+            allowContinue = true;
+            yield return null;
+        }
+        public void CheckInObjectPool()
+        {
+            if (objectPoolersCheckedIn) return;
+
+            objectPoolersCompleted++;
+            if (objectPoolersCompleted >= expectedObjectPoolersCount) objectPoolersCheckedIn = true;
+        }
+        #endregion
+
 
         void ResetLoadingElements()
         {
