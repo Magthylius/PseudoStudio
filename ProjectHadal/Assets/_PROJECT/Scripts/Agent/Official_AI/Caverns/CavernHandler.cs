@@ -3,23 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//! C: Jon
 namespace Hadal.AI.Caverns
 {
+    /// <summary>
+    /// Used to handle a single cavern logic. 
+    /// </summary>
     [RequireComponent(typeof(Collider))]
     public class CavernHandler : MonoBehaviour
     {
-        new Collider collider;
-        [SerializeField] LayerMask playerMask;
-        [SerializeField] LayerMask aiMask;
+        CavernManager manager;
 
         public CavernTag cavernTag;
+
+        [SerializeField] LayerMask playerMask;
+        [SerializeField] LayerMask aiMask;
+        [SerializeField] List<AmbushPointBehaviour> ambushPoints;
+        
         public event CavernHandlerReturn PlayerEnteredCavernEvent;
         public event CavernHandlerReturn PlayerLeftCavernEvent;
 
+        new Collider collider;
         public AIBrain aiInCavern;
         List<PlayerController> playersInCavern;
-        CavernManager manager;
-
+        
         void OnValidate()
         {
             collider = GetComponent<Collider>();
@@ -29,6 +36,8 @@ namespace Hadal.AI.Caverns
         void OnEnable()
         {
             playersInCavern = new List<PlayerController>();
+            collider = GetComponent<Collider>();
+            collider.isTrigger = true;
         }
 
         void Start()

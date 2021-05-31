@@ -52,9 +52,16 @@ namespace Hadal.AI
 
         [Header("Aggressive Settings")]
         [Min(0f)] public float AG_TargetPlayerRange = 100f;
+        [Range(0f, 1f)] public float AG_AccumulatedDamageThresholdPercentage = 0.4f;
         public bool AllowTarget_HighestDMGPlayer = true;
         public bool AllowTarget_HighestHPPlayer = true;
         public bool AllowTarget_IsolatedPlayer = true;
+
+        [Header("Judgement Settings")]
+        [Min(0f)] public float JudgementTimer1 = 30f;
+        [Min(0f)] public float JudgementTimer2 = 45f;
+        [Min(0f)] public float JudgementTimer3 = 60f;
+        [Min(0f)] public float JudgementTimer4 = 90f;
 
         public PlayerController AM_GetRandomAmbushPoint()
         {
@@ -67,7 +74,7 @@ namespace Hadal.AI
             PlayerController targetPlayer = allPlayers[Random.Range(0, allPlayers.Length)];
 
             bool loopExit = true;
-            int loopFailSafe = 100;
+            int loopFailSafe = 0;
             do
             {
                 AggressiveTargetMode mode = (AggressiveTargetMode)Random.Range((int)AggressiveTargetMode.HighestDMG, (int)AggressiveTargetMode.TOTAL);
@@ -111,9 +118,20 @@ namespace Hadal.AI
                     }
                 }
 
+                if (loopFailSafe > 100)
+                {
+                    Debug.LogError("AI aggro target loop exceeded 100!, defaulted to random player.");
+                    loopExit = true;
+                }
+
             } while (!loopExit);
 
             return targetPlayer;
         }
+        public float GetAccumulatedDamageThreshold(float aiCurrentHealth)
+        {
+            return AG_AccumulatedDamageThresholdPercentage * aiCurrentHealth;
+        }
     }
+
 }

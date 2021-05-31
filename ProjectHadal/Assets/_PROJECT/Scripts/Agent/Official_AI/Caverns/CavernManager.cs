@@ -5,8 +5,12 @@ using Tenshi.UnitySoku;
 using Hadal.Player;
 using System.Linq;
 
+//! C: Jon
 namespace Hadal.AI.Caverns
 {
+    /// <summary>
+    /// For data passback through events back to manager
+    /// </summary>
     public struct CavernPlayerData
     {
         public CavernHandler Handler;
@@ -18,6 +22,8 @@ namespace Hadal.AI.Caverns
             Player = playerController;
         }
     }
+
+    public delegate void CavernHandlerReturn(CavernPlayerData data);
 
     /// <summary>
     /// For cavern identification.
@@ -32,8 +38,9 @@ namespace Hadal.AI.Caverns
         Custom_Point
     }
 
-    public delegate CavernPlayerData CavernHandlerReturn(CavernPlayerData data);
-
+    /// <summary>
+    /// Manages all the other handlers. Is a singleton.
+    /// </summary>
     public class CavernManager : SingletonSoft<CavernManager>
     {
         List<CavernHandler> handlerList = new List<CavernHandler>();
@@ -43,14 +50,14 @@ namespace Hadal.AI.Caverns
             
         }
 
-        public CavernPlayerData OnPlayerEnterCavern(CavernPlayerData data)
+        public void OnPlayerEnterCavern(CavernPlayerData data)
         {
-            return data;
+            //return data;
         }
 
-        public CavernPlayerData OnPlayerLeftCavern(CavernPlayerData data)
+        public void OnPlayerLeftCavern(CavernPlayerData data)
         {
-            return data;
+            //return data;
         }
 
         /// <summary>
