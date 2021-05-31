@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &77432192
 GameObject:
@@ -892,7 +892,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &404032728 stripped
 Transform:
@@ -1050,7 +1050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &503133617
 GameObject:
@@ -1268,7 +1268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &576257395
 GameObject:
@@ -2079,7 +2079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &1041755153
 GameObject:
@@ -2288,7 +2288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &1088461618 stripped
 Transform:
@@ -2409,7 +2409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &1229210253
 GameObject:
@@ -2551,7 +2551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &1326021204
 GameObject:
@@ -2598,7 +2598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1 &1423040240
 GameObject:
@@ -2645,7 +2645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!1001 &1489750077
 PrefabInstance:
@@ -2709,6 +2709,18 @@ PrefabInstance:
     - target: {fileID: 6556157035893970500, guid: d4c7742bf18f40b4e92b931368308994, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: d4c7742bf18f40b4e92b931368308994, type: 3}
+      propertyPath: confidence
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: d4c7742bf18f40b4e92b931368308994, type: 3}
+      propertyPath: maxConfidence
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6556157035893970501, guid: d4c7742bf18f40b4e92b931368308994, type: 3}
+      propertyPath: bonusConfidence
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4c7742bf18f40b4e92b931368308994, type: 3}
@@ -3051,7 +3063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
-  pointType: 1
+  cavernTag: 0
   friends: []
 --- !u!4 &2119768628 stripped
 Transform:
