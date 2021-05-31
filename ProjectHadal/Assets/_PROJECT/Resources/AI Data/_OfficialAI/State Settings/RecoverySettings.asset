@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ff88f4115e3e3c498cf7d2c6581b8d2, type: 3}
-  m_Name: AnticipationSettings
+  m_Script: {fileID: 11500000, guid: bd9c770967066b6469cccb848dead9d8, type: 3}
+  m_Name: RecoverySettings
   m_EditorClassIdentifier: 
   PlayerDetectRange: 100
   ConfidenceIncrementValue: 10
   ConfidenceDecrementValue: 10
-  ConfidenceObjectiveGate: 0.5
-  RandomConfidenceInfluence: {x: 0, y: 0}
+  MaxEscapeTime: 100
+  MaxEscapeDamageThresholdPercentage: 0.6
