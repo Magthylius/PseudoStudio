@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tenshi.UnitySoku;
 using Hadal.Player;
+using System.Linq;
 
 namespace Hadal.AI.Caverns
 {
@@ -23,8 +24,12 @@ namespace Hadal.AI.Caverns
     /// </summary>
     public enum CavernTag
     {
-        Egg = 0,
+        Invalid = 0,
+        Lair_Grounds,
         Hydrothermal_Vents,
+        Bioluminescent_Cavern,
+        Tunnel,
+        Custom_Point
     }
 
     public delegate CavernPlayerData CavernHandlerReturn(CavernPlayerData data);
@@ -68,6 +73,20 @@ namespace Hadal.AI.Caverns
             return isolatedPlayer;
         }
 
+        public CavernTag GetCavernTagOfAILocation()
+        {
+            for (int i = handlerList.Count - 1; i >= 0; i--)
+            {
+                CavernHandler h = handlerList[i];
+                if (h.aiInCavern == null)
+                    continue;
+                
+                return h.cavernTag;
+            }
+            return CavernTag.Invalid;
+        }
+
         public void InjectHandler(CavernHandler handler) => handlerList.Add(handler);
+        public CavernHandler GetHandlerOfTag(CavernTag tag) => handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
     }
 }

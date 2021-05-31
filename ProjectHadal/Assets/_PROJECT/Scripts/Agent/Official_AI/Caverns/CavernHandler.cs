@@ -9,13 +9,14 @@ namespace Hadal.AI.Caverns
     public class CavernHandler : MonoBehaviour
     {
         new Collider collider;
+        [SerializeField] LayerMask playerMask;
+        [SerializeField] LayerMask aiMask;
 
         public CavernTag cavernTag;
         public event CavernHandlerReturn PlayerEnteredCavernEvent;
         public event CavernHandlerReturn PlayerLeftCavernEvent;
 
-        //! Navpoints?
-
+        public AIBrain aiInCavern;
         List<PlayerController> playersInCavern;
         CavernManager manager;
 
@@ -47,7 +48,11 @@ namespace Hadal.AI.Caverns
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            //! Prechecks
+            NavPoint nPoint = other.GetComponent<NavPoint>();
+            int layerVal = other.gameObject.layer;
+
+            if (layerVal == playerMask.value)
             {
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Add(player);
@@ -55,17 +60,32 @@ namespace Hadal.AI.Caverns
 
                 PlayerEnteredCavernEvent.Invoke(data);
             }
+            else if (layerVal == aiMask.value)
+            {
+                aiInCavern = other.GetComponent<AIBrain>();
+            }
+            else if (nPoint != null)
+            {
+                nPoint.CavernTag = cavernTag;
+            }
         }
 
         void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            //! Prechecks
+            int layerVal = other.gameObject.layer;
+
+            if (layerVal == playerMask.value)
             {
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Remove(player);
                 CavernPlayerData data = new CavernPlayerData(this, player);
 
                 PlayerLeftCavernEvent.Invoke(data);
+            }
+            else if (layerVal == aiMask.value)
+            {
+                aiInCavern = null;
             }
         }
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Hadal.AI.Caverns;
 using UnityEngine;
 
 namespace Hadal.AI
@@ -18,9 +19,9 @@ namespace Hadal.AI
 		private MeshRenderer mRenderer;
 		
 		[Header("Information")]
-        [SerializeField] private PointType pointType;
+        [SerializeField] private CavernTag cavernTag;
         [SerializeField] private List<NavPoint> friends;
-        public PointType GetPointType { get => pointType; set => pointType = value; }
+        public CavernTag CavernTag { get => cavernTag; set => cavernTag = value; }
         public Transform GetTransform => transform;
         public Vector3 GetPosition => transform.position;
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
@@ -79,14 +80,5 @@ namespace Hadal.AI
 			if (mRenderer == null) return;
 			mRenderer.material = defaultMaterial;
 		}
-    }
-
-    public enum PointType
-    {
-        OpenArea,
-        LairGrounds,
-        HydrothermalCavern,
-        BioluminescentCavern,
-        Custom
     }
 }
