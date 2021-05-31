@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -15,9 +16,24 @@ namespace Tenshi.UnitySoku
     {
         [SerializeField] protected T prefab;
         [SerializeField] protected int initialCount;
+        [SerializeField] protected bool instantiateWithCoroutine;
         private Queue<T> pool = new Queue<T>();
 
-        protected virtual void Start() => Add(initialCount.Clamp0());
+        protected virtual void Start()
+        {
+            if (instantiateWithCoroutine)
+            {
+                StartCoroutine(StartRoutine());
+                return;
+            }
+            Add(initialCount.Clamp0());
+        }
+
+        private IEnumerator StartRoutine()
+        {
+            Add(initialCount.Clamp0());
+            yield return null;
+        }
 
         public T Scoop()
         {
