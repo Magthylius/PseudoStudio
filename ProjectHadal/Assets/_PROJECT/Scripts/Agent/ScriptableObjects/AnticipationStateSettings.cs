@@ -13,20 +13,20 @@ namespace Hadal.AI.States
         [Range(0f, 1f)] public float ConfidenceObjectiveGate = 0.5f;
         [MinMaxSlider(0f, 0.5f)] public Vector2 RandomConfidenceInfluence = Vector2.zero;
 
-        public Objective GetRandomInfluencedObjective(float currentConfidence)
+        public EngagementObjective GetRandomInfluencedObjective(float currentConfidence)
         {
             if (currentConfidence + RandomInfluence < ConfidenceObjectiveGate)
-                return Objective.Ambush;
+                return EngagementObjective.Ambush;
 
-            return Objective.Aggressive;
+            return EngagementObjective.Aggressive;
         }
 
-        public Objective GetClearObjective(float currentConfidence)
+        public EngagementObjective GetClearObjective(float currentConfidence)
         {
             if (currentConfidence < ConfidenceObjectiveGate)
-                return Objective.Ambush;
+                return EngagementObjective.Ambush;
 
-            return Objective.Aggressive;
+            return EngagementObjective.Aggressive;
         }
 
         float RandomInfluence => Random.Range(-RandomConfidenceInfluence.y, RandomConfidenceInfluence.y);

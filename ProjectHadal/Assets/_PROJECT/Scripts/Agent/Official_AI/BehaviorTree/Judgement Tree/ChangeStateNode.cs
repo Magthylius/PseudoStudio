@@ -3,9 +3,9 @@ namespace Hadal.AI.TreeNodes
     public class ChangeStateNode : BTNode
     {
         private AIBrain _brain;
-        private Objective _stateObjective;
+        private MainObjective _stateObjective;
 
-        public ChangeStateNode(AIBrain brain, Objective objective)
+        public ChangeStateNode(AIBrain brain, MainObjective objective)
         {
             _brain = brain;
             _stateObjective = objective;

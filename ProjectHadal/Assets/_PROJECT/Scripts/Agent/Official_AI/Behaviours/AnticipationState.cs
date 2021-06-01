@@ -17,7 +17,7 @@ namespace Hadal.AI
         public void OnStateStart() { }
         public void StateTick()
         {
-            Objective objective = Objective.None;
+            MainObjective objective = MainObjective.None;
             
             //! Anticipation evaluation here
             // ...

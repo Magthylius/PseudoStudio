@@ -1,11 +1,19 @@
+//! C Drive: Jet
 namespace Hadal.AI
 {
-    public enum Objective
+    public enum MainObjective
     {
         None,
-        Ambush,
+        Anticipation,
+        Engagement,
+        Recover,
+        Cooldown
+    }
+
+    public enum EngagementObjective
+    {
         Aggressive,
-        Judgement,
-        Recover
+        Ambush,
+        Judgement
     }
 }
