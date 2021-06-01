@@ -15,6 +15,9 @@ namespace Hadal.Networking.UI.Loading
         [Header("Base components")]
         [SerializeField] GameObject background;
 
+        [Header("Overall Settings")]
+        [SerializeField] float fadeOutDelay = 5f;
+
         [Header("Animator Settings")]
         public Animator loadingAnimator;
         public float loadingFadeSpeed = 15f;
@@ -22,6 +25,7 @@ namespace Hadal.Networking.UI.Loading
         public Animator hiveParentAnimator;
         public Animator hiveSpinnerAnimator;
         public Animator connectionAnimator;
+        public string connectionAnimatorFinishedBool;
 
         CanvasGroup loadingCG;
         CanvasGroupFader loadingCGF;
@@ -59,6 +63,7 @@ namespace Hadal.Networking.UI.Loading
             loadingCGF = new CanvasGroupFader(loadingCG, true, true);
 
             continueCGF = new CanvasGroupFader(continueCG, true, false);
+            continueCGF.SetTransparent();
 
             hiveParentAnimator.gameObject.SetActive(false);
             if (!allowPressAnyKey) continueCGF.SetTransparent();
@@ -120,11 +125,6 @@ namespace Hadal.Networking.UI.Loading
 
         }
 
-        void ResetLoading()
-        {
-            background.gameObject.SetActive(true);
-        }
-
         #region Load Checks
         IEnumerator CheckAllLoaded()
         {
@@ -136,7 +136,7 @@ namespace Hadal.Networking.UI.Loading
             PlayHiveSpinner();
             PlayConnectionParent();
 
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(fadeOutDelay);
 
             StopHiveSpinner();
             connectionAnimator.SetTrigger("LoadingReady");
@@ -146,12 +146,21 @@ namespace Hadal.Networking.UI.Loading
             PlayHiveParent();
             
 
-            /*while(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+            /*while(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f && !connectionAnimator.IsInTransition(0))
             {
                 yield return null;
             }
 
-            StopConnectionParent();*/
+            ResetLoadingElements();*/
+
+            while (!connectionAnimator.GetBool(connectionAnimatorFinishedBool))
+            {
+                yield return null;
+            }
+
+            connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
+            ResetLoadingElements();
+
             yield return null;
         }
         public void CheckInObjectPool()
@@ -167,6 +176,9 @@ namespace Hadal.Networking.UI.Loading
         void ResetLoadingElements()
         {
             loadingCGF.fadeEndedEvent.RemoveAllListeners();
+            background.gameObject.SetActive(true);
+
+            StopAllAnimators();
 
             continueCGF.SetTransparent();
             loadingCGF.SetTransparent();
