@@ -65,7 +65,7 @@ namespace Hadal.AI
         [SerializeField, Tenshi.ReadOnly] MainObjective objective;
         [SerializeField, Tenshi.ReadOnly] EngagementObjective engagementObjective;
         IState anticipationState;
-        public MainObjective Objective => objective;
+        public MainObjective MainObjective => objective;
         public EngagementObjective EngagementObjective => engagementObjective;
         
         [Header("Engagement Settings")]
@@ -85,6 +85,7 @@ namespace Hadal.AI
         [SerializeField] private float cummulativeDamageThreshold;
         private float cummulativeDamage;
         [SerializeField] private float judgeTickTime;
+        [SerializeField] private float judgementTickRate;
         JudgementSubState eJudgementState;
         [SerializeField] private float judgementThreshold;
         [SerializeField] private float jThreshold1Multiplier;
@@ -93,6 +94,7 @@ namespace Hadal.AI
         [SerializeField] private float jThreshold4Multiplier;
         private float judgementStoptimer;
         public float GetJudgementTimerValue => judgementStoptimer;
+        public float GetJudgementTickRate => judgementTickRate;
         public float GetJudgementThreshold(int multiplierType)
         {
             return multiplierType switch
@@ -265,7 +267,8 @@ namespace Hadal.AI
         /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
         public void SetIsStunned(bool statement) => isStunned = statement;
 
-        public void SetObjective(MainObjective objective) => this.objective = objective;
+        public void SetMainObjective(MainObjective objective) => this.objective = objective;
+        public void SetEngagementObjective(EngagementObjective objective) => engagementObjective = objective;
 
         #endregion
 

@@ -27,7 +27,7 @@ namespace Hadal.AI
             // else if (aggressive)
             //     objective = AnticipationObjective.Aggressive;
             
-            Brain.SetObjective(objective);
+            Brain.SetMainObjective(objective);
         }
         public void LateStateTick() { }
         public void FixedStateTick() { }

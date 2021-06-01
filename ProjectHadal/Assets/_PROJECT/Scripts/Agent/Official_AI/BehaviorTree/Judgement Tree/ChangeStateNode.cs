@@ -13,7 +13,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-            _brain.SetObjective(_stateObjective);
+            _brain.SetMainObjective(_stateObjective);
             return NodeState.SUCCESS;
         }
     }
