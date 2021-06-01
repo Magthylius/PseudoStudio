@@ -62,9 +62,11 @@ namespace Hadal.AI
         [SerializeField] private float targetChangeTimer;
 
         [Header("Anticipation Settings")]
-        [SerializeField, Tenshi.ReadOnly] Objective objective;
+        [SerializeField, Tenshi.ReadOnly] MainObjective objective;
+        [SerializeField, Tenshi.ReadOnly] EngagementObjective engagementObjective;
         IState anticipationState;
-        public Objective Objective => objective;
+        public MainObjective MainObjective => objective;
+        public EngagementObjective EngagementObjective => engagementObjective;
         
         [Header("Engagement Settings")]
         public float playerDetectionRadius;
@@ -83,6 +85,7 @@ namespace Hadal.AI
         [SerializeField] private float cummulativeDamageThreshold;
         private float cummulativeDamage;
         [SerializeField] private float judgeTickTime;
+        [SerializeField] private float judgementTickRate;
         JudgementSubState eJudgementState;
         [SerializeField] private float judgementThreshold;
         [SerializeField] private float jThreshold1Multiplier;
@@ -90,6 +93,20 @@ namespace Hadal.AI
         [SerializeField] private float jThreshold3Multiplier;
         [SerializeField] private float jThreshold4Multiplier;
         private float judgementStoptimer;
+        public float GetJudgementTimerValue => judgementStoptimer;
+        public float GetJudgementTickRate => judgementTickRate;
+        public float GetJudgementThreshold(int multiplierType)
+        {
+            return multiplierType switch
+            {
+                1 => judgementThreshold * jThreshold1Multiplier,
+                2 => judgementThreshold * jThreshold2Multiplier,
+                3 => judgementThreshold * jThreshold3Multiplier,
+                4 => judgementThreshold * jThreshold4Multiplier,
+                _ => judgementThreshold
+            };
+        }
+        public void TickJudgementTimer(in float deltaTime) => judgementStoptimer += deltaTime;
         public void ResetJudgementTimer() => judgementStoptimer = 0.0f;
         public void ResetCummulativeDamage() => cummulativeDamage = 0f;
         public void AddCummulativeDamage(float damage) => cummulativeDamage += Mathf.Abs(damage);
@@ -122,7 +139,7 @@ namespace Hadal.AI
             if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Wall");
             rb = GetComponent<Rigidbody>();
             isStunned = false;
-            objective = Objective.None;
+            objective = MainObjective.None;
             if (randomiseOnStart) confidence = UnityEngine.Random.Range(minConfidence, maxConfidence + 1);
             else confidence = startingConfidence;
             
@@ -205,7 +222,7 @@ namespace Hadal.AI
         };
         Func<bool> HasEngageObjective() => () =>
         {
-            return objective != Objective.None;
+            return objective != MainObjective.None;
         };
         Func<bool> ResetStates() => () =>
         {
@@ -250,7 +267,8 @@ namespace Hadal.AI
         /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
         public void SetIsStunned(bool statement) => isStunned = statement;
 
-        public void SetObjective(Objective objective) => this.objective = objective;
+        public void SetMainObjective(MainObjective objective) => this.objective = objective;
+        public void SetEngagementObjective(EngagementObjective objective) => engagementObjective = objective;
 
         #endregion
 

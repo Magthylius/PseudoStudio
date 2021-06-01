@@ -17,7 +17,7 @@ namespace Hadal.AI
         public void OnStateStart() { }
         public void StateTick()
         {
-            Objective objective = Objective.None;
+            MainObjective objective = MainObjective.None;
             
             //! Anticipation evaluation here
             // ...
@@ -27,7 +27,7 @@ namespace Hadal.AI
             // else if (aggressive)
             //     objective = AnticipationObjective.Aggressive;
             
-            Brain.SetObjective(objective);
+            Brain.SetMainObjective(objective);
         }
         public void LateStateTick() { }
         public void FixedStateTick() { }
