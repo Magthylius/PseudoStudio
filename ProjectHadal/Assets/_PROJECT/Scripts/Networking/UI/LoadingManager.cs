@@ -12,10 +12,16 @@ namespace Hadal.Networking.UI.Loading
         public static LoadingManager Instance;
         NetworkEventManager neManager;
 
+        [Header("Base components")]
+        [SerializeField] GameObject background;
+
         [Header("Animator Settings")]
         public Animator loadingAnimator;
-        [SerializeField] string loadingStateName;
         public float loadingFadeSpeed = 15f;
+
+        public Animator hiveParentAnimator;
+        public Animator hiveSpinnerAnimator;
+        public Animator connectionAnimator;
 
         CanvasGroup loadingCG;
         CanvasGroupFader loadingCGF;
@@ -53,9 +59,13 @@ namespace Hadal.Networking.UI.Loading
             loadingCGF = new CanvasGroupFader(loadingCG, true, true);
 
             continueCGF = new CanvasGroupFader(continueCG, true, false);
+
+            hiveParentAnimator.gameObject.SetActive(false);
             if (!allowPressAnyKey) continueCGF.SetTransparent();
 
             ResetLoadingElements();
+
+            StopAllAnimators();
         }
 
         void FixedUpdate()
@@ -95,13 +105,24 @@ namespace Hadal.Networking.UI.Loading
                         loadingCGF.fadeEndedEvent.AddListener(ResetLoadingElements);
                     }
                 }
-                else
+                /*else
                 {
                     allowContinue = false;
-                    FadeOut();
-                    loadingCGF.fadeEndedEvent.AddListener(ResetLoadingElements);
-                }
+                    //FadeOut();
+                    //loadingCGF.fadeEndedEvent.AddListener(ResetLoadingElements);
+
+                    //loadingCGF.SetTransparent();
+
+                    PlayHiveParent();
+
+                }*/
             }
+
+        }
+
+        void ResetLoading()
+        {
+            background.gameObject.SetActive(true);
         }
 
         #region Load Checks
@@ -112,7 +133,25 @@ namespace Hadal.Networking.UI.Loading
                 yield return null;
             }
 
-            allowContinue = true;
+            PlayHiveSpinner();
+            PlayConnectionParent();
+
+            yield return new WaitForSeconds(5f);
+
+            StopHiveSpinner();
+            connectionAnimator.SetTrigger("LoadingReady");
+
+            background.gameObject.SetActive(false);
+            hiveSpinnerAnimator.gameObject.SetActive(false);
+            PlayHiveParent();
+            
+
+            /*while(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+            {
+                yield return null;
+            }
+
+            StopConnectionParent();*/
             yield return null;
         }
         public void CheckInObjectPool()
@@ -158,22 +197,60 @@ namespace Hadal.Networking.UI.Loading
         public void FadeIn()
         {
             loadingCGF.StartFadeIn();
-            Play();
+            //Play();
         }
         [Button("Fade Out")]
         public void FadeOut() => loadingCGF.StartFadeOut();
 
-        [Button("Play Animation")]
-        public void Play()
+        
+        void PlayLoadingAnimator()
         {
-            loadingAnimator.Play(loadingStateName, 0, 0);
+            loadingAnimator.Play(0, 0, 0);
             loadingAnimator.speed = 1f;
         }
-        [Button("Stop Animation")]
-        public void Stop()
+        void PlayHiveParent()
         {
+            hiveParentAnimator.gameObject.SetActive(true);
+            hiveParentAnimator.Play(0, 0, 0);
+            hiveParentAnimator.speed = 1f;
+        }
+        void PlayHiveSpinner()
+        {
+            hiveSpinnerAnimator.Play(0, 0, 0);
+            hiveSpinnerAnimator.speed = 1f;
+        }
+        void PlayConnectionParent()
+        {
+            connectionAnimator.Play(0, 0, 0);
+            connectionAnimator.speed = 1f;
+        }
+
+        void StopAllAnimators()
+        {
+            StopLoadingAnimator();
+            StopHiveParent();
+            StopHiveSpinner();
+            StopConnectionParent();
+        }
+        void StopLoadingAnimator()
+        {
+            loadingAnimator.Play(0, 0, 0);
             loadingAnimator.speed = 0f;
-            loadingAnimator.Play(loadingStateName, 0, 0);
+        }
+        void StopHiveParent()
+        {
+            hiveParentAnimator.Play(0, 0, 0);
+            hiveParentAnimator.speed = 0f;
+        }
+        void StopHiveSpinner()
+        {
+            hiveSpinnerAnimator.Play(0, 0, 0);
+            hiveSpinnerAnimator.speed = 0f;
+        }
+        void StopConnectionParent()
+        {
+            connectionAnimator.Play(0, 0, 0);
+            connectionAnimator.speed = 0f;
         }
 
     }
