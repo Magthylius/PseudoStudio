@@ -457,7 +457,7 @@ GameObject:
   - component: {fileID: 1921783508829835945}
   - component: {fileID: 4802464666975311508}
   m_Layer: 0
-  m_Name: Establishing Connection (4)
+  m_Name: Connection Success
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -512,15 +512,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: CONNECTION SUCCESSFUL
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fedd6682b6d82284d8f3bdd3f9342a84, type: 2}
-  m_sharedMaterial: {fileID: -7769476278986521890, guid: fedd6682b6d82284d8f3bdd3f9342a84, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 97eb2920862a436439bb88f34214afec, type: 2}
+  m_sharedMaterial: {fileID: -6266749041970903357, guid: 97eb2920862a436439bb88f34214afec, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1731916134
-  m_fontColor: {r: 0.4013884, g: 0.9433962, b: 0.22694907, a: 0.40392157}
+    rgba: 4278237481
+  m_fontColor: {r: 0.15952644, g: 0.7264151, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -4297,10 +4297,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   background: {fileID: 1532418107961318759}
+  fadeOutDelay: 5
   loadingAnimator: {fileID: 4982535943108254921}
   loadingFadeSpeed: 10
   hiveParentAnimator: {fileID: 1651027532239170824}
   hiveSpinnerAnimator: {fileID: 4370709888990511874}
+  connectionAnimator: {fileID: 0}
+  connectionAnimatorFinishedBool: 
   allowPressAnyKey: 0
   continueCG: {fileID: 4982535944131505170}
   continueFadeSpeed: 5

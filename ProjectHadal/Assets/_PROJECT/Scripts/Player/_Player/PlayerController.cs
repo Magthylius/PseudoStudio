@@ -7,28 +7,27 @@ using UnityEngine;
 using Hadal.Inputs;
 using Hadal.UI;
 using Tenshi;
-using Photon.Realtime;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
 
 
-// Created by Jet, E: Player
+// Created by Jet, E: Jon
 namespace Hadal.Player
 {
     public class PlayerController : Controller, IPlayerEnabler
     {
         #region Variable Definitions
 
-        [Foldout("Components"), SerializeField] private PlayerCameraController cameraController;
-        [Foldout("Components"), SerializeField] private PlayerHealthManager healthManager;
-        [Foldout("Components"), SerializeField] private PlayerInventory inventory;
-        [Foldout("Components"), SerializeField] private PlayerLamp lamp;
-        [Foldout("Components"), SerializeField] private PlayerShoot shooter;
-        [Foldout("Components"), SerializeField] private PlayerCollisions collisions;
-        [Foldout("Photon"), SerializeField] private PlayerPhotonInfo photonInfo;
-        [Foldout("Settings"), SerializeField] private string localPlayerLayer;
-        [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
-        [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
+        [Foldout("Components"), SerializeField] PlayerCameraController cameraController;
+        [Foldout("Components"), SerializeField] PlayerHealthManager healthManager;
+        [Foldout("Components"), SerializeField] PlayerInventory inventory;
+        [Foldout("Components"), SerializeField] PlayerLamp lamp;
+        [Foldout("Components"), SerializeField] PlayerShoot shooter;
+        [Foldout("Components"), SerializeField] PlayerCollisions collisions;
+        [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
+        [Foldout("Settings"), SerializeField] string localPlayerLayer;
+        [Foldout("Graphics"), SerializeField] GameObject[] graphics;
+        [Foldout("Graphics"), SerializeField] GameObject wraithGraphic;
         private PhotonView _pView;
         private PlayerManager _manager;
 
