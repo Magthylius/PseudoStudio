@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.Universal; 
 
 namespace Hadal.PostProcess.Settings
 {
@@ -12,14 +10,31 @@ namespace Hadal.PostProcess.Settings
         public bool active;
     }
 
+    [System.Serializable]
     public struct LensDistortionSettings 
     {
-        public float Intensity;
-        public float XMultiplier;
-        public float YMultiplier;
+        [Range(-1f, 1f)] public float Intensity;
+        [Range(0f, 1f)] public float XMultiplier;
+        [Range(0f, 1f)] public float YMultiplier;
         public Vector2 Center;
-        public float Scale;
+        [Range(0.1f, 5f)] public float Scale;
 
+        public LensDistortionSettings(in LensDistortion lensDistortion)
+        {
+            Intensity = lensDistortion.intensity.value;
+            XMultiplier = lensDistortion.xMultiplier.value;
+            YMultiplier = lensDistortion.yMultiplier.value;
+            Center = lensDistortion.center.value;
+            Scale = lensDistortion.scale.value;
+        }
+        public LensDistortionSettings(LensDistortionSettings other)
+        {
+            Intensity = other.Intensity;
+            XMultiplier = other.XMultiplier;
+            YMultiplier = other.YMultiplier;
+            Center = other.Center;
+            Scale = other.Scale;
+        }
         public LensDistortionSettings(float intensity = 0f)
         {
             Intensity = intensity;
@@ -27,6 +42,63 @@ namespace Hadal.PostProcess.Settings
             YMultiplier = 1f;
             Center = new Vector2(0.5f, 0.5f);
             Scale = 1f;
+        }
+
+        public bool LerpIntensity(float targetIntensity, float speed, float tolerance = 0.01f)
+        {
+            Intensity = Mathf.Lerp(Intensity, targetIntensity, speed);
+
+            if (Mathf.Abs(targetIntensity - Intensity) <= tolerance)
+            {
+                Intensity = targetIntensity;
+                return true;
+            }
+
+            return false;
+        }
+        public bool LerpScale(float targetScale, float speed, float tolerance = 0.01f)
+        {
+            Scale = Mathf.Lerp(Scale, targetScale, speed);
+
+            if (Mathf.Abs(targetScale - Scale) <= tolerance)
+            {
+                Scale = targetScale;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    [System.Serializable]
+    public struct ChromaticAberrationSettings
+    {
+        [Range(0f, 1f)] public float Intensity;
+
+        public ChromaticAberrationSettings(in ChromaticAberration chromaticAberration)
+        {
+            Intensity = chromaticAberration.intensity.value;
+        }
+        public ChromaticAberrationSettings(ChromaticAberrationSettings other)
+        {
+            Intensity = other.Intensity;
+        }
+        public ChromaticAberrationSettings(float intensity = 0f)
+        {
+            Intensity = intensity;
+        }
+
+        public bool LerpIntensity(float targetIntensity, float speed, float tolerance = 0.01f)
+        {
+            Intensity = Mathf.Lerp(Intensity, targetIntensity, speed);
+
+            if (Mathf.Abs(targetIntensity - Intensity) <= tolerance)
+            {
+                Intensity = targetIntensity;
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -9363,6 +9363,38 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: postProcessEffectSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: LoadInLensDistortion.Scale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: LoadInLensDistortion.Center.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: LoadInLensDistortion.Center.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: LoadInLensDistortion.Intensity
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: LoadInLensDistortion.XMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: LoadInLensDistortion.YMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558804987589490336, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: LoadInChromaticAberration.Intensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
       value: PersistentEssentials

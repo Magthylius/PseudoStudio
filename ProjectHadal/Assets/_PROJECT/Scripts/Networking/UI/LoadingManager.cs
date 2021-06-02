@@ -5,7 +5,9 @@ using NaughtyAttributes;
 using Magthylius.LerpFunctions;
 using Tenshi.UnitySoku;
 using UnityEngine.Events;
-
+using Hadal.PostProcess;
+using Hadal.PostProcess.Settings;
+using UnityEngine.Rendering.Universal;
 
 namespace Hadal.Networking.UI.Loading
 {
@@ -20,6 +22,7 @@ namespace Hadal.Networking.UI.Loading
     {
         public static LoadingManager Instance;
         NetworkEventManager neManager;
+        PostProcessingManager ppManager;
 
         [Header("Base settings")]
         [SerializeField] GameObject background;
@@ -54,8 +57,20 @@ namespace Hadal.Networking.UI.Loading
         bool objectPoolersCheckedIn;
 
         [Header("Post processing effects")]
+        [SerializeField] float postProcessEffectSpeed = 2f;
 
-        //! Events
+        public LensDistortionSettings LoadInLensDistortion;
+        LensDistortionSettings LoadInLensDistortionEnd;
+        LensDistortionSettings currentLensDistortion;
+
+        public ChromaticAberrationSettings LoadInChromaticAberration;
+        ChromaticAberrationSettings LoadInChromaticAberrationEnd;
+        ChromaticAberrationSettings currentChromaticAberration;
+
+        
+        bool allowPostProcess = false;
+
+        [Header("Events")]
         public UnityEvent LoadingCompletedEvent;
 
         void Awake()
@@ -67,6 +82,7 @@ namespace Hadal.Networking.UI.Loading
         void Start()
         {
             neManager = NetworkEventManager.Instance;
+            ppManager = PostProcessingManager.Instance;
 
             transform.GetChild(0).gameObject.SetActive(true);
 
@@ -79,8 +95,8 @@ namespace Hadal.Networking.UI.Loading
             hiveParentAnimator.gameObject.SetActive(false);
             if (loadingMode == LoadMode.Press_Any_Key_Continue) continueCGF.SetTransparent();
 
+            SetupPostProcess();
             ResetLoadingElements();
-
             StopAllAnimators();
         }
 
@@ -121,19 +137,22 @@ namespace Hadal.Networking.UI.Loading
                         loadingCGF.fadeEndedEvent.AddListener(ResetLoadingElements);
                     }
                 }
-                /*else
-                {
-                    allowContinue = false;
-                    //FadeOut();
-                    //loadingCGF.fadeEndedEvent.AddListener(ResetLoadingElements);
-
-                    //loadingCGF.SetTransparent();
-
-                    PlayHiveParent();
-
-                }*/
             }
 
+            if (allowPostProcess)
+            {
+                float speed = postProcessEffectSpeed * Time.deltaTime;
+                float tolerance = 0.0001f;
+
+                ppManager.EditLensDistortion(currentLensDistortion);
+                bool a = currentLensDistortion.LerpIntensity(LoadInLensDistortionEnd.Intensity, speed, tolerance);
+                bool b = currentLensDistortion.LerpScale(LoadInLensDistortionEnd.Scale, speed, tolerance);
+
+                ppManager.EditChromaticAberration(currentChromaticAberration);
+                currentChromaticAberration.LerpIntensity(LoadInChromaticAberrationEnd.Intensity, speed, tolerance);
+
+                if (a && b) allowPostProcess = false;
+            }
         }
 
         #region Load Checks
@@ -188,6 +207,8 @@ namespace Hadal.Networking.UI.Loading
             hiveSpinnerAnimator.gameObject.SetActive(false);
             PlayHiveParent();
 
+            allowPostProcess = true;
+
             while (!connectionAnimator.GetBool(connectionAnimatorFinishedBool))
             {
                 yield return null;
@@ -222,16 +243,31 @@ namespace Hadal.Networking.UI.Loading
             else Debug.LogError("Finish Load called, but not set to Load After Event!");
         }
 
+        #region Post processing
+        void SetupPostProcess()
+        {
+            LensDistortion ld;
+            if (ppManager.DefaultVolumeTryGet(out ld))
+                LoadInLensDistortionEnd = new LensDistortionSettings(ld);
+
+            ChromaticAberration ca;
+            if (ppManager.DefaultVolumeTryGet(out ca))
+                LoadInChromaticAberrationEnd = new ChromaticAberrationSettings(ca);
+
+            currentLensDistortion = LoadInLensDistortion;
+            currentChromaticAberration = LoadInChromaticAberration;
+        }
+        #endregion
+
+        #region Animators
         [Button("Fade In")]
         public void FadeIn()
         {
             loadingCGF.StartFadeIn();
-            //Play();
         }
         [Button("Fade Out")]
         public void FadeOut() => loadingCGF.StartFadeOut();
 
-        
         void PlayLoadingAnimator()
         {
             loadingAnimator.Play(0, 0, 0);
@@ -280,8 +316,8 @@ namespace Hadal.Networking.UI.Loading
         {
             connectionAnimator.Play(0, 0, 0);
             connectionAnimator.speed = 0f;
-        }
-
+        } 
+        #endregion
     }
 }
 

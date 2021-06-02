@@ -13,7 +13,9 @@ namespace Hadal.PostProcess
     {
         public static PostProcessingManager Instance;
 
-        Volume volume;
+        [Header("Settings")]
+        [SerializeField] Volume volume;
+        [SerializeField] VolumeProfile DefaultProfile;
 
         [Header("Underwater Image Effect")]
         public Material underwaterMat; 
@@ -30,7 +32,7 @@ namespace Hadal.PostProcess
         void Start()
         {
             //Get profiles
-            volume = GetComponent<Volume>();
+            //volume = GetComponent<Volume>();
             SetUnderwaterEffectSettings(underwaterEffectEnabled);
         }
 
@@ -110,16 +112,41 @@ namespace Hadal.PostProcess
             LensDistortion ld;
             if (volume.profile.TryGet(out ld))
             {
-                ld.intensity = new ClampedFloatParameter(settings.Intensity, ld.intensity.min, ld.intensity.max, ld.intensity.overrideState);
-                ld.xMultiplier = new ClampedFloatParameter(settings.XMultiplier, ld.xMultiplier.min, ld.xMultiplier.max, ld.xMultiplier.overrideState);
-                ld.yMultiplier = new ClampedFloatParameter(settings.YMultiplier, ld.yMultiplier.min, ld.yMultiplier.max, ld.yMultiplier.overrideState);
-                ld.center = new Vector2Parameter(settings.Center, ld.center.overrideState);
-                ld.scale = new ClampedFloatParameter(settings.Scale, ld.scale.min, ld.scale.max, ld.scale.overrideState);
+                ld.intensity.Override(settings.Intensity);
+                ld.xMultiplier.Override(settings.XMultiplier);
+                ld.yMultiplier.Override(settings.YMultiplier);
+                ld.center.Override(settings.Center);
+                ld.scale.Override(settings.Scale);
 
                 return;
             }
 
             Debug.LogError("Tried to edit lens distortion, but not found!");
+        }
+
+        public void EditChromaticAberration(ChromaticAberrationSettings settings)
+        {
+            ChromaticAberration ca;
+            if (CurrentVolumeTryGet(out ca))
+            {
+                ca.intensity.Override(settings.Intensity);
+
+                return;
+            }
+
+            Debug.LogError("Tried to edit chromatic aberration, but not found!");
+        }
+
+        public bool CurrentVolumeTryGet<T>(out T component) where T : VolumeComponent
+        {
+            bool r = volume.profile.TryGet(out component);
+            return r;
+        }
+
+        public bool DefaultVolumeTryGet<T>(out T component) where T : VolumeComponent
+        {
+            bool r = DefaultProfile.TryGet(out component);
+            return r;
         }
     }
 }

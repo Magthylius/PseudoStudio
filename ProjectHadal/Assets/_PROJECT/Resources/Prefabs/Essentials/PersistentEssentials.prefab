@@ -110,6 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1da955959622b64b8c64b468a98377f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  volume: {fileID: 5126344191139849633}
+  DefaultProfile: {fileID: 11400000, guid: e152858c10d53d44e925e88bbd03c79c, type: 2}
   underwaterMat: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
   underwaterEffectEnabled: 1
   UEDataEnabled: {fileID: 11400000, guid: 6bd0b94de8d4b7d44b3bcdf428bc01dd, type: 2}
@@ -527,12 +529,60 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7545408203151290778}
     - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionEnd.Scale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: connectionAnimatorFinishedBool
       value: AnimationFinished
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionStart.Scale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionEnd.Center.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionEnd.Center.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionStart.Center.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionStart.Center.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionEnd.XMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionEnd.YMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionStart.Intensity
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionStart.XMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortionStart.YMultiplier
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4982535942677956925, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: m_Name
       value: Loading Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535944500719254, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5483094423661604960, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: m_IsActive
