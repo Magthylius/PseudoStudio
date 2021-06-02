@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Hadal.AI
 {
@@ -28,6 +29,11 @@ namespace Hadal.AI
         public void DoLateUpdate(in float deltaTime)
         {
         }
+
+        // void ConvertTransformToGO()
+        // {
+        //     //players = _brain.PlayerTransforms.Select(player => player.gameObject).ToArray();
+        // }
 
         //! Another way of doing this is making a big collider as a child and detect through ontriggerenter
         //! We probably gonna call this once the AI sees a player to detect its surrondings how many players are there

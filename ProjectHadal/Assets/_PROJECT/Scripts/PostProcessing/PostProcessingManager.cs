@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using NaughtyAttributes;
+using Hadal.PostProcess.Settings;
 
 namespace Hadal.PostProcess
 {
@@ -12,7 +13,9 @@ namespace Hadal.PostProcess
     {
         public static PostProcessingManager Instance;
 
-        Volume volume;
+        [Header("Settings")]
+        [SerializeField] Volume volume;
+        [SerializeField] VolumeProfile DefaultProfile;
 
         [Header("Underwater Image Effect")]
         public Material underwaterMat; 
@@ -29,19 +32,17 @@ namespace Hadal.PostProcess
         void Start()
         {
             //Get profiles
-            volume = GetComponent<Volume>();
+            //volume = GetComponent<Volume>();
             SetUnderwaterEffectSettings(underwaterEffectEnabled);
         }
 
-        private void Update()
+        void Update()
         {
             //! Debug use
             /*if (Input.GetKeyDown(KeyCode.H))
             {
                 ToggleUnderwaterEffect();
             }*/
-
-            
         }
 
         void OnRenderImage(RenderTexture source, RenderTexture destination) // don't touch
@@ -100,7 +101,52 @@ namespace Hadal.PostProcess
             {
                 dof.focusDistance.value = Mathf.Lerp(dof.focusDistance.value, targetFocusDistance, Time.deltaTime * _focusSpeed);
                 dof.focalLength.value = Mathf.Lerp(dof.focalLength.value, targetFocalLength, Time.deltaTime * _focusSpeed);
+                return;
             }
+
+            Debug.LogError("Tried to edit depth of field, but not found!");
+        }
+
+        public void EditLensDistortion(LensDistortionSettings settings)
+        {
+            LensDistortion ld;
+            if (volume.profile.TryGet(out ld))
+            {
+                ld.intensity.Override(settings.Intensity);
+                ld.xMultiplier.Override(settings.XMultiplier);
+                ld.yMultiplier.Override(settings.YMultiplier);
+                ld.center.Override(settings.Center);
+                ld.scale.Override(settings.Scale);
+
+                return;
+            }
+
+            Debug.LogError("Tried to edit lens distortion, but not found!");
+        }
+
+        public void EditChromaticAberration(ChromaticAberrationSettings settings)
+        {
+            ChromaticAberration ca;
+            if (CurrentVolumeTryGet(out ca))
+            {
+                ca.intensity.Override(settings.Intensity);
+
+                return;
+            }
+
+            Debug.LogError("Tried to edit chromatic aberration, but not found!");
+        }
+
+        public bool CurrentVolumeTryGet<T>(out T component) where T : VolumeComponent
+        {
+            bool r = volume.profile.TryGet(out component);
+            return r;
+        }
+
+        public bool DefaultVolumeTryGet<T>(out T component) where T : VolumeComponent
+        {
+            bool r = DefaultProfile.TryGet(out component);
+            return r;
         }
     }
 }
