@@ -4,29 +4,29 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace Hadal.PostProcess
+namespace Hadal.PostProcess.Settings
 {
-    public class PostProcessingEffectSettings : ScriptableObject
+    public class PostProcessingEffectSettings
     {
         public string settingsName;
         public bool active;
     }
 
-    [CreateAssetMenu(fileName = "DepthOfField Setting", menuName = "PostProcessing/DeptOfField")]
-    public class DepthOfFieldSettings : PostProcessingEffectSettings
+    public struct LensDistortionSettings 
     {
-        public DepthOfFieldMode mode;
-        public float focalDistance;
-        [Range(0f, 350f)] public float focalLength;
-        [Range(20f, 32f)] public float aperture;
-        [Range(3, 9)] public int bladeCount;
-        [Range(0f, 1f)] public float bladeCurvature;
-        [Range(-180f, 180f)] public float bladeRotation;
+        public float Intensity;
+        public float XMultiplier;
+        public float YMultiplier;
+        public Vector2 Center;
+        public float Scale;
 
-        public void Override(in DepthOfField dof)
+        public LensDistortionSettings(float intensity = 0f)
         {
-            dof.mode = new DepthOfFieldModeParameter(mode, true);
-            dof.focusDistance = new MinFloatParameter(focalDistance, 0f, true);
+            Intensity = intensity;
+            XMultiplier = 1f;
+            YMultiplier = 1f;
+            Center = new Vector2(0.5f, 0.5f);
+            Scale = 1f;
         }
     }
 }

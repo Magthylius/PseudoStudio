@@ -6,6 +6,7 @@ using Magthylius.LerpFunctions;
 using Tenshi.UnitySoku;
 using UnityEngine.Events;
 
+
 namespace Hadal.Networking.UI.Loading
 {
     public enum LoadMode
@@ -52,6 +53,9 @@ namespace Hadal.Networking.UI.Loading
         int objectPoolersCompleted;
         bool objectPoolersCheckedIn;
 
+        [Header("Post processing effects")]
+
+        //! Events
         public UnityEvent LoadingCompletedEvent;
 
         void Awake()

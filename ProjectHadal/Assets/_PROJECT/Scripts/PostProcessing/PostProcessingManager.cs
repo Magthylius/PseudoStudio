@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using NaughtyAttributes;
+using Hadal.PostProcess.Settings;
 
 namespace Hadal.PostProcess
 {
@@ -33,15 +34,13 @@ namespace Hadal.PostProcess
             SetUnderwaterEffectSettings(underwaterEffectEnabled);
         }
 
-        private void Update()
+        void Update()
         {
             //! Debug use
             /*if (Input.GetKeyDown(KeyCode.H))
             {
                 ToggleUnderwaterEffect();
             }*/
-
-            
         }
 
         void OnRenderImage(RenderTexture source, RenderTexture destination) // don't touch
@@ -100,7 +99,27 @@ namespace Hadal.PostProcess
             {
                 dof.focusDistance.value = Mathf.Lerp(dof.focusDistance.value, targetFocusDistance, Time.deltaTime * _focusSpeed);
                 dof.focalLength.value = Mathf.Lerp(dof.focalLength.value, targetFocalLength, Time.deltaTime * _focusSpeed);
+                return;
             }
+
+            Debug.LogError("Tried to edit depth of field, but not found!");
+        }
+
+        public void EditLensDistortion(LensDistortionSettings settings)
+        {
+            LensDistortion ld;
+            if (volume.profile.TryGet(out ld))
+            {
+                ld.intensity = new ClampedFloatParameter(settings.Intensity, ld.intensity.min, ld.intensity.max, ld.intensity.overrideState);
+                ld.xMultiplier = new ClampedFloatParameter(settings.XMultiplier, ld.xMultiplier.min, ld.xMultiplier.max, ld.xMultiplier.overrideState);
+                ld.yMultiplier = new ClampedFloatParameter(settings.YMultiplier, ld.yMultiplier.min, ld.yMultiplier.max, ld.yMultiplier.overrideState);
+                ld.center = new Vector2Parameter(settings.Center, ld.center.overrideState);
+                ld.scale = new ClampedFloatParameter(settings.Scale, ld.scale.min, ld.scale.max, ld.scale.overrideState);
+
+                return;
+            }
+
+            Debug.LogError("Tried to edit lens distortion, but not found!");
         }
     }
 }
