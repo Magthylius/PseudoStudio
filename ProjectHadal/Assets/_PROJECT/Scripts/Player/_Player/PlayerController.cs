@@ -9,6 +9,7 @@ using Hadal.UI;
 using Tenshi;
 using Photon.Realtime;
 using Hadal.Networking;
+using ExitGames.Client.Photon;
 
 
 // Created by Jet, E: Player
@@ -48,16 +49,30 @@ namespace Hadal.Player
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
+            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED, Test);
+        }
+        
+        void Test(EventData obj)
+        {
+            print("hey man" +  obj.CustomData);
         }
 
         void Start()
         {
             //base.OnEnable();
             TryInjectDependencies();
-            if(!_manager.managerPView.IsMine)
+
+            if(!_manager.managerPView.IsMine) // If Not the Host player, handle camera activation.
             {
                 HandlePhotonView(_pView.IsMine);
+
+                if(_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
+                {
+                    print("event sent");
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID);
+                }
             }
+
             //print("Start IsMine : " + _pView.IsMine);
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);
