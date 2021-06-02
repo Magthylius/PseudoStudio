@@ -116,6 +116,18 @@ MonoBehaviour:
   underwaterEffectEnabled: 1
   UEDataEnabled: {fileID: 11400000, guid: 6bd0b94de8d4b7d44b3bcdf428bc01dd, type: 2}
   UEDataDisabled: {fileID: 11400000, guid: 99af4bdea846c9b4b90c7ab4a5ddabc8, type: 2}
+--- !u!225 &1778983338
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395055309177960033}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2230733009024200415
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,6 +158,18 @@ Transform:
   m_Father: {fileID: 6576420978336463563}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!225 &1866914012
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5448944553154427291}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &6298132451773036751
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,8 +553,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7545408203151290778}
     - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortion.Scale
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortion.Center.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortion.Center.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: LoadInLensDistortionEnd.Scale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortion.Intensity
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: connectionAnimatorFinishedBool
@@ -539,6 +579,14 @@ PrefabInstance:
     - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: LoadInLensDistortionStart.Scale
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortion.XMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInLensDistortion.YMultiplier
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: LoadInLensDistortionEnd.Center.x
@@ -555,6 +603,10 @@ PrefabInstance:
     - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: LoadInLensDistortionStart.Center.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: LoadInChromaticAberration.Intensity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4982535942677956898, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
       propertyPath: LoadInLensDistortionEnd.XMultiplier
@@ -599,8 +651,18 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4982535942677956897, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
   m_PrefabInstance: {fileID: 8378643974000705410}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &395055309177960033 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8159793516439423459, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+  m_PrefabInstance: {fileID: 8378643974000705410}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &7545408203151290778 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2085237571673247256, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+  m_PrefabInstance: {fileID: 8378643974000705410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5448944553154427291 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4600539714508211737, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
   m_PrefabInstance: {fileID: 8378643974000705410}
   m_PrefabAsset: {fileID: 0}

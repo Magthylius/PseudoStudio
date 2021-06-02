@@ -92,12 +92,8 @@ namespace Hadal.Networking.UI.Loading
             continueCGF = new CanvasGroupFader(continueCG, true, false);
             continueCGF.SetTransparent();
 
-            hiveParentAnimator.gameObject.SetActive(false);
-            if (loadingMode == LoadMode.Press_Any_Key_Continue) continueCGF.SetTransparent();
-
             SetupPostProcess();
             ResetLoadingElements();
-            StopAllAnimators();
         }
 
         void FixedUpdate()
@@ -153,6 +149,8 @@ namespace Hadal.Networking.UI.Loading
 
                 if (a && b) allowPostProcess = false;
             }
+
+            //print(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
 
         #region Load Checks
@@ -182,11 +180,26 @@ namespace Hadal.Networking.UI.Loading
         }
         #endregion
 
+        void ActivateLoadingElements()
+        {
+            loadingCGF.SetOpaque();
+            //hiveParentAnimator.gameObject.SetActive(true);
+            background.gameObject.SetActive(true);
+            //hiveSpinnerAnimator.gameObject.SetActive(true);
+
+            GetCG(hiveParentAnimator.gameObject).alpha = 1f;
+            GetCG(hiveSpinnerAnimator.gameObject).alpha = 1f;
+        }
         void ResetLoadingElements()
         {
+            GetCG(hiveParentAnimator.gameObject).alpha = 0f;
+            GetCG(hiveSpinnerAnimator.gameObject).alpha = 0f;
+            //hiveParentAnimator.gameObject.SetActive(false);
+            if (loadingMode == LoadMode.Press_Any_Key_Continue) continueCGF.SetTransparent();
+
             loadingCGF.fadeEndedEvent.RemoveAllListeners();
             background.gameObject.SetActive(true);
-
+            
             StopAllAnimators();
 
             continueCGF.SetTransparent();
@@ -203,20 +216,24 @@ namespace Hadal.Networking.UI.Loading
             StopHiveSpinner();
             connectionAnimator.SetTrigger("LoadingReady");
 
+            //yield return null;
+
             background.gameObject.SetActive(false);
-            hiveSpinnerAnimator.gameObject.SetActive(false);
+            //hiveSpinnerAnimator.gameObject.SetActive(false);
+            GetCG(hiveSpinnerAnimator.gameObject).alpha = 0f;
             PlayHiveParent();
 
             allowPostProcess = true;
 
             while (!connectionAnimator.GetBool(connectionAnimatorFinishedBool))
             {
+                //print("bool: " + connectionAnimator.GetBool(connectionAnimatorFinishedBool));
                 yield return null;
             }
 
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
-            ResetLoadingElements();
 
+            ResetLoadingElements();
             LoadingCompletedEvent.Invoke();
         }
 
@@ -233,6 +250,7 @@ namespace Hadal.Networking.UI.Loading
         public void LoadLevel(string levelName)
         {
             FadeIn();
+            ActivateLoadingElements();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             nextLoadLevelName = levelName; 
@@ -316,7 +334,11 @@ namespace Hadal.Networking.UI.Loading
         {
             connectionAnimator.Play(0, 0, 0);
             connectionAnimator.speed = 0f;
-        } 
+        }
+        #endregion
+
+        #region Accessors
+        CanvasGroup GetCG(GameObject go) => go.GetComponent<CanvasGroup>();
         #endregion
     }
 }
