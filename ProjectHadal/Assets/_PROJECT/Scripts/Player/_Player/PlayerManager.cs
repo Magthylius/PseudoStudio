@@ -1,4 +1,5 @@
-﻿using Hadal.Legacy;
+﻿using ExitGames.Client.Photon;
+using Hadal.Legacy;
 using Hadal.Networking;
 using Photon.Pun;
 using System.Collections.Generic;
@@ -40,6 +41,7 @@ namespace Hadal.Player
 
                     NetworkEventManager.Instance.PlayerEnteredEvent += SpawnPlayer;
                     NetworkEventManager.Instance.PlayerLeftEvent += TryToKill;
+                    NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED, Test);
                 }
                 return;
             }
@@ -92,6 +94,12 @@ namespace Hadal.Player
         #endregion
 
         #region Network Methods
+
+        // Action when received player is ready
+        void Test(EventData obj)
+        {
+           print("hey man" + obj.CustomData);          
+        }
 
         private void NetworkKill(GameObject player)
         {

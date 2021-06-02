@@ -9,6 +9,7 @@ using Hadal.UI;
 using Tenshi;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using System.Collections;
 
 
 // Created by Jet, E: Jon
@@ -31,11 +32,31 @@ namespace Hadal.Player
         private PhotonView _pView;
         private PlayerManager _manager;
 
+        private bool playerReady = false;
+        private bool cameraReady = false;
+        private bool loadingReady = true;
+
         Photon.Realtime.Player attachedPlayer;
         int pViewSelfID;
         
         public static event Action<PlayerController> OnInitialiseComplete;
 
+        #endregion
+
+        #region Notify Ready Co-routine
+        IEnumerator SendReady()
+        {
+            while(!playerReady)
+            {
+                if(cameraReady && loadingReady)
+                {
+                    yield return new WaitForSeconds(1);
+                    print("event sent");
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID);
+                }
+                yield return null;
+            }
+        }
         #endregion
 
         #region Unity Lifecycle
@@ -48,17 +69,8 @@ namespace Hadal.Player
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
-            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED, Test);
         }
-        
-        void Test(EventData obj)
-        {
-            if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
-            {
-                print("hey man" + obj.CustomData);
-            }
-        }
-
+       
         void Start()
         {
             //base.OnEnable();
@@ -70,12 +82,11 @@ namespace Hadal.Player
 
                 if(_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
-                    print("event sent");
-                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID);
+                    cameraReady = true;
+                    StartCoroutine(SendReady());
                 }
             }
 
-            //print("Start IsMine : " + _pView.IsMine);
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);
             //Deactivate();
