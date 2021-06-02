@@ -59,6 +59,8 @@ namespace Hadal.Networking.UI.Loading
         {
             neManager = NetworkEventManager.Instance;
 
+            transform.GetChild(0).gameObject.SetActive(true);
+
             loadingCG = GetComponent<CanvasGroup>();
             loadingCGF = new CanvasGroupFader(loadingCG, true, true);
 
