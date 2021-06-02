@@ -54,7 +54,10 @@ namespace Hadal.Player
         
         void Test(EventData obj)
         {
-            print("hey man" +  obj.CustomData);
+            if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
+            {
+                print("hey man" + obj.CustomData);
+            }
         }
 
         void Start()
