@@ -4,6 +4,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using Magthylius.LerpFunctions;
 using Tenshi.UnitySoku;
+using UnityEngine.Events;
 
 namespace Hadal.Networking.UI.Loading
 {
@@ -46,8 +47,9 @@ namespace Hadal.Networking.UI.Loading
         [SerializeField] int expectedObjectPoolersCount = 6;
 
         int objectPoolersCompleted;
-
         bool objectPoolersCheckedIn;
+
+        public UnityEvent LoadingCompletedEvent;
 
         void Awake()
         {
@@ -162,6 +164,8 @@ namespace Hadal.Networking.UI.Loading
 
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
             ResetLoadingElements();
+
+            LoadingCompletedEvent.Invoke();
 
             yield return null;
         }
