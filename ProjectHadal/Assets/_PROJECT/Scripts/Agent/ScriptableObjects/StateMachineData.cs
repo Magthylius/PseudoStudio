@@ -16,8 +16,11 @@ namespace Hadal.AI.States
         public RecoveryStateSettings Recovery;
         public CooldownStateSettings Cooldown;
 
-        [Header("Initial Settings")]
+        [Header("Confidence Settings")]
+        public bool RandomiseConfidenceOnAwake;
+        [Min(0)] public int MinConfidence;
+        [Min(0)] public int MaxConfidence;
         [Min(0)] public int InitialConfidence;
-        [Min(0)] public int NestDestroyedPermenantConfidence;
+        [Min(0)] public int NestDestroyedPermanentConfidence;
     }
 }

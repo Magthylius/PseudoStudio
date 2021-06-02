@@ -116,6 +116,8 @@ namespace Tenshi
 
     public static class ClampExtensions
     {
+        public static int Clamp(this int number, int min, int max) => Mathf.Clamp(number, min, max);
+        public static float Clamp(this float number, float min, float max) => Mathf.Clamp(number, min, max);
         public static int Clamp0(this int number) => Mathf.Max(number, 0);
         public static float Clamp0(this float number) => Mathf.Max(number, 0.0f);
         public static float Clamp01(this float number) => Mathf.Clamp01(number);

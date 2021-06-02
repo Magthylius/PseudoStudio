@@ -23,6 +23,7 @@ namespace Hadal.AI.States
         public bool AllowTarget_IsolatedPlayer = true;
 
         [Header("Judgement Settings")]
+        [Min(0f)] public float JudgementTickRate = 60f;
         [Min(0f)] public float JudgementTimer1 = 30f;
         [Min(0f)] public float JudgementTimer2 = 45f;
         [Min(0f)] public float JudgementTimer3 = 60f;
@@ -97,5 +98,14 @@ namespace Hadal.AI.States
         {
             return aiCurrentHealth * AG_AccumulatedDamageThresholdPercentage;
         }
+        public float GetJudgementTimerThreshold(int index)
+            => index switch
+            {
+                1 => JudgementTimer1,
+                2 => JudgementTimer2,
+                3 => JudgementTimer3,
+                4 => JudgementTimer4,
+                _ => 0f
+            };
     }
 }
