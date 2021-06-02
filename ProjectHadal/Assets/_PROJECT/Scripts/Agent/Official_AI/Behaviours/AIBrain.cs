@@ -82,7 +82,8 @@ namespace Hadal.AI
         AmbushSubState eAmbushState;
 
         [Header("E. Judgement Settings")]
-        [SerializeField] private float cummulativeDamageThreshold;
+        [SerializeField] private float cummulativeDamageThresholdPercent;
+		private float cummulativeDamageThreshold;
         private float cummulativeDamage;
         [SerializeField] private float judgeTickTime;
         [SerializeField] private float judgementTickRate;
@@ -111,6 +112,7 @@ namespace Hadal.AI
         public void ResetCummulativeDamage() => cummulativeDamage = 0f;
         public void AddCummulativeDamage(float damage) => cummulativeDamage += Mathf.Abs(damage);
         public bool CummulativeDamageExceeded() => cummulativeDamage > cummulativeDamageThreshold;
+		public void ResetCummulativeDamageThreshold() => cummulativeDamageThreshold = healthManager.GetCurrentHealth * cummulativeDamageThresholdPercent;
 
         [Header("Recovery Settings")]
         [SerializeField] private float recoveryTimoutTime;
@@ -152,6 +154,7 @@ namespace Hadal.AI
         {
             allAIComponents.ForEach(i => i.Initialise(this));
             cavernManager = FindObjectOfType<CavernManager>();
+			ResetCummulativeDamageThreshold();
             InitialiseStates();
             stateMachine.SetState(idleState);
         }

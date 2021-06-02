@@ -4,24 +4,30 @@ using UnityEngine;
 using NaughtyAttributes;
 using Magthylius.LerpFunctions;
 using Tenshi.UnitySoku;
+using UnityEngine.Events;
 
 namespace Hadal.Networking.UI.Loading
 {
+    public enum LoadMode
+    {
+        Press_Any_Key_Continue,
+        Load_After_Delay,
+        Load_After_Event
+    }
+
     public class LoadingManager : MonoBehaviour
     {
         public static LoadingManager Instance;
         NetworkEventManager neManager;
 
-        [Header("Base components")]
+        [Header("Base settings")]
         [SerializeField] GameObject background;
-
-        [Header("Overall Settings")]
+        [SerializeField] LoadMode loadingMode = LoadMode.Load_After_Delay;
         [SerializeField] float fadeOutDelay = 5f;
 
         [Header("Animator Settings")]
         public Animator loadingAnimator;
         public float loadingFadeSpeed = 15f;
-
         public Animator hiveParentAnimator;
         public Animator hiveSpinnerAnimator;
         public Animator connectionAnimator;
@@ -31,12 +37,10 @@ namespace Hadal.Networking.UI.Loading
         CanvasGroupFader loadingCGF;
 
         [Header("Continue Settings")]
-        [SerializeField] bool allowPressAnyKey = true;
         [SerializeField] CanvasGroup continueCG;
         [SerializeField] float continueFadeSpeed = 5f;
 
         CanvasGroupFader continueCGF;
-
         AsyncOperation loadingAO;
         string nextLoadLevelName;
         bool allowLoading = false;
@@ -46,8 +50,9 @@ namespace Hadal.Networking.UI.Loading
         [SerializeField] int expectedObjectPoolersCount = 6;
 
         int objectPoolersCompleted;
-
         bool objectPoolersCheckedIn;
+
+        public UnityEvent LoadingCompletedEvent;
 
         void Awake()
         {
@@ -59,6 +64,8 @@ namespace Hadal.Networking.UI.Loading
         {
             neManager = NetworkEventManager.Instance;
 
+            transform.GetChild(0).gameObject.SetActive(true);
+
             loadingCG = GetComponent<CanvasGroup>();
             loadingCGF = new CanvasGroupFader(loadingCG, true, true);
 
@@ -66,7 +73,7 @@ namespace Hadal.Networking.UI.Loading
             continueCGF.SetTransparent();
 
             hiveParentAnimator.gameObject.SetActive(false);
-            if (!allowPressAnyKey) continueCGF.SetTransparent();
+            if (loadingMode == LoadMode.Press_Any_Key_Continue) continueCGF.SetTransparent();
 
             ResetLoadingElements();
 
@@ -84,7 +91,7 @@ namespace Hadal.Networking.UI.Loading
                 {
                     allowLoading = false;
                     
-                    if (allowPressAnyKey)
+                    if (loadingMode == LoadMode.Press_Any_Key_Continue)
                     {
                         allowContinue = true;
                         continueCGF.StartFadeIn();
@@ -101,7 +108,7 @@ namespace Hadal.Networking.UI.Loading
 
             if (allowContinue)
             {
-                if (allowPressAnyKey)
+                if (loadingMode == LoadMode.Press_Any_Key_Continue)
                 {
                     if (Input.anyKeyDown)
                     {
@@ -136,30 +143,10 @@ namespace Hadal.Networking.UI.Loading
             PlayHiveSpinner();
             PlayConnectionParent();
 
-            yield return new WaitForSeconds(fadeOutDelay);
-
-            StopHiveSpinner();
-            connectionAnimator.SetTrigger("LoadingReady");
-
-            background.gameObject.SetActive(false);
-            hiveSpinnerAnimator.gameObject.SetActive(false);
-            PlayHiveParent();
-            
-
-            /*while(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f && !connectionAnimator.IsInTransition(0))
+            if (loadingMode == LoadMode.Load_After_Delay)
             {
-                yield return null;
+                StartCoroutine(EndLoading());
             }
-
-            ResetLoadingElements();*/
-
-            while (!connectionAnimator.GetBool(connectionAnimatorFinishedBool))
-            {
-                yield return null;
-            }
-
-            connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
-            ResetLoadingElements();
 
             yield return null;
         }
@@ -171,7 +158,6 @@ namespace Hadal.Networking.UI.Loading
             if (objectPoolersCompleted >= expectedObjectPoolersCount) objectPoolersCheckedIn = true;
         }
         #endregion
-
 
         void ResetLoadingElements()
         {
@@ -185,6 +171,28 @@ namespace Hadal.Networking.UI.Loading
 
             allowLoading = false;
             allowContinue = false;
+        }
+
+        IEnumerator EndLoading()
+        {
+            yield return new WaitForSeconds(fadeOutDelay);
+
+            StopHiveSpinner();
+            connectionAnimator.SetTrigger("LoadingReady");
+
+            background.gameObject.SetActive(false);
+            hiveSpinnerAnimator.gameObject.SetActive(false);
+            PlayHiveParent();
+
+            while (!connectionAnimator.GetBool(connectionAnimatorFinishedBool))
+            {
+                yield return null;
+            }
+
+            connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
+            ResetLoadingElements();
+
+            LoadingCompletedEvent.Invoke();
         }
 
         void ActualLoad()
@@ -203,6 +211,11 @@ namespace Hadal.Networking.UI.Loading
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             nextLoadLevelName = levelName; 
+        }
+        public void FinishLoading()
+        {
+            if (loadingMode == LoadMode.Load_After_Event) StartCoroutine(EndLoading());
+            else Debug.LogError("Finish Load called, but not set to Load After Event!");
         }
 
         [Button("Fade In")]

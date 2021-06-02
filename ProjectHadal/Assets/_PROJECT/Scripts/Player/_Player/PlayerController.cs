@@ -7,27 +7,27 @@ using UnityEngine;
 using Hadal.Inputs;
 using Hadal.UI;
 using Tenshi;
-using Photon.Realtime;
 using Hadal.Networking;
+using ExitGames.Client.Photon;
 
 
-// Created by Jet, E: Player
+// Created by Jet, E: Jon
 namespace Hadal.Player
 {
     public class PlayerController : Controller, IPlayerEnabler
     {
         #region Variable Definitions
 
-        [Foldout("Components"), SerializeField] private PlayerCameraController cameraController;
-        [Foldout("Components"), SerializeField] private PlayerHealthManager healthManager;
-        [Foldout("Components"), SerializeField] private PlayerInventory inventory;
-        [Foldout("Components"), SerializeField] private PlayerLamp lamp;
-        [Foldout("Components"), SerializeField] private PlayerShoot shooter;
-        [Foldout("Components"), SerializeField] private PlayerCollisions collisions;
-        [Foldout("Photon"), SerializeField] private PlayerPhotonInfo photonInfo;
-        [Foldout("Settings"), SerializeField] private string localPlayerLayer;
-        [Foldout("Graphics"), SerializeField] private GameObject[] graphics;
-        [Foldout("Graphics"), SerializeField] private GameObject wraithGraphic;
+        [Foldout("Components"), SerializeField] PlayerCameraController cameraController;
+        [Foldout("Components"), SerializeField] PlayerHealthManager healthManager;
+        [Foldout("Components"), SerializeField] PlayerInventory inventory;
+        [Foldout("Components"), SerializeField] PlayerLamp lamp;
+        [Foldout("Components"), SerializeField] PlayerShoot shooter;
+        [Foldout("Components"), SerializeField] PlayerCollisions collisions;
+        [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
+        [Foldout("Settings"), SerializeField] string localPlayerLayer;
+        [Foldout("Graphics"), SerializeField] GameObject[] graphics;
+        [Foldout("Graphics"), SerializeField] GameObject wraithGraphic;
         private PhotonView _pView;
         private PlayerManager _manager;
 
@@ -48,16 +48,33 @@ namespace Hadal.Player
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
+            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED, Test);
+        }
+        
+        void Test(EventData obj)
+        {
+            if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
+            {
+                print("hey man" + obj.CustomData);
+            }
         }
 
         void Start()
         {
             //base.OnEnable();
             TryInjectDependencies();
-            if(!_manager.managerPView.IsMine)
+
+            if(!_manager.managerPView.IsMine) // If Not the Host player, handle camera activation.
             {
                 HandlePhotonView(_pView.IsMine);
+
+                if(_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
+                {
+                    print("event sent");
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID);
+                }
             }
+
             //print("Start IsMine : " + _pView.IsMine);
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);

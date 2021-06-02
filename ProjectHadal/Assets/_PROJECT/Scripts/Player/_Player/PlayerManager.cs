@@ -121,6 +121,10 @@ namespace Hadal.Player
                 //print("Created True Camera player");
                controller.HandlePhotonView(true); 
             }
+            
+            // Host finish assignming ownerships and cameras
+
+
 
             /*if (playerList.Count > 0)
             {
