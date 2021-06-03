@@ -266,10 +266,13 @@ namespace Hadal.Networking.UI.Loading
         /// </summary>
         void NetworkedLoad(EventData data)
         {
+            //print("recieved network load");
             FadeIn();
 
             SetupPostProcess();
             ActivateLoadingElements();
+
+            allowLoading = true;
             networkedLoad = true;
         }
 
