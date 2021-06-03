@@ -130,20 +130,14 @@ namespace Hadal.Networking.UI.MainMenu
 
             versionTMP.text = "V " + Application.version;
 
-            //startIF = new ImageFiller(startFiller, startFillerSpeed, 1f);
-            //startIF.OnFillComplete += EndStartPhase;
-
-            //if (createRoomFR != null) createRoomFR.MoveToStart();
             createRoomFR = new FlexibleRect(createRoomPanel);
             createRoomFR.SetTargetPosition(createRoomFR.GetBodyOffset(Vector2.right));
             createRoomFR.MoveToEnd();
 
-            //if (findRoomFR != null) findRoomFR.MoveToStart();
             findRoomFR = new FlexibleRect(findRoomPanel);
             findRoomFR.SetTargetPosition(findRoomFR.GetBodyOffset(Vector2.right));
             findRoomFR.MoveToEnd();
 
-            //if (confirmQuitFR != null) confirmQuitFR.MoveToStart();
             confirmQuitFR = new FlexibleRect(confirmQuitPanel);
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
             confirmQuitFR.MoveToEnd();
@@ -180,8 +174,6 @@ namespace Hadal.Networking.UI.MainMenu
         public void ResetMainMenu()
         {
             if (GameManager.Instance.IsInGame) return;
-            //startIF.ResetCharge(); 
-            //InitMainMenu();
             menuPhase = MenuPhase.START;
 
             createRoomFR.MoveToStart();
@@ -360,6 +352,7 @@ namespace Hadal.Networking.UI.MainMenu
             //if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
             //NetworkEventManager.Instance.LoadLevel(NetworkEventManager.Instance.InGameScene);
             NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
             loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
         }
 

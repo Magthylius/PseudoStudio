@@ -18,6 +18,7 @@ namespace Hadal.Networking
     {
         PLAYER_SPAWNED = 0,
         PLAYER_SPAWNED_CONFIRMED,
+        GAME_START_LOAD,
         START_THE_GAME,
         PLAYER_UTILITIES_LAUNCH,
         PLAYER_TORPEDO_LAUNCH,

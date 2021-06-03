@@ -8,6 +8,7 @@ using UnityEngine.Events;
 using Hadal.PostProcess;
 using Hadal.PostProcess.Settings;
 using UnityEngine.Rendering.Universal;
+using ExitGames.Client.Photon;
 
 namespace Hadal.Networking.UI.Loading
 {
@@ -91,7 +92,7 @@ namespace Hadal.Networking.UI.Loading
             continueCGF = new CanvasGroupFader(continueCG, true, false);
             continueCGF.SetTransparent();
 
-            //SetupPostProcess();
+            neManager.AddListener(ByteEvents.GAME_START_LOAD, NetworkedLoad);
             ResetLoadingElements();
 
             LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
@@ -258,6 +259,17 @@ namespace Hadal.Networking.UI.Loading
             ResetLoadingElements();
         }
 
+        /// <summary>
+        /// Load using network event, where the load is done by Photon.
+        /// </summary>
+        void NetworkedLoad(EventData data)
+        {
+            FadeIn();
+
+            SetupPostProcess();
+            ActivateLoadingElements();
+        }
+
         void ActualLoad()
         {
             allowLoading = true;
@@ -274,7 +286,6 @@ namespace Hadal.Networking.UI.Loading
 
             SetupPostProcess();
             ActivateLoadingElements();
-            SetupPostProcess();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             nextLoadLevelName = levelName; 

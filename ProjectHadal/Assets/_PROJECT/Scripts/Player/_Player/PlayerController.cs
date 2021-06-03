@@ -48,7 +48,8 @@ namespace Hadal.Player
         {
             while(!playerReady)
             {
-                if(cameraReady && loadingReady)
+                print(cameraReady && loadingReady);
+                if (cameraReady && loadingReady)
                 {
                     yield return new WaitForSeconds(1);
                     print("event sent");
