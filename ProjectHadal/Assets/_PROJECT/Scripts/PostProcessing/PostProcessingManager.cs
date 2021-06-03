@@ -110,7 +110,7 @@ namespace Hadal.PostProcess
         public void EditLensDistortion(LensDistortionSettings settings)
         {
             LensDistortion ld;
-            if (volume.profile.TryGet(out ld))
+            if (CurrentVolumeTryGet(out ld))
             {
                 ld.intensity.Override(settings.Intensity);
                 ld.xMultiplier.Override(settings.XMultiplier);
