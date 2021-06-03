@@ -48,7 +48,7 @@ namespace Hadal.Player
         {
             while(!playerReady)
             {
-                print(cameraReady && loadingReady);
+                //print(cameraReady && loadingReady);
                 if (cameraReady && loadingReady)
                 {
                     print("event sent");
