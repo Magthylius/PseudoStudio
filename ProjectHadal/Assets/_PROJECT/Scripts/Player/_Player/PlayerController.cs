@@ -32,7 +32,7 @@ namespace Hadal.Player
         private PhotonView _pView;
         private PlayerManager _manager;
 
-        private bool playerReady = false;
+        [SerializeField] private bool playerReady = false;
         private bool cameraReady = false;
         private bool loadingReady = true;
 
@@ -69,6 +69,7 @@ namespace Hadal.Player
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
+            NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
         }
        
         void Start()
@@ -162,6 +163,11 @@ namespace Hadal.Player
         private void DoDebugUpdate(in float deltaTime)
         {
             DebugCursor();
+        }
+
+        private void StartGame(EventData obj)
+        {
+            playerReady = true;
         }
 
         public void TransferOwnership(Photon.Realtime.Player newOwner)
@@ -298,6 +304,18 @@ namespace Hadal.Player
             => GetComponent<Rigidbody>();
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => pViewSelfID;
+        #endregion
+
+        #region Accessors
+        public void setPlayerReady(bool isTrue)
+        {
+            playerReady = isTrue;
+        }
+
+        public bool getPlayerReady()
+        {
+            return playerReady;
+        }
         #endregion
     }
 }

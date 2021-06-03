@@ -18,7 +18,7 @@ namespace Hadal.Player
         private const string PrefabFolder = "Prefabs/Player";
         private const string PrefabName = "Player";
         private PhotonView _pView;
-        //private GameObject player;
+        public bool allPlayerReady;
         [SerializeField] List<PlayerController> playerList;
         NetworkEventManager neManager;
 
@@ -41,7 +41,7 @@ namespace Hadal.Player
 
                     NetworkEventManager.Instance.PlayerEnteredEvent += SpawnPlayer;
                     NetworkEventManager.Instance.PlayerLeftEvent += TryToKill;
-                    NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED, Test);
+                    NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED, PlayerReadyEvent);
                 }
                 return;
             }
@@ -60,6 +60,35 @@ namespace Hadal.Player
                     NetworkEventManager.Instance.PlayerLeftEvent -= TryToKill;
                 }
                 return;
+            }
+        }
+
+        private void Update()
+        {
+            if (!_pView.IsMine)
+                return;
+
+            if (allPlayerReady)
+                return;
+
+            for(int i = 0; i < playerList.Count; i++)
+            {
+                if(playerList[i].getPlayerReady())
+                {
+                    allPlayerReady = true;
+                    continue;
+                }
+                else
+                {
+                    allPlayerReady = false;
+                    return;
+                }
+            }
+
+            if (allPlayerReady)
+            {
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.START_THE_GAME, null);
+                print("All player ready, sending event to notify all players.");
             }
         }
 
@@ -96,9 +125,21 @@ namespace Hadal.Player
         #region Network Methods
 
         // Action when received player is ready
-        void Test(EventData obj)
+        void PlayerReadyEvent(EventData obj)
         {
-           print("hey man" + obj.CustomData);          
+            print("Setting this guy to ready " + obj.CustomData);
+
+            for (int i = 0; i < playerList.Count; i++)
+            {
+                if (!playerList[i].getPlayerReady())
+                {
+                    if (playerList[i].GetInfo.PhotonInfo.PView.ViewID == (int)obj.CustomData)
+                    {
+                        playerList[i].setPlayerReady(true);
+                        return;
+                    }
+                }
+            }
         }
 
         private void NetworkKill(GameObject player)
@@ -127,9 +168,10 @@ namespace Hadal.Player
             else
             {
                 //print("Created True Camera player");
-               controller.HandlePhotonView(true); 
+               controller.HandlePhotonView(true);
+                controller.setPlayerReady(true);
             }
-            
+
             // Host finish assignming ownerships and cameras
 
 
