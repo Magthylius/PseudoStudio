@@ -170,7 +170,7 @@ namespace Hadal.Player
             else
             {
                 //print("Created True Camera player");
-               controller.HandlePhotonView(true);
+                controller.HandlePhotonView(true);
                 controller.setPlayerReady(true);
             }
 
