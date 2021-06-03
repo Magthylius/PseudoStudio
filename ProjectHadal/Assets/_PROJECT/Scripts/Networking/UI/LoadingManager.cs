@@ -67,7 +67,6 @@ namespace Hadal.Networking.UI.Loading
         ChromaticAberrationSettings LoadInChromaticAberrationEnd;
         ChromaticAberrationSettings currentChromaticAberration;
 
-        
         bool allowPostProcess = false;
 
         [Header("Events")]
@@ -173,7 +172,7 @@ namespace Hadal.Networking.UI.Loading
             LoadingCompletedEvent.Invoke();
             if (loadingMode == LoadMode.Load_After_Delay)
             {
-                StartCoroutine(EndLoading());
+                StartEndLoad();
             }
 
             yield return null;
@@ -224,6 +223,11 @@ namespace Hadal.Networking.UI.Loading
             allowContinue = false;
         }
 
+        public void StartEndLoad()
+        {
+            StartCoroutine(EndLoading());
+        }
+
         IEnumerator EndLoading()
         {
             yield return new WaitForSeconds(fadeOutDelay);
@@ -238,8 +242,6 @@ namespace Hadal.Networking.UI.Loading
             //hiveSpinnerAnimator.gameObject.SetActive(false);
             GetCG(hiveSpinnerAnimator.gameObject).alpha = 0f;
             hiveSpinnerAnimator.enabled = false;
-
-            
 
             PlayHiveParent();
 
