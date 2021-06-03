@@ -10,7 +10,7 @@ using Tenshi;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
 using System.Collections;
-
+using Hadal.Networking.UI.Loading;
 
 // Created by Jet, E: Jon
 namespace Hadal.Player
@@ -34,7 +34,7 @@ namespace Hadal.Player
 
         [SerializeField] private bool playerReady = false;
         private bool cameraReady = false;
-        private bool loadingReady = true;
+        private bool loadingReady = false;
 
         Photon.Realtime.Player attachedPlayer;
         int pViewSelfID;
@@ -85,6 +85,7 @@ namespace Hadal.Player
                     cameraReady = true;
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, playerReadyConfirmed);
                     NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
+                    LoadingManager.Instance.LoadingCompletedEvent.AddListener();
                     StartCoroutine(SendReady());
                 }
             }
@@ -169,6 +170,7 @@ namespace Hadal.Player
         private void StartGame(EventData obj)
         {
             print("Everyone ready. Begin !");
+            LoadingManager.Instance.StartEndLoad();
         }
 
         private void playerReadyConfirmed(EventData obj)
@@ -329,6 +331,11 @@ namespace Hadal.Player
         {
             return playerReady;
         }
+
+        public void SetLoadingReady()
+        {
+            loadingReady = true;
+        }    
         #endregion
     }
 }

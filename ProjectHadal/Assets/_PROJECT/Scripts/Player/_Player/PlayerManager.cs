@@ -1,6 +1,7 @@
 ﻿using ExitGames.Client.Photon;
 using Hadal.Legacy;
 using Hadal.Networking;
+using Hadal.Networking.UI.Loading;
 using Photon.Pun;
 using System.Collections.Generic;
 using System.IO;
@@ -89,6 +90,7 @@ namespace Hadal.Player
             {
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.START_THE_GAME, null);
                 // start the game for host here !!!
+                LoadingManager.Instance.StartEndLoad();
                 print("All player ready, sending event to notify all players.");
             }
         }
