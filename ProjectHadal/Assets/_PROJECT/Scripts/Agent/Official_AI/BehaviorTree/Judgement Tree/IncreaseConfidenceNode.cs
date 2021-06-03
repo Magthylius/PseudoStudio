@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Hadal.AI.TreeNodes
 {
-    public class SnowballAggNode : BTNode
+    public class IncreaseConfidenceNode : BTNode
     {
 
         private AIBrain _brain;
@@ -23,15 +23,17 @@ namespace Hadal.AI.TreeNodes
         
         }
 
-        bool UpdateConfidence()
+        bool IncreaseConfidence()
         {
+                                        //Placeholder for now
+            confidenceIncreaseValue = Random.Range( 10, 50 );
             _brain.RuntimeData.UpdateConfidenceValue(confidenceIncreaseValue);
             return true;
         }
 
         public override NodeState Evaluate()
         {
-            if(UpdateConfidence())
+            if(IncreaseConfidence())
             {
                 return NodeState.SUCCESS;
             }

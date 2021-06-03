@@ -26,6 +26,8 @@ namespace Hadal.AI.States
 
             Test_SetupDefensiveBranchBehaviourTree();
         }
+
+        //! FILO
         private void Test_SetupDefensiveBranchBehaviourTree()
         {
             BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
@@ -50,6 +52,42 @@ namespace Hadal.AI.States
             });
 
             root = new BTSequence(new List<BTNode>() { sequenceD1 });
+        }
+
+        private void Test_SetupOffensiveBranchBehaviourTree1()
+        {
+            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
+
+            BTSequence increaseConfidence = new BTSequence(new List<BTNode>() { new IncreaseConfidenceNode() });
+
+            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
+            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b) });
+            BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
+
+            //Fallback if threshNearestTarget fails
+            BTSelector hasJT4Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 4) });
+            BTSelector decreaseConfidence = new BTSelector(new List<BTNode>() { new DecreaseConfidenceNode() });
+            BTSelector resetCummulativeDamageThreshold = new BTSelector(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b) });
+
+            BTSelector onePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 1) });
+
+            BTSequence sequenceA1 = new BTSequence(new List<BTNode>()
+            {
+                onePlayerInCavern,
+                threshNearestTarget,
+                increaseConfidence
+            });
+
+            BTSequence threshFallbackA1 = new BTSequence(new List<BTNode>()
+            {
+                hasJT4Passed,
+                decreaseConfidence,
+                resetCummulativeDamageThreshold
+            });
+
+            root = new BTSequence(new List<BTNode>() { sequenceA1 });
+            root = new BTSequence(new List<BTNode>() { threshFallbackA1 });
+
         }
 
         public void OnStateStart() { }
