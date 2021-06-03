@@ -34,12 +34,8 @@ namespace Hadal.Networking.UI.MainMenu
         [SerializeField] GameObject loginTMP;
         [SerializeField] GameObject connectLMBPrompt;
 
-        [Header("Start settings")]
-        
-        //[SerializeField] Image startFiller;
-        //[Range(0f, 1f)] public float startFillerSpeed = 0.5f;
-
-        [Space(10f)]
+        [Header("Title settings")]
+        [SerializeField] MagthyliusPointerButton titleQuitButton;
         [SerializeField] TextMeshProUGUI versionTMP;
 
         //ImageFiller startIF;
@@ -104,8 +100,8 @@ namespace Hadal.Networking.UI.MainMenu
             {
                 case MenuPhase.START:
                     //startIF.Step(Time.unscaledDeltaTime);
-                    if (Input.GetMouseButtonDown(0)) ConnectToLobby();
-                    //print("??");
+                    if (Input.GetMouseButtonDown(0) && !titleQuitButton.IsHovered) ConnectToLobby();
+                    //print(titleQuitButton.IsHovered);
                     break;
                 case MenuPhase.MAIN:
                     createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);

@@ -54,6 +54,9 @@ public class MagthyliusPointerButton : MonoBehaviour
     Color targetColor;
     GameObject currentObject;
 
+    //! External data
+    bool isHovered = false;
+
     void OnValidate()
     {
         TMPObjects = GetComponentsInChildren<TextMeshProUGUI>(true);
@@ -67,8 +70,18 @@ public class MagthyliusPointerButton : MonoBehaviour
         if (image == null) image = GetComponent<Image>();
 
         eventList = new List<UIEventContainer> { pointerEnterEvent, pointerExitEvent, pointerUpEvent, pointerDownEvent, pointerClickedEvent };
+        pointerEnterEvent.eventDelegates.AddListener(PointerEnteredHandling);
+        pointerExitEvent.eventDelegates.AddListener(PointerExitHandling);
 
         InjectEvents();
+    }
+
+    void OnDestroy()
+    {
+        foreach (UIEventContainer events in eventList)
+        {
+            events.eventDelegates.RemoveAllListeners();
+        }
     }
 
     void FixedUpdate()
@@ -124,7 +137,13 @@ public class MagthyliusPointerButton : MonoBehaviour
     }
     #endregion
 
+    #region Data Handling
+    void PointerEnteredHandling() => isHovered = true;
+    void PointerExitHandling() => isHovered = false;
+    #endregion
+
     #region Accessors
     public Color color => image.color;
+    public bool IsHovered => isHovered;
     #endregion
 }
