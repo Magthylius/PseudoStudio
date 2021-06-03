@@ -69,7 +69,8 @@ namespace Hadal.Player
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
-            NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
+            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, StartGame);
+            NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, playerReadyConfirmed);
         }
        
         void Start()
@@ -167,7 +168,16 @@ namespace Hadal.Player
 
         private void StartGame(EventData obj)
         {
-            playerReady = true;
+            print("Everyone ready. Begin !");
+        }
+
+        private void playerReadyConfirmed(EventData obj)
+        {
+            if(_pView.ViewID == (int)obj.CustomData && _pView.IsMine)
+            {
+                print("You readiness is recognized.");
+                playerReady = true;
+            }                   
         }
 
         public void TransferOwnership(Photon.Realtime.Player newOwner)

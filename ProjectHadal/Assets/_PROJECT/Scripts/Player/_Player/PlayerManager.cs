@@ -88,6 +88,7 @@ namespace Hadal.Player
             if (allPlayerReady)
             {
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.START_THE_GAME, null);
+                // start the game for host here !!!
                 print("All player ready, sending event to notify all players.");
             }
         }
@@ -136,6 +137,7 @@ namespace Hadal.Player
                     if (playerList[i].GetInfo.PhotonInfo.PView.ViewID == (int)obj.CustomData)
                     {
                         playerList[i].setPlayerReady(true);
+                        NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED_CONFIRMED, (int)obj.CustomData);
                         return;
                     }
                 }
