@@ -17,6 +17,7 @@ namespace Hadal.Networking
     public enum ByteEvents
     {
         PLAYER_SPAWNED = 0,
+        START_THE_GAME,
         PLAYER_UTILITIES_LAUNCH,
         PLAYER_TORPEDO_LAUNCH,
         AI_DAMAGE_EVENT,
