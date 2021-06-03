@@ -26,6 +26,8 @@ namespace Hadal.Networking
         TOTAL_EVENTS
     }
 
+    public delegate void ConnectionEvent();
+
     public class NetworkEventManager : MonoBehaviourPunCallbacks
     {
         public static NetworkEventManager Instance;
@@ -96,8 +98,6 @@ namespace Hadal.Networking
         #endregion
 
         #region Raising Events
-        
-
         Dictionary<ByteEvents, Action<EventData>> recieverDict;
 
         void SetupEventRaising()
@@ -229,7 +229,7 @@ namespace Hadal.Networking
         void SetupNetworking()
         {
             //if (!PhotonNetwork.IsConnected)
-                PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
+                //PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
 
             roomOptionsDefault = new RoomOptions();
             roomOptionsDefault.MaxPlayers = (byte)maxPlayers;
@@ -281,6 +281,11 @@ namespace Hadal.Networking
         }
 
         #region Connection Functions
+        public void ConnectUsingSettings()
+        {
+            PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
+        }
+
         public override void OnConnectedToMaster()
         {
             Debug.Log("Connected to Master");
@@ -302,7 +307,11 @@ namespace Hadal.Networking
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
             if (MasterClientSwitchedEvent != null) MasterClientSwitchedEvent.Invoke(newMasterClient);
-        } 
+        }
+        #endregion
+
+        #region Connection Events
+        public event ConnectionEvent JoinedLobbyEvent;
         #endregion
 
         #region Room Functions
@@ -367,17 +376,17 @@ namespace Hadal.Networking
         #region Lobby Functions
         public override void OnJoinedLobby()
         {
-            Debug.Log("Joined Lobby");
+            //Debug.Log("Joined Lobby");
             //PhotonNetwork.NickName = "Player " + Random.Range(0, 10).ToString("00");
             /*if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
                 SetupNetworking();*/
 
-            SetupNetworking();
+            //SetupNetworking();
 
-
+            
             mainMenuManager = MainMenuManager.Instance;
             mainMenuManager.InitMainMenu();
-
+            JoinedLobbyEvent.Invoke();
             gameManager.ChangeGameState(GameManager.GameState.IDLE);
         }
 
