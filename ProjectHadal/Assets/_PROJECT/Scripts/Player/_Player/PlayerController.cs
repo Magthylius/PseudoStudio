@@ -51,11 +51,10 @@ namespace Hadal.Player
                 print(cameraReady && loadingReady);
                 if (cameraReady && loadingReady)
                 {
-                    yield return new WaitForSeconds(1);
                     print("event sent");
-                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID);
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID, SendOptions.SendReliable);
                 }
-                yield return null;
+                yield return new WaitForSeconds(1);
             }
         }
         #endregion
@@ -76,7 +75,7 @@ namespace Hadal.Player
         {
             //base.OnEnable();
             TryInjectDependencies();
-            LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
+            
             if (!_manager.managerPView.IsMine) // If Not the Host player, handle camera activation.
             {
                 HandlePhotonView(_pView.IsMine);
@@ -84,6 +83,7 @@ namespace Hadal.Player
                 if(_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
                     cameraReady = true;
+					LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, playerReadyConfirmed);
                     NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
                     StartCoroutine(SendReady());
