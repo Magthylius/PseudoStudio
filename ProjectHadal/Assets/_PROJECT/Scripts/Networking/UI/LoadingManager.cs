@@ -319,10 +319,7 @@ namespace Hadal.Networking.UI.Loading
 
         #region Animators
         [Button("Fade In")]
-        public void FadeIn()
-        {
-            loadingCGF.StartFadeIn();
-        }
+        public void FadeIn() => loadingCGF.StartFadeIn();
         [Button("Fade Out")]
         public void FadeOut() => loadingCGF.StartFadeOut();
 

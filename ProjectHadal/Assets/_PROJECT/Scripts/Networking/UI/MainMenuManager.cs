@@ -92,6 +92,7 @@ namespace Hadal.Networking.UI.MainMenu
             
             DetermineMenuToOpen();
             //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
+            InitMainMenu();
         }
 
         void Update()
@@ -122,11 +123,11 @@ namespace Hadal.Networking.UI.MainMenu
         #region Main Menu 
         public void InitMainMenu()
         {
-            //Debug.LogWarning("init");
+            Debug.LogWarning("init");
             loadingManager = LoadingManager.Instance;
 
             DetermineMenuToOpen();
-            EnsureSetup();
+            EnsureSetup(false);
 
             versionTMP.text = "V " + Application.version;
 
@@ -144,9 +145,11 @@ namespace Hadal.Networking.UI.MainMenu
         }
 
         //! make sure objects are active and inactive
-        void EnsureSetup()
+        void EnsureSetup(bool openStartMenu = true)
         {
-            OpenMenu(startMenu);
+            if (openStartMenu)
+                OpenMenu(startMenu);
+
             OpenMenu(gameOptions);
             CloseMenu(nicknameMenu);
             CloseMenu(lobbyMenu);
@@ -187,12 +190,14 @@ namespace Hadal.Networking.UI.MainMenu
         public void ResetMainMenu()
         {
             if (GameManager.Instance.IsInGame) return;
-            
-            InitMainMenu();
 
-            createRoomFR.MoveToStart();
-            findRoomFR.MoveToStart();
-            confirmQuitFR.MoveToStart();
+            //InitMainMenu();
+            //EnsureSetup(false);
+            OpenMenu(lobbyMenu);
+
+            createRoomFR.MoveToEnd();
+            findRoomFR.MoveToEnd();
+            confirmQuitFR.MoveToEnd();
         }
 
         void ChangePhase(MenuPhase phase) => menuPhase = phase;
@@ -307,6 +312,30 @@ namespace Hadal.Networking.UI.MainMenu
             Application.Quit();
         }
 
+        public void BTN_StartActualLevel()
+        {
+            NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
+            loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
+        }
+
+        public void BTN_LeaveRoom()
+        {
+            /*CloseMenu(roomMenu);
+            OpenMenu(lobbyMenu);
+            CloseMenu(roomOptions);
+            OpenMenu(gameOptions);*/
+            //InitMainMenu();
+            //EnsureSetup(false);
+            CloseMenu(roomMenu);
+            CloseMenu(roomOptions);
+
+            OpenMenu(lobbyMenu);
+            OpenMenu(gameOptions);
+
+            NetworkEventManager.Instance.LeaveRoom();
+        }
+
         public void TMP_CheckRoomNameEligibility()
         {
             if (createRoomTMPInput.text.Length <= roomNameMaxLength) allowRoomCreation = true;
@@ -362,24 +391,7 @@ namespace Hadal.Networking.UI.MainMenu
             }
         }
 
-        public void BTN_StartActualLevel()
-        {
-            //if(PhotonNetwork.IsMasterClient) PhotonNetwork.LoadLevel(nextLevelName);
-            //NetworkEventManager.Instance.LoadLevel(NetworkEventManager.Instance.InGameScene);
-            NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
-            loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
-        }
-
-        public void BTN_LeaveRoom()
-        {
-            CloseMenu(roomMenu);
-            OpenMenu(lobbyMenu);
-            CloseMenu(roomOptions);
-            OpenMenu(gameOptions);
-
-            NetworkEventManager.Instance.LeaveRoom();
-        }
+        
         #endregion
 
         #endregion

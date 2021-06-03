@@ -386,7 +386,7 @@ namespace Hadal.Networking
 
             
             mainMenuManager = MainMenuManager.Instance;
-            mainMenuManager.InitMainMenu();
+           // mainMenuManager.InitMainMenu();
             JoinedLobbyEvent.Invoke();
             gameManager.ChangeGameState(GameManager.GameState.IDLE);
         }
