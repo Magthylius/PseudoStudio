@@ -26,7 +26,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-            _target = GetTheTarget();
+            _target = _brain.RuntimeData.CurrentTarget.transform;
             if (_target == null) return NodeState.FAILURE;
 
             MoveIfNotMoving();
@@ -34,14 +34,6 @@ namespace Hadal.AI.TreeNodes
             if (FarThresholdReached() && !_followPersistently) return NodeState.FAILURE;
 
             return NodeState.RUNNING;
-        }
-
-        private Transform GetTheTarget()
-        {
-            Transform target = null;
-            //! get the target from somewhere
-            // target = ???
-            return target;
         }
 
         private void MoveIfNotMoving()

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 191e20eff5259c9408eda68e0cb5e3f1, type: 3}
+  m_Name: RuntimeData
+  m_EditorClassIdentifier: 
+  healthManager: {fileID: 0}
+  navigationHandler: {fileID: 0}
+  senseDetection: {fileID: 0}
+  sightDetection: {fileID: 0}
+  cavernManager: {fileID: 0}
+  PlayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  ObstacleMask:
+    serializedVersion: 2
+    m_Bits: 4352
+  MouthObject: {fileID: 0}
+  Players: []
+  CurrentTarget: {fileID: 0}
+  CarriedPlayer: {fileID: 0}
+  machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
+  mainObjective: 0
+  engagementObjective: 0
+  confidence: 0
+  bonusConfidence: 0
+  cumulativeDamage: 0
+  cumulativeDamageThreshold: 0
+  judgementStoptimer: 0

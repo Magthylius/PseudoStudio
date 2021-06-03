@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Tenshi.AIDolls;
 using Hadal.Utility;
 using Tenshi.UnitySoku;
@@ -38,7 +35,6 @@ namespace Hadal.AI
             onThisState = true;
             stunTimer.Restart();
             Brain.SetIsStunned(false);
-            $"stunned".Msg();
         }
         public void StateTick()
         {
@@ -55,8 +51,6 @@ namespace Hadal.AI
             returnToDefaultState = false;
             onThisState = false;
             stunTimer.Pause();
-
-            $"no longer stunned".Msg();
 
         }
         public Func<bool> ShouldTerminate() => () => returnToDefaultState;

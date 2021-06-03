@@ -4297,6 +4297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   background: {fileID: 1532418107961318759}
+  loadingMode: 1
   fadeOutDelay: 5
   loadingAnimator: {fileID: 4982535943108254921}
   loadingFadeSpeed: 10
@@ -4304,10 +4305,21 @@ MonoBehaviour:
   hiveSpinnerAnimator: {fileID: 4370709888990511874}
   connectionAnimator: {fileID: 0}
   connectionAnimatorFinishedBool: 
-  allowPressAnyKey: 0
   continueCG: {fileID: 4982535944131505170}
   continueFadeSpeed: 5
   expectedObjectPoolersCount: 6
+  postProcessEffectSpeed: 2
+  LoadInLensDistortion:
+    Intensity: 0
+    XMultiplier: 0
+    YMultiplier: 0
+    Center: {x: 0, y: 0}
+    Scale: 0
+  LoadInChromaticAberration:
+    Intensity: 0
+  LoadingCompletedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4982535942767267326
 GameObject:
   m_ObjectHideFlags: 0

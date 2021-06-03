@@ -22,7 +22,7 @@ namespace Hadal.AI.States
         {
             this.parent = parent;
             b = parent.Brain;
-            updateDelay = 1f / b.GetJudgementTickRate;
+            updateDelay = 1f / b.MachineData.Engagement.JudgementTickRate;
 
             Test_SetupDefensiveBranchBehaviourTree();
         }
@@ -55,7 +55,7 @@ namespace Hadal.AI.States
         public void OnStateStart() { }
         public void StateTick()
         {
-            b.TickJudgementTimer(b.DeltaTime);
+            b.RuntimeData.TickJudgementTimer(b.DeltaTime);
             if (TickUpdateTimer(b.DeltaTime) > updateDelay)
             {
                 ResetUpdateTimer();

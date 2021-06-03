@@ -25,7 +25,7 @@ namespace Hadal.AI.TreeNodes
 
         bool UpdateConfidence()
         {
-            _brain.UpdateConfidenceValue(confidenceIncreaseValue);
+            _brain.RuntimeData.UpdateConfidenceValue(confidenceIncreaseValue);
             return true;
         }
 

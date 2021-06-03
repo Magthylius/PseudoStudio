@@ -92,8 +92,10 @@ namespace Hadal.Networking.UI.Loading
             continueCGF = new CanvasGroupFader(continueCG, true, false);
             continueCGF.SetTransparent();
 
-            SetupPostProcess();
+            //SetupPostProcess();
             ResetLoadingElements();
+
+            LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
         }
 
         void FixedUpdate()
@@ -153,6 +155,11 @@ namespace Hadal.Networking.UI.Loading
             //print(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
 
+        void LoadingCompletedPrint ()
+        {
+            print("Loading Completed.");
+        }
+
         #region Load Checks
         IEnumerator CheckAllLoaded()
         {
@@ -163,7 +170,7 @@ namespace Hadal.Networking.UI.Loading
 
             PlayHiveSpinner();
             PlayConnectionParent();
-
+            LoadingCompletedEvent.Invoke();
             if (loadingMode == LoadMode.Load_After_Delay)
             {
                 StartCoroutine(EndLoading());
@@ -189,12 +196,20 @@ namespace Hadal.Networking.UI.Loading
 
             GetCG(hiveParentAnimator.gameObject).alpha = 1f;
             GetCG(hiveSpinnerAnimator.gameObject).alpha = 1f;
+
+            //hiveParentAnimator.enabled = true;
+            //hiveSpinnerAnimator.enabled = true;
         }
         void ResetLoadingElements()
         {
             GetCG(hiveParentAnimator.gameObject).alpha = 0f;
             GetCG(hiveSpinnerAnimator.gameObject).alpha = 0f;
+            //hiveParentAnimator.enabled = false;
+            //hiveSpinnerAnimator.enabled = false;
             //hiveParentAnimator.gameObject.SetActive(false);
+
+            //StopHiveSpinner();
+            hiveSpinnerAnimator.SetBool("LoadingReady", false);
             if (loadingMode == LoadMode.Press_Any_Key_Continue) continueCGF.SetTransparent();
 
             loadingCGF.fadeEndedEvent.RemoveAllListeners();
@@ -213,14 +228,19 @@ namespace Hadal.Networking.UI.Loading
         {
             yield return new WaitForSeconds(fadeOutDelay);
 
-            StopHiveSpinner();
+            //StopHiveSpinner();
             connectionAnimator.SetTrigger("LoadingReady");
+            hiveSpinnerAnimator.SetBool("LoadingReady", true);
 
             //yield return null;
 
             background.gameObject.SetActive(false);
             //hiveSpinnerAnimator.gameObject.SetActive(false);
             GetCG(hiveSpinnerAnimator.gameObject).alpha = 0f;
+            hiveSpinnerAnimator.enabled = false;
+
+            
+
             PlayHiveParent();
 
             allowPostProcess = true;
@@ -234,7 +254,6 @@ namespace Hadal.Networking.UI.Loading
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
 
             ResetLoadingElements();
-            LoadingCompletedEvent.Invoke();
         }
 
         void ActualLoad()
@@ -250,7 +269,10 @@ namespace Hadal.Networking.UI.Loading
         public void LoadLevel(string levelName)
         {
             FadeIn();
+
+            SetupPostProcess();
             ActivateLoadingElements();
+            SetupPostProcess();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             nextLoadLevelName = levelName; 
@@ -294,16 +316,24 @@ namespace Hadal.Networking.UI.Loading
         void PlayHiveParent()
         {
             hiveParentAnimator.gameObject.SetActive(true);
+            hiveParentAnimator.enabled = true;
             hiveParentAnimator.Play(0, 0, 0);
             hiveParentAnimator.speed = 1f;
         }
         void PlayHiveSpinner()
         {
+            hiveSpinnerAnimator.SetTrigger("AllowLoading");
+            hiveSpinnerAnimator.enabled = true;
             hiveSpinnerAnimator.Play(0, 0, 0);
             hiveSpinnerAnimator.speed = 1f;
         }
         void PlayConnectionParent()
         {
+            //RuntimeAnimatorController r;
+            // connectionAnimator.runtimeAnimatorController = connectionAnimatorController.;
+
+            connectionAnimator.SetTrigger("AllowLoading");
+            connectionAnimator.enabled = true;
             connectionAnimator.Play(0, 0, 0);
             connectionAnimator.speed = 1f;
         }
@@ -332,8 +362,9 @@ namespace Hadal.Networking.UI.Loading
         }
         void StopConnectionParent()
         {
-            connectionAnimator.Play(0, 0, 0);
-            connectionAnimator.speed = 0f;
+            //connectionAnimator.Play(0, 0, 0);
+            //connectionAnimator.speed = 0f;
+            connectionAnimator.enabled = false;
         }
         #endregion
 

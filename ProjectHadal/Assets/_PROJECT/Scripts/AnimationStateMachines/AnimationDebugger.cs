@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationFinished : StateMachineBehaviour
+public class AnimationDebugger : StateMachineBehaviour
 {
     public string finishedBoolean;
 

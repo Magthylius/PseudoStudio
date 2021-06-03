@@ -70,7 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2206939683509102031}
   - component: {fileID: 2206939683509102030}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Navigation Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1417227025421074536}
   m_Father: {fileID: 2206939684412345072}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -141,7 +142,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2206939684058563681}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,8 +175,7 @@ GameObject:
   - component: {fileID: 2206939684261883554}
   - component: {fileID: 2206939684261883583}
   - component: {fileID: 2206939684261883552}
-  - component: {fileID: 2206939684261883553}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,19 +245,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2206939684261883553
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2206939684261883555}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2206939684412345075
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,34 +299,16 @@ MonoBehaviour:
   senseDetection: {fileID: 6021279049498701051}
   sightDetection: {fileID: 9221971048963321059}
   cavernManager: {fileID: 0}
-  playerTransforms: []
-  targetingPlayer: {fileID: 0}
-  carriedPlayer: {fileID: 0}
-  randomiseOnStart: 0
-  minConfidence: 0
-  maxConfidence: 100
-  startingConfidence: 50
-  confidence: 0
-  bonusConfidence: 0
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 128
+  runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
+  machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
+  isOffline: 1
   targetChangeTimer: 5
-  objective: 0
-  playerDetectionRadius: 40
-  playerDetectionAngle: 45
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4352
+  AnticipationSettings: {fileID: 0}
+  EngagementSettings: {fileID: 0}
   ambushTimoutTime: 5
-  cummulativeDamageThreshold: 600
-  judgeTickTime: 0.1
-  judgementThreshold: 1
-  jThreshold1Multiplier: 1
-  jThreshold2Multiplier: 1.5
-  jThreshold3Multiplier: 2
-  jThreshold4Multiplier: 3
+  RecoverySettings: {fileID: 0}
   recoveryTimoutTime: 2
+  CooldownSettings: {fileID: 0}
   stunDuration: 1
 --- !u!65 &2206939684412345073
 BoxCollider:
@@ -381,7 +350,7 @@ GameObject:
   - component: {fileID: 2206939684562575359}
   - component: {fileID: 2206939684562575357}
   - component: {fileID: 2206939684562575358}
-  m_Layer: 14
+  m_Layer: 0
   m_Name: Other Modules
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,3 +400,78 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+--- !u!1 &5685634872688241315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1417227025421074536}
+  - component: {fileID: 9019090016648474977}
+  - component: {fileID: 8428994859670981917}
+  - component: {fileID: 2646449823519189080}
+  m_Layer: 0
+  m_Name: Repel Bubble
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1417227025421074536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5685634872688241315}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2206939683509102031}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &9019090016648474977
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5685634872688241315}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 10
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8428994859670981917
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5685634872688241315}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 3
+--- !u!114 &2646449823519189080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5685634872688241315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7bd6cddbd09c24d937aaa16b6c1c55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigator: {fileID: 2206939683509102030}

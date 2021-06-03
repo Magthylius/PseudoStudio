@@ -33,13 +33,13 @@ namespace Hadal.AI.States
             subStateMachine.SetState(judgement); // default state
 
             //! transition conditions
-            Func<bool> OnAmbush() => () => Brain.EngagementObjective == EngagementObjective.Ambush;
-            Func<bool> OnAggressive() => () => Brain.EngagementObjective == EngagementObjective.Aggressive;
-            Func<bool> OnJudgement() => () => Brain.EngagementObjective == EngagementObjective.Judgement;
+            Func<bool> OnAmbush() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Ambush;
+            Func<bool> OnAggressive() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Aggressive;
+            Func<bool> OnJudgement() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Judgement;
         }
         public void OnStateStart()
         {
-            subStateMachine.CurrentState.OnStateStart();
+            // subStateMachine.CurrentState.OnStateStart();
         }
         public void StateTick()
         {
@@ -72,11 +72,12 @@ namespace Hadal.AI.States
             TargetPlayer = player;
         }
 
-        internal Transform ChooseClosestRandomPlayer()
+        internal Transform ChooseClosestRandomPlayer(float range)
         {
             if (Brain == null) return null;
-            List<Transform> targets = Brain.PlayerTransforms
-                            .Where(p => Vector3.Distance(Brain.transform.position, p.position) < Brain.playerDetectionRadius)
+            List<Transform> targets = Brain.RuntimeData.Players
+                            .Select(p => p.GetTarget)
+                            .Where(p => Vector3.Distance(Brain.transform.position, p.position) < range)
                             .ToList();
             if (targets.IsNullOrEmpty())
                 return null;
@@ -93,12 +94,12 @@ namespace Hadal.AI.States
             //! use NavigationHandler
         }
 
-        internal bool TargetPlayerIsInRange()
+        internal bool TargetPlayerIsInRange(float range)
         {
             if (TargetPlayer == null) return false;
 
             float dist = Vector3.Distance(Brain.transform.position, TargetPlayer.position);
-            if (dist < Brain.playerDetectionRadius)
+            if (dist < range)
             {
                 //! Detect if the player is not behind any obstacle.
                 Vector3 dir = (TargetPlayer.position - Brain.transform.position).normalized;
@@ -116,10 +117,10 @@ namespace Hadal.AI.States
                 }
 
                 Debug.DrawLine(ray.origin, ray.direction * 100000f, Color.red);
-                bool hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, Brain.playerMask, QueryTriggerInteraction.Collide);
+                bool hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, Brain.RuntimeData.PlayerMask, QueryTriggerInteraction.Collide);
                 if (hit)
                 {
-                    if (hitInfo.transform.gameObject.layer == Brain.playerMask.ToLayer())
+                    if (hitInfo.transform.gameObject.layer == Brain.RuntimeData.PlayerMask.ToLayer())
                     {
                         return true;
                     }
