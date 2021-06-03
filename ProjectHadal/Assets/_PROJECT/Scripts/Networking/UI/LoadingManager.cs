@@ -92,8 +92,10 @@ namespace Hadal.Networking.UI.Loading
             continueCGF = new CanvasGroupFader(continueCG, true, false);
             continueCGF.SetTransparent();
 
-            SetupPostProcess();
+            //SetupPostProcess();
             ResetLoadingElements();
+
+            LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
         }
 
         void FixedUpdate()
@@ -153,6 +155,11 @@ namespace Hadal.Networking.UI.Loading
             //print(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
 
+        void LoadingCompletedPrint ()
+        {
+            print("Loading Completed.");
+        }
+
         #region Load Checks
         IEnumerator CheckAllLoaded()
         {
@@ -163,7 +170,7 @@ namespace Hadal.Networking.UI.Loading
 
             PlayHiveSpinner();
             PlayConnectionParent();
-
+            LoadingCompletedEvent.Invoke();
             if (loadingMode == LoadMode.Load_After_Delay)
             {
                 StartCoroutine(EndLoading());
@@ -247,7 +254,6 @@ namespace Hadal.Networking.UI.Loading
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
 
             ResetLoadingElements();
-            LoadingCompletedEvent.Invoke();
         }
 
         void ActualLoad()
@@ -263,7 +269,10 @@ namespace Hadal.Networking.UI.Loading
         public void LoadLevel(string levelName)
         {
             FadeIn();
+
+            SetupPostProcess();
             ActivateLoadingElements();
+            SetupPostProcess();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
 
             nextLoadLevelName = levelName; 
