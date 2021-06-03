@@ -78,10 +78,14 @@ public class MagthyliusPointerButton : MonoBehaviour
 
     void OnDestroy()
     {
-        foreach (UIEventContainer events in eventList)
+        if (eventList != null)
         {
-            events.eventDelegates.RemoveAllListeners();
+            foreach (UIEventContainer events in eventList)
+            {
+                events.eventDelegates.RemoveAllListeners();
+            }
         }
+        
     }
 
     void FixedUpdate()

@@ -89,7 +89,9 @@ namespace Hadal.Networking.UI.MainMenu
         void Start()
         {
             NetworkEventManager.Instance.JoinedLobbyEvent += EndStartPhase;
-            mainMenuInitiated = true;
+            
+            DetermineMenuToOpen();
+            //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
         }
 
         void Update()
@@ -104,9 +106,10 @@ namespace Hadal.Networking.UI.MainMenu
                     //print(titleQuitButton.IsHovered);
                     break;
                 case MenuPhase.MAIN:
-                    createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
-                    confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                   // Debug.LogWarning("run");
+                    if (createRoomFR != null) createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    if (findRoomFR != null) findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    if (confirmQuitFR != null) confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     break;
             }
         }
@@ -117,15 +120,12 @@ namespace Hadal.Networking.UI.MainMenu
         }
 
         #region Main Menu 
-        public void PrewarmMainMenu()
-        {
-            InitMainMenu();
-        }
-
         public void InitMainMenu()
         {
+            //Debug.LogWarning("init");
             loadingManager = LoadingManager.Instance;
 
+            DetermineMenuToOpen();
             EnsureSetup();
 
             versionTMP.text = "V " + Application.version;
@@ -140,10 +140,7 @@ namespace Hadal.Networking.UI.MainMenu
 
             confirmQuitFR = new FlexibleRect(confirmQuitPanel);
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
-            confirmQuitFR.MoveToEnd();
-
-
-            mainMenuInitiated = true;
+            confirmQuitFR.MoveToEnd();            
         }
 
         //! make sure objects are active and inactive
@@ -168,13 +165,30 @@ namespace Hadal.Networking.UI.MainMenu
             warningRoomNameTooLong.gameObject.SetActive(false);
         }
 
+        void DetermineMenuToOpen()
+        {
+            if (NetworkEventManager.Instance.IsConnected)
+            {
+                OpenMenu(lobbyMenu);
+                menuPhase = MenuPhase.MAIN;
+            }
+            else
+            {
+                OpenMenu(startMenu);
+                menuPhase = MenuPhase.START;
+            }
+
+            mainMenuInitiated = true;
+        }
+
         /// <summary>
         /// Used for reseting main menu when in main menu only
         /// </summary>
         public void ResetMainMenu()
         {
             if (GameManager.Instance.IsInGame) return;
-            menuPhase = MenuPhase.START;
+            
+            InitMainMenu();
 
             createRoomFR.MoveToStart();
             findRoomFR.MoveToStart();
@@ -202,6 +216,7 @@ namespace Hadal.Networking.UI.MainMenu
 
             ChangePhase(MenuPhase.MAIN);
             CloseMenu(startMenu);
+            //DetermineMenuToOpen();
 
             if (PlayerPrefs.HasKey("PlayerName"))
             {

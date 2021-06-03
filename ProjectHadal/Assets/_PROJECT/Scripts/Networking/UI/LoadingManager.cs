@@ -31,7 +31,6 @@ namespace Hadal.Networking.UI.Loading
         [SerializeField] float fadeOutDelay = 5f;
 
         [Header("Animator Settings")]
-        public Animator loadingAnimator;
         public float loadingFadeSpeed = 15f;
         public Animator hiveParentAnimator;
         public Animator hiveSpinnerAnimator;
@@ -327,11 +326,6 @@ namespace Hadal.Networking.UI.Loading
         [Button("Fade Out")]
         public void FadeOut() => loadingCGF.StartFadeOut();
 
-        void PlayLoadingAnimator()
-        {
-            loadingAnimator.Play(0, 0, 0);
-            loadingAnimator.speed = 1f;
-        }
         void PlayHiveParent()
         {
             hiveParentAnimator.gameObject.SetActive(true);
@@ -359,15 +353,9 @@ namespace Hadal.Networking.UI.Loading
 
         void StopAllAnimators()
         {
-            StopLoadingAnimator();
             StopHiveParent();
             StopHiveSpinner();
             StopConnectionParent();
-        }
-        void StopLoadingAnimator()
-        {
-            loadingAnimator.Play(0, 0, 0);
-            loadingAnimator.speed = 0f;
         }
         void StopHiveParent()
         {
