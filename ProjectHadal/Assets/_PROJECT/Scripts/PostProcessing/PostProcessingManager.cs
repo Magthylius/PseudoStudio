@@ -97,7 +97,7 @@ namespace Hadal.PostProcess
         public void EditDepthOfField(float targetFocusDistance, float targetFocalLength, float _focusSpeed)
         {
             DepthOfField dof;
-            if (volume.profile.TryGet(out dof))
+            if (CurrentVolumeTryGet(out dof))
             {
                 dof.focusDistance.value = Mathf.Lerp(dof.focusDistance.value, targetFocusDistance, Time.deltaTime * _focusSpeed);
                 dof.focalLength.value = Mathf.Lerp(dof.focalLength.value, targetFocalLength, Time.deltaTime * _focusSpeed);
@@ -110,7 +110,7 @@ namespace Hadal.PostProcess
         public void EditLensDistortion(LensDistortionSettings settings)
         {
             LensDistortion ld;
-            if (volume.profile.TryGet(out ld))
+            if (CurrentVolumeTryGet(out ld))
             {
                 ld.intensity.Override(settings.Intensity);
                 ld.xMultiplier.Override(settings.XMultiplier);
