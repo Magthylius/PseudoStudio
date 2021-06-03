@@ -34,7 +34,7 @@ namespace Hadal.Player
 
         [SerializeField] private bool playerReady = false;
         private bool cameraReady = false;
-        private bool loadingReady = true;
+        private bool loadingReady = false;
 
         Photon.Realtime.Player attachedPlayer;
         int pViewSelfID;
@@ -75,8 +75,8 @@ namespace Hadal.Player
         {
             //base.OnEnable();
             TryInjectDependencies();
-
-            if(!_manager.managerPView.IsMine) // If Not the Host player, handle camera activation.
+            LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
+            if (!_manager.managerPView.IsMine) // If Not the Host player, handle camera activation.
             {
                 HandlePhotonView(_pView.IsMine);
 
@@ -85,7 +85,6 @@ namespace Hadal.Player
                     cameraReady = true;
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, playerReadyConfirmed);
                     NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
-                    /*LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);*/
                     StartCoroutine(SendReady());
                 }
             }
@@ -335,6 +334,7 @@ namespace Hadal.Player
         public void SetLoadingReady()
         {
             loadingReady = true;
+            print("Loading Ready is : " + loadingReady);
         }    
         #endregion
     }
