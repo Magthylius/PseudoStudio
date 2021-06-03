@@ -69,8 +69,6 @@ namespace Hadal.Player
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
-            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, StartGame);
-            NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, playerReadyConfirmed);
         }
        
         void Start()
@@ -85,6 +83,8 @@ namespace Hadal.Player
                 if(_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
                     cameraReady = true;
+                    NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, playerReadyConfirmed);
+                    NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
                     StartCoroutine(SendReady());
                 }
             }
@@ -173,7 +173,10 @@ namespace Hadal.Player
 
         private void playerReadyConfirmed(EventData obj)
         {
-            if(_pView.ViewID == (int)obj.CustomData && _pView.IsMine)
+            if (!_pView)
+                return;
+
+            if(_pView.ViewID == (int)obj.CustomData)
             {
                 print("You readiness is recognized.");
                 playerReady = true;
