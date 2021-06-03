@@ -47,9 +47,9 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private bool canPath;
         [SerializeField, ReadOnly] private NavPoint currentPoint;
         
-        private void Awake() => Initialise();
-        private void Update() => DoUpdate(DeltaTime);
-        private void FixedUpdate() => DoFixedUpdate(FixedDeltaTime);
+        // private void Awake() { Initialise(); }
+        // private void Update() { DoUpdate(DeltaTime); }
+        // private void FixedUpdate() { DoFixedUpdate(FixedDeltaTime); }
 
 
         #region Public Methods
@@ -66,7 +66,7 @@ namespace Hadal.AI
             canAutoSelectNavPoints = true;
             isOnCustomPath = false;
             canPath = true;
-            rBody ??= GetComponent<Rigidbody>();
+            if (rBody == null) rBody = GetComponent<Rigidbody>();
             if (numberOfClosestPointsToConsider > navPoints.Count - 1) numberOfClosestPointsToConsider = navPoints.Count - 1;
             currentPoint = GetClosestPointToSelf();
             repulsionPoints = new List<Vector3>();

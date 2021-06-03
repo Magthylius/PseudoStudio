@@ -19,7 +19,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-            _brain.UpdateConfidenceValue(_modifyDifference);
+            _brain.RuntimeData.UpdateConfidenceValue(_modifyDifference);
             return NodeState.SUCCESS;
         }
     }

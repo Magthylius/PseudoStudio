@@ -7,10 +7,6 @@ using Hadal.AI.States;
 using Hadal.AI.Caverns;
 using Photon.Pun;
 using System.Linq;
-using Hadal.Player;
-using Tenshi;
-using NaughtyAttributes;
-using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -33,92 +29,24 @@ namespace Hadal.AI
         private List<ILeviathanComponent> preUpdateComponents;
         private List<ILeviathanComponent> mainUpdateComponents;
 
-        [Header("Information")]
-        [SerializeField] private List<Transform> playerTransforms;
-        [SerializeField] private PlayerController targetingPlayer;
-        [SerializeField] private PlayerController carriedPlayer;
-        public List<Transform> PlayerTransforms => playerTransforms;
-        public PlayerController TargetingPlayer { get => targetingPlayer; set => targetingPlayer = value; }
-        public PlayerController CarriedPlayer { get => carriedPlayer; set => carriedPlayer = value; }
+        [Header("Data")]
+        [SerializeField] private LeviathanRuntimeData runtimeData;
+        [SerializeField] private StateMachineData machineData;
+        [SerializeField] private bool isOffline;
 
-        internal Rigidbody rb;
+        public LeviathanRuntimeData RuntimeData => runtimeData;
+        public StateMachineData MachineData => machineData;
 
-        [Header("Confidence Settings")]
-        [SerializeField] private bool randomiseOnStart;
-        [SerializeField] private int minConfidence;
-        [SerializeField] private int maxConfidence;
-        [SerializeField] private int startingConfidence;
-        [SerializeField, Tenshi.ReadOnly] private int confidence;
-        [SerializeField, Tenshi.ReadOnly] private int bonusConfidence;
-        public int ActualConfidenceValue => Mathf.Clamp(confidence + bonusConfidence, minConfidence, maxConfidence);
-        public float NormalisedConfidence => ActualConfidenceValue.NormaliseValue(minConfidence, maxConfidence);
-        public void UpdateConfidenceValue(int difference) => confidence = Mathf.Clamp(confidence + difference, minConfidence, maxConfidence);
-        public void UpdateBonusConfidence(int difference) => bonusConfidence += difference;
-        
+        private Rigidbody rBody;
         IState idleState;
-
-        [Header("Target Settings")]
-        public LayerMask playerMask;
-        [SerializeField] private float targetChangeTimer;
-
-        [Header("Anticipation Settings")]
-        [SerializeField, Tenshi.ReadOnly] MainObjective objective;
-        [SerializeField, Tenshi.ReadOnly] EngagementObjective engagementObjective;
         IState anticipationState;
-        public MainObjective MainObjective => objective;
-        public EngagementObjective EngagementObjective => engagementObjective;
-        
-        [Header("Engagement Settings")]
-        public float playerDetectionRadius;
-        public float playerDetectionAngle;
-        IState engagementState;
-
-        [Header("E. Aggressive Settings")]
-        [SerializeField] public LayerMask obstacleMask;
-        AggressiveSubState eAggressiveState;
-
-        [Header("E. Ambush Settings")]
-        [SerializeField] private float ambushTimoutTime;
-        AmbushSubState eAmbushState;
-
-        [Header("E. Judgement Settings")]
-        [SerializeField] private float cummulativeDamageThresholdPercent;
-		private float cummulativeDamageThreshold;
-        private float cummulativeDamage;
-        [SerializeField] private float judgeTickTime;
-        [SerializeField] private float judgementTickRate;
-        JudgementSubState eJudgementState;
-        [SerializeField] private float judgementThreshold;
-        [SerializeField] private float jThreshold1Multiplier;
-        [SerializeField] private float jThreshold2Multiplier;
-        [SerializeField] private float jThreshold3Multiplier;
-        [SerializeField] private float jThreshold4Multiplier;
-        private float judgementStoptimer;
-        public float GetJudgementTimerValue => judgementStoptimer;
-        public float GetJudgementTickRate => judgementTickRate;
-        public float GetJudgementThreshold(int multiplierType)
-        {
-            return multiplierType switch
-            {
-                1 => judgementThreshold * jThreshold1Multiplier,
-                2 => judgementThreshold * jThreshold2Multiplier,
-                3 => judgementThreshold * jThreshold3Multiplier,
-                4 => judgementThreshold * jThreshold4Multiplier,
-                _ => judgementThreshold
-            };
-        }
-        public void TickJudgementTimer(in float deltaTime) => judgementStoptimer += deltaTime;
-        public void ResetJudgementTimer() => judgementStoptimer = 0.0f;
-        public void ResetCummulativeDamage() => cummulativeDamage = 0f;
-        public void AddCummulativeDamage(float damage) => cummulativeDamage += Mathf.Abs(damage);
-        public bool CummulativeDamageExceeded() => cummulativeDamage > cummulativeDamageThreshold;
-		public void ResetCummulativeDamageThreshold() => cummulativeDamageThreshold = healthManager.GetCurrentHealth * cummulativeDamageThresholdPercent;
-
-        [Header("Recovery Settings")]
-        [SerializeField] private float recoveryTimoutTime;
         IState recoveryState;
+        IState engagementState;
+        AggressiveSubState eAggressiveState;
+        AmbushSubState eAmbushState;
+        JudgementSubState eJudgementState;
 
-        [Header("Stunned Settings")]
+        [Header("Stunned Settings (needs a relook)")]
         [SerializeField] public float stunDuration;
         IState stunnedState;
         bool isStunned;
@@ -135,48 +63,54 @@ namespace Hadal.AI
         public static event Action<Transform, AIDamageType> DamagePlayerEvent;
         internal void InvokeDamagePlayerEvent(Transform t, AIDamageType type) => DamagePlayerEvent?.Invoke(t, type);
 
+        public bool CanUpdate => PhotonNetwork.IsMasterClient || isOffline;
+
         private void Awake()
         {
-            if (playerMask == default) playerMask = LayerMask.GetMask("LocalPlayer");
-            if (obstacleMask == default) obstacleMask = LayerMask.GetMask("Wall");
-            rb = GetComponent<Rigidbody>();
+            rBody = GetComponent<Rigidbody>();
             isStunned = false;
-            objective = MainObjective.None;
-            if (randomiseOnStart) confidence = UnityEngine.Random.Range(minConfidence, maxConfidence + 1);
-            else confidence = startingConfidence;
             
             allAIComponents = GetComponentsInChildren<ILeviathanComponent>().ToList();
             preUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
             mainUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
+
+            runtimeData.Awake_Initialise();
+            navigationHandler.Initialise();
         }
 
         private void Start()
         {
             allAIComponents.ForEach(i => i.Initialise(this));
-            cavernManager = FindObjectOfType<CavernManager>();
-			ResetCummulativeDamageThreshold();
+			cavernManager = FindObjectOfType<CavernManager>();
             InitialiseStates();
             stateMachine.SetState(idleState);
+
+            runtimeData.Start_Initialise();
+            runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
         }
 
         private void Update()
         {
-            if (!PhotonNetwork.IsMasterClient) return;
-            preUpdateComponents.ForEach(c => c.DoUpdate(DeltaTime));
+            if (!CanUpdate) return;
+            float deltaTime = DeltaTime;
+            preUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
+            navigationHandler.DoUpdate(deltaTime);
             stateMachine?.MachineTick();
-            mainUpdateComponents.ForEach(c => c.DoUpdate(DeltaTime));
+            mainUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
         }
         private void LateUpdate()
         {
-            if (!PhotonNetwork.IsMasterClient) return;
+            if (!CanUpdate) return;
             stateMachine?.LateMachineTick();
             allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
         }
         private void FixedUpdate()
         {
-            if (!PhotonNetwork.IsMasterClient) return;
+            if (!CanUpdate) return;
+            float fixedDeltaTime = FixedDeltaTime;
+            navigationHandler.DoFixedUpdate(fixedDeltaTime);
             stateMachine?.FixedMachineTick();
-            allAIComponents.ForEach(c => c.DoFixedUpdate(FixedDeltaTime));
+            allAIComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
         }
 
         private void InitialiseStates()
@@ -207,14 +141,8 @@ namespace Hadal.AI
             // stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
         }
 
-        public void InjectPlayerTransforms(List<Transform> players) => playerTransforms = players;
-
         #region Transition Conditions
 
-        // TODO: POC timer(need to optimize)
-        // [SerializeField] float timerToSwitchState = 40.0f;
-        // Timer switchTimer;
-        // bool beIdle;
         Func<bool> IsAnticipating() => () =>
         {
             return false;
@@ -225,7 +153,7 @@ namespace Hadal.AI
         };
         Func<bool> HasEngageObjective() => () =>
         {
-            return objective != MainObjective.None;
+            return RuntimeData.GetMainObjective != MainObjective.None;
         };
         Func<bool> ResetStates() => () =>
         {
@@ -235,43 +163,13 @@ namespace Hadal.AI
         {
             return isStunned;
         };
-
-        //TODO: Do the actual condition for switching states
-        /// <summary>Switch to different state when time's up</summary>
-        private void InitialiseDebugStateSwitchTimer()
-        {
-            // beIdle = true;
-            // switchTimer = this.Create_A_Timer().WithDuration(timerToSwitchState)
-            //                                    .WithShouldPersist(true)
-            //                                    .WithOnCompleteEvent(() =>
-            //                                    {
-            //                                        beIdle = !beIdle;
-            //                                        if (beIdle)
-            //                                        {
-            //                                            "I should be idle".Msg();
-            //                                        }
-            //                                        else
-            //                                        {
-            //                                            "I should be engage".Msg();
-            //                                        }
-            //                                    })
-            //                                    .WithLoop(true);
-            //    .WithOnUpdateEvent(_ =>
-            //    {
-            //        $"Switch state timer: {(100f * switchTimer.GetCompletionRatio):F2}%".Msg();
-            //    });
-            // this.AttachTimer(switchTimer);
-        }
-
+        
         #endregion
 
         #region Control Methods
         /// <summary> Set the AI to stunstate</summary>
         /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
         public void SetIsStunned(bool statement) => isStunned = statement;
-
-        public void SetMainObjective(MainObjective objective) => this.objective = objective;
-        public void SetEngagementObjective(EngagementObjective objective) => engagementObjective = objective;
 
         #endregion
 

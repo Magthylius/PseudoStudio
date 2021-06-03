@@ -21,10 +21,6 @@ namespace Hadal.AI.States
 
         public AggressiveSubState()
         {
-            // pinTimer = parent.Brain.Create_A_Timer().WithDuration(40f)
-            //                                         .WithShouldPersist(true)
-            //                                         .WithOnCompleteEvent(() => canPin = true);
-            // pinTimer.Pause();
             canPin = true;
             isPinning = false;
             foundWall = false;
@@ -209,7 +205,7 @@ namespace Hadal.AI.States
             Vector3 setPosition = data[2].AsVector3();
 
             //TODO: we probably need to make an information class in the other assembly, damagemanager is doing everything at the moment
-            Transform t = b.PlayerTransforms.Where(p => b.ViewIDBelongsToTransMethod(p, viewID)).SingleOrDefault();
+            Transform t = b.RuntimeData.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).Select(p => p.GetTarget).SingleOrDefault();
             if (t == null) return;
             t.position = setPosition;
             $"pin position set to {t.position}".Msg();

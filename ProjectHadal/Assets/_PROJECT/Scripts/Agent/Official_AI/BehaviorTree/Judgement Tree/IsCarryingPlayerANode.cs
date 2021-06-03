@@ -15,12 +15,12 @@ namespace Hadal.AI.TreeNodes
         {
             if (_checkForTargetPlayer)
             {
-                if (_brain.CarriedPlayer == _brain.TargetingPlayer)
+                if (_brain.RuntimeData.CarriedPlayer == _brain.RuntimeData.CurrentTarget)
                     return NodeState.SUCCESS;
                 return NodeState.FAILURE;
             }
             
-            if (_brain.CarriedPlayer != null)
+            if (_brain.RuntimeData.CarriedPlayer != null)
                 return NodeState.SUCCESS;
             return NodeState.FAILURE;
         }
