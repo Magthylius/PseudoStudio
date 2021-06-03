@@ -72,6 +72,7 @@ namespace Hadal.Networking.UI.Loading
 
         [Header("Events")]
         public UnityEvent LoadingCompletedEvent;
+        bool networkedLoad = false;
 
         void Awake()
         {
@@ -105,7 +106,7 @@ namespace Hadal.Networking.UI.Loading
 
             if (allowLoading)
             {
-                if (loadingAO != null && loadingAO.isDone)
+                if ((loadingAO != null && loadingAO.isDone) || networkedLoad)
                 {
                     allowLoading = false;
                     
@@ -222,6 +223,7 @@ namespace Hadal.Networking.UI.Loading
 
             allowLoading = false;
             allowContinue = false;
+            networkedLoad = false;
         }
 
         public void StartEndLoad()
@@ -268,6 +270,7 @@ namespace Hadal.Networking.UI.Loading
 
             SetupPostProcess();
             ActivateLoadingElements();
+            networkedLoad = true;
         }
 
         void ActualLoad()
