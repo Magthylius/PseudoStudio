@@ -23,6 +23,7 @@ namespace Hadal.AI.TreeNodes
         {
             foreach (var node in nodes)
             {
+                ExecutionOrder++;
                 switch (node.Evaluate())
                 {
                     case NodeState.RUNNING:
@@ -46,10 +47,15 @@ namespace Hadal.AI.TreeNodes
             return _nodeState;
         }
 
-        private void Debug()
+        private void Debug(bool includeExecutionOrder = true)
         {
             if (EnableDebug)
-                $"Name: {debugName}, Nodestate: {_nodeState}".Msg();
+            {
+                string msg = "";
+                if (includeExecutionOrder) msg += $"{ExecutionOrder}) ";
+                msg += $"Name: {debugName}, Nodestate: {_nodeState}";
+                msg.Msg();
+            }
         }
     }
 }

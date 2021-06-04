@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Tenshi.UnitySoku;
 using UnityEngine;
@@ -23,6 +22,7 @@ namespace Hadal.AI.TreeNodes
             bool anyNodeRunning = false;
             foreach(var node in nodes)
             {
+                ExecutionOrder++;
                 switch(node.Evaluate())
                 {
                     //! if node is running, means there's a process happenning.
@@ -47,10 +47,15 @@ namespace Hadal.AI.TreeNodes
             return _nodeState;
         }
 
-        private void Debug()
+        private void Debug(bool includeExecutionOrder = true)
         {
             if (EnableDebug)
-                $"Name: {debugName}, Nodestate: {_nodeState}".Msg();
+            {
+                string msg = "";
+                if (includeExecutionOrder) msg += $"{ExecutionOrder}) ";
+                msg += $"Name: {debugName}, Nodestate: {_nodeState}";
+                msg.Msg();
+            }
         }
     }
 }

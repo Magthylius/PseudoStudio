@@ -4,6 +4,7 @@ using Hadal.AI.TreeNodes;
 using System.Collections.Generic;
 using Tenshi.UnitySoku;
 using Tenshi;
+using UnityEngine;
 
 namespace Hadal.AI.States
 {
@@ -49,22 +50,28 @@ namespace Hadal.AI.States
             BTSequence recoveryAfterJT4Passed = new BTSequence(new List<BTNode>() { hasJT4Passed, setRecoveryState });
             recoveryAfterJT4Passed.SetDebugName("recovery after jt4 passed");
 
-            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b), recoveryAfterJT4Passed });
-            threshCarriedPlayer.SetDebugName("thresh carried player?");
+            BTSequence threshCarriedPlayer = new BTSequence(new List<BTNode>() { new ThreshCarriedPlayerNode(b) });
+            threshCarriedPlayer.SetDebugName("thresh carried player");
 
-            BTSequence threshAndRecoveryIfSuccessful = new BTSequence(new List<BTNode>() { threshCarriedPlayer, setRecoveryState });
+            BTSelector tryToThreshCarriedPlayer = new BTSelector(new List<BTNode>() { threshCarriedPlayer, recoveryAfterJT4Passed });
+            tryToThreshCarriedPlayer.SetDebugName("try to thresh carried player?");
+
+            BTSequence threshAndRecoveryIfSuccessful = new BTSequence(new List<BTNode>() { tryToThreshCarriedPlayer, setRecoveryState });
             threshAndRecoveryIfSuccessful.SetDebugName("Thresh & Recovery");
 
             BTSelector onePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 1) });
             onePlayerInCavern.SetDebugName("One player in cavern?");
 
-            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), threshAndRecoveryIfSuccessful });
-            isCarryingAnyPlayer.SetDebugName("Is carrying any player?");
+            BTSequence isCarryingAnyPlayer = new BTSequence(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
+            isCarryingAnyPlayer.SetDebugName("Is carrying any player");
+
+            BTSelector carryOrThresh = new BTSelector(new List<BTNode>() { isCarryingAnyPlayer, threshAndRecoveryIfSuccessful });
+            carryOrThresh.SetDebugName("Carry Or Thresh?");
 
             BTSequence sequenceD1 = new BTSequence(new List<BTNode>()
             {
                 onePlayerInCavern,
-                isCarryingAnyPlayer,
+                carryOrThresh,
                 hasJT4Passed,
                 escapeTailWhip
             });
