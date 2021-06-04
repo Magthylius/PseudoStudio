@@ -123,7 +123,7 @@ namespace Hadal.Networking.UI.MainMenu
         #region Main Menu 
         public void InitMainMenu()
         {
-            Debug.LogWarning("init");
+            //Debug.LogWarning("init");
             loadingManager = LoadingManager.Instance;
 
             DetermineMenuToOpen();
