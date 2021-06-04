@@ -32,6 +32,7 @@ namespace Hadal.AI.Caverns
     public enum CavernTag
     {
         Invalid = 0,
+        Starting_Grounds,
         Lair_Grounds,
         Hydrothermal_Vents,
         Bioluminescent_Cavern,
