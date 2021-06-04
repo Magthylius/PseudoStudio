@@ -27,6 +27,7 @@ namespace Hadal.AI.States
             updateDelay = 1f / b.MachineData.Engagement.JudgementTickRate;
 
             BTNode.EnableDebug = b.DebugEnabled;
+            BTNode.ExecutionOrder = 0;
             Test_SetupDefensiveBranchBehaviourTree();
             Test_SetupOffensiveBranchBehaviourTree1();
             root.SetDebugName("Root");
@@ -56,8 +57,8 @@ namespace Hadal.AI.States
             BTSelector tryToThreshCarriedPlayer = new BTSelector(new List<BTNode>() { threshCarriedPlayer, recoveryAfterJT4Passed });
             tryToThreshCarriedPlayer.SetDebugName("try to thresh carried player?");
 
-            BTSequence threshAndRecoveryIfSuccessful = new BTSequence(new List<BTNode>() { tryToThreshCarriedPlayer, setRecoveryState });
-            threshAndRecoveryIfSuccessful.SetDebugName("Thresh & Recovery");
+            BTSelector threshAndRecoveryIfSuccessful = new BTSelector(new List<BTNode>() { tryToThreshCarriedPlayer, setRecoveryState });
+            threshAndRecoveryIfSuccessful.SetDebugName("Thresh & Recovery?");
 
             BTSelector onePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 1) });
             onePlayerInCavern.SetDebugName("One player in cavern?");
