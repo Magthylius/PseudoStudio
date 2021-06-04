@@ -1,6 +1,7 @@
 using Hadal.Player;
 using System.Collections;
 using System.Collections.Generic;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 //! C: Jon
@@ -66,7 +67,7 @@ namespace Hadal.AI.Caverns
             NavPoint nPoint = other.GetComponent<NavPoint>();
             int layerVal = other.gameObject.layer;
 
-            if (layerVal == playerMask.value)
+            if (other.GetComponent<PlayerController>() != null)
             {
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Add(player);
@@ -74,12 +75,11 @@ namespace Hadal.AI.Caverns
 
                 PlayerEnteredCavernEvent.Invoke(data);
             }
-            else if (layerVal == aiMask.value)
+            else if (other.GetComponent<AIBrain>() != null)
             {
-                if (other.GetComponent<AIBrain>() != null)
-                    AIEnteredCavernEvent?.Invoke(this);
+                AIEnteredCavernEvent?.Invoke(this);
             }
-            else if (nPoint != null)
+            if (other.gameObject.CompareTag("NavigationPoint"))
             {
                 nPoint.CavernTag = cavernTag;
             }
@@ -90,7 +90,7 @@ namespace Hadal.AI.Caverns
             //! Prechecks
             int layerVal = other.gameObject.layer;
 
-            if (layerVal == playerMask.value)
+            if (other.GetComponent<PlayerController>() != null)
             {
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Remove(player);
@@ -98,7 +98,7 @@ namespace Hadal.AI.Caverns
 
                 PlayerLeftCavernEvent.Invoke(data);
             }
-            else if (layerVal == aiMask.value)
+            else if (other.GetComponent<AIBrain>() != null)
             {
                 if (other.GetComponent<AIBrain>() != null)
                     AILeftCavernEvent?.Invoke(this);
