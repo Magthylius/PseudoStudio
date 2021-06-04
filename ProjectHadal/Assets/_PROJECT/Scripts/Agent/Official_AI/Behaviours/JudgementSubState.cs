@@ -27,6 +27,7 @@ namespace Hadal.AI.States
             updateDelay = 1f / b.MachineData.Engagement.JudgementTickRate;
 
             BTNode.EnableDebug = b.DebugEnabled;
+            BTNode.ExecutionOrder = 0;
             Test_SetupDefensiveBranchBehaviourTree();
             Test_SetupOffensiveBranchBehaviourTree1();
             root.SetDebugName("Root");
@@ -56,8 +57,8 @@ namespace Hadal.AI.States
             BTSelector tryToThreshCarriedPlayer = new BTSelector(new List<BTNode>() { threshCarriedPlayer, recoveryAfterJT4Passed });
             tryToThreshCarriedPlayer.SetDebugName("try to thresh carried player?");
 
-            BTSequence threshAndRecoveryIfSuccessful = new BTSequence(new List<BTNode>() { tryToThreshCarriedPlayer, setRecoveryState });
-            threshAndRecoveryIfSuccessful.SetDebugName("Thresh & Recovery");
+            BTSelector threshAndRecoveryIfSuccessful = new BTSelector(new List<BTNode>() { tryToThreshCarriedPlayer, setRecoveryState });
+            threshAndRecoveryIfSuccessful.SetDebugName("Thresh & Recovery?");
 
             BTSelector onePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 1) });
             onePlayerInCavern.SetDebugName("One player in cavern?");
@@ -106,7 +107,7 @@ namespace Hadal.AI.States
             });
             threshFallbackA1.SetDebugName("thresh fallback A1");
 
-            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, null, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
+            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
             getPlayerToCarry.SetDebugName("get player to carry");
 
             BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
