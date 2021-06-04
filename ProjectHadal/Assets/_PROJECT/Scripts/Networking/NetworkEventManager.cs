@@ -471,7 +471,14 @@ namespace Hadal.Networking
         }
         public void RemovePlayer(GameObject playerObject)
         {
-            foreach (GameObject player in playerObjects) if (player == playerObject) playerObjects.Remove(playerObject);
+            foreach (GameObject player in playerObjects)
+            {
+                if (player == playerObject)
+                {
+                    playerObjects.Remove(playerObject);
+                    return;
+                }
+            }
         }
         public void SyncPlayerObjects(List<GameObject> playerObjectLists)
         {
