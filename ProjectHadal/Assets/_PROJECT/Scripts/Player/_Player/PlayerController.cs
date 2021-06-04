@@ -83,7 +83,9 @@ namespace Hadal.Player
                 if(_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
                     cameraReady = true;
+                    //print("Loading set listener");
 					LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
+                    LoadingManager.Instance.AllowLoadingCompletion();
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, playerReadyConfirmed);
                     NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
                     StartCoroutine(SendReady());
