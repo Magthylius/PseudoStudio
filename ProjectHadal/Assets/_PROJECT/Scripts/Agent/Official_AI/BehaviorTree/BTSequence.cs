@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 namespace Hadal.AI.TreeNodes
@@ -34,6 +35,7 @@ namespace Hadal.AI.TreeNodes
                     //! if node is a failure, then break us out of the method. 
                     case NodeState.FAILURE:
                         _nodeState = NodeState.FAILURE;
+                        Debug();
                         return _nodeState;
                     default:
                         break;
@@ -41,7 +43,14 @@ namespace Hadal.AI.TreeNodes
             }
             //! If code reach here means all nodes is success, if not then it's running
             _nodeState = anyNodeRunning ? NodeState.RUNNING : NodeState.SUCCESS;
+            Debug();
             return _nodeState;
+        }
+
+        private void Debug()
+        {
+            if (EnableDebug)
+                $"Name: {debugName}, Nodestate: {_nodeState}".Msg();
         }
     }
 }
