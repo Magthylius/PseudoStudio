@@ -8,6 +8,7 @@ namespace Hadal.AI.TreeNodes
     {
         //! Children nodes that belong to this sequence
         protected List<BTNode> nodes = new List<BTNode>();
+		public void AddNode(BTNode node) => nodes.Add(node);
 
         //! Provide an initial set of children to work
         public BTSequence(List<BTNode> nodes)

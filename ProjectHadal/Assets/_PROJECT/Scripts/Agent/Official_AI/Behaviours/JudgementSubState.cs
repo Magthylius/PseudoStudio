@@ -25,6 +25,7 @@ namespace Hadal.AI.States
             updateDelay = 1f / b.MachineData.Engagement.JudgementTickRate;
 
             Test_SetupDefensiveBranchBehaviourTree();
+			Test_SetupOffensiveBranchBehaviourTree1();
         }
 
         //! FILO
@@ -58,36 +59,36 @@ namespace Hadal.AI.States
         {
             BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
 
-            BTSequence increaseConfidence = new BTSequence(new List<BTNode>() { new IncreaseConfidenceNode() });
+            BTSequence increaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, true) });
+			
+			//Fallback if threshNearestTarget fails
+            BTSelector hasJT4Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 4) });
+            BTSelector decreaseConfidence = new BTSelector(new List<BTNode>() { new ModifyConfidenceNode(b, 1, false) });
+            BTSelector resetCummulativeDamageThreshold = new BTSelector(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b) });
+			BTSequence threshFallbackA1 = new BTSequence(new List<BTNode>()
+            {
+                hasJT4Passed,
+                decreaseConfidence,
+                setRecoveryState
+            });
 
-            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
-            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b) });
+			BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, null, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
+            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
+            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b), threshFallbackA1 });
             BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
 
-            //Fallback if threshNearestTarget fails
-            BTSelector hasJT4Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 4) });
-            BTSelector decreaseConfidence = new BTSelector(new List<BTNode>() { new DecreaseConfidenceNode() });
-            BTSelector resetCummulativeDamageThreshold = new BTSelector(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b) });
-
             BTSelector onePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 1) });
+
+			BTSequence postSequenceA1 = new BTSequence(new List<BTNode>() { increaseConfidence, resetCummulativeDamageThreshold });
 
             BTSequence sequenceA1 = new BTSequence(new List<BTNode>()
             {
                 onePlayerInCavern,
                 threshNearestTarget,
-                increaseConfidence
+				postSequenceA1
             });
-
-            BTSequence threshFallbackA1 = new BTSequence(new List<BTNode>()
-            {
-                hasJT4Passed,
-                decreaseConfidence,
-                resetCummulativeDamageThreshold
-            });
-
-            root = new BTSequence(new List<BTNode>() { sequenceA1 });
-            root = new BTSequence(new List<BTNode>() { threshFallbackA1 });
-
+			
+			root.AddNode(sequenceA1);
         }
 
         public void OnStateStart() { }
