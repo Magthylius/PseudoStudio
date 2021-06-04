@@ -9,6 +9,7 @@ namespace Hadal.Player.Aesthetics
     public class SubmarineFinHandler : MonoBehaviour
     {
         [Header("Settings")]
+        [SerializeField] Rigidbody referenceRigidbody;
         [SerializeField, Min(0f)] float tweenSpeed = 10f;
 
         [Header("References")]
@@ -35,8 +36,8 @@ namespace Hadal.Player.Aesthetics
 
         void Update()
         {
-            Vector3 movementVec = new Vector3(moveInput.HorizontalAxis, moveInput.HoverAxis, moveInput.VerticalAxis);
-            UpdateFins(movementVec.normalized);
+            //Vector3 movementVec = new Vector3(moveInput.HorizontalAxis, moveInput.HoverAxis, moveInput.VerticalAxis);
+            UpdateFins(referenceRigidbody.velocity.normalized);
 
             //DebugManager.Instance.SLog(sl_MovementVec, "Movement", movementVec.normalized);
         }

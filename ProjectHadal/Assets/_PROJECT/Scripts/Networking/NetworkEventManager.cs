@@ -231,6 +231,9 @@ namespace Hadal.Networking
             //if (!PhotonNetwork.IsConnected)
                 //PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
 
+            if (isOfflineMode)
+                PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
+
             roomOptionsDefault = new RoomOptions();
             roomOptionsDefault.MaxPlayers = (byte)maxPlayers;
             roomOptionsDefault.PlayerTtl = playerTTL;

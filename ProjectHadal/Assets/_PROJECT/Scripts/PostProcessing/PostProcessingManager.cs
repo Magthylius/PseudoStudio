@@ -137,6 +137,24 @@ namespace Hadal.PostProcess
             Debug.LogError("Tried to edit chromatic aberration, but not found!");
         }
 
+        public void ResetVolumeToDefault()
+        {
+            foreach (VolumeComponent component in DefaultProfile.components)
+            {
+                if (component is LensDistortion)
+                {
+                    LensDistortion ld;
+                    if (DefaultVolumeTryGet(out ld)) EditLensDistortion(new LensDistortionSettings(ld));
+                }
+                else if (component is ChromaticAberration)
+                {
+                    ChromaticAberration ca;
+                    if (DefaultVolumeTryGet(out ca)) EditChromaticAberration(new ChromaticAberrationSettings(ca));
+                }
+            }
+        }
+
+        #region Accessors
         public bool CurrentVolumeTryGet<T>(out T component) where T : VolumeComponent
         {
             bool r = volume.profile.TryGet(out component);
@@ -147,6 +165,7 @@ namespace Hadal.PostProcess
         {
             bool r = DefaultProfile.TryGet(out component);
             return r;
-        }
+        } 
+        #endregion
     }
 }

@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7af9a3be2235548458942f4fb0694f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceRigidbody: {fileID: 6419753948795626213}
   tweenSpeed: 5
   leftFin: {fileID: 7318005172358396004}
   rightFin: {fileID: 2901750296828196401}
@@ -420,6 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   invertedFin: 1
+  currentQuat: {x: 0.579228, y: 0.579228, z: -0.40557984, w: -0.40557984}
   originalRotation: {x: 0.579228, y: 0.579228, z: -0.40557984, w: -0.40557984}
   forwardRotation: {x: 0.44957447, y: 0.84625113, z: -0.23748969, w: -0.15918699}
   backwardRotation: {x: 0.36599824, y: 0.21130915, z: -0.7848856, w: -0.45315385}
@@ -1367,6 +1369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   invertedFin: 0
+  currentQuat: {x: 0.5792279, y: -0.5792279, z: 0.4055799, w: -0.4055799}
   originalRotation: {x: 0.5792279, y: -0.5792279, z: 0.4055799, w: -0.4055799}
   forwardRotation: {x: 0.44957453, y: -0.8462512, z: 0.23748973, w: -0.159187}
   backwardRotation: {x: 0.4330127, y: -0.25000003, z: 0.75, w: -0.43301275}

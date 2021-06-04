@@ -84,6 +84,7 @@ namespace Hadal.Networking.UI.Loading
         {
             neManager = NetworkEventManager.Instance;
             ppManager = PostProcessingManager.Instance;
+            ResetPostProcessing();
 
             transform.GetChild(0).gameObject.SetActive(true);
 
@@ -277,7 +278,7 @@ namespace Hadal.Networking.UI.Loading
         {
             //print("recieved network load");
             FadeIn();
-
+            print("what");
             SetupPostProcess();
             ActivateLoadingElements();
 
@@ -298,7 +299,7 @@ namespace Hadal.Networking.UI.Loading
         public void LoadLevel(string levelName)
         {
             FadeIn();
-
+            print("what");
             SetupPostProcess();
             ActivateLoadingElements();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
@@ -324,6 +325,11 @@ namespace Hadal.Networking.UI.Loading
 
             currentLensDistortion = LoadInLensDistortion;
             currentChromaticAberration = LoadInChromaticAberration;
+        }
+
+        void ResetPostProcessing()
+        {
+            if (neManager.isOfflineMode) ppManager.ResetVolumeToDefault();
         }
         #endregion
 

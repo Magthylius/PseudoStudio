@@ -9,6 +9,7 @@ namespace Hadal.Player.Aesthetics
     {
         [Header("Settings")]
         [SerializeField] bool invertedFin = false;
+        [SerializeField] Quaternion currentQuat;
 
         [Header("Rotation Values")]
         [SerializeField] Quaternion originalRotation;
@@ -23,6 +24,11 @@ namespace Hadal.Player.Aesthetics
         Quaternion targetRotation;
 
         int sl_TotalMovementRot;
+
+        void OnValidate()
+        {
+            currentQuat = transform.localRotation;
+        }
 
         void Start()
         {
