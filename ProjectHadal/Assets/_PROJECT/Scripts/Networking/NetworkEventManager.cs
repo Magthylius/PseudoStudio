@@ -7,7 +7,6 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 using System;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using Random = UnityEngine.Random;
 using NaughtyAttributes;
 using Hadal.Networking.UI.MainMenu;
 

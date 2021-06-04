@@ -24,7 +24,7 @@ namespace Hadal.UI
 
     public class UIManager : MonoBehaviourDebug
     {
-        public static UIManager Instance;
+        public static UIManager Instance; 
 
         public string debugKey;
 
@@ -121,20 +121,6 @@ namespace Hadal.UI
         int sl_UI;
 
         #region Unity Lifecycle
-        void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-                //OnHealthChange += UpdateHealthBar;
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
-        }
-
         void Start()
         {
             neManager = NetworkEventManager.Instance;
@@ -190,6 +176,14 @@ namespace Hadal.UI
         }
 
         //private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
+        #endregion
+
+        #region External calls
+        public void Activate()
+        {
+            gameObject.SetActive(true);
+            if (IsNull) Instance = this;
+        }
         #endregion
 
         #region Health
@@ -323,6 +317,7 @@ namespace Hadal.UI
 
         public void TrackProjectile(Transform projectileTransform, TrackerType projectileType)
         {
+            if (IsNull) return;
             switch (projectileType)
             {
                 case TrackerType.SONIC_DART:
@@ -426,6 +421,10 @@ namespace Hadal.UI
         {
             neManager.LeaveRoom(true);
         }
+        #endregion
+
+        #region Accessors
+        public static bool IsNull => Instance == null;
         #endregion
     }
 }

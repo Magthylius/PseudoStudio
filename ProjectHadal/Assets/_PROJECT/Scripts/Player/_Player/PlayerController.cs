@@ -25,38 +25,28 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] PlayerLamp lamp;
         [Foldout("Components"), SerializeField] PlayerShoot shooter;
         [Foldout("Components"), SerializeField] PlayerCollisions collisions;
+        [Foldout("Components"), SerializeField] UIManager playerUI;
+
         [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] string localPlayerLayer;
         [Foldout("Graphics"), SerializeField] GameObject[] graphics;
         [Foldout("Graphics"), SerializeField] GameObject wraithGraphic;
-        private PhotonView _pView;
-        private PlayerManager _manager;
 
-        [SerializeField] private bool playerReady = false;
-        private bool cameraReady = false;
-        private bool loadingReady = false;
+        PhotonView _pView;
+        PlayerManager _manager;
 
+        //! Ready checks
+        bool playerReady = false;
+        bool cameraReady = false;
+        bool loadingReady = false;
+
+        //! Self information
         Photon.Realtime.Player attachedPlayer;
         int pViewSelfID;
         
+        
         public static event Action<PlayerController> OnInitialiseComplete;
 
-        #endregion
-
-        #region Notify Ready Co-routine
-        IEnumerator SendReady()
-        {
-            while(!playerReady)
-            {
-                //print(cameraReady && loadingReady);
-                if (cameraReady && loadingReady)
-                {
-                    //print("event sent");
-                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID, SendOptions.SendReliable);
-                }
-                yield return new WaitForSeconds(1);
-            }
-        }
         #endregion
 
         #region Unity Lifecycle
@@ -76,7 +66,7 @@ namespace Hadal.Player
             //base.OnEnable();
             TryInjectDependencies();
             
-            if (!_manager.managerPView.IsMine) // If Not the Host player, handle camera activation.
+            if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
             {
                 HandlePhotonView(_pView.IsMine);
 
@@ -94,6 +84,8 @@ namespace Hadal.Player
 
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);
+
+            
             //Deactivate();
         }
 
@@ -132,14 +124,13 @@ namespace Hadal.Player
         void OnDestroy()
         {
             //! Might need to uninject player
-            UIManager.Instance.PauseMenuOpened -= Disable;
-            UIManager.Instance.PauseMenuClosed -= Enable;
+            playerUI.PauseMenuOpened -= Disable;
+            playerUI.PauseMenuClosed -= Enable;
         }
 
         #endregion
 
         #region Public Methods
-
         public void InjectDependencies(PlayerManager playerManager, Photon.Realtime.Player photonPlayer)
         {
             _manager = playerManager;
@@ -163,6 +154,24 @@ namespace Hadal.Player
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Notifies ready co-routine
+        /// </summary>
+        IEnumerator SendReady()
+        {
+            while (!playerReady)
+            {
+                //print(cameraReady && loadingReady);
+                if (cameraReady && loadingReady)
+                {
+                    //print("event sent");
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID, SendOptions.SendReliable);
+                }
+                yield return new WaitForSeconds(1);
+            }
+        }
+
 
         private void DoDebugUpdate(in float deltaTime)
         {
@@ -206,9 +215,12 @@ namespace Hadal.Player
 
             if (isMine)
             {
-                UIManager.Instance.InjectPlayer(pTrans, rotator, RotationInput);
-                UIManager.Instance.PauseMenuOpened += Disable;
-                UIManager.Instance.PauseMenuClosed += Enable;
+                //! Make sure player UI is inactive in prefab!
+                playerUI.gameObject.SetActive(true);
+                playerUI.InjectPlayer(pTrans, rotator, RotationInput);
+                playerUI.PauseMenuOpened += Disable;
+                playerUI.PauseMenuClosed += Enable;
+
                 Activate();
                 cameraController.Activate();
 
@@ -222,8 +234,8 @@ namespace Hadal.Player
 
                 try
                 {
-                    UIManager.Instance.PauseMenuOpened -= Disable;
-                    UIManager.Instance.PauseMenuClosed -= Enable;
+                    playerUI.PauseMenuOpened -= Disable;
+                    playerUI.PauseMenuClosed -= Enable;
                 }
                 catch { }
             }
@@ -338,7 +350,9 @@ namespace Hadal.Player
         {
             loadingReady = true;
             //print("Loading Ready is : " + loadingReady);
-        }    
+        }
+
+        public UIManager UI => playerUI;
         #endregion
     }
 }

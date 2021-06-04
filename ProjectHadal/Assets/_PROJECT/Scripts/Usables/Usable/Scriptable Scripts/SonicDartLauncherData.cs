@@ -24,8 +24,9 @@ namespace Hadal.Usables
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
 
             //! pass in transform data to uimanager
-            UIManager.Instance.TrackProjectile(projectileObj.transform, TrackerType.SONIC_DART);
-             
+            if (!UIManager.IsNull) UIManager.Instance.TrackProjectile(projectileObj.transform, TrackerType.SONIC_DART);
+           
+            
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)
@@ -37,7 +38,7 @@ namespace Hadal.Usables
                     sonicDart.Rigidbody.isKinematic = false;
                     sonicDart.transform.SetParent(SonicDartPool.Instance.transform); ;
                 }
-                UIManager.Instance.UntrackProjectile(obj.transform);
+                if (!UIManager.IsNull) UIManager.Instance.UntrackProjectile(obj.transform);
                 SonicDartPool.Instance.Dump(sonicDart);
             }
         }
