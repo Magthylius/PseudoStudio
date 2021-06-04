@@ -80,6 +80,9 @@ namespace Hadal.Networking.UI.MainMenu
 
         FlexibleRect confirmQuitFR;
 
+        //! Connections
+        bool onMaster = false;
+
         void Awake()
         {
             Instance = this;
@@ -286,14 +289,16 @@ namespace Hadal.Networking.UI.MainMenu
 
         public void BTN_CreateRooms()
         {
+            if (!NetworkEventManager.Instance.InLobby) return;
             createRoomFR.StartLerp(false);
-            findRoomFR.StartLerp(true);
+            findRoomFR.StartLerp(true); 
         }
 
         public void BTN_CreateActualRoom()
         {
             if (!allowRoomCreation) return;
             NetworkEventManager.Instance.CreateRoom(createRoomTMPInput.text);
+            onMaster = false;
             connectingMenu.Open();
         }
 
@@ -391,10 +396,15 @@ namespace Hadal.Networking.UI.MainMenu
             }
         }
 
-        
+
         #endregion
 
         #endregion
+
+        public static bool IsNull => Instance == null;
+
+        public bool OnMaster => onMaster;
+        public void ConnectedToMaster() => onMaster = true;
     }
 
 }

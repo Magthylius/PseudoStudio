@@ -157,9 +157,9 @@ namespace Hadal.Networking.UI.Loading
             //print(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
 
-        void LoadingCompletedPrint ()
+        void LoadingCompletedPrint()
         {
-            print("Loading Completed.");
+            //print("Loading Completed.");
         }
 
         #region Load Checks

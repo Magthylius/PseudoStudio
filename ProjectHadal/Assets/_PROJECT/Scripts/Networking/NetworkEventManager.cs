@@ -284,14 +284,17 @@ namespace Hadal.Networking
         #region Connection Functions
         public void ConnectUsingSettings()
         {
+            if (PeerState != PeerStateValue.Disconnected) return;
             PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
         }
 
         public override void OnConnectedToMaster()
         {
-            Debug.Log("Connected to Master");
+            //Debug.Log("Connected to Master");
             PhotonNetwork.JoinLobby();
             PhotonNetwork.AutomaticallySyncScene = true;
+
+            if (!MainMenuManager.IsNull) MainMenuManager.Instance.ConnectedToMaster();
         }
 
         public override void OnConnected()
@@ -376,17 +379,10 @@ namespace Hadal.Networking
 
         #region Lobby Functions
         public override void OnJoinedLobby()
-        {
-            //Debug.Log("Joined Lobby");
-            //PhotonNetwork.NickName = "Player " + Random.Range(0, 10).ToString("00");
-            /*if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
-                SetupNetworking();*/
-
-            //SetupNetworking();
-
-            
+        {           
             mainMenuManager = MainMenuManager.Instance;
-           // mainMenuManager.InitMainMenu();
+            // mainMenuManager.InitMainMenu();
+            print("Joined lobby");
             JoinedLobbyEvent.Invoke();
             gameManager.ChangeGameState(GameManager.GameState.IDLE);
         }
@@ -397,6 +393,7 @@ namespace Hadal.Networking
 
         public override void OnLeftLobby()
         {
+            print("Left lobby");
         }
 
         public override void OnRegionListReceived(RegionHandler regionHandler)
@@ -505,7 +502,10 @@ namespace Hadal.Networking
         public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;
         public List<GameObject> PlayerObjects => playerObjects;
         public bool IsConnected => PhotonNetwork.IsConnected;
+        public bool InLobby => PhotonNetwork.InLobby;
+        public bool InRoom => PhotonNetwork.InRoom;
         public bool IsMasterClient => PhotonNetwork.IsMasterClient;
+        public PeerStateValue PeerState => PhotonNetwork.NetworkingClient.LoadBalancingPeer.PeerState;
         #endregion
     }
 }
