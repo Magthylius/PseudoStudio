@@ -51,7 +51,7 @@ namespace Hadal.Player
                 //print(cameraReady && loadingReady);
                 if (cameraReady && loadingReady)
                 {
-                    print("event sent");
+                    //print("event sent");
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID, SendOptions.SendReliable);
                 }
                 yield return new WaitForSeconds(1);
@@ -337,7 +337,7 @@ namespace Hadal.Player
         public void SetLoadingReady()
         {
             loadingReady = true;
-            print("Loading Ready is : " + loadingReady);
+            //print("Loading Ready is : " + loadingReady);
         }    
         #endregion
     }
