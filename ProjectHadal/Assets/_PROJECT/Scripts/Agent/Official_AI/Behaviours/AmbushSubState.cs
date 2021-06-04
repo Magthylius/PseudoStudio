@@ -1,5 +1,7 @@
 using Tenshi.AIDolls;
 using System;
+using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI.States
 {
@@ -18,7 +20,10 @@ namespace Hadal.AI.States
             b = parent.Brain;
         }
 
-        public void OnStateStart() { }
+        public void OnStateStart()
+		{
+			if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
+		}
         public void StateTick()
         {
             //! new logic

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Tenshi.AIDolls;
 using Tenshi;
+using Tenshi.UnitySoku;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace Hadal.AI.States
         }
         public void OnStateStart()
         {
-            
+            if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
         }
         public void StateTick()
         {

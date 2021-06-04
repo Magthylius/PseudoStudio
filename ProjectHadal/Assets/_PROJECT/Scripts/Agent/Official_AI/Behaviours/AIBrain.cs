@@ -33,6 +33,7 @@ namespace Hadal.AI
         [SerializeField] private LeviathanRuntimeData runtimeData;
         [SerializeField] private StateMachineData machineData;
         [SerializeField] private bool isOffline;
+		public bool DebugEnabled;
 
         public LeviathanRuntimeData RuntimeData => runtimeData;
         public StateMachineData MachineData => machineData;

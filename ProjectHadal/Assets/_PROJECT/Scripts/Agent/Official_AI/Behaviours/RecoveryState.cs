@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tenshi.AIDolls;
 using System;
+using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -17,7 +19,10 @@ namespace Hadal.AI
             NavigationHandler = Brain.NavigationHandler;
         }
 
-        public void OnStateStart() { }
+        public void OnStateStart()
+		{
+			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
+		}
         public void StateTick() { }
         public void LateStateTick()
         {

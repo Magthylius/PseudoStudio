@@ -2,6 +2,8 @@ using Tenshi.AIDolls;
 using System;
 using System.Collections;
 using UnityEngine;
+using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -27,6 +29,7 @@ namespace Hadal.AI
 
         public void OnStateStart()
 		{
+			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 			NavigationHandler.SetCanPath(true);
 			
 			if (debugRoutine != null) return;

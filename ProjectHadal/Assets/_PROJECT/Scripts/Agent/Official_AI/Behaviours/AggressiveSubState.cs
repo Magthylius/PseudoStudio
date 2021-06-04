@@ -5,6 +5,8 @@ using System;
 using Tenshi.UnitySoku;
 using Timer = Hadal.Utility.Timer;
 using System.Linq;
+using Tenshi;
+using Tenshi.UnitySoku;
 using ExitGames.Client.Photon;
 
 namespace Hadal.AI.States
@@ -33,7 +35,7 @@ namespace Hadal.AI.States
         }
         public void OnStateStart()
         {
-
+			if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
         }
         public void StateTick()
         {

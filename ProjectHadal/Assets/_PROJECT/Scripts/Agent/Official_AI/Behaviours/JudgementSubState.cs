@@ -3,6 +3,8 @@ using System;
 using Hadal.AI.TreeNodes;
 using System.Collections.Generic;
 using Tenshi.UnitySoku;
+using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI.States
 {
@@ -93,6 +95,7 @@ namespace Hadal.AI.States
 
         public void OnStateStart()
 		{
+			if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
 			b.RuntimeData.ResetJudgementTimer();
 		}
         public void StateTick()

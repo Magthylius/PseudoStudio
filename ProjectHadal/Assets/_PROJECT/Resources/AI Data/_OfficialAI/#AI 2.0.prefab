@@ -302,13 +302,7 @@ MonoBehaviour:
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   isOffline: 1
-  targetChangeTimer: 5
-  AnticipationSettings: {fileID: 0}
-  EngagementSettings: {fileID: 0}
-  ambushTimoutTime: 5
-  RecoverySettings: {fileID: 0}
-  recoveryTimoutTime: 2
-  CooldownSettings: {fileID: 0}
+  DebugEnabled: 1
   stunDuration: 1
 --- !u!65 &2206939684412345073
 BoxCollider:
@@ -385,8 +379,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   threshDamage: 0
   tailWhipDamage: 0
-  players: []
-  playerObjects: []
 --- !u!114 &2206939684562575358
 MonoBehaviour:
   m_ObjectHideFlags: 0
