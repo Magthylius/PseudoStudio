@@ -110,12 +110,12 @@ MonoBehaviour:
   timeoutNewPointTime: 12
   obstacleCheckTime: 0.1
   maxVelocity: 50
-  thrustForce: 20
+  thrustForce: 12
   attractionForce: 15
-  avoidanceForce: 0.5
-  closeRepulsionForce: 3
-  axisStalemateDeviationForce: 5
-  obstacleDetectRadius: 25
+  avoidanceForce: 10
+  closeRepulsionForce: 14
+  axisStalemateDeviationForce: 2
+  obstacleDetectRadius: 60
   smoothLookAtSpeed: 12
   obstacleMask:
     serializedVersion: 2
@@ -302,7 +302,7 @@ MonoBehaviour:
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   isOffline: 1
-  DebugEnabled: 1
+  DebugEnabled: 0
   stunDuration: 1
 --- !u!65 &2206939684412345073
 BoxCollider:

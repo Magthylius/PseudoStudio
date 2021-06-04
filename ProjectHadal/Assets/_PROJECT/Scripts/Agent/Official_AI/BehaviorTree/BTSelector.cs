@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 namespace Hadal.AI.TreeNodes
@@ -20,17 +21,19 @@ namespace Hadal.AI.TreeNodes
         * it will report a failure instead.*/
         public override NodeState Evaluate()
         {
-            foreach(var node in nodes)
+            foreach (var node in nodes)
             {
-                switch(node.Evaluate())
+                switch (node.Evaluate())
                 {
                     case NodeState.RUNNING:
-                    _nodeState = NodeState.RUNNING;
-                    return _nodeState;
+                        _nodeState = NodeState.RUNNING;
+                        Debug();
+                        return _nodeState;
 
                     case NodeState.SUCCESS:
-                    _nodeState = NodeState.SUCCESS;
-                    return _nodeState;
+                        _nodeState = NodeState.SUCCESS;
+                        Debug();
+                        return _nodeState;
 
                     case NodeState.FAILURE:
                         break;
@@ -39,7 +42,14 @@ namespace Hadal.AI.TreeNodes
                 }
             }
             _nodeState = NodeState.FAILURE;
+            Debug();
             return _nodeState;
+        }
+
+        private void Debug()
+        {
+            if (EnableDebug)
+                $"Name: {debugName}, Nodestate: {_nodeState}".Msg();
         }
     }
 }
