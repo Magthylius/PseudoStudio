@@ -16,6 +16,7 @@ namespace Hadal.AI
         [Header("Information")]
         public LayerMask PlayerMask;
         public LayerMask ObstacleMask;
+        public NavPoint navPointPrefab;
         [SerializeField] private StateMachineData machineData;
 
         [Header("Objectives")]

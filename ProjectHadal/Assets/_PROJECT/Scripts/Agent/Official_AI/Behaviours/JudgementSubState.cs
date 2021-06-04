@@ -107,7 +107,7 @@ namespace Hadal.AI.States
             });
             threshFallbackA1.SetDebugName("thresh fallback A1");
 
-            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, null, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
+            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
             getPlayerToCarry.SetDebugName("get player to carry");
 
             BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
