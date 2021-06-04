@@ -5,8 +5,6 @@ using System;
 using Tenshi.UnitySoku;
 using Timer = Hadal.Utility.Timer;
 using System.Linq;
-using Tenshi;
-using Tenshi.UnitySoku;
 using ExitGames.Client.Photon;
 
 namespace Hadal.AI.States
@@ -209,7 +207,7 @@ namespace Hadal.AI.States
             Vector3 setPosition = data[2].AsVector3();
 
             //TODO: we probably need to make an information class in the other assembly, damagemanager is doing everything at the moment
-            Transform t = b.RuntimeData.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).Select(p => p.GetTarget).SingleOrDefault();
+            Transform t = b.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).Select(p => p.GetTarget).SingleOrDefault();
             if (t == null) return;
             t.position = setPosition;
             $"pin position set to {t.position}".Msg();

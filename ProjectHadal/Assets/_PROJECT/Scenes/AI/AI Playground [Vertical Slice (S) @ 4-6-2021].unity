@@ -275,7 +275,8 @@ GameObject:
   m_Component:
   - component: {fileID: 64097383}
   - component: {fileID: 64097384}
-  m_Layer: 8
+  - component: {fileID: 64097385}
+  m_Layer: 0
   m_Name: Point I
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -312,6 +313,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &64097385
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64097382}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &64815186 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2311244546595639791, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
@@ -852,6 +866,71 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2311244546595639791, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
   m_PrefabInstance: {fileID: 1544713045}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &173634969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 173634972}
+  - component: {fileID: 173634971}
+  - component: {fileID: 173634970}
+  m_Layer: 0
+  m_Name: CavernHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &173634970
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173634969}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 303.2249, y: 277.61395, z: 331.86475}
+  m_Center: {x: 49.18564, y: 33.18219, z: -41.194756}
+--- !u!114 &173634971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173634969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cavernTag: 1
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 192
+  aiMask:
+    serializedVersion: 2
+    m_Bits: 16384
+  ambushPoints: []
+--- !u!4 &173634972
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173634969}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 33.39219, y: 62.850403, z: 120.44313}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 805868589}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &183633559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2311244546595639791, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
@@ -2436,7 +2515,8 @@ GameObject:
   m_Component:
   - component: {fileID: 401092086}
   - component: {fileID: 401092087}
-  m_Layer: 8
+  - component: {fileID: 401092088}
+  m_Layer: 0
   m_Name: Point H
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -2473,6 +2553,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &401092088
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401092085}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &406561246 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2311244546595639791, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
@@ -2861,7 +2954,8 @@ GameObject:
   m_Component:
   - component: {fileID: 449558619}
   - component: {fileID: 449558620}
-  m_Layer: 8
+  - component: {fileID: 449558621}
+  m_Layer: 0
   m_Name: Point D
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -2898,6 +2992,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &449558621
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449558618}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &455053765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3623,7 +3730,8 @@ GameObject:
   m_Component:
   - component: {fileID: 571668655}
   - component: {fileID: 571668656}
-  m_Layer: 8
+  - component: {fileID: 571668657}
+  m_Layer: 0
   m_Name: Point B
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -3660,6 +3768,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &571668657
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571668654}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &576257395
 GameObject:
   m_ObjectHideFlags: 0
@@ -4761,6 +4882,7 @@ Transform:
   - {fileID: 1180154795}
   - {fileID: 837966204}
   - {fileID: 426166415}
+  - {fileID: 173634972}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6206,7 +6328,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1009301671}
   - component: {fileID: 1009301672}
-  m_Layer: 8
+  - component: {fileID: 1009301673}
+  m_Layer: 0
   m_Name: Point E
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -6243,6 +6366,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &1009301673
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009301670}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1021829014 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2311244546595639791, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
@@ -6427,7 +6563,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1061930653}
   - component: {fileID: 1061930654}
-  m_Layer: 8
+  - component: {fileID: 1061930655}
+  m_Layer: 0
   m_Name: Point F
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -6464,6 +6601,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &1061930655
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061930652}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1065581743 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2311244546595639791, guid: 8f546cf7c4ce5314a839a7a0d768cc8a, type: 3}
@@ -6837,7 +6987,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1168273421}
   - component: {fileID: 1168273422}
-  m_Layer: 8
+  - component: {fileID: 1168273423}
+  m_Layer: 0
   m_Name: Point C
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -6874,6 +7025,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &1168273423
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168273420}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1180154794
 GameObject:
   m_ObjectHideFlags: 0
@@ -7382,7 +7546,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1315216339}
   - component: {fileID: 1315216340}
-  m_Layer: 8
+  - component: {fileID: 1315216341}
+  m_Layer: 0
   m_Name: Point K
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -7419,6 +7584,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &1315216341
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315216338}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1326021204
 GameObject:
   m_ObjectHideFlags: 0
@@ -7429,7 +7607,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1326021205}
   - component: {fileID: 1326021206}
-  m_Layer: 8
+  - component: {fileID: 1326021207}
+  m_Layer: 0
   m_Name: Point A
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -7466,6 +7645,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &1326021207
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021204}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1330580880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8017,7 +8209,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1423040241}
   - component: {fileID: 1423040242}
-  m_Layer: 8
+  - component: {fileID: 1423040243}
+  m_Layer: 0
   m_Name: Point G
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -8054,6 +8247,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &1423040243
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423040240}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1424146586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11803,7 +12009,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2081549191}
   - component: {fileID: 2081549192}
-  m_Layer: 8
+  - component: {fileID: 2081549193}
+  m_Layer: 0
   m_Name: Point J
   m_TagString: NavigationPoint
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
@@ -11840,6 +12047,19 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 419773c42ed04ee4f8914fbba8f67f61, type: 2}
   cavernTag: 0
   friends: []
+--- !u!65 &2081549193
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081549190}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2127547448
 GameObject:
   m_ObjectHideFlags: 0

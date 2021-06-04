@@ -70,7 +70,7 @@ namespace Hadal.AI.States
         internal Transform ChooseClosestRandomPlayer(float range)
         {
             if (Brain == null) return null;
-            List<Transform> targets = Brain.RuntimeData.Players
+            List<Transform> targets = Brain.Players
                             .Select(p => p.GetTarget)
                             .Where(p => Vector3.Distance(Brain.transform.position, p.position) < range)
                             .ToList();

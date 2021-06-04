@@ -67,11 +67,11 @@ namespace Hadal.AI
             int viewID = data[0].AsInt();
             int damage = data[1].AsInt();
 
-            PlayerController player = Brain.RuntimeData.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
+            PlayerController player = Brain.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
             if (player == null)
             {
-                Brain.RuntimeData.RefreshPlayerReferences();
-                player = Brain.RuntimeData.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
+                Brain.RefreshPlayerReferences();
+                player = Brain.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
             }
 
             if (player == null) { $"Cannot find player with view ID of {viewID}!".Msg(); return; }

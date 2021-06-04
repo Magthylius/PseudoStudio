@@ -12,26 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191e20eff5259c9408eda68e0cb5e3f1, type: 3}
   m_Name: RuntimeData
   m_EditorClassIdentifier: 
-  healthManager: {fileID: 0}
-  navigationHandler: {fileID: 0}
-  senseDetection: {fileID: 0}
-  sightDetection: {fileID: 0}
-  cavernManager: {fileID: 0}
   PlayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 192
   ObstacleMask:
     serializedVersion: 2
     m_Bits: 4352
   MouthObject: {fileID: 0}
-  Players: []
+  Players:
+  - {fileID: 0}
   CurrentTarget: {fileID: 0}
   CarriedPlayer: {fileID: 0}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
-  mainObjective: 0
-  engagementObjective: 0
-  confidence: 0
+  mainObjective: 2
+  engagementObjective: 3
+  confidence: 50
   bonusConfidence: 0
   cumulativeDamage: 0
-  cumulativeDamageThreshold: 0
-  judgementStoptimer: 0
+  cumulativeDamageThreshold: 40
+  judgementStoptimer: 11.3487425

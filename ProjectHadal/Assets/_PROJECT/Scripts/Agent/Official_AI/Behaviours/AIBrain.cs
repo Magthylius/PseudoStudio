@@ -7,6 +7,8 @@ using Hadal.AI.States;
 using Hadal.AI.Caverns;
 using Photon.Pun;
 using System.Linq;
+using Tenshi;
+using Hadal.Player;
 
 namespace Hadal.AI
 {
@@ -29,8 +31,14 @@ namespace Hadal.AI
         private List<ILeviathanComponent> preUpdateComponents;
         private List<ILeviathanComponent> mainUpdateComponents;
 
-        [Header("Data")]
+        [Header("Runtime Data")]
         [SerializeField] private LeviathanRuntimeData runtimeData;
+        public GameObject MouthObject;
+        [ReadOnly] public List<PlayerController> Players;
+        [ReadOnly] public PlayerController CurrentTarget;
+        [ReadOnly] public PlayerController CarriedPlayer;
+        
+        [Header("Settings Data")]
         [SerializeField] private StateMachineData machineData;
         [SerializeField] private bool isOffline;
 		public bool DebugEnabled;
@@ -75,6 +83,10 @@ namespace Hadal.AI
             preUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
             mainUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
 
+            Players = new List<PlayerController>();
+            CurrentTarget = null;
+            CarriedPlayer = null;
+
             runtimeData.Awake_Initialise();
             navigationHandler.Initialise();
         }
@@ -90,6 +102,7 @@ namespace Hadal.AI
 			stateMachine.SetState(anticipationState);
 
 			//! Runtime data
+            RefreshPlayerReferences();
             runtimeData.Start_Initialise();
             runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
         }
@@ -172,6 +185,9 @@ namespace Hadal.AI
         /// <summary> Set the AI to stunstate</summary>
         /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
         public void SetIsStunned(bool statement) => isStunned = statement;
+
+        public void RefreshPlayerReferences()
+            => Players = FindObjectsOfType<PlayerController>().ToList();
 
         #endregion
 

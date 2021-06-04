@@ -16,10 +16,6 @@ namespace Hadal.AI
         [Header("Information")]
         public LayerMask PlayerMask;
         public LayerMask ObstacleMask;
-        public GameObject MouthObject;
-        [ReadOnly] public List<PlayerController> Players;
-        [ReadOnly] public PlayerController CurrentTarget;
-        [ReadOnly] public PlayerController CarriedPlayer;
         [SerializeField] private StateMachineData machineData;
 
         [Header("Objectives")]
@@ -60,9 +56,6 @@ namespace Hadal.AI
             //! Information
             if (PlayerMask == default) PlayerMask = LayerMask.GetMask("LocalPlayer");
             if (ObstacleMask == default) ObstacleMask = LayerMask.GetMask("Wall");
-            Players = new List<PlayerController>();
-            CurrentTarget = null;
-            CarriedPlayer = null;
 
             //! Objectives
             mainObjective = MainObjective.None;
@@ -85,12 +78,6 @@ namespace Hadal.AI
         public void Start_Initialise()
         {
             //! Components should have already been initialised at this phase
-
-            //! Information
-            RefreshPlayerReferences();
         }
-
-        public void RefreshPlayerReferences()
-            => Players = FindObjectsOfType<PlayerController>().ToList();
     }
 }

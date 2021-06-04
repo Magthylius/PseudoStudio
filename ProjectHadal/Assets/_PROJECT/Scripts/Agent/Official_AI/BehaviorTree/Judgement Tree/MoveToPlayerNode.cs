@@ -26,7 +26,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-            _target = _brain.RuntimeData.CurrentTarget.transform;
+            _target = _brain.CurrentTarget.transform;
             if (_target == null) return NodeState.FAILURE;
 
             MoveIfNotMoving();

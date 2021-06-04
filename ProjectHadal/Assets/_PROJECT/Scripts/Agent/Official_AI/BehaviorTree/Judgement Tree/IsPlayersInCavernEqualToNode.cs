@@ -1,4 +1,5 @@
 using Hadal.AI.Caverns;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI.TreeNodes
 {
@@ -27,6 +28,7 @@ namespace Hadal.AI.TreeNodes
             
             //! Identify how many players are in the location
             int playerCount = handler.GetPlayerCount;
+            playerCount.Msg();
             if (playerCount != _checkCount) return NodeState.FAILURE;
 
             return NodeState.SUCCESS;

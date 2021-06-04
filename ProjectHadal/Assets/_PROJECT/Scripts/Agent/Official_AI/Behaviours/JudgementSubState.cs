@@ -4,7 +4,6 @@ using Hadal.AI.TreeNodes;
 using System.Collections.Generic;
 using Tenshi.UnitySoku;
 using Tenshi;
-using Tenshi.UnitySoku;
 
 namespace Hadal.AI.States
 {

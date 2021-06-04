@@ -31,25 +31,25 @@ namespace Hadal.AI.Caverns
         void OnValidate()
         {
             collider = GetComponent<Collider>();
-            collider.isTrigger = true;
+            collider.isTrigger = true; 
         }
 
-        void OnEnable()
+        void Awake()
         {
-            playersInCavern = new List<PlayerController>();
-            collider = GetComponent<Collider>();
-            collider.isTrigger = true;
-        }
-
-        void Start()
-        {
-            manager = CavernManager.Instance;
+            manager = FindObjectOfType<CavernManager>();
             manager.InjectHandler(this);
-
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
             AIEnteredCavernEvent += manager.OnAIEnterCavern;
             AILeftCavernEvent += manager.OnAILeaveCavern;
+
+            playersInCavern = new List<PlayerController>();
+        }
+
+        void OnEnable()
+        {
+            collider = GetComponent<Collider>();
+            collider.isTrigger = true;
         }
 
         void OnDestroy()
