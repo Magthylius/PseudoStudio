@@ -18,16 +18,12 @@ MonoBehaviour:
   ObstacleMask:
     serializedVersion: 2
     m_Bits: 4352
-  MouthObject: {fileID: 0}
-  Players:
-  - {fileID: 0}
-  CurrentTarget: {fileID: 0}
-  CarriedPlayer: {fileID: 0}
+  navPointPrefab: {fileID: 9011680927767773169, guid: 42cb9a163467d1a44b9fb2e0eba679e2, type: 3}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
-  mainObjective: 2
+  mainObjective: 3
   engagementObjective: 3
-  confidence: 50
+  confidence: 51
   bonusConfidence: 0
   cumulativeDamage: 0
   cumulativeDamageThreshold: 40
-  judgementStoptimer: 11.3487425
+  judgementStoptimer: 10.006014
