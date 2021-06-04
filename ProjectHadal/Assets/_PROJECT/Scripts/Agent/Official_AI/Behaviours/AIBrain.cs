@@ -82,9 +82,13 @@ namespace Hadal.AI
         {
             allAIComponents.ForEach(i => i.Initialise(this));
 			cavernManager = FindObjectOfType<CavernManager>();
-            InitialiseStates();
-            stateMachine.SetState(idleState);
+            
+			//! State machine
+			InitialiseStates();
+            runtimeData.SetMainObjective(MainObjective.Anticipation);
+			stateMachine.SetState(anticipationState);
 
+			//! Runtime data
             runtimeData.Start_Initialise();
             runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
         }
@@ -118,23 +122,23 @@ namespace Hadal.AI
             //! instantiate classes
             stateMachine = new StateMachine();
 
-            idleState = new IdleState(this);
+			// Anticipation
             anticipationState = new AnticipationState(this);
 
+			// Engagement
             eAggressiveState = new AggressiveSubState();
             eAmbushState = new AmbushSubState();
             eJudgementState = new JudgementSubState();
             engagementState = new EngagementState(this, eAggressiveState, eAmbushState, eJudgementState);
 
+			// Others
             recoveryState = new RecoveryState(this);
             stunnedState = new StunnedState(this);
             
             //! -setup custom transitions-
-            stateMachine.AddSequentialTransition(from: idleState, to: anticipationState, withCondition: IsAnticipating());
-            stateMachine.AddSequentialTransition(from: anticipationState, to: engagementState, withCondition: HasEngageObjective());
-            stateMachine.AddSequentialTransition(from: engagementState, to: recoveryState, withCondition: IsRecovering());
-
-            stateMachine.AddEventTransition(to: idleState, withCondition: ResetStates());
+            stateMachine.AddEventTransition(to: anticipationState, withCondition: IsAnticipating());
+            stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
+            stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
 
             //! Any state can go into stunnedState
             // stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
@@ -145,20 +149,17 @@ namespace Hadal.AI
 
         Func<bool> IsAnticipating() => () =>
         {
-            return false;
+            return RuntimeData.GetMainObjective == MainObjective.Anticipation;
         };
         Func<bool> IsRecovering() => () =>
         {
-            return false;
+            return RuntimeData.GetMainObjective == MainObjective.Recover;
         };
         Func<bool> HasEngageObjective() => () =>
         {
-            return RuntimeData.GetMainObjective != MainObjective.None;
+            return RuntimeData.GetMainObjective == MainObjective.Engagement;
         };
-        Func<bool> ResetStates() => () =>
-        {
-            return false;
-        };
+		
         Func<bool> IsStunned() => () =>
         {
             return isStunned;

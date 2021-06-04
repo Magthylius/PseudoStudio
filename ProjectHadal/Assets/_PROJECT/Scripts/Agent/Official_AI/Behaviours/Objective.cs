@@ -12,6 +12,7 @@ namespace Hadal.AI
 
     public enum EngagementObjective
     {
+		None,
         Aggressive,
         Ambush,
         Judgement

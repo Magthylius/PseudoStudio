@@ -91,11 +91,15 @@ namespace Hadal.AI.States
 			root.AddNode(sequenceA1);
         }
 
-        public void OnStateStart() { }
+        public void OnStateStart()
+		{
+			b.RuntimeData.ResetJudgementTimer();
+		}
         public void StateTick()
         {
-            b.RuntimeData.TickJudgementTimer(b.DeltaTime);
-            if (TickUpdateTimer(b.DeltaTime) > updateDelay)
+			float deltaTime = b.DeltaTime;
+            b.RuntimeData.TickJudgementTimer(deltaTime);
+            if (TickUpdateTimer(deltaTime) > updateDelay)
             {
                 ResetUpdateTimer();
                 var result = root.Evaluate();

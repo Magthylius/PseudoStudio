@@ -37,11 +37,13 @@ namespace Hadal.AI.States
         }
         public void StateTick()
         {
+			/*
             if (parent.TargetPlayer == null)
             {
                 //! Based on design chart, AI has a list of possible randoms to choose a player from
                 // parent.SetTargetPlayer(parent.ChooseClosestRandomPlayer());
             }
+			*/
 
             //! cannot use PinTargetPlayer anymore in update
             // PinTargetPlayer();

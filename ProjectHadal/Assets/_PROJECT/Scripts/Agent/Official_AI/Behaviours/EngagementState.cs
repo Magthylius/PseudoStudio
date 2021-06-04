@@ -20,7 +20,6 @@ namespace Hadal.AI.States
         {
             Brain = brain;
             NavigationHandler = Brain.NavigationHandler;
-            TargetPlayer = null;
 
             //! intialise sub machine and states
             aggressive.SetParent(this);
@@ -39,7 +38,7 @@ namespace Hadal.AI.States
         }
         public void OnStateStart()
         {
-            // subStateMachine.CurrentState.OnStateStart();
+            
         }
         public void StateTick()
         {
@@ -58,18 +57,11 @@ namespace Hadal.AI.States
             
         }
 
-        Vector3 curDestination;
-        public Transform TargetPlayer { get; private set; }
-        Vector3 prevDest;
-        bool isFirstPath;
-        bool isGridInitialised;
-
         /// <summary> Set the target player once detected in AI's sphere range(its senses) </summary>
         /// <param name="player">The transform of the player to target.</param>
         internal void SetTargetPlayer(Transform player)
         {
-            if (player == null) return;
-            TargetPlayer = player;
+            
         }
 
         internal Transform ChooseClosestRandomPlayer(float range)
@@ -96,6 +88,8 @@ namespace Hadal.AI.States
 
         internal bool TargetPlayerIsInRange(float range)
         {
+			return false;
+			/*
             if (TargetPlayer == null) return false;
 
             float dist = Vector3.Distance(Brain.transform.position, TargetPlayer.position);
@@ -141,6 +135,7 @@ namespace Hadal.AI.States
             //     }
             // }
             // return false;
+			*/
         }
 
         public Func<bool> ShouldTerminate() => () => false;

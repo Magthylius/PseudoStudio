@@ -1,5 +1,7 @@
 using Tenshi.AIDolls;
 using System;
+using System.Collections;
+using UnityEngine;
 
 namespace Hadal.AI
 {
@@ -7,27 +9,44 @@ namespace Hadal.AI
     {
         private AIBrain Brain;
         private PointNavigationHandler NavigationHandler;
+		private IEnumerator debugRoutine;
         
         public AnticipationState(AIBrain brain)
         {
             Brain = brain;
             NavigationHandler = Brain.NavigationHandler;
+			debugRoutine = null;
         }
+		
+		IEnumerator Debug_SwitchToEngagementJudgementState()
+		{
+			yield return new WaitForSeconds(2f);
+			Brain.RuntimeData.SetMainObjective(MainObjective.Engagement);
+			Brain.RuntimeData.SetEngagementObjective(EngagementObjective.Judgement);
+		}
 
-        public void OnStateStart() { }
+        public void OnStateStart()
+		{
+			NavigationHandler.SetCanPath(true);
+			
+			if (debugRoutine != null) return;
+			debugRoutine = Debug_SwitchToEngagementJudgementState();
+			Brain.StartCoroutine(debugRoutine);
+		}
+		
         public void StateTick()
         {
-            MainObjective objective = MainObjective.None;
-            
             //! Anticipation evaluation here
             // ...
-
-            // if (ambush)
-            //     objective = AnticipationObjective.Ambush;
-            // else if (aggressive)
-            //     objective = AnticipationObjective.Aggressive;
-            
-            Brain.RuntimeData.SetMainObjective(objective);
+			
+			/*
+			EngagementObjective eObj = Brain.MachineData.Anticipation.GetClearObjective(Brain.RuntimeData.NormalisedConfidence);
+			if (eObj != EngagementObjective.None)
+			{
+				LeviathanRuntimeData d = Brain.RuntimeData;
+				d.SetMainObjective(MainObjective.Engagement);
+				d.SetEngagementObjective(eObj);
+			}*/
         }
         public void LateStateTick() { }
         public void FixedStateTick() { }
