@@ -33,7 +33,7 @@ namespace Hadal.Usables
                     sonicDart.Rigidbody.isKinematic = false;
                     sonicDart.transform.SetParent(LurePool.Instance.transform); ;
                 }
-                UIManager.Instance.UntrackProjectile(obj.transform);
+                if (!UIManager.IsNull) UIManager.Instance.UntrackProjectile(obj.transform);
                 LurePool.Instance.Dump(sonicDart);
             }
         }

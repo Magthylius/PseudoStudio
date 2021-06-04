@@ -16,6 +16,9 @@ namespace Hadal.Player.Behaviours
 
         NetworkEventManager neManager;
 
+        [Header("Player")]
+        [SerializeField] PlayerController controller;
+
         [Header("Aiming")]
         public Rigidbody aimParentRb;
         public Transform aimParentObject;
@@ -138,7 +141,8 @@ namespace Hadal.Player.Behaviours
             if (!AllowUpdate) return;
             if (!tLauncher.IsChamberLoaded)
             {
-                UIManager.Instance.UpdateFiringVFX(true);
+                //if (UIManager.IsNull) return;
+                controller.UI.UpdateFiringVFX(true);
                 return;
             }
             HandleTorpedoObject();
@@ -203,18 +207,21 @@ namespace Hadal.Player.Behaviours
         }
         private void UpdateUITorpedoCount(bool isReloadEvent)
         {
-            UIManager.Instance
-            .UpdateTubes(tLauncher.TotalTorpedoes, isReloadEvent);
+            //if (UIManager.IsNull) return;
+
+            controller.UI.UpdateTubes(tLauncher.TotalTorpedoes, isReloadEvent);
         }
         private void UpdateUIRegenRatio(in float ratio)
         {
-            UIManager.Instance
-            .UpdateReload(ratio, tLauncher.IsRegenerating);
+           // if (UIManager.IsNull) return;
+
+            controller.UI.UpdateReload(ratio, tLauncher.IsRegenerating);
         }
         private void UpdateUIFloodRatio(in float ratio)
         {
-            UIManager.Instance
-            .UpdateFlooding(ratio, tLauncher.IsReloading);
+            //if (UIManager.IsNull) return;
+
+            controller.UI.UpdateFlooding(ratio, tLauncher.IsReloading);
         }
 
         #endregion

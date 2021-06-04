@@ -143,7 +143,9 @@ namespace Hadal.Player.Behaviours
 
             if (!_pView.IsMine) return;
             UpdateNetworkItem();
-            UIManager.Instance.UpdateCurrentUtility(EquippedUsable.UtilityName);
+
+            //if (UIManager.IsNull) return;
+            _controller.UI.UpdateCurrentUtility(EquippedUsable.UtilityName);
         }
 
         private void ToggleItemActiveState()
