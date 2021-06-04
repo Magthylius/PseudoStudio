@@ -72,6 +72,7 @@ namespace Hadal.Networking.UI.Loading
         [Header("Events")]
         public UnityEvent LoadingCompletedEvent;
         bool networkedLoad = false;
+        bool allowLoadingCompletion = true;
 
         void Awake()
         {
@@ -95,6 +96,7 @@ namespace Hadal.Networking.UI.Loading
             neManager.AddListener(ByteEvents.GAME_START_LOAD, NetworkedLoad);
             ResetLoadingElements();
 
+            if (loadingMode == LoadMode.Load_After_Event) allowLoadingCompletion = false;
             LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
         }
 
@@ -163,6 +165,7 @@ namespace Hadal.Networking.UI.Loading
         #region Load Checks
         IEnumerator CheckAllLoaded()
         {
+            //! Suspend until all poolers ready
             while (!objectPoolersCheckedIn)
             {
                 yield return null;
@@ -170,7 +173,14 @@ namespace Hadal.Networking.UI.Loading
 
             PlayHiveSpinner();
             PlayConnectionParent();
+
+            //! Suspend until allowed
+            while(!allowLoadingCompletion)
+            {
+                yield return null;
+            }
             LoadingCompletedEvent.Invoke();
+
             if (loadingMode == LoadMode.Load_After_Delay)
             {
                 StartEndLoad();
@@ -374,6 +384,7 @@ namespace Hadal.Networking.UI.Loading
 
         #region Accessors
         CanvasGroup GetCG(GameObject go) => go.GetComponent<CanvasGroup>();
+        public void AllowLoadingCompletion() => allowLoadingCompletion = true;
         #endregion
     }
 }
