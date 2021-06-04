@@ -10,6 +10,7 @@ namespace Hadal.Player.Aesthetics
     {
         [Header("Settings")]
         [SerializeField] Rigidbody referenceRigidbody;
+        [SerializeField] PlayerMovementF playerMovement;
         [SerializeField, Min(0f)] float tweenSpeed = 10f;
 
         [Header("References")]
@@ -31,21 +32,21 @@ namespace Hadal.Player.Aesthetics
             leftFin.SetTweenSpeed(tweenSpeed);
             rightFin.SetTweenSpeed(tweenSpeed);
 
-            //sl_MovementVec = DebugManager.Instance.CreateScreenLogger();
+            sl_MovementVec = DebugManager.Instance.CreateScreenLogger();
         }
 
-        void Update()
+        void FixedUpdate()
         {
             //Vector3 movementVec = new Vector3(moveInput.HorizontalAxis, moveInput.HoverAxis, moveInput.VerticalAxis);
-            UpdateFins(referenceRigidbody.velocity.normalized);
-
-            //DebugManager.Instance.SLog(sl_MovementVec, "Movement", movementVec.normalized);
+            Vector3 movement = referenceRigidbody.transform.InverseTransformDirection(referenceRigidbody.velocity);
+            UpdateFins(movement.normalized, playerMovement.Speed.Normalised);
+            DebugManager.Instance.SLog(sl_MovementVec, "Movement", movement);
         }
 
-        void UpdateFins(Vector3 movement)
+        void UpdateFins(Vector3 movement, float magnitude)
         {
-            leftFin.UpdateMovement(movement);
-            rightFin.UpdateMovement(movement);
+            leftFin.UpdateMovement(movement, magnitude);
+            rightFin.UpdateMovement(movement, magnitude);
         }
     }
 }

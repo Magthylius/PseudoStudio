@@ -23,7 +23,7 @@ namespace Hadal.Player.Aesthetics
         float tweenSpeed = 20f;
         Quaternion targetRotation;
 
-        int sl_TotalMovementRot;
+        
 
         void OnValidate()
         {
@@ -33,7 +33,6 @@ namespace Hadal.Player.Aesthetics
         void Start()
         {
             targetRotation = originalRotation;
-            //sl_TotalMovementRot = DebugManager.Instance.CreateScreenLogger();
         }
 
         void Update()
@@ -41,11 +40,19 @@ namespace Hadal.Player.Aesthetics
             transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, tweenSpeed * Time.deltaTime);
         }
 
-        public void UpdateMovement(Vector3 normalizedVector)
+        public void UpdateMovement(Vector3 normalizedVector, float magnitude)
         {
-            if (normalizedVector.sqrMagnitude > 0)
+            //targetRotation = Quaternion.identity;
+
+            if (normalizedVector.sqrMagnitude > 0.2f)
             {
-                Vector3 totalMovement = Vector3.zero;
+                //Vector3 totalMovement = Vector3.zero;
+
+                //! forwards backwards
+                if (normalizedVector.z < 0f)
+                    targetRotation *= forwardRotation;
+                else if (normalizedVector.z > 0f)
+                    targetRotation *= backwardRotation;
 
                 //! forwards backwards
                 /*if (movementVector.z < 0f) totalMovement += movementVector.x * forwardRotation.eulerAngles;
@@ -54,27 +61,27 @@ namespace Hadal.Player.Aesthetics
                 if (movementVector.y < 0f) totalMovement += movementVector.y * upwardRotation.eulerAngles;
                 else if (movementVector.y > 0f) totalMovement += Mathf.Abs(movementVector.y) * downwardRotation.eulerAngles;*/
 
-                float zProg = (normalizedVector.z + 1f) * 0.5f;
-                Vector3 zAngle = Vector3.Lerp(backwardRotation.eulerAngles, forwardRotation.eulerAngles, zProg);
+                //float zProg = (normalizedVector.z + 1f) * 0.5f;
+                //Vector3 zAngle = Vector3.Lerp(backwardRotation.eulerAngles, forwardRotation.eulerAngles, zProg);
 
-                float yProg = (normalizedVector.y + 1f) * 0.5f;
-                Vector3 yAngle = Vector3.Lerp(downwardRotation.eulerAngles, upwardRotation.eulerAngles, yProg);
+                //float yProg = (normalizedVector.y + 1f) * 0.5f;
+                //Vector3 yAngle = Vector3.Lerp(downwardRotation.eulerAngles, upwardRotation.eulerAngles, yProg);
 
-                if (invertedFin)
-                {
-                    totalMovement += zAngle * Mathf.Abs(normalizedVector.z);
-                    totalMovement += yAngle * Mathf.Abs(normalizedVector.y);
-                }
-                else
-                {
-                    totalMovement += zAngle * Mathf.Abs(normalizedVector.z);
-                    totalMovement += yAngle * Mathf.Abs(normalizedVector.y);
-                }
+                //if (invertedFin)
+                //{
+                //    totalMovement += zAngle * Mathf.Abs(normalizedVector.z);
+                //    totalMovement += yAngle * Mathf.Abs(normalizedVector.y);
+                //}
+                //else
+                //{
+                //    totalMovement += zAngle * Mathf.Abs(normalizedVector.z);
+                //    totalMovement += yAngle * Mathf.Abs(normalizedVector.y);
+                //}
 
-                //targetRotation = Quaternion.Euler(yAngle) * Quaternion.Euler(zAngle);
-                //targetRotation = Quaternion.Lerp(Quaternion.Euler(yAngle), Quaternion.Euler(zAngle), (yProg + zProg) * 0.5f);
-                targetRotation = Quaternion.Euler(totalMovement);
-                //DebugManager.Instance.SLog(sl_TotalMovementRot, "Rot", zAngle);
+                ////targetRotation = Quaternion.Euler(yAngle) * Quaternion.Euler(zAngle);
+                ////targetRotation = Quaternion.Lerp(Quaternion.Euler(yAngle), Quaternion.Euler(zAngle), (yProg + zProg) * 0.5f);
+                //targetRotation = Quaternion.Euler(totalMovement);
+                ////DebugManager.Instance.SLog(sl_TotalMovementRot, "Rot", zAngle);
             }
             else
             {
