@@ -1015,6 +1015,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   ambushPoints: []
+  connectedTunnels:
+  - {fileID: 2079587881}
+  connectedCaverns:
+  - {fileID: 715892172}
 --- !u!65 &67463454
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5321,6 +5325,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   ambushPoints: []
+  connectedTunnels:
+  - {fileID: 1461932352}
+  - {fileID: 1525034681}
+  - {fileID: 1726199424}
+  connectedCaverns:
+  - {fileID: 805868590}
+  - {fileID: 2012713535}
+  - {fileID: 1597480352}
+  - {fileID: 715892172}
 --- !u!1001 &474061113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7849,6 +7862,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   ambushPoints: []
+  connectedTunnels:
+  - {fileID: 1363205384}
+  - {fileID: 1525034681}
+  - {fileID: 2079587881}
+  connectedCaverns:
+  - {fileID: 1597480352}
+  - {fileID: 473574274}
+  - {fileID: 67463453}
 --- !u!65 &715892173
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8594,6 +8615,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   ambushPoints: []
+  connectedTunnels:
+  - {fileID: 1461932352}
+  connectedCaverns:
+  - {fileID: 2012713535}
+  - {fileID: 473574274}
+  - {fileID: 1597480352}
 --- !u!65 &805868591
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9079,6 +9106,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 874894943, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: handlerList.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 874894943, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: handlerList.Array.data[0]
+      value: 
+      objectReference: {fileID: 1597480352}
+    - target: {fileID: 874894943, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: handlerList.Array.data[1]
+      value: 
+      objectReference: {fileID: 473574274}
+    - target: {fileID: 874894943, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: handlerList.Array.data[2]
+      value: 
+      objectReference: {fileID: 805868590}
+    - target: {fileID: 874894943, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: handlerList.Array.data[3]
+      value: 
+      objectReference: {fileID: 2012713535}
+    - target: {fileID: 874894943, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: handlerList.Array.data[4]
+      value: 
+      objectReference: {fileID: 67463453}
+    - target: {fileID: 874894943, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
+      propertyPath: handlerList.Array.data[5]
+      value: 
+      objectReference: {fileID: 715892172}
     - target: {fileID: 800667446237500755, guid: 1d2e2be3ca8c7b6478f02905d0e8d4fb, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -15980,6 +16035,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   ambushPoints: []
+  connectedTunnels:
+  - {fileID: 522203145}
+  - {fileID: 1363205384}
+  - {fileID: 1461932352}
+  connectedCaverns:
+  - {fileID: 2012713535}
+  - {fileID: 715892172}
+  - {fileID: 805868590}
+  - {fileID: 473574274}
 --- !u!65 &1597480353
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20544,6 +20608,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   ambushPoints: []
+  connectedTunnels:
+  - {fileID: 522203145}
+  - {fileID: 1461932352}
+  - {fileID: 1726199424}
+  connectedCaverns:
+  - {fileID: 1597480352}
+  - {fileID: 805868590}
+  - {fileID: 473574274}
 --- !u!65 &2012713536
 BoxCollider:
   m_ObjectHideFlags: 0
