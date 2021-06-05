@@ -14,8 +14,9 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-			if (_brain.CurrentTarget == null)
+			if (_brain.CarriedPlayer == null)
 				return NodeState.FAILURE;
+            // if (_brain.CarriedPlayer.GetInfo.HealthManager.)
 			
             "AI: I am hurting the player".Bold().Msg();
             return NodeState.RUNNING;
