@@ -21,6 +21,7 @@ namespace Hadal.AI
 		[Header("Force Settings")]
 		[SerializeField] private float maxVelocity;
         [SerializeField] private float thrustForce;
+		[SerializeField] private float additionalBoostThrustForce;
 		[SerializeField] private float attractionForce;
         [SerializeField] private float avoidanceForce;
         [SerializeField] private float closeRepulsionForce;
@@ -44,6 +45,7 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private bool hasReachedPoint;
         [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
         [SerializeField, ReadOnly] private bool isOnCustomPath;
+		[SerializeField, ReadOnly] private bool isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
         [SerializeField, ReadOnly] private NavPoint currentPoint;
         
@@ -65,6 +67,7 @@ namespace Hadal.AI
             currentPoint = null;
             canAutoSelectNavPoints = true;
             isOnCustomPath = false;
+			isChasingAPlayer = false;
             canPath = true;
             if (rBody == null) rBody = GetComponent<Rigidbody>();
             if (numberOfClosestPointsToConsider > navPoints.Count - 1) numberOfClosestPointsToConsider = navPoints.Count - 1;
@@ -91,6 +94,7 @@ namespace Hadal.AI
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
         public float ObstacleDetectionRadius => obstacleDetectRadius;
+		public float TotalThrustForce => thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce);
         public Transform PilotTransform => pilotTrans;
 
         public void AddRepulsionPoint(Vector3 point)
@@ -120,6 +124,7 @@ namespace Hadal.AI
             if (target == null) return;
             isOnCustomPath = true;
             currentPoint = target;
+			isChasingAPlayer = targetIsPlayer;
             canAutoSelectNavPoints = !targetIsPlayer;
             ResetLingerTimer();
             ResetTimeoutTimer();
@@ -159,7 +164,7 @@ namespace Hadal.AI
 
 		private void MoveForwards(in float deltaTime)
 		{
-			Vector3 force = pilotTrans.forward * (thrustForce * deltaTime);
+			Vector3 force = pilotTrans.forward * (TotalThrustForce * deltaTime);
 			rBody.AddForce(force, ForceMode.VelocityChange);
 		}
 
@@ -285,7 +290,7 @@ namespace Hadal.AI
         private float GetNextLingerTime() => Random.Range(minLingerTime, maxLingerTime);
 
         #endregion
-
+		
         private void OnDrawGizmos()
         {
             if (!enableDebug || pilotTrans == null) return;
