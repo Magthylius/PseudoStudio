@@ -36,7 +36,7 @@ namespace Hadal.AI.Caverns
         Lair_Grounds,
         Hydrothermal_Vents,
         Bioluminescent_Cavern,
-        Tunnel,
+        Staglamite_Cavern,
         Custom_Point
     }
 
