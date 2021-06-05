@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Tenshi.UnitySoku;
 using UnityEngine;
+using NaughtyAttributes;
 
 //! C: Jon
 namespace Hadal.AI.Caverns
@@ -20,11 +21,16 @@ namespace Hadal.AI.Caverns
         [SerializeField] LayerMask playerMask;
         [SerializeField] LayerMask aiMask;
         [SerializeField] List<AmbushPointBehaviour> ambushPoints;
+
+        [ReadOnly] public List<TunnelBehaviour> connectedTunnels;
+        [ReadOnly] public List<CavernHandler> connectedCaverns;
         
         public event CavernHandlerReturn PlayerEnteredCavernEvent;
         public event CavernHandlerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnteredCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
+
+        int relativeDistanceCost = 0;
 
         new Collider collider;
         List<PlayerController> playersInCavern;
@@ -32,13 +38,15 @@ namespace Hadal.AI.Caverns
         void OnValidate()
         {
             collider = GetComponent<Collider>();
-            collider.isTrigger = true; 
+            collider.isTrigger = true;
+
+            manager = FindObjectOfType<CavernManager>();
+            manager.InjectHandler(this);
         }
 
         void Awake()
         {
-            manager = FindObjectOfType<CavernManager>();
-            manager.InjectHandler(this);
+            
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
             AIEnteredCavernEvent += manager.OnAIEnterCavern;
@@ -103,6 +111,48 @@ namespace Hadal.AI.Caverns
                 if (other.GetComponent<AIBrain>() != null)
                     AILeftCavernEvent?.Invoke(this);
             }
+        }
+
+        [Button("Update connected caverns")]
+        void UpdateConnectedCaverns()
+        {
+            connectedCaverns = new List<CavernHandler>();
+            foreach(TunnelBehaviour tunnel in connectedTunnels)
+            {
+                foreach (CavernHandler cavern in tunnel.ConnectedCaverns)
+                {
+                    if (!connectedCaverns.Contains(cavern) && cavern != this)
+                        connectedCaverns.Add(cavern);
+                }
+            }
+        }
+
+        public int CalculateRelativeDistanceCost(CavernHandler targetCavern)
+        {
+            int cost = 1;
+            if (ConnectedCavernContains(targetCavern))
+                return cost;
+            else
+            {
+                int lowestCost = int.MaxValue;
+                foreach(CavernHandler cavern in connectedCaverns)
+                {
+                    int tempCost = cavern.CalculateRelativeDistanceCost(targetCavern);
+                    if (tempCost < lowestCost)
+                    {
+                        lowestCost = tempCost;
+                    }
+                }
+
+                cost = lowestCost;
+            }
+
+            return cost;
+        }
+
+        public bool ConnectedCavernContains(CavernHandler targetCavern)
+        {
+            return connectedCaverns.Contains(targetCavern);
         }
 
         public int GetPlayerCount => playersInCavern.Count;
