@@ -43,7 +43,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 106498673858430027}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 725127307c235074da53c629cb3288b7, type: 3}
   m_Name: 
@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceRigidbody: {fileID: 6419753948795626213}
+  playerMovement: {fileID: 2886315811804455110}
   tweenSpeed: 5
   leftFin: {fileID: 7318005172358396004}
   rightFin: {fileID: 2901750296828196401}
@@ -1567,10 +1568,10 @@ MonoBehaviour:
   m_PositionModel:
     SynchronizeEnabled: 1
     TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 4
-    InterpolateOption: 2
+    TeleportIfDistanceGreaterThan: 10
+    InterpolateOption: 4
     InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
+    InterpolateLerpSpeed: 10
     ExtrapolateOption: 2
     ExtrapolateSpeed: 1
     ExtrapolateIncludingRoundTripTime: 1
