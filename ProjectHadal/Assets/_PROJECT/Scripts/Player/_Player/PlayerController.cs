@@ -117,9 +117,9 @@ namespace Hadal.Player
             rotator.DoLateUpdate(DeltaTime);
         }
 
-        private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
+      /*  private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
         private void OnCollisionStay(Collision collision) => collisions.CollisionStay(collision);
-        private void OnCollisionExit(Collision collision) => collisions.CollisionExit(collision);
+        private void OnCollisionExit(Collision collision) => collisions.CollisionExit(collision);*/
 
         void OnDestroy()
         {

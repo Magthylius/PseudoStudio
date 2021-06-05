@@ -57,7 +57,7 @@ namespace Hadal.Locomotion
             //$"Enable is called".Warn();
             Input = DefaultInputs;
             drag = Accel.MaxCummulation / Speed.Max;
-            rigidBody.drag = drag / (drag * Time.fixedDeltaTime +1);
+            rigidBody.drag = drag / (drag * (Time.fixedDeltaTime * 2) +1);
         }
 
         public override void Disable()
