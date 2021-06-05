@@ -23,6 +23,21 @@ namespace Hadal.AI.Caverns
         }
     }
 
+    /// <summary>
+    /// Used to calculate cavern heuristics
+    /// </summary>
+    public struct CavernHeuristic
+    {
+        public int Cost;
+        public CavernHandler Handler;
+
+        public CavernHeuristic(CavernHandler handler)
+        {
+            Cost = 0;
+            Handler = handler;
+        }
+    }
+
     public delegate void CavernHandlerReturn(CavernPlayerData data);
     public delegate void CavernHandlerAIReturn(CavernHandler handler);
 
@@ -79,6 +94,61 @@ namespace Hadal.AI.Caverns
         {
             if (aiAtHandler == handler)
                 aiAtHandler = null;
+        }
+
+        /// <summary>
+        /// Gets most populated cavern.
+        /// </summary>
+        /// <param name="tiedNumberRandomize">Allow randomize return of caverns of same number of players. If false, returns first cavern.</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetMostPopulatedCavern(bool tiedNumberRandomize = true)
+        {
+            int playerNum = 0;
+            List<CavernHandler> tempCaverns = new List<CavernHandler>();
+
+            foreach (CavernHandler cavern in handlerList)
+            {
+                //! Must have a cavern somewhere with players
+                if (playerNum > 0)
+                {
+                    //! Update higher playernum count
+                    if (cavern.GetPlayerCount > playerNum)
+                    {
+                        playerNum = cavern.GetPlayerCount;
+                        tempCaverns.Clear();
+                        tempCaverns.Add(cavern);
+                    }
+                    //! Equal number players cavern
+                    else if (cavern.GetPlayerCount == playerNum)
+                    {
+                        playerNum = cavern.GetPlayerCount;
+                        tempCaverns.Add(cavern);
+                    }
+                }
+            }
+
+            if (tempCaverns.Count <= 0)
+                return null;
+            else if (tempCaverns.Count == 1)
+                return tempCaverns[0];
+            else
+            {
+                if (tiedNumberRandomize)
+                    return tempCaverns[Random.Range(0, tempCaverns.Count)];
+                else
+                    return tempCaverns[0];
+            }
+        }
+
+        public CavernHandler GetEmptyCavern()
+        {
+            List<CavernHeuristic> heuristics = new List<CavernHeuristic>();
+            foreach (CavernHandler handler in handlerList)
+            {
+
+            }
+
+            return null;
         }
 
         /// <summary>
