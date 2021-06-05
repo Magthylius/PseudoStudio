@@ -130,7 +130,7 @@ namespace Hadal.Networking.UI.MainMenu
             loadingManager = LoadingManager.Instance;
 
             DetermineMenuToOpen();
-            EnsureSetup(false);
+            EnsureSetup(true);
 
             versionTMP.text = "V " + Application.version;
 

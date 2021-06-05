@@ -111,6 +111,7 @@ MonoBehaviour:
   obstacleCheckTime: 0.1
   maxVelocity: 50
   thrustForce: 12
+  additionalBoostThrustForce: 10
   attractionForce: 15
   avoidanceForce: 10
   closeRepulsionForce: 14
@@ -131,6 +132,7 @@ MonoBehaviour:
   hasReachedPoint: 0
   canAutoSelectNavPoints: 0
   isOnCustomPath: 0
+  isChasingAPlayer: 0
   canPath: 0
   currentPoint: {fileID: 0}
 --- !u!1 &2206939684058563682
@@ -279,6 +281,7 @@ Transform:
   - {fileID: 2206939683509102031}
   - {fileID: 2206939684562575359}
   - {fileID: 1692377485682228084}
+  - {fileID: 1435352782384521340}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -300,7 +303,7 @@ MonoBehaviour:
   sightDetection: {fileID: 9221971048963321059}
   cavernManager: {fileID: 0}
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
-  MouthObject: {fileID: 0}
+  MouthObject: {fileID: 4180711431457838737}
   Players: []
   CurrentTarget: {fileID: 0}
   CarriedPlayer: {fileID: 0}
@@ -396,6 +399,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+--- !u!1 &4180711431457838737
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1435352782384521340}
+  m_Layer: 0
+  m_Name: Mouth
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1435352782384521340
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4180711431457838737}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2206939684412345072}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5685634872688241315
 GameObject:
   m_ObjectHideFlags: 0
