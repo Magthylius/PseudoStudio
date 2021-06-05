@@ -118,8 +118,6 @@ GameObject:
   - component: {fileID: 5118692649966226049}
   - component: {fileID: 5112791235449951143}
   - component: {fileID: 5418744652871356807}
-  - component: {fileID: 3469789630877505846}
-  - component: {fileID: 6884608929667329289}
   - component: {fileID: -1520314024333295563}
   m_Layer: 13
   m_Name: Sonic Dart
@@ -173,45 +171,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.125, y: 0.125, z: 1.05}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3469789630877505846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7351274592407701336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &6884608929667329289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7351274592407701336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  observableSearch: 2
-  Synchronization: 3
-  OwnershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 3469789630877505846}
-  viewIdField: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &-1520314024333295563
 MonoBehaviour:
   m_ObjectHideFlags: 0
