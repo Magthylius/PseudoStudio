@@ -18,7 +18,9 @@ namespace Tenshi.UnitySoku
         [SerializeField] protected T prefab;
         [SerializeField] protected int initialCount;
         [SerializeField] protected bool instantiateWithCoroutine;
-        private Queue<T> pool = new Queue<T>();
+        protected Queue<T> pool = new Queue<T>();
+        public Action<Queue<T>> InitialisationCompleted;
+
 
         bool poolingFinished = false;
 
@@ -29,7 +31,8 @@ namespace Tenshi.UnitySoku
                 StartCoroutine(StartRoutine());
                 return;
             }
-            Add(initialCount.Clamp0());            
+            Add(initialCount.Clamp0());
+            InitialisationCompleted?.Invoke(pool);
         }
 
         private IEnumerator StartRoutine()
@@ -42,6 +45,7 @@ namespace Tenshi.UnitySoku
             }
 
             poolingFinished = true;
+            InitialisationCompleted?.Invoke(pool);
             yield return null;
         }
 

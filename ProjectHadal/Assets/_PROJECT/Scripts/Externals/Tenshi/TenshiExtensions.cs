@@ -175,6 +175,12 @@ namespace Tenshi
     public static class CollectionExtensions
     {
         public static T RandomElement<T>(this IEnumerable<T> e) => e.ElementAt(UnityEngine.Random.Range(0, e.Count()));
+        public static T Requeue<T>(this Queue<T> q)
+        {
+            T obj = q.Dequeue();
+            q.Enqueue(obj);
+            return obj;
+        }
     }
 
     public static class UnityExtensions
