@@ -990,6 +990,7 @@ MonoBehaviour:
   ambushPoints: []
   connectedTunnels:
   - {fileID: 2079587881}
+  - {fileID: 1252447918}
   connectedCaverns:
   - {fileID: 0}
 --- !u!65 &67463454
@@ -5970,7 +5971,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   connectedCaverns:
-  - {fileID: 0}
+  - {fileID: 519486359}
   - {fileID: 2012713535}
 --- !u!65 &522203146
 BoxCollider:
@@ -13196,6 +13197,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1252447917}
+  - component: {fileID: 1252447919}
+  - component: {fileID: 1252447918}
   m_Layer: 0
   m_Name: Egg to Jin Tunnel
   m_TagString: Untagged
@@ -13230,6 +13233,37 @@ Transform:
   m_Father: {fileID: 710461559}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 7.88, y: -50.532, z: -7.905}
+--- !u!114 &1252447918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252447916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb7f3376a7091847b981d0ef2e8e808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  connectedCaverns:
+  - {fileID: 67463453}
+  - {fileID: 2012713535}
+--- !u!65 &1252447919
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252447916}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1263818082 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 52b26c07efa21414a93e7b5561a45d45, type: 3}
@@ -13893,8 +13927,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   connectedCaverns:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 519486359}
+  - {fileID: 1488942620}
 --- !u!65 &1363205385
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14893,8 +14927,8 @@ MonoBehaviour:
   connectedCaverns:
   - {fileID: 805868590}
   - {fileID: 2012713535}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 9213757164826660528}
+  - {fileID: 519486359}
 --- !u!65 &1461932353
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15876,8 +15910,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   connectedCaverns:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 9213757164826660528}
+  - {fileID: 1488942620}
 --- !u!65 &1525034682
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19169,7 +19203,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   connectedCaverns:
-  - {fileID: 0}
+  - {fileID: 9213757164826660528}
   - {fileID: 2012713535}
 --- !u!65 &1726199425
 BoxCollider:
@@ -21294,6 +21328,7 @@ MonoBehaviour:
   - {fileID: 522203145}
   - {fileID: 1461932352}
   - {fileID: 1726199424}
+  - {fileID: 1252447918}
   connectedCaverns:
   - {fileID: 0}
   - {fileID: 805868590}
@@ -22247,8 +22282,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   connectedCaverns:
+  - {fileID: 1488942620}
   - {fileID: 67463453}
-  - {fileID: 0}
 --- !u!65 &2079587882
 BoxCollider:
   m_ObjectHideFlags: 0
