@@ -11,10 +11,8 @@ using Photon.Realtime;
 
 namespace Hadal.AI.States
 {
-    public class EngagementState : IState
+    public class EngagementState : AIStateBase
     {
-        public AIBrain Brain { get; private set; }
-        public PointNavigationHandler NavigationHandler { get; private set; }
         private StateMachine subStateMachine;
 
         public EngagementState(AIBrain brain, AggressiveSubState aggressive, AmbushSubState ambush, JudgementSubState judgement)
@@ -39,23 +37,23 @@ namespace Hadal.AI.States
             Func<bool> OnAggressive() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Aggressive;
             Func<bool> OnJudgement() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Judgement;
         }
-        public void OnStateStart()
+        public override void OnStateStart()
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
         }
-        public void StateTick()
+        public override void StateTick()
         {
             subStateMachine.MachineTick();
         }
-        public void LateStateTick()
+        public override void LateStateTick()
         {
             subStateMachine.LateMachineTick();
         }
-        public void FixedStateTick()
+        public override void FixedStateTick()
         {
             subStateMachine.FixedMachineTick();
         }
-        public void OnStateEnd()
+        public override void OnStateEnd()
         {
             
         }
@@ -141,6 +139,6 @@ namespace Hadal.AI.States
 			*/
         }
 
-        public Func<bool> ShouldTerminate() => () => false;
+        public override Func<bool> ShouldTerminate() => () => false;
     }
 }

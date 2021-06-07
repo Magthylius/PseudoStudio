@@ -100,6 +100,7 @@ namespace Tenshi.AIDolls
         public void LateStateTick() { }
         public void FixedStateTick() { }
         public void OnStateEnd() => _behaviour.OnEnd();
+        public void OnCavernEnter() { }
         public Func<bool> ShouldTerminate() => () => false;
     }
 

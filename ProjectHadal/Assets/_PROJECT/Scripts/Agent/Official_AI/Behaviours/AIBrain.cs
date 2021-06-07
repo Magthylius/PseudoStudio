@@ -159,6 +159,13 @@ namespace Hadal.AI
             // stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
         }
 
+        #region Event Handlers
+        public void OnCavernEnter(CavernHandler cavern)
+        {
+            //stateMachine.CurrentState.OnCavernEnter();
+        }
+        #endregion
+
         #region Transition Conditions
 
         Func<bool> IsAnticipating() => () =>
