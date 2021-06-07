@@ -100,7 +100,7 @@ namespace Hadal.AI.Caverns
         /// <summary>
         /// Gets most populated cavern.
         /// </summary>
-        /// <param name="tiedNumberRandomize">Allow randomize return of caverns of same number of players. If false, returns first cavern.</param>
+        /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
         /// <returns>CavernHandler information</returns>
         public CavernHandler GetMostPopulatedCavern(bool tiedNumberRandomize = true)
         {
@@ -141,13 +141,54 @@ namespace Hadal.AI.Caverns
             }
         }
 
-        public CavernHandler GetEmptyCavern(CavernHandler startingCavern)
+        /// <summary>
+        /// Get least populated cavern with all handlers on manager.
+        /// </summary>
+        /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetLeastPopulatedCavern(bool tiedNumberRandomize = true)
         {
-
-
-            return null;
+            return GetLeastPopulatedCavern(handlerList, tiedNumberRandomize);
         }
 
+        /// <summary>
+        /// Gets the least populated cavern given by a list of caverns.
+        /// </summary>
+        /// <param name="cavernList">List of caverns to query.</param>
+        /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetLeastPopulatedCavern(List<CavernHandler> cavernList, bool tiedNumberRandomize = true)
+        {
+            List<CavernHandler> candidateCaverns = new List<CavernHandler>();
+            int playerMin = 0;
+            bool candidatesFound = false;
+            do
+            {
+                candidateCaverns.Clear();
+                foreach (CavernHandler cavern in cavernList)
+                {
+                    if (cavern.GetPlayerCount <= playerMin)
+                    {
+                        candidateCaverns.Add(cavern);
+                        candidatesFound = true;
+                    }
+                }
+            } while (!candidatesFound);
+
+            if (candidateCaverns.Count == 1) return candidateCaverns[0];
+
+            if (tiedNumberRandomize)
+                return candidateCaverns[Random.Range(0, candidateCaverns.Count)];
+            else
+                return candidateCaverns[0];
+        }
+
+        /// <summary>
+        /// Gets the next suitable cavern based on adjacency.
+        /// </summary>
+        /// <param name="destinationCavern">Target destination cavern.</param>
+        /// <param name="searchList">List of caverns to start search from.</param>
+        /// <returns>List of caverns that are equal distance to choose from.</returns>
         public List<CavernHandler> GetNextCavern(CavernHandler destinationCavern, List<CavernHandler> searchList)
         {
             List<CavernHandler> researchList = new List<CavernHandler>();
