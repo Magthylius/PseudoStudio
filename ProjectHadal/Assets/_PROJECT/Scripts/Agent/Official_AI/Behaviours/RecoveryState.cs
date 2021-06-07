@@ -26,7 +26,7 @@ namespace Hadal.AI
 			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
             RuntimeData.UpdateCumulativeDamageThreshold(settings.GetEscapeDamageThreshold(Brain.HealthManager.GetCurrentHealth));
-            SetTargetEscapeCavern();
+            SetNewTargetEscapeCavern();
         }
 
         public override void StateTick() 
@@ -56,7 +56,7 @@ namespace Hadal.AI
         {
             if (cavern == targetCavern)
             {
-                if (cavern.GetPlayerCount > 1) SetTargetEscapeCavern();
+                if (cavern.GetPlayerCount > 1) SetNewTargetEscapeCavern();
                 else if (cavern.GetPlayerCount == 1 && Brain.CarriedPlayer != null)
                 {
                     if (cavern.GetPlayersInCavern[0] == Brain.CarriedPlayer)
@@ -74,7 +74,7 @@ namespace Hadal.AI
             RuntimeData.SetMainObjective(MainObjective.Engagement);
         }
 
-        void SetTargetEscapeCavern()
+        void SetNewTargetEscapeCavern()
         {
             targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
         }
