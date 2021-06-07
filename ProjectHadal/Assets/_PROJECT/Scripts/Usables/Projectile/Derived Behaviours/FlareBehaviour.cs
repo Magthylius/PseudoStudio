@@ -5,6 +5,8 @@ namespace Hadal.Usables.Projectiles
 {
     public class FlareBehaviour : ProjectileBehaviour
     {
+        [SerializeField] Light flareLight;
+
         [SerializeField] private string[] validLayer;
         [SerializeField] private bool isAttach;
         public ImpulseMode impulseMode;
