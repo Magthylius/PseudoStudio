@@ -182,6 +182,7 @@ namespace Hadal.Networking.UI.MainMenu
             {
                 OpenMenu(startMenu);
                 menuPhase = MenuPhase.START;
+                //print("start");
             }
 
             mainMenuInitiated = true;
