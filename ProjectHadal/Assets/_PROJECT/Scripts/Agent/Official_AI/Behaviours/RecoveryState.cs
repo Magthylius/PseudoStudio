@@ -70,6 +70,11 @@ namespace Hadal.AI.States
             }
         }
 
+        public override void OnPlayerEnterAICavern(CavernPlayerData data)
+        {
+            SetNewTargetCavern();
+        }
+
         #region State specific
         void SetNewTargetCavern()
         {

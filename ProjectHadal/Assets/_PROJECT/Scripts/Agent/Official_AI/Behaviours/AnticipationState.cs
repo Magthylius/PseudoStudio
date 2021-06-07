@@ -55,6 +55,7 @@ namespace Hadal.AI.States
 			RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
 			SetNewTargetCavern();
+			Brain.StartCoroutine(CheckPlayersInRange());
 		}
 
 		public override void StateTick()
@@ -73,7 +74,7 @@ namespace Hadal.AI.States
 
 			if (!AllowStateTick) return;
 			//! Move to target cavern
-			
+			//! Check if players in range/damaged by player
 
         }
 		public override void LateStateTick() { }
@@ -83,6 +84,11 @@ namespace Hadal.AI.States
 		public override void OnCavernEnter(CavernHandler cavern)
         {
 			DetermineNextCavern();
+        }
+
+		IEnumerator CheckPlayersInRange()
+        {
+			yield return new WaitForSeconds(0.2f);
         }
 
 		void SetNewTargetCavern()

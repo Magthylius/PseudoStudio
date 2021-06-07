@@ -5,6 +5,7 @@ using Tenshi.AIDolls;
 using System;
 using Hadal.AI.Caverns;
 using Hadal.AI.States;
+using Hadal.Player;
 
 namespace Hadal.AI
 {
@@ -36,6 +37,8 @@ namespace Hadal.AI
         public virtual void OnStateStart() { }
 
         public virtual void OnCavernEnter(CavernHandler cavern) { }
+
+        public virtual void OnPlayerEnterAICavern(CavernPlayerData data) { }
 
         public bool CheckGameHasEnded() { return false; }
 

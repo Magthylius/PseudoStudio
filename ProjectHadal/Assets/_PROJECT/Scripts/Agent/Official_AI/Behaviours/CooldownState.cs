@@ -20,7 +20,7 @@ namespace Hadal.AI.States
         public override void OnStateStart()
         {
             //! Change speed
-
+            NavigationHandler.SetSpeedMultiplier(settings.ElusiveSpeedModifier);
             SetNewTargetCavern();
             AllowStateTick = true;
         }
@@ -42,6 +42,18 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             //! Reset speed
+            NavigationHandler.ResetSpeedMultiplier();
+        }
+
+        public override void OnCavernEnter(CavernHandler cavern)
+        {
+            if (cavern.GetPlayerCount > 0)
+                SetNewTargetCavern();
+        }
+
+        public override void OnPlayerEnterAICavern(CavernPlayerData data)
+        {
+            SetNewTargetCavern();
         }
 
         void SetNewTargetCavern()

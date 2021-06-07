@@ -99,6 +99,7 @@ namespace Hadal.AI
         public Transform PilotTransform => pilotTrans;
 
         public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
+        public void ResetSpeedMultiplier() => SetSpeedMultiplier(1f);
 
         public void AddRepulsionPoint(Vector3 point)
         {
