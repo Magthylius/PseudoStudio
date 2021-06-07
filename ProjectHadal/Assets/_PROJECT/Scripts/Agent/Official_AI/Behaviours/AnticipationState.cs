@@ -85,7 +85,7 @@ namespace Hadal.AI
 		public override void FixedStateTick() { }
 		public override void OnStateEnd() { }
 
-		public override void OnCavernEnter()
+		public override void OnCavernEnter(CavernHandler cavern)
         {
 			DetermineNextCavern();
         }
