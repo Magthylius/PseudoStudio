@@ -11,7 +11,7 @@ namespace Hadal.AI.TreeNodes
             _thresholdIndex = thresholdIndex;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             /*if (_brain.RuntimeData.GetEngagementTicks > _brain.MachineData.Engagement.GetJudgementTimerThreshold(_thresholdIndex))
                 return NodeState.SUCCESS;*/

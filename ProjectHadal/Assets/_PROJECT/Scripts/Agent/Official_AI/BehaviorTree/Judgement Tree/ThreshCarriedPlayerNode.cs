@@ -32,7 +32,7 @@ namespace Hadal.AI.TreeNodes
 
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
 			if (_brain.CarriedPlayer == null)
                 return NodeState.FAILURE;

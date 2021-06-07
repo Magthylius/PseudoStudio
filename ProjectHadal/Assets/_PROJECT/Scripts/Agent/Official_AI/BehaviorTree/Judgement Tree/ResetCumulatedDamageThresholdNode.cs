@@ -11,7 +11,7 @@ namespace Hadal.AI.TreeNodes
             _brain = brain;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             //_brain.RuntimeData.UpdateCumulativeDamageThreshold(_brain.HealthManager.GetCurrentHealth);
             return NodeState.SUCCESS;

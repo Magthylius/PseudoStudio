@@ -149,7 +149,7 @@ namespace Hadal.AI.States
             if (TickUpdateTimer(deltaTime) > updateDelay)
             {
                 ResetUpdateTimer();
-                var result = root.Evaluate();
+                var result = root.Evaluate(deltaTime);
                 if (b.DebugEnabled)
                 {
                     if (result == NodeState.RUNNING) "Tree: Running".Msg();

@@ -17,13 +17,13 @@ namespace Hadal.AI.TreeNodes
         }
 
         //! If any child node returns a failure, the entire node fails. Whence all nodes return a success, the node reports a success.
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             bool anyNodeRunning = false;
             foreach(var node in nodes)
             {
                 ExecutionOrder++;
-                switch(node.Evaluate())
+                switch(node.Evaluate(deltaTime))
                 {
                     //! if node is running, means there's a process happenning.
                     case NodeState.RUNNING:

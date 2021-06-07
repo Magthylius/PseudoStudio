@@ -9,7 +9,7 @@ namespace Hadal.AI.TreeNodes
             _brain = brain;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             if (_brain.RuntimeData.HasCumulativeDamageExceeded)
                 return NodeState.SUCCESS;

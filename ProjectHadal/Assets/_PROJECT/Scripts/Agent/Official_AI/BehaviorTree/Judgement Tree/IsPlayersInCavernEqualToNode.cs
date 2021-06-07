@@ -16,7 +16,7 @@ namespace Hadal.AI.TreeNodes
             _currentCavern = CavernTag.Invalid;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             //! Identify where the AI is
             _currentCavern = _brain.CavernManager.GetCavernTagOfAILocation();

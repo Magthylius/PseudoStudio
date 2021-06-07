@@ -13,11 +13,11 @@ namespace Hadal.AI.TreeNodes
         protected string debugName = string.Empty;
         public NodeState nodeState { get { return nodeState; } }
 
-        public abstract NodeState Evaluate();
+        public abstract NodeState Evaluate(float deltaTime);
         public void SetDebugName(string msg) => debugName = msg;
     }
 
-    public enum NodeState
+    public enum NodeState 
     {
         RUNNING, SUCCESS, FAILURE,
     }

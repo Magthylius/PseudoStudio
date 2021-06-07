@@ -30,7 +30,7 @@ namespace Hadal.AI.TreeNodes
             return true;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             if(DecreaseConfidence())
             {

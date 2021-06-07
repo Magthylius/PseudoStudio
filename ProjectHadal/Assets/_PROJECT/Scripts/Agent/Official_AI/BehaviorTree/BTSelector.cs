@@ -19,12 +19,12 @@ namespace Hadal.AI.TreeNodes
         /* If any of the children reports a success, the selector will
         * immediately report a success upwards. If all children fail,
         * it will report a failure instead.*/
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             foreach (var node in nodes)
             {
                 ExecutionOrder++;
-                switch (node.Evaluate())
+                switch (node.Evaluate(deltaTime))
                 {
                     case NodeState.RUNNING:
                         _nodeState = NodeState.RUNNING;

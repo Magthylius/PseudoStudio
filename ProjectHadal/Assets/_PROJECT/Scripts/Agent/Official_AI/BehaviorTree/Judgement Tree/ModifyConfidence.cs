@@ -17,7 +17,7 @@ namespace Hadal.AI.TreeNodes
             _modifyDifference = modifyAmount;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             _brain.RuntimeData.UpdateConfidenceValue(_modifyDifference);
             return NodeState.SUCCESS;

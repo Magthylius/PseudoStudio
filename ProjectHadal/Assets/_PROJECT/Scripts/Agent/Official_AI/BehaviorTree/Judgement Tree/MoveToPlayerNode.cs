@@ -24,7 +24,7 @@ namespace Hadal.AI.TreeNodes
             _followPersistently = followPersistently;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             _target = _brain.CurrentTarget.transform;
             if (_target == null) return NodeState.FAILURE;

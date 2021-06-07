@@ -25,7 +25,7 @@ namespace Hadal.AI.TreeNodes
             _state = NodeState.FAILURE;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             if (_isWaiting) return NodeState.RUNNING;
             if (_reportResult)

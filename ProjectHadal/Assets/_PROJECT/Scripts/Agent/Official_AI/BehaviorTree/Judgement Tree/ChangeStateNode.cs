@@ -11,7 +11,7 @@ namespace Hadal.AI.TreeNodes
             _stateObjective = objective;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             // return NodeState.SUCCESS;
             _brain.RuntimeData.SetMainObjective(_stateObjective);

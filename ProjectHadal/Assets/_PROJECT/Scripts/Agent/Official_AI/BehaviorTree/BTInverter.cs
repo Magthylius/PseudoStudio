@@ -16,9 +16,9 @@ namespace Hadal.AI.TreeNodes
         }
 
         //! Reports a success if the child fails and a failure if the child succeeeds. Running will report as running
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
-            switch(node.Evaluate())
+            switch(node.Evaluate(deltaTime))
             {
                 case NodeState.RUNNING:
                 _nodeState = NodeState.RUNNING;

@@ -21,7 +21,7 @@ namespace Hadal.AI.TreeNodes
             _triggerOnce = false;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             if (!_triggerOnce)
             {

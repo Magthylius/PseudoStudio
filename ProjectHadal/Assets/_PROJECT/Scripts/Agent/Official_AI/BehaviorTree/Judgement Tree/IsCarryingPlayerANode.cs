@@ -11,7 +11,7 @@ namespace Hadal.AI.TreeNodes
             _checkForTargetPlayer = checkForTargetPlayer;
         }
 
-        public override NodeState Evaluate()
+        public override NodeState Evaluate(float deltaTime)
         {
             if (_checkForTargetPlayer)
             {
