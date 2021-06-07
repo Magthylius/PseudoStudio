@@ -11,7 +11,7 @@ namespace Hadal.AI.TreeNodes
         AIDamageManager _damageManager;
         bool _threshDone;
         bool _triggerOnce;
-
+        int timer;
 
         public ThreshCarriedPlayerNode(AIBrain brain, AIDamageManager damageManager)
         {
@@ -21,15 +21,18 @@ namespace Hadal.AI.TreeNodes
             _threshDone = false;
         }
 
-        void ThreshPlayer()
+        IEnumerator ThreshPlayer()
         {
-            for (int i = 0; i < _damageManager.threshTimer; i--)
+            timer = _damageManager.ThreshTimer;
+
+            while(timer > 0)
             {
                 _damageManager.Send_DamagePlayer(_brain.CarriedPlayer.transform, AIDamageType.Thresh);
-                if (_damageManager.threshTimer <= 0)
-                    _threshDone = true;
+                yield return new WaitForSeconds(_damageManager.ApplyEveryNSeconds);
+                timer--;
             }
 
+            _threshDone = true;
         }
 
         public override NodeState Evaluate(float deltaTime)
@@ -40,15 +43,15 @@ namespace Hadal.AI.TreeNodes
             if(!_triggerOnce)
             {
                 _triggerOnce = true;
-                ThreshPlayer();
+                Debug.Log(_brain);
+                _brain.StartCoroutine(ThreshPlayer());
             }
-				
-            // if (_brain.CarriedPlayer.GetInfo.HealthManager.)
-            while(!_threshDone)
+
+            if(_threshDone)
+                return NodeState.SUCCESS;
+            else
                 return NodeState.RUNNING;
 
-            "AI: I am hurting the player".Bold().Msg();
-            return NodeState.RUNNING;
         }
     }
 }
