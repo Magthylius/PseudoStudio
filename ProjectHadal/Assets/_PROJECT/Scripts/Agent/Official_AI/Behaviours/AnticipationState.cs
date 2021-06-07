@@ -47,7 +47,7 @@ namespace Hadal.AI
 			debugRoutine = Debug_SwitchToEngagementJudgementState();
 			Brain.StartCoroutine(debugRoutine);
 
-			targetCavern = Brain.CavernManager.GetMostPopulatedCavern();
+			//targetCavern = Brain.CavernManager.GetMostPopulatedCavern();
 
 			if (targetCavern == null)
             {
@@ -60,6 +60,8 @@ namespace Hadal.AI
 			runtimeData = Brain.RuntimeData;
 			machineData = Brain.MachineData;
 			runtimeData.SetEngagementObjective(machineData.Anticipation.GetRandomInfluencedObjective(runtimeData.NormalisedConfidence));
+
+			SetTargetCavern();
 		}
 		
         public void StateTick()
@@ -83,6 +85,30 @@ namespace Hadal.AI
         public void LateStateTick() { }
         public void FixedStateTick() { }
         public void OnStateEnd() { }
+
+		void SetTargetCavern()
+        {
+			EngagementObjective currentObj = runtimeData.GetEngagementObjective;
+
+			switch(currentObj)
+            {
+				case EngagementObjective.Aggressive:
+					targetCavern = Brain.CavernManager.GetMostPopulatedCavern();
+					break;
+				case EngagementObjective.Ambush:
+					targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetMostPopulatedCavern().ConnectedCaverns);
+					break;
+
+				default:
+					break;
+            }
+        }
+
+		void DetermineNextCavern()
+        {
+			nextCavern = Brain.CavernManager.GetNextCavern(targetCavern, Brain.CavernManager.GetHandlerOfAILocation);
+		}
+
         public Func<bool> ShouldTerminate() => () => false;
     }
 }

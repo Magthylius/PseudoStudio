@@ -157,5 +157,6 @@ namespace Hadal.AI.Caverns
 
         public int GetPlayerCount => playersInCavern.Count;
         public List<PlayerController> GetPlayersInCavern => playersInCavern;
+        public List<CavernHandler> ConnectedCaverns => connectedCaverns;
     }
 }
