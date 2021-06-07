@@ -302,6 +302,14 @@ namespace Hadal.AI.Caverns
             if (!handlerList.Contains(handler)) handlerList.Add(handler);
         }
 
+        public List<CavernHandler> GetHandlerListExcludingAI() => GetHandlerListExcluding(GetHandlerOfAILocation);
+        public List<CavernHandler> GetHandlerListExcluding(CavernHandler exludedCavern)
+        {
+            List<CavernHandler> newHandlerList = new List<CavernHandler>();
+            newHandlerList = handlerList.ToList();
+            newHandlerList.Remove(exludedCavern);
+            return newHandlerList;
+        }
         public CavernHandler GetHandlerOfAILocation => aiAtHandler;
         public CavernHandler GetHandlerOfTag(CavernTag tag) => handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
     }
