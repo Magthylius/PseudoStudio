@@ -19,11 +19,15 @@ namespace Hadal.AI
         [SerializeField] private PointNavigationHandler navigationHandler;
         [SerializeField] private AISenseDetection senseDetection;
         [SerializeField] private AISightDetection sightDetection;
+        [SerializeField] private AITailManager tailManager;
+        [SerializeField] private AIDamageManager damageManager;
         [SerializeField] private CavernManager cavernManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
         public AISenseDetection SenseDetection => senseDetection;
         public AISightDetection SightDetection => sightDetection;
+        public AITailManager TailManager => tailManager;
+        public AIDamageManager DamageManager => damageManager;
         public CavernManager CavernManager => cavernManager;
 
         private StateMachine stateMachine;
@@ -73,7 +77,6 @@ namespace Hadal.AI
 
         //! Events
         public static event Action<Transform, AIDamageType> DamagePlayerEvent;
-        internal void InvokeDamagePlayerEvent(Transform t, AIDamageType type) => DamagePlayerEvent?.Invoke(t, type);
 
         public bool CanUpdate => PhotonNetwork.IsMasterClient || isOffline;
 
@@ -98,16 +101,18 @@ namespace Hadal.AI
         {
             allAIComponents.ForEach(i => i.Initialise(this));
 			cavernManager = FindObjectOfType<CavernManager>();
-            
-			//! State machine
-			InitialiseStates();
+            cavernManager.AIEnterCavernEvent += OnCavernEnter;
+            cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
+
+            //! State machine
+            InitialiseStates();
             runtimeData.SetMainObjective(MainObjective.Anticipation);
 			stateMachine.SetState(anticipationState);
 
 			//! Runtime data
             RefreshPlayerReferences();
             runtimeData.Start_Initialise();
-            runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
+            //runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
         }
 
         private void Update()
@@ -169,10 +174,18 @@ namespace Hadal.AI
         }
 
         #region Event Handlers
+        /// <summary>Calls when AI enters a cavern</summary>
         public void OnCavernEnter(CavernHandler cavern)
         {
             //stateMachine.CurrentState.OnCavernEnter();
             GetCurrentState().OnCavernEnter(cavern);
+        }
+
+        /// <summary>Calls when a player enters the cavern AI is in</summary>
+        public void OnPlayerEnterAICavern(CavernPlayerData data)
+        {
+            if (data.Handler == cavernManager.GetHandlerOfAILocation)
+                GetCurrentState().OnPlayerEnterAICavern(data);
         }
         #endregion
 
@@ -199,6 +212,7 @@ namespace Hadal.AI
         #endregion
 
         #region Control Methods
+        
         /// <summary> Tries to set the AI to stunstate.
         /// Returns true AI can be stunned, false if AI is already stunned</summary>
         public bool TryToStun(float duration)

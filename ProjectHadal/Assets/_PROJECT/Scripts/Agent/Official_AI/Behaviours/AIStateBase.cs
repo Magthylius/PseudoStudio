@@ -4,6 +4,8 @@ using UnityEngine;
 using Tenshi.AIDolls;
 using System;
 using Hadal.AI.Caverns;
+using Hadal.AI.States;
+using Hadal.Player;
 
 namespace Hadal.AI
 {
@@ -11,6 +13,18 @@ namespace Hadal.AI
     {
         public AIBrain Brain;
         public PointNavigationHandler NavigationHandler;
+        public LeviathanRuntimeData RuntimeData;
+        public StateMachineData MachineData;
+
+        public bool AllowStateTick = true;
+
+        public void Initialize(AIBrain brain)
+        {
+            Brain = brain;
+            NavigationHandler = Brain.NavigationHandler;
+            RuntimeData = Brain.RuntimeData;
+            MachineData = Brain.MachineData;
+        }
 
         public virtual void FixedStateTick() { }
 
@@ -23,6 +37,10 @@ namespace Hadal.AI
         public virtual void OnStateStart() { }
 
         public virtual void OnCavernEnter(CavernHandler cavern) { }
+
+        public virtual void OnPlayerEnterAICavern(CavernPlayerData data) { }
+
+        public bool CheckGameHasEnded() { return false; }
 
         public bool IsCurrentState { get; set; } = false;
 

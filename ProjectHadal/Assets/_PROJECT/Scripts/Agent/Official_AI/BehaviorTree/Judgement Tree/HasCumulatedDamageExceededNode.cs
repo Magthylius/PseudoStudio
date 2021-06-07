@@ -11,7 +11,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-            if (_brain.RuntimeData.HasCumulativeDamageExceeded())
+            if (_brain.RuntimeData.HasCumulativeDamageExceeded)
                 return NodeState.SUCCESS;
             return NodeState.FAILURE;
         }

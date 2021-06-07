@@ -34,6 +34,9 @@ namespace Hadal.Player
 
         PhotonView _pView;
         PlayerManager _manager;
+        Rigidbody _rBody;
+
+        private bool _isKnocked;
 
         //! Ready checks
         bool playerReady = false;
@@ -55,6 +58,8 @@ namespace Hadal.Player
         {
             base.Awake();
             _pView = photonInfo.PView;
+            _rBody = GetComponent<Rigidbody>();
+            _isKnocked = false;
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
@@ -328,9 +333,7 @@ namespace Hadal.Player
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
-            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator);
-        public Rigidbody rigidbody
-            => GetComponent<Rigidbody>();
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator, _rBody);
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => pViewSelfID;
         #endregion

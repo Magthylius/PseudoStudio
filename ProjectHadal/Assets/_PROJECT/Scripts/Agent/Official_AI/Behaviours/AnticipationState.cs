@@ -4,31 +4,27 @@ using System.Collections;
 using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
-using Hadal.AI.States;
 using Hadal.AI.Caverns;
 
 //! C: jet, E: jon
-namespace Hadal.AI
+namespace Hadal.AI.States
 {
     public class AnticipationState : AIStateBase
     {
         
 		private IEnumerator debugRoutine;
 
-		LeviathanRuntimeData runtimeData;
-		StateMachineData machineData;
+		AnticipationStateSettings settings;
 
 		CavernHandler targetCavern;
 		CavernHandler nextCavern;
-
-		bool allowStateTick = true;
         
         public AnticipationState(AIBrain brain)
         {
-            Brain = brain;
-            NavigationHandler = Brain.NavigationHandler;
+			Initialize(brain);
 			debugRoutine = null;
-        }
+			settings = MachineData.Anticipation;
+		}
 		
 		IEnumerator Debug_SwitchToEngagementJudgementState()
 		{
@@ -51,16 +47,15 @@ namespace Hadal.AI
 			if (targetCavern == null)
             {
 				//! Check if game ended
-				allowStateTick = false;
+				AllowStateTick = false;
 				return;
             }
 
-			allowStateTick = true;
-			runtimeData = Brain.RuntimeData;
-			machineData = Brain.MachineData;
-			runtimeData.SetEngagementObjective(machineData.Anticipation.GetRandomInfluencedObjective(runtimeData.NormalisedConfidence));
+			AllowStateTick = true;
+			RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
-			SetTargetCavern();
+			SetNewTargetCavern();
+			Brain.StartCoroutine(CheckPlayersInRange());
 		}
 
 		public override void StateTick()
@@ -77,8 +72,9 @@ namespace Hadal.AI
 				d.SetEngagementObjective(eObj);
 			}*/
 
-			if (!allowStateTick) return;
-
+			if (!AllowStateTick) return;
+			//! Move to target cavern
+			//! Check if players in range/damaged by player
 
         }
 		public override void LateStateTick() { }
@@ -90,9 +86,14 @@ namespace Hadal.AI
 			DetermineNextCavern();
         }
 
-		void SetTargetCavern()
+		IEnumerator CheckPlayersInRange()
         {
-			EngagementObjective currentObj = runtimeData.GetEngagementObjective;
+			yield return new WaitForSeconds(0.2f);
+        }
+
+		void SetNewTargetCavern()
+        {
+			EngagementObjective currentObj = RuntimeData.GetEngagementObjective;
 
 			switch(currentObj)
             {

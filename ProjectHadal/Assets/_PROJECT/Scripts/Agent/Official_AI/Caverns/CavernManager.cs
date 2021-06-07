@@ -39,7 +39,7 @@ namespace Hadal.AI.Caverns
         }
     }
 
-    public delegate void CavernHandlerReturn(CavernPlayerData data);
+    public delegate void CavernHandlerPlayerReturn(CavernPlayerData data);
     public delegate void CavernHandlerAIReturn(CavernHandler handler);
 
     /// <summary>
@@ -64,6 +64,11 @@ namespace Hadal.AI.Caverns
         [ReadOnly] public List<CavernHandler> handlerList = new List<CavernHandler>();
         CavernHandler aiAtHandler;
 
+        public event CavernHandlerPlayerReturn PlayerEnterCavernEvent;
+        public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
+        public event CavernHandlerAIReturn AIEnterCavernEvent;
+        public event CavernHandlerAIReturn AILeftCavernEvent;
+
         protected override void Awake()
         {
             base.Awake();
@@ -78,23 +83,29 @@ namespace Hadal.AI.Caverns
         public void OnPlayerEnterCavern(CavernPlayerData data)
         {
             //return data;
+            PlayerEnterCavernEvent?.Invoke(data);
         }
 
         public void OnPlayerLeftCavern(CavernPlayerData data)
         {
             //return data;
+            PlayerLeftCavernEvent?.Invoke(data);
         }
 
         public void OnAIEnterCavern(CavernHandler handler)
         {
             if (aiAtHandler != handler)
                 aiAtHandler = handler;
+
+            AIEnterCavernEvent?.Invoke(handler);
         }
 
         public void OnAILeaveCavern(CavernHandler handler)
         {
             if (aiAtHandler == handler)
                 aiAtHandler = null;
+
+            AILeftCavernEvent?.Invoke(handler);
         }
 
         /// <summary>
@@ -302,6 +313,14 @@ namespace Hadal.AI.Caverns
             if (!handlerList.Contains(handler)) handlerList.Add(handler);
         }
 
+        public List<CavernHandler> GetHandlerListExcludingAI() => GetHandlerListExcluding(GetHandlerOfAILocation);
+        public List<CavernHandler> GetHandlerListExcluding(CavernHandler exludedCavern)
+        {
+            List<CavernHandler> newHandlerList = new List<CavernHandler>();
+            newHandlerList = handlerList.ToList();
+            newHandlerList.Remove(exludedCavern);
+            return newHandlerList;
+        }
         public CavernHandler GetHandlerOfAILocation => aiAtHandler;
         public CavernHandler GetHandlerOfTag(CavernTag tag) => handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
     }

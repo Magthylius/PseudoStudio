@@ -40,6 +40,7 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private float timeoutTimer;
         [SerializeField, ReadOnly] private float lingerTimer;
 		[Space(10)]
+        [SerializeField, ReadOnly] private float speedMultiplier = 1f;
 		[SerializeField, ReadOnly] private List<NavPoint> navPoints;
 		[SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
         [SerializeField, ReadOnly] private bool hasReachedPoint;
@@ -94,8 +95,11 @@ namespace Hadal.AI
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
         public float ObstacleDetectionRadius => obstacleDetectRadius;
-		public float TotalThrustForce => thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce);
+		public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public Transform PilotTransform => pilotTrans;
+
+        public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
+        public void ResetSpeedMultiplier() => SetSpeedMultiplier(1f);
 
         public void AddRepulsionPoint(Vector3 point)
         {

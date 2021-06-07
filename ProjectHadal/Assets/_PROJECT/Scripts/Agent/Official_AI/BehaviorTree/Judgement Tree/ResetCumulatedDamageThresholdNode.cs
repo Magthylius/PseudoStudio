@@ -13,7 +13,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-            _brain.RuntimeData.UpdateCumulativeDamageThreshold(_brain.HealthManager.GetCurrentHealth);
+            //_brain.RuntimeData.UpdateCumulativeDamageThreshold(_brain.HealthManager.GetCurrentHealth);
             return NodeState.SUCCESS;
         }
     }

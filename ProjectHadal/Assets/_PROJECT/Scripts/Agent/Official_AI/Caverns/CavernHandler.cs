@@ -25,8 +25,8 @@ namespace Hadal.AI.Caverns
         [ReadOnly] public List<TunnelBehaviour> connectedTunnels;
         [ReadOnly] public List<CavernHandler> connectedCaverns;
         
-        public event CavernHandlerReturn PlayerEnteredCavernEvent;
-        public event CavernHandlerReturn PlayerLeftCavernEvent;
+        public event CavernHandlerPlayerReturn PlayerEnteredCavernEvent;
+        public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnteredCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
 
@@ -81,7 +81,7 @@ namespace Hadal.AI.Caverns
                 playersInCavern.Add(player);
                 CavernPlayerData data = new CavernPlayerData(this, player);
 
-                PlayerEnteredCavernEvent.Invoke(data);
+                PlayerEnteredCavernEvent?.Invoke(data);
             }
             else if (other.GetComponent<AIBrain>() != null)
             {

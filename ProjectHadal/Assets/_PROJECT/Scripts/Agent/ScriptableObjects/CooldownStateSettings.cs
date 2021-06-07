@@ -12,5 +12,6 @@ namespace Hadal.AI.States
     {
         [Header("Cooldown Settings")]
         [Min(0f)] public float MaxCooldownTime = 60f;
+        [Min(0f)] public float ElusiveSpeedModifier = 2.5f;
     }
 }
