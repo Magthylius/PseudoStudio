@@ -7,7 +7,7 @@ namespace Hadal.AI.TreeNodes
     public class TailWhipNode : BTNode
     {
         private AIBrain _brain;
-        private Collider _tailCollider;
+        private AITailManager _tailManager;
         private bool _tailWhipDone;
         private bool _triggerOnce;
         private float _whipTimer;
@@ -16,6 +16,7 @@ namespace Hadal.AI.TreeNodes
         public TailWhipNode(AIBrain brain)
         {
             _brain = brain;
+            _tailManager = brain.TailManager;
             _tailWhipDone = false;
             _triggerOnce = false;
         }
@@ -25,7 +26,7 @@ namespace Hadal.AI.TreeNodes
             if (!_triggerOnce)
             {
                 _triggerOnce = true;
-                // trigger tailwhip code here
+                _tailManager.EnableWhipStance();
                 _brain.StartCoroutine(WhipRoutine());
             }
 
@@ -43,7 +44,7 @@ namespace Hadal.AI.TreeNodes
                 if (TickWhipTimer(_brain.DeltaTime) <= 0)
                 {
                     ResetWhipTimer();
-                    // disable collider here
+                    _tailManager.DisableWhipStance();
                     _tailWhipDone = true;
                 }
                 yield return null;
