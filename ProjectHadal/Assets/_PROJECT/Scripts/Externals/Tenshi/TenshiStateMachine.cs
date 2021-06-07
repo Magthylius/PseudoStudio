@@ -13,6 +13,7 @@ namespace Tenshi.AIDolls
 
         private IState _currState;
         public IState CurrentState => _currState;
+        public event Action<IState> OnStateChange;
 
         /// <summary> Should be called in an update function. It is this state machine's update method. It must be called
         /// on any state machine implementation as it handles state switching. </summary>
@@ -34,7 +35,10 @@ namespace Tenshi.AIDolls
         {
             if (newState == _currState) return false;
             _currState?.OnStateEnd();
+            _currState.IsCurrentState = false;
             _currState = newState;
+            _currState.IsCurrentState = true;
+            OnStateChange?.Invoke(_currState);
             AllTransitions.TryGetValue(_currState.GetType(), out SequentialTransitions);
             if (SequentialTransitions.IsNullOrEmpty()) SequentialTransitions = Transition.Null;
             _currState?.OnStateStart();
@@ -100,7 +104,7 @@ namespace Tenshi.AIDolls
         public void LateStateTick() { }
         public void FixedStateTick() { }
         public void OnStateEnd() => _behaviour.OnEnd();
-        public void OnCavernEnter() { }
+        public bool IsCurrentState { get; set; }
         public Func<bool> ShouldTerminate() => () => false;
     }
 
@@ -127,6 +131,8 @@ namespace Tenshi.AIDolls
         
         /// <summary> This will be called when the state becomes inactive (transitioned out to another state). </summary>
         void OnStateEnd();
+
+        bool IsCurrentState { get; set; }
 
         /// <summary> Can be used to specify a 'self termination' condition if this state needs to end itself at some point. 
         /// This is so that individual state can tell the machine that they should terminate without the machine needing to

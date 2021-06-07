@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Hadal.AI.States
 {
-    public class JudgementSubState : IState
+    public class JudgementSubState : AIStateBase
     {
         EngagementState parent;
         AIBrain b;

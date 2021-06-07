@@ -278,7 +278,7 @@ namespace Hadal.Networking.UI.Loading
         {
             //print("recieved network load");
             FadeIn();
-            print("what");
+            //print("what");
             SetupPostProcess();
             ActivateLoadingElements();
 
