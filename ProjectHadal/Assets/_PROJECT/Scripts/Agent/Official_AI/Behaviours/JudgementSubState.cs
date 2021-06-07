@@ -136,15 +136,15 @@ namespace Hadal.AI.States
             root.AddNode(sequenceA1);
         }
 
-        public void OnStateStart()
+        public override void OnStateStart()
         {
             if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
-            b.RuntimeData.ResetJudgementTimer();
+            b.RuntimeData.ResetEngagementTicker();
         }
-        public void StateTick()
+        public override void StateTick()
         {
             float deltaTime = b.DeltaTime;
-            b.RuntimeData.TickJudgementTimer(deltaTime);
+            b.RuntimeData.TickEngagementTicker(deltaTime);
             if (TickUpdateTimer(deltaTime) > updateDelay)
             {
                 ResetUpdateTimer();
@@ -161,10 +161,10 @@ namespace Hadal.AI.States
             // Logic Diagram https://app.diagrams.net/#G1uh0jwavfwoBIC7Pb8agoDO-CJPGdlkac
             // Node Documentation https://app.diagrams.net/#G1S3qrdiuVc7uVjAx3LYDiG1rLkVtIGEKE
         }
-        public void LateStateTick() { }
-        public void FixedStateTick() { }
-        public void OnStateEnd() { }
-        public Func<bool> ShouldTerminate() => () => false;
+        public override void LateStateTick() { }
+        public override void FixedStateTick() { }
+        public override void OnStateEnd() { }
+        public override Func<bool> ShouldTerminate() => () => false;
 
         private void ResetUpdateTimer() => updateTimer = 0.0f;
         private float TickUpdateTimer(in float tick) => updateTimer += tick;
