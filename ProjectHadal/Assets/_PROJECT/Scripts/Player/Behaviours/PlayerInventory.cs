@@ -78,7 +78,6 @@ namespace Hadal.Player.Behaviours
             {
                 _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount);
                 _controllerInfo.Shooter.SendTorpedoEvent(pViewForProj + _projectileCount);
-                _projectileCount++;
             }
             if (EquippedUsable.Data.isChargable)
             {
@@ -92,14 +91,12 @@ namespace Hadal.Player.Behaviours
                 if (_uInput.FireKey2Release)
                 {
                     FireUtility(pViewForProj + _projectileCount);
-                    _projectileCount++;
                     _chargeTime = 0f;
                 }
             }
             else if (_uInput.FireKey2)
             {
                 FireUtility(pViewForProj + _projectileCount);
-                _projectileCount++;
             }
         }
         
@@ -201,12 +198,11 @@ namespace Hadal.Player.Behaviours
         #endregion
 
         #region Shorthand
-
+        public int GetProjectileCount => _projectileCount;
+        public void IncreaseProjectileCount() { _projectileCount++; }
         public UsableLauncherObject[] GetUsableObjects => utilities;
         private UsableLauncherObject EquippedUsable => utilities[_selectedItem];
-
         private int pViewForProj => _pView.ViewID * 1000;
-
         #endregion
     }
 }
