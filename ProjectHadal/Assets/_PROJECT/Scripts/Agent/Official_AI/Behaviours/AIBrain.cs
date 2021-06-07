@@ -45,15 +45,18 @@ namespace Hadal.AI
 
         public LeviathanRuntimeData RuntimeData => runtimeData;
         public StateMachineData MachineData => machineData;
-
         private Rigidbody rBody;
-        AIStateBase idleState;
+
         AIStateBase anticipationState;
-        AIStateBase recoveryState;
         AIStateBase engagementState;
+        AIStateBase recoveryState;
+        AIStateBase cooldownState;
+
         AggressiveSubState eAggressiveState;
         AmbushSubState eAmbushState;
         JudgementSubState eJudgementState;
+
+        List<AIStateBase> allStates;
 
         [Header("Stunned Settings (needs a relook)")]
         [SerializeField] public float stunDuration;
@@ -136,17 +139,21 @@ namespace Hadal.AI
             //! instantiate classes
             stateMachine = new StateMachine();
 
-			// Anticipation
+			//! Anticipation
             anticipationState = new AnticipationState(this);
 
-			// Engagement
+			//! Engagement
             eAggressiveState = new AggressiveSubState();
             eAmbushState = new AmbushSubState();
             eJudgementState = new JudgementSubState();
             engagementState = new EngagementState(this, eAggressiveState, eAmbushState, eJudgementState);
 
-			// Others
+			//! Recovery
             recoveryState = new RecoveryState(this);
+
+            //! Cooldown
+            cooldownState = new CooldownState(this);
+
             stunnedState = new StunnedState(this);
             
             //! -setup custom transitions-
@@ -157,12 +164,15 @@ namespace Hadal.AI
             //! Any state can go into stunnedState
             // stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
             // stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
+
+            allStates = new List<AIStateBase> { anticipationState, engagementState, recoveryState, cooldownState };
         }
 
         #region Event Handlers
         public void OnCavernEnter(CavernHandler cavern)
         {
             //stateMachine.CurrentState.OnCavernEnter();
+            GetCurrentState().OnCavernEnter(cavern);
         }
         #endregion
 
@@ -216,6 +226,13 @@ namespace Hadal.AI
             // Gizmos.DrawSphere(transform.position, wallDetectionRadius);
         }
 
+        public AIStateBase GetCurrentState()
+        {
+            foreach (AIStateBase state in allStates) if (state.IsCurrentState) return state;
+
+            Debug.LogError("No active state found!");
+            return null;
+        }
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
     }
