@@ -35,7 +35,7 @@ namespace Tenshi.AIDolls
         {
             if (newState == _currState) return false;
             _currState?.OnStateEnd();
-            _currState.IsCurrentState = false;
+            if (_currState != null) _currState.IsCurrentState = false;
             _currState = newState;
             _currState.IsCurrentState = true;
             OnStateChange?.Invoke(_currState);
