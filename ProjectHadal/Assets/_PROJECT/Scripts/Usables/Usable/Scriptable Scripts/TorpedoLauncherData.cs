@@ -12,6 +12,8 @@ namespace Hadal.Usables
         {
             var projectileObj = TorpedoPool.Instance.Scoop();
             /*projectileObj.Data = ProjectileData;*/
+            projectileObj.projectileTypeID += info.ProjectileID;
+            Debug.Log(projectileObj.projectileTypeID + " shot");
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);

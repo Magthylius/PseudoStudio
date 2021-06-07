@@ -56,17 +56,6 @@ namespace Hadal.Player.Behaviours
             //PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
         }
 
-        private void NetworkingClient_EventReceived(EventData obj)
-        {
-            if (obj.Code == (byte)ByteEvents.PLAYER_TORPEDO_LAUNCH)
-            {
-                if ((int)obj.CustomData == _pView.ViewID)
-                {
-                    FireTorpedo();
-                }
-            }
-        }
-
         private void Awake()
         {
             BuildTimers();
@@ -128,15 +117,29 @@ namespace Hadal.Player.Behaviours
             return info;
         }
 
+        private void NetworkingClient_EventReceived(EventData obj)
+        {
+            if (obj.Code == (byte)ByteEvents.PLAYER_TORPEDO_LAUNCH)
+            {
+                object[] data = (object[])obj.CustomData;
+
+                if ((int)data[0] == _pView.ViewID)
+                {
+                    FireTorpedo((int)data[1]);
+                }
+            }
+        }
+
         //! Event Firing
-        public void SendTorpedoEvent()
+        public void SendTorpedoEvent(int projectileID)
         {
             if (!AllowUpdate) return;
             //PhotonNetwork.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
-            neManager.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, _pView.ViewID);
+            object[] content = new object[] { _pView.ViewID, projectileID};
+            neManager.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, content);
         }
 
-        public void FireTorpedo()
+        public void FireTorpedo(int projectileID)
         {
             if (!AllowUpdate) return;
             if (!tLauncher.IsChamberLoaded)
@@ -145,25 +148,25 @@ namespace Hadal.Player.Behaviours
                 controller.UI.UpdateFiringVFX(true);
                 return;
             }
-            HandleTorpedoObject();
+            HandleTorpedoObject(projectileID);
         }
-        private void HandleTorpedoObject()
+        private void HandleTorpedoObject(int projectileID)
         {
             tLauncher.DecrementChamber();
-            UsableHandlerInfo info = CreateInfoForTorpedo();
+            UsableHandlerInfo info = CreateInfoForTorpedo(projectileID);
             info = CalculateTorpedoAngle(info);
             tLauncher.Use(info);
         }
 
-        public void FireUtility(UsableLauncherObject usable, float chargeTime)
+        public void FireUtility(int projectileID, UsableLauncherObject usable, float chargeTime)
         {
             if (!_canUtilityFire || !AllowUpdate) return;
             HandleUtilityReloadTimer(usable);
-            usable.Use(CreateInfoForUtility(chargeTime));
+            usable.Use(CreateInfoForUtility(projectileID, chargeTime));
         }
         
-        private UsableHandlerInfo CreateInfoForTorpedo() => new UsableHandlerInfo().WithTransformForceInfo(torpedoFirePoint,0f, aimParentRb.velocity);
-        private UsableHandlerInfo CreateInfoForUtility(float chargedTime) => new UsableHandlerInfo().WithTransformForceInfo(utilityFirePoint, chargedTime, aimParentRb.velocity);
+        private UsableHandlerInfo CreateInfoForTorpedo(int projectileID) => new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint,0f, aimParentRb.velocity);
+        private UsableHandlerInfo CreateInfoForUtility(int projectileID, float chargedTime) => new UsableHandlerInfo().WithTransformForceInfo(projectileID, utilityFirePoint, chargedTime, aimParentRb.velocity);
 
         #endregion
 
