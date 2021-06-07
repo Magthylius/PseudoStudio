@@ -8,7 +8,7 @@ namespace Hadal.Usables.Projectiles
     public abstract class ProjectileBehaviour : MonoBehaviourDebug, IProjectile, IPoolable<ProjectileBehaviour>
     {
         public string DebugKey;
-        public int projectileTypeID = 0;
+        public int projectileID = 0;
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
