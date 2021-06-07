@@ -5838,7 +5838,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   connectedCaverns:
   - {fileID: 519486359}
   - {fileID: 2012713535}
@@ -5894,7 +5894,7 @@ Transform:
   - {fileID: 392077880}
   - {fileID: 616476616}
   m_Father: {fileID: 631083023}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &526190238
 PrefabInstance:
@@ -7223,8 +7223,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 704803904}
   - {fileID: 524162420}
+  - {fileID: 704803904}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7941,7 +7941,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2206939684412345039, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: DebugEnabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2206939684412345072, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: m_RootOrder
@@ -13067,7 +13067,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   connectedCaverns:
   - {fileID: 67463453}
   - {fileID: 2012713535}
@@ -13646,7 +13646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   connectedCaverns:
   - {fileID: 519486359}
   - {fileID: 1488942620}
@@ -14692,7 +14692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   connectedCaverns:
   - {fileID: 805868590}
   - {fileID: 2012713535}
@@ -15612,7 +15612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   connectedCaverns:
   - {fileID: 9213757164826660528}
   - {fileID: 1488942620}
@@ -19026,7 +19026,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   connectedCaverns:
   - {fileID: 9213757164826660528}
   - {fileID: 2012713535}
@@ -22408,7 +22408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   connectedCaverns:
   - {fileID: 1488942620}
   - {fileID: 67463453}
