@@ -144,6 +144,7 @@ namespace Hadal.AI.States
         }
         public override void StateTick()
         {
+            //return;
             float deltaTime = b.DeltaTime;
             b.RuntimeData.TickEngagementTicker(deltaTime);
             if (TickUpdateTimer(deltaTime) > updateDelay)

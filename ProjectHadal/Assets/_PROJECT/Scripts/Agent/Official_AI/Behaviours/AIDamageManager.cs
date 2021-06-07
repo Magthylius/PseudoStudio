@@ -20,7 +20,12 @@ namespace Hadal.AI
         [Header("Damage Values")]
         [Foldout("Damage Type"), SerializeField] int threshDamage;
         public int ThreshDamage { get { return threshDamage; } set { threshDamage = value; } }
-        [SerializeField] public int threshTimer { get; private set; }
+        //! How long to damage
+        [SerializeField] int threshTimer;
+        public int ThreshTimer { get { return threshTimer; } set { threshTimer = value; } }
+        //! How frequent to damage
+        [SerializeField] float applyEveryNSeconds;
+        public float ApplyEveryNSeconds { get { return applyEveryNSeconds; } set { applyEveryNSeconds = value; } }
 
         [Foldout("Damage Type"), SerializeField] int tailWhipDamage;
 
