@@ -13,8 +13,8 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate()
         {
-            if (_brain.RuntimeData.GetJudgementTimerValue > _brain.MachineData.Engagement.GetJudgementTimerThreshold(_thresholdIndex))
-                return NodeState.SUCCESS;
+            /*if (_brain.RuntimeData.GetEngagementTicks > _brain.MachineData.Engagement.GetJudgementTimerThreshold(_thresholdIndex))
+                return NodeState.SUCCESS;*/
             return NodeState.FAILURE;
         }
     }

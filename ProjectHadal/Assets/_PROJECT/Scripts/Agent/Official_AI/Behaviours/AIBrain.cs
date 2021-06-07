@@ -110,7 +110,7 @@ namespace Hadal.AI
 			//! Runtime data
             RefreshPlayerReferences();
             runtimeData.Start_Initialise();
-            runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
+            //runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
         }
 
         private void Update()

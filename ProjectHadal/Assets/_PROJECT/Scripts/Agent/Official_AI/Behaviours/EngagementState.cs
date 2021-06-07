@@ -17,8 +17,7 @@ namespace Hadal.AI.States
 
         public EngagementState(AIBrain brain, AggressiveSubState aggressive, AmbushSubState ambush, JudgementSubState judgement)
         {
-            Brain = brain;
-            NavigationHandler = Brain.NavigationHandler;
+            Initialize(brain);
 
             //! intialise sub machine and states
             aggressive.SetParent(this);

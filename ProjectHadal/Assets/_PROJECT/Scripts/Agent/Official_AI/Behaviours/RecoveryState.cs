@@ -5,22 +5,46 @@ using Tenshi.AIDolls;
 using System;
 using Tenshi;
 using Tenshi.UnitySoku;
+using Hadal.AI.States;
+using Hadal.AI.Caverns;
 
+//! C: Jon
 namespace Hadal.AI
 {
     public class RecoveryState : AIStateBase
     {
+        RecoveryStateSettings settings;
+        CavernHandler targetCavern;
+
         public RecoveryState(AIBrain brain)
         {
-            Brain = brain;
-            NavigationHandler = Brain.NavigationHandler;
+            Initialize(brain);
+            settings = MachineData.Recovery;
         }
 
         public override void OnStateStart()
 		{
 			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
-		}
-        public override void StateTick() { }
+
+            RuntimeData.UpdateCumulativeDamageThreshold(settings.GetEscapeDamageThreshold(Brain.HealthManager.GetCurrentHealth));
+            SetNewTargetEscapeCavern();
+        }
+
+        public override void StateTick() 
+        {
+            if (!AllowStateTick) return;
+
+            RuntimeData.TickRecoveryTicker(Time.deltaTime);
+
+            //! Damage threshold counter
+            if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.HasCumulativeDamageExceeded)
+            {
+                //! Nigeru
+                FailedEscape();
+                
+            }
+        }
+
         public override void LateStateTick()
         {
         }
@@ -28,6 +52,35 @@ namespace Hadal.AI
         {
         }
         public override void OnStateEnd() { }
+
+        public override void OnCavernEnter(CavernHandler cavern)
+        {
+            if (cavern == targetCavern)
+            {
+                if (cavern.GetPlayerCount > 1) SetNewTargetEscapeCavern();
+                else if (cavern.GetPlayerCount == 1 && Brain.CarriedPlayer != null)
+                {
+                    if (cavern.GetPlayersInCavern[0] == Brain.CarriedPlayer)
+                    {
+                        //! TODO: Thresh player
+                    }
+                }
+            }
+        }
+
+        #region State specific
+        void FailedEscape()
+        {
+            RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
+            RuntimeData.SetMainObjective(MainObjective.Engagement);
+        }
+
+        void SetNewTargetEscapeCavern()
+        {
+            targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
+        }
+        #endregion
+
         public override Func<bool> ShouldTerminate() => () => false;
     }
 }

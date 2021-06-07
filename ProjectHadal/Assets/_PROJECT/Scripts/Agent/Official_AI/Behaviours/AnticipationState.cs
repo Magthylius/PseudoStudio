@@ -15,20 +15,17 @@ namespace Hadal.AI
         
 		private IEnumerator debugRoutine;
 
-		LeviathanRuntimeData runtimeData;
-		StateMachineData machineData;
+		AnticipationStateSettings settings;
 
 		CavernHandler targetCavern;
 		CavernHandler nextCavern;
-
-		bool allowStateTick = true;
         
         public AnticipationState(AIBrain brain)
         {
-            Brain = brain;
-            NavigationHandler = Brain.NavigationHandler;
+			Initialize(brain);
 			debugRoutine = null;
-        }
+			settings = MachineData.Anticipation;
+		}
 		
 		IEnumerator Debug_SwitchToEngagementJudgementState()
 		{
@@ -51,14 +48,12 @@ namespace Hadal.AI
 			if (targetCavern == null)
             {
 				//! Check if game ended
-				allowStateTick = false;
+				AllowStateTick = false;
 				return;
             }
 
-			allowStateTick = true;
-			runtimeData = Brain.RuntimeData;
-			machineData = Brain.MachineData;
-			runtimeData.SetEngagementObjective(machineData.Anticipation.GetRandomInfluencedObjective(runtimeData.NormalisedConfidence));
+			AllowStateTick = true;
+			RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
 			SetTargetCavern();
 		}
@@ -77,8 +72,9 @@ namespace Hadal.AI
 				d.SetEngagementObjective(eObj);
 			}*/
 
-			if (!allowStateTick) return;
-
+			if (!AllowStateTick) return;
+			//! Move to target cavern
+			
 
         }
 		public override void LateStateTick() { }
@@ -92,7 +88,7 @@ namespace Hadal.AI
 
 		void SetTargetCavern()
         {
-			EngagementObjective currentObj = runtimeData.GetEngagementObjective;
+			EngagementObjective currentObj = RuntimeData.GetEngagementObjective;
 
 			switch(currentObj)
             {

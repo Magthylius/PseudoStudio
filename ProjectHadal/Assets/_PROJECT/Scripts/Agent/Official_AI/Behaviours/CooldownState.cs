@@ -8,8 +8,7 @@ namespace Hadal.AI
     {
         public CooldownState(AIBrain brain)
         {
-            Brain = brain;
-            NavigationHandler = Brain.NavigationHandler;
+            Initialize(brain);
         }
     }
 }

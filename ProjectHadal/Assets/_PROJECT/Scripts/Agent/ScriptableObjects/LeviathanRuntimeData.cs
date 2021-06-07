@@ -8,6 +8,7 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
 
+//! C: Jet, E: Jon
 namespace Hadal.AI
 {
     [CreateAssetMenu(menuName = "AI/Runtime Data")]
@@ -40,15 +41,36 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] float cumulativeDamageThreshold;
         public void ResetCumulativeDamage() => cumulativeDamage = 0f;
         public void AddCumulativeDamage(float damage) => cumulativeDamage += damage.Abs();
-        public bool HasCumulativeDamageExceeded() => cumulativeDamage > cumulativeDamageThreshold;
-        public void UpdateCumulativeDamageThreshold(float currentHealth)
-            => cumulativeDamageThreshold = machineData.Engagement.GetAccumulatedDamageThreshold(currentHealth);
+        public void UpdateCumulativeDamageThreshold(float newThreshold) => cumulativeDamageThreshold = newThreshold;
+        public bool HasCumulativeDamageExceeded => cumulativeDamage > cumulativeDamageThreshold;
+        
 
-        [Header("Judgement Information")]
-        [SerializeField, ReadOnly] float judgementStoptimer;
-        public void TickJudgementTimer(in float deltaTime) => judgementStoptimer += deltaTime;
-        public void ResetJudgementTimer() => judgementStoptimer = 0f;
-        public float GetJudgementTimerValue => judgementStoptimer;
+        [Header("State Tickers")]
+        [SerializeField, ReadOnly] float anticipationTicker = 0f;
+        [SerializeField, ReadOnly] float engagementTicker = 0f;
+        [SerializeField, ReadOnly] float recoveryTicker = 0f;
+        [SerializeField, ReadOnly] float cooldownTicker = 0f;
+
+        #region Tick Functions
+        public void TickAnticipationTicker(in float deltaTime) => TickATicker(ref anticipationTicker, deltaTime);
+        public void ResetAnticipationTicker() => ResetATicker(ref anticipationTicker);
+        public float GetAnticipationTicks => anticipationTicker;
+
+        public void TickEngagementTicker(in float deltaTime) => TickATicker(ref engagementTicker, deltaTime);
+        public void ResetEngagementTicker() => ResetATicker(ref engagementTicker);
+        public float GetEngagementTicks => engagementTicker;
+
+        public void TickRecoveryTicker(in float deltaTime) => TickATicker(ref recoveryTicker, deltaTime);
+        public void ResetRecoveryTicker() => ResetATicker(ref recoveryTicker);
+        public float GetRecoveryTicks => recoveryTicker;
+
+        public void TickCooldownTicker(in float deltaTime) => TickATicker(ref cooldownTicker, deltaTime);
+        public void ResetCooldownTicker() => ResetATicker(ref cooldownTicker);
+        public float GetCooldownTicks => cooldownTicker;
+
+        void TickATicker(ref float ticker, in float deltaTime) => ticker += deltaTime;
+        void ResetATicker(ref float ticker) => ticker = 0f; 
+        #endregion
 
         public void Awake_Initialise()
         {
@@ -58,7 +80,7 @@ namespace Hadal.AI
             if (PlayerMask == default) PlayerMask = LayerMask.GetMask("LocalPlayer");
             if (ObstacleMask == default) ObstacleMask = LayerMask.GetMask("Wall");
 
-            //! Objectives
+            //! ObjectivesReset
             mainObjective = MainObjective.None;
             engagementObjective = EngagementObjective.Aggressive;
 
@@ -73,7 +95,7 @@ namespace Hadal.AI
             ResetCumulativeDamage();
 
             //! Judgement
-            ResetJudgementTimer();
+            ResetEngagementTicker();
         }
 
         public void Start_Initialise()
