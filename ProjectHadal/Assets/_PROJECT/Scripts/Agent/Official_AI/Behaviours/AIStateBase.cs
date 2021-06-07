@@ -11,6 +11,7 @@ namespace Hadal.AI
     {
         public AIBrain Brain;
         public PointNavigationHandler NavigationHandler;
+        public LeviathanRuntimeData RuntimeData;
 
         public virtual void FixedStateTick() { }
 

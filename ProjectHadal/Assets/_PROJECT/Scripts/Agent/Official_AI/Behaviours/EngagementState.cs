@@ -19,6 +19,7 @@ namespace Hadal.AI.States
         {
             Brain = brain;
             NavigationHandler = Brain.NavigationHandler;
+            RuntimeData = Brain.RuntimeData;
 
             //! intialise sub machine and states
             aggressive.SetParent(this);

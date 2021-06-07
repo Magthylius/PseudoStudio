@@ -10,6 +10,7 @@ namespace Hadal.AI
         {
             Brain = brain;
             NavigationHandler = Brain.NavigationHandler;
+            RuntimeData = Brain.RuntimeData;
         }
     }
 }

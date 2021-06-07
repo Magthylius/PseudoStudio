@@ -5,15 +5,19 @@ using Tenshi.AIDolls;
 using System;
 using Tenshi;
 using Tenshi.UnitySoku;
+using Hadal.AI.States;
 
 namespace Hadal.AI
 {
     public class RecoveryState : AIStateBase
     {
+        RecoveryStateSettings settings;
+
         public RecoveryState(AIBrain brain)
         {
             Brain = brain;
             NavigationHandler = Brain.NavigationHandler;
+            RuntimeData = Brain.RuntimeData;
         }
 
         public override void OnStateStart()
