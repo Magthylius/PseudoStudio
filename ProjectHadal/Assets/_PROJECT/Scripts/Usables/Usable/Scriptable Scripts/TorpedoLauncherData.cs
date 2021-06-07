@@ -11,7 +11,7 @@ namespace Hadal.Usables
         public override void DoEffect(UsableHandlerInfo info)
         {
             var projectileObj = TorpedoPool.Instance.Scoop();
-            projectileObj.Data = ProjectileData;
+            /*projectileObj.Data = ProjectileData;*/
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);

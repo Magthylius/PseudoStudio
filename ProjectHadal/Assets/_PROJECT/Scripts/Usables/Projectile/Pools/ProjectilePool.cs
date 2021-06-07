@@ -15,6 +15,7 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             prefab = data.ProjectilePrefab.GetComponent<T>();
+            InitialisationCompleted += AssignProjData;
             InitialisationCompleted += AssignProjID;
             base.Start();
             LoadingManager.Instance.CheckInObjectPool();
@@ -27,6 +28,15 @@ namespace Hadal.Usables.Projectiles
             {
                 var projectileBehavior = projectileBehaviors.Requeue();
                 projectileBehavior.projID += projectileBehavior.Data.ProjIDInt + (i + 1);
+            }
+        }
+
+        private void AssignProjData(Queue<T> projectileBehaviors)
+        {
+            for (int i = 0; i < projectileBehaviors.Count; i++)
+            {
+                var projectileBehavior = projectileBehaviors.Requeue();
+                projectileBehavior.Data = data;
             }
         }
         #endregion
