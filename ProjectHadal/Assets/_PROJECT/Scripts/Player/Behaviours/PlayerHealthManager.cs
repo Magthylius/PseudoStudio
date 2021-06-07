@@ -3,46 +3,62 @@ using UnityEngine;
 using Hadal.UI;
 using Tenshi;
 using Tenshi.UnitySoku;
+using System;
 
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerHealthManager : MonoBehaviour, IDamageable, IPlayerComponent
+    public class PlayerHealthManager : MonoBehaviour, IDamageable, IUnalivable, IPlayerComponent
     {
         [SerializeField] private int maxHealth;
         private int _currentHealth;
+        private bool _isDead;
         private PhotonView _pView;
         private PlayerController _controller;
         private PlayerCameraController _cameraController;
+        public event Action<int> OnHit;
+        public event Action OnDeath;
+        public event Action OnDown;
 
-        private void Awake() => ResetHealth();
+        private void Awake()
+        {
+            _isDead = false;
+            ResetHealth();
+        }
         private void OnValidate()
         {
-            if (maxHealth == 0) maxHealth += 1;
+            if (maxHealth <= 0) maxHealth += 1;
         }
 
-        public GameObject Obj => gameObject;
         public bool TakeDamage(int damage)
         {
             _currentHealth = (_currentHealth - damage).Clamp0();
-            $"Player health left: {_currentHealth}".Msg();
-            DoOnHitEffects();
-            CheckCurrentHealth();
+            DoOnHitEffects(damage);
+            CheckHealthStatus();
             return true;
         }
 
-        private void DoOnHitEffects()
+        private void DoOnHitEffects(int damage)
         {
             _cameraController.ShakeCameraDefault();
+            OnHit?.Invoke(damage);
             UIManager.InvokeOnHealthChange();
         }
 
-        private void CheckCurrentHealth()
+        public void CheckHealthStatus()
         {
-            if (_currentHealth > 0) return;
-            _controller.Die();
+            if (IsDown)
+            {
+                OnDown?.Invoke();
+                return;
+            }
+            if (IsUnalive)
+            {
+                OnDeath?.Invoke();
+                _controller.Die();
+            }
         }
-        private void ResetHealth() => _currentHealth = maxHealth;
+        public void ResetHealth() => _currentHealth = maxHealth;
 
         public void ResetManager()
         {
@@ -58,7 +74,11 @@ namespace Hadal.Player.Behaviours
             _cameraController = info.CameraController;
         }
 
+        public GameObject Obj => gameObject;
         public float GetHealthRatio => _currentHealth / (float)maxHealth;
         public int GetCurrentHealth => _currentHealth;
+        public int GetMaxHealth => maxHealth;
+        public bool IsUnalive => _isDead;
+        public bool IsDown => _currentHealth <= 0;
     }
 }
