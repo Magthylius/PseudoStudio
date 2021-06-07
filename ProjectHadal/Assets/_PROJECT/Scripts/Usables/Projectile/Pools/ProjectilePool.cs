@@ -27,7 +27,7 @@ namespace Hadal.Usables.Projectiles
             for(int i = 0; i < projectileBehaviors.Count; i++)
             {
                 var projectileBehavior = projectileBehaviors.Requeue();
-                projectileBehavior.projectileTypeID += projectileBehavior.Data.ProjIDInt;
+                projectileBehavior.projectileID += projectileBehavior.Data.ProjTypeInt;
             }
         }
 

@@ -6,7 +6,7 @@ namespace Hadal.Usables.Projectiles
     public abstract class ProjectileData : ScriptableObject
     {
         public string Name;
-        public int ProjIDInt;
+        public int ProjTypeInt;
         public int BaseDamage;
         public LayerMask TargetLayer;
         public GameObject ProjectilePrefab;

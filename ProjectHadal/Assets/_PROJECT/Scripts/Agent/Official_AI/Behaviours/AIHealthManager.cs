@@ -6,18 +6,21 @@ using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
-    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable
+    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, ILeviathanComponent
     {
         [SerializeField] int maxHealth;
         int currentHealth;
+        AIBrain brain;
 
-        private void Awake()
+        public void Initialise(AIBrain brain)
         {
+            this.brain = brain;
             if (maxHealth <= 0) maxHealth = 1;
             ResetHealth();
         }
-
-        void Update()
+        public void DoUpdate(in float deltaTime) { }
+        public void DoFixedUpdate(in float fixedDeltaTime) { }
+        public void DoLateUpdate(in float deltaTime)
         {
             CheckHealthStatus();
         }
@@ -44,6 +47,16 @@ namespace Hadal.AI
         public bool IsDown => false;
         public int GetMaxHealth => maxHealth;
 
+        public UpdateMode LeviathanUpdateMode => UpdateMode.LateUpdate;
+
         public void ResetHealth() => currentHealth = maxHealth;
+
+        public bool TryStun(float duration)
+        {
+            if (brain == null)
+                return false;
+            
+            return brain.TryToStun(duration);
+        }
     }
 }

@@ -12,8 +12,10 @@ namespace Hadal.Usables
         {
             var projectileObj = FlarePool.Instance.Scoop();
             /*  projectileObj.Data = ProjectileData;*/
-            projectileObj.projectileTypeID += info.ProjectileID;
-            Debug.Log(projectileObj.projectileTypeID + " shot");
+
+            projectileObj.projectileID = projectileObj.Data.ProjTypeInt;
+            projectileObj.projectileID += info.ProjectileID;
+            Debug.Log(projectileObj.projectileID + " shot");
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);         
             projectileObj.Rigidbody.velocity = info.shooterVelocity;
