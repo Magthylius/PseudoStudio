@@ -23,6 +23,8 @@ namespace Hadal.AI
 
         public virtual void OnCavernEnter() { }
 
+        public bool IsCurrentState { get; set; } = false;
+
         public virtual Func<bool> ShouldTerminate() => () => false;
     }
 }

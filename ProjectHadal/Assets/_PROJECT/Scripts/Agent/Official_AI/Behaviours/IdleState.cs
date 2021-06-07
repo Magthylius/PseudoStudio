@@ -18,6 +18,8 @@ namespace Hadal.AI.States
         private AIBrain Brain;
         private PointNavigationHandler NavigationHandler;
 
+        public bool IsCurrentState { get; set; }
+
         #endregion
 
         public IdleState(AIBrain brain)
