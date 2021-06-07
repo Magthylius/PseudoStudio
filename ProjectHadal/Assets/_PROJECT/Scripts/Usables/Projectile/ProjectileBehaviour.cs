@@ -24,7 +24,7 @@ namespace Hadal.Usables.Projectiles
         {
             DoDebugEnabling(DebugKey);
             PPhysics.PhysicsFinished += Dump;
-            projID += Data.ProjIDInt;
+            print(Data.ProjIDInt);
         }
 
         #endregion
