@@ -12,6 +12,7 @@ namespace Hadal.AI.States
     {
         EngagementState parent;
         AIBrain b;
+        AIDamageManager damageManager;
         BTSequence root;
         float updateTimer;
         float updateDelay;
@@ -51,7 +52,7 @@ namespace Hadal.AI.States
             BTSequence recoveryAfterJT4Passed = new BTSequence(new List<BTNode>() { hasJT4Passed, setRecoveryState });
             recoveryAfterJT4Passed.SetDebugName("recovery after jt4 passed");
 
-            BTSequence threshCarriedPlayer = new BTSequence(new List<BTNode>() { new ThreshCarriedPlayerNode(b) });
+            BTSequence threshCarriedPlayer = new BTSequence(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager) });
             threshCarriedPlayer.SetDebugName("thresh carried player");
 
             BTSelector tryToThreshCarriedPlayer = new BTSelector(new List<BTNode>() { threshCarriedPlayer, recoveryAfterJT4Passed });
@@ -113,7 +114,7 @@ namespace Hadal.AI.States
             BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
             isCarryingAnyPlayer.SetDebugName("is carrying any player?");
 
-            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b), threshFallbackA1 });
+            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager), threshFallbackA1 });
             threshCarriedPlayer.SetDebugName("thresh carried player?");
 
             BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });

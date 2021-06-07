@@ -19,6 +19,9 @@ namespace Hadal.AI
 
         [Header("Damage Values")]
         [Foldout("Damage Type"), SerializeField] int threshDamage;
+        public int ThreshDamage { get { return threshDamage; } set { threshDamage = value; } }
+        [SerializeField] public int threshTimer { get; private set; }
+
         [Foldout("Damage Type"), SerializeField] int tailWhipDamage;
 
         public void Initialise(AIBrain brain)
