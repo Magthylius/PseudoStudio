@@ -34,7 +34,7 @@ namespace Hadal.AI
             returnToDefaultState = false;
             onThisState = true;
             stunTimer.Restart();
-            Brain.SetIsStunned(false);
+            Brain.StopStun();
         }
         public void StateTick()
         {

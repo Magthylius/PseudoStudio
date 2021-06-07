@@ -182,9 +182,18 @@ namespace Hadal.AI
         #endregion
 
         #region Control Methods
-        /// <summary> Set the AI to stunstate</summary>
-        /// <param name="statement">true if AI should be stun, false if AI shouldn't be stun</param>
-        public void SetIsStunned(bool statement) => isStunned = statement;
+        /// <summary> Tries to set the AI to stunstate.
+        /// Returns true AI can be stunned, false if AI is already stunned</summary>
+        public bool TryToStun(float duration)
+        {
+            if (isStunned)
+                return false;
+            
+            stunDuration = duration;
+            isStunned = true;
+            return true;
+        }
+        public void StopStun() => isStunned = false;
 
         public void RefreshPlayerReferences()
             => Players = FindObjectsOfType<PlayerController>().ToList();
