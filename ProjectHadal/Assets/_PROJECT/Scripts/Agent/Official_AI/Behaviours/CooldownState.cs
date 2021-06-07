@@ -1,14 +1,52 @@
+using Hadal.AI.Caverns;
+using Hadal.AI.States;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hadal.AI
+namespace Hadal.AI.States
 {
     public class CooldownState : AIStateBase
     {
+        CooldownStateSettings settings;
+        CavernHandler targetCavern;
+
         public CooldownState(AIBrain brain)
         {
             Initialize(brain);
+            settings = MachineData.Cooldown;
+        }
+
+        public override void OnStateStart()
+        {
+            //! Change speed
+
+            SetNewTargetCavern();
+            AllowStateTick = true;
+        }
+
+        public override void StateTick()
+        {
+            if (!AllowStateTick) return;
+
+            RuntimeData.TickCooldownTicker(Time.deltaTime);
+
+            if (RuntimeData.GetCooldownTicks >= settings.MaxCooldownTime)
+            {
+                RuntimeData.SetMainObjective(MainObjective.Anticipation);
+                RuntimeData.ResetCooldownTicker();
+                AllowStateTick = false;
+            }
+        }
+
+        public override void OnStateEnd()
+        {
+            //! Reset speed
+        }
+
+        void SetNewTargetCavern()
+        {
+            targetCavern = Brain.CavernManager.GetLeastPopulatedCavern();
         }
     }
 }

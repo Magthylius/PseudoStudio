@@ -4,11 +4,10 @@ using System.Collections;
 using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
-using Hadal.AI.States;
 using Hadal.AI.Caverns;
 
 //! C: jet, E: jon
-namespace Hadal.AI
+namespace Hadal.AI.States
 {
     public class AnticipationState : AIStateBase
     {
@@ -55,7 +54,7 @@ namespace Hadal.AI
 			AllowStateTick = true;
 			RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
-			SetTargetCavern();
+			SetNewTargetCavern();
 		}
 
 		public override void StateTick()
@@ -86,7 +85,7 @@ namespace Hadal.AI
 			DetermineNextCavern();
         }
 
-		void SetTargetCavern()
+		void SetNewTargetCavern()
         {
 			EngagementObjective currentObj = RuntimeData.GetEngagementObjective;
 

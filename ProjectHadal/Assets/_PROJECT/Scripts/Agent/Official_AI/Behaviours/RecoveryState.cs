@@ -9,7 +9,7 @@ using Hadal.AI.States;
 using Hadal.AI.Caverns;
 
 //! C: Jon
-namespace Hadal.AI
+namespace Hadal.AI.States
 {
     public class RecoveryState : AIStateBase
     {
@@ -27,7 +27,8 @@ namespace Hadal.AI
 			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
             RuntimeData.UpdateCumulativeDamageThreshold(settings.GetEscapeDamageThreshold(Brain.HealthManager.GetCurrentHealth));
-            SetNewTargetEscapeCavern();
+            SetNewTargetCavern();
+            AllowStateTick = true;
         }
 
         public override void StateTick() 
@@ -36,12 +37,13 @@ namespace Hadal.AI
 
             RuntimeData.TickRecoveryTicker(Time.deltaTime);
 
-            //! Damage threshold counter
+            //! When hit too much or time too long
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.HasCumulativeDamageExceeded)
             {
-                //! Nigeru
-                FailedEscape();
-                
+                RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
+                RuntimeData.SetMainObjective(MainObjective.Engagement);
+                RuntimeData.ResetRecoveryTicker();
+                AllowStateTick = false;
             }
         }
 
@@ -57,7 +59,7 @@ namespace Hadal.AI
         {
             if (cavern == targetCavern)
             {
-                if (cavern.GetPlayerCount > 1) SetNewTargetEscapeCavern();
+                if (cavern.GetPlayerCount > 1) SetNewTargetCavern();
                 else if (cavern.GetPlayerCount == 1 && Brain.CarriedPlayer != null)
                 {
                     if (cavern.GetPlayersInCavern[0] == Brain.CarriedPlayer)
@@ -69,13 +71,7 @@ namespace Hadal.AI
         }
 
         #region State specific
-        void FailedEscape()
-        {
-            RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-            RuntimeData.SetMainObjective(MainObjective.Engagement);
-        }
-
-        void SetNewTargetEscapeCavern()
+        void SetNewTargetCavern()
         {
             targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
         }
