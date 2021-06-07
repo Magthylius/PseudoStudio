@@ -283,6 +283,7 @@ Transform:
   - {fileID: 2206939684562575359}
   - {fileID: 1692377485682228084}
   - {fileID: 1435352782384521340}
+  - {fileID: 1099430620692770243}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -302,6 +303,8 @@ MonoBehaviour:
   navigationHandler: {fileID: 2206939683509102030}
   senseDetection: {fileID: 6021279049498701051}
   sightDetection: {fileID: 9221971048963321059}
+  tailManager: {fileID: 0}
+  damageManager: {fileID: 2206939684562575357}
   cavernManager: {fileID: 0}
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   MouthObject: {fileID: 4180711431457838737}
@@ -399,8 +402,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6491a7d1743f0e41bceb1173beda619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brain: {fileID: 2206939684412345039}
   maxHealth: 100
+--- !u!1 &3345266927618080665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1099430620692770243}
+  - component: {fileID: 6414438567741730858}
+  - component: {fileID: 7474886789056213679}
+  m_Layer: 0
+  m_Name: Tail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1099430620692770243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3345266927618080665}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2206939684412345072}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6414438567741730858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3345266927618080665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aad6885644729f488b481484c972b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whipStanceCollider: {fileID: 7474886789056213679}
+--- !u!65 &7474886789056213679
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3345266927618080665}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 30, y: 20, z: 40}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4180711431457838737
 GameObject:
   m_ObjectHideFlags: 0

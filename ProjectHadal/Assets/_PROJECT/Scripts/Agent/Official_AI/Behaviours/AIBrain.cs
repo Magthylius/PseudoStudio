@@ -19,11 +19,15 @@ namespace Hadal.AI
         [SerializeField] private PointNavigationHandler navigationHandler;
         [SerializeField] private AISenseDetection senseDetection;
         [SerializeField] private AISightDetection sightDetection;
+        [SerializeField] private AITailManager tailManager;
+        [SerializeField] private AIDamageManager damageManager;
         [SerializeField] private CavernManager cavernManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
         public AISenseDetection SenseDetection => senseDetection;
         public AISightDetection SightDetection => sightDetection;
+        public AITailManager TailManager => tailManager;
+        public AIDamageManager DamageManager => damageManager;
         public CavernManager CavernManager => cavernManager;
 
         private StateMachine stateMachine;
@@ -73,7 +77,6 @@ namespace Hadal.AI
 
         //! Events
         public static event Action<Transform, AIDamageType> DamagePlayerEvent;
-        internal void InvokeDamagePlayerEvent(Transform t, AIDamageType type) => DamagePlayerEvent?.Invoke(t, type);
 
         public bool CanUpdate => PhotonNetwork.IsMasterClient || isOffline;
 
@@ -199,6 +202,7 @@ namespace Hadal.AI
         #endregion
 
         #region Control Methods
+        
         /// <summary> Tries to set the AI to stunstate.
         /// Returns true AI can be stunned, false if AI is already stunned</summary>
         public bool TryToStun(float duration)
