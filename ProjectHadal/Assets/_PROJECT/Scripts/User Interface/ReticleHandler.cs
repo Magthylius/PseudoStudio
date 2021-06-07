@@ -26,6 +26,11 @@ public class ReticleHandler : MonoBehaviour
         //RefreshColors();
     }
 
+    void Start()
+    {
+        RefreshColors();
+    }
+
     [Button("Force Color Refresh")]
     void RefreshColors()
     {
