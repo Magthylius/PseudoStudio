@@ -384,6 +384,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   ambushPoints: []
+  connectedTunnels: []
+  connectedCaverns: []
 --- !u!65 &67463454
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -917,6 +919,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16384
   ambushPoints: []
+  connectedTunnels: []
+  connectedCaverns: []
 --- !u!4 &173634972
 Transform:
   m_ObjectHideFlags: 0
@@ -8233,7 +8237,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1423040240}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 204.95, y: 4.3, z: 108.1}
+  m_LocalPosition: {x: 216.42, y: 4.3, z: 108.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 250673064}

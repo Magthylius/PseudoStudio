@@ -19,14 +19,14 @@ namespace Hadal.AI
 
         void Update()
         {
-            CheckHealth();
+            CheckHealthStatus();
         }
 
-        public void CheckHealth()
+        public void CheckHealthStatus()
         {
             if (IsUnalive)
             {
-                $"U.N. Owen has been unalived".Msg();
+                $"Leviathan is unalive. Congrats!!!".Msg();
                 Obj.SetActive(false);
             }
         }
@@ -40,8 +40,10 @@ namespace Hadal.AI
         public GameObject Obj => transform.parent.gameObject;
         public bool IsUnalive => currentHealth <= 0;
         public float GetHealthRatio => currentHealth / maxHealth.AsFloat();
-		public float GetCurrentHealth => currentHealth;
+		public int GetCurrentHealth => currentHealth;
+        public bool IsDown => false;
+        public int GetMaxHealth => maxHealth;
 
-        private void ResetHealth() => currentHealth = maxHealth;
+        public void ResetHealth() => currentHealth = maxHealth;
     }
 }
