@@ -299,7 +299,7 @@ namespace Hadal.Networking.UI.Loading
         public void LoadLevel(string levelName)
         {
             FadeIn();
-            print("what");
+            //print("what");
             SetupPostProcess();
             ActivateLoadingElements();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
