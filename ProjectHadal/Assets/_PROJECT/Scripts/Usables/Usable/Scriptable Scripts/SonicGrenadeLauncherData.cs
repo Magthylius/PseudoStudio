@@ -11,6 +11,7 @@ namespace Hadal.Usables
         public override void DoEffect(UsableHandlerInfo info)
         {
             var projectileObj = SonicGrenadePool.Instance.Scoop();
+            projectileObj.Data = ProjectileData;
             projectileObj.projectileID = projectileObj.Data.ProjTypeInt;
             projectileObj.projectileID += info.ProjectileID;
             projectileObj.DumpEvent += DumpProjectileMethod;
