@@ -10,10 +10,9 @@ using Hadal.AI.Caverns;
 //! C: jet, E: jon
 namespace Hadal.AI
 {
-    public class AnticipationState : IState
+    public class AnticipationState : AIStateBase
     {
-        private AIBrain Brain;
-        private PointNavigationHandler NavigationHandler;
+        
 		private IEnumerator debugRoutine;
 
 		LeviathanRuntimeData runtimeData;
@@ -38,7 +37,7 @@ namespace Hadal.AI
 			Brain.RuntimeData.SetEngagementObjective(EngagementObjective.Judgement);
 		}
 
-        public void OnStateStart()
+		public override void OnStateStart()
 		{
 			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 			NavigationHandler.SetCanPath(true);
@@ -63,8 +62,8 @@ namespace Hadal.AI
 
 			SetTargetCavern();
 		}
-		
-        public void StateTick()
+
+		public override void StateTick()
         {
 			//! Anticipation evaluation here
 			// ...
@@ -82,9 +81,14 @@ namespace Hadal.AI
 
 
         }
-        public void LateStateTick() { }
-        public void FixedStateTick() { }
-        public void OnStateEnd() { }
+		public override void LateStateTick() { }
+		public override void FixedStateTick() { }
+		public override void OnStateEnd() { }
+
+		public override void OnCavernEnter()
+        {
+			DetermineNextCavern();
+        }
 
 		void SetTargetCavern()
         {
@@ -109,6 +113,6 @@ namespace Hadal.AI
 			nextCavern = Brain.CavernManager.GetNextCavern(targetCavern, Brain.CavernManager.GetHandlerOfAILocation);
 		}
 
-        public Func<bool> ShouldTerminate() => () => false;
+		public override Func<bool> ShouldTerminate() => () => false;
     }
 }

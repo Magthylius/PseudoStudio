@@ -8,29 +8,26 @@ using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
-    public class RecoveryState : IState
+    public class RecoveryState : AIStateBase
     {
-        private AIBrain Brain;
-        private PointNavigationHandler NavigationHandler;
-
         public RecoveryState(AIBrain brain)
         {
             Brain = brain;
             NavigationHandler = Brain.NavigationHandler;
         }
 
-        public void OnStateStart()
+        public override void OnStateStart()
 		{
 			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 		}
-        public void StateTick() { }
-        public void LateStateTick()
+        public override void StateTick() { }
+        public override void LateStateTick()
         {
         }
-        public void FixedStateTick()
+        public override void FixedStateTick()
         {
         }
-        public void OnStateEnd() { }
-        public Func<bool> ShouldTerminate() => () => false;
+        public override void OnStateEnd() { }
+        public override Func<bool> ShouldTerminate() => () => false;
     }
 }

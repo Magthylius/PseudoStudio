@@ -47,17 +47,17 @@ namespace Hadal.AI
         public StateMachineData MachineData => machineData;
 
         private Rigidbody rBody;
-        IState idleState;
-        IState anticipationState;
-        IState recoveryState;
-        IState engagementState;
+        AIStateBase idleState;
+        AIStateBase anticipationState;
+        AIStateBase recoveryState;
+        AIStateBase engagementState;
         AggressiveSubState eAggressiveState;
         AmbushSubState eAmbushState;
         JudgementSubState eJudgementState;
 
         [Header("Stunned Settings (needs a relook)")]
         [SerializeField] public float stunDuration;
-        IState stunnedState;
+        AIStateBase stunnedState;
         bool isStunned;
 
         //! Callbacks for Agent2 assembly
@@ -158,6 +158,13 @@ namespace Hadal.AI
             // stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
             // stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
         }
+
+        #region Event Handlers
+        public void OnCavernEnter(CavernHandler cavern)
+        {
+            //stateMachine.CurrentState.OnCavernEnter();
+        }
+        #endregion
 
         #region Transition Conditions
 

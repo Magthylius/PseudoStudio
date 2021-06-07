@@ -5,7 +5,7 @@ using Tenshi.UnitySoku;
 
 namespace Hadal.AI.States
 {
-    public class AmbushSubState : IState
+    public class AmbushSubState : AIStateBase
     {
         EngagementState parent;
         AIBrain b;
@@ -20,11 +20,11 @@ namespace Hadal.AI.States
             b = parent.Brain;
         }
 
-        public void OnStateStart()
+        public override void OnStateStart()
 		{
 			if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
 		}
-        public void StateTick()
+        public override void StateTick()
         {
             //! new logic
             /*
@@ -62,9 +62,9 @@ namespace Hadal.AI.States
             }
             */
         }
-        public void LateStateTick() { }
-        public void FixedStateTick() { }
-        public void OnStateEnd() { }
-        public Func<bool> ShouldTerminate() => () => false;
+        public override void LateStateTick() { }
+        public override void FixedStateTick() { }
+        public override void OnStateEnd() { }
+        public override Func<bool> ShouldTerminate() => () => false;
     }
 }

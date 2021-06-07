@@ -9,7 +9,7 @@ using ExitGames.Client.Photon;
 
 namespace Hadal.AI.States
 {
-    public class AggressiveSubState : IState
+    public class AggressiveSubState : AIStateBase
     {
         EngagementState parent;
         Vector3 closestWall;
@@ -31,11 +31,11 @@ namespace Hadal.AI.States
             this.parent = parent;
             b = parent.Brain;
         }
-        public void OnStateStart()
+        public override void OnStateStart()
         {
 			if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
         }
-        public void StateTick()
+        public override void StateTick()
         {
 			/*
             if (parent.TargetPlayer == null)
@@ -77,14 +77,14 @@ namespace Hadal.AI.States
             }
             */
         }
-        public void LateStateTick()
+        public override void LateStateTick()
         {
             
         }
-        public void FixedStateTick()
+        public override void FixedStateTick()
         {
         }
-        public void OnStateEnd()
+        public override void OnStateEnd()
         {
 
         }
@@ -213,6 +213,6 @@ namespace Hadal.AI.States
             $"pin position set to {t.position}".Msg();
         }
 
-        public Func<bool> ShouldTerminate() => () => false;
+        public override Func<bool> ShouldTerminate() => () => false;
     }
 }
