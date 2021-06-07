@@ -98,7 +98,7 @@ namespace Hadal.AI
 		public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public Transform PilotTransform => pilotTrans;
 
-        public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier;
+        public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
 
         public void AddRepulsionPoint(Vector3 point)
         {
