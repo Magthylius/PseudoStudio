@@ -11,7 +11,9 @@ namespace Hadal.Usables
         public override void DoEffect(UsableHandlerInfo info)
         {
             var projectileObj = FlarePool.Instance.Scoop();
-            projectileObj.Data = ProjectileData;
+            /*  projectileObj.Data = ProjectileData;*/
+            projectileObj.projectileTypeID += info.ProjectileID;
+            Debug.Log(projectileObj.projectileTypeID + " shot");
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);         
             projectileObj.Rigidbody.velocity = info.shooterVelocity;

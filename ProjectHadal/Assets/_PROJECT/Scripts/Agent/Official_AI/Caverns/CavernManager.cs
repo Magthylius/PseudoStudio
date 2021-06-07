@@ -187,9 +187,52 @@ namespace Hadal.AI.Caverns
         /// Gets the next suitable cavern based on adjacency.
         /// </summary>
         /// <param name="destinationCavern">Target destination cavern.</param>
+        /// <param name="sourceCavern">Starting cavern to search.</param>
+        /// <returns>A single cavern handler.</returns>
+        public CavernHandler GetNextCavern(CavernHandler destinationCavern, CavernHandler sourceCavern, bool tiedNumberRandomize = true)
+        {
+            List<CavernHandler> list = GetNextCaverns(destinationCavern, sourceCavern);
+            if (tiedNumberRandomize)
+                return list[Random.Range(0, list.Count)];
+            else
+                return list[0];
+        }
+
+        /// <summary>
+        /// Gets the next suitable cavern based on adjacency.
+        /// </summary>
+        /// <param name="destinationCavern">Target destination cavern.</param>
+        /// <param name="searchList">List of caverns to start search from.</param>
+        /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
+        /// <returns>A single cavern handler.</returns>
+        public CavernHandler GetNextCavern(CavernHandler destinationCavern, List<CavernHandler> searchList, bool tiedNumberRandomize = true)
+        {
+            List<CavernHandler> list = GetNextCaverns(destinationCavern, searchList);
+            if (tiedNumberRandomize)
+                return list[Random.Range(0, list.Count)];
+            else
+                return list[0];
+        }
+
+        /// <summary>
+        /// Gets a list suitable caverns based on adjacency.
+        /// </summary>
+        /// <param name="destinationCavern">Target destination cavern.</param>
+        /// <param name="sourceCavern">Starting cavern to search.</param>
+        /// <returns>List of caverns that are equal distance to choose from.</returns>
+        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, CavernHandler sourceCavern)
+        {
+            List<CavernHandler> list = new List<CavernHandler> { sourceCavern };
+            return GetNextCaverns(destinationCavern, sourceCavern);
+        }
+
+        /// <summary>
+        /// Gets a list suitable caverns based on adjacency.
+        /// </summary>
+        /// <param name="destinationCavern">Target destination cavern.</param>
         /// <param name="searchList">List of caverns to start search from.</param>
         /// <returns>List of caverns that are equal distance to choose from.</returns>
-        public List<CavernHandler> GetNextCavern(CavernHandler destinationCavern, List<CavernHandler> searchList)
+        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, List<CavernHandler> searchList)
         {
             List<CavernHandler> researchList = new List<CavernHandler>();
             List<CavernHandler> returningList = new List<CavernHandler>();
@@ -206,7 +249,7 @@ namespace Hadal.AI.Caverns
             }
 
             if (returningList.Count > 0) return returningList;
-            else return GetNextCavern(destinationCavern, researchList);
+            else return GetNextCaverns(destinationCavern, researchList);
         }
 
         [Button ("TestGetNextCavern")]
@@ -214,7 +257,7 @@ namespace Hadal.AI.Caverns
         {
             //print(GetCavern(CavernTag.Starting_Grounds).CalculateRelativeDistanceCost(GetCavern(CavernTag.Staglamite_Cavern)));
             List<CavernHandler> testList = new List<CavernHandler> { GetCavern(CavernTag.Starting) };
-            print(GetNextCavern(GetCavern(CavernTag.Staglamite), testList).Count);
+            //print(GetNextCavern(GetCavern(CavernTag.Staglamite), testList).Count);
         }
 
         /// <summary>
@@ -259,7 +302,7 @@ namespace Hadal.AI.Caverns
             if (!handlerList.Contains(handler)) handlerList.Add(handler);
         }
 
-        public CavernHandler GetHandlerOfAILocation() => aiAtHandler;
+        public CavernHandler GetHandlerOfAILocation => aiAtHandler;
         public CavernHandler GetHandlerOfTag(CavernTag tag) => handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
     }
 }

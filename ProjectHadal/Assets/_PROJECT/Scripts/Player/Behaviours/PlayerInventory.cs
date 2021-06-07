@@ -20,6 +20,7 @@ namespace Hadal.Player.Behaviours
         private PhotonView _pView;
         private PlayerController _controller;
         private PlayerControllerInfo _controllerInfo;
+        private int _projectileCount;
 
         [Header("Firing Variable")]
         private float _chargeTime = 0.0f;
@@ -75,8 +76,9 @@ namespace Hadal.Player.Behaviours
         {
             if (_uInput.FireKey1)
             {
-                _controllerInfo.Shooter.FireTorpedo();
-                _controllerInfo.Shooter.SendTorpedoEvent();
+                _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount);
+                _controllerInfo.Shooter.SendTorpedoEvent(pViewForProj + _projectileCount);
+                _projectileCount++;
             }
             if (EquippedUsable.Data.isChargable)
             {
@@ -89,13 +91,15 @@ namespace Hadal.Player.Behaviours
                 }
                 if (_uInput.FireKey2Release)
                 {
-                    FireUtility();
+                    FireUtility(pViewForProj + _projectileCount);
+                    _projectileCount++;
                     _chargeTime = 0f;
                 }
             }
             else if (_uInput.FireKey2)
             {
-                FireUtility();
+                FireUtility(pViewForProj + _projectileCount);
+                _projectileCount++;
             }
         }
         
@@ -105,15 +109,15 @@ namespace Hadal.Player.Behaviours
             object[] data = (object[])eventData.CustomData;
             if ((int)data[0] == _pView.ViewID)
             {
-                _controllerInfo.Shooter.FireUtility(utilities[(int)data[1]],(float)data[2]);
+                _controllerInfo.Shooter.FireUtility((int)data[1],utilities[(int)data[2]],(float)data[3]);
             }
         }
 
         //Fire when pressed locally, send event
-        void FireUtility()
+        void FireUtility(int projectileID)
         {
-            _controllerInfo.Shooter.FireUtility(EquippedUsable, _chargeTime);
-            object[] content = new object[] { _pView.ViewID, _selectedItem, _chargeTime };
+            _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _chargeTime);
+            object[] content = new object[] { _pView.ViewID,projectileID, _selectedItem, _chargeTime };
             neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
         }
 
@@ -200,6 +204,8 @@ namespace Hadal.Player.Behaviours
 
         public UsableLauncherObject[] GetUsableObjects => utilities;
         private UsableLauncherObject EquippedUsable => utilities[_selectedItem];
+
+        private int pViewForProj => _pView.ViewID * 1000;
 
         #endregion
     }
