@@ -153,18 +153,18 @@ namespace Hadal.Player.Behaviours
         private void HandleTorpedoObject(int projectileID)
         {
             tLauncher.DecrementChamber();
-            controller.GetInfo.Inventory.IncreaseProjectileCount();
             UsableHandlerInfo info = CreateInfoForTorpedo(projectileID);
             info = CalculateTorpedoAngle(info);
             tLauncher.Use(info);
+            controller.GetInfo.Inventory.IncreaseProjectileCount();
         }
 
         public void FireUtility(int projectileID, UsableLauncherObject usable, float chargeTime)
         {
             if (!_canUtilityFire || !AllowUpdate) return;
-            controller.GetInfo.Inventory.IncreaseProjectileCount();
             HandleUtilityReloadTimer(usable);
             usable.Use(CreateInfoForUtility(projectileID, chargeTime));
+            controller.GetInfo.Inventory.IncreaseProjectileCount();
         }
         
         private UsableHandlerInfo CreateInfoForTorpedo(int projectileID) => new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint,0f, aimParentRb.velocity);
