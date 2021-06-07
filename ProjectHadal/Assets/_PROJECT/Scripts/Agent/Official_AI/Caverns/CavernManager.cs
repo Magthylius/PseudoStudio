@@ -4,6 +4,7 @@ using UnityEngine;
 using Tenshi.UnitySoku;
 using Hadal.Player;
 using System.Linq;
+using NaughtyAttributes;
 
 //! C: Jon
 namespace Hadal.AI.Caverns
@@ -47,11 +48,11 @@ namespace Hadal.AI.Caverns
     public enum CavernTag
     {
         Invalid = 0,
-        Starting_Grounds,
-        Lair_Grounds,
-        Hydrothermal_Vents,
-        Bioluminescent_Cavern,
-        Staglamite_Cavern,
+        Starting,
+        Lair,
+        Hydrothermal,
+        Bioluminescent,
+        Staglamite,
         Custom_Point
     }
 
@@ -60,7 +61,7 @@ namespace Hadal.AI.Caverns
     /// </summary>
     public class CavernManager : SingletonSoft<CavernManager>
     {
-        List<CavernHandler> handlerList = new List<CavernHandler>();
+        [ReadOnly] public List<CavernHandler> handlerList = new List<CavernHandler>();
         CavernHandler aiAtHandler;
 
         protected override void Awake()
@@ -140,15 +141,39 @@ namespace Hadal.AI.Caverns
             }
         }
 
-        public CavernHandler GetEmptyCavern()
+        public CavernHandler GetEmptyCavern(CavernHandler startingCavern)
         {
-            List<CavernHeuristic> heuristics = new List<CavernHeuristic>();
-            foreach (CavernHandler handler in handlerList)
-            {
 
-            }
 
             return null;
+        }
+
+        public List<CavernHandler> GetNextCavern(CavernHandler destinationCavern, List<CavernHandler> searchList)
+        {
+            List<CavernHandler> researchList = new List<CavernHandler>();
+            List<CavernHandler> returningList = new List<CavernHandler>();
+
+            foreach(CavernHandler searchCavern in searchList)
+            {
+                foreach (CavernHandler childCavern in searchCavern.connectedCaverns)
+                {
+                    if (childCavern == destinationCavern)
+                        returningList.Add(searchCavern);
+                    else if (!searchList.Contains(childCavern) && !researchList.Contains(childCavern))
+                        researchList.Add(childCavern);
+                }
+            }
+
+            if (returningList.Count > 0) return returningList;
+            else return GetNextCavern(destinationCavern, researchList);
+        }
+
+        [Button ("TestGetNextCavern")]
+        void TestGetNextCavern()
+        {
+            //print(GetCavern(CavernTag.Starting_Grounds).CalculateRelativeDistanceCost(GetCavern(CavernTag.Staglamite_Cavern)));
+            List<CavernHandler> testList = new List<CavernHandler> { GetCavern(CavernTag.Starting) };
+            print(GetNextCavern(GetCavern(CavernTag.Staglamite), testList).Count);
         }
 
         /// <summary>
@@ -178,10 +203,22 @@ namespace Hadal.AI.Caverns
             return aiAtHandler.cavernTag;
         }
 
-        public CavernHandler GetHandlerOfAILocation()
-            => aiAtHandler;
+        public CavernHandler GetCavern(CavernTag tag)
+        {
+            foreach(CavernHandler handler in handlerList)
+            {
+                if (handler.cavernTag == tag) return handler;
+            }
 
-        public void InjectHandler(CavernHandler handler) => handlerList.Add(handler);
+            return null;
+        }
+
+        public void InjectHandler(CavernHandler handler)
+        {
+            if (!handlerList.Contains(handler)) handlerList.Add(handler);
+        }
+
+        public CavernHandler GetHandlerOfAILocation() => aiAtHandler;
         public CavernHandler GetHandlerOfTag(CavernTag tag) => handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
     }
 }

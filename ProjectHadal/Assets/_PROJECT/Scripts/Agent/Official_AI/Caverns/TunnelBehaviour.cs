@@ -16,9 +16,21 @@ namespace Hadal.AI.Caverns
 
         [Header("References")]
         [SerializeField] List<CavernHandler> connectedCaverns;
+        public List<CavernHandler> ConnectedCaverns => connectedCaverns;
 
         //! Internal
         List<PlayerController> playersInTunnel = new List<PlayerController>();
+
+        void OnValidate()
+        {
+            foreach (CavernHandler cavern in connectedCaverns)
+            {
+                if (!cavern.connectedTunnels.Contains(this))
+                {
+                    cavern.connectedTunnels.Add(this);
+                }
+            }
+        }
 
         void Start()
         {
