@@ -76,8 +76,8 @@ namespace Hadal.Player.Behaviours
         {
             if (_uInput.FireKey1)
             {
-                _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount);
                 _controllerInfo.Shooter.SendTorpedoEvent(pViewForProj + _projectileCount);
+                _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount);
             }
             if (EquippedUsable.Data.isChargable)
             {
