@@ -5,9 +5,8 @@ using System;
 
 namespace Hadal.AI
 {
-    public class StunnedState : IState
+    public class StunnedState : AIStateBase
     {
-        public AIBrain Brain { get; private set; }
         Timer stunTimer;
         bool returnToDefaultState = false;
         bool onThisState;
@@ -29,30 +28,30 @@ namespace Hadal.AI
                                 .WithShouldPersist(true);
             stunTimer.Pause();
         }
-        public void OnStateStart()
+        public override void OnStateStart()
         {
             returnToDefaultState = false;
             onThisState = true;
             stunTimer.Restart();
             Brain.StopStun();
         }
-        public void StateTick()
+        public override void StateTick()
         {
 
         }
-        public void LateStateTick()
+        public override void LateStateTick()
         {
         }
-        public void FixedStateTick()
+        public override void FixedStateTick()
         {
         }
-        public void OnStateEnd()
+        public override void OnStateEnd()
         {
             returnToDefaultState = false;
             onThisState = false;
             stunTimer.Pause();
 
         }
-        public Func<bool> ShouldTerminate() => () => returnToDefaultState;
+        public override Func<bool> ShouldTerminate() => () => returnToDefaultState;
     }
 }
