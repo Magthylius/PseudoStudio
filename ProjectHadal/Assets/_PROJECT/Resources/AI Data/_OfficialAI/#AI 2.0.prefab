@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlapSphereDetectionRadius: 100
-  detectPoint: {x: 0, y: 0, z: 0}
+  detectionOffset: {x: 0, y: 0, z: 0}
+  checkDelay: 0
 --- !u!114 &9221971048963321059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,15 +109,15 @@ MonoBehaviour:
   minLingerTime: 4
   maxLingerTime: 10
   timeoutNewPointTime: 12
-  obstacleCheckTime: 0.1
+  obstacleCheckTime: 0.2
   maxVelocity: 50
   thrustForce: 12
   additionalBoostThrustForce: 10
-  attractionForce: 15
-  avoidanceForce: 10
-  closeRepulsionForce: 14
+  attractionForce: 20
+  avoidanceForce: 5
+  closeRepulsionForce: 5
   axisStalemateDeviationForce: 2
-  obstacleDetectRadius: 60
+  obstacleDetectRadius: 30
   smoothLookAtSpeed: 12
   obstacleMask:
     serializedVersion: 2
@@ -127,9 +128,11 @@ MonoBehaviour:
   obstacleCheckTimer: 0
   timeoutTimer: 0
   lingerTimer: 0
+  speedMultiplier: 1
   navPoints: []
   repulsionPoints: []
   hasReachedPoint: 0
+  canTimeout: 0
   canAutoSelectNavPoints: 0
   isOnCustomPath: 0
   isChasingAPlayer: 0
@@ -299,6 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae3cbf74d9642e45b10c23ffb58fbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetMoveCavern: {fileID: 0}
   healthManager: {fileID: 2206939684562575358}
   navigationHandler: {fileID: 2206939683509102030}
   senseDetection: {fileID: 6021279049498701051}
@@ -389,6 +393,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshDamage: 0
+  threshTimer: 0
+  applyEveryNSeconds: 0
   tailWhipDamage: 0
 --- !u!114 &2206939684562575358
 MonoBehaviour:
@@ -448,6 +454,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   whipStanceCollider: {fileID: 7474886789056213679}
+  reachDistances: []
+  whipKnockbackAmount: 0
+  knockDuration: 0
+  falloffMode: 0
+  knockbackSettings:
+    Position: {x: 0, y: 0, z: 0}
+    Radius: 1
+    Force: 1
+    DetonateOnRemote: 0
+  exponentConst: 0
+  viewAngle: 0
 --- !u!65 &7474886789056213679
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -457,7 +474,7 @@ BoxCollider:
   m_GameObject: {fileID: 3345266927618080665}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 30, y: 20, z: 40}
   m_Center: {x: 0, y: 0, z: 0}

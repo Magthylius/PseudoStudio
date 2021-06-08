@@ -131,6 +131,8 @@ namespace Tenshi
         public static float ToRadians(this float degree) => degree * Mathf.Deg2Rad;
         public static float Abs(this float number) => Mathf.Abs(number);
         public static int Abs(this int number) => Mathf.Abs(number);
+        public static float Pow(this float number, float power) => Mathf.Pow(number, power);
+        public static float Pow(this int number, float power) => Mathf.Pow(number, power);
         
         public static void LerpSpeed(this ref float speed, in float directionalSpeed, in float acceleration, in float deltaTime)
         {
@@ -157,6 +159,10 @@ namespace Tenshi
         public static float NormaliseValue(this int value, int min, int max)
         {
             return (value - min) / (max - min).AsFloat();
+        }
+        public static float NormaliseValue(this float value, float min, float max)
+        {
+            return (value - min) / (max - min);
         }
 
         public static bool IsEven(this int number) => number % 2 == 0;

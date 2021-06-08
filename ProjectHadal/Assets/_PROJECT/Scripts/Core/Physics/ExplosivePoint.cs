@@ -65,7 +65,7 @@ namespace Hadal
             DetonateAndDestroy();
         }
 
-        public static ExplosivePoint SpawnPoint(ExplosionSettings settings)
+        public static ExplosivePoint Create(ExplosionSettings settings)
         {
             ExplosivePoint prefab = Resources.Load<ExplosivePoint>(PathManager.ExplosivePointPrefabPath);
             ExplosivePoint point = Instantiate(prefab, settings.Position, Quaternion.identity);
