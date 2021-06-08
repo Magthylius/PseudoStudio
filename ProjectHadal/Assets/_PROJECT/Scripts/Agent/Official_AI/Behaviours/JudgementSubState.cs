@@ -40,7 +40,7 @@ namespace Hadal.AI.States
             BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
             setRecoveryState.SetDebugName("set recovery state");
 
-            BTSequence tailWhip = new BTSequence(new List<BTNode>() { new TailWhipNode(b) });
+            BTSequence tailWhip = new BTSequence(new List<BTNode>() { new TailWhipNode(b, 1f) });
             tailWhip.SetDebugName("tail whip");
 
             BTSequence escapeTailWhip = new BTSequence(new List<BTNode>() { tailWhip, setRecoveryState });
