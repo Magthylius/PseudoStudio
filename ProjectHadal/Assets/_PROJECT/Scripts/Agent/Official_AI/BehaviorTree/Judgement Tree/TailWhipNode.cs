@@ -9,47 +9,41 @@ namespace Hadal.AI.TreeNodes
         private AIBrain _brain;
         private AITailManager _tailManager;
         private bool _tailWhipDone;
-        private bool _triggerOnce;
+        private bool _startTimer;
         private float _whipTimer;
         private float _whipTime;
 
-        public TailWhipNode(AIBrain brain)
+        public TailWhipNode(AIBrain brain, float whipTime)
         {
             _brain = brain;
             _tailManager = brain.TailManager;
             _tailWhipDone = false;
-            _triggerOnce = false;
+            _startTimer = false;
+            _whipTime = whipTime;
         }
 
         public override NodeState Evaluate(float deltaTime)
         {
-            if (!_triggerOnce)
-            {
-                _triggerOnce = true;
-                _tailManager.EnableWhipStance();
-                _brain.StartCoroutine(WhipRoutine());
-            }
-
-            if (!_tailWhipDone)
-                return NodeState.RUNNING;
-
-            "Whips something?".Msg();
-            return NodeState.SUCCESS;
-        }
-
-        private IEnumerator WhipRoutine()
-        {
-            while (!_tailWhipDone)
+            if (_startTimer)
             {
                 if (TickWhipTimer(_brain.DeltaTime) <= 0)
                 {
                     ResetWhipTimer();
-                    _tailManager.DisableWhipStance();
                     _tailWhipDone = true;
+                    _startTimer = false;
                 }
-                yield return null;
             }
-            _triggerOnce = false;
+            else
+            {
+                _startTimer = true;
+                _tailWhipDone = false;
+                _brain.TailManager.Send_ApplyKnockback(_brain.SenseDetection.DetectedPlayers);
+            }
+
+            if (!_tailWhipDone)
+                return NodeState.RUNNING;
+            
+            return NodeState.SUCCESS;
         }
 
         private float TickWhipTimer(in float deltaTime) => _whipTimer -= deltaTime;

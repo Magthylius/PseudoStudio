@@ -419,7 +419,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1099430620692770243}
   - component: {fileID: 6414438567741730858}
-  - component: {fileID: 7474886789056213679}
   m_Layer: 0
   m_Name: Tail
   m_TagString: Untagged
@@ -453,8 +452,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aad6885644729f488b481484c972b18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whipStanceCollider: {fileID: 7474886789056213679}
-  reachDistances: []
+  reachDistances:
+  - 20
+  - 40
+  - 75
   whipKnockbackAmount: 0
   knockDuration: 0
   falloffMode: 0
@@ -464,20 +465,8 @@ MonoBehaviour:
     Force: 1
     DetonateOnRemote: 0
   exponentConst: 0
-  viewAngle: 0
---- !u!65 &7474886789056213679
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3345266927618080665}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 30, y: 20, z: 40}
-  m_Center: {x: 0, y: 0, z: 0}
+  viewAngle: 60
+  distance: 20
 --- !u!1 &4180711431457838737
 GameObject:
   m_ObjectHideFlags: 0
