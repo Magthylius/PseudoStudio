@@ -16,7 +16,11 @@ namespace Hadal.AI.Caverns
     public class CavernHandler : MonoBehaviour
     {
         CavernManager manager;
+        
+        [Header("Data")]
+        [SerializeField, ReadOnly] int cavernHeuristic = -1;
 
+        [Header("Settings")]
         public CavernTag cavernTag;
         public bool forceFirstFrameRecheck = false;
 
@@ -34,10 +38,7 @@ namespace Hadal.AI.Caverns
         
         new Collider collider;
         List<PlayerController> playersInCavern;
-        
-        //! BFS data
-        [SerializeField, ReadOnly] int cavernHeuristic = -1;
-        
+
         void OnValidate()
         {
             collider = GetComponent<Collider>();
