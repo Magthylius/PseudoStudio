@@ -12,7 +12,7 @@ using ExitGames.Client.Photon;
 using System.Collections;
 using Hadal.Networking.UI.Loading;
 
-// Created by Jet, E: Jon
+// Created by Jet, E: Jon, Jin
 namespace Hadal.Player
 {
     public class PlayerController : Controller, IPlayerEnabler
@@ -105,6 +105,7 @@ namespace Hadal.Player
             cameraController.CameraTransition(DeltaTime, IsBoosted);
             inventory.DoUpdate(DeltaTime);
             lamp.DoUpdate(DeltaTime);
+            healthManager.DoUpdate(DeltaTime);
             mover.DoUpdate(DeltaTime);
             shooter.DoUpdate(DeltaTime);
         }
@@ -122,9 +123,9 @@ namespace Hadal.Player
             rotator.DoLateUpdate(DeltaTime);
         }
 
-      /*  private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
+        private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
         private void OnCollisionStay(Collision collision) => collisions.CollisionStay(collision);
-        private void OnCollisionExit(Collision collision) => collisions.CollisionExit(collision);*/
+        private void OnCollisionExit(Collision collision) => collisions.CollisionExit(collision);
 
         void OnDestroy()
         {
