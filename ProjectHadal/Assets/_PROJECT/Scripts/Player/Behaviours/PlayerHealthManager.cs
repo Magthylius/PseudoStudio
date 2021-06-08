@@ -8,11 +8,13 @@ using System;
 //Created by Jet
 namespace Hadal.Player.Behaviours
 {
-    public class PlayerHealthManager : MonoBehaviour, IDamageable, IUnalivable, IPlayerComponent
+    public class PlayerHealthManager : MonoBehaviour, IDamageable, IUnalivable, IKnockable, IPlayerComponent
     {
         [SerializeField] private int maxHealth;
         private int _currentHealth;
         private bool _isDead;
+        private bool _isKnocked;
+        private float _knockTimer;
         private PhotonView _pView;
         private PlayerController _controller;
         private PlayerCameraController _cameraController;
@@ -28,6 +30,15 @@ namespace Hadal.Player.Behaviours
         private void OnValidate()
         {
             if (maxHealth <= 0) maxHealth += 1;
+        }
+
+        public void DoUpdate(in float deltaTime)
+        {
+            if (!_isKnocked)
+                return;
+            
+            if (TickKnockTimer(deltaTime) <= 0f)
+                _isKnocked = false;
         }
 
         public bool TakeDamage(int damage)
@@ -66,6 +77,20 @@ namespace Hadal.Player.Behaviours
             UIManager.InvokeOnHealthChange();
         }
 
+        public bool TryToKnock(Vector3 force, float duration)
+        {
+            if (_isKnocked)
+                return false;
+            
+            _isKnocked = true;
+            ResetKnockTimer(duration);
+            _controller.GetInfo.Rigidbody.AddForce(force, ForceMode.Impulse);
+            return true;
+        }
+
+        private float TickKnockTimer(in float deltaTime) => _knockTimer -= deltaTime;
+        private void ResetKnockTimer(in float time) => _knockTimer = time;
+
         public void Inject(PlayerController controller)
         {
             var info = controller.GetInfo;
@@ -80,5 +105,6 @@ namespace Hadal.Player.Behaviours
         public int GetMaxHealth => maxHealth;
         public bool IsUnalive => _isDead;
         public bool IsDown => _currentHealth <= 0;
+        public bool IsKnocked => _isKnocked;
     }
 }

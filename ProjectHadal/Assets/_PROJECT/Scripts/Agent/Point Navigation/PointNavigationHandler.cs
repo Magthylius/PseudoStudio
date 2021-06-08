@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Hadal.AI.Caverns;
 using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
@@ -44,6 +45,7 @@ namespace Hadal.AI
 		[SerializeField, ReadOnly] private List<NavPoint> navPoints;
 		[SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
         [SerializeField, ReadOnly] private bool hasReachedPoint;
+        [SerializeField, ReadOnly] private bool canTimeout;
         [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
         [SerializeField, ReadOnly] private bool isOnCustomPath;
 		[SerializeField, ReadOnly] private bool isChasingAPlayer;
@@ -65,6 +67,7 @@ namespace Hadal.AI
             ResetTimeoutTimer();
             obstacleCheckTimer = 0f;
             hasReachedPoint = false;
+            canTimeout = true;
             currentPoint = null;
             canAutoSelectNavPoints = true;
             isOnCustomPath = false;
@@ -123,12 +126,27 @@ namespace Hadal.AI
             rBody.velocity = Vector3.zero;
         }
 
+        public void SetTargetNavPointAtCavern(CavernHandler handler)
+        {
+            NavPoint target = navPoints
+                        .Where(point => point.CavernTag == handler.cavernTag)
+                        .OrderBy(point => point.GetSqrDistanceTo(currentPoint.GetPosition))
+                        .FirstOrDefault();
+            
+            if (target == null)
+                return;
+            
+            canTimeout = false;
+            currentPoint = target;
+        }
+
         public void SetCustomPath(NavPoint target, bool targetIsPlayer)
         {
             if (target == null) return;
             isOnCustomPath = true;
             currentPoint = target;
 			isChasingAPlayer = targetIsPlayer;
+            canTimeout = false;
             canAutoSelectNavPoints = !targetIsPlayer;
             ResetLingerTimer();
             ResetTimeoutTimer();
@@ -147,7 +165,8 @@ namespace Hadal.AI
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
 				currentPoint.Deselect();
-                Destroy(currentPoint.gameObject);
+                if (currentPoint.CavernTag == CavernTag.Custom_Point)
+                    Destroy(currentPoint.gameObject);
                 if (enableDebug) "Stopping custom path".Msg();
                 yield return null;
                 
@@ -189,6 +208,7 @@ namespace Hadal.AI
             if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < closeRadius * closeRadius)
             {
                 hasReachedPoint = true;
+                canTimeout = true;
                 if (enableDebug) "Point Reached".Msg();
             }
         }
@@ -264,7 +284,10 @@ namespace Hadal.AI
             if (hasReachedPoint)
                 lingerTimer -= deltaTime;
             else
-                timeoutTimer -= deltaTime;
+            {
+                if (canTimeout)
+                    timeoutTimer -= deltaTime;
+            }
 
             if (lingerTimer <= 0f || timeoutTimer <= 0f)
             {
