@@ -125,12 +125,12 @@ namespace Hadal.AI.Caverns
         void UpdateConnectedCaverns()
         {
             connectedCaverns = new List<CavernHandler>();
-            foreach(TunnelBehaviour tunnel in connectedTunnels)
+            foreach(TunnelBehaviour tunnelBehav in connectedTunnels)
             {
-                foreach (CavernHandler cavern in tunnel.ConnectedCaverns)
+                foreach (CavernTunnel tunnel in tunnelBehav.ConnectedTunnels)
                 {
-                    if (!connectedCaverns.Contains(cavern) && cavern != this)
-                        connectedCaverns.Add(cavern);
+                    if (!connectedCaverns.Contains(tunnel.ConnectedCavern) && tunnel.ConnectedCavern != this)
+                        connectedCaverns.Add(tunnel.ConnectedCavern);
                 }
             }
         }
@@ -168,6 +168,34 @@ namespace Hadal.AI.Caverns
         public bool ConnectedCavernContains(CavernHandler targetCavern)
         {
             return connectedCaverns.Contains(targetCavern);
+        }
+        
+        /// <summary>
+        /// Gets both end of NavPoint of the tunnel connecting this cavern to targetCavern.
+        /// </summary>
+        /// <param name="targetCavern">Targeted cavern to get entry NavPoint.</param>
+        /// <returns>Array of 2 NavPoints if found, null if not.</returns>
+        public NavPoint[] GetEntryNavPoints(CavernHandler targetCavern)
+        {
+            NavPoint[] navPoints = new NavPoint[2];
+
+            foreach (var cavernTunnel in connectedTunnels)
+            {
+                if (cavernTunnel.ContainsCaverns(this, targetCavern))
+                {
+                    navPoints[0] = cavernTunnel.GetCavernTunnel(this).EntryNavPoint;
+                    navPoints[1] = cavernTunnel.GetCavernTunnel(targetCavern).EntryNavPoint;
+
+                    if (navPoints[0] != null && navPoints[1] != null)
+                        return navPoints;
+                    
+                    Debug.LogError("Tunnel NavPoints is null!");
+                    break;
+                }
+                
+            }
+
+            return null;
         }
 
         public int GetPlayerCount => playersInCavern.Count;
