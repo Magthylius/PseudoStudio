@@ -21,10 +21,10 @@ namespace Hadal.Usables.Projectiles
                     {
                         collision.gameObject.GetComponent<AIBrain>().HealthManager.TakeDamage(Data.BaseDamage);
                     }*/
-/*                    neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);*/
-                    for(int i=0; i < GameManager.Instance.pViewList.Count; i++)
+                    /*neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);*/
+                    for (int i=0; i < GameManager.Instance.pViewList.Count; i++)
                     {
-                        if(GetShooterID() == GameManager.Instance.pViewList[i].ViewID)
+                        if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID)
                         {
                             PPhysics.OnPhysicsFinished();
                             print(projectileID + "sending event to despawn");

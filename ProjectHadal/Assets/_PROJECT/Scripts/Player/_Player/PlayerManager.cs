@@ -224,13 +224,13 @@ namespace Hadal.Player
 
             if(playerControllers == null)
             {
-                print("fuck you");
+                print("No controllers found");
             }
 
             for (int i=0; i < playControllers.Length; i++)
             {
-                print(playControllers[i].GetInfo.PhotonInfo.PView + "found");
-              //  GameManager.Instance.pViewList.Add(playerControllers[i].GetInfo.PhotonInfo.PView);
+              //  print(playControllers[i].GetInfo.PhotonInfo.PView + "found");
+                GameManager.Instance.pViewList.Add(playerControllers[i].GetInfo.PhotonInfo.PView);
             }  
         }
 
