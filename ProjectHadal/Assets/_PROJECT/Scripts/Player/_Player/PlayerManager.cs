@@ -227,9 +227,9 @@ namespace Hadal.Player
                 print("fuck you");
             }
 
-            for (int i=0; i<playControllers.Length; i++)
+            for (int i=0; i < playControllers.Length; i++)
             {
-                print(playerControllers[i].GetInfo.PhotonInfo.PView + "found");
+                print(playControllers[i].GetInfo.PhotonInfo.PView + "found");
               //  GameManager.Instance.pViewList.Add(playerControllers[i].GetInfo.PhotonInfo.PView);
             }  
         }
