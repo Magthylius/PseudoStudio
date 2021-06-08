@@ -24,7 +24,7 @@ namespace Hadal.Usables.Projectiles
                     /*neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);*/
                     for (int i=0; i < GameManager.Instance.pViewList.Count; i++)
                     {
-                        if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID)
+                        if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
                         {
                             PPhysics.OnPhysicsFinished();
                             print(projectileID + "sending event to despawn");
