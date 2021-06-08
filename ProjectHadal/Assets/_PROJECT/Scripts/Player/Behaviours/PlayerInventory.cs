@@ -40,7 +40,6 @@ namespace Hadal.Player.Behaviours
         {
             neManager = NetworkEventManager.Instance;
             if (neManager) neManager.AddListener(ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
-
             EquipItem(0);
         }
 

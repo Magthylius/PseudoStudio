@@ -186,6 +186,7 @@ namespace Hadal.Player
         private void StartGame(EventData obj)
         {
             print("Everyone ready. Begin !");
+            _manager.instantiatePViewList();
             LoadingManager.Instance.StartEndLoad();
         }
 
