@@ -1,6 +1,7 @@
 using Tenshi.AIDolls;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
@@ -16,7 +17,6 @@ namespace Hadal.AI.States
         AnticipationStateSettings settings;
 
         CavernHandler targetCavern;
-        CavernHandler nextCavern;
 
         public AnticipationState(AIBrain brain)
         {
@@ -37,12 +37,15 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
 
+            print("Entered anticipation!");
+            
             //if (debugRoutine != null) return;
             //debugRoutine = Debug_SwitchToEngagementJudgementState();
             //Brain.StartCoroutine(debugRoutine);
 
             //targetCavern = Brain.CavernManager.GetMostPopulatedCavern();
 
+            SetNewTargetCavern();
             if (targetCavern == null)
             {
                 //! Check if game ended
@@ -52,9 +55,16 @@ namespace Hadal.AI.States
 
             AllowStateTick = true;
             RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
-
-            SetNewTargetCavern();
+            
+            
             Brain.StartCoroutine(CheckPlayersInRange());
+            
+        }
+
+        IEnumerator DebugRoutine()
+        {
+            yield return new WaitForSeconds(5f);
+
         }
 
         public override void StateTick()
@@ -90,6 +100,7 @@ namespace Hadal.AI.States
 
         public override void OnCavernEnter(CavernHandler cavern)
         {
+            print("Cavern entered");
             DetermineNextCavern();
         }
 
@@ -105,22 +116,29 @@ namespace Hadal.AI.States
             switch (currentObj)
             {
                 case EngagementObjective.Aggressive:
-                    targetCavern = Brain.CavernManager.GetMostPopulatedCavern();
+                    if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
+                    targetCavern = CavernManager.GetMostPopulatedCavern();
                     break;
                 case EngagementObjective.Ambush:
-                    targetCavern =
-                        Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetMostPopulatedCavern()
-                            .ConnectedCaverns);
+                    if (Brain.DebugEnabled) print("Anticipation: Ambush.");
+                    targetCavern = CavernManager.GetLeastPopulatedCavern(CavernManager.GetMostPopulatedCavern().ConnectedCaverns);
                     break;
-
                 default:
+                    Debug.LogError("Incorrect engagement objective!");
                     break;
             }
+
+            targetCavern = CavernManager.GetCavern(CavernTag.Starting);
         }
 
         void DetermineNextCavern()
         {
-            nextCavern = Brain.CavernManager.GetNextCavern(targetCavern, Brain.CavernManager.GetHandlerOfAILocation);
+            CavernHandler nextCavern =
+                CavernManager.GetLeastPopulatedCavern(CavernManager.GetNextCaverns(targetCavern,
+                    CavernManager.GetHandlerOfAILocation));
+            
+            print(nextCavern);
+            NavigationHandler.SetTargetNavPointAtCavern(nextCavern);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;

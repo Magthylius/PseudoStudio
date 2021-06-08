@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Tenshi.UnitySoku;
 using Hadal.Player;
 using System.Linq;
 using NaughtyAttributes;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 //! C: Jon
 namespace Hadal.AI.Caverns
@@ -68,6 +70,11 @@ namespace Hadal.AI.Caverns
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnterCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
+
+        void OnValidate()
+        {
+           handlerList.RemoveAll(wat => wat == null);
+        }
 
         protected override void Awake()
         {
@@ -138,7 +145,9 @@ namespace Hadal.AI.Caverns
                     }
                 }
             }
-
+            
+            if (playerNum == 0) print("Cannot find any player!");
+            
             if (tempCaverns.Count <= 0)
                 return null;
             else if (tempCaverns.Count == 1)
@@ -233,8 +242,15 @@ namespace Hadal.AI.Caverns
         /// <returns>List of caverns that are equal distance to choose from.</returns>
         public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, CavernHandler sourceCavern)
         {
+            if (sourceCavern == null)
+            {
+                Debug.LogError("Source cavern null!");
+                return null;
+            }
+            
             List<CavernHandler> list = new List<CavernHandler> { sourceCavern };
-            return GetNextCaverns(destinationCavern, sourceCavern);
+            if (destinationCavern == sourceCavern) return list;
+            return GetNextCaverns(destinationCavern, list);
         }
 
         /// <summary>
@@ -243,32 +259,52 @@ namespace Hadal.AI.Caverns
         /// <param name="destinationCavern">Target destination cavern.</param>
         /// <param name="searchList">List of caverns to start search from.</param>
         /// <returns>List of caverns that are equal distance to choose from.</returns>
-        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, List<CavernHandler> searchList)
+        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, List<CavernHandler> searchList, List<CavernHandler> exclusionList = null, int loopcount = 0)
         {
             List<CavernHandler> researchList = new List<CavernHandler>();
             List<CavernHandler> returningList = new List<CavernHandler>();
 
+            DebugPrintCavernList(searchList, "search list:");
+            DebugPrintCavernList(exclusionList, "exclusion list:");
             foreach(CavernHandler searchCavern in searchList)
             {
-                foreach (CavernHandler childCavern in searchCavern.connectedCaverns)
+                foreach (CavernHandler childCavern in searchCavern.ConnectedCaverns)
                 {
+                    //! ignore excluded caverns
+                    if (exclusionList != null && exclusionList.Contains((childCavern))) continue;
+                    
                     if (childCavern == destinationCavern)
                         returningList.Add(searchCavern);
-                    else if (!searchList.Contains(childCavern) && !researchList.Contains(childCavern))
+                    else if (returningList.Count < 1 && !searchList.Contains(childCavern) && !researchList.Contains(childCavern))
                         researchList.Add(childCavern);
                 }
             }
 
-            if (returningList.Count > 0) return returningList;
-            else return GetNextCaverns(destinationCavern, researchList);
+            if (loopcount > 5) return null;
+            
+            if (returningList.Count > 0) 
+                return returningList;
+            else
+            {
+                List<CavernHandler> newExclusionList = new List<CavernHandler>();
+                if(exclusionList != null) newExclusionList.Union(exclusionList);
+                newExclusionList.Union(searchList);
+                loopcount++;
+                return GetNextCaverns(destinationCavern, researchList, newExclusionList, loopcount);
+            }
         }
-
-        [Button ("TestGetNextCavern")]
-        void TestGetNextCavern()
+        
+        void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")
         {
-            //print(GetCavern(CavernTag.Starting_Grounds).CalculateRelativeDistanceCost(GetCavern(CavernTag.Staglamite_Cavern)));
-            List<CavernHandler> testList = new List<CavernHandler> { GetCavern(CavernTag.Starting) };
-            //print(GetNextCavern(GetCavern(CavernTag.Staglamite), testList).Count);
+            if (cavernHandlerList == null) return;
+            
+            string tags = "";
+            foreach (CavernHandler cavern in cavernHandlerList)
+            {
+                if (cavern == null) continue;
+                tags += cavern.cavernTag.ToString() + ", ";
+            }
+            print(prefix + " " + tags);
         }
 
         /// <summary>
