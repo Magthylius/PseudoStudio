@@ -87,6 +87,7 @@ namespace Tenshi
         public static double AsDouble(this ulong number) => Convert.ToDouble(number);
         public static bool AsBool(this byte bitSet) => Convert.ToBoolean(bitSet);
         public static bool AsBool(this uint number) => Convert.ToBoolean(number);
+        public static string AsString(this int number) => Convert.ToString(number);
         public static T AsType<T>(this GameObject gameObject) where T : UnityEngine.Component => gameObject.GetComponent<T>();
         public static T AsType<T>(this T tee) where T : UnityEngine.Component => tee.GetComponent<T>();
         public static GameObject AsGObject(this UnityEngine.Object obj) => (GameObject) obj;
