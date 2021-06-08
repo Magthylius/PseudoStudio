@@ -16,7 +16,11 @@ namespace Hadal.AI.Caverns
     public class CavernHandler : MonoBehaviour
     {
         CavernManager manager;
+        
+        [Header("Data")]
+        [SerializeField, ReadOnly] int cavernHeuristic = -1;
 
+        [Header("Settings")]
         public CavernTag cavernTag;
         public bool forceFirstFrameRecheck = false;
 
@@ -31,12 +35,10 @@ namespace Hadal.AI.Caverns
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnteredCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
-
-        int relativeDistanceCost = 0;
-
+        
         new Collider collider;
         List<PlayerController> playersInCavern;
-        
+
         void OnValidate()
         {
             collider = GetComponent<Collider>();
@@ -171,5 +173,9 @@ namespace Hadal.AI.Caverns
         public int GetPlayerCount => playersInCavern.Count;
         public List<PlayerController> GetPlayersInCavern => playersInCavern;
         public List<CavernHandler> ConnectedCaverns => connectedCaverns;
+        public void SetHeuristic(int newHeuristic) => cavernHeuristic = newHeuristic;
+        public void ResetHeuristic() => cavernHeuristic = -1;
+        public int GetHeuristic => cavernHeuristic;
+        public int GetPlayerAccountedHeuristic => cavernHeuristic + GetPlayerCount;
     }
 }

@@ -117,11 +117,11 @@ namespace Hadal.AI.States
             {
                 case EngagementObjective.Aggressive:
                     if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
-                    targetCavern = CavernManager.GetMostPopulatedCavern();
+                    //targetCavern = CavernManager.GetMostPopulatedCavern();
                     break;
                 case EngagementObjective.Ambush:
                     if (Brain.DebugEnabled) print("Anticipation: Ambush.");
-                    targetCavern = CavernManager.GetLeastPopulatedCavern(CavernManager.GetMostPopulatedCavern().ConnectedCaverns);
+                    //targetCavern = CavernManager.GetLeastPopulatedCavern(CavernManager.GetMostPopulatedCavern().ConnectedCaverns);
                     break;
                 default:
                     Debug.LogError("Incorrect engagement objective!");
@@ -129,17 +129,22 @@ namespace Hadal.AI.States
             }
 
             targetCavern = CavernManager.GetCavern(CavernTag.Starting);
+            CavernManager.SeedCavernHeuristics(AICavern, targetCavern);
         }
 
         void DetermineNextCavern()
         {
-            CavernHandler nextCavern =
+            /*CavernHandler nextCavern =
                 CavernManager.GetLeastPopulatedCavern(CavernManager.GetNextCaverns(targetCavern,
                     CavernManager.GetHandlerOfAILocation));
             
             print(nextCavern);
             NavigationHandler.SetTargetNavPointAtCavern(nextCavern);
             
+            Brain.UpdateTargetMoveCavern(nextCavern);*/
+
+            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern);
+            NavigationHandler.SetTargetNavPointAtCavern(nextCavern);
             Brain.UpdateTargetMoveCavern(nextCavern);
         }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.Player;
+using ICSharpCode.NRefactory.Ast;
 using NaughtyAttributes;
 using Tenshi.UnitySoku;
 using UnityEngine;
@@ -24,18 +25,19 @@ namespace Hadal.AI.Caverns
     }
 
     /// <summary>
-    ///     Used to calculate cavern heuristics
+    /// Used for pathing information
     /// </summary>
-    public struct CavernHeuristic
+    public struct CavernPathData
     {
-        public int Cost;
-        public CavernHandler Handler;
+        public Queue<CavernHandler> pathingQueue;
 
-        public CavernHeuristic(CavernHandler handler)
+        public CavernPathData(Queue<CavernHandler> newQueue = null)
         {
-            Cost = 0;
-            Handler = handler;
+            pathingQueue = newQueue ?? new Queue<CavernHandler>();
         }
+
+        public void Enqueue(CavernHandler queuedCavern) => pathingQueue.Enqueue(queuedCavern);
+        public void Dequeue() => pathingQueue.Dequeue();
     }
 
     public delegate void CavernHandlerPlayerReturn(CavernPlayerData data);
@@ -190,94 +192,87 @@ namespace Hadal.AI.Caverns
             return candidateCaverns[0];
         }
 
-        /// <summary>
-        ///     Gets the next suitable cavern based on adjacency.
-        /// </summary>
-        /// <param name="destinationCavern">Target destination cavern.</param>
-        /// <param name="sourceCavern">Starting cavern to search.</param>
-        /// <returns>A single cavern handler.</returns>
-        public CavernHandler GetNextCavern(CavernHandler destinationCavern, CavernHandler sourceCavern,
-            bool tiedNumberRandomize = true)
+        public void SeedCavernHeuristics(CavernHandler sourceCavern, CavernHandler destinationCavern)
         {
-            var list = GetNextCaverns(destinationCavern, sourceCavern);
-            if (tiedNumberRandomize)
-                return list[Random.Range(0, list.Count)];
-            return list[0];
-        }
+            ResetCavernHeuristics();
+            
+            //sourceCavern.SetHeuristic((int.MaxValue));
+            destinationCavern.SetHeuristic(0);
+            Queue<CavernHandler> uncheckedCaverns = new Queue<CavernHandler>();
+            
+            foreach (var cavern in destinationCavern.ConnectedCaverns)
+                uncheckedCaverns.Enqueue(cavern);
 
-        /// <summary>
-        ///     Gets the next suitable cavern based on adjacency.
-        /// </summary>
-        /// <param name="destinationCavern">Target destination cavern.</param>
-        /// <param name="searchList">List of caverns to start search from.</param>
-        /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
-        /// <returns>A single cavern handler.</returns>
-        public CavernHandler GetNextCavern(CavernHandler destinationCavern, List<CavernHandler> searchList,
-            bool tiedNumberRandomize = true)
-        {
-            var list = GetNextCaverns(destinationCavern, searchList);
-            if (tiedNumberRandomize)
-                return list[Random.Range(0, list.Count)];
-            return list[0];
-        }
-
-        /// <summary>
-        ///     Gets a list suitable caverns based on adjacency.
-        /// </summary>
-        /// <param name="destinationCavern">Target destination cavern.</param>
-        /// <param name="sourceCavern">Starting cavern to search.</param>
-        /// <returns>List of caverns that are equal distance to choose from.</returns>
-        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, CavernHandler sourceCavern)
-        {
-            if (sourceCavern == null)
+            int distHeuristic = 1;
+            while (uncheckedCaverns.Any())
             {
-                Debug.LogError("Source cavern null!");
-                return null;
-            }
-
-            var list = new List<CavernHandler> {sourceCavern};
-            if (destinationCavern == sourceCavern) return new List<CavernHandler> {destinationCavern};
-            return GetNextCaverns(destinationCavern, list);
-        }
-
-        /// <summary>
-        ///     Gets a list suitable caverns based on adjacency.
-        /// </summary>
-        /// <param name="destinationCavern">Target destination cavern.</param>
-        /// <param name="searchList">List of caverns to start search from.</param>
-        /// <returns>List of caverns that are equal distance to choose from.</returns>
-        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, List<CavernHandler> searchList,
-            List<CavernHandler> exclusionList = null, int loopcount = 0)
-        {
-            var researchList = new List<CavernHandler>();
-            var returningList = new List<CavernHandler>();
-
-            DebugPrintCavernList(searchList, "search list:");
-            DebugPrintCavernList(exclusionList, "exclusion list:");
-            foreach (var searchCavern in searchList)
-            {
-                foreach (var childCavern in searchCavern.ConnectedCaverns)
+                int queueCount = uncheckedCaverns.Count;
+                for (int i = 0; i < queueCount; i++)
                 {
-                    //! ignore excluded caverns
-                    if (exclusionList != null && exclusionList.Contains(childCavern)) continue;
+                    CavernHandler currentCavern = uncheckedCaverns.Dequeue();
+                    if (currentCavern.GetHeuristic < 0)
+                    {
+                        currentCavern.SetHeuristic(distHeuristic);
+                        
+                        //! Add unchecked children
+                        foreach (var childCavern in currentCavern.ConnectedCaverns)
+                        {
+                            if (childCavern.GetHeuristic < 0) uncheckedCaverns.Enqueue(childCavern);
+                        }
+                    }
+                }
 
-                    if (childCavern == destinationCavern)
-                        returningList.Add(searchCavern);
-                    else if (returningList.Count < 1 && !searchList.Contains(childCavern) &&
-                             !researchList.Contains(childCavern))
-                        researchList.Add(childCavern);
+                distHeuristic++;
+            }
+        }
+
+        public void ResetCavernHeuristics()
+        {
+            foreach(CavernHandler cavern in handlerList) 
+                cavern.ResetHeuristic();
+        }
+
+        /// <summary>
+        /// Gets the next best cavern based on player accounted heuristics. 
+        /// </summary>
+        /// <remarks>Heuristics are accounted by player number + distance to seeded destination</remarks>
+        /// <param name="sourceCavern">Cavern to calculate from</param>
+        /// <param name="randomizeOnTied">Randomizes return if there are tied results</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetNextBestCavern(CavernHandler sourceCavern, bool randomizeOnTied = true)
+        {
+            return GetNextBestCavern(sourceCavern.ConnectedCaverns, randomizeOnTied);
+        }
+            
+        /// <summary>
+        /// Gets the next best cavern based on player accounted heuristics. 
+        /// </summary>
+        /// <remarks>Heuristics are accounted by player number + distance to seeded destination</remarks>
+        /// <param name="cavernChoices">Choices of cavern to choose</param>
+        /// <param name="randomizeOnTied">Randomizes return if there are tied results</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetNextBestCavern(List<CavernHandler> cavernChoices, bool randomizeOnTied = true)
+        {
+            List<CavernHandler> bestCaverns = new List<CavernHandler>();
+            int cheapestHeuristic = int.MaxValue;
+
+            foreach (CavernHandler cavern in cavernChoices)
+            {
+                if (cavern.GetPlayerAccountedHeuristic < cheapestHeuristic)
+                {
+                    cheapestHeuristic = cavern.GetPlayerAccountedHeuristic;
                 }
             }
 
-            if (loopcount > 5) return null;
+            foreach (CavernHandler cavern in cavernChoices)
+            {
+                if (cavern.GetPlayerAccountedHeuristic == cheapestHeuristic) bestCaverns.Add(cavern);
+            }
 
-            if (returningList.Count > 0) return returningList;
-
-            var newExclusionList = new List<CavernHandler>();
-            if (exclusionList != null) newExclusionList.Union(exclusionList);
-            newExclusionList.Union(searchList);
-            loopcount++;
-            return GetNextCaverns(destinationCavern, researchList, newExclusionList, loopcount);
+            if (bestCaverns.Count == 1 || !randomizeOnTied)
+                return bestCaverns[0];
+            else
+                return bestCaverns[Random.Range(0, bestCaverns.Count)];
         }
 
         private void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")
