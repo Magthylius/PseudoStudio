@@ -1,18 +1,15 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Tenshi.UnitySoku;
-using Hadal.Player;
 using System.Linq;
+using Hadal.Player;
 using NaughtyAttributes;
+using Tenshi.UnitySoku;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 //! C: Jon
 namespace Hadal.AI.Caverns
 {
     /// <summary>
-    /// For data passback through events back to manager
+    ///     For data passback through events back to manager
     /// </summary>
     public struct CavernPlayerData
     {
@@ -27,7 +24,7 @@ namespace Hadal.AI.Caverns
     }
 
     /// <summary>
-    /// Used to calculate cavern heuristics
+    ///     Used to calculate cavern heuristics
     /// </summary>
     public struct CavernHeuristic
     {
@@ -42,10 +39,11 @@ namespace Hadal.AI.Caverns
     }
 
     public delegate void CavernHandlerPlayerReturn(CavernPlayerData data);
+
     public delegate void CavernHandlerAIReturn(CavernHandler handler);
 
     /// <summary>
-    /// For cavern identification.
+    ///     For cavern identification.
     /// </summary>
     public enum CavernTag
     {
@@ -59,32 +57,30 @@ namespace Hadal.AI.Caverns
     }
 
     /// <summary>
-    /// Manages all the other handlers. Is a singleton.
+    ///     Manages all the other handlers. Is a singleton.
     /// </summary>
     public class CavernManager : SingletonSoft<CavernManager>
     {
         [ReadOnly] public List<CavernHandler> handlerList = new List<CavernHandler>();
-        CavernHandler aiAtHandler;
 
         public event CavernHandlerPlayerReturn PlayerEnterCavernEvent;
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnterCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
 
-        void OnValidate()
+        private void OnValidate()
         {
-           handlerList.RemoveAll(wat => wat == null);
+            handlerList.RemoveAll(wat => wat == null);
         }
 
         protected override void Awake()
         {
             base.Awake();
-            aiAtHandler = null;
+            GetHandlerOfAILocation = null;
         }
 
-        void Start()
+        private void Start()
         {
-            
         }
 
         public void OnPlayerEnterCavern(CavernPlayerData data)
@@ -101,32 +97,31 @@ namespace Hadal.AI.Caverns
 
         public void OnAIEnterCavern(CavernHandler handler)
         {
-            if (aiAtHandler != handler)
-                aiAtHandler = handler;
+            if (GetHandlerOfAILocation != handler)
+                GetHandlerOfAILocation = handler;
 
             AIEnterCavernEvent?.Invoke(handler);
         }
 
         public void OnAILeaveCavern(CavernHandler handler)
         {
-            if (aiAtHandler == handler)
-                aiAtHandler = null;
+            if (GetHandlerOfAILocation == handler)
+                GetHandlerOfAILocation = null;
 
             AILeftCavernEvent?.Invoke(handler);
         }
 
         /// <summary>
-        /// Gets most populated cavern.
+        ///     Gets most populated cavern.
         /// </summary>
         /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
         /// <returns>CavernHandler information</returns>
         public CavernHandler GetMostPopulatedCavern(bool tiedNumberRandomize = true)
         {
-            int playerNum = 0;
-            List<CavernHandler> tempCaverns = new List<CavernHandler>();
+            var playerNum = 0;
+            var tempCaverns = new List<CavernHandler>();
 
-            foreach (CavernHandler cavern in handlerList)
-            {
+            foreach (var cavern in handlerList)
                 //! Must have a cavern somewhere with players
                 if (playerNum > 0)
                 {
@@ -144,25 +139,20 @@ namespace Hadal.AI.Caverns
                         tempCaverns.Add(cavern);
                     }
                 }
-            }
-            
+
             if (playerNum == 0) print("Cannot find any player!");
-            
-            if (tempCaverns.Count <= 0)
-                return null;
-            else if (tempCaverns.Count == 1)
-                return tempCaverns[0];
-            else
-            {
-                if (tiedNumberRandomize)
-                    return tempCaverns[Random.Range(0, tempCaverns.Count)];
-                else
-                    return tempCaverns[0];
-            }
+
+            if (tempCaverns.Count <= 0) return null;
+
+            if (tempCaverns.Count == 1) return tempCaverns[0];
+
+            if (tiedNumberRandomize)
+                return tempCaverns[Random.Range(0, tempCaverns.Count)];
+            return tempCaverns[0];
         }
 
         /// <summary>
-        /// Get least populated cavern with all handlers on manager.
+        ///     Get least populated cavern with all handlers on manager.
         /// </summary>
         /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
         /// <returns>CavernHandler information</returns>
@@ -172,70 +162,67 @@ namespace Hadal.AI.Caverns
         }
 
         /// <summary>
-        /// Gets the least populated cavern given by a list of caverns.
+        ///     Gets the least populated cavern given by a list of caverns.
         /// </summary>
         /// <param name="cavernList">List of caverns to query.</param>
         /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
         /// <returns>CavernHandler information</returns>
         public CavernHandler GetLeastPopulatedCavern(List<CavernHandler> cavernList, bool tiedNumberRandomize = true)
         {
-            List<CavernHandler> candidateCaverns = new List<CavernHandler>();
-            int playerMin = 0;
-            bool candidatesFound = false;
+            var candidateCaverns = new List<CavernHandler>();
+            var playerMin = 0;
+            var candidatesFound = false;
             do
             {
                 candidateCaverns.Clear();
-                foreach (CavernHandler cavern in cavernList)
-                {
+                foreach (var cavern in cavernList)
                     if (cavern.GetPlayerCount <= playerMin)
                     {
                         candidateCaverns.Add(cavern);
                         candidatesFound = true;
                     }
-                }
             } while (!candidatesFound);
 
             if (candidateCaverns.Count == 1) return candidateCaverns[0];
 
             if (tiedNumberRandomize)
                 return candidateCaverns[Random.Range(0, candidateCaverns.Count)];
-            else
-                return candidateCaverns[0];
+            return candidateCaverns[0];
         }
 
         /// <summary>
-        /// Gets the next suitable cavern based on adjacency.
+        ///     Gets the next suitable cavern based on adjacency.
         /// </summary>
         /// <param name="destinationCavern">Target destination cavern.</param>
         /// <param name="sourceCavern">Starting cavern to search.</param>
         /// <returns>A single cavern handler.</returns>
-        public CavernHandler GetNextCavern(CavernHandler destinationCavern, CavernHandler sourceCavern, bool tiedNumberRandomize = true)
+        public CavernHandler GetNextCavern(CavernHandler destinationCavern, CavernHandler sourceCavern,
+            bool tiedNumberRandomize = true)
         {
-            List<CavernHandler> list = GetNextCaverns(destinationCavern, sourceCavern);
+            var list = GetNextCaverns(destinationCavern, sourceCavern);
             if (tiedNumberRandomize)
                 return list[Random.Range(0, list.Count)];
-            else
-                return list[0];
+            return list[0];
         }
 
         /// <summary>
-        /// Gets the next suitable cavern based on adjacency.
+        ///     Gets the next suitable cavern based on adjacency.
         /// </summary>
         /// <param name="destinationCavern">Target destination cavern.</param>
         /// <param name="searchList">List of caverns to start search from.</param>
         /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
         /// <returns>A single cavern handler.</returns>
-        public CavernHandler GetNextCavern(CavernHandler destinationCavern, List<CavernHandler> searchList, bool tiedNumberRandomize = true)
+        public CavernHandler GetNextCavern(CavernHandler destinationCavern, List<CavernHandler> searchList,
+            bool tiedNumberRandomize = true)
         {
-            List<CavernHandler> list = GetNextCaverns(destinationCavern, searchList);
+            var list = GetNextCaverns(destinationCavern, searchList);
             if (tiedNumberRandomize)
                 return list[Random.Range(0, list.Count)];
-            else
-                return list[0];
+            return list[0];
         }
 
         /// <summary>
-        /// Gets a list suitable caverns based on adjacency.
+        ///     Gets a list suitable caverns based on adjacency.
         /// </summary>
         /// <param name="destinationCavern">Target destination cavern.</param>
         /// <param name="sourceCavern">Starting cavern to search.</param>
@@ -247,99 +234,96 @@ namespace Hadal.AI.Caverns
                 Debug.LogError("Source cavern null!");
                 return null;
             }
-            
-            List<CavernHandler> list = new List<CavernHandler> { sourceCavern };
-            if (destinationCavern == sourceCavern) return list;
+
+            var list = new List<CavernHandler> {sourceCavern};
+            if (destinationCavern == sourceCavern) return new List<CavernHandler> {destinationCavern};
             return GetNextCaverns(destinationCavern, list);
         }
 
         /// <summary>
-        /// Gets a list suitable caverns based on adjacency.
+        ///     Gets a list suitable caverns based on adjacency.
         /// </summary>
         /// <param name="destinationCavern">Target destination cavern.</param>
         /// <param name="searchList">List of caverns to start search from.</param>
         /// <returns>List of caverns that are equal distance to choose from.</returns>
-        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, List<CavernHandler> searchList, List<CavernHandler> exclusionList = null, int loopcount = 0)
+        public List<CavernHandler> GetNextCaverns(CavernHandler destinationCavern, List<CavernHandler> searchList,
+            List<CavernHandler> exclusionList = null, int loopcount = 0)
         {
-            List<CavernHandler> researchList = new List<CavernHandler>();
-            List<CavernHandler> returningList = new List<CavernHandler>();
+            var researchList = new List<CavernHandler>();
+            var returningList = new List<CavernHandler>();
 
             DebugPrintCavernList(searchList, "search list:");
             DebugPrintCavernList(exclusionList, "exclusion list:");
-            foreach(CavernHandler searchCavern in searchList)
+            foreach (var searchCavern in searchList)
             {
-                foreach (CavernHandler childCavern in searchCavern.ConnectedCaverns)
+                foreach (var childCavern in searchCavern.ConnectedCaverns)
                 {
                     //! ignore excluded caverns
-                    if (exclusionList != null && exclusionList.Contains((childCavern))) continue;
-                    
+                    if (exclusionList != null && exclusionList.Contains(childCavern)) continue;
+
                     if (childCavern == destinationCavern)
                         returningList.Add(searchCavern);
-                    else if (returningList.Count < 1 && !searchList.Contains(childCavern) && !researchList.Contains(childCavern))
+                    else if (returningList.Count < 1 && !searchList.Contains(childCavern) &&
+                             !researchList.Contains(childCavern))
                         researchList.Add(childCavern);
                 }
             }
 
             if (loopcount > 5) return null;
-            
-            if (returningList.Count > 0) 
-                return returningList;
-            else
-            {
-                List<CavernHandler> newExclusionList = new List<CavernHandler>();
-                if(exclusionList != null) newExclusionList.Union(exclusionList);
-                newExclusionList.Union(searchList);
-                loopcount++;
-                return GetNextCaverns(destinationCavern, researchList, newExclusionList, loopcount);
-            }
+
+            if (returningList.Count > 0) return returningList;
+
+            var newExclusionList = new List<CavernHandler>();
+            if (exclusionList != null) newExclusionList.Union(exclusionList);
+            newExclusionList.Union(searchList);
+            loopcount++;
+            return GetNextCaverns(destinationCavern, researchList, newExclusionList, loopcount);
         }
-        
-        void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")
+
+        private void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")
         {
             if (cavernHandlerList == null) return;
-            
-            string tags = "";
-            foreach (CavernHandler cavern in cavernHandlerList)
+
+            var tags = "";
+            foreach (var cavern in cavernHandlerList)
             {
                 if (cavern == null) continue;
-                tags += cavern.cavernTag.ToString() + ", ";
+                tags += cavern.cavernTag + ", ";
             }
+
             print(prefix + " " + tags);
         }
 
         /// <summary>
-        /// Attempts to get an isolated player.
+        ///     Attempts to get an isolated player.
         /// </summary>
         /// <returns>An isolated player, or null if no one is isolated.</returns>
         public PlayerController GetIsolatedPlayer()
         {
             PlayerController isolatedPlayer = null;
 
-            foreach(CavernHandler handler in handlerList)
-            {
+            foreach (var handler in handlerList)
                 if (handler.GetPlayerCount == 1)
                 {
                     isolatedPlayer = handler.GetPlayersInCavern[0];
                     break;
                 }
-            }
 
             return isolatedPlayer;
         }
 
         public CavernTag GetCavernTagOfAILocation()
         {
-            if (aiAtHandler == null)
+            if (GetHandlerOfAILocation == null)
                 return CavernTag.Invalid;
-            return aiAtHandler.cavernTag;
+            return GetHandlerOfAILocation.cavernTag;
         }
 
         public CavernHandler GetCavern(CavernTag tag)
         {
-            foreach(CavernHandler handler in handlerList)
-            {
-                if (handler.cavernTag == tag) return handler;
-            }
+            foreach (var handler in handlerList)
+                if (handler.cavernTag == tag)
+                    return handler;
 
             return null;
         }
@@ -349,15 +333,24 @@ namespace Hadal.AI.Caverns
             if (!handlerList.Contains(handler)) handlerList.Add(handler);
         }
 
-        public List<CavernHandler> GetHandlerListExcludingAI() => GetHandlerListExcluding(GetHandlerOfAILocation);
+        public List<CavernHandler> GetHandlerListExcludingAI()
+        {
+            return GetHandlerListExcluding(GetHandlerOfAILocation);
+        }
+
         public List<CavernHandler> GetHandlerListExcluding(CavernHandler exludedCavern)
         {
-            List<CavernHandler> newHandlerList = new List<CavernHandler>();
+            var newHandlerList = new List<CavernHandler>();
             newHandlerList = handlerList.ToList();
             newHandlerList.Remove(exludedCavern);
             return newHandlerList;
         }
-        public CavernHandler GetHandlerOfAILocation => aiAtHandler;
-        public CavernHandler GetHandlerOfTag(CavernTag tag) => handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
+
+        public CavernHandler GetHandlerOfAILocation { get; private set; }
+
+        public CavernHandler GetHandlerOfTag(CavernTag tag)
+        {
+            return handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
+        }
     }
 }

@@ -139,6 +139,8 @@ namespace Hadal.AI.States
             
             print(nextCavern);
             NavigationHandler.SetTargetNavPointAtCavern(nextCavern);
+            
+            Brain.UpdateTargetMoveCavern(nextCavern);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;
