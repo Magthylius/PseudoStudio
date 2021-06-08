@@ -220,9 +220,16 @@ namespace Hadal.Player
         {
             var playControllers = FindObjectsOfType<PlayerController>();
             GameManager.Instance.pViewList = new List<PhotonView>();
+
+            if(playerControllers == null)
+            {
+                print("fuck you");
+            }
+
             for (int i=0; i<playControllers.Length; i++)
             {
-                GameManager.Instance.pViewList.Add(playerControllers[i].GetInfo.PhotonInfo.PView);
+                print(playerControllers[i].GetInfo.PhotonInfo.PView + "found");
+              //  GameManager.Instance.pViewList.Add(playerControllers[i].GetInfo.PhotonInfo.PView);
             }  
         }
 
