@@ -282,7 +282,7 @@ namespace Hadal.Player
 
         private void TryInjectDependencies()
         {
-            _manager ??= PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
+            //_manager ??= PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
         }
 
         [PunRPC]
