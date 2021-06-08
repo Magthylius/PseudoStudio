@@ -1,3 +1,4 @@
+using System;
 using Hadal.Player;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Hadal.AI.Caverns
         CavernManager manager;
 
         public CavernTag cavernTag;
+        public bool forceFirstFrameRecheck = false;
 
         [SerializeField] LayerMask playerMask;
         [SerializeField] LayerMask aiMask;
@@ -46,13 +48,17 @@ namespace Hadal.AI.Caverns
 
         void Awake()
         {
-            
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
             AIEnteredCavernEvent += manager.OnAIEnterCavern;
             AILeftCavernEvent += manager.OnAILeaveCavern;
 
             playersInCavern = new List<PlayerController>();
+        }
+
+        void Start()
+        {
+            if (forceFirstFrameRecheck) StartCoroutine(ColliderRecheck());
         }
 
         void OnEnable()
@@ -127,6 +133,13 @@ namespace Hadal.AI.Caverns
             }
         }
 
+        IEnumerator ColliderRecheck()
+        {
+            collider.enabled = false;
+            yield return null;
+            collider.enabled = true;
+        }
+        
         public int CalculateRelativeDistanceCost(CavernHandler targetCavern)
         {
             int cost = 1;

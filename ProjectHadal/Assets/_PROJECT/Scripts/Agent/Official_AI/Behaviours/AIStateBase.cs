@@ -6,6 +6,7 @@ using System;
 using Hadal.AI.Caverns;
 using Hadal.AI.States;
 using Hadal.Player;
+using Tenshi;
 
 namespace Hadal.AI
 {
@@ -15,6 +16,7 @@ namespace Hadal.AI
         public PointNavigationHandler NavigationHandler;
         public LeviathanRuntimeData RuntimeData;
         public StateMachineData MachineData;
+        public CavernManager CavernManager;
 
         public bool AllowStateTick = true;
 
@@ -24,6 +26,7 @@ namespace Hadal.AI
             NavigationHandler = Brain.NavigationHandler;
             RuntimeData = Brain.RuntimeData;
             MachineData = Brain.MachineData;
+            CavernManager = Brain.CavernManager;
         }
 
         public virtual void FixedStateTick() { }
@@ -45,5 +48,7 @@ namespace Hadal.AI
         public bool IsCurrentState { get; set; } = false;
 
         public virtual Func<bool> ShouldTerminate() => () => false;
+
+        protected void print(object message) => Debug.Log(message);
     }
 }
