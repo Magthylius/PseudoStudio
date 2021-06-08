@@ -933,7 +933,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cavernHeuristic: -1
   cavernTag: 2
+  forceFirstFrameRecheck: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -5754,7 +5756,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cavernHeuristic: -1
   cavernTag: 0
+  forceFirstFrameRecheck: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -8814,7 +8818,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cavernHeuristic: -1
   cavernTag: 1
+  forceFirstFrameRecheck: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -10509,14 +10515,14 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2206939684412345075, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
   m_PrefabInstance: {fileID: 704803903}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &973236434
+--- !u!114 &973236433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 973236432}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32a238c737737b5429464f0a7489819f, type: 3}
   m_Name: 
@@ -15211,7 +15217,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cavernHeuristic: -1
   cavernTag: 5
+  forceFirstFrameRecheck: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -21551,7 +21559,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cavernHeuristic: -1
   cavernTag: 3
+  forceFirstFrameRecheck: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -84340,7 +84350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3279162a0faf274f9ed2d698e649fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cavernHeuristic: -1
   cavernTag: 4
+  forceFirstFrameRecheck: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 0
