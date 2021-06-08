@@ -13,6 +13,7 @@ namespace Hadal.AI
         [SerializeField] float checkDelay;
         public int DetectedPlayersCount { get; private set; }
         public List<PlayerController> DetectedPlayers => new List<PlayerController>(_detectedPlayers);
+        public float MajorDetectionRadius => overlapSphereDetectionRadius;
         private float _checkTimer;
         private List<PlayerController> _detectedPlayers;
         private AIBrain _brain;

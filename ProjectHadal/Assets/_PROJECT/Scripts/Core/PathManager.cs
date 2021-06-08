@@ -15,5 +15,6 @@ namespace Hadal
         public const string UtilitiesDataPath = "ScriptableObjects/Usables";
         public const string ProjectileDataPath = "ScriptableObjects/Projectiles";
         public const string GridNodePrefabPath = "AI Data/3/Node";
+        public const string ExplosivePointPrefabPath = "Prefabs/Functional/Explosive Point";
     }
 }
