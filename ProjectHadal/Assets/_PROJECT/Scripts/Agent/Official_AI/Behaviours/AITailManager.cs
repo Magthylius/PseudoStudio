@@ -7,6 +7,7 @@ namespace Hadal.AI
     {
         [SerializeField] private Collider whipStanceCollider;
         [SerializeField] private float whipKnockbackAmount;
+        [SerializeField] private float knockDuration;
         AIBrain brain;
         AIDamageManager damageManager;
 
@@ -34,7 +35,14 @@ namespace Hadal.AI
         private void Send_ApplyKnockback(PlayerController player)
         {
             Vector3 force = brain.transform.forward * whipKnockbackAmount;
-            player.GetInfo.Rigidbody.AddForce(force, ForceMode.Impulse);
+            var knockable = player.GetComponentInChildren<IKnockable>();
+            if (knockable != null)
+            {
+                knockable.TryToKnock(force, knockDuration);
+                //player.GetInfo.Rigidbody.AddForce(force, ForceMode.Impulse); <-- call this in the playercontroller side
+            }
+
+            //! Raise event here
         }
 
         public void DoUpdate(in float deltaTime) { }
