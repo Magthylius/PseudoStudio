@@ -14,6 +14,9 @@ namespace Hadal.AI
 {
     public class AIBrain : MonoBehaviour
     {
+        [Header("Read-only data")] [ReadOnly, SerializeField]
+        private CavernHandler TargetMoveCavern;
+        
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
@@ -231,14 +234,9 @@ namespace Hadal.AI
 
         #endregion
 
-        /// <summary>Debug draw the radius</summary>
-        void OnDrawGizmos()
-        {
-            // Gizmos.color = new Color(1f, 0.92f, 0.016f, 0.1f);
-            // Gizmos.DrawSphere(transform.position, detectionRadius);
-            // Gizmos.color = new Color(1, 0, 1, 0.1f);
-            // Gizmos.DrawSphere(transform.position, wallDetectionRadius);
-        }
+        #region Data
+        public void UpdateTargetMoveCavern(CavernHandler newCavern) => TargetMoveCavern = newCavern;
+        #endregion
 
         public AIStateBase GetCurrentState()
         {

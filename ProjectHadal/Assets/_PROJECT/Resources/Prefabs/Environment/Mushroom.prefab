@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7844293662435232769}
   - component: {fileID: 4966758870941120328}
   - component: {fileID: 6637515887830390809}
-  - component: {fileID: 6711295530388976886}
   - component: {fileID: 3301968298250583131}
   m_Layer: 0
   m_Name: GrowUnlit Ball (1)
@@ -83,19 +82,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &6711295530388976886
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685593594826923150}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3301968298250583131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2712,7 +2698,6 @@ GameObject:
   - component: {fileID: 7792940227961955877}
   - component: {fileID: 2143944710800840578}
   - component: {fileID: 4182319246093296015}
-  - component: {fileID: 891915438634648579}
   m_Layer: 0
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -2783,20 +2768,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &891915438634648579
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4814196639245641767}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &5435400376699300281
 GameObject:
   m_ObjectHideFlags: 0
@@ -2807,7 +2778,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6570819639423113741}
   m_Layer: 0
-  m_Name: Mushroom2
+  m_Name: Mushroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2842,7 +2813,6 @@ GameObject:
   - component: {fileID: 7401556926135446955}
   - component: {fileID: 1198715078096609983}
   - component: {fileID: 8490298018664458019}
-  - component: {fileID: 7322681336050725025}
   m_Layer: 0
   m_Name: GrowUnlit Ball (2)
   m_TagString: Untagged
@@ -2913,19 +2883,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &7322681336050725025
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5890482541458290632}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9046726921698065500
 GameObject:
   m_ObjectHideFlags: 0
@@ -2937,7 +2894,6 @@ GameObject:
   - component: {fileID: 8525159029369134128}
   - component: {fileID: 1054870068959991230}
   - component: {fileID: 3628339417958842506}
-  - component: {fileID: 2304596824143269546}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -3008,17 +2964,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2304596824143269546
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9046726921698065500}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
