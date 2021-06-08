@@ -11,6 +11,14 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
+            for (int i = 0; i < GameManager.Instance.pViewList.Count; i++)
+            {
+                if (GetShooterID() != GameManager.Instance.pViewList[i].ViewID || !GameManager.Instance.pViewList[i].IsMine)
+                {
+                    return;
+                }
+            }
+
             foreach (string layerName in validLayer)
             {
                 LayerMask layer = LayerMask.NameToLayer(layerName);
@@ -22,17 +30,11 @@ namespace Hadal.Usables.Projectiles
                         collision.gameObject.GetComponent<AIBrain>().HealthManager.TakeDamage(Data.BaseDamage);
                     }*/
                     /*neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);*/
-                    for (int i=0; i < GameManager.Instance.pViewList.Count; i++)
-                    {
-                        if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
-                        {
-                            PPhysics.OnPhysicsFinished();
-                            print(projectileID + "sending event to despawn");
-                            NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN,projectileID);
-                        }
-                    }
-                    
-                    break;
+
+                    PPhysics.OnPhysicsFinished();
+                    print(projectileID + "sending event to despawn");
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, projectileID);
+                    return;
                 }
             }
         }
