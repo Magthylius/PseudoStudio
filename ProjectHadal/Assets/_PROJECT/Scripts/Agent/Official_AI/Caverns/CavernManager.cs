@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.Player;
+using ICSharpCode.NRefactory.Ast;
 using NaughtyAttributes;
 using Tenshi.UnitySoku;
 using UnityEngine;
@@ -24,18 +25,19 @@ namespace Hadal.AI.Caverns
     }
 
     /// <summary>
-    ///     Used to calculate cavern heuristics
+    /// Used for pathing information
     /// </summary>
-    public struct CavernHeuristic
+    public struct CavernPathData
     {
-        public int Cost;
-        public CavernHandler Handler;
+        public Queue<CavernHandler> pathingQueue;
 
-        public CavernHeuristic(CavernHandler handler)
+        public CavernPathData(Queue<CavernHandler> newQueue = null)
         {
-            Cost = 0;
-            Handler = handler;
+            pathingQueue = newQueue ?? new Queue<CavernHandler>();
         }
+
+        public void Enqueue(CavernHandler queuedCavern) => pathingQueue.Enqueue(queuedCavern);
+        public void Dequeue() => pathingQueue.Dequeue();
     }
 
     public delegate void CavernHandlerPlayerReturn(CavernPlayerData data);
@@ -199,6 +201,8 @@ namespace Hadal.AI.Caverns
         public CavernHandler GetNextCavern(CavernHandler destinationCavern, CavernHandler sourceCavern,
             bool tiedNumberRandomize = true)
         {
+            if (sourceCavern.ConnectedCavernContains(destinationCavern)) 
+                return destinationCavern;
             var list = GetNextCaverns(destinationCavern, sourceCavern);
             if (tiedNumberRandomize)
                 return list[Random.Range(0, list.Count)];
@@ -278,6 +282,89 @@ namespace Hadal.AI.Caverns
             newExclusionList.Union(searchList);
             loopcount++;
             return GetNextCaverns(destinationCavern, researchList, newExclusionList, loopcount);
+        }
+
+        public void SeedCavernHeuristics(CavernHandler sourceCavern, CavernHandler destinationCavern)
+        {
+            ResetCavernHeuristics();
+            
+            //sourceCavern.SetHeuristic((int.MaxValue));
+            destinationCavern.SetHeuristic(0);
+            Queue<CavernHandler> uncheckedCaverns = new Queue<CavernHandler>();
+            
+            foreach (var cavern in destinationCavern.ConnectedCaverns)
+                uncheckedCaverns.Enqueue(cavern);
+
+            int distHeuristic = 1;
+            while (uncheckedCaverns.Any())
+            {
+                int queueCount = uncheckedCaverns.Count;
+                for (int i = 0; i < queueCount; i++)
+                {
+                    CavernHandler currentCavern = uncheckedCaverns.Dequeue();
+                    if (currentCavern.GetHeuristic < 0)
+                    {
+                        currentCavern.SetHeuristic(distHeuristic);
+                        
+                        //! Add unchecked children
+                        foreach (var childCavern in currentCavern.ConnectedCaverns)
+                        {
+                            if (childCavern.GetHeuristic < 0) uncheckedCaverns.Enqueue(childCavern);
+                        }
+                    }
+                }
+
+                distHeuristic++;
+            }
+        }
+
+        public void ResetCavernHeuristics()
+        {
+            foreach(CavernHandler cavern in handlerList) 
+                cavern.ResetHeuristic();
+        }
+
+        /// <summary>
+        /// Gets the next best cavern based on player accounted heuristics. 
+        /// </summary>
+        /// <remarks>Heuristics are accounted by player number + distance to seeded destination</remarks>
+        /// <param name="sourceCavern">Cavern to calculate from</param>
+        /// <param name="randomizeOnTied">Randomizes return if there are tied results</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetNextBestCavern(CavernHandler sourceCavern, bool randomizeOnTied = true)
+        {
+            return GetNextBestCavern(sourceCavern.ConnectedCaverns, randomizeOnTied);
+        }
+            
+        /// <summary>
+        /// Gets the next best cavern based on player accounted heuristics. 
+        /// </summary>
+        /// <remarks>Heuristics are accounted by player number + distance to seeded destination</remarks>
+        /// <param name="cavernChoices">Choices of cavern to choose</param>
+        /// <param name="randomizeOnTied">Randomizes return if there are tied results</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetNextBestCavern(List<CavernHandler> cavernChoices, bool randomizeOnTied = true)
+        {
+            List<CavernHandler> bestCaverns = new List<CavernHandler>();
+            int cheapestHeuristic = int.MaxValue;
+
+            foreach (CavernHandler cavern in cavernChoices)
+            {
+                if (cavern.GetPlayerAccountedHeuristic < cheapestHeuristic)
+                {
+                    cheapestHeuristic = cavern.GetPlayerAccountedHeuristic;
+                }
+            }
+
+            foreach (CavernHandler cavern in cavernChoices)
+            {
+                if (cavern.GetPlayerAccountedHeuristic == cheapestHeuristic) bestCaverns.Add(cavern);
+            }
+
+            if (bestCaverns.Count == 1 || !randomizeOnTied)
+                return bestCaverns[0];
+            else
+                return bestCaverns[Random.Range(0, bestCaverns.Count)];
         }
 
         private void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")

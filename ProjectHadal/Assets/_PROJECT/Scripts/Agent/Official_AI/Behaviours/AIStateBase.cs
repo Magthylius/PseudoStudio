@@ -49,6 +49,7 @@ namespace Hadal.AI
 
         public virtual Func<bool> ShouldTerminate() => () => false;
 
+        public CavernHandler AICavern => CavernManager.GetHandlerOfAILocation;
         protected void print(object message) => Debug.Log(message);
     }
 }

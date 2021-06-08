@@ -31,11 +31,12 @@ namespace Hadal.AI.Caverns
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnteredCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
-
-        int relativeDistanceCost = 0;
-
+        
         new Collider collider;
         List<PlayerController> playersInCavern;
+        
+        //! BFS data
+        [SerializeField, ReadOnly] int cavernHeuristic = -1;
         
         void OnValidate()
         {
@@ -171,5 +172,9 @@ namespace Hadal.AI.Caverns
         public int GetPlayerCount => playersInCavern.Count;
         public List<PlayerController> GetPlayersInCavern => playersInCavern;
         public List<CavernHandler> ConnectedCaverns => connectedCaverns;
+        public void SetHeuristic(int newHeuristic) => cavernHeuristic = newHeuristic;
+        public void ResetHeuristic() => cavernHeuristic = -1;
+        public int GetHeuristic => cavernHeuristic;
+        public int GetPlayerAccountedHeuristic => cavernHeuristic + GetPlayerCount;
     }
 }
