@@ -1,5 +1,7 @@
 using UnityEngine;
 using NaughtyAttributes;
+using Photon.Pun;
+using System.Collections.Generic;
 
 namespace Hadal
 {
@@ -14,6 +16,7 @@ namespace Hadal
 
         public static GameManager Instance;
         [ReadOnly] GameState currentGameState;
+        public List<PhotonView> pViewList;
 
         void Awake()
         {

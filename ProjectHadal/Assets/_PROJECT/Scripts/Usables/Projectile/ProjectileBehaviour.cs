@@ -1,6 +1,8 @@
 using Tenshi.UnitySoku;
 using System;
 using UnityEngine;
+using Hadal.Networking;
+using ExitGames.Client.Photon;
 
 //Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
@@ -16,13 +18,15 @@ namespace Hadal.Usables.Projectiles
         public bool IsAttached { get; set; } = false;
         public event Action<bool> OnHit;
         public event Action<ProjectileBehaviour> DumpEvent;
-
+        NetworkEventManager neManager;
         #region Unity Lifecycle
 
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void Start()
         {
             DoDebugEnabling(DebugKey);
+            neManager = NetworkEventManager.Instance;
+             neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
             PPhysics.PhysicsFinished += Dump;
         }
 
@@ -88,6 +92,27 @@ namespace Hadal.Usables.Projectiles
             transform.rotation = rotation;
         }
 
+        #endregion
+
+        #region Event Methods
+        protected virtual void REdump(EventData eventData)
+        {
+            if((int)eventData.CustomData == projectileID)
+            {
+                if(gameObject.activeSelf)
+                {
+                    print(projectileID + "despawning due to event");
+                    PPhysics.OnPhysicsFinished();
+                }
+            }
+        }
+
+        protected int GetShooterID()
+        {
+            string ShooterID = projectileID.ToString();
+            ShooterID = ShooterID.Substring(0, 4);
+            return Convert.ToInt32(ShooterID);
+        }
         #endregion
 
         #region Interface Methods

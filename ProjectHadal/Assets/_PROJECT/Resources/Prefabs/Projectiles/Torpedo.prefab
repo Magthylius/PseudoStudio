@@ -137,8 +137,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: 
+  projectileID: 0
   validLayer:
   - Monster
+  - Player
 --- !u!54 &5112791235449951143
 Rigidbody:
   m_ObjectHideFlags: 0

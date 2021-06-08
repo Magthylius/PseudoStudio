@@ -91,6 +91,7 @@ namespace Hadal.Player
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.START_THE_GAME, null, SendOptions.SendReliable);
                 // start the game for host here !!!
                 LoadingManager.Instance.StartEndLoad();
+                instantiatePViewList();
                 print("All player ready, sending event to notify all players.");
             }
         }
@@ -175,7 +176,6 @@ namespace Hadal.Player
                 controller.HandlePhotonView(true);
                 controller.setPlayerReady(true);
             }
-
             // Host finish assignming ownerships and cameras
 
 
@@ -214,6 +214,24 @@ namespace Hadal.Player
             controller.HandlePhotonView(true);
             playerList.Add(controller);
             controller.InjectDependencies(this, photonPlayer);
+        }
+
+        public void instantiatePViewList()
+        {
+            print("instantiate PView Called");
+            var playControllers = FindObjectsOfType<PlayerController>();
+            GameManager.Instance.pViewList = new List<PhotonView>();
+
+            if(playerControllers == null)
+            {
+                print("fuck you");
+            }
+
+            for (int i=0; i<playControllers.Length; i++)
+            {
+                print(playerControllers[i].GetInfo.PhotonInfo.PView + "found");
+              //  GameManager.Instance.pViewList.Add(playerControllers[i].GetInfo.PhotonInfo.PView);
+            }  
         }
 
         #endregion

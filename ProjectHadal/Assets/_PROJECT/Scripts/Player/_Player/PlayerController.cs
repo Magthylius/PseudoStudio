@@ -187,6 +187,7 @@ namespace Hadal.Player
         {
             print("Everyone ready. Begin !");
             LoadingManager.Instance.StartEndLoad();
+            _manager.instantiatePViewList();
         }
 
         private void playerReadyConfirmed(EventData obj)
@@ -281,7 +282,7 @@ namespace Hadal.Player
 
         private void TryInjectDependencies()
         {
-            _manager ??= PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
+            //_manager ??= PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
         }
 
         [PunRPC]
