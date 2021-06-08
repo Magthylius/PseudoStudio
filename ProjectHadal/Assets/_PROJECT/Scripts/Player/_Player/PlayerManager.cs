@@ -218,6 +218,7 @@ namespace Hadal.Player
 
         public void instantiatePViewList()
         {
+            print("instantiate PView Called");
             var playControllers = FindObjectsOfType<PlayerController>();
             GameManager.Instance.pViewList = new List<PhotonView>();
 
