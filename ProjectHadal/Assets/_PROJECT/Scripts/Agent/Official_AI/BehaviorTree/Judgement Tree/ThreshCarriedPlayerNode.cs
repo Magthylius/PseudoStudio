@@ -10,42 +10,57 @@ namespace Hadal.AI.TreeNodes
         private AIBrain _brain;
         AIDamageManager _damageManager;
         bool _threshDone;
-        bool _triggerOnce;
-        int timer;
+        bool _timerRunning;
+        bool _doOnce;
+        float timer;
+        float nextActionTime = 0;
 
         public ThreshCarriedPlayerNode(AIBrain brain, AIDamageManager damageManager)
         {
             _brain = brain;
             _damageManager = damageManager;
-            _triggerOnce = false;
             _threshDone = false;
+            _timerRunning = false;
+            _doOnce = false;
         }
 
-        IEnumerator ThreshPlayer()
+        void StartTimer()
         {
             timer = _damageManager.ThreshTimer;
+        }
 
-            while(timer > 0)
+        void ThreshPlayer()
+        {
+            if(timer > 0)
             {
-                _damageManager.Send_DamagePlayer(_brain.CarriedPlayer.transform, AIDamageType.Thresh);
-                yield return new WaitForSeconds(_damageManager.ApplyEveryNSeconds);
-                timer--;
+                timer -= Time.deltaTime;
+                if(Time.time > nextActionTime)
+                {
+                    nextActionTime = Time.time + _damageManager.ApplyEveryNSeconds;
+                    _damageManager.Send_DamagePlayer(_brain.CarriedPlayer.transform, AIDamageType.Thresh);
+                }
+                
             }
-
-            _threshDone = true;
+            else
+            {
+                timer = 0;
+                _threshDone = true;
+            }
+           
         }
 
         public override NodeState Evaluate(float deltaTime)
         {
-			if (_brain.CarriedPlayer == null)
-                return NodeState.FAILURE;
+			// if (_brain.CarriedPlayer == null)
+            //     return NodeState.FAILURE;
 
-            if(!_triggerOnce)
+            if(!_doOnce)
             {
-                _triggerOnce = true;
-                Debug.Log(_brain);
-                _brain.StartCoroutine(ThreshPlayer());
+                _doOnce = true;
+                StartTimer();
             }
+
+            ThreshPlayer();
 
             if(_threshDone)
                 return NodeState.SUCCESS;

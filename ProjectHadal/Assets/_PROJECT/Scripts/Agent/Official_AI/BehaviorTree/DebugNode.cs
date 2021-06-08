@@ -9,20 +9,21 @@ namespace Hadal.AI
     {
         [SerializeField] AIBrain brain;
         [SerializeField] AIDamageManager damageManager;
+        ThreshCarriedPlayerNode testThresh; 
 
         // Start is called before the first frame update
         void Start()
         {
             brain = brain.gameObject.GetComponent<AIBrain>();
             damageManager = damageManager.gameObject.GetComponent<AIDamageManager>();
-            ThreshCarriedPlayerNode testThresh = new ThreshCarriedPlayerNode(brain, damageManager);
-            testThresh.Evaluate(Time.deltaTime);
+            testThresh = new ThreshCarriedPlayerNode(brain, damageManager);
+
         }
 
         // Update is called once per frame
         void Update()
         {
-            
+            testThresh.Evaluate(Time.deltaTime);
         }
     }
 }

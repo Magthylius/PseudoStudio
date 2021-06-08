@@ -10,7 +10,6 @@ namespace Hadal.AI
 {
     public class AITailManager : MonoBehaviour, ILeviathanComponent
     {
-        [SerializeField] private Collider whipStanceCollider;
         [SerializeField] private List<float> reachDistances;
         [SerializeField] private float whipKnockbackAmount;
         [SerializeField] private float knockDuration;
@@ -50,34 +49,27 @@ namespace Hadal.AI
             damageManager = brain.DamageManager;
         }
 
-        private void Send_ApplyKnockback(PlayerController player)
+        public void Send_ApplyKnockback(in List<PlayerController> players)
         {
-            OrderReachDistancesList();
-            float distToPlayer = Vector3.Distance(player.GetTarget.position, brain.transform.position);
-            Vector3 dir = (player.GetTarget.position - brain.transform.position).normalized;
-            bool canReachPlayer = distToPlayer <= reachDistances.Last();
-            bool inFrontOfAI = Vector3.Angle(LightOfSight, dir).IsLessOrEqualTo(ViewAngleSpan);
-
-            if (!canReachPlayer || !inFrontOfAI) return;
-
-            int r = GetRankFromReachDistances(distToPlayer);
-            if (r == -1)
+            if (players.IsNullOrEmpty())
                 return;
 
-            float forceMultiplier = 1f;
-            for (int rank = 1; rank <= reachDistances.Count; rank++)
+            OrderReachDistancesList();
+            float compareDistance = reachDistances.Last();
+            Vector3 brainPosition = brain.transform.position;
+            for (int i = 0; i < players.Count; i++)
             {
-                float distance = reachDistances[rank];
-                forceMultiplier = GetMultiplierFromFalloff(distToPlayer);
+                float distToPlayer = Vector3.Distance(players[i].GetTarget.position, brainPosition);
+                Vector3 dir = (players[i].GetTarget.position - brain.transform.position).normalized;
+                bool canReachPlayer = distToPlayer <= compareDistance;
+                bool inFrontOfAI = Vector3.Angle(LightOfSight, dir).IsLessOrEqualTo(ViewAngleSpan);
+                if (!canReachPlayer || !inFrontOfAI) continue;
+
+                Vector3 force = dir * whipKnockbackAmount * GetMultiplierFromFalloff(distToPlayer);
+                players[i].GetComponentInChildren<IKnockable>()?.TryToKnock(force, knockDuration);
             }
 
-            float additionalForce = forceMultiplier;
-            Vector3 force = dir * whipKnockbackAmount * additionalForce;
-            var knockable = player.GetComponentInChildren<IKnockable>();
-            knockable?.TryToKnock(force, knockDuration);
-
             //! Raise event here
-
         }
 
         private void OrderReachDistancesList() => reachDistances = reachDistances.OrderBy(dist => dist).ToList();
@@ -95,22 +87,22 @@ namespace Hadal.AI
             }
             return -1;
         }
-        [Button("Test")]
-        private float GetMultiplierFromFalloff(float distance = 1f)
+
+        private float GetMultiplierFromFalloff(float distance)
         {
             float multiplier = 1f;
             if (falloffMode == KnockbackFalloffMode.Linear)
             {
-                multiplier = distance.NormaliseValue(reachDistances.First(), reachDistances.Last()).Clamp01();
-                multiplier += 1f;
+                multiplier = distance.NormaliseValue(reachDistances.First(), reachDistances.Last()).Clamp0();
             }
             else if (falloffMode == KnockbackFalloffMode.Exponential)
             {
-                float x = distance.NormaliseValue(reachDistances.First(), reachDistances.Last()).Clamp01();
-                float neg2k = -(2 * exponentConst);
-                multiplier = (x - 2).Pow(neg2k) - 2.Pow(neg2k) * (1 - x);
+                float x = distance.NormaliseValue(reachDistances.First(), reachDistances.Last()).Clamp0();
+                float neg2k = -(2f * exponentConst.Round());
+                multiplier = (x - 2f).Pow(neg2k) - 2f.Pow(neg2k) * (1f - x);
             }
-            multiplier.Msg();
+            multiplier += 1f;
+            $"{multiplier.ToString()}".Msg();
             return multiplier;
         }
 
