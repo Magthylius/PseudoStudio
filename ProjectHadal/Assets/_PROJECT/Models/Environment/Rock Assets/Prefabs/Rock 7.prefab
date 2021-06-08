@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6699194798356979633}
   - component: {fileID: 6699194798356979635}
   - component: {fileID: 6699194798356979632}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Rock 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 6699194798356979646}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10.533595, y: 10.533595, z: 10.533595}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6589587941103847467}
   m_Father: {fileID: 0}
@@ -125,10 +125,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 52b8715798ca56d49a2ef883507ff258, type: 3}
       propertyPath: m_Name
       value: Environment_PrePro Rock Test 05_Low Poly
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 52b8715798ca56d49a2ef883507ff258, type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 52b8715798ca56d49a2ef883507ff258, type: 3}
       propertyPath: m_IsActive
