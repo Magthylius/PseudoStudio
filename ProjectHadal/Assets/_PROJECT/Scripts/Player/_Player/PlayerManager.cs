@@ -219,7 +219,7 @@ namespace Hadal.Player
         public void instantiatePViewList()
         {
             print("instantiate PView Called");
-            var playControllers = FindObjectsOfType<PlayerController>();
+            var playerControllers = FindObjectsOfType<PlayerController>();
             GameManager.Instance.pViewList = new List<PhotonView>();
 
             if(playerControllers == null)
@@ -227,7 +227,7 @@ namespace Hadal.Player
                 print("No controllers found");
             }
 
-            for (int i=0; i < playControllers.Length; i++)
+            for (int i=0; i < playerControllers.Length; i++)
             {
               //  print(playControllers[i].GetInfo.PhotonInfo.PView + "found");
                 GameManager.Instance.pViewList.Add(playerControllers[i].GetInfo.PhotonInfo.PView);
