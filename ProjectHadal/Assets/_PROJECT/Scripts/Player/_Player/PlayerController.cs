@@ -357,6 +357,7 @@ namespace Hadal.Player
             //print("Loading Ready is : " + loadingReady);
         }
 
+        public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
         #endregion
     }
