@@ -88,7 +88,7 @@ namespace Hadal.AI.Caverns
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Add(player);
                 CavernPlayerData data = new CavernPlayerData(this, player);
-
+                
                 PlayerEnteredCavernEvent?.Invoke(data);
             }
             else if (other.GetComponent<AIBrain>() != null)
@@ -198,9 +198,13 @@ namespace Hadal.AI.Caverns
             return null;
         }
 
+        //! Data
+        public string CavernName => gameObject.name;
         public int GetPlayerCount => playersInCavern.Count;
         public List<PlayerController> GetPlayersInCavern => playersInCavern;
         public List<CavernHandler> ConnectedCaverns => connectedCaverns;
+        
+        //! Heuristics
         public void SetHeuristic(int newHeuristic) => cavernHeuristic = newHeuristic;
         public void ResetHeuristic() => cavernHeuristic = -1;
         public int GetHeuristic => cavernHeuristic;

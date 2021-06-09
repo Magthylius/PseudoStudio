@@ -96,6 +96,7 @@ namespace Hadal.Networking.UI.MainMenu
             DetermineMenuToOpen();
             //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
             InitMainMenu();
+            //p
         }
 
         void Update()

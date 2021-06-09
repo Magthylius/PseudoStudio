@@ -23,25 +23,8 @@ namespace Hadal.AI.Caverns
             Player = playerController;
         }
     }
-
-    /// <summary>
-    /// Used for pathing information
-    /// </summary>
-    public struct CavernPathData
-    {
-        public Queue<CavernHandler> pathingQueue;
-
-        public CavernPathData(Queue<CavernHandler> newQueue = null)
-        {
-            pathingQueue = newQueue ?? new Queue<CavernHandler>();
-        }
-
-        public void Enqueue(CavernHandler queuedCavern) => pathingQueue.Enqueue(queuedCavern);
-        public void Dequeue() => pathingQueue.Dequeue();
-    }
-
+    
     public delegate void CavernHandlerPlayerReturn(CavernPlayerData data);
-
     public delegate void CavernHandlerAIReturn(CavernHandler handler);
 
     /// <summary>
@@ -63,8 +46,13 @@ namespace Hadal.AI.Caverns
     /// </summary>
     public class CavernManager : SingletonSoft<CavernManager>
     {
+        [Header("Cavern Handler List")]
         [ReadOnly] public List<CavernHandler> handlerList = new List<CavernHandler>();
 
+        [Header("Settings")] 
+        [SerializeField] private bool debugPlayerEvents = false;
+        [SerializeField] private bool debugAIEvents = false;
+        
         public event CavernHandlerPlayerReturn PlayerEnterCavernEvent;
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnterCavernEvent;
@@ -87,18 +75,20 @@ namespace Hadal.AI.Caverns
 
         public void OnPlayerEnterCavern(CavernPlayerData data)
         {
-            //return data;
+            if (debugPlayerEvents) print(data.Player.PlayerName + " entered " + data.Handler.CavernName);
             PlayerEnterCavernEvent?.Invoke(data);
         }
 
         public void OnPlayerLeftCavern(CavernPlayerData data)
         {
-            //return data;
+            if (debugPlayerEvents) print(data.Player.PlayerName + " left " + data.Handler.CavernName);
             PlayerLeftCavernEvent?.Invoke(data);
         }
 
         public void OnAIEnterCavern(CavernHandler handler)
         {
+            if (debugAIEvents) print("AI entered " + handler.CavernName);
+            
             if (GetHandlerOfAILocation != handler)
                 GetHandlerOfAILocation = handler;
 
@@ -107,6 +97,8 @@ namespace Hadal.AI.Caverns
 
         public void OnAILeaveCavern(CavernHandler handler)
         {
+            if (debugAIEvents) print("AI left " + handler.CavernName);
+            
             if (GetHandlerOfAILocation == handler)
                 GetHandlerOfAILocation = null;
 

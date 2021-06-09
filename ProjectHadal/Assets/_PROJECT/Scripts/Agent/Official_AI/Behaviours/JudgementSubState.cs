@@ -13,6 +13,7 @@ namespace Hadal.AI.States
         EngagementState parent;
         AIBrain b;
         AIDamageManager damageManager;
+        EngagementStateSettings engagementStateSettings;
         BTSequence root;
         float updateTimer;
         float updateDelay;
@@ -97,7 +98,7 @@ namespace Hadal.AI.States
             BTSequence decreaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, false) });
             decreaseConfidence.SetDebugName("decrease confidence");
 
-            BTSequence resetCumulativeDamageThreshold = new BTSequence(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b) });
+            BTSequence resetCumulativeDamageThreshold = new BTSequence(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b, engagementStateSettings) });
             resetCumulativeDamageThreshold.SetDebugName("reset cumulative damage threshold");
 
             BTSequence threshFallbackA1 = new BTSequence(new List<BTNode>()

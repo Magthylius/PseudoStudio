@@ -100,7 +100,7 @@ namespace Hadal.AI.States
 
         public override void OnCavernEnter(CavernHandler cavern)
         {
-            print("Cavern entered");
+            //print("Cavern entered");
             DetermineNextCavern();
         }
 
