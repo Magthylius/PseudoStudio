@@ -18,18 +18,18 @@ namespace Hadal.AI
         [SerializeField] private float maxLingerTime;
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
-		
-		[Header("Force Settings")]
-		[SerializeField] private float maxVelocity;
+
+        [Header("Force Settings")]
+        [SerializeField] private float maxVelocity;
         [SerializeField] private float thrustForce;
-		[SerializeField] private float additionalBoostThrustForce;
-		[SerializeField] private float attractionForce;
+        [SerializeField] private float additionalBoostThrustForce;
+        [SerializeField] private float attractionForce;
         [SerializeField] private float avoidanceForce;
         [SerializeField] private float closeRepulsionForce;
         [SerializeField] private float axisStalemateDeviationForce;
         [SerializeField] private float obstacleDetectRadius;
         [SerializeField] private float smoothLookAtSpeed;
-		[SerializeField] private LayerMask obstacleMask;
+        [SerializeField] private LayerMask obstacleMask;
 
         [Header("Nav Components")]
         [SerializeField] private int numberOfClosestPointsToConsider;
@@ -37,21 +37,22 @@ namespace Hadal.AI
         [SerializeField] private Rigidbody rBody;
 
         [Header("Internal Data")]
-		[SerializeField, ReadOnly] private float obstacleCheckTimer;
+        [SerializeField, ReadOnly] private float obstacleCheckTimer;
         [SerializeField, ReadOnly] private float timeoutTimer;
         [SerializeField, ReadOnly] private float lingerTimer;
-		[Space(10)]
+        [Space(10)]
         [SerializeField, ReadOnly] private float speedMultiplier = 1f;
-		[SerializeField, ReadOnly] private List<NavPoint> navPoints;
-		[SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
+        [SerializeField, ReadOnly] private List<NavPoint> navPoints;
+        [SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
         [SerializeField, ReadOnly] private bool hasReachedPoint;
         [SerializeField, ReadOnly] private bool canTimeout;
         [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
         [SerializeField, ReadOnly] private bool isOnCustomPath;
-		[SerializeField, ReadOnly] private bool isChasingAPlayer;
+        [SerializeField, ReadOnly] private bool isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
         [SerializeField, ReadOnly] private NavPoint currentPoint;
-        
+        private Queue<NavPoint> pointPath;
+
         // private void Awake() { Initialise(); }
         // private void Update() { DoUpdate(DeltaTime); }
         // private void FixedUpdate() { DoFixedUpdate(FixedDeltaTime); }
@@ -71,16 +72,17 @@ namespace Hadal.AI
             currentPoint = null;
             canAutoSelectNavPoints = true;
             isOnCustomPath = false;
-			isChasingAPlayer = false;
+            isChasingAPlayer = false;
             canPath = true;
             if (rBody == null) rBody = GetComponent<Rigidbody>();
             if (numberOfClosestPointsToConsider > navPoints.Count - 1) numberOfClosestPointsToConsider = navPoints.Count - 1;
             currentPoint = GetClosestPointToSelf();
             repulsionPoints = new List<Vector3>();
+            pointPath = new Queue<NavPoint>();
         }
         public void DoUpdate(in float deltaTime)
         {
-            
+
         }
         public void DoFixedUpdate(in float fixedDeltaTime)
         {
@@ -88,7 +90,7 @@ namespace Hadal.AI
             if (canPath)
             {
                 TrySelectNewNavPoint(fixedDeltaTime);
-				MoveForwards(fixedDeltaTime);
+                MoveForwards(fixedDeltaTime);
                 MoveTowardsCurrentNavPoint(fixedDeltaTime);
             }
             HandleObstacleAvoidance(fixedDeltaTime);
@@ -98,7 +100,7 @@ namespace Hadal.AI
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
         public float ObstacleDetectionRadius => obstacleDetectRadius;
-		public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
+        public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public Transform PilotTransform => pilotTrans;
 
         public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
@@ -132,10 +134,10 @@ namespace Hadal.AI
                         .Where(point => point.CavernTag == handler.cavernTag)
                         .OrderBy(point => point.GetSqrDistanceTo(currentPoint.GetPosition))
                         .FirstOrDefault();
-            
+
             if (target == null)
                 return;
-            
+
             canTimeout = false;
             currentPoint = target;
         }
@@ -145,7 +147,7 @@ namespace Hadal.AI
             if (target == null) return;
             isOnCustomPath = true;
             currentPoint = target;
-			isChasingAPlayer = targetIsPlayer;
+            isChasingAPlayer = targetIsPlayer;
             canTimeout = false;
             canAutoSelectNavPoints = !targetIsPlayer;
             ResetLingerTimer();
@@ -153,23 +155,64 @@ namespace Hadal.AI
             if (enableDebug) "Setting custom path".Msg();
         }
 
+        public void SetCustomPath(Queue<NavPoint> points)
+        {
+            if (points.IsNullOrEmpty())
+                return;
+
+            isOnCustomPath = true;
+            pointPath = new Queue<NavPoint>(points);
+            currentPoint = pointPath.Dequeue();
+            isChasingAPlayer = false;
+            canTimeout = false;
+            canAutoSelectNavPoints = false;
+            ResetLingerTimer();
+            ResetTimeoutTimer();
+            if (enableDebug) "Setting custom paths in queue".Msg();
+        }
+
+        public void SetQueuedPath(Queue<NavPoint> points)
+        {
+            if (points.IsNullOrEmpty())
+                return;
+
+            isOnCustomPath = false;
+            pointPath = new Queue<NavPoint>(points);
+            currentPoint = pointPath.Dequeue();
+            isChasingAPlayer = false;
+            canTimeout = false;
+            canAutoSelectNavPoints = true;
+            ResetLingerTimer();
+            ResetTimeoutTimer();
+            if (enableDebug) "Setting queued path".Msg();
+        }
+
+        public void SkipCurrentPath()
+        {
+            currentPoint.Deselect();
+            if (currentPoint.CavernTag == CavernTag.Custom_Point)
+                Destroy(currentPoint.gameObject);
+            SelectNewNavPoint();
+        }
+
         public void StopCustomPath(bool instantlyFindNewNavPoint = false)
         {
             canAutoSelectNavPoints = true;
-			if (isOnCustomPath)
-			{
-				isOnCustomPath = false;
-				StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
-			}
+            if (isOnCustomPath)
+            {
+                isOnCustomPath = false;
+                pointPath.Clear();
+                StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
+            }
 
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
-				currentPoint.Deselect();
+                currentPoint.Deselect();
                 if (currentPoint.CavernTag == CavernTag.Custom_Point)
                     Destroy(currentPoint.gameObject);
                 if (enableDebug) "Stopping custom path".Msg();
                 yield return null;
-                
+
                 if (justFindNewPoint)
                 {
                     ResetLingerTimer();
@@ -185,11 +228,11 @@ namespace Hadal.AI
 
         #region Private Methods
 
-		private void MoveForwards(in float deltaTime)
-		{
-			Vector3 force = pilotTrans.forward * (TotalThrustForce * deltaTime);
-			rBody.AddForce(force, ForceMode.VelocityChange);
-		}
+        private void MoveForwards(in float deltaTime)
+        {
+            Vector3 force = pilotTrans.forward * (TotalThrustForce * deltaTime);
+            rBody.AddForce(force, ForceMode.VelocityChange);
+        }
 
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
         {
@@ -208,9 +251,23 @@ namespace Hadal.AI
             if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < closeRadius * closeRadius)
             {
                 hasReachedPoint = true;
-                canTimeout = true;
+                EvaluateQueuedPath();
                 if (enableDebug) "Point Reached".Msg();
             }
+        }
+
+        private void EvaluateQueuedPath()
+        {
+            if (pointPath.IsNotEmpty())
+            {
+                currentPoint.Deselect();
+                if (isOnCustomPath)
+                    Destroy(currentPoint.gameObject);
+
+                currentPoint = pointPath.Dequeue();
+                hasReachedPoint = false;
+            }
+            else { canTimeout = true; }
         }
 
         private void HandleObstacleAvoidance(in float deltaTime)
@@ -223,7 +280,7 @@ namespace Hadal.AI
             //                         .Where(r => obstacleMask == (obstacleMask | (1 << r.collider.gameObject.layer)))
             //                         .Select(r => r.point)
             //                         .ToList();
-            
+
             if (enableDebug) $"Obstacle count: {repulsionPoints.Count}".Bold().Msg();
             float deltaOfTime = deltaTime;
             repulsionPoints.ForEach(p =>
@@ -250,31 +307,6 @@ namespace Hadal.AI
             });
 
             repulsionPoints.Clear();
-
-            // var defaultRepulsionPoints = navPoints.Select(n => n.GetPosition).Where(p => Vector3.Distance(p, pilotTrans.position) <= obstacleDetectRadius).ToList();
-            // defaultRepulsionPoints.ForEach(point =>
-            // {
-            //     //! The closer the point, the higher the repulsion multiplier
-            //     float dist = (pilotTrans.position - point).magnitude;
-            //     float multiplier = 1f;
-            //     if (dist < obstacleDetectRadius)
-            //         multiplier += ((obstacleDetectRadius - dist) / obstacleDetectRadius) * closeRepulsionForce;
-
-            //     //! Diversion force added if the AI is looking directly at the repulsion point
-            //     Vector3 force = (pilotTrans.position - point).normalized * avoidanceForce * multiplier;
-            //     Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
-            //     if (cross.magnitude.Abs() <= 0.5f)
-            //     {
-            //         if (enableDebug) "parralel".Msg();
-            //         Vector3 direction = force.normalized;
-
-            //         //! Diversion force added is always towards the right
-            //         Vector3 relativeRight = new Vector3(direction.z, direction.y, -direction.x).normalized;
-            //         force += relativeRight * axisStalemateDeviationForce;
-            //     }
-            //     rBody.AddForce(force, ForceMode.VelocityChange);
-            // });
-
         }
 
         private void TrySelectNewNavPoint(in float deltaTime)
@@ -293,8 +325,7 @@ namespace Hadal.AI
             {
                 ResetLingerTimer();
                 ResetTimeoutTimer();
-                StopCustomPath();
-                SelectNewNavPoint();
+                SkipCurrentPath();
             }
         }
 
@@ -303,8 +334,8 @@ namespace Hadal.AI
             var points = navPoints.Where(o => o != currentPoint);
             List<NavPoint> potentialPoints = points.OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition)).Take(numberOfClosestPointsToConsider).ToList();
             if (currentPoint != null) currentPoint.Deselect();
-			currentPoint = potentialPoints.RandomElement();
-			currentPoint.Select();
+            currentPoint = potentialPoints.RandomElement();
+            currentPoint.Select();
             hasReachedPoint = false;
 
             if (enableDebug) "Selecting new point".Msg();
@@ -317,7 +348,7 @@ namespace Hadal.AI
         private float GetNextLingerTime() => Random.Range(minLingerTime, maxLingerTime);
 
         #endregion
-		
+
         private void OnDrawGizmos()
         {
             if (!enableDebug || pilotTrans == null) return;
