@@ -14,9 +14,10 @@ namespace Hadal.AI
 {
     public class AIBrain : MonoBehaviour
     {
-        [Header("Read-only data")] [ReadOnly, SerializeField]
+        [Header("Read-only data")]
+        [ReadOnly, SerializeField]
         private CavernHandler TargetMoveCavern;
-        
+
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
@@ -44,11 +45,11 @@ namespace Hadal.AI
         [ReadOnly] public List<PlayerController> Players;
         [ReadOnly] public PlayerController CurrentTarget;
         [ReadOnly] public PlayerController CarriedPlayer;
-        
+
         [Header("Settings Data")]
         [SerializeField] private StateMachineData machineData;
         [SerializeField] private bool isOffline;
-		public bool DebugEnabled;
+        public bool DebugEnabled;
 
         public LeviathanRuntimeData RuntimeData => runtimeData;
         public StateMachineData MachineData => machineData;
@@ -70,24 +71,11 @@ namespace Hadal.AI
         AIStateBase stunnedState;
         bool isStunned;
 
-        //! Callbacks for Agent2 assembly
-        public Func<Transform, int> GetViewIDMethod;
-        public Func<Transform, int, bool> ViewIDBelongsToTransMethod;
-        public Action<Transform, bool> FreezePlayerMovementEvent;
-        public void InvokeFreezePlayerMovementEvent(Transform player, bool shouldFreeze) => FreezePlayerMovementEvent?.Invoke(player, shouldFreeze);
-        public Action<Transform, Vector3> ThreshPlayerEvent;
-        public void InvokeForceSlamPlayerEvent(Transform player, Vector3 destination) => ThreshPlayerEvent?.Invoke(player, destination);
-
-        //! Events
-        public static event Action<Transform, AIDamageType> DamagePlayerEvent;
-
-        public bool CanUpdate => PhotonNetwork.IsMasterClient || isOffline;
-
         private void Awake()
         {
             rBody = GetComponent<Rigidbody>();
             isStunned = false;
-            
+
             allAIComponents = GetComponentsInChildren<ILeviathanComponent>().ToList();
             preUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
             mainUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
@@ -103,16 +91,16 @@ namespace Hadal.AI
         private void Start()
         {
             allAIComponents.ForEach(i => i.Initialise(this));
-			cavernManager = FindObjectOfType<CavernManager>();
+            cavernManager = FindObjectOfType<CavernManager>();
             cavernManager.AIEnterCavernEvent += OnCavernEnter;
             cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
 
             //! State machine
             InitialiseStates();
             runtimeData.SetMainObjective(MainObjective.Anticipation);
-			stateMachine.SetState(anticipationState);
+            stateMachine.SetState(anticipationState);
 
-			//! Runtime data
+            //! Runtime data
             RefreshPlayerReferences();
             runtimeData.Start_Initialise();
             //runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
@@ -147,31 +135,30 @@ namespace Hadal.AI
             //! instantiate classes
             stateMachine = new StateMachine();
 
-			//! Anticipation
+            //! Anticipation
             anticipationState = new AnticipationState(this);
 
-			//! Engagement
+            //! Engagement
             eAggressiveState = new AggressiveSubState();
             eAmbushState = new AmbushSubState();
             eJudgementState = new JudgementSubState();
             engagementState = new EngagementState(this, eAggressiveState, eAmbushState, eJudgementState);
 
-			//! Recovery
+            //! Recovery
             recoveryState = new RecoveryState(this);
 
             //! Cooldown
             cooldownState = new CooldownState(this);
 
             stunnedState = new StunnedState(this);
-            
+
             //! -setup custom transitions-
             stateMachine.AddEventTransition(to: anticipationState, withCondition: IsAnticipating());
             stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
             stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
 
             //! Any state can go into stunnedState
-            // stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
-            // stateMachine.AddSequentialTransition(from: stunnedState, to: idleState, withCondition: stunnedState.ShouldTerminate());
+            stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
 
             allStates = new List<AIStateBase> { anticipationState, engagementState, recoveryState, cooldownState };
         }
@@ -196,33 +183,37 @@ namespace Hadal.AI
 
         Func<bool> IsAnticipating() => () =>
         {
-            return RuntimeData.GetMainObjective == MainObjective.Anticipation;
+            return RuntimeData.GetMainObjective == MainObjective.Anticipation && !isStunned;
         };
         Func<bool> IsRecovering() => () =>
         {
-            return RuntimeData.GetMainObjective == MainObjective.Recover;
+            return RuntimeData.GetMainObjective == MainObjective.Recover && !isStunned;
         };
         Func<bool> HasEngageObjective() => () =>
         {
-            return RuntimeData.GetMainObjective == MainObjective.Engagement;
+            return RuntimeData.GetMainObjective == MainObjective.Engagement && !isStunned;
         };
-		
+        Func<bool> IsCooldown() => () =>
+        {
+            return RuntimeData.GetMainObjective == MainObjective.Cooldown && !isStunned;
+        };
+
         Func<bool> IsStunned() => () =>
         {
             return isStunned;
         };
-        
+
         #endregion
 
         #region Control Methods
-        
+
         /// <summary> Tries to set the AI to stunstate.
         /// Returns true AI can be stunned, false if AI is already stunned</summary>
         public bool TryToStun(float duration)
         {
             if (isStunned)
                 return false;
-            
+
             stunDuration = duration;
             isStunned = true;
             return true;
@@ -231,6 +222,23 @@ namespace Hadal.AI
 
         public void RefreshPlayerReferences()
             => Players = FindObjectsOfType<PlayerController>().ToList();
+
+        public void AttachCarriedPlayerToMouth(bool attachToMouth)
+        {
+            if (CarriedPlayer == null)
+            {
+                MouthObject.transform.DetachChildren();
+                return;
+            }
+
+            if (attachToMouth)
+            {
+                CarriedPlayer.GetTarget.SetParent(MouthObject.transform);
+                return;
+            }
+
+            MouthObject.transform.DetachChildren();
+        }
 
         #endregion
 
@@ -245,6 +253,7 @@ namespace Hadal.AI
             Debug.LogError("No active state found!");
             return null;
         }
+        public bool CanUpdate => PhotonNetwork.IsMasterClient || isOffline;
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
     }

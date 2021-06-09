@@ -76,7 +76,7 @@ namespace Hadal.AI
             isOnCustomPath = false;
             isChasingAPlayer = false;
             canPath = true;
-            if (rBody == null) rBody = GetComponent<Rigidbody>();
+            if (rBody == null) rBody = GetComponentInParent<Rigidbody>();
             if (numberOfClosestPointsToConsider > navPoints.Count - 1) numberOfClosestPointsToConsider = navPoints.Count - 1;
             currentPoint = GetClosestPointToSelf();
             repulsionPoints = new List<Vector3>();
@@ -127,7 +127,8 @@ namespace Hadal.AI
                 obstacleCheckTimer = 0f;
                 return;
             }
-            rBody.velocity = Vector3.zero;
+            if (rBody != null)
+                rBody.velocity = Vector3.zero;
         }
 
         /// <summary>
