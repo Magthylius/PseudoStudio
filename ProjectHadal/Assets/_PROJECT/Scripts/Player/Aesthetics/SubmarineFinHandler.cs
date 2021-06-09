@@ -37,10 +37,15 @@ namespace Hadal.Player.Aesthetics
 
         void FixedUpdate()
         {
-            //Vector3 movementVec = new Vector3(moveInput.HorizontalAxis, moveInput.HoverAxis, moveInput.VerticalAxis);
             Vector3 movement = referenceRigidbody.transform.InverseTransformDirection(referenceRigidbody.velocity);
-            UpdateFins(movement.normalized, playerMovement.Speed.Normalised);
-            DebugManager.Instance.SLog(sl_MovementVec, "Movement", movement);
+            //leftFin.transform.parent.GetComponent<Rigidbody>().AddForce(-movement);
+            //rightFin.transform.parent.GetComponent<Rigidbody>().AddForce(-movement);
+            //return;
+            //Vector3 movementVec = new Vector3(moveInput.HorizontalAxis, moveInput.HoverAxis, moveInput.VerticalAxis);
+            
+            float magnitude = (movement.magnitude / playerMovement.Speed.Max) * 2f;
+            UpdateFins(movement, playerMovement.Speed.Normalised);
+            DebugManager.Instance.SLog(sl_MovementVec, "Movement", magnitude);
         }
 
         void UpdateFins(Vector3 movement, float magnitude)
