@@ -7,7 +7,7 @@ namespace Hadal.Interactables
     {
         public virtual void Interact()
         {
-
+ 
         }
     }
 }
