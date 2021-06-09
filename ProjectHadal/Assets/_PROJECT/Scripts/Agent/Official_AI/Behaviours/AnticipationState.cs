@@ -36,8 +36,6 @@ namespace Hadal.AI.States
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
-
-            print("Entered anticipation!");
             
             //if (debugRoutine != null) return;
             //debugRoutine = Debug_SwitchToEngagementJudgementState();
@@ -144,7 +142,7 @@ namespace Hadal.AI.States
             Brain.UpdateTargetMoveCavern(nextCavern);*/
 
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern);
-            NavigationHandler.SetTargetNavPointAtCavern(nextCavern);
+            NavigationHandler.SetDestinationToCavern(CavernManager, nextCavern);
             Brain.UpdateTargetMoveCavern(nextCavern);
         }
 

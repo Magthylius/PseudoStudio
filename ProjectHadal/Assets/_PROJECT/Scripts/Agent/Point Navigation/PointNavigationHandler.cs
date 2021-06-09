@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.AI.Caverns;
+using NaughtyAttributes;
 using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
+using ReadOnlyAttribute = Tenshi.ReadOnlyAttribute;
 
 namespace Hadal.AI
 {
@@ -32,7 +34,7 @@ namespace Hadal.AI
         [SerializeField] private LayerMask obstacleMask;
 
         [Header("Nav Components")]
-        [SerializeField] private int numberOfClosestPointsToConsider;
+        [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
         [SerializeField] private Transform pilotTrans;
         [SerializeField] private Rigidbody rBody;
 
@@ -128,24 +130,57 @@ namespace Hadal.AI
             rBody.velocity = Vector3.zero;
         }
 
-        public void SetTargetNavPointAtCavern(CavernHandler handler)
+        /// <summary>
+        /// Plans out a path to the destination cavern.
+        /// </summary>
+        /// <param name="manager">Used to obtain cavern-related information.</param>
+        /// <param name="destination">The destination where the pilot should end up.</param>
+        public void SetDestinationToCavern(CavernManager manager, CavernHandler destination)
         {
-            NavPoint target = navPoints
-                        .Where(point => point.CavernTag == handler.cavernTag)
-                        .OrderBy(point => point.GetSqrDistanceTo(currentPoint.GetPosition))
-                        .FirstOrDefault();
-
-            if (target == null)
+            if (manager == null || destination == null)
+            {
+                if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
+            }
 
-            canTimeout = false;
-            currentPoint = target;
+            Vector3 curPointPos = currentPoint.GetPosition;
+            CavernHandler currentCavern = manager.GetHandlerOfAILocation;
+            NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
+
+            NavPoint first = entryPoints.Where(point => point.CavernTag == currentCavern.cavernTag).Single();
+            NavPoint second = (entryPoints[0] == first) ? entryPoints[1] : entryPoints[0];
+            NavPoint third = navPoints
+                        .Where(point => point.CavernTag == destination.cavernTag && point != second)
+                        .OrderBy(point => point.GetSqrDistanceTo(curPointPos))
+                        .Take(numberOfClosestPointsToConsider - 1)
+                        .RandomElement();
+
+            if (first == null || second == null || third == null)
+            {
+                if (enableDebug) "A point for the queue is missing.".Msg();
+                return;
+            }
+
+            Queue<NavPoint> points = new Queue<NavPoint>();
+            points.Enqueue(first);
+            points.Enqueue(second);
+            points.Enqueue(third);
+
+            SetQueuedPath(points);
         }
 
+        /// <summary>
+        /// Sets the current point to a custom nav point (note that this must be a freshly instantiated nav point).
+        /// When the pilot reaches the custom destination, the nav point will be deleted with Destroy().
+        /// </summary>
+        /// <param name="target">An instantiated nav point that can be sitting at a fixed location, or parented to a gameObject.</param>
+        /// <param name="targetIsPlayer">If the nav point is specified attached to the player, it will alter the pilot movements.</param>
         public void SetCustomPath(NavPoint target, bool targetIsPlayer)
         {
             if (target == null) return;
             isOnCustomPath = true;
+            hasReachedPoint = false;
+            pointPath.Clear();
             currentPoint = target;
             isChasingAPlayer = targetIsPlayer;
             canTimeout = false;
@@ -155,12 +190,18 @@ namespace Hadal.AI
             if (enableDebug) "Setting custom path".Msg();
         }
 
+        /// <summary>
+        /// Similar to the other SetCustomPath() function, but this accepts a queue of nav points to plan out a path. These
+        /// nav points must be freshly instantiated and will be deleted with Destroy() when the pilot reaches each point.
+        /// </summary>
+        /// <param name="points">The queue that will be used to plot out a path plan.</param>
         public void SetCustomPath(Queue<NavPoint> points)
         {
             if (points.IsNullOrEmpty())
                 return;
 
             isOnCustomPath = true;
+            hasReachedPoint = false;
             pointPath = new Queue<NavPoint>(points);
             currentPoint = pointPath.Dequeue();
             isChasingAPlayer = false;
@@ -171,22 +212,32 @@ namespace Hadal.AI
             if (enableDebug) "Setting custom paths in queue".Msg();
         }
 
+        /// <summary>
+        /// Accepts a queue of existing nav points in the game to plan out a path. The nav points used must be existing in the
+        /// scene and not freshly instantiated as they will not be deleted after the pilot reaches each point.
+        /// </summary>
+        /// <param name="points">The queue that will be used to plot out a path plan.</param>
         public void SetQueuedPath(Queue<NavPoint> points)
         {
             if (points.IsNullOrEmpty())
                 return;
 
             isOnCustomPath = false;
+            hasReachedPoint = false;
             pointPath = new Queue<NavPoint>(points);
             currentPoint = pointPath.Dequeue();
             isChasingAPlayer = false;
             canTimeout = false;
-            canAutoSelectNavPoints = true;
+            canAutoSelectNavPoints = false;
             ResetLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting queued path".Msg();
         }
 
+        /// <summary>
+        /// If there is no point path queue, it will ask the handler to immediately find a new point in the cavern. Otherwise, it will
+        /// skip the current point in the queue and move on to the next point immediately.
+        /// </summary>
         public void SkipCurrentPath()
         {
             currentPoint.Deselect();
@@ -195,6 +246,11 @@ namespace Hadal.AI
             SelectNewNavPoint();
         }
 
+        /// <summary>
+        /// Stops the pilot from continuing to go towards the custom point. If it was a custom queue path, the entire queue will be
+        /// discarded and the handler will assume normal pathing afterward.
+        /// </summary>
+        /// <param name="instantlyFindNewNavPoint">If false, it will just get the closest existing nav point to sync to.</param>
         public void StopCustomPath(bool instantlyFindNewNavPoint = false)
         {
             canAutoSelectNavPoints = true;
@@ -254,20 +310,23 @@ namespace Hadal.AI
                 EvaluateQueuedPath();
                 if (enableDebug) "Point Reached".Msg();
             }
-        }
 
-        private void EvaluateQueuedPath()
-        {
-            if (pointPath.IsNotEmpty())
+            void EvaluateQueuedPath()
             {
-                currentPoint.Deselect();
-                if (isOnCustomPath)
-                    Destroy(currentPoint.gameObject);
+                if (pointPath.IsNotEmpty())
+                {
+                    currentPoint.Deselect();
+                    if (isOnCustomPath)
+                        Destroy(currentPoint.gameObject);
 
-                currentPoint = pointPath.Dequeue();
-                hasReachedPoint = false;
+                    currentPoint = pointPath.Dequeue();
+                    hasReachedPoint = false;
+                    return;
+                }
+                
+                canTimeout = true;
+                canAutoSelectNavPoints = true;
             }
-            else { canTimeout = true; }
         }
 
         private void HandleObstacleAvoidance(in float deltaTime)
@@ -309,6 +368,7 @@ namespace Hadal.AI
             repulsionPoints.Clear();
         }
 
+        /// <summary> Elapses timer to determine if it is time to move on to a new point. </summary>
         private void TrySelectNewNavPoint(in float deltaTime)
         {
             if (!canAutoSelectNavPoints) return;
@@ -329,6 +389,8 @@ namespace Hadal.AI
             }
         }
 
+        /// <summary> The actual logic that selects a new nav point. The algorithm behaviour can be adjusted with
+        /// the <see cref="numberOfClosestPointsToConsider"/> variable. </summary>
         private void SelectNewNavPoint()
         {
             var points = navPoints.Where(o => o != currentPoint);
