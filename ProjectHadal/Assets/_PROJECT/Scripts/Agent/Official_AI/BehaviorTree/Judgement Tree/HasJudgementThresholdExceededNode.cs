@@ -5,6 +5,7 @@ namespace Hadal.AI.TreeNodes
         private AIBrain _brain;
         private int _thresholdIndex;
 
+
         public HasJudgementThresholdExceededNode(AIBrain brain, int thresholdIndex)
         {
             _brain = brain;
@@ -13,9 +14,10 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate(float deltaTime)
         {
-            /*if (_brain.RuntimeData.GetEngagementTicks > _brain.MachineData.Engagement.GetJudgementTimerThreshold(_thresholdIndex))
-                return NodeState.SUCCESS;*/
-            return NodeState.FAILURE;
+            if (_brain.RuntimeData.HasJudgementTimerOfIndexExceeded(_thresholdIndex))
+                return NodeState.SUCCESS;
+            else
+                return NodeState.FAILURE;
         }
     }
 }
