@@ -20,9 +20,9 @@ namespace Hadal.Player.Behaviours
         [SerializeField] private CameraShakeProperties shakeProperties;
 
         private float _originalCameraFOV;
-        private float _sqrSpeed = 0;
         private bool _isDisabled = false;
         private PhotonView _pView;
+        private PlayerController _controller;
 
         #endregion
 
@@ -39,9 +39,10 @@ namespace Hadal.Player.Behaviours
 
         public void CameraTransition(in float deltaTime, in bool isBoosted)
         {
-            if (_isDisabled || true) return;
-            if (isBoosted) LerpBoostedFOV(deltaTime);
-            else LerpOriginalFOV(deltaTime);
+            return;
+            // if (_isDisabled || true) return;
+            // if (isBoosted) LerpBoostedFOV(deltaTime);
+            // else LerpOriginalFOV(deltaTime);
         }
         private void LerpBoostedFOV(in float deltaTime)
         {
@@ -60,16 +61,15 @@ namespace Hadal.Player.Behaviours
 
         #region Camera Shake
 
-        public void SetSqrSpeed(float speed) => _sqrSpeed = speed;
         public void ShakeCameraDefault()
         {
             if (_isDisabled || !enableCameraShake) return;
             this.ShakeCamera(selfCamera, shakeProperties, true);
         }
-        public void ShakeCamera()
+        public void ShakeCamera(float magnitude)
         {
             if (_isDisabled || !enableCameraShake) return;
-            var sProp = ShakePropertiesWithSpeed(_sqrSpeed);
+            var sProp = ShakePropertiesWithSpeed(magnitude);
             this.ShakeCamera(selfCamera, sProp, true);
         }
         private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
@@ -77,7 +77,6 @@ namespace Hadal.Player.Behaviours
             var newShakeProperties = new CameraShakeProperties(shakeProperties.Angle, shakeProperties.Strength + speed * 20,
                 shakeProperties.MaxSpeed + speed * 500, shakeProperties.MinSpeed, shakeProperties.Duration + speed * 50,
                 shakeProperties.NoisePercent + speed * 20, shakeProperties.DampingPercent - speed * 10, shakeProperties.RotationPercent);
-
             return newShakeProperties;
         }
 
@@ -96,8 +95,8 @@ namespace Hadal.Player.Behaviours
             selfCamera.enabled = true;
             selfCamera.gameObject.SetActive(true);
 
-            var l = selfCamera.GetComponent<AudioListener>();
-            if (l == null) selfCamera.gameObject.AddComponent<AudioListener>();
+            var listener = selfCamera.GetComponent<AudioListener>();
+            if (listener == null) selfCamera.gameObject.AddComponent<AudioListener>();
         }
 
         public void Deactivate()
@@ -106,13 +105,14 @@ namespace Hadal.Player.Behaviours
             selfCamera.enabled = false;
             selfCamera.gameObject.SetActive(false);
             
-            var l = selfCamera.GetComponent<AudioListener>();
-            if (l != null) Destroy(l);
+            var listener = selfCamera.GetComponent<AudioListener>();
+            if (listener != null) Destroy(listener);
         }
 
         public void Inject(PlayerController controller)
         {
-            var info = controller.GetInfo;
+            _controller = controller;
+            var info = _controller.GetInfo;
             _pView = info.PhotonInfo.PView;
         }
 

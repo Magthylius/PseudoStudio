@@ -250,7 +250,7 @@ namespace Hadal.AI
         /// </summary>
         public void SkipCurrentPoint(bool automaticallySelectNewPoint)
         {
-            currentPoint.Deselect();
+            if (currentPoint != null) currentPoint.Deselect();
             if (currentPoint.CavernTag == CavernTag.Custom_Point) Destroy(currentPoint.gameObject);
             if (automaticallySelectNewPoint) SelectNewNavPoint();
             currentPoint = null;

@@ -10,7 +10,7 @@ namespace Hadal.Player.Behaviours
         [Header("Layer Collisions")]
         [SerializeField] private string obstacleLayer = string.Empty;
         [SerializeField] private string interactLayer = string.Empty;
-        
+
         private PlayerController _playerController;
         private PlayerCameraController _cameraController;
 
@@ -24,39 +24,21 @@ namespace Hadal.Player.Behaviours
 
         internal void CollisionEnter(Collision collision)
         {
-            LayerMask layer = LayerMask.NameToLayer(obstacleLayer);
-            DebugLog(layer.ToString());
-            if (collision.gameObject.layer == layer.value)
+            if (_playerController.SqrSpeed >= 0.02f)
             {
-                if (_playerController.SqrSpeed >= 0.02f)
-                {
-                    _cameraController.ShakeCamera();
-                }
-                _playerController.GetInfo.Mover.Speed.Max = 10;
+                // _playerController.Mover.Speed.Normalised
+                // _cameraController.ShakeCamera();
             }
+            _playerController.GetInfo.Mover.Speed.Max = 10;
         }
 
         internal void CollisionStay(Collision collision)
         {
-			if(Input.GetKeyDown(KeyCode.T))
-			{
-				LayerMask layer = LayerMask.NameToLayer(interactLayer);
-				if (collision.gameObject.layer == layer.value)
-				{
-					collision.gameObject.GetComponent<Interactable>().Interact();
-				}
-			}
 
-            LayerMask ObstacleLayer = LayerMask.NameToLayer(obstacleLayer);
-            if(collision.gameObject.layer == ObstacleLayer.value)
-            {
-                _playerController.GetInfo.Mover.DisableBoost();
-            }
         }
 
         internal void CollisionExit(Collision collision)
         {
-            _playerController.GetInfo.Mover.EnableBoost();
             _playerController.GetInfo.Mover.Speed.Max = 75;
         }
 
