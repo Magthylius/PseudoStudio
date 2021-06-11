@@ -55,6 +55,7 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private bool canPath;
         [SerializeField, ReadOnly] private NavPoint currentPoint;
         private Queue<NavPoint> pointPath;
+        private bool _isEnabled;
 
         #region Public Methods
 
@@ -77,20 +78,15 @@ namespace Hadal.AI
             currentPoint = GetClosestPointToSelf();
             repulsionPoints = new List<Vector3>();
             pointPath = new Queue<NavPoint>();
+            _isEnabled = true;
         }
-        public void DoUpdate(in float deltaTime)
-        {
-
-        }
+        public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
         {
-            if (pilotTrans == null) return;
-            if (canPath)
-            {
-                TrySelectNewNavPoint(fixedDeltaTime);
-                MoveForwards(fixedDeltaTime);
-                MoveTowardsCurrentNavPoint(fixedDeltaTime);
-            }
+            if (!CanMove || !canPath) return;
+            TrySelectNewNavPoint(fixedDeltaTime);
+            MoveForwards(fixedDeltaTime);
+            MoveTowardsCurrentNavPoint(fixedDeltaTime);
             HandleObstacleAvoidance(fixedDeltaTime);
         }
 
@@ -99,23 +95,29 @@ namespace Hadal.AI
         public float FixedDeltaTime => Time.fixedDeltaTime;
         public float ObstacleDetectionRadius => obstacleDetectRadius;
         public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
+        public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
+        /// <summary> Returns the pilot that this handler is running. </summary>
         public Transform PilotTransform => pilotTrans;
 
+        /// <summary> Enables this component safely. </summary>
+        public void Enable() => _isEnabled = true;
+        /// <summary> Disables this component safely. </summary>
+        public void Disable() => _isEnabled = false;
         public void SetCavernManager(CavernManager manager) => cavernManager = manager;
-
         public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
+        /// <summary> Resets speed multiplier value back to 1f. </summary>
         public void ResetSpeedMultiplier() => SetSpeedMultiplier(1f);
-
+        public List<Vector3> GetRepulsionPoints() => new List<Vector3>(repulsionPoints);
         public void AddRepulsionPoint(Vector3 point)
         {
-            if (!ObstacleTimerReached || repulsionPoints.Contains(point))
-                return;
-            
-            repulsionPoints.Add(point);
+            if (ObstacleTimerReached && !repulsionPoints.Contains(point))
+                repulsionPoints.Add(point);
         }
 
-        public List<Vector3> GetRepulsionPoints() => new List<Vector3>(repulsionPoints);
-
+        /// <summary>
+        /// Sets whether the handler will allow pathing for the pilot.
+        /// </summary>
+        /// <param name="statement">True or False</param>
         public void SetCanPath(bool statement)
         {
             canPath = statement;
@@ -132,7 +134,7 @@ namespace Hadal.AI
         }
 
         /// <summary>
-        /// Plans out a path to the destination cavern.
+        /// Plans out a path to the destination cavern. Will make a new queued path.
         /// </summary>
         /// <param name="manager">Used to obtain cavern-related information.</param>
         /// <param name="destination">The destination where the pilot should end up.</param>
@@ -154,7 +156,7 @@ namespace Hadal.AI
                         .Where(point => point.CavernTag == destination.cavernTag && point != second)
                         .OrderBy(point => point.GetSqrDistanceTo(curPointPos))
                         .Take(numberOfClosestPointsToConsider - 1)
-                        .RandomElement();
+                        .FirstOrDefault();
 
             if (first == null || second == null || third == null)
             {
@@ -219,15 +221,8 @@ namespace Hadal.AI
         /// scene and not freshly instantiated as they will not be deleted after the pilot reaches each point.
         /// </summary>
         /// <param name="pointsArray">The array of NavPoints that will be used to plot out a path plan.</param>
-        public void SetQueuedPath(NavPoint[] pointsArray)
-        {
-            Queue<NavPoint> newQueue = new Queue<NavPoint>();
-            foreach(NavPoint points in pointsArray)
-                newQueue.Enqueue(points);
-            
-            SetQueuedPath(newQueue);
-        }
-        
+        public void SetQueuedPath(NavPoint[] pointsArray) => SetQueuedPath(new Queue<NavPoint>(pointsArray));
+
         /// <summary>
         /// Accepts a queue of existing nav points in the game to plan out a path. The nav points used must be existing in the
         /// scene and not freshly instantiated as they will not be deleted after the pilot reaches each point.
@@ -251,16 +246,14 @@ namespace Hadal.AI
         }
 
         /// <summary>
-        /// If there is no point path queue, it will ask the handler to immediately find a new point in the cavern. Otherwise, it will
-        /// skip the current point in the queue and move on to the next point immediately.
+        /// If there is no point path queue and the paramater is set to True, it will ask the handler to immediately find a new point
+        /// in the cavern. Otherwise, it will skip the current point in the queue and move on to the next point in the next update frame.
         /// </summary>
         public void SkipCurrentPoint(bool automaticallySelectNewPoint)
         {
             currentPoint.Deselect();
-            if (currentPoint.CavernTag == CavernTag.Custom_Point)
-                Destroy(currentPoint.gameObject);
-            if (automaticallySelectNewPoint)
-                SelectNewNavPoint();
+            if (currentPoint.CavernTag == CavernTag.Custom_Point) Destroy(currentPoint.gameObject);
+            if (automaticallySelectNewPoint) SelectNewNavPoint();
             currentPoint = null;
         }
 
@@ -326,7 +319,7 @@ namespace Hadal.AI
             {
                 hasReachedPoint = true;
                 EvaluateQueuedPath();
-                if (enableDebug) "Point Reached".Msg();
+                if (enableDebug) $"Point Reached: {currentPoint.gameObject.name}".Msg();
             }
 
             void EvaluateQueuedPath()
@@ -341,7 +334,7 @@ namespace Hadal.AI
                     hasReachedPoint = false;
                     return;
                 }
-                
+
                 canTimeout = true;
                 canAutoSelectNavPoints = true;
                 if (enableDebug) "Queued path is done.".Msg();
@@ -352,14 +345,8 @@ namespace Hadal.AI
         {
             obstacleCheckTimer -= deltaTime;
             if (!ObstacleTimerReached) return;
+            if (enableDebug) $"Obstacle count: {repulsionPoints.Count}".Msg();
 
-            
-            // List<Vector3> points = Physics.SphereCastAll(pilotTrans.position, obstacleDetectRadius, Vector3.zero)
-            //                         .Where(r => obstacleMask == (obstacleMask | (1 << r.collider.gameObject.layer)))
-            //                         .Select(r => r.point)
-            //                         .ToList();
-
-            if (enableDebug) $"Obstacle count: {repulsionPoints.Count}".Bold().Msg();
             float deltaOfTime = deltaTime;
             repulsionPoints.ForEach(p =>
             {
@@ -418,13 +405,16 @@ namespace Hadal.AI
             if (cavernManager == null)
                 return;
 
-            var points = navPoints.Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation());
-            List<NavPoint> potentialPoints = points.OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition)).Take(numberOfClosestPointsToConsider).ToList();
+            List<NavPoint> potentialPoints = navPoints
+                                            .Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation())
+                                            .OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition))
+                                            .Take(numberOfClosestPointsToConsider)
+                                            .ToList();
+
             if (currentPoint != null) currentPoint.Deselect();
             currentPoint = potentialPoints.RandomElement();
             currentPoint.Select();
             hasReachedPoint = false;
-
             if (enableDebug) "Selecting new point".Msg();
         }
 
@@ -433,7 +423,12 @@ namespace Hadal.AI
         private void ResetObstacleCheckTimer() => obstacleCheckTimer = obstacleCheckTime;
         private void ResetLingerTimer() => lingerTimer = GetNextLingerTime();
         private float GetNextLingerTime() => Random.Range(minLingerTime, maxLingerTime);
-        public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
+
+        #endregion
+
+        #region Shorthands
+
+        private bool CanMove => _isEnabled && pilotTrans != null && rBody != null;
 
         #endregion
 
@@ -443,28 +438,9 @@ namespace Hadal.AI
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(pilotTrans.position, obstacleDetectRadius);
 
-            /*
-            float closeRadius = obstacleDetectRadius + 2f;
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(pilotTrans.position, closeRadius * closeRadius);
-
             if (currentPoint == null) return;
-            Gizmos.color = Color.gray;
-            Gizmos.DrawWireSphere(pilotTrans.position, currentPoint.GetSqrDistanceTo(pilotTrans.position));
-            */
-        }
-    }
-
-    [System.Serializable]
-    public class CollisionPoint
-    {
-        public Collider Collider { get; private set; }
-        public Vector3 Point { get; private set; }
-
-        public CollisionPoint(Collider collider, Vector3 point)
-        {
-            Collider = collider;
-            Point = point;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(pilotTrans.position, currentPoint.GetPosition);
         }
     }
 }
