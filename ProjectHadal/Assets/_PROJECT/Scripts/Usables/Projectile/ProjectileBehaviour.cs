@@ -103,6 +103,7 @@ namespace Hadal.Usables.Projectiles
                 else
                 {
                     IsLocal = false;
+                    print("Set is local to false");
                 }
             }
         }
