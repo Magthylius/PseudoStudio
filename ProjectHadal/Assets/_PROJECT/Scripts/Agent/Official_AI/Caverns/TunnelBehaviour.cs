@@ -38,10 +38,11 @@ namespace Hadal.AI.Caverns
             foreach (CavernTunnel cavern in connectedTunnels)
             {
                 if (cavern.ConnectedCavern == null) continue;
+                
                 if (!cavern.ConnectedCavern.connectedTunnels.Contains(this))
-                {
                     cavern.ConnectedCavern.connectedTunnels.Add(this);
-                }
+
+                cavern.EntryNavPoint.CavernTag = cavern.ConnectedCavern.cavernTag;
             }
         }
 
