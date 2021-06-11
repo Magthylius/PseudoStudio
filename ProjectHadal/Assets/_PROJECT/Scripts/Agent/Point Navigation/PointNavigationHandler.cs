@@ -37,6 +37,7 @@ namespace Hadal.AI
         [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
         [SerializeField] private Transform pilotTrans;
         [SerializeField] private Rigidbody rBody;
+        private CavernManager cavernManager;
 
         [Header("Internal Data")]
         [SerializeField, ReadOnly] private float obstacleCheckTimer;
@@ -54,11 +55,6 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private bool canPath;
         [SerializeField, ReadOnly] private NavPoint currentPoint;
         private Queue<NavPoint> pointPath;
-
-        // private void Awake() { Initialise(); }
-        // private void Update() { DoUpdate(DeltaTime); }
-        // private void FixedUpdate() { DoFixedUpdate(FixedDeltaTime); }
-
 
         #region Public Methods
 
@@ -104,6 +100,8 @@ namespace Hadal.AI
         public float ObstacleDetectionRadius => obstacleDetectRadius;
         public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public Transform PilotTransform => pilotTrans;
+
+        public void SetCavernManager(CavernManager manager) => cavernManager = manager;
 
         public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
         public void ResetSpeedMultiplier() => SetSpeedMultiplier(1f);
@@ -163,6 +161,8 @@ namespace Hadal.AI
                 if (enableDebug) "A point for the queue is missing.".Msg();
                 return;
             }
+
+            if (enableDebug) $"New Queued Path Created: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
 
             Queue<NavPoint> points = new Queue<NavPoint>();
             points.Enqueue(first);
@@ -255,12 +255,14 @@ namespace Hadal.AI
         /// If there is no point path queue, it will ask the handler to immediately find a new point in the cavern. Otherwise, it will
         /// skip the current point in the queue and move on to the next point immediately.
         /// </summary>
-        public void SkipCurrentPath()
+        public void SkipCurrentPoint(bool automaticallySelectNewPoint)
         {
             currentPoint.Deselect();
             if (currentPoint.CavernTag == CavernTag.Custom_Point)
                 Destroy(currentPoint.gameObject);
-            SelectNewNavPoint();
+            if (automaticallySelectNewPoint)
+                SelectNewNavPoint();
+            currentPoint = null;
         }
 
         /// <summary>
@@ -343,6 +345,7 @@ namespace Hadal.AI
                 
                 canTimeout = true;
                 canAutoSelectNavPoints = true;
+                if (enableDebug) "Queued path is done.".Msg();
             }
         }
 
@@ -372,7 +375,6 @@ namespace Hadal.AI
                 Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
                 if (cross.magnitude.Abs() <= 0.2f)
                 {
-                    if (enableDebug) "parralel".Msg();
                     Vector3 direction = force.normalized;
 
                     //! Diversion force added is always towards the right
@@ -406,7 +408,7 @@ namespace Hadal.AI
             {
                 ResetLingerTimer();
                 ResetTimeoutTimer();
-                SkipCurrentPath();
+                SkipCurrentPoint(true);
             }
         }
 
@@ -414,7 +416,10 @@ namespace Hadal.AI
         /// the <see cref="numberOfClosestPointsToConsider"/> variable. </summary>
         private void SelectNewNavPoint()
         {
-            var points = navPoints.Where(o => o != currentPoint);
+            if (cavernManager == null)
+                return;
+
+            var points = navPoints.Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation());
             List<NavPoint> potentialPoints = points.OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition)).Take(numberOfClosestPointsToConsider).ToList();
             if (currentPoint != null) currentPoint.Deselect();
             currentPoint = potentialPoints.RandomElement();
