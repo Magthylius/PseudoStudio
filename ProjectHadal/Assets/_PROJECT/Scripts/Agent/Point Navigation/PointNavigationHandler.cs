@@ -43,7 +43,6 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private float obstacleCheckTimer;
         [SerializeField, ReadOnly] private float timeoutTimer;
         [SerializeField, ReadOnly] private float lingerTimer;
-        [Space(10)]
         [SerializeField, ReadOnly] private float speedMultiplier = 1f;
         [SerializeField, ReadOnly] private List<NavPoint> navPoints;
         [SerializeField, ReadOnly] private List<Vector3> repulsionPoints;

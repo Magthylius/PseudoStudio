@@ -573,7 +573,10 @@ MonoBehaviour:
   navigator: {fileID: 2206939683509102030}
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1001 &2129860028607093654
 PrefabInstance:
   m_ObjectHideFlags: 0

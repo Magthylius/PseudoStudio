@@ -8,6 +8,7 @@ namespace Hadal.AI
     {
         [SerializeField] private PointNavigationHandler navigator;
         [SerializeField] private LayerMask obstacleMask;
+        [SerializeField] private LayerMask wallMask;
         private SphereCollider cCollider;
         
         private void Awake()
@@ -18,14 +19,19 @@ namespace Hadal.AI
 
         private void OnTriggerEnter(Collider other)
         {
-            if (navigator.ObstacleTimerReached)
+            if (ShouldCollide(other))
                 navigator.AddRepulsionPoint(other.ClosestPointOnBounds(navigator.PilotTransform.position));
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (navigator.ObstacleTimerReached)
+            if (ShouldCollide(other))
                 navigator.AddRepulsionPoint(other.ClosestPointOnBounds(navigator.PilotTransform.position));
         }
+
+        private bool ShouldCollide(Collider other)
+            => navigator.ObstacleTimerReached;
+            // || other.gameObject.layer == obstacleMask.ToLayer()
+            // || other.gameObject.layer == wallMask.ToLayer();
     }
 }
