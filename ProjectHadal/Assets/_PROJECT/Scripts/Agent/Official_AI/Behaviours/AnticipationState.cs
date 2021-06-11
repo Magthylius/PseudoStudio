@@ -100,6 +100,7 @@ namespace Hadal.AI.States
         {
             //print("Cavern entered");
             DetermineNextCavern();
+            print("Called");
         }
 
         IEnumerator CheckPlayersInRange()

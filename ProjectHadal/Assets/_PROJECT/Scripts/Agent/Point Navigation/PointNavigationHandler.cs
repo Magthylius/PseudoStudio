@@ -217,7 +217,21 @@ namespace Hadal.AI
         /// Accepts a queue of existing nav points in the game to plan out a path. The nav points used must be existing in the
         /// scene and not freshly instantiated as they will not be deleted after the pilot reaches each point.
         /// </summary>
-        /// <param name="points">The queue that will be used to plot out a path plan.</param>
+        /// <param name="pointsArray">The array of NavPoints that will be used to plot out a path plan.</param>
+        public void SetQueuedPath(NavPoint[] pointsArray)
+        {
+            Queue<NavPoint> newQueue = new Queue<NavPoint>();
+            foreach(NavPoint points in pointsArray)
+                newQueue.Enqueue(points);
+            
+            SetQueuedPath(newQueue);
+        }
+        
+        /// <summary>
+        /// Accepts a queue of existing nav points in the game to plan out a path. The nav points used must be existing in the
+        /// scene and not freshly instantiated as they will not be deleted after the pilot reaches each point.
+        /// </summary>
+        /// <param name="points">The queue of NavPoints that will be used to plot out a path plan.</param>
         public void SetQueuedPath(Queue<NavPoint> points)
         {
             if (points.IsNullOrEmpty())

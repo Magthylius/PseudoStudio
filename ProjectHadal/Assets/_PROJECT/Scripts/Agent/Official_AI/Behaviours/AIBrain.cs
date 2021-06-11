@@ -243,11 +243,18 @@ namespace Hadal.AI
         #endregion
 
         #region Data
-        public void UpdateTargetMoveCavern(CavernHandler newCavern) => TargetMoveCavern = newCavern;
+
+        public void UpdateTargetMoveCavern(CavernHandler newCavern)
+        {
+            TargetMoveCavern = newCavern;
+            NavPoint[] nextCavernPoints = CavernManager.GetHandlerOfAILocation.GetEntryNavPoints(newCavern);
+            NavigationHandler.SetQueuedPath(nextCavernPoints);
+        }
         #endregion
 
         public AIStateBase GetCurrentState()
         {
+            print(allStates.Count);
             foreach (AIStateBase state in allStates) if (state.IsCurrentState) return state;
 
             Debug.LogError("No active state found!");
