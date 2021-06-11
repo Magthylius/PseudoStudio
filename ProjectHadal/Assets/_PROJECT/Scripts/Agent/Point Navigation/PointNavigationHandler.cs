@@ -351,7 +351,7 @@ namespace Hadal.AI
             obstacleCheckTimer -= deltaTime;
             if (!ObstacleTimerReached) return;
 
-            ResetObstacleCheckTimer();
+            
             // List<Vector3> points = Physics.SphereCastAll(pilotTrans.position, obstacleDetectRadius, Vector3.zero)
             //                         .Where(r => obstacleMask == (obstacleMask | (1 << r.collider.gameObject.layer)))
             //                         .Select(r => r.point)
@@ -382,7 +382,11 @@ namespace Hadal.AI
                 rBody.AddForce(force * deltaOfTime, ForceMode.VelocityChange);
             });
 
-            repulsionPoints.Clear();
+            if (repulsionPoints.IsNotEmpty())
+            {
+                repulsionPoints.Clear();
+                ResetObstacleCheckTimer();
+            }
         }
 
         /// <summary> Elapses timer to determine if it is time to move on to a new point. </summary>
