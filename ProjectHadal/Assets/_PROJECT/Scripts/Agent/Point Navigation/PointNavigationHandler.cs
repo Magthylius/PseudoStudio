@@ -162,14 +162,13 @@ namespace Hadal.AI
                 return;
             }
 
-            if (enableDebug) $"New Queued Path Created: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
-
             Queue<NavPoint> points = new Queue<NavPoint>();
             points.Enqueue(first);
             points.Enqueue(second);
             points.Enqueue(third);
 
             SetQueuedPath(points);
+            if (enableDebug) $"New Queued Path Created: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
         }
 
         /// <summary>
