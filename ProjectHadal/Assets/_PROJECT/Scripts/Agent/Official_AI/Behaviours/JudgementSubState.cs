@@ -34,6 +34,9 @@ namespace Hadal.AI.States
             //!Defensive
             SetupDefensiveBranchBehaviourTree1();
             SetupDefensiveBranchBehaviourTree2();
+            SetupOffensiveBranchBehaviourTree3();
+            SetupOffensiveBranchBehaviourTree4();
+            rootDef.SetDebugName("RootDef");
 
             //!Offensive
             SetupOffensiveBranchBehaviourTree1();
