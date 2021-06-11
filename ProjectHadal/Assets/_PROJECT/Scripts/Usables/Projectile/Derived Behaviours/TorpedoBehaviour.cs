@@ -11,16 +11,8 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            //Check if projectile is local.
-         /*   for (int i = 0; i < GameManager.Instance.pViewList.Count; i++)
-            {
-                if (GetShooterID() != GameManager.Instance.pViewList[i].ViewID || !GameManager.Instance.pViewList[i].IsMine)
-                {
-                    return;
-                }
-            }*/
-            if(!isLocal)
-            {
+            if(!IsLocal)
+            { 
                 return;
             }
 

@@ -11,7 +11,7 @@ namespace Hadal.Usables.Projectiles
     {
         public string DebugKey;
         public int projectileID = 0;
-        public bool isLocal = false;
+        public bool IsLocal = false;
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
@@ -32,7 +32,8 @@ namespace Hadal.Usables.Projectiles
         {
             DoDebugEnabling(DebugKey);
             neManager = NetworkEventManager.Instance;
-             neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
+            neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
+            neManager.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
             PPhysics.PhysicsFinished += Dump;
         }
         #endregion
@@ -97,11 +98,11 @@ namespace Hadal.Usables.Projectiles
             {
                 if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
                 {
-                    isLocal = true;
+                    IsLocal = true;
                 }
                 else
                 {
-                    isLocal = false;
+                    IsLocal = false;
                 }
             }
         }
@@ -131,12 +132,37 @@ namespace Hadal.Usables.Projectiles
 
         protected virtual void REattach(EventData eventData)
         {
-            
+            object[] data = (object[])eventData.CustomData;
+            if ((int)data[0] == projectileID)
+            {
+                if (gameObject.activeSelf)
+                {
+                    gameObject.transform.position = (Vector3)data[1];
+                    print(projectileID + "flare attaching due to event");
+                    if((bool)data[2])
+                    {
+                        //monster attach
+                    }
+                    else
+                    {
+                        Rigidbody.isKinematic = true;
+                        IsAttached = true;
+                    }
+
+                }
+            }
         }
 
         protected int GetShooterID()
         {
             string ShooterID = projectileID.ToString();
+
+            // return if projectile ID's length is less then 4, I.e., when its not shot by anyone.
+            if(ShooterID.Length < 4)
+            {
+                return 0;
+            }
+
             ShooterID = ShooterID.Substring(0, 4);
             return Convert.ToInt32(ShooterID);
         }

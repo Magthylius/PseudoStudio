@@ -312,10 +312,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugKey: Projectile Physics
   projectileID: 0
+  IsLocal: 0
   flareLight: {fileID: 6458389941356830930}
   validLayer:
-  - Wall
   - Monster
+  - Obstacle
   isAttach: 0
   impulseMode: {fileID: 0}
   selfDeactivation: {fileID: 0}
