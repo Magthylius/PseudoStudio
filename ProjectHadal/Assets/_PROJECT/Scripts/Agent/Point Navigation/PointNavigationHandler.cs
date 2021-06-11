@@ -250,7 +250,13 @@ namespace Hadal.AI
         /// </summary>
         public void SkipCurrentPoint(bool automaticallySelectNewPoint)
         {
-            if (currentPoint != null) currentPoint.Deselect();
+            if (currentPoint == null)
+            {
+                SelectNewNavPoint();
+                return;
+            }
+            
+            currentPoint.Deselect();
             if (currentPoint.CavernTag == CavernTag.Custom_Point) Destroy(currentPoint.gameObject);
             if (automaticallySelectNewPoint) SelectNewNavPoint();
             currentPoint = null;
@@ -404,6 +410,8 @@ namespace Hadal.AI
             if (cavernManager == null)
                 return;
 
+            if (currentPoint == null) currentPoint = GetClosestPointToSelf(); 
+            
             List<NavPoint> potentialPoints = navPoints
                                             .Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation())
                                             .OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition))

@@ -38,6 +38,7 @@ namespace Hadal.AI.Caverns
         Hydrothermal,
         Bioluminescent,
         Staglamite,
+        Middle,
         Custom_Point
     }
 
