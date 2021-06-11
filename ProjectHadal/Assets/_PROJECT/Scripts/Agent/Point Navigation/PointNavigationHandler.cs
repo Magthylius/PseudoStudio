@@ -259,7 +259,6 @@ namespace Hadal.AI
             currentPoint.Deselect();
             if (currentPoint.CavernTag == CavernTag.Custom_Point) Destroy(currentPoint.gameObject);
             if (automaticallySelectNewPoint) SelectNewNavPoint();
-            currentPoint = null;
         }
 
         /// <summary>
