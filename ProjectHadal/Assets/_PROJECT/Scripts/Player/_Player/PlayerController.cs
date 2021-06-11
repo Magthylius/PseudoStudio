@@ -37,6 +37,7 @@ namespace Hadal.Player
         Rigidbody _rBody;
 
         private bool _isKnocked;
+        private bool _isCarried;
 
         //! Ready checks
         bool playerReady = false;
@@ -46,8 +47,8 @@ namespace Hadal.Player
         //! Self information
         Photon.Realtime.Player attachedPlayer;
         int pViewSelfID;
-        
-        
+
+
         public static event Action<PlayerController> OnInitialiseComplete;
 
         #endregion
@@ -60,26 +61,27 @@ namespace Hadal.Player
             _pView = photonInfo.PView;
             _rBody = GetComponent<Rigidbody>();
             _isKnocked = false;
+            _isCarried = false;
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
             Enable();
         }
-       
+
         void Start()
         {
             //base.OnEnable();
             TryInjectDependencies();
-            
+
             if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
             {
                 HandlePhotonView(_pView.IsMine);
 
-                if(_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
+                if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
                     cameraReady = true;
                     //print("Loading set listener");
-					LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
+                    LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
                     LoadingManager.Instance.AllowLoadingCompletion();
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, playerReadyConfirmed);
                     NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
@@ -90,7 +92,7 @@ namespace Hadal.Player
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);
 
-            
+
             //Deactivate();
         }
 
@@ -99,28 +101,25 @@ namespace Hadal.Player
             DoDebugUpdate(DeltaTime);
 
             if (!_pView.IsMine) return;
-            
-            //Order Test
-            //print(_pView.GetInstanceID());
+
             cameraController.CameraTransition(DeltaTime, IsBoosted);
             inventory.DoUpdate(DeltaTime);
             lamp.DoUpdate(DeltaTime);
             healthManager.DoUpdate(DeltaTime);
-            mover.DoUpdate(DeltaTime);
             shooter.DoUpdate(DeltaTime);
         }
 
         protected override void FixedUpdate()
         {
             if (!_pView.IsMine) return;
-            mover.DoFixedUpdate(FixedDeltaTime);
-            rotator.DoFixedUpdate(FixedDeltaTime);
+            if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
+            if (CanRotate) rotator.DoFixedUpdate(FixedDeltaTime);
         }
 
         protected override void LateUpdate()
         {
-            mover.DoLateUpdate(DeltaTime);
-            rotator.DoLateUpdate(DeltaTime);
+            if (!_pView.IsMine) return;
+
         }
 
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
@@ -145,11 +144,8 @@ namespace Hadal.Player
             pViewSelfID = _pView.ViewID;
         }
 
-        public void AddVelocity(float speed, Vector3 direction)
-        {
-            Vector3 addVelocity = direction.normalized * speed;
-            mover.Velocity.AddVelocity(addVelocity);
-        }
+        public void SetIsCarried(in bool statement) => _isCarried = statement;
+        
         public void Die() => _manager.TryToKill(attachedPlayer);
         public void ResetController()
         {
@@ -196,11 +192,11 @@ namespace Hadal.Player
             if (!_pView)
                 return;
 
-            if(_pView.ViewID == (int)obj.CustomData)
+            if (_pView.ViewID == (int)obj.CustomData)
             {
                 print("You readiness is recognized.");
                 playerReady = true;
-            }                   
+            }
         }
 
         public void TransferOwnership(Photon.Realtime.Player newOwner)
@@ -338,6 +334,9 @@ namespace Hadal.Player
             => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator, _rBody);
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => pViewSelfID;
+        public bool CanMove => !_isKnocked && !_isCarried;
+        public bool CanRotate => true;
+
         #endregion
 
         #region Accessors

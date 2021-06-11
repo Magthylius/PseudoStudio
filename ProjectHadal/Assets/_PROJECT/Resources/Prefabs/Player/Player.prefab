@@ -1423,7 +1423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   light: {fileID: 2897252121386762477}
-  colour: {r: 1, g: 1, b: 0.5896226, a: 0.78431374}
+  colour: {r: 0.76862746, g: 0.90112287, b: 1, a: 0.78431374}
   toggleSpeed: 4
   toggleLerpSnap: 1
   startLightsOn: 1
@@ -1809,6 +1809,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1971764567260539390, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1997049082251355822, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1827,7 +1831,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2142410516265149546, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2226556703309375804, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_Enabled
@@ -1842,6 +1846,10 @@ PrefabInstance:
       value: Player UI2
       objectReference: {fileID: 0}
     - target: {fileID: 2683690785763935899, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2738830397971429127, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -1916,7 +1924,7 @@ PrefabInstance:
     - target: {fileID: 6195234976191563366, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: currentSettings
       value: 
-      objectReference: {fileID: 11400000, guid: c20a812d889f63c40b64ac150c987af0, type: 2}
+      objectReference: {fileID: 11400000, guid: abd4d56f3271558439f7333633814b95, type: 2}
     - target: {fileID: 6195234976191563366, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: overrideGlowAlpha
       value: 0
@@ -1955,7 +1963,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7257940681045712375, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8660655559423479317, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_IsActive
