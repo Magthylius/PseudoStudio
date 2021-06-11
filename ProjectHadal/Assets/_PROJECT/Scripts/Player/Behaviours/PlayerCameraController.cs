@@ -66,17 +66,24 @@ namespace Hadal.Player.Behaviours
             if (_isDisabled || !enableCameraShake) return;
             this.ShakeCamera(selfCamera, shakeProperties, true);
         }
-        public void ShakeCamera(float magnitude)
+        public void ShakeCamera(float normSpeed)
         {
             if (_isDisabled || !enableCameraShake) return;
-            var sProp = ShakePropertiesWithSpeed(magnitude);
+            var sProp = ShakePropertiesWithSpeed(normSpeed);
             this.ShakeCamera(selfCamera, sProp, true);
         }
         private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
         {
-            var newShakeProperties = new CameraShakeProperties(shakeProperties.Angle, shakeProperties.Strength + speed * 20,
-                shakeProperties.MaxSpeed + speed * 500, shakeProperties.MinSpeed, shakeProperties.Duration + speed * 50,
-                shakeProperties.NoisePercent + speed * 20, shakeProperties.DampingPercent - speed * 10, shakeProperties.RotationPercent);
+            var newShakeProperties = new CameraShakeProperties(
+                shakeProperties.Angle,
+                shakeProperties.Strength + (speed * 5),
+                shakeProperties.MaxSpeed + (speed * 20),
+                shakeProperties.MinSpeed + (speed * 10),
+                shakeProperties.Duration + (speed * 3),
+                shakeProperties.NoisePercent + (speed * 0.25f),
+                shakeProperties.DampingPercent - (speed * 0.25f),
+                shakeProperties.RotationPercent
+            );
             return newShakeProperties;
         }
 
