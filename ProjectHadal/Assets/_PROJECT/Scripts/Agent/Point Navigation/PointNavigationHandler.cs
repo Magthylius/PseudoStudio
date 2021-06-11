@@ -110,8 +110,10 @@ namespace Hadal.AI
 
         public void AddRepulsionPoint(Vector3 point)
         {
-            if (!repulsionPoints.Contains(point))
-                repulsionPoints.Add(point);
+            if (!ObstacleTimerReached || repulsionPoints.Contains(point))
+                return;
+            
+            repulsionPoints.Add(point);
         }
 
         public List<Vector3> GetRepulsionPoints() => new List<Vector3>(repulsionPoints);
@@ -347,7 +349,7 @@ namespace Hadal.AI
         private void HandleObstacleAvoidance(in float deltaTime)
         {
             obstacleCheckTimer -= deltaTime;
-            if (obstacleCheckTimer > 0f) return;
+            if (!ObstacleTimerReached) return;
 
             ResetObstacleCheckTimer();
             // List<Vector3> points = Physics.SphereCastAll(pilotTrans.position, obstacleDetectRadius, Vector3.zero)
@@ -423,6 +425,7 @@ namespace Hadal.AI
         private void ResetObstacleCheckTimer() => obstacleCheckTimer = obstacleCheckTime;
         private void ResetLingerTimer() => lingerTimer = GetNextLingerTime();
         private float GetNextLingerTime() => Random.Range(minLingerTime, maxLingerTime);
+        public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
 
         #endregion
 

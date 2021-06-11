@@ -16,11 +16,13 @@ namespace Hadal.AI
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!navigator.ObstacleTimerReached) return;
             navigator.AddRepulsionPoint(other.ClosestPointOnBounds(navigator.PilotTransform.position));
         }
 
         private void OnTriggerStay(Collider other)
         {
+            if (!navigator.ObstacleTimerReached) return;
             navigator.AddRepulsionPoint(other.ClosestPointOnBounds(navigator.PilotTransform.position));
         }
     }
