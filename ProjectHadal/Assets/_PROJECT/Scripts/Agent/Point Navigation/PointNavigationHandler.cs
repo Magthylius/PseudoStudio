@@ -12,6 +12,21 @@ namespace Hadal.AI
 {
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
+		[Header("Internal Data")]
+        [SerializeField, ReadOnly] private float obstacleCheckTimer;
+        [SerializeField, ReadOnly] private float timeoutTimer;
+        [SerializeField, ReadOnly] private float lingerTimer;
+        [SerializeField, ReadOnly] private float speedMultiplier = 1f;
+        [SerializeField, ReadOnly] private List<NavPoint> navPoints;
+        [SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
+        [SerializeField, ReadOnly] private bool hasReachedPoint;
+        [SerializeField, ReadOnly] private bool canTimeout;
+        [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
+        [SerializeField, ReadOnly] private bool isOnCustomPath;
+        [SerializeField, ReadOnly] private bool isChasingAPlayer;
+        [SerializeField, ReadOnly] private bool canPath;
+        [SerializeField, ReadOnly] private NavPoint currentPoint;
+		
         [Header("Debug")]
         [SerializeField] private bool enableDebug;
 
@@ -39,20 +54,7 @@ namespace Hadal.AI
         [SerializeField] private Rigidbody rBody;
         private CavernManager cavernManager;
 
-        [Header("Internal Data")]
-        [SerializeField, ReadOnly] private float obstacleCheckTimer;
-        [SerializeField, ReadOnly] private float timeoutTimer;
-        [SerializeField, ReadOnly] private float lingerTimer;
-        [SerializeField, ReadOnly] private float speedMultiplier = 1f;
-        [SerializeField, ReadOnly] private List<NavPoint> navPoints;
-        [SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
-        [SerializeField, ReadOnly] private bool hasReachedPoint;
-        [SerializeField, ReadOnly] private bool canTimeout;
-        [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
-        [SerializeField, ReadOnly] private bool isOnCustomPath;
-        [SerializeField, ReadOnly] private bool isChasingAPlayer;
-        [SerializeField, ReadOnly] private bool canPath;
-        [SerializeField, ReadOnly] private NavPoint currentPoint;
+        // True private variables
         private Queue<NavPoint> pointPath;
         private bool _isEnabled;
 
@@ -155,7 +157,7 @@ namespace Hadal.AI
                         .Where(point => point.CavernTag == destination.cavernTag && point != second)
                         .OrderBy(point => point.GetSqrDistanceTo(curPointPos))
                         .Take(numberOfClosestPointsToConsider - 1)
-                        .FirstOrDefault();
+                        .RandomElement();
 
             if (first == null || second == null || third == null)
             {
@@ -237,8 +239,8 @@ namespace Hadal.AI
             pointPath = new Queue<NavPoint>(points);
             currentPoint = pointPath.Dequeue();
             isChasingAPlayer = false;
-            canTimeout = false;
-            canAutoSelectNavPoints = false;
+            canTimeout = true;
+            canAutoSelectNavPoints = true;
             ResetLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting queued path".Msg();
@@ -337,6 +339,7 @@ namespace Hadal.AI
 
                     currentPoint = pointPath.Dequeue();
                     hasReachedPoint = false;
+					ResetTimeoutTimer();
                     return;
                 }
 
