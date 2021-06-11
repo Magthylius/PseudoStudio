@@ -27,6 +27,12 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
+            if (!isLocal)
+            {
+                return;
+            }
+
+            //If not attach mode, or already attached, return.
             if (!isAttach || IsAttached)
                 return;
 
