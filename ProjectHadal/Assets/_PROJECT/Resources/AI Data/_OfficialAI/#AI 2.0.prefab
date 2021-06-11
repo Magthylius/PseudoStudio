@@ -109,7 +109,7 @@ MonoBehaviour:
   minLingerTime: 4
   maxLingerTime: 10
   timeoutNewPointTime: 12
-  obstacleCheckTime: 0.2
+  obstacleCheckTime: 0.1
   maxVelocity: 50
   thrustForce: 12
   additionalBoostThrustForce: 10
@@ -261,7 +261,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2206939684412345072}
   - component: {fileID: 2206939684412345039}
-  - component: {fileID: 2206939684412345073}
+  - component: {fileID: 638281922364176427}
   - component: {fileID: 2206939684412345074}
   m_Layer: 14
   m_Name: '#AI 2.0'
@@ -319,18 +319,18 @@ MonoBehaviour:
   isOffline: 1
   DebugEnabled: 0
   stunDuration: 1
---- !u!65 &2206939684412345073
-BoxCollider:
+--- !u!135 &638281922364176427
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2206939684412345075}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 60f53cdeacc472147ad0dcb791e4fabf, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6, y: 6, z: 6}
+  m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2206939684412345074
 Rigidbody:
@@ -466,7 +466,6 @@ MonoBehaviour:
     DetonateOnRemote: 0
   exponentConst: 0
   viewAngle: 60
-  distance: 20
 --- !u!1 &4180711431457838737
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +571,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navigator: {fileID: 2206939683509102030}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &2129860028607093654
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -642,6 +644,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6ee1054fc9578854da33078120a6f83f, type: 3}
       propertyPath: m_Name
       value: Creature_SizeTest
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6ee1054fc9578854da33078120a6f83f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ee1054fc9578854da33078120a6f83f, type: 3}
