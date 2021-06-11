@@ -11,6 +11,7 @@ namespace Hadal.Usables.Projectiles
     {
         public string DebugKey;
         public int projectileID = 0;
+        public bool isLocal = false;
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
@@ -19,9 +20,14 @@ namespace Hadal.Usables.Projectiles
         public event Action<bool> OnHit;
         public event Action<ProjectileBehaviour> DumpEvent;
         NetworkEventManager neManager;
+
         #region Unity Lifecycle
 
         protected virtual void Awake() => HandleDependentComponents();
+        protected virtual void OnEnable()
+        {
+            setIsLocal();
+        }
         protected virtual void Start()
         {
             DoDebugEnabling(DebugKey);
@@ -29,7 +35,6 @@ namespace Hadal.Usables.Projectiles
              neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
             PPhysics.PhysicsFinished += Dump;
         }
-
         #endregion
 
         #region Behavioural Methods
@@ -86,6 +91,21 @@ namespace Hadal.Usables.Projectiles
             if (PPhysics != null) PPhysics.SetBehaviour(this);
         }
 
+        private void setIsLocal()
+        {
+            for (int i = 0; i < GameManager.Instance.pViewList.Count; i++)
+            {
+                if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
+                {
+                    isLocal = true;
+                }
+                else
+                {
+                    isLocal = false;
+                }
+            }
+        }
+
         public void SetPositionRotation(Vector3 position, Quaternion rotation)
         {
             transform.position = position;
@@ -97,14 +117,21 @@ namespace Hadal.Usables.Projectiles
         #region Event Methods
         protected virtual void REdump(EventData eventData)
         {
-            if((int)eventData.CustomData == projectileID)
+            object[] data = (object[])eventData.CustomData;
+            if ((int)data[0] == projectileID)
             {
                 if(gameObject.activeSelf)
                 {
+                    gameObject.transform.position = (Vector3)data[1];
                     print(projectileID + "despawning due to event");
                     PPhysics.OnPhysicsFinished();
                 }
             }
+        }
+
+        protected virtual void REattach(EventData eventData)
+        {
+            
         }
 
         protected int GetShooterID()
