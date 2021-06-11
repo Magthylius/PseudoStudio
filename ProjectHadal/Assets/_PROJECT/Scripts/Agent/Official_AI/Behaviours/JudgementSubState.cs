@@ -144,7 +144,7 @@ namespace Hadal.AI.States
             });
             sequenceA1.SetDebugName("sequence A1");
 
-            rootAgg.AddNode(sequenceA1);
+            rootAgg = new BTSequence(new List<BTNode>() { sequenceA1 });
         }
 
         private void SetupOffensiveBranchBehaviourTree2()
