@@ -31,8 +31,6 @@ namespace Hadal.AI
         {
             if (friends == null || friends.Count == 0)
                 friends = new List<NavPoint>();
-            
-
         }
 
         public void AttachTo(Transform target)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Tenshi.AIDolls;
@@ -103,7 +102,7 @@ namespace Hadal.AI
             //! Runtime data
             RefreshPlayerReferences();
             runtimeData.Start_Initialise();
-            //runtimeData.UpdateCumulativeDamageThreshold(HealthManager.GetCurrentHealth);
+            navigationHandler.SetCavernManager(cavernManager);
         }
 
         private void Update()
