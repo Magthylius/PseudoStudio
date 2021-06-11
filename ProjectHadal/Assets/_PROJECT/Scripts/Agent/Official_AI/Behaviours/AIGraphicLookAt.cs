@@ -18,7 +18,7 @@ namespace Hadal.AI
         {
             transform.LookAt(brain.transform);
             Vector3 targetPos = Vector3.MoveTowards(transform.position, brain.transform.position, maxDistanceDelta);
-            Quaternion targetRot = transform.rotation.SetLookRotation(brain.transform.position);
+            //Quaternion targetRot = transform.rotation.SetLookRotation(brain.transform.position);
         }
 
         IEnumerator TryLinkAIBrain()
