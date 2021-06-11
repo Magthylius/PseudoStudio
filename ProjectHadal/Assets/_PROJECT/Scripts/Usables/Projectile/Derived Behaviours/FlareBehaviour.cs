@@ -1,4 +1,5 @@
 using UnityEngine;
+using Hadal.Networking;
 
 //Created by Jon, edited by Jin
 namespace Hadal.Usables.Projectiles
@@ -27,7 +28,7 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!isLocal)
+            if (!IsLocal)
             {
                 return;
             }
@@ -41,9 +42,28 @@ namespace Hadal.Usables.Projectiles
                 LayerMask layer = LayerMask.NameToLayer(layerName);
                 if (collision.gameObject.layer == layer.value)
                 {
+                    print(projectileID + "flare attach locally");
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
+
+                    print(LayerMask.LayerToName(layer));
+
+                    Vector3 collisionSpot = gameObject.transform.position;
+                   
+                    bool attachedToMonster = false;
+
+                    if (LayerMask.LayerToName(layer) == "MONSTER")
+                    {
+                        attachedToMonster = true;
+                    }
+                    else
+                    {
+                        attachedToMonster = false;
+                    }
+
+                    object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
                 }
             }
         }
