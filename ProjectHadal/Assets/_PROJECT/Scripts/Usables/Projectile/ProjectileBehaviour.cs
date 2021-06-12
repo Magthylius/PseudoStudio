@@ -104,7 +104,6 @@ namespace Hadal.Usables.Projectiles
                 else
                 {
                     IsLocal = false;
-                    return;
                 }
             }
         }
