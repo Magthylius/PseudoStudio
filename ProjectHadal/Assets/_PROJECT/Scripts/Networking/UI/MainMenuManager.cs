@@ -18,7 +18,7 @@ namespace Hadal.Networking.UI.MainMenu
             START = 0,
             MAIN
         }
-
+        
         MenuPhase menuPhase = MenuPhase.START;
         LoadingManager loadingManager;
 
