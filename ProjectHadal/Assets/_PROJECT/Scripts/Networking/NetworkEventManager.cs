@@ -66,6 +66,9 @@ namespace Hadal.Networking
             //print("awake");
 
             playerObjects = new List<GameObject>();
+            
+            //! Force disconnect because PhotonNetwork does not disconnect after offline mode
+            if (IsConnected && !isOfflineMode) Disconnect();
         }
 
         void Start()
@@ -258,6 +261,7 @@ namespace Hadal.Networking
             SetCurrentRoomCustomProperty(hashTable);
         }
 
+        [Button("Force disconnect")]
         public void Disconnect() => PhotonNetwork.Disconnect();
         public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
         public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName, roomOptionsDefault);
@@ -508,6 +512,7 @@ namespace Hadal.Networking
         #endregion
 
         #region Accessors
+        
         public Transform LocalSpawn => localPlayerSpawnTrans;
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
         public Player LocalPlayer => PhotonNetwork.LocalPlayer;
