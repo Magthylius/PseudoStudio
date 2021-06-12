@@ -17,7 +17,7 @@ namespace Hadal.AI.TreeNodes
         public void SetDebugName(string msg) => debugName = msg;
     }
 
-    public enum NodeState 
+    public enum NodeState
     {
         RUNNING, SUCCESS, FAILURE,
     }

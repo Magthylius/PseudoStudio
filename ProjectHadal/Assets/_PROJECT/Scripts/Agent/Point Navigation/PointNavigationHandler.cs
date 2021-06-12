@@ -173,6 +173,7 @@ namespace Hadal.AI
         /// <param name="destination">The destination where the pilot should end up.</param>
         public void SetDestinationToCavern(CavernManager manager, CavernHandler destination)
         {
+            if (isChasingAPlayer) return;
             if (manager == null || destination == null)
             {
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
