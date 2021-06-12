@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 //! C: Jon
 namespace Hadal
@@ -17,7 +18,16 @@ namespace Hadal
 
         [Header("FPS Display")]
         [SerializeField] TextMeshProUGUI fpsTMP;
+        [SerializeField] TextMeshProUGUI avgFPSTMP;
+        [SerializeField] TextMeshProUGUI lowFPSTMP;
+        [SerializeField] TextMeshProUGUI highFPSTMP;
         [SerializeField, Min(0f)] float fpsUpdateCycle = 0.1f;
+
+        private float totalFPS = 0f;
+        private float totalFPSDiv = 0f;
+        private float avgFPS = 0f;
+        private float lowFPS = float.MaxValue; 
+        private float highFPS = 0f;
 
         void Start()
         {
@@ -27,6 +37,7 @@ namespace Hadal
             wholeCanvasParent.SetActive(internalToggler);
 
             StartCoroutine(FPSCoroutine());
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         void Update()
@@ -37,6 +48,14 @@ namespace Hadal
             }
         }
 
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        { 
+            totalFPS = 0f;
+            avgFPS = 0f;
+            lowFPS = float.MaxValue;
+            highFPS = 0f;
+        }
+
         void ToggleScreen()
         {
             internalToggler = !internalToggler;
@@ -45,7 +64,17 @@ namespace Hadal
 
         void UpdateFPS()
         {
-            fpsTMP.text = "FPS: " + (int)(1.0f / Time.deltaTime);
+            float fps = 1.0f / Time.deltaTime;
+            totalFPS += fps;
+            totalFPSDiv++;
+            if (fps > highFPS) highFPS = fps;
+            if (fps < lowFPS) lowFPS = fps;
+            avgFPS = totalFPS / totalFPSDiv;
+            
+            fpsTMP.text = "FPS: " + (int)fps;
+            avgFPSTMP.text = "AVG: " + (int)avgFPS;
+            lowFPSTMP.text = "LOW: " + (int)lowFPS;
+            highFPSTMP.text = "HI: " + (int)highFPS;
         }
 
         IEnumerator FPSCoroutine()
