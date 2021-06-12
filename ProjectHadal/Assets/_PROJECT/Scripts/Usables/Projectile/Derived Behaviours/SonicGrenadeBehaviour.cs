@@ -25,6 +25,9 @@ namespace Hadal.Usables.Projectiles
         //Trigger locally
         public void SonicExplode()
         {
+            if (!IsLocal)
+                return;
+
             print("Sonic Grenade Triggered Locally.");
             //Scan for monster locally
             LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
