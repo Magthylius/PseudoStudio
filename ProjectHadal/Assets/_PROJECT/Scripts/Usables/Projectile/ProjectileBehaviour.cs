@@ -99,11 +99,12 @@ namespace Hadal.Usables.Projectiles
                 if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
                 {
                     IsLocal = true;
+                    return;
                 }
                 else
                 {
                     IsLocal = false;
-                    print("Set is local to false");
+                    return;
                 }
             }
         }
