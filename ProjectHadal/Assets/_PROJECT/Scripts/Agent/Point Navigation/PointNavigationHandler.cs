@@ -128,6 +128,7 @@ namespace Hadal.AI
         public float ObstacleDetectionRadius => obstacleDetectRadius;
         public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
+        public LayerMask GetObstacleMask => obstacleMask;
         /// <summary> Returns the pilot that this handler is running. </summary>
         public Transform PilotTransform => pilotTrans;
 

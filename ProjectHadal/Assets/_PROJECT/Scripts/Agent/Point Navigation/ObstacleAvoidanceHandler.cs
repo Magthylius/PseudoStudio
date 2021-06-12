@@ -8,21 +8,17 @@ namespace Hadal.AI
     public class ObstacleAvoidanceHandler : MonoBehaviour
     {
         [SerializeField] private PointNavigationHandler navigator;
-        [SerializeField] private LayerMask obstacleMask;
-        [SerializeField] private LayerMask wallMask;
         private SphereCollider cCollider;
 
         private void OnValidate()
         {
-            cCollider = GetComponent<SphereCollider>();
+            if (cCollider == null) cCollider = GetComponent<SphereCollider>();
             cCollider.radius = navigator.ObstacleDetectionRadius;
         }
 
         private void Awake()
         {
             cCollider = GetComponent<SphereCollider>();
-            //UpdateData();
-            //print("awake");
             navigator.OnObstacleDetectRadiusChange += UpdateData;
         }
 
@@ -40,13 +36,10 @@ namespace Hadal.AI
 
         public void UpdateData(float radius)
         {
-            //print("bruh");
             cCollider.radius = radius;
         }
         
         private bool ShouldCollide(Collider other)
-            => navigator.ObstacleTimerReached;
-            // || other.gameObject.layer == obstacleMask.ToLayer()
-            // || other.gameObject.layer == wallMask.ToLayer();
+            => navigator.ObstacleTimerReached && other.gameObject.layer.IsAMatchingMask(navigator.GetObstacleMask);
     }
 }
