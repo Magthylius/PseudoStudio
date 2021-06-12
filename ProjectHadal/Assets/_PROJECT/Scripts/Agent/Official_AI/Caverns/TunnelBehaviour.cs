@@ -16,11 +16,6 @@ namespace Hadal.AI.Caverns
         public NavPoint EntryNavPoint;
     }
     
-    
-    /// <summary>
-    /// Used only for data handling in tunnels
-    /// </summary>
-    [RequireComponent(typeof(Collider))]
     public class TunnelBehaviour : MonoBehaviour
     {
         [Header("Settings")]
@@ -32,6 +27,7 @@ namespace Hadal.AI.Caverns
 
         //! Internal
         List<PlayerController> playersInTunnel = new List<PlayerController>();
+        private bool aiInsideTunnel = false;
 
         void OnValidate()
         {
@@ -46,21 +42,39 @@ namespace Hadal.AI.Caverns
             }
         }
 
-        void OnTriggerEnter(Collider other)
+        public void TriggerEntry(AIBrain ai)
         {
-            if (other.gameObject.layer == playerLayer.value)
+            if (!aiInsideTunnel)
             {
-                PlayerController player = other.GetComponent<PlayerController>();
-                playersInTunnel.Add(player);
+                aiInsideTunnel = true;
+                CavernManager.Instance.OnAIEnterTunnel(this);
             }
         }
 
-        void OnTriggerExit(Collider other)
+        public void TriggerEntry(PlayerController player)
         {
-            if (other.gameObject.layer == playerLayer.value)
+            if (!playersInTunnel.Contains(player))
             {
-                PlayerController player = other.GetComponent<PlayerController>();
+                playersInTunnel.Add(player);
+                CavernManager.Instance.OnPlayerEnterTunnel(new TunnelPlayerData(this, player));
+            }
+        }
+
+        public void TriggerExit(AIBrain ai)
+        {
+            if (aiInsideTunnel)
+            {
+                aiInsideTunnel = false;
+                CavernManager.Instance.OnAILeftTunnel(this);
+            }
+        }
+
+        public void TriggerExit(PlayerController player)
+        {
+            if (playersInTunnel.Contains(player))
+            {
                 playersInTunnel.Remove(player);
+                CavernManager.Instance.OnPlayerLeftTunnel(new TunnelPlayerData(this, player));
             }
         }
 
