@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Player;
+using NaughtyAttributes;
+using UnityEngine.PlayerLoop;
 
 //! Created: Jon
 namespace Hadal.AI.Caverns
@@ -31,6 +33,12 @@ namespace Hadal.AI.Caverns
 
         void OnValidate()
         {
+            UpdateConnectedTunnels();
+        }
+
+        [Button("Update Connected Tunnels")]
+        void UpdateConnectedTunnels()
+        {
             foreach (CavernTunnel cavern in connectedTunnels)
             {
                 if (cavern.ConnectedCavern == null) continue;
@@ -41,6 +49,7 @@ namespace Hadal.AI.Caverns
                 cavern.EntryNavPoint.CavernTag = cavern.ConnectedCavern.cavernTag;
             }
         }
+        
 
         public void TriggerEntry(AIBrain ai)
         {

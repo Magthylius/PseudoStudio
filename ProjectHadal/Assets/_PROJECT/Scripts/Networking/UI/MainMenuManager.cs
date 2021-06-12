@@ -97,10 +97,12 @@ namespace Hadal.Networking.UI.MainMenu
             //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
             InitMainMenu();
             //p
+
         }
 
         void Update()
         {
+            print(menuPhase);
             if (!mainMenuInitiated) return;
 
             switch (menuPhase)
@@ -108,7 +110,7 @@ namespace Hadal.Networking.UI.MainMenu
                 case MenuPhase.START:
                     //startIF.Step(Time.unscaledDeltaTime);
                     if (Input.GetMouseButtonDown(0) && !titleQuitButton.IsHovered) ConnectToLobby();
-                    //print(titleQuitButton.IsHovered);
+                    //print("what the fuck");
                     break;
                 case MenuPhase.MAIN:
                    // Debug.LogWarning("run");
@@ -117,6 +119,8 @@ namespace Hadal.Networking.UI.MainMenu
                     if (confirmQuitFR != null) confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     break;
             }
+            
+            //print("?");
         }
 
         void OnDestroy()
@@ -154,6 +158,7 @@ namespace Hadal.Networking.UI.MainMenu
             if (openStartMenu)
                 OpenMenu(startMenu);
 
+            //print("?");
             OpenMenu(gameOptions);
             CloseMenu(nicknameMenu);
             CloseMenu(lobbyMenu);
@@ -174,6 +179,7 @@ namespace Hadal.Networking.UI.MainMenu
 
         void DetermineMenuToOpen()
         {
+            print(NetworkEventManager.Instance.IsConnected);
             if (NetworkEventManager.Instance.IsConnected)
             {
                 OpenMenu(lobbyMenu);
@@ -183,10 +189,10 @@ namespace Hadal.Networking.UI.MainMenu
             {
                 OpenMenu(startMenu);
                 menuPhase = MenuPhase.START;
-                //print("start");
             }
 
             mainMenuInitiated = true;
+            
         }
 
         /// <summary>
@@ -216,7 +222,7 @@ namespace Hadal.Networking.UI.MainMenu
             connectLMBPrompt.SetActive(false);
             connectingTMP.SetActive(true);
 
-            print("Connecting to lobby");
+            //print("Connecting to lobby");
         }
 
         void EndStartPhase()
