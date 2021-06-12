@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
 
@@ -45,6 +46,12 @@ namespace Hadal.AI.TreeNodes
             _nodeState = anyNodeRunning ? NodeState.RUNNING : NodeState.SUCCESS;
             Debug();
             return _nodeState;
+        }
+
+        public BTSequence WithDebugName(string msg)
+        {
+            debugName = msg.AddSpacesBeforeCapitalLetters(false);
+            return this;
         }
 
         private void Debug(bool includeExecutionOrder = true)

@@ -34,6 +34,7 @@ namespace Hadal.Usables.Projectiles
             neManager = NetworkEventManager.Instance;
             neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
             neManager.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
+            neManager.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
             PPhysics.PhysicsFinished += Dump;
         }
         #endregion
@@ -141,7 +142,7 @@ namespace Hadal.Usables.Projectiles
                     gameObject.transform.position = (Vector3)data[1];
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
-                    print(projectileID + "flare attaching due to event");
+                    print(projectileID + "projectile attaching due to event");
 
                     if((bool)data[2])
                     {
@@ -149,6 +150,12 @@ namespace Hadal.Usables.Projectiles
                     }
                 }
             }
+        }
+
+        //For triggering utility (trap), for NON LOCAL players.
+        public virtual void ReTriggerBehavior(EventData eventData)
+        {
+            return;
         }
 
         protected int GetShooterID()

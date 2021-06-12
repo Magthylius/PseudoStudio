@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
 
@@ -45,6 +46,12 @@ namespace Hadal.AI.TreeNodes
             _nodeState = NodeState.FAILURE;
             Debug();
             return _nodeState;
+        }
+
+        public BTSelector WithDebugName(string msg)
+        {
+            debugName = msg.AddSpacesBeforeCapitalLetters(false) + "?";
+            return this;
         }
 
         private void Debug(bool includeExecutionOrder = true)

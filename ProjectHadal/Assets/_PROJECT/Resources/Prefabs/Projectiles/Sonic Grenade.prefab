@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 5
-  endTime: 0.2
+  endTime: 60
   armsProjectile: 0
   skipsOnContact: 0
   attachTimer: 0
@@ -312,6 +312,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: 
+  projectileID: 0
+  IsLocal: 0
   selfDeactivation: {fileID: 0}
 --- !u!114 &2162494160188478927
 MonoBehaviour:

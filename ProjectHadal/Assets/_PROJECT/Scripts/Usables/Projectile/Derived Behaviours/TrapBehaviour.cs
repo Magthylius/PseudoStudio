@@ -1,6 +1,9 @@
 using UnityEngine;
 //using Hadal.AI;
 using Magthylius.DataFunctions;
+using ExitGames.Client.Photon;
+using Hadal.Networking;
+
 //Created by Jet
 namespace Hadal.Usables.Projectiles
 {
@@ -47,15 +50,19 @@ namespace Hadal.Usables.Projectiles
             selfDeactivation.selfDeactivated += ModeOn;
         }
 
+        // Trigger locally.
         public override bool TriggerBehavior()
         {
             if (!isSet)
                 return false;
 
+            if (!IsLocal)
+                return true;
+
+            print("Trap triggered locally");
+            //Explode locally, check for AI
             LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
-
             detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
-
             foreach (Collider col in detectedObjects)
             {
                 /*if (col.GetComponent<AIBrain>())
@@ -65,7 +72,31 @@ namespace Hadal.Usables.Projectiles
             }
             isExploding = true;
             particleEffect.SetActive(true);
+
+            //Send event to explode.
+            Vector3 activatedSpot = gameObject.transform.position;
+            object[] content = new object[] { projectileID, activatedSpot };
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ACTIVATED, content);
+
             return true;   
+        }
+
+        // Trigger network clones.
+        public override void ReTriggerBehavior(EventData eventData)
+        {
+            object[] data = (object[])eventData.CustomData;
+
+            if ((int)data[0] == projectileID)
+            {
+                if (gameObject.activeSelf)
+                {
+                    print("Trap triggered due to event");
+                    gameObject.transform.position = (Vector3)data[1];
+                    isExploding = true;
+                    particleEffect.SetActive(true);
+                }
+            }            
+            return;
         }
 
         private void StopExplosion()
