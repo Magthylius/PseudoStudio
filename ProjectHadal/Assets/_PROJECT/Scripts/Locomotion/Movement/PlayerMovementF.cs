@@ -39,6 +39,7 @@ namespace Hadal.Locomotion
         public override void DoFixedUpdate(in float fixedDeltaTime)
         {
             if (!allowUpdate) return;
+            
             HandleAcceleration(fixedDeltaTime);
             CalculateSpeed();
         }
@@ -68,6 +69,7 @@ namespace Hadal.Locomotion
         public override void Disable()
         {
             //$"Disable is called".Warn();
+            _isEnabled = false;
             Input = DisabledInputs;
         }
 
@@ -86,7 +88,8 @@ namespace Hadal.Locomotion
             }
 
             rigidBody.AddForce(moveForce, ForceMode.Force);
-
+            //print("raw: " + UnityEngine.Input.GetAxis("Vertical"));
+            //print("ip: " + Input.VerticalAxis);
         }
 
         private void CalculateSpeed()
