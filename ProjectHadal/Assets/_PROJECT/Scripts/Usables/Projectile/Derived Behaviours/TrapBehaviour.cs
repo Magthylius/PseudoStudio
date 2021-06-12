@@ -59,6 +59,7 @@ namespace Hadal.Usables.Projectiles
             if (!IsLocal)
                 return true;
 
+            print("Trap triggered locally");
             //Explode locally, check for AI
             LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
             detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
@@ -89,6 +90,8 @@ namespace Hadal.Usables.Projectiles
             {
                 if (gameObject.activeSelf)
                 {
+                    print("Trap triggered due to event");
+                    gameObject.transform.position = (Vector3)data[1];
                     isExploding = true;
                     particleEffect.SetActive(true);
                 }
