@@ -413,7 +413,8 @@ namespace Hadal.AI
             if (cavernManager == null)
                 return;
 
-            if (currentPoint == null) currentPoint = GetClosestPointToSelf(); 
+            if (currentPoint == null)
+				currentPoint = GetClosestPointToSelf(); 
             
             List<NavPoint> potentialPoints = navPoints
                                             .Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation())
@@ -425,7 +426,8 @@ namespace Hadal.AI
             currentPoint = potentialPoints.RandomElement();
             currentPoint.Select();
             hasReachedPoint = false;
-            if (enableDebug) "Selecting new point".Msg();
+            if (enableDebug)
+				$"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
 
         private NavPoint GetClosestPointToSelf() => navPoints.OrderBy(n => n.GetSqrDistanceTo(pilotTrans.position)).FirstOrDefault();
