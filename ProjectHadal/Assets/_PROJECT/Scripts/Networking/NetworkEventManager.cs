@@ -22,6 +22,7 @@ namespace Hadal.Networking
         PLAYER_UTILITIES_LAUNCH,
         PLAYER_TORPEDO_LAUNCH,
         PROJECTILE_DESPAWN,
+        PROJECTILE_ACTIVATED,
         PROJECTILE_ATTACH,
         AI_DAMAGE_EVENT,
         AI_PIN_EVENT,

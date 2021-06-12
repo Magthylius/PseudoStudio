@@ -198,7 +198,13 @@ namespace Hadal.Player.Behaviours
 
         #region Shorthand
         public int GetProjectileCount => _projectileCount;
-        public void IncreaseProjectileCount() { _projectileCount++; }
+        public void IncreaseProjectileCount() 
+        {
+            if (_projectileCount > 20)
+                _projectileCount = 0;
+            else
+                _projectileCount++; 
+        }
         public UsableLauncherObject[] GetUsableObjects => utilities;
         private UsableLauncherObject EquippedUsable => utilities[_selectedItem];
         private int pViewForProj => _pView.ViewID * 1000;
