@@ -105,11 +105,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4afc231c313531342a4a3c8d649f2aa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleCheckTimer: 0
+  timeoutTimer: 0
+  lingerTimer: 0
+  speedMultiplier: 1
+  navPoints: []
+  repulsionPoints: []
+  hasReachedPoint: 0
+  canTimeout: 0
+  canAutoSelectNavPoints: 0
+  isOnCustomPath: 0
+  isChasingAPlayer: 0
+  canPath: 0
+  currentPoint: {fileID: 0}
   enableDebug: 0
   minLingerTime: 4
   maxLingerTime: 10
   timeoutNewPointTime: 12
   obstacleCheckTime: 0.1
+  _steeringMode: 0
+  cavernSteeringSettings: {fileID: 0}
+  tunnelSteeringSettings: {fileID: 0}
   maxVelocity: 50
   thrustForce: 12
   additionalBoostThrustForce: 10
@@ -125,19 +141,6 @@ MonoBehaviour:
   numberOfClosestPointsToConsider: 4
   pilotTrans: {fileID: 2206939684412345072}
   rBody: {fileID: 2206939684412345074}
-  obstacleCheckTimer: 0
-  timeoutTimer: 0
-  lingerTimer: 0
-  speedMultiplier: 1
-  navPoints: []
-  repulsionPoints: []
-  hasReachedPoint: 0
-  canTimeout: 0
-  canAutoSelectNavPoints: 0
-  isOnCustomPath: 0
-  isChasingAPlayer: 0
-  canPath: 0
-  currentPoint: {fileID: 0}
 --- !u!1 &2206939684058563682
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +268,7 @@ GameObject:
   - component: {fileID: 2206939684412345074}
   m_Layer: 14
   m_Name: '#AI 2.0'
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -302,7 +305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae3cbf74d9642e45b10c23ffb58fbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetMoveCavern: {fileID: 0}
+  targetMoveCavern: {fileID: 0}
   healthManager: {fileID: 2206939684562575358}
   navigationHandler: {fileID: 2206939683509102030}
   senseDetection: {fileID: 6021279049498701051}
@@ -540,7 +543,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 10
+  m_Radius: 30
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8428994859670981917
 Rigidbody:
