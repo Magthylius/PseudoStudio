@@ -108,7 +108,7 @@ namespace Hadal.AI
             repulsionPoints = new List<Vector3>();
             pointPath = new Queue<NavPoint>();
             _isEnabled = true;
-            OnObstacleDetectRadiusChange = delegate { };
+            //OnObstacleDetectRadiusChange = delegate { };
 
             CavernModeSteering();
         }
@@ -128,6 +128,7 @@ namespace Hadal.AI
         public float ObstacleDetectionRadius => obstacleDetectRadius;
         public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
+        public LayerMask GetObstacleMask => obstacleMask;
         /// <summary> Returns the pilot that this handler is running. </summary>
         public Transform PilotTransform => pilotTrans;
 
@@ -369,7 +370,7 @@ namespace Hadal.AI
             smoothLookAtSpeed = currentSteer.SmoothLookAtSpeed;
             obstacleMask = currentSteer.ObstacleMask;
             
-            print("Invocation");
+            //print("Invocation");
             OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
         }
         #endregion
