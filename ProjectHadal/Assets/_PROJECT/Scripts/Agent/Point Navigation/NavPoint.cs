@@ -20,6 +20,9 @@ namespace Hadal.AI
 		
 		[Header("Information")]
         [SerializeField] private CavernTag cavernTag;
+		[SerializeField] private bool isTunnelEntry;
+
+		[Header("Friend references")]
         [SerializeField] private List<NavPoint> friends;
         public CavernTag CavernTag { get => cavernTag; set => cavernTag = value; }
         public Transform GetTransform => transform;
@@ -68,6 +71,7 @@ namespace Hadal.AI
             return median;
         }
 
+        
         public void Select()
 		{
 			if (mRenderer == null) return;

@@ -128,6 +128,7 @@ namespace Hadal.AI
         public float ObstacleDetectionRadius => obstacleDetectRadius;
         public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
+        public LayerMask GetObstacleMask => obstacleMask;
         /// <summary> Returns the pilot that this handler is running. </summary>
         public Transform PilotTransform => pilotTrans;
 
@@ -172,6 +173,7 @@ namespace Hadal.AI
         /// <param name="destination">The destination where the pilot should end up.</param>
         public void SetDestinationToCavern(CavernManager manager, CavernHandler destination)
         {
+            if (isChasingAPlayer) return;
             if (manager == null || destination == null)
             {
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();

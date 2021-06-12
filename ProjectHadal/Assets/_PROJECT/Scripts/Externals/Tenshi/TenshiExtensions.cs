@@ -209,5 +209,8 @@ namespace Tenshi
             }
             return index - 1;
         }
+
+        public static bool IsAMatchingMask(this int layer, LayerMask includeLayers) => ((1 << layer) & includeLayers) != 0;
+        public static bool IsNotAnIgnoredMask(this int layer, LayerMask ignoreLayers) => ((1 << layer) & ignoreLayers) == 0;
     }
 }

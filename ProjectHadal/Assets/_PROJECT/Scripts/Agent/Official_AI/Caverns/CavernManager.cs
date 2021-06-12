@@ -4,6 +4,7 @@ using Hadal.Player;
 using ICSharpCode.NRefactory.Ast;
 using NaughtyAttributes;
 using Tenshi.UnitySoku;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 //! C: Jon
@@ -23,9 +24,27 @@ namespace Hadal.AI.Caverns
             Player = playerController;
         }
     }
+
+    /// <summary>
+    ///     For data passback through events back to manager
+    /// </summary>
+    public struct TunnelPlayerData
+    {
+        public TunnelBehaviour Tunnel;
+        public PlayerController Player;
+        
+        public TunnelPlayerData(TunnelBehaviour tunnel, PlayerController playerController)
+        {
+            Tunnel = tunnel;
+            Player = playerController;
+        }
+    }
     
     public delegate void CavernHandlerPlayerReturn(CavernPlayerData data);
     public delegate void CavernHandlerAIReturn(CavernHandler handler);
+
+    public delegate void TunnelBehaviourPlayerReturn(TunnelPlayerData data);
+    public delegate void TunnelBehaviourAIReturn(TunnelBehaviour tunnel);
 
     /// <summary>
     ///     For cavern identification.
@@ -53,11 +72,18 @@ namespace Hadal.AI.Caverns
         [Header("Settings")] 
         [SerializeField] private bool debugPlayerEvents = false;
         [SerializeField] private bool debugAIEvents = false;
+        [SerializeField] private string playerLayer;
+        [SerializeField] private string aiLayer;
         
+        //! Events
         public event CavernHandlerPlayerReturn PlayerEnterCavernEvent;
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnterCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
+        public event TunnelBehaviourPlayerReturn PlayerEnterTunnelEvent;
+        public event TunnelBehaviourPlayerReturn PlayerLeftTunnelEvent;
+        public event TunnelBehaviourAIReturn AIEnterTunnelEvent;
+        public event TunnelBehaviourAIReturn AILeftTunnelEvent;
 
         private void OnValidate()
         {
@@ -104,6 +130,30 @@ namespace Hadal.AI.Caverns
                 GetHandlerOfAILocation = null;
 
             AILeftCavernEvent?.Invoke(handler);
+        }
+
+        public void OnPlayerEnterTunnel(TunnelPlayerData data)
+        {
+            if (debugPlayerEvents) print(data.Player.PlayerName + " entered tunnel " + data.Tunnel.name);
+            PlayerEnterTunnelEvent?.Invoke(data);
+        }
+
+        public void OnPlayerLeftTunnel(TunnelPlayerData data)
+        {
+            if (debugPlayerEvents) print(data.Player.PlayerName + " left tunnel " + data.Tunnel.name);
+            PlayerLeftTunnelEvent?.Invoke(data);
+        }
+
+        public void OnAIEnterTunnel(TunnelBehaviour tunnel)
+        {
+            if (debugAIEvents) print("AI entered " + tunnel.name);
+            AIEnterTunnelEvent?.Invoke(tunnel);
+        }
+
+        public void OnAILeftTunnel(TunnelBehaviour tunnel)
+        {
+            if (debugAIEvents) print("AI left " + tunnel.name);
+            AILeftTunnelEvent?.Invoke(tunnel);
         }
 
         /// <summary>
@@ -189,12 +239,14 @@ namespace Hadal.AI.Caverns
         {
             ResetCavernHeuristics();
             
-            //sourceCavern.SetHeuristic((int.MaxValue));
+            //sourceCavern.SetHeuristic(int.MaxValue);
             destinationCavern.SetHeuristic(0);
             Queue<CavernHandler> uncheckedCaverns = new Queue<CavernHandler>();
-            
+
             foreach (var cavern in destinationCavern.ConnectedCaverns)
+            {
                 uncheckedCaverns.Enqueue(cavern);
+            }
 
             int distHeuristic = 1;
             while (uncheckedCaverns.Any())
@@ -203,6 +255,7 @@ namespace Hadal.AI.Caverns
                 for (int i = 0; i < queueCount; i++)
                 {
                     CavernHandler currentCavern = uncheckedCaverns.Dequeue();
+
                     if (currentCavern.GetHeuristic < 0)
                     {
                         currentCavern.SetHeuristic(distHeuristic);
@@ -217,6 +270,8 @@ namespace Hadal.AI.Caverns
 
                 distHeuristic++;
             }
+            
+            //sourceCavern.SetHeuristic(distHeuristic);
         }
 
         public void ResetCavernHeuristics()
@@ -340,5 +395,8 @@ namespace Hadal.AI.Caverns
         {
             return handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
         }
+
+        public int PlayerLayer => LayerMask.NameToLayer(playerLayer);
+        public int AILayer => LayerMask.NameToLayer(aiLayer);
     }
 }

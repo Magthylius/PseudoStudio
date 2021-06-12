@@ -33,17 +33,17 @@ namespace Hadal.AI.States
             BTNode.ExecutionOrder = 0;
             //!Defensive
             SetupDefensiveBranchBehaviourTree1();
-            //SetupDefensiveBranchBehaviourTree2();
-            //SetupOffensiveBranchBehaviourTree3();
-            //SetupOffensiveBranchBehaviourTree4();
-            rootDef.SetDebugName("RootDef");
+            SetupDefensiveBranchBehaviourTree2();
+            SetupDefensiveBranchBehaviourTree3();
+            SetupDefensiveBranchBehaviourTree4();
+            rootDef.WithDebugName("RootDef");
 
             //!Offensive
             SetupOffensiveBranchBehaviourTree1();
-            //SetupOffensiveBranchBehaviourTree2();
-            //SetupOffensiveBranchBehaviourTree3();
-            //SetupOffensiveBranchBehaviourTree4();
-            rootAgg.SetDebugName("RootAgg");
+            SetupOffensiveBranchBehaviourTree2();
+            SetupOffensiveBranchBehaviourTree3();
+            SetupOffensiveBranchBehaviourTree4();
+            rootAgg.WithDebugName("RootAgg");
         }
 
 
@@ -52,394 +52,227 @@ namespace Hadal.AI.States
         #region Defensive Branch
         private void SetupDefensiveBranchBehaviourTree1()
         {
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
+            BTSequence threshCarriedPlayer = Build_Sequence(new ThreshCarriedPlayerNode(b, damageManager)).WithDebugName(nameof(threshCarriedPlayer));
+            BTSelector onePlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 1)).WithDebugName(nameof(onePlayerInCavern));
+            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(b, false)).WithDebugName(nameof(isCarryingAnyPlayer));
+            BTSelector hasJt4Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 4)).WithDebugName(nameof(hasJt4Passed));
 
-            BTSequence tailWhip = new BTSequence(new List<BTNode>() { new TailWhipNode(b, 1f) });
-            tailWhip.SetDebugName("tail whip");
+            BTSequence escapeTailWhip = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(escapeTailWhip));
+            BTSequence recoveryAfterJt4Passed = Build_Sequence(hasJt4Passed, setRecoveryState).WithDebugName(nameof(recoveryAfterJt4Passed));
+            BTSelector tryToThreshCarriedPlayer = Build_Selector(threshCarriedPlayer, recoveryAfterJt4Passed).WithDebugName(nameof(tryToThreshCarriedPlayer));
+            BTSelector threshAndRecoveryIfSuccessful = Build_Selector(tryToThreshCarriedPlayer, setRecoveryState).WithDebugName(nameof(threshAndRecoveryIfSuccessful));
+            BTSelector carryOrThresh = Build_Selector(isCarryingAnyPlayer, threshAndRecoveryIfSuccessful).WithDebugName(nameof(carryOrThresh));
 
-            BTSequence escapeTailWhip = new BTSequence(new List<BTNode>() { tailWhip, setRecoveryState });
-            escapeTailWhip.SetDebugName("escape tail whip");
-
-            BTSelector hasJT4Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 4) });
-            hasJT4Passed.SetDebugName("has jt4 passed?");
-
-            BTSequence recoveryAfterJT4Passed = new BTSequence(new List<BTNode>() { hasJT4Passed, setRecoveryState });
-            recoveryAfterJT4Passed.SetDebugName("recovery after jt4 passed");
-
-            BTSequence threshCarriedPlayer = new BTSequence(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager) });
-            threshCarriedPlayer.SetDebugName("thresh carried player");
-
-            BTSelector tryToThreshCarriedPlayer = new BTSelector(new List<BTNode>() { threshCarriedPlayer, recoveryAfterJT4Passed });
-            tryToThreshCarriedPlayer.SetDebugName("try to thresh carried player?");
-
-            BTSelector threshAndRecoveryIfSuccessful = new BTSelector(new List<BTNode>() { tryToThreshCarriedPlayer, setRecoveryState });
-            threshAndRecoveryIfSuccessful.SetDebugName("Thresh & Recovery?");
-
-            BTSelector onePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 1) });
-            onePlayerInCavern.SetDebugName("One player in cavern?");
-
-            BTSequence isCarryingAnyPlayer = new BTSequence(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
-            isCarryingAnyPlayer.SetDebugName("Is carrying any player");
-
-            BTSelector carryOrThresh = new BTSelector(new List<BTNode>() { isCarryingAnyPlayer, threshAndRecoveryIfSuccessful });
-            carryOrThresh.SetDebugName("Carry Or Thresh?");
-
-            BTSequence sequenceD1 = new BTSequence(new List<BTNode>()
-            {
+            BTSequence sequenceD1 = Build_Sequence(
                 onePlayerInCavern,
                 carryOrThresh,
-                hasJT4Passed,
+                hasJt4Passed,
                 escapeTailWhip
-            });
-            sequenceD1.SetDebugName("sequence D1");
+            ).WithDebugName(nameof(sequenceD1));
 
-            rootDef = new BTSequence(new List<BTNode>() { sequenceD1 });
+            rootDef = Build_Sequence(sequenceD1);
         }
 
         private void SetupDefensiveBranchBehaviourTree2()
         {
-            BTSelector twoPlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 2) });
-            twoPlayerInCavern.SetDebugName("Two player in cavern?");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
+            BTSelector twoPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 2)).WithDebugName(nameof(twoPlayerInCavern));
+            
+            BTSequence escapeTailWhip = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(escapeTailWhip));
+            BTSelector moveToNearestPlayer = Build_Selector(new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false),
+                                                            escapeTailWhip).WithDebugName(nameof(moveToNearestPlayer));
+            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(b, false), moveToNearestPlayer).WithDebugName(nameof(isCarryingAnyPlayer));
 
-            BTSequence isCarryingAnyPlayer = new BTSequence(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
-            isCarryingAnyPlayer.SetDebugName("Is carrying any player");
-
-            BTSelector hasJT3Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 3) });
-            hasJT3Passed.SetDebugName("has jt3 passed?");
-
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
-
-            BTSequence tailWhip = new BTSequence(new List<BTNode>() { new TailWhipNode(b, 1f) });
-            tailWhip.SetDebugName("tail whip");
-
-            BTSequence escapeTailWhip = new BTSequence(new List<BTNode>() { tailWhip, setRecoveryState });
-            escapeTailWhip.SetDebugName("escape tail whip");
-
-            BTSequence sequenceD2 = new BTSequence(new List<BTNode>()
-            {
-                twoPlayerInCavern,
-                isCarryingAnyPlayer,
-                hasJT3Passed,
-                escapeTailWhip
-            });
-            sequenceD2.SetDebugName("sequence D2");
-
-            //! IsCarryingPlayer Fallback
-            BTSelector moveToNearestPlayer = new BTSelector(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false) }); //! Not sure how to set so need to reset the parameters
-            //! If moveToNearestPlayer Fails, escape tailwhip. Shud tailwhip use selector? cause it's a fallback
-            // BTSelector tailWhipSelector = new BTSelector(new List<BTNode>() { new TailWhipNode(b, 1f) });
-            // tailWhip.SetDebugName("tail whip");
-            BTSequence isCarryingPlayerFallbackD2 = new BTSequence(new List<BTNode>()
-            {
-                moveToNearestPlayer,
-                setRecoveryState
-            });
-
-            BTSequence threshCarriedPlayer = new BTSequence(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager) });
-            threshCarriedPlayer.SetDebugName("thresh carried player?");
-            BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
-            threshNearestTarget.SetDebugName("thresh nearest target");
-            //JT3 fallback
-            BTSequence jt3Fallback = new BTSequence(new List<BTNode>()
-            {
+            BTSequence threshCarriedPlayer = Build_Sequence(new ThreshCarriedPlayerNode(b, damageManager)).WithDebugName(nameof(threshCarriedPlayer));
+            BTSequence threshNearestTarget = Build_Sequence(isCarryingAnyPlayer, threshCarriedPlayer).WithDebugName(nameof(threshNearestTarget));
+            
+            BTSequence jt3Fallback = Build_Sequence(
                 threshNearestTarget,
                 setRecoveryState
-            });
+            ).WithDebugName(nameof(jt3Fallback));
+            BTSelector hasJt3Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 3), jt3Fallback).WithDebugName(nameof(hasJt3Passed));
 
+            BTSequence sequenceD2 = Build_Sequence(
+                twoPlayerInCavern,
+                isCarryingAnyPlayer,
+                hasJt3Passed,
+                escapeTailWhip
+            ).WithDebugName(nameof(sequenceD2));
 
             rootDef.AddNode(sequenceD2);
-
         }
         private void SetupDefensiveBranchBehaviourTree3()
         {
-            BTSelector threePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 3) });
-            threePlayerInCavern.SetDebugName("Three player in cavern?");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
+            BTSelector threePlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 3)).WithDebugName(nameof(threePlayerInCavern));
+            
+            BTSequence escapeTailWhip = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(escapeTailWhip));
+            BTSelector moveToNearestPlayer = Build_Selector(new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false),
+                                                            escapeTailWhip).WithDebugName(nameof(moveToNearestPlayer));
+            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(b, false), moveToNearestPlayer).WithDebugName(nameof(isCarryingAnyPlayer));
 
-            BTSequence isCarryingAnyPlayer = new BTSequence(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
-            isCarryingAnyPlayer.SetDebugName("Is carrying any player");
+            BTSequence threshCarriedPlayer = Build_Sequence(new ThreshCarriedPlayerNode(b, damageManager)).WithDebugName(nameof(threshCarriedPlayer));
+            BTSequence threshNearestTarget = Build_Sequence(isCarryingAnyPlayer, threshCarriedPlayer).WithDebugName(nameof(threshNearestTarget));
+            
+            BTSequence jt2Fallback = Build_Sequence(
+                threshNearestTarget,
+                setRecoveryState
+            ).WithDebugName(nameof(jt2Fallback));
+            BTSelector hasJt2Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 2), jt2Fallback).WithDebugName(nameof(hasJt2Passed));
 
-            BTSelector hasJT2Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 2) });
-            hasJT2Passed.SetDebugName("has jt2 passed?");
-
-            BTSequence sequenceD3 = new BTSequence(new List<BTNode>()
-            {
+            BTSequence sequenceD3 = Build_Sequence(
                 threePlayerInCavern,
                 isCarryingAnyPlayer,
-                hasJT2Passed,
-            });
-            sequenceD3.SetDebugName("sequence D3");
-
-
-            //!*IsCarryingPlayer Fallback*
-            BTSelector moveToNearestPlayer = new BTSelector(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false) }); //! Not sure how to set so need to reset the parameters
-            //! If moveToNearestPlayer Fails, escape tailwhip. Shud tailwhip use selector? cause it's a fallback
-            // BTSelector tailWhipSelector = new BTSelector(new List<BTNode>() { new TailWhipNode(b, 1f) });
-            // tailWhip.SetDebugName("tail whip");
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
-            BTSequence isCarryingPlayerFallbackD3 = new BTSequence(new List<BTNode>()
-            {
-                moveToNearestPlayer,
+                hasJt2Passed,
                 setRecoveryState
-            });
-
-            //!*JT2 Fallback*
-            BTSelector recoveryFallback = new BTSelector(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
+            ).WithDebugName(nameof(sequenceD3));
 
             rootDef.AddNode(sequenceD3);
         }
 
         private void SetupDefensiveBranchBehaviourTree4()
         {
-            BTSelector fourPlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 4) });
-            fourPlayerInCavern.SetDebugName("four player in cavern?");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
+            BTSelector fourPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 4)).WithDebugName(nameof(fourPlayerInCavern));
+            BTSelector hasJt1Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 3), setRecoveryState).WithDebugName(nameof(hasJt1Passed));
+            
+            BTSequence escapeTailWhip = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(escapeTailWhip));
+            BTSelector tryCarryTargetNode = Build_Selector(new CarryTargetNode(b, 1.5f, 0.5f), escapeTailWhip).WithDebugName(nameof(tryCarryTargetNode));
+            BTSequence getPlayerToCarry = Build_Sequence(new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), tryCarryTargetNode)
+                .WithDebugName(nameof(getPlayerToCarry));
 
-            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
-            getPlayerToCarry.SetDebugName("get player to carry");
-
-            BTSelector hasJT1Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 1) });
-            hasJT1Passed.SetDebugName("has jt4 passed?");
-
-            BTSequence sequenceD4 = new BTSequence(new List<BTNode>()
-            {
+            BTSequence sequenceD4 = Build_Sequence(
                 fourPlayerInCavern,
                 getPlayerToCarry,
-                hasJT1Passed
-            });
-            sequenceD4.SetDebugName("sequence D4");
-
-            //! JT1 Fallback
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
-
-            //! GrabNearestPlayer Fallback
-            BTSequence tailWhip = new BTSequence(new List<BTNode>() { new TailWhipNode(b, 1f) });
-            tailWhip.SetDebugName("tail whip");
+                hasJt1Passed
+            ).WithDebugName(nameof(sequenceD4));
 
             rootDef.AddNode(sequenceD4);
-
         }
         #endregion
 
         #region Offensive Branch
         private void SetupOffensiveBranchBehaviourTree1()
         {
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSelector hasJt4Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 4)).WithDebugName(nameof(hasJt4Passed));
+            BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
+            BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));
+            BTSequence resetCumulativeDamageThreshold = Build_Sequence(new ResetCumulatedDamageThresholdNode(b, engagementStateSettings))
+                .WithDebugName(nameof(resetCumulativeDamageThreshold));
 
-            BTSequence increaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, true) });
-            increaseConfidence.SetDebugName("increase confidence");
+            BTSequence threshFallback1 = Build_Sequence(hasJt4Passed, decreaseConfidence, setRecoveryState).WithDebugName(nameof(threshFallback1));
+            BTSelector threshCarriedPlayer = Build_Selector(new ThreshCarriedPlayerNode(b, damageManager), threshFallback1).WithDebugName(nameof(threshCarriedPlayer));
 
-            //Fallback if threshNearestTarget fails
-            BTSelector hasJT4Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 4) });
-            hasJT4Passed.SetDebugName("has jt4 passed?");
+            BTSequence getPlayerToCarry = Build_Sequence(new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f))
+                .WithDebugName(nameof(getPlayerToCarry));
+            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(b, false), getPlayerToCarry).WithDebugName(nameof(isCarryingAnyPlayer));
+            BTSequence threshNearestTarget = Build_Sequence(isCarryingAnyPlayer, threshCarriedPlayer).WithDebugName(nameof(threshNearestTarget));
+            BTSelector tryThreshNearestTarget = Build_Selector(threshNearestTarget, hasJt4Passed).WithDebugName(nameof(tryThreshNearestTarget));
 
-            BTSequence decreaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, false) });
-            decreaseConfidence.SetDebugName("decrease confidence");
+            BTSelector onePlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 1)).WithDebugName(nameof(onePlayerInCavern));
+            BTSequence postSequenceA1 = Build_Sequence(increaseConfidence, resetCumulativeDamageThreshold).WithDebugName(nameof(postSequenceA1));
 
-            BTSequence resetCumulativeDamageThreshold = new BTSequence(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b, engagementStateSettings) });
-            resetCumulativeDamageThreshold.SetDebugName("reset cumulative damage threshold");
-
-            BTSequence threshFallbackA1 = new BTSequence(new List<BTNode>()
-            {
-                hasJT4Passed,
-                decreaseConfidence,
-                setRecoveryState
-            });
-            threshFallbackA1.SetDebugName("thresh fallback A1");
-
-            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
-            getPlayerToCarry.SetDebugName("get player to carry");
-
-            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
-            isCarryingAnyPlayer.SetDebugName("is carrying any player?");
-
-            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager), threshFallbackA1 });
-            threshCarriedPlayer.SetDebugName("thresh carried player?");
-
-            BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
-            threshNearestTarget.SetDebugName("thresh nearest target");
-
-            BTSelector onePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 1) });
-            onePlayerInCavern.SetDebugName("one player in cavern?");
-
-            BTSequence postSequenceA1 = new BTSequence(new List<BTNode>() { increaseConfidence, resetCumulativeDamageThreshold });
-            postSequenceA1.SetDebugName("post sequence A1");
-
-            BTSequence sequenceA1 = new BTSequence(new List<BTNode>()
-            {
+            BTSequence sequenceA1 = Build_Sequence(
                 onePlayerInCavern,
-                threshNearestTarget,
+                tryThreshNearestTarget,
                 postSequenceA1
-            });
-            sequenceA1.SetDebugName("sequence A1");
+            ).WithDebugName(nameof(sequenceA1));
 
-            rootAgg = new BTSequence(new List<BTNode>() { sequenceA1 });
+            rootAgg = Build_Sequence(sequenceA1);
         }
 
         private void SetupOffensiveBranchBehaviourTree2()
         {
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSelector hasJt3Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 3)).WithDebugName(nameof(hasJt3Passed));
+            BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
+            BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));
+            BTSequence resetCumulativeDamageThreshold = Build_Sequence(new ResetCumulatedDamageThresholdNode(b, engagementStateSettings))
+                .WithDebugName(nameof(resetCumulativeDamageThreshold));
 
-            BTSequence increaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, true) });
-            increaseConfidence.SetDebugName("increase confidence");
+            BTSequence threshFallback1 = Build_Sequence(hasJt3Passed, decreaseConfidence, setRecoveryState).WithDebugName(nameof(threshFallback1));
+            BTSelector threshCarriedPlayer = Build_Selector(new ThreshCarriedPlayerNode(b, damageManager), threshFallback1).WithDebugName(nameof(threshCarriedPlayer));
 
-            //Fallback if threshNearestTarget fails
-            BTSelector hasJT3Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 3) });
-            hasJT3Passed.SetDebugName("has jt3 passed?");
+            BTSequence getPlayerToCarry = Build_Sequence(new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f))
+                .WithDebugName(nameof(getPlayerToCarry));
+            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(b, false), getPlayerToCarry).WithDebugName(nameof(isCarryingAnyPlayer));
+            BTSequence threshNearestTarget = Build_Sequence(isCarryingAnyPlayer, threshCarriedPlayer).WithDebugName(nameof(threshNearestTarget));
+            BTSelector tryThreshNearestTarget = Build_Selector(threshNearestTarget, hasJt3Passed).WithDebugName(nameof(tryThreshNearestTarget));
 
-            BTSequence decreaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, false) });
-            decreaseConfidence.SetDebugName("decrease confidence");
+            BTSelector twoPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 2)).WithDebugName(nameof(twoPlayerInCavern));
+            BTSequence postSequenceA2 = Build_Sequence(increaseConfidence, resetCumulativeDamageThreshold).WithDebugName(nameof(postSequenceA2));
 
-            BTSequence resetCumulativeDamageThreshold = new BTSequence(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b, engagementStateSettings) });
-            resetCumulativeDamageThreshold.SetDebugName("reset cumulative damage threshold");
-
-            BTSequence threshFallbackA2 = new BTSequence(new List<BTNode>()
-            {
-                hasJT3Passed,
-                decreaseConfidence,
-                setRecoveryState
-            });
-            threshFallbackA2.SetDebugName("thresh fallback A1");
-
-            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
-            getPlayerToCarry.SetDebugName("get player to carry");
-
-            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
-            isCarryingAnyPlayer.SetDebugName("is carrying any player?");
-
-            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager), threshFallbackA2 });
-            threshCarriedPlayer.SetDebugName("thresh carried player?");
-
-            BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
-            threshNearestTarget.SetDebugName("thresh nearest target");
-
-            BTSelector twoPlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 2) });
-            twoPlayerInCavern.SetDebugName("two player in cavern?");
-
-            BTSequence postSequenceA2 = new BTSequence(new List<BTNode>() { increaseConfidence, resetCumulativeDamageThreshold });
-            postSequenceA2.SetDebugName("post sequence A2");
-
-            BTSequence sequenceA2 = new BTSequence(new List<BTNode>()
-            {
+            BTSequence sequenceA2 = Build_Sequence(
                 twoPlayerInCavern,
-                threshNearestTarget,
+                tryThreshNearestTarget,
                 postSequenceA2
-            });
-            sequenceA2.SetDebugName("sequence A2");
+            ).WithDebugName(nameof(sequenceA2));
 
             rootAgg.AddNode(sequenceA2);
         }
 
         private void SetupOffensiveBranchBehaviourTree3()
         {
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSelector hasJt2Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 2)).WithDebugName(nameof(hasJt2Passed));
+            BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
+            BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));
+            BTSequence resetCumulativeDamageThreshold = Build_Sequence(new ResetCumulatedDamageThresholdNode(b, engagementStateSettings))
+                .WithDebugName(nameof(resetCumulativeDamageThreshold));
 
-            BTSequence increaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, true) });
-            increaseConfidence.SetDebugName("increase confidence");
+            BTSequence threshFallback1 = Build_Sequence(hasJt2Passed, decreaseConfidence, setRecoveryState).WithDebugName(nameof(threshFallback1));
+            BTSelector threshCarriedPlayer = Build_Selector(new ThreshCarriedPlayerNode(b, damageManager), threshFallback1).WithDebugName(nameof(threshCarriedPlayer));
 
-            //Fallback if threshNearestTarget fails
-            BTSelector hasJT2Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 2) });
-            hasJT2Passed.SetDebugName("has jt2 passed?");
+            BTSequence getPlayerToCarry = Build_Sequence(new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f))
+                .WithDebugName(nameof(getPlayerToCarry));
+            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(b, false), getPlayerToCarry).WithDebugName(nameof(isCarryingAnyPlayer));
+            BTSequence threshNearestTarget = Build_Sequence(isCarryingAnyPlayer, threshCarriedPlayer).WithDebugName(nameof(threshNearestTarget));
+            BTSelector tryThreshNearestTarget = Build_Selector(threshNearestTarget, hasJt2Passed).WithDebugName(nameof(tryThreshNearestTarget));
 
-            BTSequence decreaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, false) });
-            decreaseConfidence.SetDebugName("decrease confidence");
+            BTSelector threePlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 3)).WithDebugName(nameof(threePlayerInCavern));
+            BTSequence postSequenceA3 = Build_Sequence(increaseConfidence, resetCumulativeDamageThreshold).WithDebugName(nameof(postSequenceA3));
 
-            BTSequence resetCumulativeDamageThreshold = new BTSequence(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b, engagementStateSettings) });
-            resetCumulativeDamageThreshold.SetDebugName("reset cumulative damage threshold");
-
-            BTSequence threshFallbackA3 = new BTSequence(new List<BTNode>()
-            {
-                hasJT2Passed,
-                decreaseConfidence,
-                setRecoveryState
-            });
-            threshFallbackA3.SetDebugName("thresh fallback A1");
-
-            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
-            getPlayerToCarry.SetDebugName("get player to carry");
-
-            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
-            isCarryingAnyPlayer.SetDebugName("is carrying any player?");
-
-            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager), threshFallbackA3 });
-            threshCarriedPlayer.SetDebugName("thresh carried player?");
-
-            BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
-            threshNearestTarget.SetDebugName("thresh nearest target");
-
-            BTSelector threePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 3) });
-            threePlayerInCavern.SetDebugName("three player in cavern?");
-
-            BTSequence postSequenceA2 = new BTSequence(new List<BTNode>() { increaseConfidence, resetCumulativeDamageThreshold });
-            postSequenceA2.SetDebugName("post sequence A2");
-
-            BTSequence sequenceA3 = new BTSequence(new List<BTNode>()
-            {
+            BTSequence sequenceA3 = Build_Sequence(
                 threePlayerInCavern,
-                threshNearestTarget,
-                postSequenceA2
-            });
-            sequenceA3.SetDebugName("sequence A3");
+                tryThreshNearestTarget,
+                postSequenceA3
+            ).WithDebugName(nameof(sequenceA3));
 
             rootAgg.AddNode(sequenceA3);
         }
 
         private void SetupOffensiveBranchBehaviourTree4()
         {
-            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
-            setRecoveryState.SetDebugName("set recovery state");
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSelector hasJt1Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 2)).WithDebugName(nameof(hasJt1Passed));
+            BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
+            BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));
+            BTSequence resetCumulativeDamageThreshold = Build_Sequence(new ResetCumulatedDamageThresholdNode(b, engagementStateSettings))
+                .WithDebugName(nameof(resetCumulativeDamageThreshold));
 
-            BTSequence increaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, true) });
-            increaseConfidence.SetDebugName("increase confidence");
+            BTSequence threshFallback1 = Build_Sequence(hasJt1Passed, decreaseConfidence, setRecoveryState).WithDebugName(nameof(threshFallback1));
+            BTSelector threshCarriedPlayer = Build_Selector(new ThreshCarriedPlayerNode(b, damageManager), threshFallback1).WithDebugName(nameof(threshCarriedPlayer));
 
-            //Fallback if threshNearestTarget fails
-            BTSelector hasJT1Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 1) });
-            hasJT1Passed.SetDebugName("has jt1 passed?");
+            BTSequence getPlayerToCarry = Build_Sequence(new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f))
+                .WithDebugName(nameof(getPlayerToCarry));
+            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(b, false), getPlayerToCarry).WithDebugName(nameof(isCarryingAnyPlayer));
+            BTSequence threshNearestTarget = Build_Sequence(isCarryingAnyPlayer, threshCarriedPlayer).WithDebugName(nameof(threshNearestTarget));
+            BTSelector tryThreshNearestTarget = Build_Selector(threshNearestTarget, hasJt1Passed).WithDebugName(nameof(tryThreshNearestTarget));
 
-            BTSequence decreaseConfidence = new BTSequence(new List<BTNode>() { new ModifyConfidenceNode(b, 1, false) });
-            decreaseConfidence.SetDebugName("decrease confidence");
+            BTSelector fourPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 4)).WithDebugName(nameof(fourPlayerInCavern));
+            BTSequence postSequenceA4 = Build_Sequence(increaseConfidence, resetCumulativeDamageThreshold).WithDebugName(nameof(postSequenceA4));
 
-            BTSequence resetCumulativeDamageThreshold = new BTSequence(new List<BTNode>() { new ResetCumulatedDamageThresholdNode(b, engagementStateSettings) });
-            resetCumulativeDamageThreshold.SetDebugName("reset cumulative damage threshold");
-
-            BTSequence threshFallbackA4 = new BTSequence(new List<BTNode>()
-            {
-                hasJT1Passed,
-                decreaseConfidence,
-                setRecoveryState
-            });
-            threshFallbackA4.SetDebugName("thresh fallback A1");
-
-            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
-            getPlayerToCarry.SetDebugName("get player to carry");
-
-            BTSelector isCarryingAnyPlayer = new BTSelector(new List<BTNode>() { new IsCarryingAPlayerNode(b, false), getPlayerToCarry });
-            isCarryingAnyPlayer.SetDebugName("is carrying any player?");
-
-            BTSelector threshCarriedPlayer = new BTSelector(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager), threshFallbackA4 });
-            threshCarriedPlayer.SetDebugName("thresh carried player?");
-
-            BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
-            threshNearestTarget.SetDebugName("thresh nearest target");
-
-            BTSelector fourPlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 4) });
-            fourPlayerInCavern.SetDebugName("three player in cavern?");
-
-            BTSequence postSequenceA4 = new BTSequence(new List<BTNode>() { increaseConfidence, resetCumulativeDamageThreshold });
-            postSequenceA4.SetDebugName("post sequence A4");
-
-            BTSequence sequenceA4 = new BTSequence(new List<BTNode>()
-            {
+            BTSequence sequenceA4 = Build_Sequence(
                 fourPlayerInCavern,
-                threshNearestTarget,
+                tryThreshNearestTarget,
                 postSequenceA4
-            });
-            sequenceA4.SetDebugName("sequence A4");
+            ).WithDebugName(nameof(sequenceA4));
 
             rootAgg.AddNode(sequenceA4);
         }
@@ -460,24 +293,18 @@ namespace Hadal.AI.States
         }
         public override void StateTick()
         {
-            //return;
             float deltaTime = b.DeltaTime;
             b.RuntimeData.TickEngagementTicker(deltaTime);
-            if (TickUpdateTimer(deltaTime) > updateDelay)
+            if (randomNumber == 0)
+                result = rootAgg.Evaluate(deltaTime);
+            else
+                result = rootDef.Evaluate(deltaTime);
+
+            if (b.DebugEnabled)
             {
-                ResetUpdateTimer();
-
-                if (randomNumber == 0)
-                    result = rootAgg.Evaluate(deltaTime);
-                else
-                    result = rootDef.Evaluate(deltaTime);
-
-                if (b.DebugEnabled)
-                {
-                    if (result == NodeState.RUNNING) "Tree: Running".Msg();
-                    else if (result == NodeState.SUCCESS) "Tree: Success".Msg();
-                    else if (result == NodeState.FAILURE) "Tree: Fail".Msg();
-                }
+                if (result == NodeState.RUNNING) "Tree: Running".Msg();
+                else if (result == NodeState.SUCCESS) "Tree: Success".Msg();
+                else if (result == NodeState.FAILURE) "Tree: Fail".Msg();
             }
 
             // Behaviour tree links
@@ -491,5 +318,7 @@ namespace Hadal.AI.States
 
         private void ResetUpdateTimer() => updateTimer = 0.0f;
         private float TickUpdateTimer(in float tick) => updateTimer += tick;
+        private BTSelector Build_Selector(params BTNode[] nodes) => new BTSelector(new List<BTNode>(nodes));
+        private BTSequence Build_Sequence(params BTNode[] nodes) => new BTSequence(new List<BTNode>(nodes));
     }
 }

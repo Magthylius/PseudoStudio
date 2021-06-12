@@ -59,9 +59,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd029ad7758ba9409b938fca09a61ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableDelay: 1
+  enableUpdate: 1
   updateDelay: 1
   targetCavern: 0
+  currentPoint: {fileID: 0}
+  obstacleCheckTimer: 0
+  timeoutTimer: 0
+  lingerTimer: 0
+  speedMultiplier: 0
+  navPoints: []
+  repulsionPoints: []
+  hasReachedPoint: 0
+  canTimeout: 0
+  canAutoSelectNavPoints: 0
+  isOnCustomPath: 0
+  isChasingAPlayer: 0
+  canPath: 0
 --- !u!1001 &2007591999200880586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83,7 +96,7 @@ PrefabInstance:
       objectReference: {fileID: 395465446244265274}
     - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: enableDebug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: maxVelocity
@@ -107,7 +120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: obstacleDetectRadius
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: axisStalemateDeviationForce
@@ -172,6 +185,10 @@ PrefabInstance:
     - target: {fileID: 2206939684412345075, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9019090016648474977, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: m_Radius
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
