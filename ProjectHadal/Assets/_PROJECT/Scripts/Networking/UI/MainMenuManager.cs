@@ -92,7 +92,7 @@ namespace Hadal.Networking.UI.MainMenu
         void Start()
         {
             NetworkEventManager.Instance.JoinedLobbyEvent += EndStartPhase;
-            
+            NetworkEventManager.Instance.isOfflineMode = false;
             DetermineMenuToOpen();
             //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
             InitMainMenu();
@@ -102,7 +102,7 @@ namespace Hadal.Networking.UI.MainMenu
 
         void Update()
         {
-            print(menuPhase);
+            //print(menuPhase);
             if (!mainMenuInitiated) return;
 
             switch (menuPhase)
@@ -179,7 +179,7 @@ namespace Hadal.Networking.UI.MainMenu
 
         void DetermineMenuToOpen()
         {
-            print(NetworkEventManager.Instance.IsConnected);
+            //print(NetworkEventManager.Instance.IsConnected);
             if (NetworkEventManager.Instance.IsConnected)
             {
                 OpenMenu(lobbyMenu);
