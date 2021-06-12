@@ -12,20 +12,36 @@ namespace Hadal.AI
 {
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
-		[Header("Internal Data")]
+        #region Data Accessors
+
+        [Header("Internal Data")]
         [SerializeField, ReadOnly] private float obstacleCheckTimer;
+        public float Data_ObjstacleCheckTimer => obstacleCheckTimer;
         [SerializeField, ReadOnly] private float timeoutTimer;
+        public float Data_TimeoutTimer => timeoutTimer;
         [SerializeField, ReadOnly] private float lingerTimer;
+        public float Data_LingerTimer => lingerTimer;
         [SerializeField, ReadOnly] private float speedMultiplier = 1f;
+        public float Data_SpeedMultiplier => speedMultiplier;
         [SerializeField, ReadOnly] private List<NavPoint> navPoints;
+        public List<NavPoint> Data_NavPoints => navPoints;
         [SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
+        public List<Vector3> Data_RepulsionPoints => repulsionPoints;
         [SerializeField, ReadOnly] private bool hasReachedPoint;
+        public bool Data_HasReachedPoint => hasReachedPoint;
         [SerializeField, ReadOnly] private bool canTimeout;
+        public bool Data_CanTimeOut => canTimeout;
         [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
+        public bool Data_CAnAutoSelectNavPoints => canAutoSelectNavPoints;
         [SerializeField, ReadOnly] private bool isOnCustomPath;
+        public bool Data_IsOnCustomPath => isOnCustomPath;
         [SerializeField, ReadOnly] private bool isChasingAPlayer;
+        public bool Data_IsChasingAPlayer => isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
+        public bool Data_CanPath => canPath;
         [SerializeField, ReadOnly] private NavPoint currentPoint;
+        public NavPoint Data_CurrentPoint => currentPoint;
+        #endregion
 		
         [Header("Debug")]
         [SerializeField] private bool enableDebug;
