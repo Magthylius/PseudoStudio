@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Hadal.AI.Caverns;
 using UnityEngine;
+using ReadOnly = NaughtyAttributes.ReadOnlyAttribute;
 
 namespace Hadal.AI.Information
 {
@@ -11,11 +12,28 @@ namespace Hadal.AI.Information
         private AIBrain brain;
 
         [Header("Settings")] 
+        [Tooltip("Disable update to save editor frames")] 
         [SerializeField] private bool enableUpdate = true;
         [SerializeField] private float updateDelay = 1f;
 
-        [Header("Data Display")] 
-        [SerializeField, NaughtyAttributes.ReadOnly] private CavernTag targetCavern;
+        [Header("AI Brain")] 
+        [SerializeField, ReadOnly] private CavernTag targetCavern;
+        
+        [Header("Point Nav Handler")]
+        [SerializeField, ReadOnly] private NavPoint currentPoint;
+        [SerializeField, ReadOnly] private float obstacleCheckTimer;
+        [SerializeField, ReadOnly] private float timeoutTimer;
+        [SerializeField, ReadOnly] private float lingerTimer;
+        [SerializeField, ReadOnly] private float speedMultiplier;
+        [SerializeField, ReadOnly] private List<NavPoint> navPoints;
+        [SerializeField, ReadOnly] private List<Vector3> repulsionPoints;
+        [SerializeField, ReadOnly] private bool hasReachedPoint;
+        [SerializeField, ReadOnly] private bool canTimeout;
+        [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
+        [SerializeField, ReadOnly] private bool isOnCustomPath;
+        [SerializeField, ReadOnly] private bool isChasingAPlayer;
+        [SerializeField, ReadOnly] private bool canPath;
+        
         
         void Start()
         {
@@ -34,7 +52,7 @@ namespace Hadal.AI.Information
                 brain = GetComponentInChildren<AIBrain>();
                 navHandler = GetComponentInChildren<PointNavigationHandler>();
                 yield return null;
-            } while (navHandler == null || brain == null);
+            } while (navHandler == null || brain == null || brain.TargetMoveCavern == null);
             
             StartUpdate();
         }
@@ -43,7 +61,24 @@ namespace Hadal.AI.Information
         {
             while (enableUpdate)
             {
-                if (brain.TargetMoveCavern != null) targetCavern = brain.TargetMoveCavern.cavernTag;
+                //! AIBrain
+                targetCavern = brain.TargetMoveCavern.cavernTag;
+
+                //! NavHandler
+                obstacleCheckTimer = navHandler.Data_ObjstacleCheckTimer;
+                timeoutTimer = navHandler.Data_TimeoutTimer;
+                lingerTimer = navHandler.Data_LingerTimer;
+                speedMultiplier = navHandler.Data_SpeedMultiplier;
+                navPoints = navHandler.Data_NavPoints;
+                repulsionPoints = navHandler.Data_RepulsionPoints;
+                hasReachedPoint = navHandler.Data_HasReachedPoint;
+                canTimeout = navHandler.Data_CanTimeOut;
+                canAutoSelectNavPoints = navHandler.Data_CanAutoSelectNavPoints;
+                isOnCustomPath = navHandler.Data_IsOnCustomPath;
+                isChasingAPlayer = navHandler.Data_IsChasingAPlayer;
+                canPath = navHandler.Data_CanPath;
+                currentPoint = navHandler.Data_CurrentPoint;
+
                 yield return new WaitForSeconds(updateDelay);
             }
 

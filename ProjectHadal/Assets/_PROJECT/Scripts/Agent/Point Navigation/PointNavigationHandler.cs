@@ -32,7 +32,7 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private bool canTimeout;
         public bool Data_CanTimeOut => canTimeout;
         [SerializeField, ReadOnly] private bool canAutoSelectNavPoints;
-        public bool Data_CAnAutoSelectNavPoints => canAutoSelectNavPoints;
+        public bool Data_CanAutoSelectNavPoints => canAutoSelectNavPoints;
         [SerializeField, ReadOnly] private bool isOnCustomPath;
         public bool Data_IsOnCustomPath => isOnCustomPath;
         [SerializeField, ReadOnly] private bool isChasingAPlayer;
