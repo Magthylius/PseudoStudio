@@ -1,12 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.AI.Caverns;
-using NaughtyAttributes;
 using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
 using ReadOnlyAttribute = Tenshi.ReadOnlyAttribute;
+using Random = UnityEngine.Random;
 
 namespace Hadal.AI
 {
@@ -70,9 +71,10 @@ namespace Hadal.AI
         [SerializeField] private Rigidbody rBody;
         private CavernManager cavernManager;
 
-        // True private variables
+        // Misc variables
         private Queue<NavPoint> pointPath;
         private bool _isEnabled;
+        public event Action<float> OnObstacleDetectRadiusChange;
 
         #region Public Methods
 
@@ -96,6 +98,7 @@ namespace Hadal.AI
             repulsionPoints = new List<Vector3>();
             pointPath = new Queue<NavPoint>();
             _isEnabled = true;
+            OnObstacleDetectRadiusChange = delegate { };
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
@@ -110,7 +113,15 @@ namespace Hadal.AI
         public float ElapsedTime => Time.time;
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
-        public float ObstacleDetectionRadius => obstacleDetectRadius;
+        public float ObstacleDetectionRadius
+        {
+            get => obstacleDetectRadius;
+            set
+            {
+                obstacleDetectRadius = value;
+                OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
+            }
+        }
         public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
         /// <summary> Returns the pilot that this handler is running. </summary>
@@ -169,11 +180,19 @@ namespace Hadal.AI
 
             NavPoint first = entryPoints.Where(point => point.CavernTag == currentCavern.cavernTag).Single();
             NavPoint second = (entryPoints[0] == first) ? entryPoints[1] : entryPoints[0];
-            NavPoint third = navPoints
+            var potentialList = navPoints
                         .Where(point => point.CavernTag == destination.cavernTag && point != second)
                         .OrderBy(point => point.GetSqrDistanceTo(curPointPos))
                         .Take(numberOfClosestPointsToConsider - 1)
-                        .RandomElement();
+                        .ToList();
+
+            potentialList.RemoveAll(p => p == null);
+            if (potentialList.IsEmpty())
+            {
+                if (enableDebug) "No potential points found for cavern exit attempt.".Msg();
+                return;
+            }
+            NavPoint third = potentialList.RandomElement();
 
             if (first == null || second == null || third == null)
             {
@@ -438,6 +457,10 @@ namespace Hadal.AI
                                             .Take(numberOfClosestPointsToConsider)
                                             .ToList();
 
+            potentialPoints.RemoveAll(p => p == null);
+            if (potentialPoints.IsEmpty())
+                return;
+            
             if (currentPoint != null) currentPoint.Deselect();
             currentPoint = potentialPoints.RandomElement();
             currentPoint.Select();
