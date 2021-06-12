@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Tenshi;
 using UnityEngine;
@@ -10,7 +11,13 @@ namespace Hadal.AI
         [SerializeField] private LayerMask obstacleMask;
         [SerializeField] private LayerMask wallMask;
         private SphereCollider cCollider;
-        
+
+        private void OnValidate()
+        {
+            cCollider = GetComponent<SphereCollider>();
+            cCollider.radius = navigator.ObstacleDetectionRadius;
+        }
+
         private void Awake()
         {
             cCollider = GetComponent<SphereCollider>();
