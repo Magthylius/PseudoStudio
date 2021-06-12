@@ -33,16 +33,16 @@ namespace Hadal.AI.States
             BTNode.ExecutionOrder = 0;
             //!Defensive
             SetupDefensiveBranchBehaviourTree1();
-            SetupDefensiveBranchBehaviourTree2();
-            SetupOffensiveBranchBehaviourTree3();
-            SetupOffensiveBranchBehaviourTree4();
+            //SetupDefensiveBranchBehaviourTree2();
+            //SetupOffensiveBranchBehaviourTree3();
+            //SetupOffensiveBranchBehaviourTree4();
             rootDef.SetDebugName("RootDef");
 
             //!Offensive
             SetupOffensiveBranchBehaviourTree1();
-            SetupOffensiveBranchBehaviourTree2();
-            SetupOffensiveBranchBehaviourTree3();
-            SetupOffensiveBranchBehaviourTree4();
+            //SetupOffensiveBranchBehaviourTree2();
+            //SetupOffensiveBranchBehaviourTree3();
+            //SetupOffensiveBranchBehaviourTree4();
             rootAgg.SetDebugName("RootAgg");
         }
 

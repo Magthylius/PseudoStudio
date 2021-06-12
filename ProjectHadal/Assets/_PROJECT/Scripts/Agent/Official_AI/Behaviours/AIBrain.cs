@@ -15,7 +15,7 @@ namespace Hadal.AI
     {
         [Header("Read-only data")]
         [ReadOnly, SerializeField]
-        private CavernHandler TargetMoveCavern;
+        private CavernHandler targetMoveCavern;
 
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
@@ -242,13 +242,14 @@ namespace Hadal.AI
         #endregion
 
         #region Data
-
         public void UpdateTargetMoveCavern(CavernHandler newCavern)
         {
-            TargetMoveCavern = newCavern;
+            targetMoveCavern = newCavern;
             //NavPoint[] nextCavernPoints = CavernManager.GetHandlerOfAILocation.GetEntryNavPoints(newCavern);
             //NavigationHandler.SetQueuedPath(nextCavernPoints);
         }
+
+        public CavernHandler TargetMoveCavern => targetMoveCavern;
         #endregion
 
         public AIStateBase GetCurrentState()
