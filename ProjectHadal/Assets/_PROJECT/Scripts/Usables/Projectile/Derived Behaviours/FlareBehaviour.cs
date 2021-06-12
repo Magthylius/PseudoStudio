@@ -42,17 +42,14 @@ namespace Hadal.Usables.Projectiles
                 LayerMask layer = LayerMask.NameToLayer(layerName);
                 if (collision.gameObject.layer == layer.value)
                 {
+                    //attach locally
                     print(projectileID + "flare attach locally");
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
 
-                    print(LayerMask.LayerToName(layer));
-
-                    Vector3 collisionSpot = gameObject.transform.position;
-                   
+                    //send event data to attach          
                     bool attachedToMonster = false;
-
                     if (LayerMask.LayerToName(layer) == "MONSTER")
                     {
                         attachedToMonster = true;
@@ -61,6 +58,7 @@ namespace Hadal.Usables.Projectiles
                     {
                         attachedToMonster = false;
                     }
+                    Vector3 collisionSpot = gameObject.transform.position;
 
                     object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);

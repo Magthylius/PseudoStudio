@@ -22,7 +22,7 @@ namespace Hadal.AI
         {
             cCollider = GetComponent<SphereCollider>();
             //UpdateData();
-            print("awake");
+            //print("awake");
             navigator.OnObstacleDetectRadiusChange += UpdateData;
         }
 
@@ -40,7 +40,7 @@ namespace Hadal.AI
 
         public void UpdateData(float radius)
         {
-            print("bruh");
+            //print("bruh");
             cCollider.radius = radius;
         }
         

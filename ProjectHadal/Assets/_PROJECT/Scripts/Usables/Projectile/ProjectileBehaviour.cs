@@ -139,17 +139,14 @@ namespace Hadal.Usables.Projectiles
                 if (gameObject.activeSelf)
                 {
                     gameObject.transform.position = (Vector3)data[1];
+                    Rigidbody.isKinematic = true;
+                    IsAttached = true;
                     print(projectileID + "flare attaching due to event");
+
                     if((bool)data[2])
                     {
-                        //monster attach
+                        transform.parent = GameObject.FindGameObjectWithTag("Monster").transform;
                     }
-                    else
-                    {
-                        Rigidbody.isKinematic = true;
-                        IsAttached = true;
-                    }
-
                 }
             }
         }
