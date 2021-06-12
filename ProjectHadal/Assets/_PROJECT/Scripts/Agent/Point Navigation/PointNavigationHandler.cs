@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.AI.Caverns;
+using Hadal.AI.Settings;
 using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
@@ -11,6 +12,12 @@ using Random = UnityEngine.Random;
 
 namespace Hadal.AI
 {
+    public enum SteeringMode
+    {
+        Cavern = 0,
+        Tunnel
+    }
+    
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
         #region Data Accessors
@@ -53,17 +60,20 @@ namespace Hadal.AI
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
 
-        [Header("Force Settings")]
-        [SerializeField] private float maxVelocity;
-        [SerializeField] private float thrustForce;
-        [SerializeField] private float additionalBoostThrustForce;
-        [SerializeField] private float attractionForce;
-        [SerializeField] private float avoidanceForce;
-        [SerializeField] private float closeRepulsionForce;
-        [SerializeField] private float axisStalemateDeviationForce;
-        [SerializeField] private float obstacleDetectRadius;
-        [SerializeField] private float smoothLookAtSpeed;
-        [SerializeField] private LayerMask obstacleMask;
+        [Header("Steering Settings")] 
+        [SerializeField] private SteeringMode _steeringMode;
+        [SerializeField] private AISteeringSettings cavernSteeringSettings;
+        [SerializeField] private AISteeringSettings tunnelSteeringSettings;
+        [SerializeField, ReadOnly] private float maxVelocity;
+        [SerializeField, ReadOnly] private float thrustForce;
+        [SerializeField, ReadOnly] private float additionalBoostThrustForce;
+        [SerializeField, ReadOnly] private float attractionForce;
+        [SerializeField, ReadOnly] private float avoidanceForce;
+        [SerializeField, ReadOnly] private float closeRepulsionForce;
+        [SerializeField, ReadOnly] private float axisStalemateDeviationForce;
+        [SerializeField, ReadOnly] private float obstacleDetectRadius;
+        [SerializeField, ReadOnly] private float smoothLookAtSpeed;
+        [SerializeField, ReadOnly] private LayerMask obstacleMask;
 
         [Header("Nav Components")]
         [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
@@ -99,6 +109,8 @@ namespace Hadal.AI
             pointPath = new Queue<NavPoint>();
             _isEnabled = true;
             OnObstacleDetectRadiusChange = delegate { };
+
+            CavernModeSteering();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
@@ -113,15 +125,7 @@ namespace Hadal.AI
         public float ElapsedTime => Time.time;
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
-        public float ObstacleDetectionRadius
-        {
-            get => obstacleDetectRadius;
-            set
-            {
-                obstacleDetectRadius = value;
-                OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
-            }
-        }
+        public float ObstacleDetectionRadius => obstacleDetectRadius;
         public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
         public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
         /// <summary> Returns the pilot that this handler is running. </summary>
@@ -333,6 +337,41 @@ namespace Hadal.AI
             }
         }
 
+        public void TunnelModeSteering()
+        {
+            _steeringMode = SteeringMode.Tunnel;
+            UpdateSteering();
+        }
+
+        public void CavernModeSteering()
+        {
+            _steeringMode = SteeringMode.Cavern;
+            UpdateSteering();
+        }
+
+        void UpdateSteering()
+        {
+            AISteeringSettings currentSteer = cavernSteeringSettings;
+            
+            if (_steeringMode == SteeringMode.Cavern)
+                currentSteer = cavernSteeringSettings;
+            else if (_steeringMode == SteeringMode.Tunnel)
+                currentSteer = tunnelSteeringSettings;
+
+            maxVelocity = currentSteer.MaxVelocity;
+            thrustForce = currentSteer.ThrustForce;
+            additionalBoostThrustForce = currentSteer.AdditionalBoostThrustForce;
+            attractionForce = currentSteer.AttractionForce;
+            avoidanceForce = currentSteer.AvoidanceForce;
+            closeRepulsionForce = currentSteer.CloseRepulsionForce;
+            axisStalemateDeviationForce = currentSteer.AxisStalemateDeviationForce;
+            obstacleDetectRadius = currentSteer.ObstacleDetectRadius;
+            smoothLookAtSpeed = currentSteer.SmoothLookAtSpeed;
+            obstacleMask = currentSteer.ObstacleMask;
+            
+            print("Invocation");
+            OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
+        }
         #endregion
 
         #region Private Methods

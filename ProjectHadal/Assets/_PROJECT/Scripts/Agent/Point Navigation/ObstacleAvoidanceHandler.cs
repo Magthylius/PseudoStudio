@@ -21,7 +21,9 @@ namespace Hadal.AI
         private void Awake()
         {
             cCollider = GetComponent<SphereCollider>();
-            cCollider.radius = navigator.ObstacleDetectionRadius;
+            //UpdateData();
+            print("awake");
+            navigator.OnObstacleDetectRadiusChange += UpdateData;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -36,6 +38,12 @@ namespace Hadal.AI
                 navigator.AddRepulsionPoint(other.ClosestPointOnBounds(navigator.PilotTransform.position));
         }
 
+        public void UpdateData(float radius)
+        {
+            print("bruh");
+            cCollider.radius = radius;
+        }
+        
         private bool ShouldCollide(Collider other)
             => navigator.ObstacleTimerReached;
             // || other.gameObject.layer == obstacleMask.ToLayer()
