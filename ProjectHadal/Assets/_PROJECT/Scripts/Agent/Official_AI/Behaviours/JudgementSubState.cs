@@ -32,8 +32,12 @@ namespace Hadal.AI.States
             BTNode.EnableDebug = b.DebugEnabled;
             BTNode.ExecutionOrder = 0;
             //!Defensive
-            SetupDefensiveBranchBehaviourTree();
-            
+            SetupDefensiveBranchBehaviourTree1();
+            SetupDefensiveBranchBehaviourTree2();
+            SetupOffensiveBranchBehaviourTree3();
+            SetupOffensiveBranchBehaviourTree4();
+            rootDef.SetDebugName("RootDef");
+
             //!Offensive
             SetupOffensiveBranchBehaviourTree1();
             SetupOffensiveBranchBehaviourTree2();
@@ -44,7 +48,9 @@ namespace Hadal.AI.States
 
 
         //! FILO
-        private void SetupDefensiveBranchBehaviourTree()
+        //! Setup Def/Off Branch BT X (X based on number of players to check)
+        #region Defensive Branch
+        private void SetupDefensiveBranchBehaviourTree1()
         {
             BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
             setRecoveryState.SetDebugName("set recovery state");
@@ -91,7 +97,133 @@ namespace Hadal.AI.States
             rootDef = new BTSequence(new List<BTNode>() { sequenceD1 });
         }
 
-#region Offensive Branch
+        private void SetupDefensiveBranchBehaviourTree2()
+        {
+            BTSelector twoPlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 2) });
+            twoPlayerInCavern.SetDebugName("Two player in cavern?");
+
+            BTSequence isCarryingAnyPlayer = new BTSequence(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
+            isCarryingAnyPlayer.SetDebugName("Is carrying any player");
+
+            BTSelector hasJT3Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 3) });
+            hasJT3Passed.SetDebugName("has jt3 passed?");
+
+            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
+            setRecoveryState.SetDebugName("set recovery state");
+
+            BTSequence tailWhip = new BTSequence(new List<BTNode>() { new TailWhipNode(b, 1f) });
+            tailWhip.SetDebugName("tail whip");
+
+            BTSequence escapeTailWhip = new BTSequence(new List<BTNode>() { tailWhip, setRecoveryState });
+            escapeTailWhip.SetDebugName("escape tail whip");
+
+            BTSequence sequenceD2 = new BTSequence(new List<BTNode>()
+            {
+                twoPlayerInCavern,
+                isCarryingAnyPlayer,
+                hasJT3Passed,
+                escapeTailWhip
+            });
+            sequenceD2.SetDebugName("sequence D2");
+
+            //! IsCarryingPlayer Fallback
+            BTSelector moveToNearestPlayer = new BTSelector(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false) }); //! Not sure how to set so need to reset the parameters
+            //! If moveToNearestPlayer Fails, escape tailwhip. Shud tailwhip use selector? cause it's a fallback
+            // BTSelector tailWhipSelector = new BTSelector(new List<BTNode>() { new TailWhipNode(b, 1f) });
+            // tailWhip.SetDebugName("tail whip");
+            BTSequence isCarryingPlayerFallbackD2 = new BTSequence(new List<BTNode>()
+            {
+                moveToNearestPlayer,
+                setRecoveryState
+            });
+
+            BTSequence threshCarriedPlayer = new BTSequence(new List<BTNode>() { new ThreshCarriedPlayerNode(b, damageManager) });
+            threshCarriedPlayer.SetDebugName("thresh carried player?");
+            BTSequence threshNearestTarget = new BTSequence(new List<BTNode>() { isCarryingAnyPlayer, threshCarriedPlayer });
+            threshNearestTarget.SetDebugName("thresh nearest target");
+            //JT3 fallback
+            BTSequence jt3Fallback = new BTSequence(new List<BTNode>()
+            {
+                threshNearestTarget,
+                setRecoveryState
+            });
+
+
+            rootDef.AddNode(sequenceD2);
+
+        }
+        private void SetupDefensiveBranchBehaviourTree3()
+        {
+            BTSelector threePlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 3) });
+            threePlayerInCavern.SetDebugName("Three player in cavern?");
+
+            BTSequence isCarryingAnyPlayer = new BTSequence(new List<BTNode>() { new IsCarryingAPlayerNode(b, false) });
+            isCarryingAnyPlayer.SetDebugName("Is carrying any player");
+
+            BTSelector hasJT2Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 2) });
+            hasJT2Passed.SetDebugName("has jt2 passed?");
+
+            BTSequence sequenceD3 = new BTSequence(new List<BTNode>()
+            {
+                threePlayerInCavern,
+                isCarryingAnyPlayer,
+                hasJT2Passed,
+            });
+            sequenceD3.SetDebugName("sequence D3");
+
+
+            //!*IsCarryingPlayer Fallback*
+            BTSelector moveToNearestPlayer = new BTSelector(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false) }); //! Not sure how to set so need to reset the parameters
+            //! If moveToNearestPlayer Fails, escape tailwhip. Shud tailwhip use selector? cause it's a fallback
+            // BTSelector tailWhipSelector = new BTSelector(new List<BTNode>() { new TailWhipNode(b, 1f) });
+            // tailWhip.SetDebugName("tail whip");
+            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
+            setRecoveryState.SetDebugName("set recovery state");
+            BTSequence isCarryingPlayerFallbackD3 = new BTSequence(new List<BTNode>()
+            {
+                moveToNearestPlayer,
+                setRecoveryState
+            });
+
+            //!*JT2 Fallback*
+            BTSelector recoveryFallback = new BTSelector(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
+
+            rootDef.AddNode(sequenceD3);
+        }
+
+        private void SetupDefensiveBranchBehaviourTree4()
+        {
+            BTSelector fourPlayerInCavern = new BTSelector(new List<BTNode>() { new IsPlayersInCavernEqualToNode(b, 4) });
+            fourPlayerInCavern.SetDebugName("four player in cavern?");
+
+            BTSequence getPlayerToCarry = new BTSequence(new List<BTNode>() { new MoveToPlayerNode(b, b.RuntimeData.navPointPrefab, 2, 1000, false), new CarryTargetNode(b, 1.5f, 0.5f) });
+            getPlayerToCarry.SetDebugName("get player to carry");
+
+            BTSelector hasJT1Passed = new BTSelector(new List<BTNode>() { new HasJudgementThresholdExceededNode(b, 1) });
+            hasJT1Passed.SetDebugName("has jt4 passed?");
+
+            BTSequence sequenceD4 = new BTSequence(new List<BTNode>()
+            {
+                fourPlayerInCavern,
+                getPlayerToCarry,
+                hasJT1Passed
+            });
+            sequenceD4.SetDebugName("sequence D4");
+
+            //! JT1 Fallback
+            BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
+            setRecoveryState.SetDebugName("set recovery state");
+
+            //! GrabNearestPlayer Fallback
+            BTSequence tailWhip = new BTSequence(new List<BTNode>() { new TailWhipNode(b, 1f) });
+            tailWhip.SetDebugName("tail whip");
+
+            rootDef.AddNode(sequenceD4);
+
+        }
+        #endregion
+
+        #region Offensive Branch
         private void SetupOffensiveBranchBehaviourTree1()
         {
             BTSequence setRecoveryState = new BTSequence(new List<BTNode>() { new ChangeStateNode(b, MainObjective.Recover) });
@@ -311,7 +443,7 @@ namespace Hadal.AI.States
 
             rootAgg.AddNode(sequenceA4);
         }
-#endregion
+        #endregion
 
         //TODO: Set a way to determine which root to go or probablity?
         int randomNumber;
