@@ -30,6 +30,7 @@ namespace Hadal.Debugging
         public static DebugCommand C_AIStop;
         public static DebugCommand C_AIMove;
         public static DebugCommand<float> C_AISetSpeed;
+        public static DebugCommand<int> C_AISetState;
         
         //! Player
         public static DebugCommand<int> C_SetHp;
@@ -68,8 +69,6 @@ namespace Hadal.Debugging
 
         private void Start()
         {
-            //AIBrain aiBrain = FindObjectOfType<AIBrain>();
-            
             //! Implement commands here
             //! Console
             C_Help = new DebugCommand("help", "Toggles list of commands", "help", () =>
@@ -94,6 +93,26 @@ namespace Hadal.Debugging
             C_AISetSpeed = new DebugCommand<float>("AISetSpeed", "Sets the speed multiplier of AI", "AISetSpeed", (x) =>
             {
                 FindObjectOfType<AIBrain>().NavigationHandler.SetDebugVelocityMultiplier(x);
+            });
+            C_AISetState = new DebugCommand<int>("AISetState", "Forces the AI into (1)Anticipation, (2)Engagement, (3)Recovery, (4)Cooldown", "AISetState", (x) =>
+            {
+                switch (x)
+                {
+                    case 1:
+                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Anticipation);
+                        break;
+                    case 2:
+                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Engagement);
+                        break;
+                    case 3:
+                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Recover);
+                        break;
+                    case 4:
+                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Cooldown);
+                        break;
+                    default:
+                        break;
+                }
             });
             
             //! Player
@@ -125,6 +144,7 @@ namespace Hadal.Debugging
                 C_AIStop,
                 C_AIMove,
                 C_AISetSpeed,
+                C_AISetState,
                 C_SetHp,
                 C_SetSpeed,
                 C_SetMaxSpeed,
