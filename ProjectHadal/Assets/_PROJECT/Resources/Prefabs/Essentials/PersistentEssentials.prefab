@@ -308,10 +308,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a196a3c96192f0740b1cb8eedd736536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isOfflineMode: 1
+  isOfflineMode: 0
   localPlayerSpawnTrans: {fileID: 4099844762844519294}
   MainMenuScene: MainMenu
-  InGameScene: Vertical Slice (S)
+  InGameScene: Vertical Slice
   maxPlayers: 4
   playerTTL: 1000
   emptyRoomTTL: 1000
@@ -383,6 +383,10 @@ PrefabInstance:
       propertyPath: fpsUpdateCycle
       value: 0.05
       objectReference: {fileID: 0}
+    - target: {fileID: 4633874112791886494, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+      propertyPath: wholeCanvasParent
+      value: 
+      objectReference: {fileID: 7106379817278195641}
     - target: {fileID: 8716315643385868218, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
       propertyPath: debugKeyList.Array.size
       value: 6
@@ -448,6 +452,11 @@ PrefabInstance:
 --- !u!4 &2572319464389894201 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8716315643385868229, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
+  m_PrefabInstance: {fileID: 6576420977376858108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7106379817278195641 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4168867348216203333, guid: bf740a43101e73945a1f64f90ce8e001, type: 3}
   m_PrefabInstance: {fileID: 6576420977376858108}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8378643974000705410

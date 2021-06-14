@@ -424,6 +424,8 @@ namespace Hadal.UI
         #endregion
 
         #region Accessors
+
+        public bool IsOpen => pauseMenuOpen;
         public static bool IsNull => Instance == null;
         #endregion
     }

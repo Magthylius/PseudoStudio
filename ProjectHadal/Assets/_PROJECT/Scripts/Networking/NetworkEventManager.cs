@@ -44,7 +44,7 @@ namespace Hadal.Networking
         [Scene] public string InGameScene;
 
         List<GameObject> playerObjects;
-        
+
         //! internal references
         bool loadsToMainMenu = false;
 
@@ -392,7 +392,7 @@ namespace Hadal.Networking
             mainMenuManager = MainMenuManager.Instance;
             // mainMenuManager.InitMainMenu();
             print("Joined lobby");
-            JoinedLobbyEvent.Invoke();
+            JoinedLobbyEvent?.Invoke();
             gameManager.ChangeGameState(GameManager.GameState.IDLE);
         }
 
@@ -497,7 +497,7 @@ namespace Hadal.Networking
 
         public void SpawnPlayerManager()
         {
-            PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
+            GameObject o = PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
         }
 
         public void SpawnAIEssentials(Vector3 pos = new Vector3(), Quaternion rot = new Quaternion())
