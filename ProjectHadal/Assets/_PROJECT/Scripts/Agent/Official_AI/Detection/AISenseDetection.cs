@@ -46,6 +46,9 @@ namespace Hadal.AI
             Collider[] playerSphere = Physics.OverlapSphere(transform.position + detectionOffset, overlapSphereDetectionRadius, _brain.RuntimeData.PlayerMask);
             DetectedPlayersCount = playerSphere.Length;
             _detectedPlayers = playerSphere.Select(c => c.GetComponent<PlayerController>()).ToList();
+
+            //Temporary
+            _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
             //if (_brain.DebugEnabled) Debug.Log("I SENSE:" + DetectedPlayersCount);
         }
 
