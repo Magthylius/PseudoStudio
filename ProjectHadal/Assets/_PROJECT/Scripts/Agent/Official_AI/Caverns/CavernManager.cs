@@ -85,7 +85,7 @@ namespace Hadal.AI.Caverns
 
         private void OnValidate()
         {
-            handlerList.RemoveAll(wat => wat == null);
+            handlerList.RemoveAll(cavern => cavern == null);
         }
 
         protected override void Awake()

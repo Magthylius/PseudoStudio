@@ -268,7 +268,8 @@ namespace Hadal.AI
 
         public CavernHandler TargetMoveCavern => targetMoveCavern;
         #endregion
-
+        
+        
         public BrainState GetState => runtimeData.GetBrainState;
         public AIStateBase GetCurrentState()
         {
