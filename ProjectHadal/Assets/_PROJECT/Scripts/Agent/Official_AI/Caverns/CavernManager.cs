@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.Player;
-using ICSharpCode.NRefactory.Ast;
 using NaughtyAttributes;
 using Tenshi.UnitySoku;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 //! C: Jon
