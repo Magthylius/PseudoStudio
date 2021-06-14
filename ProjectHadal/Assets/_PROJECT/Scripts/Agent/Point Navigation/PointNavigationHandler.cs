@@ -17,7 +17,7 @@ namespace Hadal.AI
         Cavern = 0,
         Tunnel
     }
-    
+
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
         #region Data Accessors
@@ -50,10 +50,11 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private NavPoint currentPoint;
         public NavPoint Data_CurrentPoint => currentPoint;
         #endregion
-		
+
         [Header("Debug")]
         [SerializeField] private bool enableDebug;
-		[SerializeField] private bool enableMovement;
+        [SerializeField] private bool showObstacleInfo;
+        [SerializeField] private bool enableMovement;
 
         [Header("Timer Settings")]
         [SerializeField] private float minLingerTime;
@@ -61,7 +62,7 @@ namespace Hadal.AI
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
 
-        [Header("Steering Settings")] 
+        [Header("Steering Settings")]
         [SerializeField] private SteeringMode _steeringMode;
         [SerializeField] private AISteeringSettings cavernSteeringSettings;
         [SerializeField] private AISteeringSettings tunnelSteeringSettings;
@@ -78,7 +79,7 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private LayerMask obstacleMask;
 
         private float debugVelocityMultiplier = 1f;
-        
+
         [Header("Nav Components")]
         [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
         [SerializeField] private Transform pilotTrans;
@@ -89,6 +90,11 @@ namespace Hadal.AI
         private Queue<NavPoint> pointPath;
         private bool _isEnabled;
         public event Action<float> OnObstacleDetectRadiusChange;
+
+        private void OnValidate()
+        {
+            if (!enableDebug) showObstacleInfo = false;
+        }
 
         #region Public Methods
 
@@ -123,6 +129,8 @@ namespace Hadal.AI
             MoveForwards(fixedDeltaTime);
             MoveTowardsCurrentNavPoint(fixedDeltaTime);
             HandleObstacleAvoidance(fixedDeltaTime);
+            HandleSpeedAndDirection(fixedDeltaTime);
+            ClampMaxVelocity();
         }
 
         public float ElapsedTime => Time.time;
@@ -302,11 +310,11 @@ namespace Hadal.AI
                 SelectNewNavPoint();
                 return;
             }
-            
+
             currentPoint.Deselect();
             if (currentPoint.CavernTag == CavernTag.Custom_Point) Destroy(currentPoint.gameObject);
             if (automaticallySelectNewPoint) SelectNewNavPoint();
-			if (enableDebug) $"New point selected: {currentPoint.gameObject.name}".Msg();
+            if (enableDebug) $"New point selected: {currentPoint.gameObject.name}".Msg();
         }
 
         /// <summary>
@@ -358,7 +366,7 @@ namespace Hadal.AI
         void UpdateSteering()
         {
             AISteeringSettings currentSteer = cavernSteeringSettings;
-            
+
             if (_steeringMode == SteeringMode.Cavern)
                 currentSteer = cavernSteeringSettings;
             else if (_steeringMode == SteeringMode.Tunnel)
@@ -375,7 +383,7 @@ namespace Hadal.AI
             closeNavPointDetectionRadius = currentSteer.CloseNavPointDetectionRadius;
             smoothLookAtSpeed = currentSteer.SmoothLookAtSpeed;
             obstacleMask = currentSteer.ObstacleMask;
-            
+
             OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
         }
 
@@ -393,19 +401,21 @@ namespace Hadal.AI
 
         private void HandleSpeedAndDirection(in float deltaTime)
         {
-            //! Clamp max speed
-            if (rBody.velocity.magnitude > maxVelocity)
-                rBody.velocity = rBody.velocity.normalized * maxVelocity;
-
             if (currentPoint == null) return;
-            
+
             //! Chasing player direction
             Vector3 moveTo = currentPoint.GetPosition - pilotTrans.position;
             rBody.velocity = Vector3.Lerp(rBody.velocity, rBody.velocity + moveTo, deltaTime * attractionForce);
 
             //! Look at
-            Vector3 lookAt = rBody.velocity.normalized;
-            pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
+            pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, deltaTime * smoothLookAtSpeed);
+        }
+
+        private void ClampMaxVelocity()
+        {
+            float cappedVelocity = maxVelocity * debugVelocityMultiplier;
+            if (rBody.velocity.magnitude > cappedVelocity)
+                rBody.velocity = rBody.velocity.normalized * cappedVelocity;
         }
 
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
@@ -414,17 +424,6 @@ namespace Hadal.AI
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
             Vector3 force = direction * (TotalAttractionForce * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
-
-            float cappedVelocity = maxVelocity * debugVelocityMultiplier;
-            if (rBody.velocity.magnitude > cappedVelocity)
-                rBody.velocity = rBody.velocity.normalized * cappedVelocity;
-            
-            Vector3 lookAt;
-            if (isChasingAPlayer)
-                lookAt = (currentPoint.GetPosition - pilotTrans.position).normalized;
-            else
-                lookAt = rBody.velocity.normalized;
-            pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
 
             if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius))
             {
@@ -443,7 +442,7 @@ namespace Hadal.AI
 
                     currentPoint = pointPath.Dequeue();
                     hasReachedPoint = false;
-					ResetTimeoutTimer();
+                    ResetTimeoutTimer();
                     return;
                 }
 
@@ -457,7 +456,7 @@ namespace Hadal.AI
         {
             obstacleCheckTimer -= deltaTime;
             if (!ObstacleTimerReached) return;
-            if (enableDebug) $"Obstacle count: {repulsionPoints.Count}".Msg();
+            if (enableDebug && showObstacleInfo) $"Obstacle count: {repulsionPoints.Count}".Msg();
 
             float deltaOfTime = deltaTime;
             repulsionPoints.ForEach(p =>
@@ -470,14 +469,17 @@ namespace Hadal.AI
 
                 //! Diversion force added if the AI is looking directly at the repulsion point
                 Vector3 force = (pilotTrans.position - p).normalized * (avoidanceForce * multiplier);
-                Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
-                if (cross.magnitude.Abs() <= 0.2f)
+                if (!isChasingAPlayer)
                 {
-                    Vector3 direction = force.normalized;
+                    Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
+                    if (cross.magnitude.Abs() <= 0.2f)
+                    {
+                        Vector3 direction = force.normalized;
 
-                    //! Diversion force added is always towards the right
-                    Vector3 relativeRight = new Vector3(direction.z, direction.y, -direction.x).normalized;
-                    force += relativeRight * axisStalemateDeviationForce;
+                        //! Diversion force added is always towards the right
+                        Vector3 relativeRight = new Vector3(direction.z, direction.y, -direction.x).normalized;
+                        force += relativeRight * axisStalemateDeviationForce;
+                    }
                 }
                 rBody.AddForce(force * deltaOfTime, ForceMode.VelocityChange);
             });
@@ -518,8 +520,8 @@ namespace Hadal.AI
                 return;
 
             if (currentPoint == null)
-				currentPoint = GetClosestPointToSelf(); 
-            
+                currentPoint = GetClosestPointToSelf();
+
             List<NavPoint> potentialPoints = navPoints
                                             .Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation())
                                             .OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition))
@@ -529,13 +531,13 @@ namespace Hadal.AI
             potentialPoints.RemoveAll(p => p == null);
             if (potentialPoints.IsEmpty())
                 return;
-            
+
             if (currentPoint != null) currentPoint.Deselect();
             currentPoint = potentialPoints.RandomElement();
             currentPoint.Select();
             hasReachedPoint = false;
             if (enableDebug)
-				$"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
+                $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
 
         private NavPoint GetClosestPointToSelf() => navPoints.OrderBy(n => n.GetSqrDistanceTo(pilotTrans.position)).FirstOrDefault();
