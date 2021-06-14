@@ -95,8 +95,12 @@ namespace Hadal.AI
         {
             allAIComponents.ForEach(i => i.Initialise(this));
             cavernManager = FindObjectOfType<CavernManager>();
+            
+            //! Event handling
             cavernManager.AIEnterCavernEvent += OnCavernEnter;
             cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
+            cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
+            cavernManager.AILeftTunnelEvent += OnTunnelLeave;
 
             //! State machine
             InitialiseStates();
@@ -168,17 +172,27 @@ namespace Hadal.AI
 
         #region Event Handlers
         /// <summary>Calls when AI enters a cavern</summary>
-        public void OnCavernEnter(CavernHandler cavern)
+        void OnCavernEnter(CavernHandler cavern)
         {
             //stateMachine.CurrentState.OnCavernEnter();
             GetCurrentState().OnCavernEnter(cavern);
         }
 
         /// <summary>Calls when a player enters the cavern AI is in</summary>
-        public void OnPlayerEnterAICavern(CavernPlayerData data)
+        void OnPlayerEnterAICavern(CavernPlayerData data)
         {
             if (data.Handler == cavernManager.GetHandlerOfAILocation)
                 GetCurrentState().OnPlayerEnterAICavern(data);
+        }
+
+        void OnTunnelEnter(TunnelBehaviour tunnel)
+        {
+            navigationHandler.TunnelModeSteering();
+        }
+
+        public void OnTunnelLeave(TunnelBehaviour tunnel)
+        {
+            navigationHandler.CavernModeSteering();
         }
         #endregion
 
