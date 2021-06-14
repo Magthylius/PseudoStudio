@@ -53,6 +53,7 @@ namespace Hadal.AI
 		
         [Header("Debug")]
         [SerializeField] private bool enableDebug;
+		[SerializeField] private bool enableMovement;
 
         [Header("Timer Settings")]
         [SerializeField] private float minLingerTime;
@@ -108,14 +109,13 @@ namespace Hadal.AI
             repulsionPoints = new List<Vector3>();
             pointPath = new Queue<NavPoint>();
             _isEnabled = true;
-            //OnObstacleDetectRadiusChange = delegate { };
 
             CavernModeSteering();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
         {
-            if (!CanMove || !canPath) return;
+            if (!CanMove || !canPath || !enableMovement) return;
             TrySelectNewNavPoint(fixedDeltaTime);
             MoveForwards(fixedDeltaTime);
             MoveTowardsCurrentNavPoint(fixedDeltaTime);

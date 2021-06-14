@@ -7,6 +7,7 @@ using Hadal.AI.Caverns;
 using Photon.Pun;
 using System.Linq;
 using Tenshi;
+using Tenshi.UnitySoku;
 using Hadal.Player;
 
 namespace Hadal.AI
@@ -72,6 +73,9 @@ namespace Hadal.AI
 
         private void Awake()
         {
+			if (DebugEnabled && isOffline)
+				"Leviathan brain initialising in Offline mode.".Msg();
+			
             rBody = GetComponent<Rigidbody>();
             isStunned = false;
 

@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1642916594410295916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1642916594410295891}
+  - component: {fileID: 1642916594410295890}
+  m_Layer: 0
+  m_Name: '#Leviathan Navigation Handler'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1642916594410295891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642916594410295916}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2001657051442378740}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1642916594410295890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642916594410295916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4afc231c313531342a4a3c8d649f2aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleCheckTimer: 0
+  timeoutTimer: 0
+  lingerTimer: 0
+  speedMultiplier: 1
+  navPoints: []
+  repulsionPoints: []
+  hasReachedPoint: 0
+  canTimeout: 0
+  canAutoSelectNavPoints: 0
+  isOnCustomPath: 0
+  isChasingAPlayer: 0
+  canPath: 0
+  currentPoint: {fileID: 0}
+  enableDebug: 0
+  enableMovement: 1
+  minLingerTime: 4
+  maxLingerTime: 10
+  timeoutNewPointTime: 12
+  obstacleCheckTime: 0.1
+  _steeringMode: 0
+  cavernSteeringSettings: {fileID: 11400000, guid: 2236f65e4060cb7408fcfad93410d504, type: 2}
+  tunnelSteeringSettings: {fileID: 11400000, guid: 5019088c4761ab84c9761c44cad629c9, type: 2}
+  maxVelocity: 50
+  thrustForce: 12
+  additionalBoostThrustForce: 10
+  attractionForce: 20
+  avoidanceForce: 5
+  closeRepulsionForce: 5
+  axisStalemateDeviationForce: 2
+  obstacleDetectRadius: 30
+  smoothLookAtSpeed: 12
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4352
+  numberOfClosestPointsToConsider: 4
+  pilotTrans: {fileID: 0}
+  rBody: {fileID: 0}
+--- !u!1 &5083225641118702911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2001657051442378740}
+  - component: {fileID: 8450563343994111741}
+  - component: {fileID: 8977255334005848705}
+  - component: {fileID: 3230844639400419268}
+  m_Layer: 0
+  m_Name: Repel Bubble
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2001657051442378740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5083225641118702911}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1642916594410295891}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8450563343994111741
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5083225641118702911}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 30
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8977255334005848705
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5083225641118702911}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 3
+--- !u!114 &3230844639400419268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5083225641118702911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7bd6cddbd09c24d937aaa16b6c1c55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigator: {fileID: 1642916594410295890}
