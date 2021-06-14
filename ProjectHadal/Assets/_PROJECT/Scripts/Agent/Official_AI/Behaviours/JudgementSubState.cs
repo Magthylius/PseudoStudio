@@ -31,7 +31,6 @@ namespace Hadal.AI.States
             updateDelay = 1f / b.MachineData.Engagement.JudgementTickRate;
 
             BTNode.EnableDebug = b.DebugEnabled;
-            BTNode.ExecutionOrder = 0;
             //!Defensive
             SetupDefensiveBranchBehaviourTree1();
             // SetupDefensiveBranchBehaviourTree2();
