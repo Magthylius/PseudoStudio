@@ -173,19 +173,19 @@ namespace Hadal.AI
         /// <summary>
         /// Plans out a path to the destination cavern. Will make a new queued path.
         /// </summary>
-        /// <param name="manager">Used to obtain cavern-related information.</param>
+        /// <param name="manager">Unused, can be set to null.</param>
         /// <param name="destination">The destination where the pilot should end up.</param>
         public void SetDestinationToCavern(CavernManager manager, CavernHandler destination)
         {
             if (isChasingAPlayer) return;
-            if (manager == null || destination == null)
+            if (cavernManager == null || destination == null)
             {
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
             }
 
             Vector3 curPointPos = currentPoint.GetPosition;
-            CavernHandler currentCavern = manager.GetHandlerOfAILocation;
+            CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
             NavPoint first = entryPoints.Where(point => point.CavernTag == currentCavern.cavernTag).Single();

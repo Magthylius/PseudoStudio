@@ -23,7 +23,6 @@ namespace Hadal.AI.TreeNodes
             bool anyNodeRunning = false;
             foreach(var node in nodes)
             {
-                ExecutionOrder++;
                 switch(node.Evaluate(deltaTime))
                 {
                     //! if node is running, means there's a process happenning.
@@ -54,15 +53,10 @@ namespace Hadal.AI.TreeNodes
             return this;
         }
 
-        private void Debug(bool includeExecutionOrder = true)
+        private void Debug()
         {
             if (EnableDebug)
-            {
-                string msg = "";
-                if (includeExecutionOrder) msg += $"{ExecutionOrder}) ";
-                msg += $"Name: {debugName}, Nodestate: {_nodeState}";
-                msg.Msg();
-            }
+                $"Name: {debugName}, Nodestate: {_nodeState}".Msg();
         }
     }
 }
