@@ -68,7 +68,7 @@ namespace Hadal.Debugging
 
         private void Start()
         {
-            AIBrain aiBrain = FindObjectOfType<AIBrain>();
+            //AIBrain aiBrain = FindObjectOfType<AIBrain>();
             
             //! Implement commands here
             //! Console
@@ -85,15 +85,15 @@ namespace Hadal.Debugging
             //! AI
             C_AIStop = new DebugCommand("AIStop", "Stops the creature movement", "AIStop", () =>
             {
-                aiBrain.NavigationHandler.SetDebugVelocityMultiplier(0f);
+                FindObjectOfType<AIBrain>().NavigationHandler.SetDebugVelocityMultiplier(0f);
             });
             C_AIMove = new DebugCommand("AIMove", "Allows the creature to move", "AIMove", () =>
             {
-                aiBrain.NavigationHandler.ResetDebugVelocityMultiplier();
+                FindObjectOfType<AIBrain>().NavigationHandler.ResetDebugVelocityMultiplier();
             });
             C_AISetSpeed = new DebugCommand<float>("AISetSpeed", "Sets the speed multiplier of AI", "AISetSpeed", (x) =>
             {
-                aiBrain.NavigationHandler.SetDebugVelocityMultiplier(x);
+                FindObjectOfType<AIBrain>().NavigationHandler.SetDebugVelocityMultiplier(x);
             });
             
             //! Player

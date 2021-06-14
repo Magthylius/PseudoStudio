@@ -50,6 +50,14 @@ namespace Hadal.AI.Caverns
 
         void Awake()
         {
+            manager = FindObjectOfType<CavernManager>();
+            manager.InjectHandler(this);
+        }
+
+        void Start()
+        {
+            if (forceFirstFrameRecheck) StartCoroutine(ColliderRecheck());
+            
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
             AIEnteredCavernEvent += manager.OnAIEnterCavern;
@@ -58,25 +66,12 @@ namespace Hadal.AI.Caverns
             playersInCavern = new List<PlayerController>();
         }
 
-        void Start()
-        {
-            if (forceFirstFrameRecheck) StartCoroutine(ColliderRecheck());
-        }
-
         void OnEnable()
         {
             collider = GetComponent<Collider>();
             collider.isTrigger = true;
         }
-
-        void OnDestroy()
-        {
-            PlayerEnteredCavernEvent -= manager.OnPlayerEnterCavern;
-            PlayerLeftCavernEvent -= manager.OnPlayerLeftCavern;
-            AIEnteredCavernEvent -= manager.OnAIEnterCavern;
-            AILeftCavernEvent -= manager.OnAILeaveCavern;
-        }
-
+        
         void OnTriggerEnter(Collider other)
         {
             //! Prechecks
