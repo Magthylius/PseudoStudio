@@ -186,11 +186,13 @@ namespace Hadal.AI
 
         void OnTunnelEnter(TunnelBehaviour tunnel)
         {
+            //print("Entering tunnel");
             navigationHandler.TunnelModeSteering();
         }
 
         public void OnTunnelLeave(TunnelBehaviour tunnel)
         {
+            //print("Leaving tunnel");
             navigationHandler.CavernModeSteering();
         }
         #endregion
