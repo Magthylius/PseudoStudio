@@ -28,6 +28,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate(float deltaTime)
         {
+            Debug.Log("My Target:" + _brain.CurrentTarget);
             if (_brain.CurrentTarget == null) return NodeState.FAILURE;
             if (_target != _brain.CurrentTarget.transform)
             {
