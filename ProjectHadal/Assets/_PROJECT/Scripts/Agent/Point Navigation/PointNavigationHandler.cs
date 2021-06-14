@@ -374,7 +374,6 @@ namespace Hadal.AI
             smoothLookAtSpeed = currentSteer.SmoothLookAtSpeed;
             obstacleMask = currentSteer.ObstacleMask;
             
-            //print("Invocation");
             OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
         }
         #endregion
@@ -397,7 +396,12 @@ namespace Hadal.AI
             if (rBody.velocity.magnitude > maxVelocity)
                 rBody.velocity = rBody.velocity.normalized * maxVelocity;
 
-            Vector3 lookAt = rBody.velocity.normalized;
+            Vector3 lookAt;
+            if (isChasingAPlayer)
+                lookAt = (currentPoint.GetPosition - pilotTrans.position).normalized;
+            else
+                lookAt = rBody.velocity.normalized;
+            
             pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
 
             if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius))

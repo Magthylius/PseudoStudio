@@ -294,6 +294,8 @@ namespace Hadal.AI.States
             b.RuntimeData.ResetEngagementTicker();
             RandomizeAggOrDefRoot();
         }
+
+        private const int DelayInterval = 5;
         public override void StateTick()
         {
             float deltaTime = b.DeltaTime;
@@ -301,8 +303,11 @@ namespace Hadal.AI.States
             // if (randomNumber == 0)
             //     result = rootAgg.Evaluate(deltaTime);
             // else
+            
+            if (Time.frameCount % DelayInterval != 0)
+                return;
+            
             result = rootDef.Evaluate(deltaTime);
-
             if (b.DebugEnabled)
             {
                 if (result == NodeState.RUNNING) "Tree: Running".Msg();
@@ -316,7 +321,16 @@ namespace Hadal.AI.States
         }
         public override void LateStateTick() { }
         public override void FixedStateTick() { }
-        public override void OnStateEnd() { }
+        public override void OnStateEnd()
+        {
+            //! Subject to change
+            if (b.CarriedPlayer != null)
+            {
+                b.CarriedPlayer.SetIsCarried(false);
+                b.CarriedPlayer = null;
+                b.AttachCarriedPlayerToMouth(false);
+            }
+        }
         public override Func<bool> ShouldTerminate() => () => false;
 
         private void ResetUpdateTimer() => updateTimer = 0.0f;

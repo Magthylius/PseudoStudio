@@ -31,30 +31,30 @@ namespace Hadal.AI.TreeNodes
 
         void ThreshPlayer()
         {
-            if(timer > 0)
+            if (timer > 0)
             {
                 timer -= Time.deltaTime;
-                if(Time.time > nextActionTime)
+                if (Time.time > nextActionTime)
                 {
                     nextActionTime = Time.time + _damageManager.ApplyEveryNSeconds;
                     _damageManager.Send_DamagePlayer(_brain.CarriedPlayer.transform, AIDamageType.Thresh);
                 }
-                
+
             }
             else
             {
                 timer = 0;
                 _threshDone = true;
             }
-           
+
         }
 
         public override NodeState Evaluate(float deltaTime)
         {
-			if (_brain.CarriedPlayer == null)
+            if (_brain.CarriedPlayer == null)
                 return NodeState.FAILURE;
 
-            if(!_doOnce)
+            if (!_doOnce)
             {
                 _doOnce = true;
                 StartTimer();
@@ -62,8 +62,13 @@ namespace Hadal.AI.TreeNodes
 
             ThreshPlayer();
 
-            if(_threshDone)
+            if (_threshDone)
+            {
+                _brain.CarriedPlayer.SetIsCarried(false);
+                _brain.CarriedPlayer = null;
+                _brain.AttachCarriedPlayerToMouth(false);
                 return NodeState.SUCCESS;
+            }
             else
                 return NodeState.RUNNING;
 
