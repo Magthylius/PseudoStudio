@@ -410,6 +410,16 @@ namespace Hadal.AI
             Vector3 force = direction * (TotalAttractionForce * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
 
+            if (rBody.velocity.magnitude > maxVelocity)
+                rBody.velocity = rBody.velocity.normalized * maxVelocity;
+            
+            Vector3 lookAt;
+            if (isChasingAPlayer)
+                lookAt = (currentPoint.GetPosition - pilotTrans.position).normalized;
+            else
+                lookAt = rBody.velocity.normalized;
+            pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
+
             if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius))
             {
                 hasReachedPoint = true;
