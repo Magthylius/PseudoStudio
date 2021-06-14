@@ -37,10 +37,10 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
             
-            //if (debugRoutine != null) return;
-            //debugRoutine = Debug_SwitchToEngagementJudgementState();
-            //Brain.StartCoroutine(debugRoutine);
-
+            if (debugRoutine != null) return;
+            debugRoutine = Debug_SwitchToEngagementJudgementState();
+            Brain.StartCoroutine(debugRoutine);
+            return;
             //targetCavern = Brain.CavernManager.GetMostPopulatedCavern();
 
             SetNewTargetCavern();

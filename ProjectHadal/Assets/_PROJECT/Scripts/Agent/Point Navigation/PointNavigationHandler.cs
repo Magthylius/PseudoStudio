@@ -67,12 +67,13 @@ namespace Hadal.AI
         [SerializeField] private AISteeringSettings tunnelSteeringSettings;
         [SerializeField, ReadOnly] private float maxVelocity;
         [SerializeField, ReadOnly] private float thrustForce;
-        [SerializeField, ReadOnly] private float additionalBoostThrustForce;
+        [SerializeField, ReadOnly] private float additionalAttractionForce;
         [SerializeField, ReadOnly] private float attractionForce;
         [SerializeField, ReadOnly] private float avoidanceForce;
         [SerializeField, ReadOnly] private float closeRepulsionForce;
         [SerializeField, ReadOnly] private float axisStalemateDeviationForce;
         [SerializeField, ReadOnly] private float obstacleDetectRadius;
+        [SerializeField, ReadOnly] private float closeNavPointDetectionRadius;
         [SerializeField, ReadOnly] private float smoothLookAtSpeed;
         [SerializeField, ReadOnly] private LayerMask obstacleMask;
 
@@ -126,7 +127,8 @@ namespace Hadal.AI
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
         public float ObstacleDetectionRadius => obstacleDetectRadius;
-        public float TotalThrustForce => (thrustForce + (isChasingAPlayer.AsFloat() * additionalBoostThrustForce)) * speedMultiplier;
+        public float TotalThrustForce => thrustForce * speedMultiplier;
+        public float TotalAttractionForce => attractionForce + (isChasingAPlayer.AsFloat() * additionalAttractionForce);
         public bool ObstacleTimerReached => obstacleCheckTimer <= 0f;
         public LayerMask GetObstacleMask => obstacleMask;
         /// <summary> Returns the pilot that this handler is running. </summary>
@@ -280,8 +282,8 @@ namespace Hadal.AI
             pointPath = new Queue<NavPoint>(points);
             currentPoint = pointPath.Dequeue();
             isChasingAPlayer = false;
-            canTimeout = true;
-            canAutoSelectNavPoints = true;
+            canTimeout = false;
+            canAutoSelectNavPoints = false;
             ResetLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting queued path".Msg();
@@ -362,12 +364,13 @@ namespace Hadal.AI
 
             maxVelocity = currentSteer.MaxVelocity;
             thrustForce = currentSteer.ThrustForce;
-            additionalBoostThrustForce = currentSteer.AdditionalBoostThrustForce;
+            additionalAttractionForce = currentSteer.AdditionalAttractionForce;
             attractionForce = currentSteer.AttractionForce;
             avoidanceForce = currentSteer.AvoidanceForce;
             closeRepulsionForce = currentSteer.CloseRepulsionForce;
             axisStalemateDeviationForce = currentSteer.AxisStalemateDeviationForce;
             obstacleDetectRadius = currentSteer.ObstacleDetectRadius;
+            closeNavPointDetectionRadius = currentSteer.CloseNavPointDetectionRadius;
             smoothLookAtSpeed = currentSteer.SmoothLookAtSpeed;
             obstacleMask = currentSteer.ObstacleMask;
             
@@ -388,7 +391,7 @@ namespace Hadal.AI
         {
             if (currentPoint == null) return;
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
-            Vector3 force = direction * (attractionForce * deltaTime);
+            Vector3 force = direction * (TotalAttractionForce * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
 
             if (rBody.velocity.magnitude > maxVelocity)
@@ -397,8 +400,7 @@ namespace Hadal.AI
             Vector3 lookAt = rBody.velocity.normalized;
             pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
 
-            float closeRadius = obstacleDetectRadius - 2f;
-            if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < closeRadius * closeRadius)
+            if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius))
             {
                 hasReachedPoint = true;
                 EvaluateQueuedPath();
@@ -529,6 +531,9 @@ namespace Hadal.AI
             if (!enableDebug || pilotTrans == null) return;
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(pilotTrans.position, obstacleDetectRadius);
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(pilotTrans.position, closeNavPointDetectionRadius);
 
             if (currentPoint == null) return;
             Gizmos.color = Color.yellow;
