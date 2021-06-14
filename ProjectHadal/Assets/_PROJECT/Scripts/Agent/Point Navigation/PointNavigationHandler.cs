@@ -386,23 +386,29 @@ namespace Hadal.AI
             rBody.AddForce(force, ForceMode.VelocityChange);
         }
 
+        private void HandleSpeedAndDirection(in float deltaTime)
+        {
+            //! Clamp max speed
+            if (rBody.velocity.magnitude > maxVelocity)
+                rBody.velocity = rBody.velocity.normalized * maxVelocity;
+
+            if (currentPoint == null) return;
+            
+            //! Chasing player direction
+            Vector3 moveTo = currentPoint.GetPosition - pilotTrans.position;
+            rBody.velocity = Vector3.Lerp(rBody.velocity, rBody.velocity + moveTo, deltaTime * attractionForce);
+
+            //! Look at
+            Vector3 lookAt = rBody.velocity.normalized;
+            pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
+        }
+
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
         {
             if (currentPoint == null) return;
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
             Vector3 force = direction * (TotalAttractionForce * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
-
-            if (rBody.velocity.magnitude > maxVelocity)
-                rBody.velocity = rBody.velocity.normalized * maxVelocity;
-
-            Vector3 lookAt;
-            if (isChasingAPlayer)
-                lookAt = (currentPoint.GetPosition - pilotTrans.position).normalized;
-            else
-                lookAt = rBody.velocity.normalized;
-            
-            pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, lookAt, deltaTime * smoothLookAtSpeed);
 
             if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius))
             {
