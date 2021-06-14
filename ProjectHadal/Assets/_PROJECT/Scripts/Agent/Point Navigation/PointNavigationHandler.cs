@@ -77,6 +77,8 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private float smoothLookAtSpeed;
         [SerializeField, ReadOnly] private LayerMask obstacleMask;
 
+        private float debugVelocityMultiplier = 1f;
+        
         [Header("Nav Components")]
         [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
         [SerializeField] private Transform pilotTrans;
@@ -376,6 +378,9 @@ namespace Hadal.AI
             
             OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
         }
+
+        public void SetDebugVelocityMultiplier(float multiplier) => debugVelocityMultiplier = multiplier;
+        public void ResetDebugVelocityMultiplier() => SetDebugVelocityMultiplier(1f);
         #endregion
 
         #region Private Methods
@@ -410,8 +415,9 @@ namespace Hadal.AI
             Vector3 force = direction * (TotalAttractionForce * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
 
-            if (rBody.velocity.magnitude > maxVelocity)
-                rBody.velocity = rBody.velocity.normalized * maxVelocity;
+            float cappedVelocity = maxVelocity * debugVelocityMultiplier;
+            if (rBody.velocity.magnitude > cappedVelocity)
+                rBody.velocity = rBody.velocity.normalized * cappedVelocity;
             
             Vector3 lookAt;
             if (isChasingAPlayer)

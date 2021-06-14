@@ -35,3 +35,17 @@ public class DebugCommand : DebugCommandBase
         _command.Invoke();
     }
 }
+
+public class DebugCommand<T1> : DebugCommandBase
+{
+    private Action<T1> _command;
+    public DebugCommand(string id, string desc, string format, Action<T1> command) : base(id, desc, format)
+    {
+        _command = command;
+    }
+    
+    public void Invoke(T1 value)
+    {
+        _command.Invoke(value);
+    }
+}
