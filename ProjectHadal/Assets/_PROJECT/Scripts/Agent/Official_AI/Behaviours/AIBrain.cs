@@ -15,8 +15,7 @@ namespace Hadal.AI
     public class AIBrain : MonoBehaviour
     {
         [Header("Read-only data")]
-        [ReadOnly, SerializeField]
-        private CavernHandler targetMoveCavern;
+        [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
 
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
@@ -270,6 +269,7 @@ namespace Hadal.AI
         public CavernHandler TargetMoveCavern => targetMoveCavern;
         #endregion
 
+        public BrainState GetState => runtimeData.GetBrainState;
         public AIStateBase GetCurrentState()
         {
             foreach (AIStateBase state in allStates) if (state.IsCurrentState) return state;
