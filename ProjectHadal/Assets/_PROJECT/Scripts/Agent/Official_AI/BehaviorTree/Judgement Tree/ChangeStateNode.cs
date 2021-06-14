@@ -3,9 +3,9 @@ namespace Hadal.AI.TreeNodes
     public class ChangeStateNode : BTNode
     {
         private AIBrain _brain;
-        private MainObjective _stateObjective;
+        private BrainState _stateObjective;
 
-        public ChangeStateNode(AIBrain brain, MainObjective objective)
+        public ChangeStateNode(AIBrain brain, BrainState objective)
         {
             _brain = brain;
             _stateObjective = objective;
@@ -14,7 +14,7 @@ namespace Hadal.AI.TreeNodes
         public override NodeState Evaluate(float deltaTime)
         {
             // return NodeState.SUCCESS;
-            _brain.RuntimeData.SetMainObjective(_stateObjective);
+            _brain.RuntimeData.SetBrainState(_stateObjective);
             return NodeState.SUCCESS;
         }
     }

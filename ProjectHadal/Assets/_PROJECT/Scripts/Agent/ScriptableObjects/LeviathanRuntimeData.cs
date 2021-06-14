@@ -21,12 +21,12 @@ namespace Hadal.AI
         [SerializeField] private StateMachineData machineData;
 
         [Header("Objectives")]
-        [SerializeField, ReadOnly] MainObjective mainObjective;
-        [SerializeField, ReadOnly] EngagementObjective engagementObjective;
-        public MainObjective GetMainObjective => mainObjective;
-        public EngagementObjective GetEngagementObjective => engagementObjective;
-        public void SetMainObjective(MainObjective objective) => mainObjective = objective;
-        public void SetEngagementObjective(EngagementObjective objective) => engagementObjective = objective;
+        [SerializeField, ReadOnly] BrainState brainState;
+        [SerializeField, ReadOnly] EngagementSubState engagementSubState;
+        public BrainState GetBrainState => brainState;
+        public EngagementSubState GetEngagementObjective => engagementSubState;
+        public void SetBrainState(BrainState state) => brainState = state;
+        public void SetEngagementSubState(EngagementSubState state) => engagementSubState = state;
 
         [Header("Confidence")]
         [SerializeField, ReadOnly] int confidence;
@@ -82,8 +82,8 @@ namespace Hadal.AI
             if (ObstacleMask == default) ObstacleMask = LayerMask.GetMask("Wall");
 
             //! ObjectivesReset
-            mainObjective = MainObjective.None;
-            engagementObjective = EngagementObjective.Aggressive;
+            brainState = BrainState.None;
+            engagementSubState = EngagementSubState.Aggressive;
 
             //! Confidence
             if (machineData.RandomiseConfidenceOnAwake)

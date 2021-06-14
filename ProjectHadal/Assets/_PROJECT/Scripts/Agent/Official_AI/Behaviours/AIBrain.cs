@@ -100,7 +100,7 @@ namespace Hadal.AI
 
             //! State machine
             InitialiseStates();
-            runtimeData.SetMainObjective(MainObjective.Anticipation);
+            runtimeData.SetBrainState(BrainState.Anticipation);
             stateMachine.SetState(anticipationState);
 
             //! Runtime data
@@ -186,19 +186,19 @@ namespace Hadal.AI
 
         Func<bool> IsAnticipating() => () =>
         {
-            return RuntimeData.GetMainObjective == MainObjective.Anticipation && !isStunned;
+            return RuntimeData.GetBrainState == BrainState.Anticipation && !isStunned;
         };
         Func<bool> IsRecovering() => () =>
         {
-            return RuntimeData.GetMainObjective == MainObjective.Recover && !isStunned;
+            return RuntimeData.GetBrainState == BrainState.Recover && !isStunned;
         };
         Func<bool> HasEngageObjective() => () =>
         {
-            return RuntimeData.GetMainObjective == MainObjective.Engagement && !isStunned;
+            return RuntimeData.GetBrainState == BrainState.Engagement && !isStunned;
         };
         Func<bool> IsCooldown() => () =>
         {
-            return RuntimeData.GetMainObjective == MainObjective.Cooldown && !isStunned;
+            return RuntimeData.GetBrainState == BrainState.Cooldown && !isStunned;
         };
 
         Func<bool> IsStunned() => () =>

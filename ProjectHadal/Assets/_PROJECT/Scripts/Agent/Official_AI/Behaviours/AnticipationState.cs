@@ -28,8 +28,8 @@ namespace Hadal.AI.States
         IEnumerator Debug_SwitchToEngagementJudgementState()
         {
             yield return new WaitForSeconds(2f);
-            Brain.RuntimeData.SetMainObjective(MainObjective.Engagement);
-            Brain.RuntimeData.SetEngagementObjective(EngagementObjective.Judgement);
+            Brain.RuntimeData.SetBrainState(BrainState.Engagement);
+            Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
         }
 
         public override void OnStateStart()
@@ -52,7 +52,7 @@ namespace Hadal.AI.States
             }
 
             AllowStateTick = true;
-            RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
+            RuntimeData.SetEngagementSubState(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
             
             
             Brain.StartCoroutine(CheckPlayersInRange());
@@ -109,15 +109,15 @@ namespace Hadal.AI.States
 
         void SetNewTargetCavern()
         {
-            EngagementObjective currentObj = RuntimeData.GetEngagementObjective;
+            EngagementSubState currentObj = RuntimeData.GetEngagementObjective;
 
             switch (currentObj)
             {
-                case EngagementObjective.Aggressive:
+                case EngagementSubState.Aggressive:
                     if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
                     //targetCavern = CavernManager.GetMostPopulatedCavern();
                     break;
-                case EngagementObjective.Ambush:
+                case EngagementSubState.Ambush:
                     if (Brain.DebugEnabled) print("Anticipation: Ambush.");
                     //targetCavern = CavernManager.GetLeastPopulatedCavern(CavernManager.GetMostPopulatedCavern().ConnectedCaverns);
                     break;

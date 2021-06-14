@@ -441,7 +441,7 @@ namespace Hadal.AI
                     multiplier += ((obstacleDetectRadius - dist) / obstacleDetectRadius) * closeRepulsionForce;
 
                 //! Diversion force added if the AI is looking directly at the repulsion point
-                Vector3 force = (pilotTrans.position - p).normalized * avoidanceForce * multiplier;
+                Vector3 force = (pilotTrans.position - p).normalized * (avoidanceForce * multiplier);
                 Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
                 if (cross.magnitude.Abs() <= 0.2f)
                 {

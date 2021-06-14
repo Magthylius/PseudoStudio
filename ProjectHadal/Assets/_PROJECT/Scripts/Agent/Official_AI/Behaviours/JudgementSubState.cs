@@ -52,7 +52,7 @@ namespace Hadal.AI.States
         #region Defensive Branch
         private void SetupDefensiveBranchBehaviourTree1()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
             BTSequence threshCarriedPlayer = Build_Sequence(new ThreshCarriedPlayerNode(b, damageManager)).WithDebugName(nameof(threshCarriedPlayer));
             BTSelector onePlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 1)).WithDebugName(nameof(onePlayerInCavern));
@@ -77,7 +77,7 @@ namespace Hadal.AI.States
 
         private void SetupDefensiveBranchBehaviourTree2()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
             BTSelector twoPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 2)).WithDebugName(nameof(twoPlayerInCavern));
             
@@ -106,7 +106,7 @@ namespace Hadal.AI.States
         }
         private void SetupDefensiveBranchBehaviourTree3()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
             BTSelector threePlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 3)).WithDebugName(nameof(threePlayerInCavern));
             
@@ -136,7 +136,7 @@ namespace Hadal.AI.States
 
         private void SetupDefensiveBranchBehaviourTree4()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSequence tailWhip = Build_Sequence(new TailWhipNode(b, 1f)).WithDebugName(nameof(tailWhip));
             BTSelector fourPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(b, 4)).WithDebugName(nameof(fourPlayerInCavern));
             BTSelector hasJt1Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 3), setRecoveryState).WithDebugName(nameof(hasJt1Passed));
@@ -159,7 +159,7 @@ namespace Hadal.AI.States
         #region Offensive Branch
         private void SetupOffensiveBranchBehaviourTree1()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSelector hasJt4Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 4)).WithDebugName(nameof(hasJt4Passed));
             BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
             BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));
@@ -189,7 +189,7 @@ namespace Hadal.AI.States
 
         private void SetupOffensiveBranchBehaviourTree2()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSelector hasJt3Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 3)).WithDebugName(nameof(hasJt3Passed));
             BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
             BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));
@@ -219,7 +219,7 @@ namespace Hadal.AI.States
 
         private void SetupOffensiveBranchBehaviourTree3()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSelector hasJt2Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 2)).WithDebugName(nameof(hasJt2Passed));
             BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
             BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));
@@ -249,7 +249,7 @@ namespace Hadal.AI.States
 
         private void SetupOffensiveBranchBehaviourTree4()
         {
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, MainObjective.Recover)).WithDebugName(nameof(setRecoveryState));
+            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(b, BrainState.Recover)).WithDebugName(nameof(setRecoveryState));
             BTSelector hasJt1Passed = Build_Selector(new HasJudgementThresholdExceededNode(b, 2)).WithDebugName(nameof(hasJt1Passed));
             BTSequence increaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, true)).WithDebugName(nameof(increaseConfidence));
             BTSequence decreaseConfidence = Build_Sequence(new ModifyConfidenceNode(b, 1, false)).WithDebugName(nameof(decreaseConfidence));

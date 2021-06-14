@@ -1,7 +1,7 @@
 //! C Drive: Jet
 namespace Hadal.AI
 {
-    public enum MainObjective
+    public enum BrainState
     {
         None,
         Anticipation,
@@ -10,7 +10,7 @@ namespace Hadal.AI
         Cooldown
     }
 
-    public enum EngagementObjective
+    public enum EngagementSubState
     {
 		None,
         Aggressive,

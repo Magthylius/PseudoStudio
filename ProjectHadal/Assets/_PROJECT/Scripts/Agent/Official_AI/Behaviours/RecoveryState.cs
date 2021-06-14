@@ -41,7 +41,7 @@ namespace Hadal.AI.States
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.HasCumulativeDamageExceeded)
             {
                 RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-                RuntimeData.SetMainObjective(MainObjective.Engagement);
+                RuntimeData.SetBrainState(BrainState.Engagement);
                 RuntimeData.ResetRecoveryTicker();
                 AllowStateTick = false;
             }

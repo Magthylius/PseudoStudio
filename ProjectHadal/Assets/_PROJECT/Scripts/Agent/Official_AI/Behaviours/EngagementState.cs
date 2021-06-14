@@ -32,9 +32,9 @@ namespace Hadal.AI.States
             subStateMachine.SetState(judgement); // default state
 
             //! transition conditions
-            Func<bool> OnAmbush() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Ambush;
-            Func<bool> OnAggressive() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Aggressive;
-            Func<bool> OnJudgement() => () => Brain.RuntimeData.GetEngagementObjective == EngagementObjective.Judgement;
+            Func<bool> OnAmbush() => () => Brain.RuntimeData.GetEngagementObjective == EngagementSubState.Ambush;
+            Func<bool> OnAggressive() => () => Brain.RuntimeData.GetEngagementObjective == EngagementSubState.Aggressive;
+            Func<bool> OnJudgement() => () => Brain.RuntimeData.GetEngagementObjective == EngagementSubState.Judgement;
         }
         public override void OnStateStart()
         {
