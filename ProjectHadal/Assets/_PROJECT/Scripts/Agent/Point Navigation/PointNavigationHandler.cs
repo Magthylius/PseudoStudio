@@ -523,7 +523,7 @@ namespace Hadal.AI
                 currentPoint = GetClosestPointToSelf();
 
             List<NavPoint> potentialPoints = navPoints
-                                            .Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation())
+                                            .Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation() && !o.IsTunnelEntry)
                                             .OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition))
                                             .Take(numberOfClosestPointsToConsider)
                                             .ToList();

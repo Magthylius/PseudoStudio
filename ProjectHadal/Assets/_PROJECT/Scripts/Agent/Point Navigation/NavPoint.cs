@@ -21,6 +21,7 @@ namespace Hadal.AI
 		[Header("Information")]
         [SerializeField] private CavernTag cavernTag;
 		[SerializeField] private bool isTunnelEntry;
+        public bool IsTunnelEntry => isTunnelEntry;
 
 		[Header("Friend references")]
         [SerializeField] private List<NavPoint> friends;
