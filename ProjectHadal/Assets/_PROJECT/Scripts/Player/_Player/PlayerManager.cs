@@ -12,6 +12,8 @@ namespace Hadal.Player
 {
     public class PlayerManager : MonoBehaviour
     {
+        public static PlayerManager Instance;
+        
         public delegate void AddAPlayerEvent();
         public static event AddAPlayerEvent AddPlayerEvent;
 
@@ -21,9 +23,16 @@ namespace Hadal.Player
         private PhotonView _pView;
         public bool allPlayerReady;
         [SerializeField] List<PlayerController> playerList;
+        
         NetworkEventManager neManager;
 
-        private void Awake() => _pView = GetComponent<PhotonView>();
+        private void Awake()
+        {
+            _pView = GetComponent<PhotonView>();
+            
+            if (Instance != null) Destroy(this);
+            else Instance = this;
+        }
         private void OnEnable()
         {
             neManager = NetworkEventManager.Instance;
@@ -238,12 +247,12 @@ namespace Hadal.Player
 
         private string GetPrefabPath() => Path.Combine(PrefabFolder, PrefabName);
         private object[] DefaultObjectArray() => new object[] { _pView.ViewID };
-        PlayerController GetController(Photon.Realtime.Player player)
+        public PlayerController GetController(Photon.Realtime.Player player)
         {
             foreach (PlayerController controller in playerList) if (controller.AttachedPlayer == player) return controller;
             return null;
         }
-        PlayerController GetController(GameObject playerObject) => playerObject.GetComponent<PlayerController>();
+        public PlayerController GetController(GameObject playerObject) => playerObject.GetComponent<PlayerController>();
 
         public bool IsOnNetwork => !NetworkEventManager.Instance.isOfflineMode;
 
