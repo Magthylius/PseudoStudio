@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Hadal.AI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Hadal.Player;
@@ -15,10 +17,12 @@ namespace Hadal.Debugging
         private string input;
         private PlayerController localPlayerController;
 
-        public static DebugCommand C_StopCreature;
+        public static DebugCommand C_AIStop;
+        public static DebugCommand C_AIMove;
         public List<object> commandList;
+        
+        #region Input system
 
-        //! Called from Input system
         public void OnToggleDebug(InputValue value)
         {
             showConsole = !showConsole;
@@ -29,33 +33,79 @@ namespace Hadal.Debugging
             }
             else
             {
-               CloseConsole();
+                CloseConsole();
             }
         }
 
-        private void Awake()
+        public void OnReturn(InputValue value)
         {
-            //! Implement commands here
-            /*C_StopCreature = new DebugCommand("StopCreature", "Stops the creature movement", "StopCreature") () =>
+            if (showConsole)
             {
-                
-            });*/
+                HandleInput();
+                input = "";
+                showConsole = false;
+                CloseConsole();
+            }
+        }
+
+        #endregion
+
+        private void Start()
+        {
+            AIBrain aiBrain = FindObjectOfType<AIBrain>();
+            
+            //! Implement commands here
+            C_AIStop = new DebugCommand("AIStop", "Stops the creature movement", "AIStop", () =>
+            {
+                aiBrain.NavigationHandler.SetDebugVelocityMultiplier(0f);
+            });
+            
+            C_AIMove = new DebugCommand("AIMove", "Allows the creature to move", "AIMove", () =>
+            {
+                aiBrain.NavigationHandler.ResetDebugVelocityMultiplier();
+            });
+
+            commandList = new List<object>
+            {
+                C_AIStop,
+                C_AIMove
+            };
         }
 
         private void OnGUI()
         {
-            if (!showConsole) return;
             
-            GUI.SetNextControlName("GUI Console");
-            float y = 0f;
-            GUI.Box(new Rect(0, y, Screen.width, 30f), "");
-            GUI.backgroundColor = new Color(0f, 0f, 0f, 0f);
+            
+            if (showConsole)
+            {
+                float y = 0f;
+                GUI.Box(new Rect(0, y, Screen.width, 30f), "");
+                GUI.backgroundColor = new Color(0f, 0f, 0f, 0f);
 
-            input = GUI.TextField(new Rect(10f, y + 5f, Screen.width - 20f, 20f), input);
-            
+                GUI.SetNextControlName("console");
+                input = GUI.TextField(new Rect(10f, y + 5f, Screen.width - 20f, 20f), input);
+                GUI.FocusControl("console");
+            }
+   
             //GUI.FocusControl("GUI Console");
         }
 
+        void HandleInput()
+        {
+            foreach (var command in commandList)
+            {
+                DebugCommandBase commandBase = command as DebugCommandBase;
+
+                if (input.Contains(commandBase.ID))
+                {
+                    if (command as DebugCommand != null)
+                    {
+                        (command as DebugCommand).Invoke();
+                    }
+                }
+            }
+        }
+        
         void OpenConsole()
         {
             //Cursor.visible = true;
