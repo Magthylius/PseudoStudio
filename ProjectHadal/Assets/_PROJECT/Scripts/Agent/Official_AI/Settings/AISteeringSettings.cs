@@ -16,6 +16,7 @@ namespace Hadal.AI.Settings
         [Min(0f)] public float CloseRepulsionForce;
         [Min(0f)] public float AxisStalemateDeviationForce;
         [Min(0f)] public float ObstacleDetectRadius;
+        [Min(0f), Tooltip("Should always be lower than ObstacleDetectRadius.")] public float CloseNavPointDetectionRadius;
         [Min(0f)] public float SmoothLookAtSpeed;
         public LayerMask ObstacleMask;
     }
