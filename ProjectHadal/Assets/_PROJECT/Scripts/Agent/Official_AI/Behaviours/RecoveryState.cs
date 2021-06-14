@@ -79,6 +79,7 @@ namespace Hadal.AI.States
         void SetNewTargetCavern()
         {
             targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
+            NavigationHandler.SetDestinationToCavern(null, targetCavern);
         }
         #endregion
 
