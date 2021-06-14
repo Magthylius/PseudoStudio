@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxVelocity: 50
   ThrustForce: 15
-  AdditionalBoostThrustForce: 10
+  AdditionalAttractionForce: 40
   AttractionForce: 50
   AvoidanceForce: 10
   CloseRepulsionForce: 10
   AxisStalemateDeviationForce: 100
   ObstacleDetectRadius: 10
+  CloseNavPointDetectionRadius: 10
   SmoothLookAtSpeed: 12
   ObstacleMask:
     serializedVersion: 2

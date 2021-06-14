@@ -10,7 +10,7 @@ namespace Hadal.AI.Settings
         [Header("Steering Settings")]
         [Min(0f)] public float MaxVelocity;
         [Min(0f)] public float ThrustForce;
-        [Min(0f)] public float AdditionalBoostThrustForce;
+        [Min(0f)] public float AdditionalAttractionForce;
         [Min(0f)] public float AttractionForce;
         [Min(0f)] public float AvoidanceForce;
         [Min(0f)] public float CloseRepulsionForce;
