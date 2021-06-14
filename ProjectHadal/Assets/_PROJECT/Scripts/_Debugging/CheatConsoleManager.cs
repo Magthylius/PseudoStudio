@@ -19,13 +19,24 @@ namespace Hadal.Debugging
         private string input;
         private Vector2 helpScroll;
         private PlayerController localPlayerController;
+        
+        public List<object> commandList;
 
+        //! Console
         public static DebugCommand C_Help;
+        public static DebugCommand C_Close;
+        
+        //! AI
         public static DebugCommand C_AIStop;
         public static DebugCommand C_AIMove;
         public static DebugCommand<float> C_AISetSpeed;
         
-        public List<object> commandList;
+        //! Player
+        public static DebugCommand<int> C_SetHp;
+        public static DebugCommand<float> C_SetSpeed;
+        public static DebugCommand<float> C_SetMaxSpeed;
+        public static DebugCommand<float> C_SetAcce;
+        public static DebugCommand C_GodMode;
         
         #region Input system
 
@@ -49,8 +60,7 @@ namespace Hadal.Debugging
             {
                 HandleInput();
                 input = "";
-                //showConsole = false;
-                CloseConsole();
+                //CloseConsole();
             }
         }
 
@@ -61,33 +71,65 @@ namespace Hadal.Debugging
             AIBrain aiBrain = FindObjectOfType<AIBrain>();
             
             //! Implement commands here
-            C_Help = new DebugCommand("help", "Shows list of commands", "help", () =>
+            //! Console
+            C_Help = new DebugCommand("help", "Toggles list of commands", "help", () =>
             {
                 showHelp = !showHelp;
             });
+            C_Close = new DebugCommand("close", "Closes this console", "close", () =>
+            {
+                showConsole = false;
+                CloseConsole();
+            });
             
+            //! AI
             C_AIStop = new DebugCommand("AIStop", "Stops the creature movement", "AIStop", () =>
             {
                 aiBrain.NavigationHandler.SetDebugVelocityMultiplier(0f);
             });
-            
             C_AIMove = new DebugCommand("AIMove", "Allows the creature to move", "AIMove", () =>
             {
                 aiBrain.NavigationHandler.ResetDebugVelocityMultiplier();
             });
-
             C_AISetSpeed = new DebugCommand<float>("AISetSpeed", "Sets the speed multiplier of AI", "AISetSpeed", (x) =>
             {
                 aiBrain.NavigationHandler.SetDebugVelocityMultiplier(x);
             });
-                
+            
+            //! Player
+            C_SetHp = new DebugCommand<int>("SetHp", "Sets the health of player", "SetHp", (x) =>
+            {
+                //! TODO: bind to player health
+            });
+            C_SetSpeed = new DebugCommand<float>("SetSpeed", "Sets the speed multiplier of player", "SetSpeed", (x) =>
+            {
+                //! TODO: bind to player speed
+            });
+            C_SetMaxSpeed = new DebugCommand<float>("SetMaxSpeed", "Sets the max velocity of player", "SetMaxSpeed", (x) =>
+            {
+                //! TODO: bind to player max speed
+            });
+            C_SetAcce = new DebugCommand<float>("SetAcce", "Sets the acceleration of player", "SetAcce", (x) =>
+            {
+                //! TODO: bind to player acceleration
+            });
+            C_GodMode = new DebugCommand("God", "Turns the player into god", "God", () =>
+            {
+                //! TODO: bind to player health
+            });
 
             commandList = new List<object>
             {
                 C_Help,
+                C_Close,
                 C_AIStop,
                 C_AIMove,
-                C_AISetSpeed
+                C_AISetSpeed,
+                C_SetHp,
+                C_SetSpeed,
+                C_SetMaxSpeed,
+                C_SetAcce,
+                C_GodMode
             };
         }
 
@@ -106,7 +148,7 @@ namespace Hadal.Debugging
                     for (int i = 0; i < commandList.Count; i++)
                     {
                         DebugCommandBase command = commandList[i] as DebugCommandBase;
-                        string label = $"{command.Format}: {command.Desc}";
+                        string label = $"{command.Format} - {command.Desc}";
                         Rect labelRect = new Rect(5f, 20f * i, viewPort.width - 100f, 20f);
                         GUI.Label(labelRect, label);
                     }
