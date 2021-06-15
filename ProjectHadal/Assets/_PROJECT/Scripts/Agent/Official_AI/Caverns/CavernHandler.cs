@@ -36,8 +36,7 @@ namespace Hadal.AI.Caverns
         public event CavernHandlerAIReturn AIEnteredCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
         
-        new Collider collider;
-        List<PlayerController> playersInCavern;
+        List<PlayerController> playersInCavern = new List<PlayerController>();
 
         void OnValidate()
         {
@@ -53,7 +52,7 @@ namespace Hadal.AI.Caverns
 
         void Start()
         {
-            if (forceFirstFrameRecheck) StartCoroutine(ColliderRecheck());
+            if (forceFirstFrameRecheck) cavernCollider.StartColliderRecheck();
             
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
@@ -71,12 +70,6 @@ namespace Hadal.AI.Caverns
             }
         }
 
-        void OnEnable()
-        {
-            collider = GetComponent<Collider>();
-            collider.isTrigger = true;
-        }
-        
         void ColliderTriggerEnter(Collider other)
         {
             //! Prechecks
@@ -135,12 +128,7 @@ namespace Hadal.AI.Caverns
             }
         }
 
-        IEnumerator ColliderRecheck()
-        {
-            collider.enabled = false;
-            yield return null;
-            collider.enabled = true;
-        }
+        
         
         public int CalculateRelativeDistanceCost(CavernHandler targetCavern)
         {

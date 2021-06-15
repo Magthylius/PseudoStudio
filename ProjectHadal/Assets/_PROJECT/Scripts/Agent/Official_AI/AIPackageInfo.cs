@@ -65,7 +65,12 @@ namespace Hadal.AI.Information
             {
                 //! AIBrain
                 targetCavern = brain.TargetMoveCavern.cavernTag;
-                currentCavern = brain.CavernManager.GetHandlerOfAILocation.cavernTag;
+                
+                if (brain.CavernManager.GetHandlerOfAILocation)
+                    currentCavern = brain.CavernManager.GetHandlerOfAILocation.cavernTag;
+                else 
+                    currentCavern = CavernTag.Invalid;
+                
                 state = brain.GetState;
 
                 //! NavHandler
