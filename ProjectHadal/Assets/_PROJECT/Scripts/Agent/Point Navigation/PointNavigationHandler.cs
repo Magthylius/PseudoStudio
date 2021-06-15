@@ -404,8 +404,11 @@ namespace Hadal.AI
             if (currentPoint == null) return;
 
             //! Chasing player direction
-            Vector3 moveTo = currentPoint.GetPosition - pilotTrans.position;
-            rBody.velocity = Vector3.Lerp(rBody.velocity, rBody.velocity + moveTo, deltaTime * attractionForce);
+            if (isChasingAPlayer)
+            {
+                Vector3 moveTo = (currentPoint.GetPosition - pilotTrans.position).normalized * TotalAttractionForce;
+                rBody.velocity = Vector3.Lerp(rBody.velocity, rBody.velocity + moveTo, deltaTime * attractionForce);
+            }
 
             //! Look at
             pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, deltaTime * smoothLookAtSpeed);
