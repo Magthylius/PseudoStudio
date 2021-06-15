@@ -6,7 +6,7 @@ namespace Hadal.AI
         None,
         Anticipation,
         Engagement,
-        Recover,
+        Recovery,
         Cooldown
     }
 

@@ -105,7 +105,7 @@ namespace Hadal.Debugging
                         FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Engagement);
                         break;
                     case 3:
-                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Recover);
+                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Recovery);
                         break;
                     case 4:
                         FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Cooldown);

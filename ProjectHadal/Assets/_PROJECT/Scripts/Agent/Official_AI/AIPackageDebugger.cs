@@ -6,36 +6,44 @@ using Hadal.AI.Information;
 using NaughtyAttributes;
 using UnityEngine;
 
-namespace Hadal.AI
+namespace Hadal.AI.Information
 {
     [RequireComponent(typeof(AIPackageInfo))]
     public class AIPackageDebugger : MonoBehaviour
     {
         private AIBrain brain;
         private PointNavigationHandler navHandler;
-
-        [SerializeField] private CavernTag targetCavern = CavernTag.Starting;
+        
+        [Header("States")] 
+        [SerializeField] private BrainState overrideState;
+        [SerializeField] private bool startWithOverrideState;
         
         private void Start()
         {
             brain = FindObjectOfType<AIBrain>();
             navHandler = brain.NavigationHandler;
+            
+            brain.SetOverrideState(overrideState);
+            if (startWithOverrideState) brain.StartWithOverrideState();
         }
 
+        [Header("Navigation Debug")]
+        [SerializeField] private CavernTag targetCavern = CavernTag.Starting;
         [Button("Resume Logic")]
         void AIResumeLogic()
         {
-            brain.SuspendStateLogic = false;
+            brain.SuspendState();
         }
         [Button("Force Go To Target Cavern")]
         void ForceGoToTargetCavern()
         {
-            brain.SuspendStateLogic = true;
+            brain.ResumeState();
 
             brain.CavernManager.SeedCavernHeuristics(brain.CavernManager.GetHandlerOfAILocation, brain.CavernManager.GetCavern(targetCavern));
             CavernHandler nextCavern = brain.CavernManager.GetNextBestCavern(brain.CavernManager.GetHandlerOfAILocation);
  
             navHandler.SetDestinationToCavern(brain.CavernManager, nextCavern);
         }
+        
     }
 }
