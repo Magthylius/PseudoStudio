@@ -21,14 +21,14 @@ namespace Hadal.Usables.Projectiles
                 LayerMask layer = LayerMask.NameToLayer(layerName);
                 if (collision.gameObject.layer == layer.value)
                 {
-                    //if its AI.
-                    /*if (collision.gameObject.GetComponent<AIBrain>())
+                    
+                    if (LayerMask.LayerToName(layer) == "MONSTER")
                     {
-                        collision.gameObject.GetComponent<AIBrain>().HealthManager.TakeDamage(Data.BaseDamage);
-                    }*/
+                        collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
+                    }
+
                     PPhysics.OnPhysicsFinished();
                     Vector3 collisionSpot = gameObject.transform.position;
-                    print(projectileID + "sending event to despawn");
                     object[] content = new object[] {projectileID, collisionSpot};
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
                     return;

@@ -30,7 +30,6 @@ namespace Hadal.Usables.Projectiles
                 if (collision.gameObject.layer == layer.value)
                 {
                     //attach locally
-                    print(projectileID + "harpoon attach locally");
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;

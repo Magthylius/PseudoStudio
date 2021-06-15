@@ -43,7 +43,6 @@ namespace Hadal.Usables.Projectiles
                 if (collision.gameObject.layer == layer.value)
                 {
                     //attach locally
-                    print(projectileID + "flare attach locally");
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;

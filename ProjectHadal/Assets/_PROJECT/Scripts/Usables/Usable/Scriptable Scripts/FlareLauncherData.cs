@@ -14,7 +14,6 @@ namespace Hadal.Usables
             projectileObj.Data = ProjectileData;
             projectileObj.projectileID = projectileObj.Data.ProjTypeInt;
             projectileObj.projectileID += info.ProjectileID;
-            Debug.Log(projectileObj.projectileID + " shot");
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);         
             projectileObj.Rigidbody.velocity = info.shooterVelocity;
