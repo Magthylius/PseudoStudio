@@ -35,6 +35,7 @@ namespace Hadal.Usables.Projectiles
             foreach (Collider col in detectedObjects)
             {
                 Debug.Log("Sonic : Enemy Detected");
+                col.gameObject.GetComponentInChildren<IStunnable>().TryStun(0.5f);
             }
 
             //Send event to clones
