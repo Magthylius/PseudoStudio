@@ -6,6 +6,7 @@ using Hadal.AI.Caverns;
 using Hadal.AI.Settings;
 using Tenshi;
 using Tenshi.UnitySoku;
+using Tenshi.Shrine;
 using UnityEngine;
 using ReadOnlyAttribute = Tenshi.ReadOnlyAttribute;
 using Random = UnityEngine.Random;
@@ -43,6 +44,8 @@ namespace Hadal.AI
         public bool Data_CanAutoSelectNavPoints => canAutoSelectNavPoints;
         [SerializeField, ReadOnly] private bool isOnCustomPath;
         public bool Data_IsOnCustomPath => isOnCustomPath;
+        [SerializeField, ReadOnly] private bool isOnQueuePath;
+        public bool Data_IsOnQueuePath => isOnQueuePath;
         [SerializeField, ReadOnly] private bool isChasingAPlayer;
         public bool Data_IsChasingAPlayer => isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
@@ -57,6 +60,7 @@ namespace Hadal.AI
         [SerializeField] private bool enableMovement;
 
         [Header("Timer Settings")]
+        [SerializeField, MinMaxSlider(1f, 30f)] private Vector2 lingerTimeRange;
         [SerializeField] private float minLingerTime;
         [SerializeField] private float maxLingerTime;
         [SerializeField] private float timeoutNewPointTime;
@@ -88,8 +92,10 @@ namespace Hadal.AI
 
         // Misc variables
         private Queue<NavPoint> pointPath;
+        private Queue<NavPoint> cachedPointPath;
         private bool _isEnabled;
         public event Action<float> OnObstacleDetectRadiusChange;
+        public event Action OnReachedPoint;
 
         private void OnValidate()
         {
@@ -110,6 +116,7 @@ namespace Hadal.AI
             currentPoint = null;
             canAutoSelectNavPoints = true;
             isOnCustomPath = false;
+            isOnQueuePath = false;
             isChasingAPlayer = false;
             canPath = true;
             if (rBody == null) rBody = GetComponentInParent<Rigidbody>();
@@ -117,6 +124,7 @@ namespace Hadal.AI
             currentPoint = GetClosestPointToSelf();
             repulsionPoints = new List<Vector3>();
             pointPath = new Queue<NavPoint>();
+            cachedPointPath = new Queue<NavPoint>();
             _isEnabled = true;
 
             CavernModeSteering();
@@ -179,55 +187,6 @@ namespace Hadal.AI
         }
 
         /// <summary>
-        /// Plans out a path to the destination cavern. Will make a new queued path.
-        /// </summary>
-        /// <param name="manager">Unused, can be set to null.</param>
-        /// <param name="destination">The destination where the pilot should end up.</param>
-        public void SetDestinationToCavern(CavernManager manager, CavernHandler destination)
-        {
-            if (isChasingAPlayer) return;
-            if (cavernManager == null || destination == null)
-            {
-                if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
-                return;
-            }
-
-            Vector3 curPointPos = currentPoint.GetPosition;
-            CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
-            NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
-
-            NavPoint first = entryPoints.Where(point => point.CavernTag == currentCavern.cavernTag).Single();
-            NavPoint second = (entryPoints[0] == first) ? entryPoints[1] : entryPoints[0];
-            var potentialList = navPoints
-                        .Where(point => point.CavernTag == destination.cavernTag && point != second)
-                        .OrderBy(point => point.GetSqrDistanceTo(curPointPos))
-                        .Take(numberOfClosestPointsToConsider - 1)
-                        .ToList();
-
-            potentialList.RemoveAll(p => p == null);
-            if (potentialList.IsEmpty())
-            {
-                if (enableDebug) "No potential points found for cavern exit attempt.".Msg();
-                return;
-            }
-            NavPoint third = potentialList.RandomElement();
-
-            if (first == null || second == null || third == null)
-            {
-                if (enableDebug) "A point for the queue is missing.".Msg();
-                return;
-            }
-
-            Queue<NavPoint> points = new Queue<NavPoint>();
-            points.Enqueue(first);
-            points.Enqueue(second);
-            points.Enqueue(third);
-
-            SetQueuedPath(points);
-            if (enableDebug) $"New Queued Path Created: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
-        }
-
-        /// <summary>
         /// Sets the current point to a custom nav point (note that this must be a freshly instantiated nav point).
         /// When the pilot reaches the custom destination, the nav point will be deleted with Destroy().
         /// </summary>
@@ -245,37 +204,88 @@ namespace Hadal.AI
             canAutoSelectNavPoints = !targetIsPlayer;
             ResetLingerTimer();
             ResetTimeoutTimer();
-            if (enableDebug) "Setting custom path".Msg();
+            if (enableDebug) "Setting custom nav point path".Msg();
         }
 
-        /// <summary>
-        /// Similar to the other SetCustomPath() function, but this accepts a queue of nav points to plan out a path. These
-        /// nav points must be freshly instantiated and will be deleted with Destroy() when the pilot reaches each point.
-        /// </summary>
-        /// <param name="points">The queue that will be used to plot out a path plan.</param>
-        public void SetCustomPath(Queue<NavPoint> points)
+        public void ComputeCachedDestinationCavernPath(CavernHandler destination)
         {
-            if (points.IsNullOrEmpty())
+            if (cavernManager == null || destination == null)
+            {
+                if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
+            }
 
-            isOnCustomPath = true;
-            hasReachedPoint = false;
-            pointPath = new Queue<NavPoint>(points);
-            currentPoint = pointPath.Dequeue();
-            isChasingAPlayer = false;
-            canTimeout = false;
-            canAutoSelectNavPoints = false;
-            ResetLingerTimer();
-            ResetTimeoutTimer();
-            if (enableDebug) "Setting custom paths in queue".Msg();
+            Vector3 curPointPos = currentPoint.GetPosition;
+            CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
+            NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
+
+            NavPoint first = entryPoints.Where(point => point.CavernTag == currentCavern.cavernTag).Single();
+            NavPoint second = (entryPoints[0] == first) ? entryPoints[1] : entryPoints[0];
+            var potentialList = navPoints
+                        .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second))
+                        .ToList()
+                        .Shuffle(Time.frameCount)
+                        .Take(numberOfClosestPointsToConsider)
+                        .Where(p => p != null)
+                        .ToList();
+
+            if (potentialList.IsEmpty())
+            {
+                if (enableDebug) "No potential points found for third cavern point.".Msg();
+                return;
+            }
+            NavPoint third = potentialList.RandomElement();
+
+            if (first == null || second == null || third == null)
+            {
+                if (enableDebug) "A point for the queue is missing.".Msg();
+                return;
+            }
+
+            cachedPointPath.Clear();
+            cachedPointPath.Enqueue(first);
+            cachedPointPath.Enqueue(second);
+            cachedPointPath.Enqueue(third);
+            if (enableDebug)
+                $"Created cached Queued Path: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
+
+            // Local Methods
+            bool HasTheSameCavernTagAsDestinationCavern(NavPoint point) => point.CavernTag == destination.cavernTag;
+            bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point != other;
         }
 
         /// <summary>
-        /// Accepts a queue of existing nav points in the game to plan out a path. The nav points used must be existing in the
-        /// scene and not freshly instantiated as they will not be deleted after the pilot reaches each point.
+        /// Computes a plan for the path to a destination cavern and immediately follows it. It will return if the handler is
+        /// currently chasing a player.
         /// </summary>
-        /// <param name="pointsArray">The array of NavPoints that will be used to plot out a path plan.</param>
-        public void SetQueuedPath(NavPoint[] pointsArray) => SetQueuedPath(new Queue<NavPoint>(pointsArray));
+        /// <param name="destination">The destination where the pilot should end up.</param>
+        public void SetImmediateDestinationToCavern(CavernHandler destination)
+        {
+            if (isChasingAPlayer) return;
+            if (cavernManager == null || destination == null)
+            {
+                if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
+                return;
+            }
+
+            ComputeCachedDestinationCavernPath(destination);
+            SetQueuedPathFromCache();
+        }
+
+        /// <summary>
+        /// Sets the handler's path to use the cached queue path that has been generated. If there is no cache queue path that has
+        /// been generated beforehand, the function will return. See <see cref="ComputeCachedDestinationCavernPath"/>.
+        /// </summary>
+        public void SetQueuedPathFromCache()
+        {
+            if (cachedPointPath.IsNullOrEmpty())
+            {
+                if (enableDebug) $"There is no cached point path to run. Please compute the cached path before calling this.".Msg();
+                return;
+            }
+            if (enableDebug) "Running cached queue path...".Msg();
+            SetQueuedPath(cachedPointPath);
+        }
 
         /// <summary>
         /// Accepts a queue of existing nav points in the game to plan out a path. The nav points used must be existing in the
@@ -291,12 +301,19 @@ namespace Hadal.AI
             hasReachedPoint = false;
             pointPath = new Queue<NavPoint>(points);
             currentPoint = pointPath.Dequeue();
+            isOnQueuePath = true;
             isChasingAPlayer = false;
             canTimeout = false;
             canAutoSelectNavPoints = false;
             ResetLingerTimer();
             ResetTimeoutTimer();
-            if (enableDebug) "Setting queued path".Msg();
+            if (enableDebug)
+            {
+                var first = currentPoint;
+                var second = pointPath.Requeue();
+                var third = pointPath.Requeue();
+                $"Queued path set: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
+            }
         }
 
         /// <summary>
@@ -363,7 +380,7 @@ namespace Hadal.AI
             UpdateSteering();
         }
 
-        void UpdateSteering()
+        private void UpdateSteering()
         {
             AISteeringSettings currentSteer = cavernSteeringSettings;
 
@@ -428,12 +445,16 @@ namespace Hadal.AI
             Vector3 force = direction * (TotalAttractionForce * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
 
-            if (!hasReachedPoint && currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius))
+            if (!hasReachedPoint && CloseEnoughToTargetNavPoint())
             {
                 hasReachedPoint = true;
+                OnReachedPoint?.Invoke();
                 EvaluateQueuedPath();
                 if (enableDebug) $"Point Reached: {currentPoint.gameObject.name}".Msg();
             }
+
+            //! Local shorthands
+            bool CloseEnoughToTargetNavPoint() => currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius);
 
             void EvaluateQueuedPath()
             {
@@ -451,6 +472,7 @@ namespace Hadal.AI
 
                 canTimeout = true;
                 canAutoSelectNavPoints = true;
+                isOnQueuePath = false;
                 if (enableDebug) "Queued path is done.".Msg();
             }
         }
