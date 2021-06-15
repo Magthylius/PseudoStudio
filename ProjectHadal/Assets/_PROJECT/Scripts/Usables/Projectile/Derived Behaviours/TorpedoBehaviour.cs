@@ -28,7 +28,6 @@ namespace Hadal.Usables.Projectiles
                     }*/
                     PPhysics.OnPhysicsFinished();
                     Vector3 collisionSpot = gameObject.transform.position;
-                    print(projectileID + "sending event to despawn");
                     object[] content = new object[] {projectileID, collisionSpot};
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
                     return;

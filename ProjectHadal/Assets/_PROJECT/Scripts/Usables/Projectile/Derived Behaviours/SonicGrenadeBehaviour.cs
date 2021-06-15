@@ -28,7 +28,6 @@ namespace Hadal.Usables.Projectiles
             if (!IsLocal)
                 return;
 
-            print("Sonic Grenade Triggered Locally.");
             //Scan for monster locally
             LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
             detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
@@ -56,7 +55,6 @@ namespace Hadal.Usables.Projectiles
             {
                 if (gameObject.activeSelf)
                 {
-                    print("Sonic Grenade Triggered Due to Event");
                     gameObject.transform.position = (Vector3)data[1];
                     PPhysics.OnPhysicsFinished();
                 }
