@@ -95,6 +95,7 @@ namespace Hadal.AI
         private Queue<NavPoint> pointPath;
         private Queue<NavPoint> cachedPointPath;
         private bool _isEnabled;
+        private bool _tickCavernLingerTimer;
         public event Action<float> OnObstacleDetectRadiusChange;
         public event Action OnReachedPoint;
 
@@ -127,6 +128,7 @@ namespace Hadal.AI
             pointPath = new Queue<NavPoint>();
             cachedPointPath = new Queue<NavPoint>();
             _isEnabled = true;
+            _tickCavernLingerTimer = false;
 
             CavernModeSteering();
         }
@@ -135,6 +137,7 @@ namespace Hadal.AI
         {
             if (!CanMove || !canPath || !enableMovement) return;
             TrySelectNewNavPoint(fixedDeltaTime);
+            ElapseCavernLingerTimer(fixedDeltaTime);
             MoveForwards(fixedDeltaTime);
             MoveTowardsCurrentNavPoint(fixedDeltaTime);
             HandleObstacleAvoidance(fixedDeltaTime);
@@ -255,10 +258,7 @@ namespace Hadal.AI
             bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point != other;
         }
 
-        public void EnableCachedQueuePathTimer()
-        {
-
-        }
+        public void EnableCachedQueuePathTimer() => _tickCavernLingerTimer = true;
 
         /// <summary>
         /// Computes a plan for the path to a destination cavern and immediately follows it. It will return if the handler is
@@ -541,6 +541,18 @@ namespace Hadal.AI
                 ResetTimeoutTimer();
                 SkipCurrentPoint(true);
             }
+        }
+
+        private void ElapseCavernLingerTimer(in float deltaTime)
+        {
+            if (!_tickCavernLingerTimer) return;
+            
+            cavernLingerTimer -= deltaTime;
+            if (cavernLingerTimer > 0f) return;
+            
+            _tickCavernLingerTimer = false;
+            ResetCavernLingerTimer();
+            SetQueuedPathFromCache();
         }
 
         /// <summary> The actual logic that selects a new nav point. The algorithm behaviour can be adjusted with
