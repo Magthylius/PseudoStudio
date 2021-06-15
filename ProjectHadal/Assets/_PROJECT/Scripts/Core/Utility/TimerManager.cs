@@ -74,6 +74,14 @@ namespace Hadal.Utility
             _timersToAdd.Clear();
         }
 
-        private void PostUpdateTick() => _timers.RemoveAll(t => t.IsDone);
+        private void PostUpdateTick()
+        {
+            for (int i = _timers.Count - 1; i >= 0; i--)
+            {
+                if (!_timers[i].IsDone) continue;
+                _timers[i].Destroy();
+                _timers.RemoveAt(i);
+            }
+        }
     }
 }

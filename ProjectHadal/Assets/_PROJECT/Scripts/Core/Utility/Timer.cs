@@ -80,6 +80,19 @@ namespace Hadal.Utility
             _lastUpdateTime = _startTime;
         }
 
+        public void RestartWithDuration(float duration)
+        {
+            Duration = duration;
+            Restart();
+        }
+
+        public void Destroy()
+        {
+            Stop();
+            OnCompleteEvent = null;
+            OnUpdateEvent = null;
+        }
+
         public float GetElapsedTime()
         {
             if (IsCompleted || GetTime >= GetTriggerTime)
