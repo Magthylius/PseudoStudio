@@ -1,21 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Hadal.AI.Information;
 using UnityEngine;
 
 namespace Hadal.AI
 {
+    [RequireComponent(typeof(AIPackageInfo))]
     public class AIPackageDebugger : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        private AIBrain brain;
+        private PointNavigationHandler navHandler;
         
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
         
-        }
     }
 }

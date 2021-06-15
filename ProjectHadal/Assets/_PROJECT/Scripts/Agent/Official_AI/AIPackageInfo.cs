@@ -9,7 +9,9 @@ namespace Hadal.AI.Information
     public class AIPackageInfo : MonoBehaviour
     {
         private PointNavigationHandler navHandler;
+        public PointNavigationHandler NavHandler => navHandler;
         private AIBrain brain;
+        public AIBrain Brain => brain;
 
         [Header("Settings")] 
         [Tooltip("Disable update to save editor frames")] 
