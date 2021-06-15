@@ -5,6 +5,7 @@ using Tenshi.UnitySoku;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hadal.AI.Caverns;
 using Hadal.Networking;
 using Debug = UnityEngine.Debug;
 using Photon.Realtime;
@@ -18,6 +19,7 @@ namespace Hadal.AI.States
         public EngagementState(AIBrain brain, AggressiveSubState aggressive, AmbushSubState ambush, JudgementSubState judgement)
         {
             Initialize(brain);
+            
 
             //! intialise sub machine and states
             aggressive.SetParent(this);
@@ -39,6 +41,7 @@ namespace Hadal.AI.States
         public override void OnStateStart()
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
+            RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
             subStateMachine.CurrentState.OnStateStart();
         }
         public override void StateTick()
@@ -56,6 +59,11 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             subStateMachine.CurrentState.OnStateEnd();
+        }
+
+        public override void OnCavernEnter(CavernHandler cavern)
+        {
+            Brain.UpdateTargetMoveCavern(AICavern);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;
