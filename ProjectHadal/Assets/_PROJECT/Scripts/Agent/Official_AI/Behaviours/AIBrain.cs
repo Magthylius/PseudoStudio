@@ -17,6 +17,9 @@ namespace Hadal.AI
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
 
+        [Header("Debugging")] 
+        public bool SuspendStateLogic = false;
+
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
