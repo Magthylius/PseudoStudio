@@ -27,5 +27,17 @@ namespace Hadal.AI.Caverns
         {
             TriggerLeftEvent?.Invoke(other);
         }
+
+        public void StartColliderRecheck()
+        {
+            StartCoroutine(ColliderRecheck());
+        }
+        
+        IEnumerator ColliderRecheck()
+        {
+            GetComponent<Collider>().enabled = false;
+            yield return null;
+            GetComponent<Collider>().enabled = true;
+        }
     }
 }
