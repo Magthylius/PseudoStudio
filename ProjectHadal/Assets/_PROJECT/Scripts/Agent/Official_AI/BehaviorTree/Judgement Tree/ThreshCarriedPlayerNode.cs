@@ -46,7 +46,6 @@ namespace Hadal.AI.TreeNodes
                 timer = 0;
                 _threshDone = true;
             }
-
         }
 
         public override NodeState Evaluate(float deltaTime)

@@ -9,6 +9,7 @@ using System.Linq;
 using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.Player;
+using System.Collections;
 
 namespace Hadal.AI
 {
@@ -258,22 +259,25 @@ namespace Hadal.AI
         public void RefreshPlayerReferences()
             => Players = FindObjectsOfType<PlayerController>().ToList();
 
+        Coroutine suckPlayerRoutine;
         public void AttachCarriedPlayerToMouth(bool attachToMouth)
         {
+            Transform mouth = MouthObject.transform;
             if (CarriedPlayer == null)
             {
-                MouthObject.transform.DetachChildren();
+                mouth.DetachChildren();
                 return;
             }
 
             if (attachToMouth)
             {
-                CarriedPlayer.GetTarget.SetParent(MouthObject.transform);
+                CarriedPlayer.GetTarget.SetParent(mouth);
                 CarriedPlayer.DisableCollider();
+                CarriedPlayer.GetTarget.position = mouth.position;
                 return;
             }
 
-            MouthObject.transform.DetachChildren();
+            mouth.DetachChildren();
             CarriedPlayer.EnableCollider();
         }
 
