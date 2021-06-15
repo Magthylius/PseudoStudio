@@ -10,7 +10,7 @@ namespace Hadal.AI.Information
     {
         private PointNavigationHandler navHandler;
         private AIBrain brain;
-
+        
         [Header("Settings")] 
         [Tooltip("Disable update to save editor frames")] 
         [SerializeField] private bool enableUpdate = true;
@@ -54,7 +54,7 @@ namespace Hadal.AI.Information
                 brain = GetComponentInChildren<AIBrain>();
                 navHandler = GetComponentInChildren<PointNavigationHandler>();
                 yield return null;
-            } while (navHandler == null || brain == null || brain.TargetMoveCavern == null);
+            } while (navHandler == null || brain == null);
             
             StartUpdate();
         }
@@ -64,12 +64,8 @@ namespace Hadal.AI.Information
             while (enableUpdate)
             {
                 //! AIBrain
-                targetCavern = brain.TargetMoveCavern.cavernTag;
-                
-                if (brain.CavernManager.GetHandlerOfAILocation)
-                    currentCavern = brain.CavernManager.GetHandlerOfAILocation.cavernTag;
-                else 
-                    currentCavern = CavernTag.Invalid;
+                targetCavern = brain.TargetMoveCavern ? brain.TargetMoveCavern.cavernTag : CavernTag.Invalid;
+                currentCavern = brain.CavernManager.GetHandlerOfAILocation ? brain.CavernManager.GetHandlerOfAILocation.cavernTag : CavernTag.Invalid;
                 
                 state = brain.GetState;
 

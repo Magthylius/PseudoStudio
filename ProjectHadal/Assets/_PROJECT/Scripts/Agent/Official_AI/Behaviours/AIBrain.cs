@@ -17,6 +17,7 @@ namespace Hadal.AI
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
 
+        //[Header("Debugging")] 
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
@@ -103,8 +104,17 @@ namespace Hadal.AI
 
             //! State machine
             InitialiseStates();
-            runtimeData.SetBrainState(BrainState.Anticipation);
-            stateMachine.SetState(anticipationState);
+            if (!startWithOverrideState)
+            {
+                runtimeData.SetBrainState(BrainState.Anticipation);
+                stateMachine.SetState(anticipationState);
+            }
+            else
+            {
+                runtimeData.SetBrainState(overrideState);
+                stateMachine.SetState(GetMachineState(overrideState));
+            }
+            
 
             //! Runtime data
             RefreshPlayerReferences();
@@ -181,14 +191,14 @@ namespace Hadal.AI
         void OnCavernEnter(CavernHandler cavern)
         {
             //stateMachine.CurrentState.OnCavernEnter();
-            GetCurrentState().OnCavernEnter(cavern);
+            GetCurrentMachineState().OnCavernEnter(cavern);
         }
 
         /// <summary>Calls when a player enters the cavern AI is in</summary>
         void OnPlayerEnterAICavern(CavernPlayerData data)
         {
             if (data.Handler == cavernManager.GetHandlerOfAILocation)
-                GetCurrentState().OnPlayerEnterAICavern(data);
+                GetCurrentMachineState().OnPlayerEnterAICavern(data);
         }
 
         void OnTunnelEnter(TunnelBehaviour tunnel)
@@ -212,7 +222,7 @@ namespace Hadal.AI
         };
         Func<bool> IsRecovering() => () =>
         {
-            return RuntimeData.GetBrainState == BrainState.Recover && !isStunned;
+            return RuntimeData.GetBrainState == BrainState.Recovery && !isStunned;
         };
         Func<bool> HasEngageObjective() => () =>
         {
@@ -277,19 +287,58 @@ namespace Hadal.AI
 
         public CavernHandler TargetMoveCavern => targetMoveCavern;
         #endregion
-        
-        
+
+        #region Accesors
+
         public BrainState GetState => runtimeData.GetBrainState;
-        public AIStateBase GetCurrentState()
+        public AIStateBase GetCurrentMachineState()
         {
             foreach (AIStateBase state in allStates) if (state.IsCurrentState) return state;
 
             Debug.LogError("No active state found!");
             return null;
         }
+        public AIStateBase GetMachineState(BrainState state)
+        {
+            switch (state)
+            {
+                case BrainState.Anticipation:
+                    return anticipationState;
+                    break;
+                case BrainState.Engagement:
+                    return engagementState;
+                    break;
+                case BrainState.Recovery:
+                    return recoveryState;
+                    break;
+                case BrainState.Cooldown:
+                    return cooldownState;
+                    break;
+                default:
+                    Debug.LogWarning("State not found!");
+                    return null;
+                    break;
+            }
+        }
         public bool CanUpdate => PhotonNetwork.IsMasterClient || isOffline;
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
+
+        #endregion
+
+        #region Debugging
+        private bool suspendStateLogic = false;
+
+        private BrainState overrideState = BrainState.None;
+        private bool startWithOverrideState = false;
+
+        public bool StateSuspension => suspendStateLogic;
+        public void SuspendState() => suspendStateLogic = true;
+        public void ResumeState() => suspendStateLogic = false;
+        public void SetOverrideState(BrainState state) => overrideState = state;
+        public void StartWithOverrideState() => startWithOverrideState = true;
+
+        #endregion
     }
 
     public enum AIDamageType
