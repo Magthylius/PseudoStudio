@@ -50,7 +50,6 @@ MonoBehaviour:
   projectileRigidbody: {fileID: 5112791235449951143}
   projectileBehavior: {fileID: 0}
   projectileModeList:
-  - {fileID: 3534986708049555734}
   - {fileID: 1637671488171667810}
 --- !u!114 &3534986708049555734
 MonoBehaviour:
@@ -87,7 +86,7 @@ MonoBehaviour:
   endTime: 5
   armsProjectile: 1
   skipsOnContact: 0
-  force: 50
+  force: 100
   linearDrag: 1
 --- !u!1 &7351274592407701336
 GameObject:
@@ -138,6 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DebugKey: 
   projectileID: 0
+  IsLocal: 0
   validLayer:
   - Monster
   - Obstacle

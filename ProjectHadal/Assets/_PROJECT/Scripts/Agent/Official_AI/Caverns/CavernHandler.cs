@@ -12,15 +12,17 @@ namespace Hadal.AI.Caverns
     /// <summary>
     /// Used to handle a single cavern logic. 
     /// </summary>
-    [RequireComponent(typeof(Collider))]
     public class CavernHandler : MonoBehaviour
     {
         CavernManager manager;
         
         [Header("Data")]
         [SerializeField, ReadOnly] int cavernHeuristic = -1;
+        [ReadOnly] public List<TunnelBehaviour> connectedTunnels;
+        [ReadOnly] public List<CavernHandler> connectedCaverns;
 
-        [Header("Settings")]
+        [Header("Settings")] 
+        public CavernColliderBehaviour cavernCollider;
         public CavernTag cavernTag;
         public bool forceFirstFrameRecheck = false;
 
@@ -28,8 +30,6 @@ namespace Hadal.AI.Caverns
         [SerializeField] LayerMask aiMask;
         [SerializeField] List<AmbushPointBehaviour> ambushPoints;
 
-        [ReadOnly] public List<TunnelBehaviour> connectedTunnels;
-        [ReadOnly] public List<CavernHandler> connectedCaverns;
         
         public event CavernHandlerPlayerReturn PlayerEnteredCavernEvent;
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
@@ -41,9 +41,6 @@ namespace Hadal.AI.Caverns
 
         void OnValidate()
         {
-            collider = GetComponent<Collider>();
-            collider.isTrigger = true;
-
             manager = FindObjectOfType<CavernManager>();
             manager.InjectHandler(this);
         }
@@ -64,6 +61,14 @@ namespace Hadal.AI.Caverns
             AILeftCavernEvent += manager.OnAILeaveCavern;
 
             playersInCavern = new List<PlayerController>();
+
+            if (cavernCollider == null) GetComponentInChildren<CavernColliderBehaviour>();
+            if (cavernCollider == null) Debug.LogError("Cavern collider is null!");
+            else
+            {
+                cavernCollider.TriggerEnteredEvent += ColliderTriggerEnter;
+                cavernCollider.TriggerLeftEvent += ColliderTriggerLeave;
+            }
         }
 
         void OnEnable()
@@ -72,7 +77,7 @@ namespace Hadal.AI.Caverns
             collider.isTrigger = true;
         }
         
-        void OnTriggerEnter(Collider other)
+        void ColliderTriggerEnter(Collider other)
         {
             //! Prechecks
             NavPoint nPoint = other.GetComponent<NavPoint>();
@@ -96,7 +101,7 @@ namespace Hadal.AI.Caverns
             }
         }
 
-        void OnTriggerExit(Collider other)
+        void ColliderTriggerLeave(Collider other)
         {
             //! Prechecks
             int layerVal = other.gameObject.layer;

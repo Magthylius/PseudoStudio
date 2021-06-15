@@ -3,9 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="288286ef-6628-4052-b004-981f2b383844" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectHadal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectHadal/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_PROJECT/Resources/ScriptableObjects/AI/CavernSteering.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_PROJECT/Resources/ScriptableObjects/AI/CavernSteering.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_PROJECT/Resources/ScriptableObjects/AI/TunnelSteering.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_PROJECT/Resources/ScriptableObjects/AI/TunnelSteering.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_PROJECT/Scenes/_Official/Vertical Slice Collider Test.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_PROJECT/Scenes/_Official/Vertical Slice Collider Test.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_PROJECT/Scenes/_Official/Vertical Slice.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_PROJECT/Scenes/_Official/Vertical Slice.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/AIPackageInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/AIPackageInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/CavernHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/CavernHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Point Navigation/PointNavigationHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Point Navigation/PointNavigationHandler.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +28,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/82EC470C-9131-4935-8AD0-C83AD628910C/9b/14bd2132/PropertyAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/TunnelColliderBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/AIPackageInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/CavernColliderBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Settings/AISteeringSettings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/_PROJECT/Scripts/_Debugging/DebugCommandBase.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -50,17 +52,18 @@
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/TunnelBehaviour.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Networking/UI/MainMenuManager.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Core/Debug/InGameDebugger.cs" />
-      <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/AIPackageInfo.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Networking/NetworkEventManager.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Player/_Player/PlayerManager.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/User Interface/UIManager.cs" />
-      <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Point Navigation/PointNavigationHandler.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/_Debugging/DebugCommandBase.cs" />
-      <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/CavernHandler.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/CavernManager.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/_Debugging/CheatConsoleManager.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Behaviours/AnticipationState.cs" />
       <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Behaviours/AIBrain.cs" />
+      <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Point Navigation/PointNavigationHandler.cs" />
+      <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/CavernHandler.cs" />
+      <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/Caverns/CavernColliderBehaviour.cs" />
+      <option value="$PROJECT_DIR$/Assets/_PROJECT/Scripts/Agent/Official_AI/AIPackageInfo.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1teq5e1PCibUoijUsQAkdmqM4QU" />
@@ -121,7 +124,8 @@
       <workItem from="1623216355615" duration="13365000" />
       <workItem from="1623393803358" duration="8473000" />
       <workItem from="1623479854406" duration="25451000" />
-      <workItem from="1623654402012" duration="18886000" />
+      <workItem from="1623654402012" duration="19201000" />
+      <workItem from="1623740614029" duration="3542000" />
     </task>
     <servers />
   </component>

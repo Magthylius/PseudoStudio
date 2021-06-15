@@ -533,7 +533,11 @@ namespace Hadal.AI
 
             potentialPoints.RemoveAll(p => p == null);
             if (potentialPoints.IsEmpty())
+            {
+                if (enableDebug)
+                    $"Potential points is empty; AI in {cavernManager.GetCavernTagOfAILocation()}".Msg();
                 return;
+            }
 
             if (currentPoint != null) currentPoint.Deselect();
             currentPoint = potentialPoints.RandomElement();

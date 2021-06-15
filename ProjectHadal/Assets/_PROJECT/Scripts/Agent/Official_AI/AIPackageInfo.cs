@@ -18,6 +18,7 @@ namespace Hadal.AI.Information
 
         [Header("AI Brain")] 
         [SerializeField, ReadOnly] private CavernTag targetCavern;
+        [SerializeField, ReadOnly] private CavernTag currentCavern;
         [SerializeField, ReadOnly] private BrainState state;
         
         [Header("Point Nav Handler")]
@@ -64,6 +65,7 @@ namespace Hadal.AI.Information
             {
                 //! AIBrain
                 targetCavern = brain.TargetMoveCavern.cavernTag;
+                currentCavern = brain.CavernManager.GetHandlerOfAILocation.cavernTag;
                 state = brain.GetState;
 
                 //! NavHandler
