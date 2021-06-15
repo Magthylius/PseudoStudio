@@ -9,6 +9,7 @@ using System.Linq;
 using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.Player;
+using Hadal.AI.Graphics;
 using System.Collections;
 
 namespace Hadal.AI
@@ -26,6 +27,7 @@ namespace Hadal.AI
         [SerializeField] private AISightDetection sightDetection;
         [SerializeField] private AITailManager tailManager;
         [SerializeField] private AIDamageManager damageManager;
+        [SerializeField] private AIGraphicsHandler graphicsHandler;
         [SerializeField] private CavernManager cavernManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
@@ -33,6 +35,7 @@ namespace Hadal.AI
         public AISightDetection SightDetection => sightDetection;
         public AITailManager TailManager => tailManager;
         public AIDamageManager DamageManager => damageManager;
+        public AIGraphicsHandler GraphicsHandler => graphicsHandler;
         public CavernManager CavernManager => cavernManager;
 
         private StateMachine stateMachine;
@@ -42,7 +45,7 @@ namespace Hadal.AI
 
         [Header("Runtime Data")]
         [SerializeField] private LeviathanRuntimeData runtimeData;
-        public GameObject MouthObject;
+        [ReadOnly] public GameObject MouthObject;
         [ReadOnly] public List<PlayerController> Players;
         [ReadOnly] public PlayerController CurrentTarget;
         [ReadOnly] public PlayerController CarriedPlayer;
@@ -78,6 +81,7 @@ namespace Hadal.AI
 				"Leviathan brain initialising in Offline mode.".Msg();
 			
             rBody = GetComponent<Rigidbody>();
+            graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
             isStunned = false;
 
             allAIComponents = GetComponentsInChildren<ILeviathanComponent>().ToList();
@@ -121,6 +125,7 @@ namespace Hadal.AI
             RefreshPlayerReferences();
             runtimeData.Start_Initialise();
             navigationHandler.SetCavernManager(cavernManager);
+            if (graphicsHandler != null) MouthObject = graphicsHandler.MouthObject;
         }
 
         private void Update()
@@ -259,7 +264,6 @@ namespace Hadal.AI
         public void RefreshPlayerReferences()
             => Players = FindObjectsOfType<PlayerController>().ToList();
 
-        Coroutine suckPlayerRoutine;
         public void AttachCarriedPlayerToMouth(bool attachToMouth)
         {
             Transform mouth = MouthObject.transform;
@@ -271,9 +275,8 @@ namespace Hadal.AI
 
             if (attachToMouth)
             {
-                CarriedPlayer.GetTarget.SetParent(mouth);
+                CarriedPlayer.GetTarget.SetParent(mouth, true);
                 CarriedPlayer.DisableCollider();
-                CarriedPlayer.GetTarget.position = mouth.position;
                 return;
             }
 
