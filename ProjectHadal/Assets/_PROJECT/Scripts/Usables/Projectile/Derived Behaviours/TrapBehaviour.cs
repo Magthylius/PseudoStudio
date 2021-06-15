@@ -64,10 +64,7 @@ namespace Hadal.Usables.Projectiles
             detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
             foreach (Collider col in detectedObjects)
             {
-                /*if (col.GetComponent<AIBrain>())
-                {
-                    col.GetComponent<AIBrain>().SetIsStunned(true); 
-                } */                 
+                col.gameObject.GetComponentInChildren<IStunnable>().TryStun(5.0f);
             }
             isExploding = true;
             particleEffect.SetActive(true);

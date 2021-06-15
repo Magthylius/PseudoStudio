@@ -54,9 +54,7 @@ namespace Hadal.AI.States
             AllowStateTick = true;
             RuntimeData.SetEngagementSubState(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
             
-            
             Brain.StartCoroutine(CheckPlayersInRange());
-            
         }
 
         IEnumerator DebugRoutine()
@@ -98,7 +96,7 @@ namespace Hadal.AI.States
 
         public override void OnCavernEnter(CavernHandler cavern)
         {
-            //print("Cavern entered");
+            if (Brain.SuspendStateLogic) return;
             DetermineNextCavern();
         }
 
@@ -132,15 +130,6 @@ namespace Hadal.AI.States
 
         void DetermineNextCavern()
         {
-            /*CavernHandler nextCavern =
-                CavernManager.GetLeastPopulatedCavern(CavernManager.GetNextCaverns(targetCavern,
-                    CavernManager.GetHandlerOfAILocation));
-            
-            print(nextCavern);
-            NavigationHandler.SetTargetNavPointAtCavern(nextCavern);
-            
-            Brain.UpdateTargetMoveCavern(nextCavern);*/
-
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern);
             NavigationHandler.SetDestinationToCavern(CavernManager, nextCavern);
             Brain.UpdateTargetMoveCavern(nextCavern);

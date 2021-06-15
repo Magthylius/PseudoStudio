@@ -17,6 +17,9 @@ namespace Hadal.AI
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
 
+        [Header("Debugging")] 
+        public bool SuspendStateLogic = false;
+
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
@@ -66,9 +69,9 @@ namespace Hadal.AI
         List<AIStateBase> allStates;
 
         [Header("Stunned Settings (needs a relook)")]
+        [SerializeField, ReadOnly] bool isStunned;
         [SerializeField] public float stunDuration;
         AIStateBase stunnedState;
-        bool isStunned;
 
         private void Awake()
         {
@@ -156,17 +159,24 @@ namespace Hadal.AI
             //! Cooldown
             cooldownState = new CooldownState(this);
 
+            //! Stunned
             stunnedState = new StunnedState(this);
 
             //! -setup custom transitions-
             stateMachine.AddEventTransition(to: anticipationState, withCondition: IsAnticipating());
             stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
             stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
-
-            //! Any state can go into stunnedState
+            stateMachine.AddEventTransition(to: cooldownState, withCondition: IsCooldown());
             stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
 
-            allStates = new List<AIStateBase> { anticipationState, engagementState, recoveryState, cooldownState };
+            allStates = new List<AIStateBase>
+            {
+                anticipationState,
+                engagementState,
+                recoveryState,
+                cooldownState,
+                stunnedState
+            };
         }
 
         #region Event Handlers

@@ -1,7 +1,7 @@
-using Tenshi.AIDolls;
 using Hadal.Utility;
 using Tenshi.UnitySoku;
 using System;
+using Tenshi;
 
 namespace Hadal.AI
 {
@@ -9,7 +9,6 @@ namespace Hadal.AI
     {
         Timer stunTimer;
         bool returnToDefaultState = false;
-        bool onThisState;
 
         public StunnedState(AIBrain brain)
         {
@@ -17,41 +16,33 @@ namespace Hadal.AI
             returnToDefaultState = false;
             stunTimer = Brain.Create_A_Timer()
                                 .WithDuration(Brain.stunDuration)
-                                .WithOnCompleteEvent(() =>                                
-                                    returnToDefaultState = true)
-                                .WithOnUpdateEvent(_ =>
-                                {
-                                    if (onThisState)
-                                        $"Stun timer: {(100f * stunTimer.GetCompletionRatio):F2}%".Msg();
-
-                                })
+                                .WithOnCompleteEvent(CancelStun)
                                 .WithShouldPersist(true);
             stunTimer.Pause();
         }
+        ~StunnedState() => stunTimer.Destroy();
+        
         public override void OnStateStart()
         {
+            if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             returnToDefaultState = false;
-            onThisState = true;
-            stunTimer.Restart();
-            Brain.StopStun();
+            stunTimer.RestartWithDuration(Brain.stunDuration);
         }
-        public override void StateTick()
-        {
-
-        }
-        public override void LateStateTick()
-        {
-        }
-        public override void FixedStateTick()
-        {
-        }
+        public override void StateTick() { }
+        public override void LateStateTick() { }
+        public override void FixedStateTick() { }
         public override void OnStateEnd()
         {
             returnToDefaultState = false;
-            onThisState = false;
             stunTimer.Pause();
-
         }
+
+        private void CancelStun()
+        {
+            returnToDefaultState = true;
+            Brain.StopStun();
+        }
+
         public override Func<bool> ShouldTerminate() => () => returnToDefaultState;
     }
 }

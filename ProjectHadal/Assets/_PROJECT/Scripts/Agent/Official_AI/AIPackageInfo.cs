@@ -9,7 +9,9 @@ namespace Hadal.AI.Information
     public class AIPackageInfo : MonoBehaviour
     {
         private PointNavigationHandler navHandler;
+        public PointNavigationHandler NavHandler => navHandler;
         private AIBrain brain;
+        public AIBrain Brain => brain;
 
         [Header("Settings")] 
         [Tooltip("Disable update to save editor frames")] 
@@ -18,6 +20,7 @@ namespace Hadal.AI.Information
 
         [Header("AI Brain")] 
         [SerializeField, ReadOnly] private CavernTag targetCavern;
+        [SerializeField, ReadOnly] private CavernTag currentCavern;
         [SerializeField, ReadOnly] private BrainState state;
         
         [Header("Point Nav Handler")]
@@ -64,6 +67,12 @@ namespace Hadal.AI.Information
             {
                 //! AIBrain
                 targetCavern = brain.TargetMoveCavern.cavernTag;
+                
+                if (brain.CavernManager.GetHandlerOfAILocation)
+                    currentCavern = brain.CavernManager.GetHandlerOfAILocation.cavernTag;
+                else 
+                    currentCavern = CavernTag.Invalid;
+                
                 state = brain.GetState;
 
                 //! NavHandler
