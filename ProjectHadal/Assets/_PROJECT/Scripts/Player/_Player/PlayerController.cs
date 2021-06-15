@@ -35,6 +35,7 @@ namespace Hadal.Player
         PhotonView _pView;
         PlayerManager _manager;
         Rigidbody _rBody;
+        Collider _collider;
 
         private bool _isKnocked;
         private bool _isCarried;
@@ -48,7 +49,6 @@ namespace Hadal.Player
         Photon.Realtime.Player attachedPlayer;
         int pViewSelfID;
 
-
         public static event Action<PlayerController> OnInitialiseComplete;
 
         #endregion
@@ -60,6 +60,7 @@ namespace Hadal.Player
             base.Awake();
             _pView = photonInfo.PView;
             _rBody = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
             _isKnocked = false;
             _isCarried = false;
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
@@ -153,8 +154,8 @@ namespace Hadal.Player
             healthManager.ResetManager();
         }
 
-        public void EnableCollider() => GetComponent<Collider>().enabled = true;
-        public void DisableCollider() => GetComponent<Collider>().enabled = false;
+        public void EnableCollider() => _collider.enabled = true;
+        public void DisableCollider() => _collider.enabled = false;
         #endregion
 
         #region Private Methods
