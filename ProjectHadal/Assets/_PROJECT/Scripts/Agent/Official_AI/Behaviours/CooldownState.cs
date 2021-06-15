@@ -59,7 +59,7 @@ namespace Hadal.AI.States
         void SetNewTargetCavern()
         {
             targetCavern = Brain.CavernManager.GetLeastPopulatedCavern();
-            NavigationHandler.SetDestinationToCavern(null, targetCavern);
+            NavigationHandler.SetImmediateDestinationToCavern(targetCavern);
         }
     }
 }

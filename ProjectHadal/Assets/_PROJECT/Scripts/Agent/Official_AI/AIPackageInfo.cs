@@ -72,7 +72,7 @@ namespace Hadal.AI.Information
                 //! NavHandler
                 obstacleCheckTimer = navHandler.Data_ObjstacleCheckTimer;
                 timeoutTimer = navHandler.Data_TimeoutTimer;
-                lingerTimer = navHandler.Data_LingerTimer;
+                lingerTimer = navHandler.Data_NavPointLingerTimer;
                 speedMultiplier = navHandler.Data_SpeedMultiplier;
                 navPoints = navHandler.Data_NavPoints;
                 repulsionPoints = navHandler.Data_RepulsionPoints;

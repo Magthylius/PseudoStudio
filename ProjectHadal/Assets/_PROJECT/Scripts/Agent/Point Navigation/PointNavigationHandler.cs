@@ -28,8 +28,10 @@ namespace Hadal.AI
         public float Data_ObjstacleCheckTimer => obstacleCheckTimer;
         [SerializeField, ReadOnly] private float timeoutTimer;
         public float Data_TimeoutTimer => timeoutTimer;
-        [SerializeField, ReadOnly] private float lingerTimer;
-        public float Data_LingerTimer => lingerTimer;
+        [SerializeField, ReadOnly] private float navPointLingerTimer;
+        public float Data_NavPointLingerTimer => navPointLingerTimer;
+        [SerializeField, ReadOnly] private float cavernLingerTimer;
+        public float Data_CavernLingerTimer => cavernLingerTimer;
         [SerializeField, ReadOnly] private float speedMultiplier = 1f;
         public float Data_SpeedMultiplier => speedMultiplier;
         [SerializeField, ReadOnly] private List<NavPoint> navPoints;
@@ -60,9 +62,8 @@ namespace Hadal.AI
         [SerializeField] private bool enableMovement;
 
         [Header("Timer Settings")]
-        [SerializeField, MinMaxSlider(1f, 30f)] private Vector2 lingerTimeRange;
-        [SerializeField] private float minLingerTime;
-        [SerializeField] private float maxLingerTime;
+        [SerializeField, MinMaxSlider(1f, 30f)] private Vector2 navPointLingerTimeRange;
+        [SerializeField, MinMaxSlider(1f, 120f)] private Vector2 cavernLingerTimeRange;
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
 
@@ -108,7 +109,7 @@ namespace Hadal.AI
         {
             navPoints = FindObjectsOfType<NavPoint>().ToList();
             navPoints.ForEach(p => p.Initialise());
-            ResetLingerTimer();
+            ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             obstacleCheckTimer = 0f;
             hasReachedPoint = false;
@@ -177,7 +178,7 @@ namespace Hadal.AI
 
             if (canPath)
             {
-                ResetLingerTimer();
+                ResetNavPointLingerTimer();
                 ResetTimeoutTimer();
                 obstacleCheckTimer = 0f;
                 return;
@@ -202,7 +203,7 @@ namespace Hadal.AI
             isChasingAPlayer = targetIsPlayer;
             canTimeout = false;
             canAutoSelectNavPoints = !targetIsPlayer;
-            ResetLingerTimer();
+            ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting custom nav point path".Msg();
         }
@@ -252,6 +253,11 @@ namespace Hadal.AI
             // Local Methods
             bool HasTheSameCavernTagAsDestinationCavern(NavPoint point) => point.CavernTag == destination.cavernTag;
             bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point != other;
+        }
+
+        public void EnableCachedQueuePathTimer()
+        {
+
         }
 
         /// <summary>
@@ -305,7 +311,7 @@ namespace Hadal.AI
             isChasingAPlayer = false;
             canTimeout = false;
             canAutoSelectNavPoints = false;
-            ResetLingerTimer();
+            ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug)
             {
@@ -359,7 +365,7 @@ namespace Hadal.AI
 
                 if (justFindNewPoint)
                 {
-                    ResetLingerTimer();
+                    ResetNavPointLingerTimer();
                     ResetTimeoutTimer();
                     SelectNewNavPoint();
                     yield break;
@@ -522,16 +528,16 @@ namespace Hadal.AI
             if (!canAutoSelectNavPoints) return;
 
             if (hasReachedPoint)
-                lingerTimer -= deltaTime;
+                navPointLingerTimer -= deltaTime;
             else
             {
                 if (canTimeout)
                     timeoutTimer -= deltaTime;
             }
 
-            if (lingerTimer <= 0f || timeoutTimer <= 0f)
+            if (navPointLingerTimer <= 0f || timeoutTimer <= 0f)
             {
-                ResetLingerTimer();
+                ResetNavPointLingerTimer();
                 ResetTimeoutTimer();
                 SkipCurrentPoint(true);
             }
@@ -572,8 +578,10 @@ namespace Hadal.AI
         private NavPoint GetClosestPointToSelf() => navPoints.OrderBy(n => n.GetSqrDistanceTo(pilotTrans.position)).FirstOrDefault();
         private void ResetTimeoutTimer() => timeoutTimer = timeoutNewPointTime;
         private void ResetObstacleCheckTimer() => obstacleCheckTimer = obstacleCheckTime;
-        private void ResetLingerTimer() => lingerTimer = GetNextLingerTime();
-        private float GetNextLingerTime() => Random.Range(minLingerTime, maxLingerTime);
+        private void ResetNavPointLingerTimer() => navPointLingerTimer = GetNextNavPointLingerTime();
+        private void ResetCavernLingerTimer() => cavernLingerTimer = GetNextCavernLingerTime();
+        private float GetNextNavPointLingerTime() => Random.Range(navPointLingerTimeRange.x, navPointLingerTimeRange.y);
+        private float GetNextCavernLingerTime() => Random.Range(cavernLingerTimeRange.x, cavernLingerTimeRange.y);
 
         #endregion
 

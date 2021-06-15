@@ -131,7 +131,8 @@ namespace Hadal.AI.States
         void DetermineNextCavern()
         {
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern);
-            NavigationHandler.SetDestinationToCavern(CavernManager, nextCavern);
+            NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
+            NavigationHandler.EnableCachedQueuePathTimer();
             Brain.UpdateTargetMoveCavern(nextCavern);
         }
 

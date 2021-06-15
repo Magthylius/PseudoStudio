@@ -42,7 +42,7 @@ namespace Hadal.AI.Information
             brain.CavernManager.SeedCavernHeuristics(brain.CavernManager.GetHandlerOfAILocation, brain.CavernManager.GetCavern(targetCavern));
             CavernHandler nextCavern = brain.CavernManager.GetNextBestCavern(brain.CavernManager.GetHandlerOfAILocation);
  
-            navHandler.SetDestinationToCavern(brain.CavernManager, nextCavern);
+            navHandler.SetImmediateDestinationToCavern(nextCavern);
         }
         
     }
