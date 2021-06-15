@@ -153,6 +153,8 @@ namespace Hadal.Player
             healthManager.ResetManager();
         }
 
+        public void EnableCollider() => GetComponent<Collider>().enabled = true;
+        public void DisableCollider() => GetComponent<Collider>().enabled = false;
         #endregion
 
         #region Private Methods

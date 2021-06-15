@@ -269,10 +269,12 @@ namespace Hadal.AI
             if (attachToMouth)
             {
                 CarriedPlayer.GetTarget.SetParent(MouthObject.transform);
+                CarriedPlayer.DisableCollider();
                 return;
             }
 
             MouthObject.transform.DetachChildren();
+            CarriedPlayer.EnableCollider();
         }
 
         #endregion
