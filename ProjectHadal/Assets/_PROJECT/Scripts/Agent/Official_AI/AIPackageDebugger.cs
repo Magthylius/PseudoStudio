@@ -32,11 +32,9 @@ namespace Hadal.AI
         {
             brain.SuspendStateLogic = true;
 
-            //print(cavernManager.GetHandlerOfAILocation);
-            //print(brain.CavernManager.GetCavern(targetCavern));
             brain.CavernManager.SeedCavernHeuristics(brain.CavernManager.GetHandlerOfAILocation, brain.CavernManager.GetCavern(targetCavern));
             CavernHandler nextCavern = brain.CavernManager.GetNextBestCavern(brain.CavernManager.GetHandlerOfAILocation);
-            //brain.SuspendStateLogic = true;
+ 
             navHandler.SetDestinationToCavern(brain.CavernManager, nextCavern);
         }
     }
