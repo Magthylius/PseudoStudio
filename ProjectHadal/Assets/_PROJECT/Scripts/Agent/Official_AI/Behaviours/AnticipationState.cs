@@ -96,7 +96,7 @@ namespace Hadal.AI.States
 
         public override void OnCavernEnter(CavernHandler cavern)
         {
-            if (Brain.SuspendStateLogic) return;
+            if (Brain.StateSuspension) return;
             DetermineNextCavern();
         }
 

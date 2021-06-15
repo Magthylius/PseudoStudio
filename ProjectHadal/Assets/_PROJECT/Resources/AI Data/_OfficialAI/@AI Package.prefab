@@ -24,6 +24,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9200071578313348570}
   - component: {fileID: 1417038863}
+  - component: {fileID: 7784796312020894348}
   m_Layer: 0
   m_Name: '@AI Package'
   m_TagString: Untagged
@@ -62,6 +63,8 @@ MonoBehaviour:
   enableUpdate: 1
   updateDelay: 1
   targetCavern: 0
+  currentCavern: 0
+  state: 0
   currentPoint: {fileID: 0}
   obstacleCheckTimer: 0
   timeoutTimer: 0
@@ -75,6 +78,19 @@ MonoBehaviour:
   isOnCustomPath: 0
   isChasingAPlayer: 0
   canPath: 0
+--- !u!114 &7784796312020894348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8595098662043833109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e28d4f826579775458308ccd62b5bbee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCavern: 1
 --- !u!1001 &2007591999200880586
 PrefabInstance:
   m_ObjectHideFlags: 0
