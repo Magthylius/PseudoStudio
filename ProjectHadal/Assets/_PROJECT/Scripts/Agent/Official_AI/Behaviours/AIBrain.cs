@@ -277,6 +277,7 @@ namespace Hadal.AI
             {
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
                 CarriedPlayer.DisableCollider();
+				CarriedPlayer.GetTarget.localPosition = Vector3.zero;
                 return;
             }
 
