@@ -8,10 +8,13 @@ namespace Hadal.Interactables
     [RequireComponent(typeof(Collider))]
     public class MushroomBehaviour : MonoBehaviour
     {
+        [Header("Settings")]
+        [SerializeField, MinMaxSlider(0.1f, 10f)] private Vector2 reactiveTimeoutRange;
+
         [Header("Colour Data")]
-        [SerializeField] private MushroomColourData reactiveColourData;
-        [SerializeField, ReadOnly] private MushroomColourData unreactiveColourData;
-        [SerializeField, ReadOnly] private bool _isReactive;
+        [SerializeField] private MushroomShaderData reactiveData;
+        [SerializeField, ReadOnly] private MushroomShaderData unreactiveData;
+        [SerializeField, ReadOnly] private MushroomShaderData currentData;
         [SerializeField, ReadOnly] private float _percent;
 
         [Header("Renderers")]
@@ -25,31 +28,47 @@ namespace Hadal.Interactables
         [SerializeField, ReadOnly] private List<Material> materialsInner;
         [SerializeField, ReadOnly] private List<Material> materialsOuter;
 
-        private readonly string BorderColour = "_BorderColor";
+        private bool _canBecomeUnreactive;
+        private bool _isReactive;
+        private float reactiveTimeoutTimer;
+        private HashSet<Collider> contacts;
 
-        [ContextMenu("Trigger Awake")]
+        private readonly string BorderColour = "_BorderColor";
+        private readonly string Colour = "_Color";
+        private readonly string BorderPower = "_BorderPower";
+        private readonly string NoiseScale = "_NoiseScale";
+
         private void Awake()
         {
             renderersInner ??= new List<MeshRenderer>();
             renderersOuter ??= new List<MeshRenderer>();
             materialsInner ??= new List<Material>();
             materialsOuter ??= new List<Material>();
+            _canBecomeUnreactive = false;
             _isReactive = false;
+            contacts = new HashSet<Collider>();
             _percent = 0f;
 
+            currentData = new MushroomShaderData();
             const int count = 2;
             int i = -1;
             while (++i < count)
             {
                 materialsOuter.Add(renderersOuter[i].material);
                 materialsOuter[i].EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                materialsOuter[i].SetFloat("_BorderPower", 0.3f);
+                materialsOuter[i].SetFloat(BorderPower, 0.3f);
+
+                materialsInner.Add(renderersInner[i].material);
+                materialsInner[i].EnableKeyword("_ALPHAPREMULTIPLY_ON");
             }
-            
+
             //! Default colour data
-            unreactiveColourData = new MushroomColourData
+            unreactiveData = new MushroomShaderData
             {
-                OuterColour = materialsOuter[0].GetColor(BorderColour)
+                BorderColour = materialsOuter[0].GetColor(BorderColour),
+                Colour = materialsInner[0].GetColor(Colour),
+                BorderPower = materialsOuter[0].GetFloat(BorderPower),
+                NoiseScale = materialsOuter[0].GetFloat(NoiseScale)
             };
         }
 
@@ -58,8 +77,14 @@ namespace Hadal.Interactables
             if (!HasViableColourData || !CanTransition) return;
             if (CanCollide(other))
             {
+                if (contacts.Contains(other))
+                    return;
+                contacts.Add(other);
+
+                if (_isReactive)
+                    return;
+                _canBecomeUnreactive = false;
                 StopAllCoroutines();
-                _isReactive = true;
                 StartCoroutine(ReactiveTransition());
             }
         }
@@ -69,33 +94,48 @@ namespace Hadal.Interactables
             if (!HasViableColourData || !CanTransition) return;
             if (CanCollide(other))
             {
-                StopAllCoroutines();
-                _isReactive = false;
-                StartCoroutine(UnreactiveTransition());
+                contacts.Remove(other);
+                if (contacts.IsEmpty())
+                    _canBecomeUnreactive = true;
             }
         }
 
         private void SetMaterialColour()
         {
             _percent = _percent.Clamp01();
-            
+            currentData.Lerp(unreactiveData, reactiveData, _percent);
+
             const int count = 2;
             int i = -1;
             while (++i < count)
             {
-                Color outerCol = Color.Lerp(unreactiveColourData.OuterColour, reactiveColourData.OuterColour, _percent);
-                materialsOuter[i].SetColor(BorderColour, outerCol);
+                materialsOuter[i].SetColor(BorderColour, currentData.BorderColour);
+                materialsInner[i].SetColor(Colour, currentData.Colour);
+                materialsOuter[i].SetFloat(BorderPower, currentData.BorderPower);
+                materialsOuter[i].SetFloat(NoiseScale, currentData.NoiseScale);
             }
         }
 
         private IEnumerator ReactiveTransition()
         {
+            _isReactive = true;
+
+            //! Become Reactive
             while (_percent < 1f)
             {
                 _percent += DeltaTime * reactiveTransitionSpeed;
                 SetMaterialColour();
                 yield return null;
             }
+
+            //! Wait for unreactive cue & timer
+            while (!_canBecomeUnreactive)
+                yield return null;
+
+            yield return new WaitForSeconds(Random.Range(reactiveTimeoutRange.x, reactiveTimeoutRange.y));
+
+            //! Become Unreactive
+            StartCoroutine(UnreactiveTransition());
         }
 
         private IEnumerator UnreactiveTransition()
@@ -106,6 +146,8 @@ namespace Hadal.Interactables
                 SetMaterialColour();
                 yield return null;
             }
+
+            _isReactive = false;
         }
 
         private float DeltaTime => Time.deltaTime;
@@ -113,13 +155,26 @@ namespace Hadal.Interactables
         private bool CanTransition
             => !renderersOuter.IsNullOrEmpty()
             && !materialsOuter.IsNullOrEmpty();
-        private bool HasViableColourData => unreactiveColourData != null && reactiveColourData != null;
+        private bool HasViableColourData => unreactiveData != null && reactiveData != null;
+
+        private void ResetTimeoutTimer() => reactiveTimeoutTimer = Random.Range(reactiveTimeoutRange.x, reactiveTimeoutRange.y);
+        private float TickTimeoutTimer(in float deltaTime) => reactiveTimeoutTimer -= deltaTime;
+        private bool ReactiveTimeoutTimerReached => reactiveTimeoutTimer <= 0f;
     }
 
     [System.Serializable]
-    public class MushroomColourData
+    public class MushroomShaderData
     {
-        public Color OuterColour = Color.white;
-        public Color InnerColour = Color.white;
+        public Color BorderColour = Color.white;
+        public Color Colour = Color.white;
+        public float BorderPower = 0f;
+        public float NoiseScale = 0f;
+        public void Lerp(MushroomShaderData a, MushroomShaderData b, in float percent)
+        {
+            BorderColour = Color.Lerp(a.BorderColour, b.BorderColour, percent);
+            Colour = Color.Lerp(a.Colour, b.Colour, percent);
+            BorderPower = Mathf.Lerp(a.BorderPower, b.BorderPower, percent);
+            NoiseScale = Mathf.Lerp(a.NoiseScale, b.NoiseScale, percent);
+        }
     }
 }

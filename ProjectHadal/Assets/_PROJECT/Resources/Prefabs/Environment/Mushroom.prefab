@@ -3089,6 +3089,7 @@ GameObject:
   - component: {fileID: 2540516074670912511}
   - component: {fileID: 1361719066703693179}
   - component: {fileID: 5719331931242065070}
+  - component: {fileID: 4043632581625740157}
   m_Layer: 0
   m_Name: Mushroom
   m_TagString: Untagged
@@ -3170,13 +3171,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3cc14ba78f89b4c9e5cf4dec56fdc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reactiveColourData:
-    OuterColour: {r: 1, g: 0.9990684, b: 0, a: 1}
-    InnerColour: {r: 0.7852063, g: 0.8113208, b: 0.14925243, a: 1}
-  unreactiveColourData:
-    OuterColour: {r: 0, g: 0, b: 0, a: 0}
-    InnerColour: {r: 0, g: 0, b: 0, a: 0}
-  _isReactive: 0
+  reactiveTimeoutRange: {x: 3, y: 5}
+  reactiveData:
+    BorderColour: {r: 0.9511088, g: 1, b: 0, a: 0.6039216}
+    Colour: {r: 0.68680394, g: 0.6901961, b: 0.23137254, a: 0.5372549}
+    BorderPower: 0.5
+    NoiseScale: 0.15
+  unreactiveData:
+    BorderColour: {r: 1, g: 1, b: 1, a: 1}
+    Colour: {r: 1, g: 1, b: 1, a: 1}
+    BorderPower: 0
+    NoiseScale: 0
+  currentData:
+    BorderColour: {r: 1, g: 1, b: 1, a: 1}
+    Colour: {r: 1, g: 1, b: 1, a: 1}
+    BorderPower: 0
+    NoiseScale: 0
   _percent: 0
   renderersInner:
   - {fileID: 9106017975802900117}
@@ -3184,8 +3194,8 @@ MonoBehaviour:
   renderersOuter:
   - {fileID: 7424058427915777819}
   - {fileID: 1802790389474029951}
-  reactiveTransitionSpeed: 0.75
-  unreactiveTransitionSpeed: 0.5
+  reactiveTransitionSpeed: 0.5
+  unreactiveTransitionSpeed: 0.25
   reactiveMasks:
     serializedVersion: 2
     m_Bits: 16512
@@ -3202,8 +3212,21 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 3, z: 4}
-  m_Center: {x: 0, y: 0.75, z: 0}
+  m_Size: {x: 5, y: 12, z: 5}
+  m_Center: {x: 0, y: 6, z: 0}
+--- !u!135 &4043632581625740157
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5435400376699300281}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 3, z: 0}
 --- !u!1 &5890482541458290632
 GameObject:
   m_ObjectHideFlags: 0
