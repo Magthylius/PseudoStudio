@@ -117,6 +117,7 @@ MonoBehaviour:
   sightDetection: {fileID: 9221971048963321059}
   tailManager: {fileID: 6414438567741730858}
   damageManager: {fileID: 2206939684562575357}
+  graphicsHandler: {fileID: 0}
   cavernManager: {fileID: 0}
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   MouthObject: {fileID: 0}
@@ -124,7 +125,7 @@ MonoBehaviour:
   CurrentTarget: {fileID: 0}
   CarriedPlayer: {fileID: 0}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
-  isOffline: 1
+  isOffline: 0
   DebugEnabled: 0
   isStunned: 0
   stunDuration: 1
