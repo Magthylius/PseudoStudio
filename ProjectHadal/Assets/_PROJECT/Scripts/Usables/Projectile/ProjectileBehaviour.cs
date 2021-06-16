@@ -47,10 +47,10 @@ namespace Hadal.Usables.Projectiles
             return false;
         }
 
-        public virtual bool ImpactBehaviour(Collision collision)
+        public virtual void ImpactBehaviour()
         {
-            var damageable = collision.transform.GetComponent<IDamageable>();
-            return TryDamageTarget(damageable);
+            PPhysics.OnPhysicsFinished();
+            return;        
         }
 
         protected bool TryDamageTarget(IDamageable target)
@@ -127,7 +127,7 @@ namespace Hadal.Usables.Projectiles
                 {
                     gameObject.transform.position = (Vector3)data[1];
                     print(projectileID + "despawning due to event");
-                    PPhysics.OnPhysicsFinished();
+                    ImpactBehaviour();
                 }
             }
         }
