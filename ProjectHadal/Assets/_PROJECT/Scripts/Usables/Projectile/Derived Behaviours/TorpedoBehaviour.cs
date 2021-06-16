@@ -67,6 +67,7 @@ namespace Hadal.Usables.Projectiles
         public override void ImpactBehaviour()
         {
             print("called");
+            Rigidbody.isKinematic = true;
             particleEffect.SetActive(true);
             isExploding = true;
         }
@@ -74,6 +75,7 @@ namespace Hadal.Usables.Projectiles
         private void StopExplosion()
         {
             isExploding = false;
+            Rigidbody.isKinematic = false;
             PPhysics.OnPhysicsFinished();
         }
     }
