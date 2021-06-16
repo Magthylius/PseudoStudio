@@ -25,7 +25,7 @@ namespace Hadal.Interactables
         [SerializeField, ReadOnly] private List<Material> materialsInner;
         [SerializeField, ReadOnly] private List<Material> materialsOuter;
 
-        private readonly string BorderColour = "_Color";
+        private readonly string BorderColour = "_BorderColor";
 
         [ContextMenu("Trigger Awake")]
         private void Awake()
@@ -41,14 +41,14 @@ namespace Hadal.Interactables
             int i = -1;
             while (++i < count)
             {
-                materialsInner.Add(renderersInner[i].material);
                 materialsOuter.Add(renderersOuter[i].material);
+                materialsOuter[i].EnableKeyword("_ALPHAPREMULTIPLY_ON");
+                materialsOuter[i].SetFloat("_BorderPower", 0.3f);
             }
-            return;
+            
             //! Default colour data
             unreactiveColourData = new MushroomColourData
             {
-                InnerColour = materialsInner[0].GetColor(BorderColour),
                 OuterColour = materialsOuter[0].GetColor(BorderColour)
             };
         }
@@ -77,19 +77,13 @@ namespace Hadal.Interactables
 
         private void SetMaterialColour()
         {
-            return;
             _percent = _percent.Clamp01();
-            MushroomColourData data = _isReactive ? reactiveColourData : unreactiveColourData;
-            Material innerMat = materialsInner[0];
-            Material outerMat = materialsOuter[0];
-            Color innerCol = Color.Lerp(innerMat.GetColor(BorderColour), data.InnerColour, _percent);
-            Color outerCol = Color.Lerp(outerMat.GetColor(BorderColour), data.OuterColour, _percent);
-
+            
             const int count = 2;
             int i = -1;
             while (++i < count)
             {
-                materialsInner[i].SetColor(BorderColour, innerCol);
+                Color outerCol = Color.Lerp(unreactiveColourData.OuterColour, reactiveColourData.OuterColour, _percent);
                 materialsOuter[i].SetColor(BorderColour, outerCol);
             }
         }
@@ -117,9 +111,7 @@ namespace Hadal.Interactables
         private float DeltaTime => Time.deltaTime;
         private bool CanCollide(Collider other) => other.gameObject.layer.IsAMatchingMask(reactiveMasks);
         private bool CanTransition
-            => !renderersInner.IsNullOrEmpty()
-            && !renderersOuter.IsNullOrEmpty()
-            && !materialsInner.IsNullOrEmpty()
+            => !renderersOuter.IsNullOrEmpty()
             && !materialsOuter.IsNullOrEmpty();
         private bool HasViableColourData => unreactiveColourData != null && reactiveColourData != null;
     }
