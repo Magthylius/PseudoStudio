@@ -11,6 +11,7 @@ using Tenshi.UnitySoku;
 using Hadal.Player;
 using Hadal.AI.Graphics;
 using System.Collections;
+using Hadal.Networking;
 
 namespace Hadal.AI
 {
@@ -52,6 +53,7 @@ namespace Hadal.AI
 
         [Header("Settings Data")]
         [SerializeField] private StateMachineData machineData;
+        [SerializeField] private bool followNetworkManagerOfflineStatus;
         [SerializeField] private bool isOffline;
         public bool DebugEnabled;
 
@@ -75,11 +77,11 @@ namespace Hadal.AI
         [SerializeField] public float stunDuration;
         AIStateBase stunnedState;
 
+        private bool _playersAreReady;
+
         private void Awake()
         {
-			if (DebugEnabled && isOffline)
-				"Leviathan brain initialising in Offline mode.".Msg();
-			
+            _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
             graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
             isStunned = false;
@@ -98,6 +100,13 @@ namespace Hadal.AI
 
         private void Start()
         {
+            NetworkEventManager nManager = NetworkEventManager.Instance;
+            if (nManager != null && followNetworkManagerOfflineStatus)
+                isOffline = nManager.isOfflineMode;
+            
+            if (DebugEnabled && isOffline)
+				"Leviathan brain initialising in Offline mode.".Msg();
+
             allAIComponents.ForEach(i => i.Initialise(this));
             cavernManager = FindObjectOfType<CavernManager>();
             
@@ -106,6 +115,10 @@ namespace Hadal.AI
             cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
             cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
             cavernManager.AILeftTunnelEvent += OnTunnelLeave;
+
+            PlayerManager pManager = PlayerManager.Instance;
+            if (pManager != null && PhotonNetwork.IsMasterClient)
+                pManager.OnAllPlayersReadyEvent += PlayersAreReadySignal;
 
             //! State machine
             InitialiseStates();
@@ -136,6 +149,7 @@ namespace Hadal.AI
             navigationHandler.DoUpdate(deltaTime);
             stateMachine?.MachineTick();
             mainUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
+            HandleCarriedPlayer();
         }
         private void LateUpdate()
         {
@@ -192,11 +206,24 @@ namespace Hadal.AI
             };
         }
 
+        private void PlayersAreReadySignal()
+        {
+            PlayerManager.Instance.OnAllPlayersReadyEvent -= PlayersAreReadySignal;
+            "Players are ready, Happy hunting!".Msg();
+            _playersAreReady = true;
+        }
+
+        private readonly Vector3 vZero = Vector3.zero;
+        private void HandleCarriedPlayer()
+        {
+            if (CarriedPlayer == null) return;
+            CarriedPlayer.GetTarget.localPosition = vZero;
+        }
+
         #region Event Handlers
         /// <summary>Calls when AI enters a cavern</summary>
         void OnCavernEnter(CavernHandler cavern)
         {
-            //stateMachine.CurrentState.OnCavernEnter();
             GetCurrentMachineState().OnCavernEnter(cavern);
         }
 
@@ -209,13 +236,11 @@ namespace Hadal.AI
 
         void OnTunnelEnter(TunnelBehaviour tunnel)
         {
-            //print("Entering tunnel");
             navigationHandler.TunnelModeSteering();
         }
 
         public void OnTunnelLeave(TunnelBehaviour tunnel)
         {
-            //print("Leaving tunnel");
             navigationHandler.CavernModeSteering();
         }
         #endregion
@@ -291,8 +316,6 @@ namespace Hadal.AI
         public void UpdateTargetMoveCavern(CavernHandler newCavern)
         {
             targetMoveCavern = newCavern;
-            //NavPoint[] nextCavernPoints = CavernManager.GetHandlerOfAILocation.GetEntryNavPoints(newCavern);
-            //NavigationHandler.SetQueuedPath(nextCavernPoints);
         }
 
         public CavernHandler TargetMoveCavern => targetMoveCavern;
@@ -309,28 +332,21 @@ namespace Hadal.AI
             return null;
         }
         public AIStateBase GetMachineState(BrainState state)
-        {
-            switch (state)
+            => state switch
             {
-                case BrainState.Anticipation:
-                    return anticipationState;
-                    break;
-                case BrainState.Engagement:
-                    return engagementState;
-                    break;
-                case BrainState.Recovery:
-                    return recoveryState;
-                    break;
-                case BrainState.Cooldown:
-                    return cooldownState;
-                    break;
-                default:
-                    Debug.LogWarning("State not found!");
-                    return null;
-                    break;
-            }
+                BrainState.Anticipation => anticipationState,
+                BrainState.Engagement   => engagementState,
+                BrainState.Recovery     => recoveryState,
+                BrainState.Cooldown     => cooldownState,
+                _ => ReturnDefaultAIState()
+            };
+        private AIStateBase ReturnDefaultAIState()
+        {
+            Debug.LogWarning("State not found!");
+            return null;
         }
-        public bool CanUpdate => PhotonNetwork.IsMasterClient || isOffline;
+        
+        public bool CanUpdate => (PhotonNetwork.IsMasterClient || isOffline) && (_playersAreReady || isOffline);
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
 

@@ -115,7 +115,6 @@ namespace Hadal.Player
             if (!_pView.IsMine) return;
             if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
             if (CanRotate) rotator.DoFixedUpdate(FixedDeltaTime);
-            if (_isCarried) GetTarget.localPosition = Vector3.zero;
         }
 
         protected override void LateUpdate()

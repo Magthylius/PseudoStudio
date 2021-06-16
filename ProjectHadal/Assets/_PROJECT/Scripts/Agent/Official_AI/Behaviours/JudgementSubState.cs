@@ -324,12 +324,12 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             //! Subject to change
-            // if (Brain.CarriedPlayer != null)
-            // {
-            //     Brain.CarriedPlayer.SetIsCarried(false);
-            //     Brain.CarriedPlayer = null;
-            //     Brain.AttachCarriedPlayerToMouth(false);
-            // }
+            if (Brain.CarriedPlayer != null)
+            {
+                Brain.CarriedPlayer.SetIsCarried(false);
+                Brain.CarriedPlayer = null;
+                Brain.AttachCarriedPlayerToMouth(false);
+            }
         }
         public override Func<bool> ShouldTerminate() => () => false;
 

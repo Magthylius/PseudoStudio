@@ -5,6 +5,7 @@ using Hadal.Networking.UI.Loading;
 using Photon.Pun;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using UnityEngine;
 
 //! Created by Jet, E: Jon
@@ -16,6 +17,7 @@ namespace Hadal.Player
         
         public delegate void AddAPlayerEvent();
         public static event AddAPlayerEvent AddPlayerEvent;
+        public event Action OnAllPlayersReadyEvent;
 
         public bool isOnNetwork = false;
         private const string PrefabFolder = "Prefabs/Player";
@@ -102,6 +104,7 @@ namespace Hadal.Player
                 LoadingManager.Instance.StartEndLoad();
                 instantiatePViewList();
                 print("All player ready, sending event to notify all players.");
+                if (PhotonNetwork.IsMasterClient) OnAllPlayersReadyEvent?.Invoke();
             }
         }
 
