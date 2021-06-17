@@ -1,9 +1,13 @@
 {
     "name": "PlayModeTests",
-    "rootNamespace": "",
+    "rootNamespace": "Hadal.UnitTests.PlayMode",
     "references": [
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "Hadal.Player",
+        "Hadal.Usables",
+        "Hadal.Locomotion",
+        "Hadal.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

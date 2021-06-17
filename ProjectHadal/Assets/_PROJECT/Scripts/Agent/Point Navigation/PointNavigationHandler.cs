@@ -204,7 +204,7 @@ namespace Hadal.AI
             pointPath.Clear();
             currentPoint = target;
             isChasingAPlayer = targetIsPlayer;
-            canTimeout = false;
+            canTimeout = true;
             canAutoSelectNavPoints = !targetIsPlayer;
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
@@ -359,7 +359,10 @@ namespace Hadal.AI
             {
                 currentPoint.Deselect();
                 if (currentPoint.CavernTag == CavernTag.Custom_Point)
+                {
+                    isChasingAPlayer = false;
                     Destroy(currentPoint.gameObject);
+                }
                 if (enableDebug) "Stopping custom path".Msg();
                 yield return null;
 

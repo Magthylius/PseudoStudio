@@ -66,6 +66,7 @@ namespace Hadal.AI.TreeNodes
                 _brain.CarriedPlayer.SetIsCarried(false);
                 _brain.CarriedPlayer = null;
                 _brain.AttachCarriedPlayerToMouth(false);
+                _brain.NavigationHandler.StopCustomPath(true);
                 return NodeState.SUCCESS;
             }
             else
