@@ -1,3 +1,4 @@
+using Hadal.AI.Caverns;
 using UnityEngine;
 
 namespace Hadal.AI.TreeNodes
@@ -62,7 +63,9 @@ namespace Hadal.AI.TreeNodes
             {
                 point = Object.Instantiate(_pointPrefab, target.position, Quaternion.identity);
                 point.AttachTo(target);
+                point.SetCavernTag(CavernTag.Custom_Point);
                 _navigator.SetCustomPath(point, true);
+                
             }
         }
 

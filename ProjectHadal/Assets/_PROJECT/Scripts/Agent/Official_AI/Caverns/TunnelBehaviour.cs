@@ -46,7 +46,7 @@ namespace Hadal.AI.Caverns
                 if (!cavern.ConnectedCavern.connectedTunnels.Contains(this))
                     cavern.ConnectedCavern.connectedTunnels.Add(this);
 
-                cavern.EntryNavPoint.CavernTag = cavern.ConnectedCavern.cavernTag;
+                cavern.EntryNavPoint.SetCavernTag(cavern.ConnectedCavern.cavernTag);
             }
         }
         
