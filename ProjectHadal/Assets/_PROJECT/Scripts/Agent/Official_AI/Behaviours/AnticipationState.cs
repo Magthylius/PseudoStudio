@@ -18,6 +18,8 @@ namespace Hadal.AI.States
 
         CavernHandler targetCavern;
 
+        private bool gameStartupInitialization = false;
+
         public AnticipationState(AIBrain brain)
         {
             Initialize(brain);
@@ -80,7 +82,7 @@ namespace Hadal.AI.States
         public override void OnCavernEnter(CavernHandler cavern)
         {
             if (Brain.StateSuspension) return;
-            DetermineNextCavern();
+            if (gameStartupInitialization) DetermineNextCavern();
         }
 
         IEnumerator CheckPlayersInRange()
@@ -109,6 +111,8 @@ namespace Hadal.AI.States
             RuntimeData.SetEngagementSubState(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
             
             Brain.StartCoroutine(CheckPlayersInRange());
+            gameStartupInitialization = true;
+            DetermineNextCavern();
         }
         
         void SetNewTargetCavern()
@@ -120,6 +124,7 @@ namespace Hadal.AI.States
                 case EngagementSubState.Aggressive:
                     if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
                     targetCavern = CavernManager.GetMostPopulatedCavern();
+                    //print(targetCavern);
                     break;
                 case EngagementSubState.Ambush:
                     if (Brain.DebugEnabled) print("Anticipation: Ambush.");
@@ -131,6 +136,8 @@ namespace Hadal.AI.States
             }
 
             //targetCavern = CavernManager.GetCavern(CavernTag.Starting);
+            //print(targetCavern);
+            Brain.UpdateTargetMoveCavern(targetCavern);
             CavernManager.SeedCavernHeuristics(targetCavern);
         }
 
@@ -139,7 +146,7 @@ namespace Hadal.AI.States
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern);
             NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
             NavigationHandler.EnableCachedQueuePathTimer();
-            Brain.UpdateTargetMoveCavern(nextCavern);
+            Brain.UpdateNextMoveCavern(nextCavern);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;

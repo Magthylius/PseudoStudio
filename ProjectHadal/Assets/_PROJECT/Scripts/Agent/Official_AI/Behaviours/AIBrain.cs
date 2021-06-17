@@ -19,6 +19,7 @@ namespace Hadal.AI
     {
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
+        [ReadOnly, SerializeField] private CavernHandler nextMoveCavern;
 
         //[Header("Debugging")] 
         [Header("Module Components")]
@@ -316,9 +317,17 @@ namespace Hadal.AI
         public void UpdateTargetMoveCavern(CavernHandler newCavern)
         {
             targetMoveCavern = newCavern;
+            if (DebugEnabled) print("New target cavern: " + newCavern.cavernTag);
+        }
+
+        public void UpdateNextMoveCavern(CavernHandler newCavern)
+        {
+            nextMoveCavern = newCavern;
+            if (DebugEnabled) print("Moving to next cavern: " + newCavern.cavernTag);
         }
 
         public CavernHandler TargetMoveCavern => targetMoveCavern;
+        public CavernHandler NextMoveCavern => nextMoveCavern;
         #endregion
 
         #region Accesors
