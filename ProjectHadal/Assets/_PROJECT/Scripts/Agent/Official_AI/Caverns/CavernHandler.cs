@@ -15,6 +15,8 @@ namespace Hadal.AI.Caverns
     public class CavernHandler : MonoBehaviour
     {
         CavernManager manager;
+        //! used to communicate with manager if it needs a first frame recheck
+        private bool cavernInitialized = false;
         
         [Header("Data")]
         [SerializeField, ReadOnly] int cavernHeuristic = -1;
@@ -30,12 +32,13 @@ namespace Hadal.AI.Caverns
         [SerializeField] LayerMask aiMask;
         [SerializeField] List<AmbushPointBehaviour> ambushPoints;
 
-        
+        //! Events
         public event CavernHandlerPlayerReturn PlayerEnteredCavernEvent;
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnteredCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
         
+        //! Data
         List<PlayerController> playersInCavern = new List<PlayerController>();
 
         void OnValidate()
@@ -52,7 +55,8 @@ namespace Hadal.AI.Caverns
 
         void Start()
         {
-            if (forceFirstFrameRecheck) cavernCollider.StartColliderRecheck();
+            if (forceFirstFrameRecheck) cavernCollider.StartColliderRecheck(this);
+            else cavernInitialized = true;
             
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
@@ -187,6 +191,8 @@ namespace Hadal.AI.Caverns
         }
 
         //! Data
+        public void SetCavernInitialize(bool newStatus) => cavernInitialized = newStatus;
+        public bool IsInitialized => cavernInitialized;
         public string CavernName => gameObject.name;
         public int GetPlayerCount => playersInCavern.Count;
         public List<PlayerController> GetPlayersInCavern => playersInCavern;

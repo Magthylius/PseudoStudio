@@ -10,6 +10,7 @@ namespace Hadal.AI.Caverns
     [RequireComponent(typeof(Collider))]
     public class CavernColliderBehaviour : MonoBehaviour
     {
+        private CavernHandler parentCavern;
         public event ColliderTriggerEvent TriggerEnteredEvent;
         public event ColliderTriggerEvent TriggerLeftEvent;
 
@@ -28,8 +29,9 @@ namespace Hadal.AI.Caverns
             TriggerLeftEvent?.Invoke(other);
         }
 
-        public void StartColliderRecheck()
+        public void StartColliderRecheck(CavernHandler injectedCavern)
         {
+            parentCavern = injectedCavern;
             StartCoroutine(ColliderRecheck());
         }
         
@@ -38,6 +40,7 @@ namespace Hadal.AI.Caverns
             GetComponent<Collider>().enabled = false;
             yield return null;
             GetComponent<Collider>().enabled = true;
+            parentCavern.SetCavernInitialize(true);
         }
     }
 }

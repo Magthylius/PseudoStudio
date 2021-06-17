@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.Player;
@@ -92,11 +93,10 @@ namespace Hadal.AI.Caverns
         {
             base.Awake();
             GetHandlerOfAILocation = null;
+            StartCoroutine(CheckCavernInitialization());
         }
 
-        private void Start()
-        {
-        }
+        #region Event Handling
 
         public void OnPlayerEnterCavern(CavernPlayerData data)
         {
@@ -153,9 +153,83 @@ namespace Hadal.AI.Caverns
             if (debugAIEvents) print("AI left " + tunnel.name);
             AILeftTunnelEvent?.Invoke(tunnel);
         }
+        
+
+        #endregion
+
+        #region Cavern Handling
+
+        public bool CavernsInitialized = false;
+        IEnumerator CheckCavernInitialization()
+        {
+            while (!CavernsInitialized)
+            {
+                CavernsInitialized = true;
+                foreach (var cavern in handlerList)
+                {
+                    if (!cavern.IsInitialized)
+                    {
+                        CavernsInitialized = false;
+                        break;
+                    }
+                }
+
+                yield return null;
+            }
+        }
 
         /// <summary>
-        ///     Gets most populated cavern.
+        /// Seeds the cavern with heuristic values
+        /// </summary>
+        /// <param name="destinationCavern">End destination cavern</param>
+        public void SeedCavernHeuristics(CavernHandler destinationCavern)
+        {
+            ResetCavernHeuristics();
+            
+            destinationCavern.SetHeuristic(0);
+            Queue<CavernHandler> uncheckedCaverns = new Queue<CavernHandler>();
+
+            foreach (var cavern in destinationCavern.ConnectedCaverns)
+            {
+                uncheckedCaverns.Enqueue(cavern);
+            }
+
+            int distHeuristic = 1;
+            while (uncheckedCaverns.Any())
+            {
+                int queueCount = uncheckedCaverns.Count;
+                for (int i = 0; i < queueCount; i++)
+                {
+                    CavernHandler currentCavern = uncheckedCaverns.Dequeue();
+
+                    if (currentCavern.GetHeuristic < 0)
+                    {
+                        currentCavern.SetHeuristic(distHeuristic);
+                        
+                        //! Add unchecked children
+                        foreach (var childCavern in currentCavern.ConnectedCaverns)
+                        {
+                            if (childCavern.GetHeuristic < 0) uncheckedCaverns.Enqueue(childCavern);
+                        }
+                    }
+                }
+
+                distHeuristic++;
+            }
+
+        }
+
+        /// <summary>
+        /// Resets heursitics of caverns
+        /// </summary>
+        public void ResetCavernHeuristics()
+        {
+            foreach(CavernHandler cavern in handlerList) 
+                cavern.ResetHeuristic();
+        }
+        
+        /// <summary>
+        ///     Gets most populated cavern unsafely.
         /// </summary>
         /// <param name="tiedNumberRandomize">Allows randomize on tied player numbers.</param>
         /// <returns>CavernHandler information</returns>
@@ -232,51 +306,7 @@ namespace Hadal.AI.Caverns
                 return candidateCaverns[Random.Range(0, candidateCaverns.Count)];
             return candidateCaverns[0];
         }
-
-        public void SeedCavernHeuristics(CavernHandler sourceCavern, CavernHandler destinationCavern)
-        {
-            ResetCavernHeuristics();
-            
-            //sourceCavern.SetHeuristic(int.MaxValue);
-            destinationCavern.SetHeuristic(0);
-            Queue<CavernHandler> uncheckedCaverns = new Queue<CavernHandler>();
-
-            foreach (var cavern in destinationCavern.ConnectedCaverns)
-            {
-                uncheckedCaverns.Enqueue(cavern);
-            }
-
-            int distHeuristic = 1;
-            while (uncheckedCaverns.Any())
-            {
-                int queueCount = uncheckedCaverns.Count;
-                for (int i = 0; i < queueCount; i++)
-                {
-                    CavernHandler currentCavern = uncheckedCaverns.Dequeue();
-
-                    if (currentCavern.GetHeuristic < 0)
-                    {
-                        currentCavern.SetHeuristic(distHeuristic);
-                        
-                        //! Add unchecked children
-                        foreach (var childCavern in currentCavern.ConnectedCaverns)
-                        {
-                            if (childCavern.GetHeuristic < 0) uncheckedCaverns.Enqueue(childCavern);
-                        }
-                    }
-                }
-
-                distHeuristic++;
-            }
-            
-            //sourceCavern.SetHeuristic(distHeuristic);
-        }
-
-        public void ResetCavernHeuristics()
-        {
-            foreach(CavernHandler cavern in handlerList) 
-                cavern.ResetHeuristic();
-        }
+        
 
         /// <summary>
         /// Gets the next best cavern based on player accounted heuristics. 
@@ -320,7 +350,9 @@ namespace Hadal.AI.Caverns
             else
                 return bestCaverns[Random.Range(0, bestCaverns.Count)];
         }
+        
 
+        #endregion
         private void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")
         {
             if (cavernHandlerList == null) return;
