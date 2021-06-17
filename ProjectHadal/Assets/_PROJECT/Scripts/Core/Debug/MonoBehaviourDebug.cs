@@ -9,6 +9,11 @@ namespace Hadal
 
         protected void DoDebugEnabling(string keyCode)
         {
+            if (DebugManager.Instance == null)
+            {
+                allowDebug = false;
+                return;
+            }
             allowDebug = DebugManager.Instance.EnableDebugging(keyCode);
 
             if (allowDebug) Debug.Log("Debug '" + keyCode + "' enabled.");
