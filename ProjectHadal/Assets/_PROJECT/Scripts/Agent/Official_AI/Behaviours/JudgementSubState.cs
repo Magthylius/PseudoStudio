@@ -36,7 +36,7 @@ namespace Hadal.AI.States
             SetupDefensiveBranchBehaviourTree2();
             //SetupDefensiveBranchBehaviourTree3();
             //SetupDefensiveBranchBehaviourTree4();
-            rootDef.WithDebugName("RootDef");
+            //rootDef = new BTNode();
 
             // //!Offensive
             // SetupOffensiveBranchBehaviourTree1();
@@ -317,7 +317,6 @@ namespace Hadal.AI.States
             //     result = rootAgg.Evaluate(deltaTime);
             // else
 
-            Debug.Log("Frame:" + Time.frameCount);
             if (Time.frameCount % DelayInterval != 0)
                 return;
 
