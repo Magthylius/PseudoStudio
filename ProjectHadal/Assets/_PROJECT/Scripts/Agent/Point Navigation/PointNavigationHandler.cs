@@ -362,12 +362,15 @@ namespace Hadal.AI
                 {
                     isChasingAPlayer = false;
                     Destroy(currentPoint.gameObject);
+                    //print(isChasingAPlayer);
                 }
+                
                 if (enableDebug) "Stopping custom path".Msg();
                 yield return null;
 
                 if (justFindNewPoint)
                 {
+                    //print(isChasingAPlayer);
                     ResetNavPointLingerTimer();
                     ResetTimeoutTimer();
                     SelectNewNavPoint();
