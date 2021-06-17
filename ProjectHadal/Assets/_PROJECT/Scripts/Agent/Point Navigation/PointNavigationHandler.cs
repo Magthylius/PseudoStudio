@@ -358,19 +358,18 @@ namespace Hadal.AI
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
                 currentPoint.Deselect();
+
                 if (currentPoint.CavernTag == CavernTag.Custom_Point)
                 {
                     isChasingAPlayer = false;
                     Destroy(currentPoint.gameObject);
-                    //print(isChasingAPlayer);
                 }
-                
+
                 if (enableDebug) "Stopping custom path".Msg();
                 yield return null;
 
                 if (justFindNewPoint)
                 {
-                    //print(isChasingAPlayer);
                     ResetNavPointLingerTimer();
                     ResetTimeoutTimer();
                     SelectNewNavPoint();

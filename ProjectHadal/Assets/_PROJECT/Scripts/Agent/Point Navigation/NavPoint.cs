@@ -20,13 +20,13 @@ namespace Hadal.AI
 		
 		[Header("Information")]
         [SerializeField] private CavernTag cavernTag;
+		public CavernTag CavernTag => cavernTag;
 		[SerializeField] private bool isTunnelEntry;
         public bool IsTunnelEntry => isTunnelEntry;
 
 		[Header("Friend references")]
         [SerializeField] private List<NavPoint> friends;
-        public CavernTag CavernTag { get => cavernTag; set => cavernTag = value; }
-        public Transform GetTransform => transform;
+		public Transform GetTransform => transform;
         public Vector3 GetPosition => transform.position;
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
         public Vector3 GetDirectionTo(Vector3 position) => (GetPosition - position).normalized;
@@ -83,5 +83,7 @@ namespace Hadal.AI
 			if (mRenderer == null) return;
 			mRenderer.material = defaultMaterial;
 		}
+
+		public void SetCavernTag(CavernTag newTag) => cavernTag = newTag;
     }
 }
