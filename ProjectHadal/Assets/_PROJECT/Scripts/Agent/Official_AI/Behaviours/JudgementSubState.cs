@@ -13,8 +13,8 @@ namespace Hadal.AI.States
         EngagementState parent;
         AIDamageManager damageManager;
         EngagementStateSettings engagementStateSettings;
-        BTSequence rootAgg;
-        BTSequence rootDef;
+        BTNode rootAgg;
+        BTNode rootDef;
         float updateTimer;
         float updateDelay;
 
@@ -36,7 +36,7 @@ namespace Hadal.AI.States
             SetupDefensiveBranchBehaviourTree2();
             //SetupDefensiveBranchBehaviourTree3();
             //SetupDefensiveBranchBehaviourTree4();
-            //rootDef = new BTNode();
+            rootDef = new BTNode();
 
             // //!Offensive
             // SetupOffensiveBranchBehaviourTree1();
@@ -118,7 +118,7 @@ namespace Hadal.AI.States
                 escapeTailWhip
             ).WithDebugName(nameof(sequenceD2));
 
-            rootDef.AddNode(sequenceD2);
+            rootDef = Build_Sequence(sequenceD2);
         }
         private void SetupDefensiveBranchBehaviourTree3()
         {
@@ -147,7 +147,7 @@ namespace Hadal.AI.States
                 setRecoveryState
             ).WithDebugName(nameof(sequenceD3));
 
-            rootDef.AddNode(sequenceD3);
+             rootDef = Build_Sequence(sequenceD3);
         }
 
         private void SetupDefensiveBranchBehaviourTree4()
@@ -168,7 +168,7 @@ namespace Hadal.AI.States
                 hasJt1Passed
             ).WithDebugName(nameof(sequenceD4));
 
-            rootDef.AddNode(sequenceD4);
+            rootDef = Build_Sequence(sequenceD4);
         }
         #endregion
 
@@ -230,7 +230,7 @@ namespace Hadal.AI.States
                 postSequenceA2
             ).WithDebugName(nameof(sequenceA2));
 
-            rootAgg.AddNode(sequenceA2);
+            rootAgg = Build_Sequence(sequenceA2);
         }
 
         private void SetupOffensiveBranchBehaviourTree3()
@@ -260,7 +260,7 @@ namespace Hadal.AI.States
                 postSequenceA3
             ).WithDebugName(nameof(sequenceA3));
 
-            rootAgg.AddNode(sequenceA3);
+            rootAgg = Build_Sequence(sequenceA3);
         }
 
         private void SetupOffensiveBranchBehaviourTree4()
@@ -290,7 +290,7 @@ namespace Hadal.AI.States
                 postSequenceA4
             ).WithDebugName(nameof(sequenceA4));
 
-            rootAgg.AddNode(sequenceA4);
+            rootAgg = Build_Sequence(sequenceA4);
         }
         #endregion
 
@@ -351,5 +351,6 @@ namespace Hadal.AI.States
         private float TickUpdateTimer(in float tick) => updateTimer += tick;
         private BTSelector Build_Selector(params BTNode[] nodes) => new BTSelector(new List<BTNode>(nodes));
         private BTSequence Build_Sequence(params BTNode[] nodes) => new BTSequence(new List<BTNode>(nodes));
+
     }
 }
