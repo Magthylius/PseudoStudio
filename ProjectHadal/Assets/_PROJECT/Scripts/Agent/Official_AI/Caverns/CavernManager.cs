@@ -159,7 +159,7 @@ namespace Hadal.AI.Caverns
 
         #region Cavern Handling
 
-        public bool CavernsInitialized = false;
+        [ReadOnly] public bool CavernsInitialized = false;
         IEnumerator CheckCavernInitialization()
         {
             while (!CavernsInitialized)
@@ -240,7 +240,7 @@ namespace Hadal.AI.Caverns
 
             foreach (var cavern in handlerList)
                 //! Must have a cavern somewhere with players
-                if (playerNum > 0)
+                if (cavern.GetPlayerCount > 0)
                 {
                     //! Update higher playernum count
                     if (cavern.GetPlayerCount > playerNum)

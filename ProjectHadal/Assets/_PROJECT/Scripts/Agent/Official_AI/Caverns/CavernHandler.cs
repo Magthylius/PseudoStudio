@@ -22,6 +22,7 @@ namespace Hadal.AI.Caverns
         [SerializeField, ReadOnly] int cavernHeuristic = -1;
         [ReadOnly] public List<TunnelBehaviour> connectedTunnels;
         [ReadOnly] public List<CavernHandler> connectedCaverns;
+        [SerializeField, ReadOnly] private int playerCountInCavern;
 
         [Header("Settings")] 
         public CavernColliderBehaviour cavernCollider;
@@ -85,7 +86,8 @@ namespace Hadal.AI.Caverns
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Add(player);
                 CavernPlayerData data = new CavernPlayerData(this, player);
-                
+
+                playerCountInCavern = GetPlayerCount;
                 PlayerEnteredCavernEvent?.Invoke(data);
             }
             else if (other.GetComponent<AIBrain>() != null)
@@ -108,7 +110,8 @@ namespace Hadal.AI.Caverns
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Remove(player);
                 CavernPlayerData data = new CavernPlayerData(this, player);
-
+                
+                playerCountInCavern = GetPlayerCount;
                 PlayerLeftCavernEvent.Invoke(data);
             }
             else if (other.GetComponent<AIBrain>() != null)
@@ -131,32 +134,7 @@ namespace Hadal.AI.Caverns
                 }
             }
         }
-
         
-        
-        public int CalculateRelativeDistanceCost(CavernHandler targetCavern)
-        {
-            int cost = 1;
-            if (ConnectedCavernContains(targetCavern))
-                return cost;
-            else
-            {
-                int lowestCost = int.MaxValue;
-                foreach(CavernHandler cavern in connectedCaverns)
-                {
-                    int tempCost = cavern.CalculateRelativeDistanceCost(targetCavern);
-                    if (tempCost < lowestCost)
-                    {
-                        lowestCost = tempCost;
-                    }
-                }
-
-                cost = lowestCost;
-            }
-
-            return cost;
-        }
-
         public bool ConnectedCavernContains(CavernHandler targetCavern)
         {
             return connectedCaverns.Contains(targetCavern);

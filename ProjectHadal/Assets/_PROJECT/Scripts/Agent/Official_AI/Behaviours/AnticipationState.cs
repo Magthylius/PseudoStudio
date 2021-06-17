@@ -13,10 +13,10 @@ namespace Hadal.AI.States
     public class AnticipationState : AIStateBase
     {
         private IEnumerator debugRoutine;
-
         AnticipationStateSettings settings;
 
-        CavernHandler targetCavern;
+        //! Meant just for startup
+        private bool gameStartupInitialization = false;
 
         public AnticipationState(AIBrain brain)
         {
@@ -25,23 +25,10 @@ namespace Hadal.AI.States
             settings = MachineData.Anticipation;
         }
 
-        IEnumerator Debug_SwitchToEngagementJudgementState()
-        {
-            yield return new WaitForSeconds(2f);
-            Brain.RuntimeData.SetBrainState(BrainState.Engagement);
-            Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
-        }
-
         public override void OnStateStart()
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
-            
-            /*if (debugRoutine != null) return;
-            debugRoutine = Debug_SwitchToEngagementJudgementState();
-            Brain.StartCoroutine(debugRoutine);
-            return;*/
-            //targetCavern = Brain.CavernManager.GetMostPopulatedCavern();
 
             Brain.StartCoroutine(InitializeAfterCaverns());
         }
@@ -80,7 +67,18 @@ namespace Hadal.AI.States
         public override void OnCavernEnter(CavernHandler cavern)
         {
             if (Brain.StateSuspension) return;
-            DetermineNextCavern();
+
+            if (cavern == Brain.TargetMoveCavern)
+            {
+                if (cavern.GetPlayerCount <= 0)
+                    SetNewTargetCavern();
+                else
+                {
+                    Brain.RuntimeData.SetBrainState(BrainState.Engagement);
+                    Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+                }
+            }
+            else if (gameStartupInitialization) DetermineNextCavern();
         }
 
         IEnumerator CheckPlayersInRange()
@@ -97,7 +95,7 @@ namespace Hadal.AI.States
             }
             
             SetNewTargetCavern();
-            if (targetCavern == null)
+            if (Brain.TargetMoveCavern == null)
             {
                 //! Check if game ended
                 AllowStateTick = false;
@@ -109,17 +107,21 @@ namespace Hadal.AI.States
             RuntimeData.SetEngagementSubState(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
             
             Brain.StartCoroutine(CheckPlayersInRange());
+            gameStartupInitialization = true;
+            DetermineNextCavern();
         }
         
         void SetNewTargetCavern()
         {
             EngagementSubState currentObj = RuntimeData.GetEngagementObjective;
-
+            CavernHandler targetCavern = null;
+            
             switch (currentObj)
             {
                 case EngagementSubState.Aggressive:
                     if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
                     targetCavern = CavernManager.GetMostPopulatedCavern();
+                    //print(targetCavern);
                     break;
                 case EngagementSubState.Ambush:
                     if (Brain.DebugEnabled) print("Anticipation: Ambush.");
@@ -131,6 +133,8 @@ namespace Hadal.AI.States
             }
 
             //targetCavern = CavernManager.GetCavern(CavernTag.Starting);
+            //print(targetCavern);
+            Brain.UpdateTargetMoveCavern(targetCavern);
             CavernManager.SeedCavernHeuristics(targetCavern);
         }
 
@@ -139,7 +143,7 @@ namespace Hadal.AI.States
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern);
             NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
             NavigationHandler.EnableCachedQueuePathTimer();
-            Brain.UpdateTargetMoveCavern(nextCavern);
+            Brain.UpdateNextMoveCavern(nextCavern);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;
