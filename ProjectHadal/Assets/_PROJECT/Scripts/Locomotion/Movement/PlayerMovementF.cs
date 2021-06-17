@@ -9,12 +9,16 @@ namespace Hadal.Locomotion
     {
         [Header("Debug"), SerializeField] private string debugKey;
         [SerializeField] private Rigidbody rigidBody;
+
         private Vector3 _lastPosition;
         private Vector3 _currentPosition;
         private bool _isLocal = true;
         private bool _isEnabled = false;
 
-        [SerializeField] private float drag;
+        [SerializeField, ReadOnly] private float drag;
+
+        public float CalculatedDrag => drag;
+        public Rigidbody Rigidbody { get => rigidBody; set => rigidBody = value; }
 
         public override void Initialise(Transform target)
         {
@@ -62,8 +66,12 @@ namespace Hadal.Locomotion
 
             _isEnabled = true;
             Input = DefaultInputs;
+            
             drag = Accel.MaxCummulation / Speed.Max;
-            rigidBody.drag = (drag / (drag * Time.fixedDeltaTime +1));
+            if (rigidBody != null) rigidBody.drag = (drag / (drag * Time.fixedDeltaTime + 1));
+
+            // CalculateDrag();
+            // if (rigidBody != null) rigidBody.drag = GetModifiedDrag();
         }
 
         public override void Disable()
@@ -72,6 +80,9 @@ namespace Hadal.Locomotion
             _isEnabled = false;
             Input = DisabledInputs;
         }
+
+        public void CalculateDrag() => drag = Accel.MaxCummulation / Speed.Max;
+        public float GetModifiedDrag() => drag / (drag * Time.fixedDeltaTime + 1);
 
         #region Private Methods
         private void HandleAcceleration(in float deltaTime)
