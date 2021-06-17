@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Networking;
+using Kit;
 
 namespace Hadal.AI
 {
@@ -11,14 +12,9 @@ namespace Hadal.AI
 
         NetworkEventManager neManager;
 
-        [Header("Settings")]
-        [SerializeField] bool enableAIInit = true;
-
-        [Header("References")]
-        public Transform patrolPositionParent;
-        public Transform spawnPosition;
-
-        Transform[] patrolPositions;
+        [Header("Spawn Settings")] 
+        [SerializeField] private bool enableAIRandomSpawn = false;
+        [SerializeField] private List<Transform> spawnPositions;
 
         void Awake()
         {
@@ -30,13 +26,11 @@ namespace Hadal.AI
         {
             neManager = NetworkEventManager.Instance;
 
-            if (enableAIInit)
+            if (enableAIRandomSpawn)
             {
-                patrolPositions = patrolPositionParent.GetComponentsInChildren<Transform>();
-                if (neManager.IsMasterClient) neManager.SpawnAIEssentials(spawnPosition.position, spawnPosition.rotation);
+                FindObjectOfType<AITransformHandler>().Move(spawnPositions[(int)Random.Range(0, spawnPositions.Count)].position);
             }
         }
 
-        public Transform[] GetPositions() => patrolPositions;
     }
 }
