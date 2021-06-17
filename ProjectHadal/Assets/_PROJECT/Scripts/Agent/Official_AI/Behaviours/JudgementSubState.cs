@@ -343,6 +343,7 @@ namespace Hadal.AI.States
                 Brain.CarriedPlayer.SetIsCarried(false);
                 Brain.CarriedPlayer = null;
                 Brain.AttachCarriedPlayerToMouth(false);
+                Brain.NavigationHandler.StopCustomPath(true);
             }
         }
         public override Func<bool> ShouldTerminate() => () => false;
