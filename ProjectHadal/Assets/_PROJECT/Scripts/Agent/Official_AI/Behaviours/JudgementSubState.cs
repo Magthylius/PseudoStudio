@@ -31,12 +31,15 @@ namespace Hadal.AI.States
             updateDelay = 1f / Brain.MachineData.Engagement.JudgementTickRate;
 
             BTNode.EnableDebug = Brain.DebugEnabled;
+
+            rootDef = new BTNode(); 
+
             //!Defensive
             SetupDefensiveBranchBehaviourTree1();
             SetupDefensiveBranchBehaviourTree2();
             //SetupDefensiveBranchBehaviourTree3();
             //SetupDefensiveBranchBehaviourTree4();
-            rootDef = new BTNode();
+            
 
             // //!Offensive
             // SetupOffensiveBranchBehaviourTree1();
