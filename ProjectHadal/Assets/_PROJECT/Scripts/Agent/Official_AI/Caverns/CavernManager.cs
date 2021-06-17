@@ -313,11 +313,12 @@ namespace Hadal.AI.Caverns
         /// </summary>
         /// <remarks>Heuristics are accounted by player number + distance to seeded destination</remarks>
         /// <param name="sourceCavern">Cavern to calculate from</param>
+        /// /// <param name="playerAccounted">Accounts heuristics with player count</param>
         /// <param name="randomizeOnTied">Randomizes return if there are tied results</param>
         /// <returns>CavernHandler information</returns>
-        public CavernHandler GetNextBestCavern(CavernHandler sourceCavern, bool randomizeOnTied = true)
+        public CavernHandler GetNextBestCavern(CavernHandler sourceCavern, bool playerAccounted = true, bool randomizeOnTied = true)
         {
-            return GetNextBestCavern(sourceCavern.ConnectedCaverns, randomizeOnTied);
+            return GetNextBestCavern(sourceCavern.ConnectedCaverns, playerAccounted, randomizeOnTied);
         }
             
         /// <summary>
@@ -325,25 +326,46 @@ namespace Hadal.AI.Caverns
         /// </summary>
         /// <remarks>Heuristics are accounted by player number + distance to seeded destination</remarks>
         /// <param name="cavernChoices">Choices of cavern to choose</param>
+        /// <param name="playerAccounted">Accounts heuristics with player count</param>
         /// <param name="randomizeOnTied">Randomizes return if there are tied results</param>
         /// <returns>CavernHandler information</returns>
-        public CavernHandler GetNextBestCavern(List<CavernHandler> cavernChoices, bool randomizeOnTied = true)
+        public CavernHandler GetNextBestCavern(List<CavernHandler> cavernChoices, bool playerAccounted = true, bool randomizeOnTied = true)
         {
             List<CavernHandler> bestCaverns = new List<CavernHandler>();
             int cheapestHeuristic = int.MaxValue;
 
-            foreach (CavernHandler cavern in cavernChoices)
+            if (playerAccounted)
             {
-                if (cavern.GetPlayerAccountedHeuristic < cheapestHeuristic)
+                foreach (CavernHandler cavern in cavernChoices)
                 {
-                    cheapestHeuristic = cavern.GetPlayerAccountedHeuristic;
+                    if (cavern.GetPlayerAccountedHeuristic < cheapestHeuristic)
+                    {
+                        cheapestHeuristic = cavern.GetPlayerAccountedHeuristic;
+                    }
+                }
+
+                foreach (CavernHandler cavern in cavernChoices)
+                {
+                    if (cavern.GetPlayerAccountedHeuristic == cheapestHeuristic) bestCaverns.Add(cavern);
                 }
             }
-
-            foreach (CavernHandler cavern in cavernChoices)
+            else
             {
-                if (cavern.GetPlayerAccountedHeuristic == cheapestHeuristic) bestCaverns.Add(cavern);
+                foreach (CavernHandler cavern in cavernChoices)
+                {
+                    if (cavern.GetHeuristic < cheapestHeuristic)
+                    {
+                        cheapestHeuristic = cavern.GetHeuristic;
+                    }
+                }
+
+                foreach (CavernHandler cavern in cavernChoices)
+                {
+                    if (cavern.GetHeuristic == cheapestHeuristic) bestCaverns.Add(cavern);
+                }
+
             }
+            
 
             if (bestCaverns.Count == 1 || !randomizeOnTied)
                 return bestCaverns[0];
