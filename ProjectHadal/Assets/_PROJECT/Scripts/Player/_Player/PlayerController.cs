@@ -45,6 +45,9 @@ namespace Hadal.Player
         bool cameraReady = false;
         bool loadingReady = false;
 
+        //Dummy System
+        [SerializeField] bool isDummy = false;
+
         //! Self information
         Photon.Realtime.Player attachedPlayer;
         int pViewSelfID;
@@ -102,6 +105,7 @@ namespace Hadal.Player
             DoDebugUpdate(DeltaTime);
 
             if (!_pView.IsMine) return;
+            if (isDummy) return;
 
             cameraController.CameraTransition(DeltaTime, IsBoosted);
             inventory.DoUpdate(DeltaTime);
@@ -113,6 +117,8 @@ namespace Hadal.Player
         protected override void FixedUpdate()
         {
             if (!_pView.IsMine) return;
+            if (isDummy) return;
+
             if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
             if (CanRotate) rotator.DoFixedUpdate(FixedDeltaTime);
         }
@@ -218,7 +224,16 @@ namespace Hadal.Player
         public void HandlePhotonView(bool isMine)
         {
             gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
-            gameObject.name = "Player " + photonInfo.PView.ViewID.ToString();
+            
+            if(!NetworkEventManager.Instance.isOfflineMode)
+            {
+                gameObject.name = "Player " + photonInfo.PView.ViewID.ToString();
+            }
+            else
+            {
+                gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
+            }
+            
             if (isMine)
             {
                 //! Make sure player UI is inactive in prefab!
@@ -359,6 +374,10 @@ namespace Hadal.Player
             //print("Loading Ready is : " + loadingReady);
         }
 
+        public void SetDummyState(bool isTrue)
+        {
+            isDummy = isTrue;
+        }
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
         #endregion

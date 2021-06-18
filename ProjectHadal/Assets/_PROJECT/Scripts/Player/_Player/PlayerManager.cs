@@ -25,8 +25,11 @@ namespace Hadal.Player
         private PhotonView _pView;
         public bool allPlayerReady;
         [SerializeField] List<PlayerController> playerList;
-        
         NetworkEventManager neManager;
+
+        [Header("Offline Player Dummies")]
+        public int DummyPlayerCount;
+        public bool DummyMirrorsMovement;
 
         private void Awake()
         {
@@ -226,6 +229,23 @@ namespace Hadal.Player
             controller.HandlePhotonView(true);
             playerList.Add(controller);
             controller.InjectDependencies(this, photonPlayer);
+
+            //create dummy players
+            for(int i = 0; i < DummyPlayerCount; i++)
+            {
+                Transform spawnTrans = SpawnManager.instance.GetSpawnPoint();
+                GameObject dummyPlayer = (GameObject)Instantiate(prefab, spawnTrans.position, spawnTrans.rotation);
+                PlayerController dummyControllers = dummyPlayer.GetComponent<PlayerController>();
+                dummyControllers.HandlePhotonView(false);
+                playerList.Add(dummyControllers);
+                dummyControllers.InjectDependencies(this, photonPlayer);
+                
+                if(!DummyMirrorsMovement)
+                {
+                    //dummyControllers.enabled = false;
+                    dummyControllers.SetDummyState(true);
+                }
+            }
         }
 
         public void instantiatePViewList()
