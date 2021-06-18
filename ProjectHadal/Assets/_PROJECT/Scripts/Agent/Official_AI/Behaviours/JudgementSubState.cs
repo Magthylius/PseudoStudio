@@ -15,6 +15,8 @@ namespace Hadal.AI.States
         EngagementStateSettings engagementStateSettings;
         BTNode rootAgg;
         BTNode rootDef;
+        List<BTNode> btRootDef;
+
         float updateTimer;
         float updateDelay;
 
@@ -32,14 +34,14 @@ namespace Hadal.AI.States
 
             BTNode.EnableDebug = Brain.DebugEnabled;
 
-            rootDef = new BTNode(); 
+            btRootDef = new List<BTNode>();
 
             //!Defensive
             SetupDefensiveBranchBehaviourTree1();
             SetupDefensiveBranchBehaviourTree2();
             //SetupDefensiveBranchBehaviourTree3();
             //SetupDefensiveBranchBehaviourTree4();
-            
+
 
             // //!Offensive
             // SetupOffensiveBranchBehaviourTree1();
@@ -78,7 +80,7 @@ namespace Hadal.AI.States
                 escapeTailWhip
             ).WithDebugName(nameof(sequenceD1));
 
-            rootDef = Build_Sequence(sequenceD1);
+            btRootDef.Add(sequenceD1);
         }
 
         //! Notes: Detect two player, IsCarrying?, Has jt3 passed?, escape whip
@@ -121,7 +123,7 @@ namespace Hadal.AI.States
                 escapeTailWhip
             ).WithDebugName(nameof(sequenceD2));
 
-            rootDef = Build_Sequence(sequenceD2);
+            btRootDef.Add(sequenceD2);
         }
         private void SetupDefensiveBranchBehaviourTree3()
         {
@@ -150,7 +152,7 @@ namespace Hadal.AI.States
                 setRecoveryState
             ).WithDebugName(nameof(sequenceD3));
 
-             rootDef = Build_Sequence(sequenceD3);
+            btRootDef.Add(sequenceD3);
         }
 
         private void SetupDefensiveBranchBehaviourTree4()
@@ -171,7 +173,7 @@ namespace Hadal.AI.States
                 hasJt1Passed
             ).WithDebugName(nameof(sequenceD4));
 
-            rootDef = Build_Sequence(sequenceD4);
+            btRootDef.Add(sequenceD4);
         }
         #endregion
 
@@ -311,7 +313,7 @@ namespace Hadal.AI.States
             RandomizeAggOrDefRoot();
         }
 
-        private const int DelayInterval = 5;
+        private const int DelayInterval = 30;
         public override void StateTick()
         {
             float deltaTime = Brain.DeltaTime;
@@ -319,16 +321,22 @@ namespace Hadal.AI.States
             // if (randomNumber == 0)
             //     result = rootAgg.Evaluate(deltaTime);
             // else
+            // if (Brain.DebugEnabled)
+            // {
+            //     if (result == NodeState.RUNNING) "Tree: Running".Msg();
+            //     else if (result == NodeState.SUCCESS) "Tree: Success".Msg();
+            //     else if (result == NodeState.FAILURE) "Tree: Fail".Msg();
+            // }
 
             if (Time.frameCount % DelayInterval != 0)
-                return;
-
-            result = rootDef.Evaluate(deltaTime);
-            if (Brain.DebugEnabled)
             {
-                if (result == NodeState.RUNNING) "Tree: Running".Msg();
-                else if (result == NodeState.SUCCESS) "Tree: Success".Msg();
-                else if (result == NodeState.FAILURE) "Tree: Fail".Msg();
+                return;
+            }
+
+            foreach (var node in btRootDef)
+            {
+                node.Evaluate(deltaTime);
+
             }
 
             // Behaviour tree links
