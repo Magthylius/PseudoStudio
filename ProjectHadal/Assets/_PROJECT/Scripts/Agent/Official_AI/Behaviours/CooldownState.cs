@@ -9,7 +9,6 @@ namespace Hadal.AI.States
     public class CooldownState : AIStateBase
     {
         CooldownStateSettings settings;
-        CavernHandler targetCavern;
 
         public CooldownState(AIBrain brain)
         {
@@ -21,6 +20,7 @@ namespace Hadal.AI.States
         {
             //! Change speed
             NavigationHandler.SetSpeedMultiplier(settings.ElusiveSpeedModifier);
+            RuntimeData.ResetCooldownTicker();
             SetNewTargetCavern();
             AllowStateTick = true;
         }
@@ -58,8 +58,28 @@ namespace Hadal.AI.States
 
         void SetNewTargetCavern()
         {
-            targetCavern = Brain.CavernManager.GetLeastPopulatedCavern();
-            NavigationHandler.SetImmediateDestinationToCavern(targetCavern);
+            CavernHandler targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
+            Brain.UpdateTargetMoveCavern(targetCavern);
+
+            CavernManager.SeedCavernHeuristics(targetCavern);
+            DetermineNextCavern();
+        }
+        
+        void DetermineNextCavern()
+        {
+            Brain.StartCoroutine(WaitForAICavern());
+            //print(AICavern);
+            IEnumerator WaitForAICavern()
+            {
+                while (AICavern == null)
+                    yield return null;
+                
+                CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
+            
+                NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
+                NavigationHandler.EnableCachedQueuePathTimer();
+                Brain.UpdateNextMoveCavern(nextCavern);
+            }
         }
     }
 }
