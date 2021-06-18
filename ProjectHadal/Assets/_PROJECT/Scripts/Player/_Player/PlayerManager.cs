@@ -242,7 +242,8 @@ namespace Hadal.Player
                 
                 if(!DummyMirrorsMovement)
                 {
-                    dummyControllers.enabled = false;
+                    //dummyControllers.enabled = false;
+                    dummyControllers.SetDummyState(true);
                 }
             }
         }
