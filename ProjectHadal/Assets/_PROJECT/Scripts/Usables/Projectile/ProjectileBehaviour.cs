@@ -26,7 +26,7 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
         {
-            setIsLocal();
+            /*setIsLocal();*/
         }
         protected virtual void Start()
         {
@@ -36,6 +36,7 @@ namespace Hadal.Usables.Projectiles
             neManager.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
             neManager.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
             PPhysics.PhysicsFinished += Dump;
+            setIsLocal();
         }
         #endregion
 
@@ -95,6 +96,12 @@ namespace Hadal.Usables.Projectiles
 
         private void setIsLocal()
         {
+            if(neManager.isOfflineMode)
+            {
+                IsLocal = true;
+                return;
+            }
+
             for (int i = 0; i < GameManager.Instance.pViewList.Count; i++)
             {
                 if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
