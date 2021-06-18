@@ -91,7 +91,6 @@ namespace Hadal.AI.States
         {
             CavernHandler targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
             Brain.UpdateTargetMoveCavern(targetCavern);
-            //NavigationHandler.SetImmediateDestinationToCavern(targetCavern);
 
             CavernManager.SeedCavernHeuristics(targetCavern);
             DetermineNextCavern();

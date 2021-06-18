@@ -27,6 +27,8 @@ namespace Hadal.AI.States
 
         public override void OnStateStart()
         {
+            RuntimeData.ResetAnticipationTicker();
+            
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
 
@@ -35,17 +37,7 @@ namespace Hadal.AI.States
 
         public override void StateTick()
         {
-            //! Anticipation evaluation here
-            // ...
-
-            /*
-            EngagementObjective eObj = Brain.MachineData.Anticipation.GetClearObjective(Brain.RuntimeData.NormalisedConfidence);
-            if (eObj != EngagementObjective.None)
-            {
-                LeviathanRuntimeData d = Brain.RuntimeData;
-                d.SetMainObjective(MainObjective.Engagement);
-                d.SetEngagementObjective(eObj);
-            }*/
+            RuntimeData.TickAnticipationTicker(Time.deltaTime);
 
             if (!AllowStateTick) return;
             //! Move to target cavern
