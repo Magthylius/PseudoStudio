@@ -28,6 +28,7 @@ namespace Hadal.AI.TreeNodes
                     //! if node is running, means there's a process happenning.
                     case NodeState.RUNNING:
                         anyNodeRunning = true;
+                        Debug();
                         return _nodeState;
                         
                     //! if node is a success, don't do anything and evaluate next child.

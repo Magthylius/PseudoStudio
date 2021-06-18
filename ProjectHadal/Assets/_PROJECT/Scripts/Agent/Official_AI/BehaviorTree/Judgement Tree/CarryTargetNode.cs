@@ -18,7 +18,7 @@ namespace Hadal.AI.TreeNodes
             _brain = brain;
             _succeedDistance = carrySucceedDistance;
             _waitTime = carryWaitTime;
-            _isWaiting = false;
+            _isWaiting = true;
         }
 
         public override NodeState Evaluate(float deltaTime)
@@ -33,13 +33,13 @@ namespace Hadal.AI.TreeNodes
                     return state;
                 }
             }
-            else
+            /*else
             {
                 _isWaiting = true;
                 return NodeState.RUNNING;
-            }
+            }*/
 
-            return NodeState.FAILURE;
+            return NodeState.RUNNING;
         }
 
         private NodeState TryCarryPlayer()

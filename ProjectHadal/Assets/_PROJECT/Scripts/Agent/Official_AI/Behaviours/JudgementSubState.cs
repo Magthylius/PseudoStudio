@@ -89,8 +89,10 @@ namespace Hadal.AI.States
             BTSequence threshAndRecover = Build_Sequence(moveToPlayer, carryPlayer, threshAndRecoveryIfSuccessful).WithDebugName(nameof(threshAndRecover));
             
             //! This returns succeed immediately after grabbing -> and never threshing
-            BTSelector carryOrThresh = Build_Selector(isCarryingAnyPlayer, threshAndRecover).WithDebugName(nameof(carryOrThresh));
+            BTSelector carryOrThresh = Build_Selector(threshAndRecover, isCarryingAnyPlayer).WithDebugName(nameof(carryOrThresh));
 
+            
+            //! needs to return RUNNING
             sequenceD1 = Build_Sequence(
                 onePlayerInCavern,
                 carryOrThresh, //! returning s

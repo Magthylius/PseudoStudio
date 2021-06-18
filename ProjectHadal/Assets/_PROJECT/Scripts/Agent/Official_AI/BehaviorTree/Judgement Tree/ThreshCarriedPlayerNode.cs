@@ -33,7 +33,6 @@ namespace Hadal.AI.TreeNodes
         {
             if (timer > 0)
             {
-                Debug.Log(timer);
                 timer -= Time.deltaTime;
                 if (Time.time > nextActionTime)
                 {
@@ -64,6 +63,7 @@ namespace Hadal.AI.TreeNodes
 
             if (_threshDone)
             {
+                Debug.LogWarning("thresh finished");
                 _brain.CarriedPlayer.SetIsCarried(false);
                 _brain.CarriedPlayer = null;
                 _brain.AttachCarriedPlayerToMouth(false);
