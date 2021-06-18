@@ -33,6 +33,7 @@ namespace Hadal.AI.TreeNodes
         {
             if (timer > 0)
             {
+                Debug.Log(timer);
                 timer -= Time.deltaTime;
                 if (Time.time > nextActionTime)
                 {
