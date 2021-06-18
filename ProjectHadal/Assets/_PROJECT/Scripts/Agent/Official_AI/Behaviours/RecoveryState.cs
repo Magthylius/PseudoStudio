@@ -42,6 +42,7 @@ namespace Hadal.AI.States
             {
                 RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
                 RuntimeData.SetBrainState(BrainState.Engagement);
+                RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                 RuntimeData.ResetRecoveryTicker();
                 AllowStateTick = false;
             }
