@@ -33,6 +33,9 @@ namespace Hadal.AI.States
             NavigationHandler.SetCanPath(true);
 
             Brain.StartCoroutine(InitializeAfterCaverns());
+            
+            if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
+                RuntimeData.SetEngagementSubState(EngagementSubState.Aggressive);
         }
 
         public override void StateTick()

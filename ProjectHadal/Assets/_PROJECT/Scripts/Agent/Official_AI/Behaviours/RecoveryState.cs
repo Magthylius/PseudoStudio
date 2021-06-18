@@ -39,11 +39,15 @@ namespace Hadal.AI.States
             //! When hit too much or time too long, force back into Engagement State
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.HasCumulativeDamageExceeded)
             {
-                RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-                RuntimeData.SetBrainState(BrainState.Engagement);
-                RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
-                RuntimeData.ResetRecoveryTicker();
-                AllowStateTick = false;
+                //! If not travelling and has players in same cavern
+                if (AICavern && AICavern.GetPlayerCount > 0)
+                {
+                    RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
+                    RuntimeData.SetBrainState(BrainState.Engagement);
+                    RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
+                    RuntimeData.ResetRecoveryTicker();
+                    AllowStateTick = false;
+                }
             }
         }
 
@@ -107,8 +111,9 @@ namespace Hadal.AI.States
                 
                 CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
             
-                NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
-                NavigationHandler.EnableCachedQueuePathTimer();
+                //NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
+                NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
+                //NavigationHandler.EnableCachedQueuePathTimer();
                 Brain.UpdateNextMoveCavern(nextCavern);
             }
         }

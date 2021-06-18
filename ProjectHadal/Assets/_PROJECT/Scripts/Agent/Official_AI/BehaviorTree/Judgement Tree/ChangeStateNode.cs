@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Hadal.AI.TreeNodes
 {
     public class ChangeStateNode : BTNode
@@ -14,6 +16,7 @@ namespace Hadal.AI.TreeNodes
         public override NodeState Evaluate(float deltaTime)
         {
             // return NodeState.SUCCESS;
+            Debug.LogWarning("Changing states to " + _stateObjective);
             _brain.RuntimeData.SetBrainState(_stateObjective);
             return NodeState.SUCCESS;
         }
