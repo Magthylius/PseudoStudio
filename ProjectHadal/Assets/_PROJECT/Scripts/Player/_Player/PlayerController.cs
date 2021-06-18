@@ -218,7 +218,16 @@ namespace Hadal.Player
         public void HandlePhotonView(bool isMine)
         {
             gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
-            gameObject.name = "Player " + photonInfo.PView.ViewID.ToString();
+            
+            if(!NetworkEventManager.Instance.isOfflineMode)
+            {
+                gameObject.name = "Player " + photonInfo.PView.ViewID.ToString();
+            }
+            else
+            {
+                gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
+            }
+            
             if (isMine)
             {
                 //! Make sure player UI is inactive in prefab!
