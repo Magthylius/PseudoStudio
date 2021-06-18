@@ -302,13 +302,15 @@ namespace Hadal.AI
             if (attachToMouth)
             {
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
-                CarriedPlayer.DisableCollider();
+                //CarriedPlayer.DisableCollider();
+                CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
 				CarriedPlayer.GetTarget.localPosition = Vector3.zero;
                 return;
             }
 
             mouth.DetachChildren();
-            CarriedPlayer.EnableCollider();
+            //CarriedPlayer.EnableCollider();
+            CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
         }
 
         #endregion

@@ -43,6 +43,7 @@ namespace Hadal.AI
 
         private void SenseSurroundings()
         {
+            //Physics.SyncTransforms();
             //Collider[] playerSphere = Physics.OverlapSphere(transform.position + detectionOffset, overlapSphereDetectionRadius, _brain.RuntimeData.PlayerMask);
             Collider[] playerSphere = new Collider[4];
             DetectedPlayersCount = Physics.OverlapSphereNonAlloc(transform.position + detectionOffset, overlapSphereDetectionRadius, playerSphere, _brain.RuntimeData.PlayerMask);
@@ -51,7 +52,7 @@ namespace Hadal.AI
             _detectedPlayers = playerSphere.Where(c => c != null).Select(c => c.GetComponent<PlayerController>()).ToList();
 
             //Temporary
-            print("detecting: " + _detectedPlayers.FirstOrDefault());
+            //print("detecting: " + _detectedPlayers.FirstOrDefault());
             _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
             //if (_brain.DebugEnabled) Debug.Log("I SENSE:" + DetectedPlayersCount);
         }

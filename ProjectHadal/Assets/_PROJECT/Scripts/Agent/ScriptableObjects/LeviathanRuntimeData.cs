@@ -14,7 +14,9 @@ namespace Hadal.AI
     [CreateAssetMenu(menuName = "AI/Runtime Data")]
     public class LeviathanRuntimeData : ScriptableObject
     {
-        [Header("Information")]
+        [Header("Information")] 
+        public string GrabbedPlayerLayer;
+        public string FreePlayerLayer;
         public LayerMask PlayerMask;
         public LayerMask ObstacleMask;
         public NavPoint navPointPrefab;

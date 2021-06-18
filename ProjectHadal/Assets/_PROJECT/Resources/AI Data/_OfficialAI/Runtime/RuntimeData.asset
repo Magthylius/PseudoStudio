@@ -12,18 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191e20eff5259c9408eda68e0cb5e3f1, type: 3}
   m_Name: RuntimeData
   m_EditorClassIdentifier: 
+  GrabbedPlayerLayer: PlayerGrabbed
+  FreePlayerLayer: Player
   PlayerMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 1048768
   ObstacleMask:
     serializedVersion: 2
     m_Bits: 4352
   navPointPrefab: {fileID: 9011680927767773169, guid: 42cb9a163467d1a44b9fb2e0eba679e2, type: 3}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
-  mainObjective: 3
-  engagementObjective: 3
-  confidence: 51
+  brainState: 2
+  engagementSubState: 3
+  confidence: 50
   bonusConfidence: 0
   cumulativeDamage: 0
-  cumulativeDamageThreshold: 40
-  judgementStoptimer: 10.006014
+  cumulativeDamageThreshold: 60.000004
+  anticipationTicker: 29.38597
+  engagementTicker: 21.866451
+  recoveryTicker: 0
+  cooldownTicker: 2.8217618
