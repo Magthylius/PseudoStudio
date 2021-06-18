@@ -388,8 +388,10 @@ namespace Hadal.AI.States
 
         private void ResetUpdateTimer() => updateTimer = 0.0f;
         private float TickUpdateTimer(in float tick) => updateTimer += tick;
+        
         private BTSelector Build_Selector(params BTNode[] nodes) => new BTSelector(new List<BTNode>(nodes));
         private BTSequence Build_Sequence(params BTNode[] nodes) => new BTSequence(new List<BTNode>(nodes));
+        private BTSuccessor Build_Successor(params BTNode[] nodes) => new BTSuccessor(new List<BTNode>(nodes));
 
     }
 }
