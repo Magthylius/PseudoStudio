@@ -302,6 +302,9 @@ namespace Hadal.AI.States
         //TODO: Set a way to determine which root to go or probablity?
         int randomNumber;
         NodeState result;
+
+        private const int DelayInterval = 30;
+        float tickTimer;
         void RandomizeAggOrDefRoot()
         {
             randomNumber = UnityEngine.Random.Range(0, 1);
@@ -310,33 +313,34 @@ namespace Hadal.AI.States
         {
             if (Brain.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
             Brain.RuntimeData.ResetEngagementTicker();
-            RandomizeAggOrDefRoot();
+            //RandomizeAggOrDefRoot();
+
+            //nextTick = Time.time + DelayInterval;
+            tickTimer = 10;
         }
 
-        private const int DelayInterval = 30;
         public override void StateTick()
         {
             float deltaTime = Brain.DeltaTime;
             Brain.RuntimeData.TickEngagementTicker(deltaTime);
             // if (randomNumber == 0)
             //     result = rootAgg.Evaluate(deltaTime);
-            // else
-            // if (Brain.DebugEnabled)
-            // {
-            //     if (result == NodeState.RUNNING) "Tree: Running".Msg();
-            //     else if (result == NodeState.SUCCESS) "Tree: Success".Msg();
-            //     else if (result == NodeState.FAILURE) "Tree: Fail".Msg();
-            // }
+            // else 
 
-            if (Time.frameCount % DelayInterval != 0)
+            if (Time.frameCount % DelayInterval == 0)
             {
-                return;
+                foreach (var node in btRootDef)
+                {
+                    node.Evaluate(deltaTime);
+                    result = node.Evaluate(deltaTime);
+                }
             }
 
-            foreach (var node in btRootDef)
+            if (Brain.DebugEnabled)
             {
-                node.Evaluate(deltaTime);
-
+                if (result == NodeState.RUNNING) "Tree: Running".Msg();
+                else if (result == NodeState.SUCCESS) "Tree: Success".Msg();
+                else if (result == NodeState.FAILURE) "Tree: Fail".Msg();
             }
 
             // Behaviour tree links
