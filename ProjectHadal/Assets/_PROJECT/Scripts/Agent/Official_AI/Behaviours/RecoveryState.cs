@@ -14,7 +14,6 @@ namespace Hadal.AI.States
     public class RecoveryState : AIStateBase
     {
         RecoveryStateSettings settings;
-        CavernHandler targetCavern;
 
         public RecoveryState(AIBrain brain)
         {
@@ -37,7 +36,7 @@ namespace Hadal.AI.States
 
             RuntimeData.TickRecoveryTicker(Time.deltaTime);
 
-            //! When hit too much or time too long
+            //! When hit too much or time too long, force back into Engagement State
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.HasCumulativeDamageExceeded)
             {
                 RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
@@ -58,7 +57,7 @@ namespace Hadal.AI.States
 
         public override void OnCavernEnter(CavernHandler cavern)
         {
-            if (cavern == targetCavern)
+            if (cavern == Brain.TargetMoveCavern)
             {
                 if (cavern.GetPlayerCount > 1) SetNewTargetCavern();
                 else if (cavern.GetPlayerCount == 1 && Brain.CarriedPlayer != null)
@@ -68,6 +67,16 @@ namespace Hadal.AI.States
                         //! TODO: Thresh player
                     }
                 }
+                else if (RuntimeData.GetRecoveryTicks >= settings.MinimumRecoveryTime && cavern.GetPlayerCount <= 0)
+                {
+                    RuntimeData.SetBrainState(BrainState.Cooldown);
+                    //RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
+                    RuntimeData.ResetRecoveryTicker();
+                }
+            }
+            else
+            {
+                DetermineNextCavern();
             }
         }
 
@@ -77,11 +86,34 @@ namespace Hadal.AI.States
         }
 
         #region State specific
+
         void SetNewTargetCavern()
         {
-            targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
-            NavigationHandler.SetImmediateDestinationToCavern(targetCavern);
+            CavernHandler targetCavern = Brain.CavernManager.GetLeastPopulatedCavern(Brain.CavernManager.GetHandlerListExcludingAI());
+            Brain.UpdateTargetMoveCavern(targetCavern);
+            //NavigationHandler.SetImmediateDestinationToCavern(targetCavern);
+
+            CavernManager.SeedCavernHeuristics(targetCavern);
+            DetermineNextCavern();
         }
+        
+        void DetermineNextCavern()
+        {
+            Brain.StartCoroutine(WaitForAICavern());
+            //print(AICavern);
+            IEnumerator WaitForAICavern()
+            {
+                while (AICavern == null)
+                    yield return null;
+                
+                CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
+            
+                NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
+                NavigationHandler.EnableCachedQueuePathTimer();
+                Brain.UpdateNextMoveCavern(nextCavern);
+            }
+        }
+
         #endregion
 
         public override Func<bool> ShouldTerminate() => () => false;
