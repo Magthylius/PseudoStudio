@@ -66,7 +66,7 @@ namespace Hadal.AI.States
         private void SetupDefensiveBranchBehaviourTree1(ref BTSequence D1Sequence)
         {
             ChangeStateNode setRecoveryState = new ChangeStateNode(Brain, BrainState.Recovery);
-            TailWhipNode tailWhipNode = new TailWhipNode(Brain, 1f);
+            TailWhipNode tailWhip = new TailWhipNode(Brain, 5f);
             ThreshCarriedPlayerNode threshCarriedPlayer = new ThreshCarriedPlayerNode(Brain, damageManager).WithDebugName(nameof(threshCarriedPlayer));
             IsPlayersInCavernEqualToNode onePlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 1);
             IsCarryingAPlayerNode isCarryingPlayer = new IsCarryingAPlayerNode(Brain, false);
@@ -86,40 +86,50 @@ namespace Hadal.AI.States
         //! If jt3 fails, thresh nearest player and set to recovery, if thresh fails, wait for jt1+jt3 pass and set to recovery
         private void SetupDefensiveBranchBehaviourTree2(ref BTSequence sequenceD2)
         {
-            BTSelector twoPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(Brain, 2)).WithDebugName(nameof(twoPlayerInCavern));
+            IsPlayersInCavernEqualToNode twoPlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 2);
+            IsCarryingAPlayerNode isCarryingPlayer = new IsCarryingAPlayerNode(Brain, false);
+            HasJudgementThresholdExceededNode hasJT3Passed = new HasJudgementThresholdExceededNode(Brain, 3);
+            TailWhipNode tailWhipNode = new TailWhipNode(Brain, 1f);
 
-            BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(Brain, BrainState.Recovery)).WithDebugName(nameof(setRecoveryState));
-            BTSequence tailWhip = Build_Sequence(new TailWhipNode(Brain, 1f)).WithDebugName(nameof(tailWhip));
 
-            BTSequence escapeTailWhip = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(escapeTailWhip));
-            BTSelector moveToNearestPlayerWithFallback = Build_Selector(new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 2, 1000, false),
-                                                            escapeTailWhip).WithDebugName(nameof(moveToNearestPlayerWithFallback));
 
-            BTSelector carryPlayer = Build_Selector(new CarryTargetNode(Brain, 10, 0.5f), escapeTailWhip).WithDebugName(nameof(carryPlayer));
-            BTSequence carryAndRecover = Build_Sequence(moveToNearestPlayerWithFallback, carryPlayer, setRecoveryState).WithDebugName(nameof(carryAndRecover));
 
-            BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(Brain, false), carryAndRecover).WithDebugName(nameof(isCarryingAnyPlayer));
 
-            BTSelector moveToNearestPlayer = Build_Selector(new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 2, 1000, false));
-            BTSequence threshCarriedPlayer = Build_Sequence(new ThreshCarriedPlayerNode(Brain, damageManager)).WithDebugName(nameof(threshCarriedPlayer));
-            BTSequence threshNearestTarget = Build_Sequence(moveToNearestPlayer, carryPlayer, threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(threshNearestTarget));
 
-            BTSequence hasJT1JT3PassAndRecover = Build_Sequence(new HasJudgementThresholdExceededNode(Brain, 1), new HasJudgementThresholdExceededNode(Brain, 3), setRecoveryState);
-            BTSelector threshFallback = Build_Selector(threshNearestTarget, hasJT1JT3PassAndRecover);
+            // BTSelector twoPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(Brain, 2)).WithDebugName(nameof(twoPlayerInCavern));
 
-            BTSequence jt3Fallback = Build_Sequence(
-                threshFallback,
-                setRecoveryState
-            ).WithDebugName(nameof(jt3Fallback));
+            // BTSequence setRecoveryState = Build_Sequence(new ChangeStateNode(Brain, BrainState.Recovery)).WithDebugName(nameof(setRecoveryState));
+            // BTSequence tailWhip = Build_Sequence(new TailWhipNode(Brain, 1f)).WithDebugName(nameof(tailWhip));
 
-            BTSelector hasJT3Passed = Build_Selector(new HasJudgementThresholdExceededNode(Brain, 3), jt3Fallback).WithDebugName(nameof(hasJT3Passed));
+            // BTSequence escapeTailWhip = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(escapeTailWhip));
+            // BTSelector moveToNearestPlayerWithFallback = Build_Selector(new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 2, 1000, false),
+            //                                                 escapeTailWhip).WithDebugName(nameof(moveToNearestPlayerWithFallback));
 
-            sequenceD2 = Build_Sequence(
-                twoPlayerInCavern,
-                isCarryingAnyPlayer,
-                hasJT3Passed,
-                escapeTailWhip
-            ).WithDebugName(nameof(sequenceD2));
+            // BTSelector carryPlayer = Build_Selector(new CarryTargetNode(Brain, 10, 0.5f), escapeTailWhip).WithDebugName(nameof(carryPlayer));
+            // BTSequence carryAndRecover = Build_Sequence(moveToNearestPlayerWithFallback, carryPlayer, setRecoveryState).WithDebugName(nameof(carryAndRecover));
+
+            // BTSelector isCarryingAnyPlayer = Build_Selector(new IsCarryingAPlayerNode(Brain, false), carryAndRecover).WithDebugName(nameof(isCarryingAnyPlayer));
+
+            // BTSelector moveToNearestPlayer = Build_Selector(new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 2, 1000, false));
+            // BTSequence threshCarriedPlayer = Build_Sequence(new ThreshCarriedPlayerNode(Brain, damageManager)).WithDebugName(nameof(threshCarriedPlayer));
+            // BTSequence threshNearestTarget = Build_Sequence(moveToNearestPlayer, carryPlayer, threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(threshNearestTarget));
+
+            // BTSequence hasJT1JT3PassAndRecover = Build_Sequence(new HasJudgementThresholdExceededNode(Brain, 1), new HasJudgementThresholdExceededNode(Brain, 3), setRecoveryState);
+            // BTSelector threshFallback = Build_Selector(threshNearestTarget, hasJT1JT3PassAndRecover);
+
+            // BTSequence jt3Fallback = Build_Sequence(
+            //     threshFallback,
+            //     setRecoveryState
+            // ).WithDebugName(nameof(jt3Fallback));
+
+            // BTSelector hasJT3Passed = Build_Selector(new HasJudgementThresholdExceededNode(Brain, 3), jt3Fallback).WithDebugName(nameof(hasJT3Passed));
+
+            // sequenceD2 = Build_Sequence(
+            //     twoPlayerInCavern,
+            //     isCarryingAnyPlayer,
+            //     hasJT3Passed,
+            //     escapeTailWhip
+            // ).WithDebugName(nameof(sequenceD2));
 
             //btRootDef.Add(sequenceD2);
         }
@@ -295,7 +305,7 @@ namespace Hadal.AI.States
         int randomNumber;
         NodeState result;
 
-        private const int DelayInterval = 30;
+        int DelayInterval;
         float tickTimer;
         void RandomizeAggOrDefRoot()
         {
@@ -309,6 +319,7 @@ namespace Hadal.AI.States
 
             //nextTick = Time.time + DelayInterval;
             tickTimer = 10;
+            DelayInterval = 30;
         }
 
         public override void StateTick()
