@@ -34,6 +34,7 @@ namespace Hadal.AI.States
 
             Brain.StartCoroutine(InitializeAfterCaverns());
             
+            print(RuntimeData.GetEngagementObjective);
             if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
                 RuntimeData.SetEngagementSubState(EngagementSubState.Aggressive);
         }

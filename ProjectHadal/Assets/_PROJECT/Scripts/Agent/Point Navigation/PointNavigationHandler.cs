@@ -18,7 +18,7 @@ namespace Hadal.AI
         Cavern = 0,
         Tunnel
     }
-
+    
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
         #region Data Accessors
@@ -52,7 +52,18 @@ namespace Hadal.AI
         public bool Data_IsChasingAPlayer => isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
         public bool Data_CanPath => canPath;
-        [SerializeField, ReadOnly] private NavPoint currentPoint;
+        
+        private NavPoint CurrentPoint;
+        private NavPoint currentPoint {
+            get => CurrentPoint;
+            set
+            {
+                CurrentPoint = value;
+                print("Cpoint changed: " + value);
+            }
+        }
+        
+       
         public NavPoint Data_CurrentPoint => currentPoint;
         #endregion
 
@@ -369,7 +380,9 @@ namespace Hadal.AI
                 }
 
                 if (enableDebug) "Stopping custom path".Msg();
-                yield return null;
+                
+                //! THIS CAUSED THE FUCKING THING TO OVERWRITE THE CURRENT POINT AFTER IT REEEEEEEEEEEEEEEEEEEEE
+                //yield return null;
 
                 if (justFindNewPoint)
                 {
