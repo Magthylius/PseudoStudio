@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.Player;
-using NaughtyAttributes;
+using Kit;
 using Tenshi.UnitySoku;
 using UnityEngine;
 
@@ -66,13 +66,13 @@ namespace Hadal.AI.Caverns
     public class CavernManager : SingletonSoft<CavernManager>
     {
         [Header("Cavern Handler List")]
-        [ReadOnly] public List<CavernHandler> handlerList = new List<CavernHandler>();
+        [NaughtyAttributes.ReadOnly] public List<CavernHandler> handlerList = new List<CavernHandler>();
 
         [Header("Settings")] 
         [SerializeField] private bool debugPlayerEvents = false;
         [SerializeField] private bool debugAIEvents = false;
-        [SerializeField] private string playerLayer;
-        [SerializeField] private string aiLayer;
+        [SerializeField] private LayerMask playerLayer;
+        [SerializeField] private LayerMask aiLayer;
         
         //! Events
         public event CavernHandlerPlayerReturn PlayerEnterCavernEvent;
@@ -159,7 +159,7 @@ namespace Hadal.AI.Caverns
 
         #region Cavern Handling
 
-        [ReadOnly] public bool CavernsInitialized = false;
+        [NaughtyAttributes.ReadOnly] public bool CavernsInitialized = false;
         IEnumerator CheckCavernInitialization()
         {
             while (!CavernsInitialized)
@@ -448,7 +448,9 @@ namespace Hadal.AI.Caverns
             return handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
         }
 
-        public int PlayerLayer => LayerMask.NameToLayer(playerLayer);
-        public int AILayer => LayerMask.NameToLayer(aiLayer);
+        //public int PlayerLayer => LayerMask.NameToLayer(playerLayer);
+        //public int AILayer => LayerMask.NameToLayer(aiLayer);
+        public bool PlayerLayerContains(int layer) => LayerMaskExtend.Contain(playerLayer, layer);
+        public bool AILayerContains(int layer) => LayerMaskExtend.Contain(aiLayer, layer);
     }
 }

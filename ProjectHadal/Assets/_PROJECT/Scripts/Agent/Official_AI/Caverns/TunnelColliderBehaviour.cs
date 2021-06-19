@@ -32,9 +32,9 @@ namespace Hadal.AI
             //print(LayerMask.LayerToName(other.gameObject.layer) + " entered");
             //print(LayerMask.LayerToName(cManager.PlayerLayer.value) + " cMan");
             //print(gameObject.name);
-            if (other.gameObject.layer == cManager.PlayerLayer)
+            if (cManager.PlayerLayerContains(other.gameObject.layer))
                 parentTunnel.TriggerEntry(other.GetComponent<PlayerController>());
-            else if (other.gameObject.layer == cManager.AILayer)
+            else if (cManager.AILayerContains(other.gameObject.layer))
                 parentTunnel.TriggerEntry(other.GetComponent<AIBrain>());
         }
 
@@ -43,9 +43,9 @@ namespace Hadal.AI
             if (type == TunnelColliderType.Entry) return;
             //print(LayerMask.LayerToName(other.gameObject.layer)   + " left");
             //print(gameObject.name);
-            if (other.gameObject.layer == cManager.PlayerLayer)
+            if (cManager.PlayerLayerContains(other.gameObject.layer))
                 parentTunnel.TriggerExit(other.GetComponent<PlayerController>());
-            else if (other.gameObject.layer == cManager.AILayer)
+            else if (cManager.AILayerContains(other.gameObject.layer))
                 parentTunnel.TriggerExit(other.GetComponent<AIBrain>());
         }
 
