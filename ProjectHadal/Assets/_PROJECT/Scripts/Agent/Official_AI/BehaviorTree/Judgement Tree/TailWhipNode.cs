@@ -1,4 +1,5 @@
 using System.Collections;
+using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
 
@@ -31,6 +32,8 @@ namespace Hadal.AI.TreeNodes
                     ResetWhipTimer();
                     _tailWhipDone = true;
                     _startTimer = false;
+                    Debugger();
+                    Debug.LogWarning("TailWhip:" + _tailWhipDone);
                 }
             }
             else
@@ -48,5 +51,17 @@ namespace Hadal.AI.TreeNodes
 
         private float TickWhipTimer(in float deltaTime) => _whipTimer -= deltaTime;
         private void ResetWhipTimer() => _whipTimer = _whipTime;
+
+         public TailWhipNode WithDebugName(string msg)
+        {
+            debugName = msg.AddSpacesBeforeCapitalLetters(false) + "Node";
+            return this;
+        }
+
+        private void Debugger()
+        {
+            if (EnableDebug)
+                $"Name: {debugName}, TailWhipDone?: {_tailWhipDone}".Msg();
+        }
     }
 }
