@@ -33,7 +33,8 @@ namespace Hadal.AI.TreeNodes
         {
             if (timer > 0)
             {
-                timer -= Time.deltaTime;
+                timer = timer - 1;
+                Debug.Log("Timer Thresh:" + timer);
                 if (Time.time > nextActionTime)
                 {
                     nextActionTime = Time.time + _damageManager.ApplyEveryNSeconds;
@@ -50,6 +51,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate(float deltaTime)
         {
+            Debugger();
             if (_brain.CarriedPlayer == null)
                 return NodeState.FAILURE;
 
@@ -73,6 +75,18 @@ namespace Hadal.AI.TreeNodes
             else
                 return NodeState.RUNNING;
 
+        }
+
+         public ThreshCarriedPlayerNode WithDebugName(string msg)
+        {
+            debugName = msg.AddSpacesBeforeCapitalLetters(false) + "?";
+            return this;
+        }
+
+        private void Debugger()
+        {
+            if (EnableDebug)
+                $"Name: {debugName}, Target: {_brain.CarriedPlayer}".Msg();
         }
     }
 }

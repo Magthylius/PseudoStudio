@@ -22,15 +22,15 @@ namespace Hadal.AI.States
         }
 
         public override void OnStateStart()
-		{
-			if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
+        {
+            if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
             RuntimeData.UpdateCumulativeDamageThreshold(settings.GetEscapeDamageThreshold(Brain.HealthManager.GetCurrentHealth));
             SetNewTargetCavern();
             AllowStateTick = true;
         }
 
-        public override void StateTick() 
+        public override void StateTick()
         {
             if (!AllowStateTick) return;
 
@@ -57,7 +57,12 @@ namespace Hadal.AI.States
         public override void FixedStateTick()
         {
         }
-        public override void OnStateEnd() { }
+        public override void OnStateEnd()
+        {
+            RuntimeData.ResetRecoveryTicker();
+            AllowStateTick = false;
+            Debug.LogWarning("StateTickFalse:" + AllowStateTick);
+        }
 
         public override void OnCavernEnter(CavernHandler cavern)
         {
@@ -99,7 +104,7 @@ namespace Hadal.AI.States
             CavernManager.SeedCavernHeuristics(targetCavern);
             DetermineNextCavern();
         }
-        
+
         void DetermineNextCavern()
         {
             Brain.StartCoroutine(WaitForAICavern());
@@ -108,9 +113,9 @@ namespace Hadal.AI.States
             {
                 while (AICavern == null)
                     yield return null;
-                
+
                 CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
-            
+
                 //NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
                 NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
                 //NavigationHandler.EnableCachedQueuePathTimer();

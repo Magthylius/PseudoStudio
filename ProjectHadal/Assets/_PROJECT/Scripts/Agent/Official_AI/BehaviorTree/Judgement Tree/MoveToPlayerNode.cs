@@ -1,5 +1,7 @@
 using Hadal.AI.Caverns;
 using UnityEngine;
+using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI.TreeNodes
 {
@@ -29,7 +31,7 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate(float deltaTime)
         {
-
+            Debugger();
             if (_brain.CurrentTarget == null)
             {
                 //return NodeState.FAILURE;
@@ -70,7 +72,7 @@ namespace Hadal.AI.TreeNodes
                 point.AttachTo(target);
                 point.SetCavernTag(CavernTag.Custom_Point);
                 _navigator.SetCustomPath(point, true);
-                
+
             }
         }
 
@@ -79,5 +81,17 @@ namespace Hadal.AI.TreeNodes
 
         private bool FarThresholdReached()
             => (_pilot.position - _target.position).sqrMagnitude > _farDistanceThreshold * _farDistanceThreshold;
+
+        public MoveToPlayerNode WithDebugName(string msg)
+        {
+            debugName = msg.AddSpacesBeforeCapitalLetters(false) + "Node";
+            return this;
+        }
+
+        private void Debugger()
+        {
+            if (EnableDebug)
+                $"Name: {debugName}, Target: {_brain.CurrentTarget}".Msg();
+        }
     }
 }
