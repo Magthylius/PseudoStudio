@@ -15,7 +15,8 @@ namespace Hadal.Usables.Projectiles
         private Collider[] detectedObjects;
         public SelfDeactivationMode selfDeactivation;
 
-        [Header("Explode Effect")]
+        [Header("Visual Effect")]
+        [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private GameObject particleEffect;
         private Timer explodeDuration;
         private bool isExploding;
@@ -24,6 +25,7 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
+            meshRenderer = GetComponent<MeshRenderer>();
             explodeDuration = new Timer(1f);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
@@ -39,6 +41,13 @@ namespace Hadal.Usables.Projectiles
         private void OnDisable()
         {
             isSet = false;
+
+            if(meshRenderer)
+            {
+                meshRenderer.material.color = Color.yellow;
+                return;
+            }
+
             particleEffect.SetActive(false);
         }
         #endregion
@@ -107,7 +116,11 @@ namespace Hadal.Usables.Projectiles
             Gizmos.DrawWireSphere(transform.position, radius);
         }
 
-        private void ModeOn() => isSet = true;
+        private void ModeOn()
+        {
+            meshRenderer.material.color = Color.red;
+            isSet = true;
+        }
     }
 }
 
