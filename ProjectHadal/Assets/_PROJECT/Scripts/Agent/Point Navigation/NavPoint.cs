@@ -84,6 +84,10 @@ namespace Hadal.AI
 			mRenderer.material = defaultMaterial;
 		}
 
-		public void SetCavernTag(CavernTag newTag) => cavernTag = newTag;
+		public void SetCavernTag(CavernTag newTag)
+		{
+			//Debug.LogWarning(newTag);
+			cavernTag = newTag;
+		}
     }
 }

@@ -36,17 +36,17 @@ namespace Hadal.AI.States
             BTSequence seqD1 = null;
             BTSequence seqD2 = null;
             BTSequence fallBack = Build_Sequence(new IsPlayersInCavernEqualToNode(Brain, 0), new ChangeStateNode(Brain, BrainState.Recovery)).WithDebugName(nameof(fallBack));
-            
+
             //!Defensive
             SetupDefensiveBranchBehaviourTree2(ref seqD2);
             SetupDefensiveBranchBehaviourTree1(ref seqD1);
-            
+
             defRoot = Build_Selector(
-                //seqD2,
+                seqD2,
                 seqD1,
                 fallBack
             ).WithDebugName(nameof(defRoot));
-            
+
             //SetupDefensiveBranchBehaviourTree3();
             //SetupDefensiveBranchBehaviourTree4();
 
@@ -84,16 +84,24 @@ namespace Hadal.AI.States
         //! Notes: Detect two player, IsCarrying?, Has jt3 passed?, escape whip
         //! If IsCarrying fails, Grab nearest player and set to recovery, if grab fails, escape
         //! If jt3 fails, thresh nearest player and set to recovery, if thresh fails, wait for jt1+jt3 pass and set to recovery
-        private void SetupDefensiveBranchBehaviourTree2(ref BTSequence sequenceD2)
+        private void SetupDefensiveBranchBehaviourTree2(ref BTSequence D2Sequence)
         {
-            IsPlayersInCavernEqualToNode twoPlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 2);
+            ChangeStateNode setRecoveryState = new ChangeStateNode(Brain, BrainState.Recovery);
+            TailWhipNode tailWhip = new TailWhipNode(Brain, 5f).WithDebugName(nameof(TailWhipNode));
+            ThreshCarriedPlayerNode threshCarriedPlayer = new ThreshCarriedPlayerNode(Brain, damageManager).WithDebugName(nameof(threshCarriedPlayer));
             IsCarryingAPlayerNode isCarryingPlayer = new IsCarryingAPlayerNode(Brain, false);
-            HasJudgementThresholdExceededNode hasJT3Passed = new HasJudgementThresholdExceededNode(Brain, 3);
-            TailWhipNode tailWhipNode = new TailWhipNode(Brain, 1f);
+            HasJudgementThresholdNotExceededNode hasJT3NotPass = new HasJudgementThresholdNotExceededNode(Brain, 3);
+            HasJudgementThresholdExceededNode hasJT3Pass = new HasJudgementThresholdExceededNode(Brain, 3);
+            CarryTargetNode carryPlayer = new CarryTargetNode(Brain, 10, 0.5f);
+            MoveToPlayerNode moveToPlayer = new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 10, 1000, false).WithDebugName(nameof(moveToPlayer));
+            IsPlayersInCavernEqualToNode twoPlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 2);
 
+            //BTSequence TailWhipAndRecover = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(TailWhipAndRecover));
+            BTSequence ThreshIfJT3HaventPass = Build_Sequence(hasJT3NotPass, moveToPlayer, carryPlayer, threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(ThreshIfJT3HaventPass));
+            BTSelector IsCarryingPlayerWithFallback = Build_Selector(isCarryingPlayer, ThreshIfJT3HaventPass, setRecoveryState).WithDebugName(nameof(IsCarryingPlayerWithFallback));
+            BTSequence ThreshCarriedPlayerAndEscape = Build_Sequence(threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(ThreshCarriedPlayerAndEscape));
 
-
-
+            D2Sequence = Build_Sequence(twoPlayerInCavern, IsCarryingPlayerWithFallback, ThreshCarriedPlayerAndEscape).WithDebugName(nameof(D2Sequence));
 
 
             // BTSelector twoPlayerInCavern = Build_Selector(new IsPlayersInCavernEqualToNode(Brain, 2)).WithDebugName(nameof(twoPlayerInCavern));
@@ -313,6 +321,7 @@ namespace Hadal.AI.States
         }
         public override void OnStateStart()
         {
+            Initialise(parent);
             if (Brain.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
             Brain.RuntimeData.ResetEngagementTicker();
             //RandomizeAggOrDefRoot();
@@ -326,7 +335,7 @@ namespace Hadal.AI.States
         {
             float deltaTime = Brain.DeltaTime;
             Brain.RuntimeData.TickEngagementTicker(deltaTime);
-            
+
             //Debug.LogWarning("Judgement Tick!");
 
             if (Time.frameCount % DelayInterval == 0)
@@ -356,14 +365,14 @@ namespace Hadal.AI.States
                 Brain.CarriedPlayer.SetIsCarried(false);
                 Brain.CarriedPlayer = null;
                 Brain.AttachCarriedPlayerToMouth(false);
-                Brain.NavigationHandler.StopCustomPath(true);
+                Brain.NavigationHandler.StopCustomPath(false);
             }
         }
         public override Func<bool> ShouldTerminate() => () => false;
 
         private void ResetUpdateTimer() => updateTimer = 0.0f;
         private float TickUpdateTimer(in float tick) => updateTimer += tick;
-        
+
         private BTSelector Build_Selector(params BTNode[] nodes) => new BTSelector(new List<BTNode>(nodes));
         private BTSequence Build_Sequence(params BTNode[] nodes) => new BTSequence(new List<BTNode>(nodes));
         private BTSuccessor Build_Successor(params BTNode[] nodes) => new BTSuccessor(new List<BTNode>(nodes));

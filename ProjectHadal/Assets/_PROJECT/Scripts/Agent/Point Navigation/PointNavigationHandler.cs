@@ -206,6 +206,7 @@ namespace Hadal.AI
             isChasingAPlayer = targetIsPlayer;
             canTimeout = true;
             canAutoSelectNavPoints = !targetIsPlayer;
+            print("custom: " + canAutoSelectNavPoints);
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting custom nav point path".Msg();
@@ -219,7 +220,7 @@ namespace Hadal.AI
                 return;
             }
 
-            Vector3 curPointPos = currentPoint.GetPosition;
+            //Vector3 curPointPos = currentPoint.GetPosition;
             CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
@@ -273,7 +274,7 @@ namespace Hadal.AI
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
             }
-
+            Debug.LogWarning("Moving");
             ComputeCachedDestinationCavernPath(destination);
             SetQueuedPathFromCache();
         }
@@ -353,13 +354,15 @@ namespace Hadal.AI
                 isOnCustomPath = false;
                 pointPath.Clear();
                 StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
+                //Debug.LogWarning("Destroy and Regen ");
             }
 
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
                 currentPoint.Deselect();
 
-                if (currentPoint.CavernTag == CavernTag.Custom_Point)
+                //Debug.LogWarning("start coroutine: " + currentPoint.CavernTag);
+                if (isChasingAPlayer)
                 {
                     isChasingAPlayer = false;
                     Destroy(currentPoint.gameObject);
@@ -571,7 +574,7 @@ namespace Hadal.AI
                 currentPoint = GetClosestPointToSelf();
 
             List<NavPoint> potentialPoints = navPoints
-                                            .Where(o => o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation() && !o.IsTunnelEntry)
+                                            .Where(o => o != null && o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation() && !o.IsTunnelEntry)
                                             .OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition))
                                             .Take(numberOfClosestPointsToConsider)
                                             .ToList();
@@ -592,7 +595,7 @@ namespace Hadal.AI
                 $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
 
-        private NavPoint GetClosestPointToSelf() => navPoints.OrderBy(n => n.GetSqrDistanceTo(pilotTrans.position)).FirstOrDefault();
+        private NavPoint GetClosestPointToSelf() => navPoints.Where(n => n != null).OrderBy(n => n.GetSqrDistanceTo(pilotTrans.position)).FirstOrDefault();
         private void ResetTimeoutTimer() => timeoutTimer = timeoutNewPointTime;
         private void ResetObstacleCheckTimer() => obstacleCheckTimer = obstacleCheckTime;
         private void ResetNavPointLingerTimer() => navPointLingerTimer = GetNextNavPointLingerTime();
