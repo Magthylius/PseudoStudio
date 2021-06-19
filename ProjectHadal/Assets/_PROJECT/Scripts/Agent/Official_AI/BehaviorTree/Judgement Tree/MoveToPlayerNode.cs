@@ -69,10 +69,11 @@ namespace Hadal.AI.TreeNodes
             if (point == null)
             {
                 point = Object.Instantiate(_pointPrefab, target.position, Quaternion.identity);
+                point.tag = "NavigationPoint";
                 point.AttachTo(target);
                 point.SetCavernTag(CavernTag.Custom_Point);
+                //Debug.LogWarning(point.CavernTag);
                 _navigator.SetCustomPath(point, true);
-
             }
         }
 

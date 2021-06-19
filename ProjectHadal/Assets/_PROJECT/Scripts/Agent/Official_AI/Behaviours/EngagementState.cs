@@ -59,6 +59,7 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             subStateMachine.CurrentState.OnStateEnd();
+            Brain.RuntimeData.SetEngagementSubState(EngagementSubState.None);
         }
 
         public override void OnCavernEnter(CavernHandler cavern)
