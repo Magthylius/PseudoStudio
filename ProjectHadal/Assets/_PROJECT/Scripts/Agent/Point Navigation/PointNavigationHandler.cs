@@ -266,8 +266,8 @@ namespace Hadal.AI
                 $"Created cached Queued Path: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
 
             // Local Methods
-            bool HasTheSameCavernTagAsDestinationCavern(NavPoint point) => point.CavernTag == destination.cavernTag;
-            bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point != other;
+            bool HasTheSameCavernTagAsDestinationCavern(NavPoint point) => point && point.CavernTag == destination.cavernTag;
+            bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point && point != other;
         }
 
         public void EnableCachedQueuePathTimer() => _tickCavernLingerTimer = true;
