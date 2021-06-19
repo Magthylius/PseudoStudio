@@ -44,7 +44,7 @@ namespace Hadal.AI.TreeNodes
                 }
             }
             //! If code reach here means all nodes is success, if not then it's running
-            //_nodeState = anyNodeRunning ? NodeState.RUNNING : NodeState.SUCCESS;
+            _nodeState = anyNodeRunning ? NodeState.RUNNING : NodeState.SUCCESS;
             Debug();
             return _nodeState;
         }
