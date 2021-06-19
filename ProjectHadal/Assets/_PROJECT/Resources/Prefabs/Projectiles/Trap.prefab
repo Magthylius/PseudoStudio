@@ -131,7 +131,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 0, b: 0.03455162, a: 1}
+  m_Color: {r: 1, g: 0.14656208, b: 0, a: 1}
   m_Intensity: 4000
   m_Range: 100
   m_SpotAngle: 30
@@ -312,9 +312,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: 
+  projectileID: 0
+  IsLocal: 0
   radius: 70
   isSet: 0
   selfDeactivation: {fileID: 0}
+  lightIndicator: {fileID: 6458389941356830930}
   particleEffect: {fileID: 3791313692687117044}
 --- !u!1001 &3790297980800970658
 PrefabInstance:
