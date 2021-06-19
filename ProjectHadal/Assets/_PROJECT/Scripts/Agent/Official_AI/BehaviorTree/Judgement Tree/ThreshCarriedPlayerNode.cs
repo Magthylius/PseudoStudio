@@ -65,11 +65,11 @@ namespace Hadal.AI.TreeNodes
 
             if (_threshDone)
             {
-                Debug.LogWarning("thresh finished");
+                Debug.LogWarning("thresh finished " + _brain.NavigationHandler.Data_CurrentPoint.CavernTag);
                 _brain.CarriedPlayer.SetIsCarried(false);
                 _brain.CarriedPlayer = null;
                 _brain.AttachCarriedPlayerToMouth(false);
-                _brain.NavigationHandler.StopCustomPath(true);
+                _brain.NavigationHandler.StopCustomPath(false);
                 return NodeState.SUCCESS;
             }
             else
