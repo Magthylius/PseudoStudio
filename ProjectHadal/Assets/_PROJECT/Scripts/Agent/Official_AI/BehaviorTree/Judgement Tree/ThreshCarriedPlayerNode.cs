@@ -33,7 +33,8 @@ namespace Hadal.AI.TreeNodes
         {
             if (timer > 0)
             {
-                timer -= Time.deltaTime;
+                timer = timer - 1;
+                Debug.Log("Timer Thresh:" + timer);
                 if (Time.time > nextActionTime)
                 {
                     nextActionTime = Time.time + _damageManager.ApplyEveryNSeconds;
