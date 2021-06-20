@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using Magthylius.DataFunctions;
 
 //Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
@@ -21,8 +22,12 @@ namespace Hadal.Usables.Projectiles
         public event Action<ProjectileBehaviour> DumpEvent;
         NetworkEventManager neManager;
 
-        #region Unity Lifecycle
+        [Header("Impact Effect")]
+        [SerializeField] protected GameObject particleEffect;
+        protected Timer impactDuration;
+        protected bool isVisualizing;
 
+        #region Unity Lifecycle
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
         {
@@ -48,10 +53,17 @@ namespace Hadal.Usables.Projectiles
             return false;
         }
 
-        public virtual void ImpactBehaviour()
+        protected virtual void ImpactBehaviour()
         {
             PPhysics.OnPhysicsFinished();
             return;        
+        }
+
+        protected virtual void StopImpactEffect()
+        {
+            isVisualizing = false;
+            Rigidbody.isKinematic = false;
+            PPhysics.OnPhysicsFinished();
         }
 
         protected bool TryDamageTarget(IDamageable target)

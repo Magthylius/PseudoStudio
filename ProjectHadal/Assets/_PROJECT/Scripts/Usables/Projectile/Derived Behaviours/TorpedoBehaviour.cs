@@ -10,23 +10,18 @@ namespace Hadal.Usables.Projectiles
     {
         [SerializeField] private string[] validLayer;
 
-        [Header("Explode Effect")]
-        [SerializeField] private GameObject particleEffect;
-        private Timer explodeDuration;
-        private bool isExploding;
-
         #region Unity Lifecycle
         protected override void Start()
         {
             base.Start();
-            explodeDuration = new Timer(2f);
-            explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
+            impactDuration = new Timer(2f);
+            impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
         }
         private void Update()
         {
-            if (isExploding)
+            if (isVisualizing)
             {
-                explodeDuration.Tick(Time.deltaTime);
+                impactDuration.Tick(Time.deltaTime);
             }
         }
 
@@ -64,17 +59,16 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
-        public override void ImpactBehaviour()
+        protected override void ImpactBehaviour()
         {
-            print("called");
             Rigidbody.isKinematic = true;
             particleEffect.SetActive(true);
-            isExploding = true;
+            isVisualizing = true;
         }
 
-        private void StopExplosion()
+        protected override void StopImpactEffect()
         {
-            isExploding = false;
+            isVisualizing = false;
             Rigidbody.isKinematic = false;
             PPhysics.OnPhysicsFinished();
         }

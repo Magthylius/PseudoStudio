@@ -15,7 +15,11 @@ namespace Hadal.Locomotion
         private bool _isLocal = true;
         private bool _isEnabled = false;
 
+        [Header("Physic Stimulation")]
         [SerializeField, ReadOnly] private float drag;
+        [SerializeField] private float weightForce;
+        [SerializeField] private float buoyantForce;
+        [SerializeField] private float dragForce;
 
         public float CalculatedDrag => drag;
         public Rigidbody Rigidbody { get => rigidBody; set => rigidBody = value; }
@@ -33,6 +37,9 @@ namespace Hadal.Locomotion
             _lastPosition = target.position;
             _currentPosition = target.position;
             DoDebugEnabling(debugKey);
+
+            //Real Physics Set Up
+            SetUpRigidBody();
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -85,6 +92,12 @@ namespace Hadal.Locomotion
         public float GetModifiedDrag() => drag / (drag * Time.fixedDeltaTime + 1);
 
         #region Private Methods
+        private void SetUpRigidBody()
+        {
+            rigidBody.mass = weightForce / 10;
+            rigidBody.useGravity = true;
+        }
+
         private void HandleAcceleration(in float deltaTime)
         {
             _currentForwardSpeed = VerticalInputSpeed  * Accel.Forward * deltaTime;

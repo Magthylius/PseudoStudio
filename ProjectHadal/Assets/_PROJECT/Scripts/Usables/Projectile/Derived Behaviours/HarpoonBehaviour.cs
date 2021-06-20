@@ -1,5 +1,6 @@
 using UnityEngine;
 using Hadal.Networking;
+using Magthylius.DataFunctions;
 //using Hadal.AI;
 
 //Created by Jet
@@ -9,10 +10,27 @@ namespace Hadal.Usables.Projectiles
     {
         [SerializeField] private string[] validLayer;
 
-        public void OnDisable()
+        #region Unity Lifecycle
+        protected override void Start()
         {
+            base.Start();
+            impactDuration = new Timer(2f);
+            impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
+        }
+        private void Update()
+        {
+            if (isVisualizing)
+            {
+                impactDuration.Tick(Time.deltaTime);
+            }
+        }
+
+        private void OnDisable()
+        {
+            particleEffect.SetActive(false);
             IsAttached = false;
         }
+        #endregion
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -48,6 +66,7 @@ namespace Hadal.Usables.Projectiles
 
                     object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
+                    ImpactBehaviour();
                     //if its AI.
                     //if (collision.gameObject.GetComponent<AIBrain>())
                     // {
@@ -55,6 +74,20 @@ namespace Hadal.Usables.Projectiles
                     // }
                 }
             }
+        }
+
+        protected override void ImpactBehaviour()
+        {
+            Rigidbody.isKinematic = true;
+            particleEffect.SetActive(true);
+            isVisualizing = true;
+        }
+
+        protected override void StopImpactEffect()
+        {
+            isVisualizing = false;
+            Rigidbody.isKinematic = false;
+            PPhysics.OnPhysicsFinished();
         }
     }
 }
