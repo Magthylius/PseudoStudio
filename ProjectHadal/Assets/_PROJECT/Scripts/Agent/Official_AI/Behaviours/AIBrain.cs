@@ -12,6 +12,7 @@ using Hadal.Player;
 using Hadal.AI.Graphics;
 using System.Collections;
 using Hadal.Networking;
+using ExitGames.Client.Photon;
 
 namespace Hadal.AI
 {
@@ -31,6 +32,7 @@ namespace Hadal.AI
         [SerializeField] private AIDamageManager damageManager;
         [SerializeField] private AIGraphicsHandler graphicsHandler;
         [SerializeField] private CavernManager cavernManager;
+        NetworkEventManager neManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
         public AISenseDetection SenseDetection => senseDetection;
@@ -101,16 +103,16 @@ namespace Hadal.AI
 
         private void Start()
         {
-            NetworkEventManager nManager = NetworkEventManager.Instance;
-            if (nManager != null && followNetworkManagerOfflineStatus)
-                isOffline = nManager.isOfflineMode;
-            
+            neManager = NetworkEventManager.Instance;
+            if (neManager != null && followNetworkManagerOfflineStatus)
+                isOffline = neManager.isOfflineMode;
+
             if (DebugEnabled && isOffline)
-				"Leviathan brain initialising in Offline mode.".Msg();
+                "Leviathan brain initialising in Offline mode.".Msg();
 
             allAIComponents.ForEach(i => i.Initialise(this));
             cavernManager = FindObjectOfType<CavernManager>();
-            
+
             //! Event handling
             cavernManager.AIEnterCavernEvent += OnCavernEnter;
             cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
@@ -133,13 +135,15 @@ namespace Hadal.AI
                 runtimeData.SetBrainState(overrideState);
                 stateMachine.SetState(GetMachineState(overrideState));
             }
-            
+
 
             //! Runtime data
             RefreshPlayerReferences();
             runtimeData.Start_Initialise();
             navigationHandler.SetCavernManager(cavernManager);
             if (graphicsHandler != null) MouthObject = graphicsHandler.MouthObject;
+
+            //neManager.AddListener(ByteEvents.AI_GRAB_EVENT, RE_AttachCarriedPlayerToMouth);
         }
 
         private void Update()
@@ -300,6 +304,7 @@ namespace Hadal.AI
                 return;
             }
 
+
             if (attachToMouth)
             {
                 //Debug.LogWarning("Player grabbed");
@@ -307,13 +312,34 @@ namespace Hadal.AI
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
                 //CarriedPlayer.DisableCollider();
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
-				CarriedPlayer.GetTarget.localPosition = Vector3.zero;
+                CarriedPlayer.GetTarget.localPosition = Vector3.zero;
+                int GrabbedPlayerID = CarriedPlayer.GetInfo.PhotonInfo.PView.ViewID;
+                int data = GrabbedPlayerID;
+                neManager.RaiseEvent(ByteEvents.AI_GRAB_EVENT, data);
                 return;
             }
 
             //Debug.LogWarning("Player let go :(");
             mouth.DetachChildren();
             CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+        }
+
+        public void RE_AttachCarriedPlayerToMouth(EventData eventData)
+        {
+            int data = (int)eventData.CustomData;
+
+            Debug.LogWarning("ID:" + data);
+
+            foreach (var playerControl in Players)
+            {
+                Debug.LogWarning("PC ID:" + playerControl.ViewID);
+                if(playerControl.ViewID == data)
+                {
+                    Debug.LogWarning("RECEIVED ID");
+                    break;
+                }
+            }
+
         }
 
         #endregion
@@ -349,9 +375,9 @@ namespace Hadal.AI
             => state switch
             {
                 BrainState.Anticipation => anticipationState,
-                BrainState.Engagement   => engagementState,
-                BrainState.Recovery     => recoveryState,
-                BrainState.Cooldown     => cooldownState,
+                BrainState.Engagement => engagementState,
+                BrainState.Recovery => recoveryState,
+                BrainState.Cooldown => cooldownState,
                 _ => ReturnDefaultAIState()
             };
         private AIStateBase ReturnDefaultAIState()
@@ -359,7 +385,7 @@ namespace Hadal.AI
             Debug.LogWarning("State not found!");
             return null;
         }
-        
+
         public bool CanUpdate => (PhotonNetwork.IsMasterClient || isOffline) && (_playersAreReady || isOffline);
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;

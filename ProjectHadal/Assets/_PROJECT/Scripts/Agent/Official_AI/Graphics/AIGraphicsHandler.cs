@@ -6,4 +6,5 @@ namespace Hadal.AI.Graphics
     {
         public GameObject MouthObject;
     }
+
 }

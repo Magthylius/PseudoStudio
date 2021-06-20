@@ -26,6 +26,7 @@ namespace Hadal.Networking
         PROJECTILE_ATTACH,
         AI_DAMAGE_EVENT,
         AI_PIN_EVENT,
+        AI_GRAB_EVENT,
         TOTAL_EVENTS
     }
 
