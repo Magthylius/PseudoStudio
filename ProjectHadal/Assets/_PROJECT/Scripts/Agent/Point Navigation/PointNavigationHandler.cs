@@ -59,11 +59,9 @@ namespace Hadal.AI
             set
             {
                 CurrentPoint = value;
-                print("Cpoint changed: " + value);
+                if (enableDebug) print("Current point changed: " + value);
             }
         }
-        
-       
         public NavPoint Data_CurrentPoint => currentPoint;
         #endregion
 
