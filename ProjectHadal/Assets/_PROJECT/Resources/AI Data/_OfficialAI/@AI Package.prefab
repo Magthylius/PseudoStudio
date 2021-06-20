@@ -1,5 +1,63 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &2007591999211397865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395465446244265273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 2
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 2007591999211397866}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &2007591999211397866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395465446244265273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useCustomTransform: 0
+  customTrans: {fileID: 0}
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 3
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 2
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 2
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
 --- !u!1 &8595098662043833109
 GameObject:
   m_ObjectHideFlags: 0
@@ -66,6 +124,9 @@ MonoBehaviour:
   isOnCustomPath: 0
   isChasingAPlayer: 0
   canPath: 0
+  drawPathing: 1
+  pointPathList: []
+  cachedPointPathList: []
 --- !u!114 &7784796312020894348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +178,7 @@ PrefabInstance:
       objectReference: {fileID: 395465446244265274}
     - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: enableDebug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: maxVelocity
@@ -213,7 +274,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2206939684562575357, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: threshTimer
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9019090016648474977, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: m_Radius
@@ -221,6 +282,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+--- !u!1 &395465446244265273 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2206939684412345075, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+  m_PrefabInstance: {fileID: 2007591999200880586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &395465446244265274 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2206939684412345072, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}

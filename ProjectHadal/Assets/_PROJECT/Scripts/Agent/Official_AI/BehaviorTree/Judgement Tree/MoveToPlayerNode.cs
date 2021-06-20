@@ -31,19 +31,14 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate(float deltaTime)
         {
-            Debugger();
-            if (_brain.CurrentTarget == null)
-            {
-                //return NodeState.FAILURE;
-            }
-
-            Debug.Log("My Target:" + _brain.CurrentTarget);
-            if (_target != _brain.CurrentTarget.transform)
+            if (_brain.CurrentTarget && _target != _brain.CurrentTarget.transform)
             {
                 _previousTarget = _target;
                 _target = _brain.CurrentTarget.transform;
                 SetNavPoint(_target);
             }
+            
+            Debugger();
 
             // Move();
             if (CloseThresholdReached()) return NodeState.SUCCESS;
@@ -78,10 +73,10 @@ namespace Hadal.AI.TreeNodes
         }
 
         private bool CloseThresholdReached()
-            => (_pilot.position - _target.position).sqrMagnitude < _closeDistanceThreshold * _closeDistanceThreshold;
+            => _target && (_pilot.position - _target.position).sqrMagnitude < _closeDistanceThreshold * _closeDistanceThreshold;
 
         private bool FarThresholdReached()
-            => (_pilot.position - _target.position).sqrMagnitude > _farDistanceThreshold * _farDistanceThreshold;
+            => _target && (_pilot.position - _target.position).sqrMagnitude > _farDistanceThreshold * _farDistanceThreshold;
 
         public MoveToPlayerNode WithDebugName(string msg)
         {

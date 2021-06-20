@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Hadal.AI.TreeNodes
 {
     public class HasJudgementThresholdExceededNode : BTNode
@@ -15,7 +17,10 @@ namespace Hadal.AI.TreeNodes
         public override NodeState Evaluate(float deltaTime)
         {
             if (_brain.RuntimeData.HasJudgementTimerOfIndexExceeded(_thresholdIndex))
+            {
+                Debug.LogWarning(("waht the fuck"));
                 return NodeState.SUCCESS;
+            }
             else
                 return NodeState.FAILURE;
         }

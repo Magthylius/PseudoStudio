@@ -55,12 +55,14 @@ namespace Hadal.AI.Information
             for (int i = 0; i < cachedPointPathList.Count - 1; i++)
             {
                 Gizmos.color = Color.cyan;
+                if (cachedPointPathList[i] == null || cachedPointPathList[i + 1] == null) return;
                 Gizmos.DrawLine(cachedPointPathList[i].GetPosition, cachedPointPathList[i + 1].GetPosition);
             }
             
             for (int i = 0; i < pointPathList.Count - 1; i++)
             {
                 Gizmos.color = Color.red;
+                if (pointPathList[i] == null || pointPathList[i + 1] == null) return;
                 Gizmos.DrawLine(pointPathList[i].GetPosition, pointPathList[i + 1].GetPosition);
             }
         }
