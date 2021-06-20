@@ -27,6 +27,7 @@ public class AINetworking : MonoBehaviour
         else
         {
             neManager.PlayerEnteredEvent += OnPlayerEnter;
+            neManager.PlayerLeftEvent += OnPlayerEnter;
             Debug.LogWarning("Player entered event");
         }
             
