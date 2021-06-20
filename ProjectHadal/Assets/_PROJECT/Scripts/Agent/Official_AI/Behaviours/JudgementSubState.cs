@@ -103,7 +103,7 @@ namespace Hadal.AI.States
             IsPlayersInCavernEqualToNode twoPlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 2);
 
             //BTSequence TailWhipAndRecover = Build_Sequence(tailWhip, setRecoveryState).WithDebugName(nameof(TailWhipAndRecover));
-            BTSequence ThreshIfJT3HaventPass = Build_Sequence(hasJT3NotPass, moveToPlayer, carryPlayer, threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(ThreshIfJT3HaventPass));
+            BTSequence ThreshIfJT3HaventPass = Build_Sequence(hasJT3NotPass, moveToPlayer, carryPlayer, setRecoveryState).WithDebugName(nameof(ThreshIfJT3HaventPass));
             BTSelector IsCarryingPlayerWithFallback = Build_Selector(isCarryingPlayer, ThreshIfJT3HaventPass, setRecoveryState).WithDebugName(nameof(IsCarryingPlayerWithFallback));
             BTSequence ThreshCarriedPlayerAndEscape = Build_Sequence(threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(ThreshCarriedPlayerAndEscape));
 
@@ -117,14 +117,13 @@ namespace Hadal.AI.States
             TailWhipNode tailWhip = new TailWhipNode(Brain, 5f).WithDebugName(nameof(TailWhipNode));
             ThreshCarriedPlayerNode threshCarriedPlayer = new ThreshCarriedPlayerNode(Brain, damageManager).WithDebugName(nameof(threshCarriedPlayer));
             IsCarryingAPlayerNode isCarryingPlayer = new IsCarryingAPlayerNode(Brain, false);
-            HasJudgementThresholdExceededNode hasJT2Passed = new HasJudgementThresholdExceededNode(Brain, 2);
+            HasJudgementThresholdNotExceededNode hasJT2NotPassed = new HasJudgementThresholdNotExceededNode(Brain, 2);
             CarryTargetNode carryPlayer = new CarryTargetNode(Brain, 10, 0.5f);
             MoveToPlayerNode moveToPlayer = new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 10, 1000, false).WithDebugName(nameof(moveToPlayer));
             IsPlayersInCavernEqualToNode threePlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 3);
-
-            BTSequence ThreshPlayer = Build_Sequence(moveToPlayer, carryPlayer, threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(ThreshPlayer));
-            BTSequence RecoverIfJT2HasNotPassed = Build_Sequence(hasJT2Passed, setRecoveryState).WithDebugName(nameof(RecoverIfJT2HasNotPassed));
-            BTSelector IsCarryingPlayerWithFallback = Build_Selector(isCarryingPlayer, RecoverIfJT2HasNotPassed, ThreshPlayer).WithDebugName(nameof(IsCarryingPlayerWithFallback));
+            
+            BTSequence CarryAndEscape = Build_Sequence(hasJT2NotPassed, moveToPlayer, carryPlayer, setRecoveryState).WithDebugName(nameof(CarryAndEscape));
+            BTSelector IsCarryingPlayerWithFallback = Build_Selector(isCarryingPlayer, CarryAndEscape, setRecoveryState).WithDebugName(nameof(IsCarryingPlayerWithFallback));
             BTSequence ThreshCarriedPlayerAndEscape = Build_Sequence(threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(ThreshCarriedPlayerAndEscape));
 
             D3Sequence = Build_Sequence(threePlayerInCavern, IsCarryingPlayerWithFallback, ThreshCarriedPlayerAndEscape).WithDebugName(nameof(D3Sequence));
@@ -141,9 +140,9 @@ namespace Hadal.AI.States
             MoveToPlayerNode moveToPlayer = new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 10, 1000, false).WithDebugName(nameof(moveToPlayer));
             IsPlayersInCavernEqualToNode fourPlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 4);
 
-            BTSequence ThreshPlayer = Build_Sequence(moveToPlayer, carryPlayer, setRecoveryState).WithDebugName(nameof(ThreshPlayer));
+            BTSequence CarryAndEscape = Build_Sequence(moveToPlayer, carryPlayer, setRecoveryState).WithDebugName(nameof(CarryAndEscape));
             BTSelector RecoveryAfterJT1NotPassed = Build_Selector(hasJT1NotPassed, setRecoveryState).WithDebugName(nameof(RecoveryAfterJT1NotPassed));
-            BTSequence ThreshPlayerIfJT1HasNotPassed = Build_Sequence(RecoveryAfterJT1NotPassed, ThreshPlayer).WithDebugName(nameof(ThreshPlayerIfJT1HasNotPassed));
+            BTSequence ThreshPlayerIfJT1HasNotPassed = Build_Sequence(RecoveryAfterJT1NotPassed, CarryAndEscape).WithDebugName(nameof(ThreshPlayerIfJT1HasNotPassed));
 
             D4Sequence = Build_Sequence(fourPlayerInCavern, ThreshPlayerIfJT1HasNotPassed).WithDebugName(nameof(D4Sequence));
 
