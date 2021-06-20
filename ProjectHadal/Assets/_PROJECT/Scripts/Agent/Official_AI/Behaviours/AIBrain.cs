@@ -331,28 +331,14 @@ namespace Hadal.AI
         public void RE_AttachCarriedPlayerToMouth(EventData eventData)
         {
             int data = (int)eventData.CustomData;
-
-            //Debug.LogWarning("ID:" + data);
-            //Debug.LogWarning("LocalPlayerID: " + LocalPlayerData.ViewID);
-
-            /*foreach (var playerControl in Players)
-            {
-                Debug.LogWarning("PC ID:" + playerControl.ViewID);
-                if(playerControl.ViewID == data)
-                {
-                    Debug.LogWarning("RECEIVED ID");
-                    break;
-                }
-            }*/
-
-
+  
             if (LocalPlayerData.ViewID == data)
             {
                 //Debug.LogWarning(("Eat shit"));
                 CarriedPlayer = LocalPlayerData.PlayerController;
+                CarriedPlayer.SetIsCarried(true);
                 AttachCarriedPlayerToMouth(true);
             }
-
         }
 
         #endregion
