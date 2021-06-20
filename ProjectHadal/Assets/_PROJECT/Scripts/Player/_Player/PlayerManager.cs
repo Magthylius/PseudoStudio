@@ -31,6 +31,9 @@ namespace Hadal.Player
         private int DummyPlayerCount;
         private bool DummyMirrorsMovement;
 
+        private PlayerController localPlayerController;
+        public PlayerController LocalPlayerController => localPlayerController;
+
         private void Awake()
         {
             _pView = GetComponent<PhotonView>();
@@ -188,6 +191,7 @@ namespace Hadal.Player
             else
             {
                 //print("Created True Camera player");
+                localPlayerController = controller;
                 controller.HandlePhotonView(true);
                 controller.setPlayerReady(true);
             }
@@ -199,9 +203,9 @@ namespace Hadal.Player
             {
                 foreach (PlayerController pControl in playerList)
                 {
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID + ", " + GetController(neManager.LocalPlayer).ViewID);
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
-                    pControl.HandlePhotonView(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.LocalPlayer).ViewID);
+                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID + ", " + GetController(neManager.localPlayerController).ViewID);
+                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.localPlayerController).ViewID);
+                    pControl.HandlePhotonView(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.localPlayerController).ViewID);
                 }
             }*/
 
@@ -230,6 +234,8 @@ namespace Hadal.Player
             playerList.Add(controller);
             controller.InjectDependencies(this, photonPlayer);
 
+            localPlayerController = controller;
+            
             //create dummy players
             for(int i = 0; i < DummyPlayerCount; i++)
             {

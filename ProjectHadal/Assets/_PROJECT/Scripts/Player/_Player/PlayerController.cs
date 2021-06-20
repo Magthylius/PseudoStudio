@@ -95,8 +95,8 @@ namespace Hadal.Player
 
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);
-
-
+            //LocalPlayerData.ViewID = pViewSelfID;
+            StartCoroutine(InitializeLocalData());
             //Deactivate();
         }
 
@@ -126,7 +126,6 @@ namespace Hadal.Player
         protected override void LateUpdate()
         {
             if (!_pView.IsMine) return;
-
         }
 
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
@@ -149,6 +148,18 @@ namespace Hadal.Player
             attachedPlayer = photonPlayer;
 
             pViewSelfID = _pView.ViewID;
+        }
+
+        IEnumerator InitializeLocalData()
+        {
+            while (_pView.ViewID == 0)
+            {
+                yield return null;
+            }
+
+            LocalPlayerData.ViewID = _pView.ViewID;
+            LocalPlayerData.PlayerController = this;
+            //Debug.LogWarning(pViewSelfID);
         }
 
         public void SetIsCarried(in bool statement) => _isCarried = statement;

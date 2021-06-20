@@ -308,15 +308,18 @@ namespace Hadal.AI
             if (attachToMouth)
             {
                 //Debug.LogWarning("Player grabbed");
-                //Debug.LogError(CarriedPlayer.GetTarget);
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
-                //CarriedPlayer.DisableCollider();
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
                 CarriedPlayer.GetTarget.localPosition = Vector3.zero;
-                int GrabbedPlayerID = CarriedPlayer.GetInfo.PhotonInfo.PView.ViewID;
-                Debug.LogWarning("GrabID:" + GrabbedPlayerID);
-                int data = GrabbedPlayerID;
-                neManager.RaiseEvent(ByteEvents.AI_GRAB_EVENT, data);
+                
+                //! Send event if host
+                if (neManager.IsMasterClient)
+                {
+                    int GrabbedPlayerID = CarriedPlayer.GetInfo.PhotonInfo.PView.ViewID;
+                    //Debug.LogWarning("GrabID:" + GrabbedPlayerID);
+                    neManager.RaiseEvent(ByteEvents.AI_GRAB_EVENT, GrabbedPlayerID);
+                }
+                
                 return;
             }
 
@@ -329,9 +332,10 @@ namespace Hadal.AI
         {
             int data = (int)eventData.CustomData;
 
-            Debug.LogWarning("ID:" + data);
+            //Debug.LogWarning("ID:" + data);
+            //Debug.LogWarning("LocalPlayerID: " + LocalPlayerData.ViewID);
 
-            foreach (var playerControl in Players)
+            /*foreach (var playerControl in Players)
             {
                 Debug.LogWarning("PC ID:" + playerControl.ViewID);
                 if(playerControl.ViewID == data)
@@ -339,6 +343,14 @@ namespace Hadal.AI
                     Debug.LogWarning("RECEIVED ID");
                     break;
                 }
+            }*/
+
+
+            if (LocalPlayerData.ViewID == data)
+            {
+                //Debug.LogWarning(("Eat shit"));
+                CarriedPlayer = LocalPlayerData.PlayerController;
+                AttachCarriedPlayerToMouth(true);
             }
 
         }
