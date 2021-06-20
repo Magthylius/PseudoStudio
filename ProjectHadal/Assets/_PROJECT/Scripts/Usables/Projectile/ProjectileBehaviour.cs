@@ -24,6 +24,7 @@ namespace Hadal.Usables.Projectiles
 
         [Header("Impact Effect")]
         [SerializeField] protected GameObject particleEffect;
+        [SerializeField] protected GameObject projectileAsset;
         protected Timer impactDuration;
         protected bool isVisualizing;
 

@@ -14,7 +14,7 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            impactDuration = new Timer(2f);
+            impactDuration = new Timer(5f);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
         }
         private void Update()
@@ -27,7 +27,7 @@ namespace Hadal.Usables.Projectiles
 
         private void OnDisable()
         {
-            particleEffect.SetActive(false);
+            Rigidbody.isKinematic = false;
         }
         #endregion
 
@@ -61,14 +61,16 @@ namespace Hadal.Usables.Projectiles
         protected override void ImpactBehaviour()
         {
             Rigidbody.isKinematic = true;
-            particleEffect.SetActive(true);
             isVisualizing = true;
+            particleEffect.SetActive(true);
+            projectileAsset.SetActive(false);
         }
 
         protected override void StopImpactEffect()
         {
             isVisualizing = false;
-            Rigidbody.isKinematic = false;
+            particleEffect.SetActive(false);
+            projectileAsset.SetActive(true);
             PPhysics.OnPhysicsFinished();
         }
     }
