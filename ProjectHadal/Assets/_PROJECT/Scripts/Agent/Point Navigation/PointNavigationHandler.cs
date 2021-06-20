@@ -235,8 +235,23 @@ namespace Hadal.AI
             CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
-            NavPoint first = entryPoints.Where(point => point.CavernTag == currentCavern.cavernTag).Single();
+            cachedPointPath.Clear();
+            
+            
+            
+            //! First point and its approach point. Enqueue approach first.
+            NavPoint first = entryPoints.Single(point => point.CavernTag == currentCavern.cavernTag);
+            if (first.approachPoint != null) 
+                cachedPointPath.Enqueue(first.approachPoint);
+            cachedPointPath.Enqueue(first);    
+            
+            //! Second point and its approach point. Enqueue exit first.
             NavPoint second = (entryPoints[0] == first) ? entryPoints[1] : entryPoints[0];
+            cachedPointPath.Enqueue(second);
+            if (second.approachPoint != null)
+                cachedPointPath.Enqueue(second.approachPoint);
+            
+            
             var potentialList = navPoints
                         .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second))
                         .ToList()
@@ -252,18 +267,21 @@ namespace Hadal.AI
             }
             NavPoint third = potentialList.RandomElement();
 
-            if (first == null || second == null || third == null)
+            if (cachedPointPath.Contains(null))
             {
-                if (enableDebug) "A point for the queue is missing.".Msg();
+                if (enableDebug) "A point for the queue is missing or null.".Msg();
                 return;
             }
 
-            cachedPointPath.Clear();
-            cachedPointPath.Enqueue(first);
-            cachedPointPath.Enqueue(second);
             cachedPointPath.Enqueue(third);
+
             if (enableDebug)
-                $"Created cached Queued Path: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
+            {
+                //$"Created cached Queued Path: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
+                string pathQueue = "Created cached queued path: ";
+                foreach (NavPoint point in cachedPointPath)
+                    pathQueue += point.gameObject.name + ", ";
+            }
 
             // Local Methods
             bool HasTheSameCavernTagAsDestinationCavern(NavPoint point) => point && point.CavernTag == destination.cavernTag;

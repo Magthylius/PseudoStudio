@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.AI.Caverns;
@@ -17,11 +18,14 @@ namespace Hadal.AI
 		[SerializeField] private Material selectedMaterial;
 		private Material defaultMaterial;
 		private MeshRenderer mRenderer;
+
+		[Header("Approaching vectors")] 
+		public NavPoint approachPoint;
 		
 		[Header("Information")]
         [SerializeField] private CavernTag cavernTag;
-		public CavernTag CavernTag => cavernTag;
 		[SerializeField] private bool isTunnelEntry;
+		public CavernTag CavernTag => cavernTag;
         public bool IsTunnelEntry => isTunnelEntry;
 
 		[Header("Friend references")]
@@ -30,6 +34,23 @@ namespace Hadal.AI
         public Vector3 GetPosition => transform.position;
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
         public Vector3 GetDirectionTo(Vector3 position) => (GetPosition - position).normalized;
+
+        void OnValidate()
+        {
+	        if (approachPoint != null)
+	        {
+		        approachPoint.SetCavernTag(cavernTag);
+		        approachPoint.SetIsTunnelEntry(true);
+	        }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+	        if (approachPoint != null)
+	        {
+		        Gizmos.DrawLine(transform.position, approachPoint.GetPosition);
+	        }
+        }
 
         public void Initialise()
         {
@@ -89,5 +110,7 @@ namespace Hadal.AI
 			//Debug.LogWarning(newTag);
 			cavernTag = newTag;
 		}
+
+		public void SetIsTunnelEntry(bool isEntry) => isTunnelEntry = isEntry;
     }
 }
