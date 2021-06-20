@@ -15,7 +15,12 @@ public class AIEventListener : MonoBehaviour
         neManager = NetworkEventManager.Instance;
         // Debug.Log(brain);
         // Debug.Log(neManager);
+        Debug.LogWarning("AI START");
         if(!neManager.IsMasterClient)
+        {
             neManager.AddListener(ByteEvents.AI_GRAB_EVENT, brain.RE_AttachCarriedPlayerToMouth);
+            Debug.LogWarning("AI Listener");
+        }
+            
     }
 }

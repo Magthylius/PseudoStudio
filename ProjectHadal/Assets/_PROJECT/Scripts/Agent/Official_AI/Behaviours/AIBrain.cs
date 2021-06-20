@@ -314,6 +314,7 @@ namespace Hadal.AI
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
                 CarriedPlayer.GetTarget.localPosition = Vector3.zero;
                 int GrabbedPlayerID = CarriedPlayer.GetInfo.PhotonInfo.PView.ViewID;
+                Debug.LogWarning("GrabID:" + GrabbedPlayerID);
                 int data = GrabbedPlayerID;
                 neManager.RaiseEvent(ByteEvents.AI_GRAB_EVENT, data);
                 return;
