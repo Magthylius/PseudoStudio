@@ -135,7 +135,7 @@ Transform:
   m_GameObject: {fileID: 7351274592407701336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 50, y: 50, z: 50}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9019930035885817092}
   - {fileID: 1110699958241314260}
@@ -187,7 +187,9 @@ MonoBehaviour:
   DebugKey: 
   projectileID: 0
   IsLocal: 0
+  IsAttached: 0
   particleEffect: {fileID: 6004869895138044315}
+  projectileAsset: {fileID: 0}
   validLayer:
   - Monster
   - Obstacle
@@ -281,7 +283,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8565945202466799122, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8565945202466799122, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -293,7 +295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8565945202466799123, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8565945202466799124, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_RootOrder

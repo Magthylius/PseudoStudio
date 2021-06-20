@@ -17,13 +17,14 @@ namespace Hadal.Usables.Projectiles
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public bool IsArmed { get; set; } = false;
-        public bool IsAttached { get; set; } = false;
+        public bool IsAttached = false;
         public event Action<bool> OnHit;
         public event Action<ProjectileBehaviour> DumpEvent;
         NetworkEventManager neManager;
 
         [Header("Impact Effect")]
         [SerializeField] protected GameObject particleEffect;
+        [SerializeField] protected GameObject projectileAsset;
         protected Timer impactDuration;
         protected bool isVisualizing;
 
