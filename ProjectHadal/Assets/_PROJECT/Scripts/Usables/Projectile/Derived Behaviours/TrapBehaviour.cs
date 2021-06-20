@@ -17,7 +17,7 @@ namespace Hadal.Usables.Projectiles
 
         [Header("Visual Effect")]
         [SerializeField] private MeshRenderer meshRenderer;
-        [SerializeField] private GameObject particleEffect;
+        [SerializeField] private GameObject explodeEffect;
         private Timer explodeDuration;
         private bool isExploding;
 
@@ -45,10 +45,9 @@ namespace Hadal.Usables.Projectiles
             if(meshRenderer)
             {
                 meshRenderer.material.color = Color.yellow;
-                return;
             }
 
-            particleEffect.SetActive(false);
+            explodeEffect.SetActive(false);
         }
         #endregion
 
@@ -76,7 +75,7 @@ namespace Hadal.Usables.Projectiles
                 col.gameObject.GetComponentInChildren<IStunnable>().TryStun(5.0f);
             }
             isExploding = true;
-            particleEffect.SetActive(true);
+            explodeEffect.SetActive(true);
 
             //Send event to explode.
             Vector3 activatedSpot = gameObject.transform.position;
@@ -97,7 +96,7 @@ namespace Hadal.Usables.Projectiles
                 {
                     gameObject.transform.position = (Vector3)data[1];
                     isExploding = true;
-                    particleEffect.SetActive(true);
+                    explodeEffect.SetActive(true);
                 }
             }            
             return;
