@@ -34,8 +34,9 @@ namespace Hadal.AI.States
 
             Brain.StartCoroutine(InitializeAfterCaverns());
             
+            //print(RuntimeData.GetEngagementObjective);
             if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
-                RuntimeData.SetEngagementSubState(EngagementSubState.Aggressive);
+                ForceEngagementObjective(EngagementSubState.Aggressive);
         }
 
         public override void StateTick()
@@ -110,9 +111,22 @@ namespace Hadal.AI.States
         {
             EngagementSubState currentObj = RuntimeData.GetEngagementObjective;
             CavernHandler targetCavern = null;
+
+            //! Catch the engagement substate first
+            if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement ||
+                RuntimeData.GetEngagementObjective == EngagementSubState.None)
+            {
+                Debug.LogWarning("Incorrect engagement objective! Current objective: " + RuntimeData.GetEngagementObjective);
+                ForceEngagementObjective(EngagementSubState.Aggressive);
+                Debug.LogWarning("Forced objective to: " + RuntimeData.GetEngagementObjective);
+            }
             
             switch (currentObj)
             {
+                //! fall back to aggressive
+                case EngagementSubState.None:
+                case EngagementSubState.Judgement:
+                    
                 case EngagementSubState.Aggressive:
                     if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
                     targetCavern = CavernManager.GetMostPopulatedCavern();
@@ -123,7 +137,6 @@ namespace Hadal.AI.States
                     targetCavern = CavernManager.GetLeastPopulatedCavern(CavernManager.GetMostPopulatedCavern().ConnectedCaverns);
                     break;
                 default:
-                    Debug.LogError("Incorrect engagement objective!");
                     break;
             }
 
@@ -141,6 +154,7 @@ namespace Hadal.AI.States
             Brain.UpdateNextMoveCavern(nextCavern);
         }
 
+        void ForceEngagementObjective(EngagementSubState newObjective) => RuntimeData.SetEngagementSubState(newObjective);
         public override Func<bool> ShouldTerminate() => () => false;
     }
 }

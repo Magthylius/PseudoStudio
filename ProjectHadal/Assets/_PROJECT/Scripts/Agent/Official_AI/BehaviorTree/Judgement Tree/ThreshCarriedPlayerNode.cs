@@ -72,8 +72,8 @@ namespace Hadal.AI.TreeNodes
                 _brain.NavigationHandler.StopCustomPath(false);
                 return NodeState.SUCCESS;
             }
-            else
-                return NodeState.RUNNING;
+
+            return NodeState.RUNNING;
 
         }
 
