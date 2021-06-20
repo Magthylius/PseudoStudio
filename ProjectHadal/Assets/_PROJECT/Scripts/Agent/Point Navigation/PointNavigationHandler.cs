@@ -100,7 +100,11 @@ namespace Hadal.AI
         [SerializeField] private Rigidbody rBody;
         private CavernManager cavernManager;
 
-        // Misc variables
+        //! Misc variables
+        //[Header("Pathing")] 
+        //[SerializeField] private bool enableListConversion;
+        //[SerializeField, ReadOnly] private List<NavPoint> pointPathList;
+        //[SerializeField, ReadOnly] private List<NavPoint> cachedPointPathList;
         private Queue<NavPoint> pointPath;
         private Queue<NavPoint> cachedPointPath;
         private bool _isEnabled;
@@ -112,6 +116,21 @@ namespace Hadal.AI
         {
             if (!enableDebug) showObstacleInfo = false;
         }
+
+        private void OnDrawGizmos()
+        {
+            if (!enableDebug || pilotTrans == null) return;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(pilotTrans.position, obstacleDetectRadius);
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(pilotTrans.position, closeNavPointDetectionRadius);
+
+            if (currentPoint == null) return;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(pilotTrans.position, currentPoint.GetPosition);
+        }
+        
 
         #region Public Methods
 
@@ -219,6 +238,8 @@ namespace Hadal.AI
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting custom nav point path".Msg();
+            
+            //ConvertPointPathToList();
         }
 
         public void ComputeCachedDestinationCavernPath(CavernHandler destination)
@@ -251,7 +272,7 @@ namespace Hadal.AI
             
             
             var potentialList = navPoints
-                        .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second))
+                        .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
                         .ToList()
                         .Shuffle(Time.frameCount)
                         .Take(numberOfClosestPointsToConsider)
@@ -281,6 +302,7 @@ namespace Hadal.AI
                     pathQueue += point.gameObject.name + ", ";
             }
 
+            //ConvertCachedPointPathToList();
             // Local Methods
             bool HasTheSameCavernTagAsDestinationCavern(NavPoint point) => point && point.CavernTag == destination.cavernTag;
             bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point && point != other;
@@ -343,15 +365,24 @@ namespace Hadal.AI
             ResetTimeoutTimer();
             if (enableDebug)
             {
-                var first = currentPoint;
+                //! ?? why requeue??
+                /*var first = currentPoint;
                 var second = pointPath.Requeue();
                 var third = pointPath.Requeue();
-                $"Queued path set: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
+                $"Queued path set: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();*/
+
+                string debugPath = "";
+                foreach (NavPoint point in pointPath)
+                    debugPath += point + ",";
+                
+                $"Queued path set: {debugPath}".Msg();
             }
+            
+            //ConvertPointPathToList();
         }
 
         /// <summary>
-        /// If there is no point path queue and the paramater is set to True, it will ask the handler to immediately find a new point
+        /// If there is no point path queue and the parameter is set to True, it will ask the handler to immediately find a new point
         /// in the cavern. Otherwise, it will skip the current point in the queue and move on to the next point in the next update frame.
         /// </summary>
         public void SkipCurrentPoint(bool automaticallySelectNewPoint)
@@ -382,6 +413,8 @@ namespace Hadal.AI
                 pointPath.Clear();
                 StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
                 //Debug.LogWarning("Destroy and Regen ");
+                
+                //ConvertPointPathToList();
             }
 
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
@@ -396,9 +429,6 @@ namespace Hadal.AI
                 }
 
                 if (enableDebug) "Stopping custom path".Msg();
-                
-                //! THIS CAUSED THE FUCKING THING TO OVERWRITE THE CURRENT POINT AFTER IT REEEEEEEEEEEEEEEEEEEEE
-                //yield return null;
 
                 if (justFindNewPoint)
                 {
@@ -490,6 +520,8 @@ namespace Hadal.AI
 
             if (!hasReachedPoint && CloseEnoughToTargetNavPoint())
             {
+                //print("Square Dist: " + currentPoint.GetSqrDistanceTo(pilotTrans.position));
+                //print("Nav Radius: " +closeNavPointDetectionRadius * closeNavPointDetectionRadius);
                 hasReachedPoint = true;
                 OnReachedPoint?.Invoke();
                 EvaluateQueuedPath();
@@ -510,6 +542,9 @@ namespace Hadal.AI
                     currentPoint = pointPath.Dequeue();
                     hasReachedPoint = false;
                     ResetTimeoutTimer();
+                    
+                    //ConvertPointPathToList();
+                    //ConvertCachedPointPathToList();
                     return;
                 }
 
@@ -624,6 +659,8 @@ namespace Hadal.AI
                 $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
 
+        public Queue<NavPoint> GetPointPath => pointPath;
+        public Queue<NavPoint> GetCachedPointPath => cachedPointPath;
         private NavPoint GetClosestPointToSelf() => navPoints.Where(n => n != null).OrderBy(n => n.GetSqrDistanceTo(pilotTrans.position)).FirstOrDefault();
         private void ResetTimeoutTimer() => timeoutTimer = timeoutNewPointTime;
         private void ResetObstacleCheckTimer() => obstacleCheckTimer = obstacleCheckTime;
@@ -632,6 +669,16 @@ namespace Hadal.AI
         private float GetNextNavPointLingerTime() => Random.Range(navPointLingerTimeRange.x, navPointLingerTimeRange.y);
         private float GetNextCavernLingerTime() => Random.Range(cavernLingerTimeRange.x, cavernLingerTimeRange.y);
 
+        /*private void ConvertPointPathToList()
+        {
+            if (enableListConversion) pointPathList = pointPath.ToList();
+        }*/
+
+        /*private void ConvertCachedPointPathToList()
+        {
+            if (enableListConversion) cachedPointPathList = cachedPointPath.ToList();
+        }*/
+
         #endregion
 
         #region Shorthands
@@ -639,19 +686,5 @@ namespace Hadal.AI
         private bool CanMove => _isEnabled && pilotTrans != null && rBody != null;
 
         #endregion
-
-        private void OnDrawGizmos()
-        {
-            if (!enableDebug || pilotTrans == null) return;
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(pilotTrans.position, obstacleDetectRadius);
-
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(pilotTrans.position, closeNavPointDetectionRadius);
-
-            if (currentPoint == null) return;
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(pilotTrans.position, currentPoint.GetPosition);
-        }
     }
 }

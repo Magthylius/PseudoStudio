@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Hadal.AI.Caverns;
 using UnityEngine;
 using ReadOnly = NaughtyAttributes.ReadOnlyAttribute;
@@ -36,11 +37,32 @@ namespace Hadal.AI.Information
         [SerializeField, ReadOnly] private bool isOnCustomPath;
         [SerializeField, ReadOnly] private bool isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
+
+        [Header("Pathing")] 
+        [SerializeField] private bool drawPathing = true;
+        [SerializeField, ReadOnly] private List<NavPoint> pointPathList;
+        [SerializeField, ReadOnly] private List<NavPoint> cachedPointPathList;
         
         
         void Start()
         {
             StartCoroutine(TryInitialize());
+        }
+        
+        private void OnDrawGizmosSelected()
+        {
+            if (!drawPathing) return;
+            for (int i = 0; i < cachedPointPathList.Count - 1; i++)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawLine(cachedPointPathList[i].GetPosition, cachedPointPathList[i + 1].GetPosition);
+            }
+            
+            for (int i = 0; i < pointPathList.Count - 1; i++)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(pointPathList[i].GetPosition, pointPathList[i + 1].GetPosition);
+            }
         }
 
         void StartUpdate()
@@ -85,6 +107,8 @@ namespace Hadal.AI.Information
                 isChasingAPlayer = navHandler.Data_IsChasingAPlayer;
                 canPath = navHandler.Data_CanPath;
                 currentPoint = navHandler.Data_CurrentPoint;
+                pointPathList = navHandler.GetPointPath.ToList();
+                cachedPointPathList = navHandler.GetCachedPointPath.ToList();
 
                 yield return new WaitForSeconds(updateDelay);
             }
