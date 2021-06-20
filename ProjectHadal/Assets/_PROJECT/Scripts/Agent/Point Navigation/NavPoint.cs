@@ -48,6 +48,7 @@ namespace Hadal.AI
         {
 	        if (approachPoint != null)
 	        {
+	            approachPoint.transform.LookAt(transform);
 		        Gizmos.DrawLine(transform.position, approachPoint.GetPosition);
 	        }
         }
