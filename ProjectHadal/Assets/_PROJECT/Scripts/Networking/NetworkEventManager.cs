@@ -45,6 +45,10 @@ namespace Hadal.Networking
 
         List<GameObject> playerObjects;
 
+        [Header("Offline settings")] 
+        [Range(0, 3)] public int DummyCount;
+        public bool DummyMirrorsMovement;
+        
         //! internal references
         bool loadsToMainMenu = false;
 

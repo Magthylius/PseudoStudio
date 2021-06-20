@@ -28,8 +28,8 @@ namespace Hadal.Player
         NetworkEventManager neManager;
 
         [Header("Offline Player Dummies")]
-        public int DummyPlayerCount;
-        public bool DummyMirrorsMovement;
+        private int DummyPlayerCount;
+        private bool DummyMirrorsMovement;
 
         private void Awake()
         {
@@ -43,6 +43,7 @@ namespace Hadal.Player
             neManager = NetworkEventManager.Instance;
 
             playerList = new List<PlayerController>();
+            SetDummySettings(neManager.DummyCount, neManager.DummyMirrorsMovement);
 
             if (IsOnNetwork)
             {
@@ -61,7 +62,6 @@ namespace Hadal.Player
                 return;
             }
             SpawnPlayer(neManager.LocalPlayer);
-            
         }
 
         void OnDisable()
@@ -268,6 +268,11 @@ namespace Hadal.Player
 
         #endregion
 
+        public void SetDummySettings(int dummyCount, bool dummyMirrorsMovement)
+        {
+            DummyPlayerCount = dummyCount;
+            DummyMirrorsMovement = dummyMirrorsMovement;
+        }
         private string GetPrefabPath() => Path.Combine(PrefabFolder, PrefabName);
         private object[] DefaultObjectArray() => new object[] { _pView.ViewID };
         public PlayerController GetController(Photon.Realtime.Player player)
