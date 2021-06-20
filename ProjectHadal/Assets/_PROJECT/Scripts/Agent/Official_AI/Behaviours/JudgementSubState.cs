@@ -136,14 +136,14 @@ namespace Hadal.AI.States
             TailWhipNode tailWhip = new TailWhipNode(Brain, 5f).WithDebugName(nameof(TailWhipNode));
             ThreshCarriedPlayerNode threshCarriedPlayer = new ThreshCarriedPlayerNode(Brain, damageManager).WithDebugName(nameof(threshCarriedPlayer));
             IsCarryingAPlayerNode isCarryingPlayer = new IsCarryingAPlayerNode(Brain, false);
-            HasJudgementThresholdExceededNode hasJT1Passed = new HasJudgementThresholdExceededNode(Brain, 1);
+            HasJudgementThresholdNotExceededNode hasJT1NotPassed = new HasJudgementThresholdNotExceededNode(Brain, 1);
             CarryTargetNode carryPlayer = new CarryTargetNode(Brain, 10, 0.5f);
             MoveToPlayerNode moveToPlayer = new MoveToPlayerNode(Brain, Brain.RuntimeData.navPointPrefab, 10, 1000, false).WithDebugName(nameof(moveToPlayer));
             IsPlayersInCavernEqualToNode fourPlayerInCavern = new IsPlayersInCavernEqualToNode(Brain, 4);
 
-            BTSequence ThreshPlayer = Build_Sequence(moveToPlayer, carryPlayer, threshCarriedPlayer, setRecoveryState).WithDebugName(nameof(ThreshPlayer));
-            BTSelector RecoveryAfterJT1Passed = Build_Selector(hasJT1Passed, setRecoveryState).WithDebugName(nameof(RecoveryAfterJT1Passed));
-            BTSelector ThreshPlayerIfJT1HasNotPassed = Build_Selector(RecoveryAfterJT1Passed, ThreshPlayer).WithDebugName(nameof(ThreshPlayerIfJT1HasNotPassed));
+            BTSequence ThreshPlayer = Build_Sequence(moveToPlayer, carryPlayer, setRecoveryState).WithDebugName(nameof(ThreshPlayer));
+            BTSelector RecoveryAfterJT1NotPassed = Build_Selector(hasJT1NotPassed, setRecoveryState).WithDebugName(nameof(RecoveryAfterJT1NotPassed));
+            BTSequence ThreshPlayerIfJT1HasNotPassed = Build_Sequence(RecoveryAfterJT1NotPassed, ThreshPlayer).WithDebugName(nameof(ThreshPlayerIfJT1HasNotPassed));
 
             D4Sequence = Build_Sequence(fourPlayerInCavern, ThreshPlayerIfJT1HasNotPassed).WithDebugName(nameof(D4Sequence));
 
@@ -317,13 +317,14 @@ namespace Hadal.AI.States
         {
             //Debug.LogWarning("Judgement Exit!");
             //! Subject to change
-            if (Brain.CarriedPlayer != null)
+            /*if (Brain.CarriedPlayer != null)
             {
                 Brain.CarriedPlayer.SetIsCarried(false);
                 Brain.CarriedPlayer = null;
                 Brain.AttachCarriedPlayerToMouth(false);
                 Brain.NavigationHandler.StopCustomPath(false);
-            }
+            }*/
+            Brain.NavigationHandler.StopCustomPath(false);
         }
         public override Func<bool> ShouldTerminate() => () => false;
 

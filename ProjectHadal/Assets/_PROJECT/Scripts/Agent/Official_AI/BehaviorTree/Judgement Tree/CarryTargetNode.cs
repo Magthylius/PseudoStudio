@@ -47,12 +47,14 @@ namespace Hadal.AI.TreeNodes
             float distance = Vector3.Distance(_brain.transform.position, _brain.CurrentTarget.transform.position);
             if (distance <= _succeedDistance)
             {
+                //Debug.Log(_brain.CurrentTarget + " grabbed!");
                 _brain.CurrentTarget.SetIsCarried(true);
                 _brain.CarriedPlayer = _brain.CurrentTarget;
                 _brain.AttachCarriedPlayerToMouth(true);
                 return NodeState.SUCCESS;
             }
 
+            //Debug.Log("Grab failed!");
             _brain.CurrentTarget.SetIsCarried(false);
             _brain.CarriedPlayer = null;
             _brain.AttachCarriedPlayerToMouth(false);

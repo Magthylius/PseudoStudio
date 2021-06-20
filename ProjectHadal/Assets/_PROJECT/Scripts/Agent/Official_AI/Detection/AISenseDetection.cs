@@ -8,6 +8,7 @@ namespace Hadal.AI
 {
     public class AISenseDetection : MonoBehaviour, ILeviathanComponent
     {
+        [SerializeField] private bool allowSwitchTarget = false;
         [SerializeField] float overlapSphereDetectionRadius;
         [SerializeField] Vector3 detectionOffset;
         [SerializeField] float checkDelay;
@@ -43,18 +44,19 @@ namespace Hadal.AI
 
         private void SenseSurroundings()
         {
-            //Physics.SyncTransforms();
-            //Collider[] playerSphere = Physics.OverlapSphere(transform.position + detectionOffset, overlapSphereDetectionRadius, _brain.RuntimeData.PlayerMask);
             Collider[] playerSphere = new Collider[4];
             DetectedPlayersCount = Physics.OverlapSphereNonAlloc(transform.position + detectionOffset, overlapSphereDetectionRadius, playerSphere, _brain.RuntimeData.PlayerMask);
             
-            //DetectedPlayersCount = playerSphere.Length;
             _detectedPlayers = playerSphere.Where(c => c != null).Select(c => c.GetComponent<PlayerController>()).ToList();
 
-            //Temporary
-            //print("detecting: " + _detectedPlayers.FirstOrDefault());
-            _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
-            //if (_brain.DebugEnabled) Debug.Log("I SENSE:" + DetectedPlayersCount);
+
+            if (DetectedPlayersCount <= 0) _brain.CurrentTarget = null;
+            else if (_brain.CurrentTarget == null) _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
+            
+            //! If already targetting, takes closest player
+            if (_brain.CurrentTarget && allowSwitchTarget)
+                _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
+
         }
 
         private float TickTimer(in float deltaTime) => _checkTimer -= deltaTime;

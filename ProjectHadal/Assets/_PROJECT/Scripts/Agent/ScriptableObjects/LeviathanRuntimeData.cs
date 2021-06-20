@@ -61,7 +61,13 @@ namespace Hadal.AI
         public void TickEngagementTicker(in float deltaTime) => TickATicker(ref engagementTicker, deltaTime);
         public void ResetEngagementTicker() => ResetATicker(ref engagementTicker);
         public float GetEngagementTicks => engagementTicker;
-        public bool HasJudgementTimerOfIndexExceeded(int index) => engagementTicker > machineData.Engagement.GetJudgementTimerThreshold(index);
+
+        public bool HasJudgementTimerOfIndexExceeded(int index)
+        {
+            //Debug.Log("ET: "+ engagementTicker + " JT: " + machineData.Engagement.GetJudgementTimerThreshold(index));
+            //Debug.Log(engagementTicker > machineData.Engagement.GetJudgementTimerThreshold(index));
+            return engagementTicker > machineData.Engagement.GetJudgementTimerThreshold(index);
+        }
 
         public void TickRecoveryTicker(in float deltaTime) => TickATicker(ref recoveryTicker, deltaTime);
         public void ResetRecoveryTicker() => ResetATicker(ref recoveryTicker);
