@@ -40,7 +40,6 @@ namespace Hadal.Usables.Projectiles
 
             foreach (string layerName in validLayer)
             {
-                print("valid layer found");
                 LayerMask layer = LayerMask.NameToLayer(layerName);
                 if (collision.gameObject.layer == layer.value)
                 {

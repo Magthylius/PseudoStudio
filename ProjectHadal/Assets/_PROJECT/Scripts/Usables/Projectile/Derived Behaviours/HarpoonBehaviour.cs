@@ -39,7 +39,7 @@ namespace Hadal.Usables.Projectiles
                 return;
             }
 
-            if (IsAttached || IsAttached)
+            if (IsAttached)
                 return;
 
             foreach (string layerName in validLayer)
