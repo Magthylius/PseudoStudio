@@ -4,15 +4,18 @@ using UnityEngine;
 using ExitGames.Client.Photon;
 using Hadal.AI;
 using Hadal.Networking;
+using Photon.Realtime;
 
-public class AIEventListener : MonoBehaviour
+public class AINetworking : MonoBehaviour
 {
     [SerializeField] AIBrain brain;
     NetworkEventManager neManager;
 
+
     void Start()
     {
         neManager = NetworkEventManager.Instance;
+        
         // Debug.Log(brain);
         // Debug.Log(neManager);
         Debug.LogWarning("AI START");
@@ -21,6 +24,16 @@ public class AIEventListener : MonoBehaviour
             neManager.AddListener(ByteEvents.AI_GRAB_EVENT, brain.RE_AttachCarriedPlayerToMouth);
             Debug.LogWarning("AI Listener");
         }
+        else
+        {
+            neManager.PlayerEnteredEvent += OnPlayerEnter;
+            Debug.LogWarning("Player entered event");
+        }
             
+    }
+
+    void OnPlayerEnter(Player player)
+    {
+        brain.RefreshPlayerReferences();
     }
 }
