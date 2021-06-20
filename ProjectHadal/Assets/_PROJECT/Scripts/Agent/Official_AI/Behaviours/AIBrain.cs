@@ -295,12 +295,15 @@ namespace Hadal.AI
             Transform mouth = MouthObject.transform;
             if (CarriedPlayer == null)
             {
+                //Debug.LogError("null detach!");
                 mouth.DetachChildren();
                 return;
             }
 
             if (attachToMouth)
             {
+                //Debug.LogWarning("Player grabbed");
+                //Debug.LogError(CarriedPlayer.GetTarget);
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
                 //CarriedPlayer.DisableCollider();
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
@@ -308,8 +311,8 @@ namespace Hadal.AI
                 return;
             }
 
+            //Debug.LogWarning("Player let go :(");
             mouth.DetachChildren();
-            //CarriedPlayer.EnableCollider();
             CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
         }
 
