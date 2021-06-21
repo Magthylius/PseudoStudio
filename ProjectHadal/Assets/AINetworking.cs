@@ -52,13 +52,13 @@ public class AINetworking : MonoBehaviour
     {
         int data = (int)eventData.CustomData;
   
-        if (LocalPlayerData.ViewID == data)
+        /*if (LocalPlayerData.ViewID == data)
         {
             Debug.LogWarning(("Eat shit"));
             brain.CarriedPlayer = LocalPlayerData.PlayerController;
             brain.CarriedPlayer.SetIsCarried(true);
             brain.AttachCarriedPlayerToMouth(true);
-        }
+        }*/
         Debug.LogWarning("ID: " + data);
         
         PlayerController targetPlayer = NetworkData.GetPlayerController(data);

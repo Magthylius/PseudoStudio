@@ -158,15 +158,20 @@ namespace Hadal.Player
             }
 
             Debug.LogWarning("ID assigned: " + _pView.ViewID + ", " + _pView.IsMine);
-            
-            if (_pView.IsMine)
+
+            if (NetworkEventManager.Instance.IsMasterClient)
             {
+                //! Host treats everything as isMine
+                if (LocalPlayerData.PlayerController == null) LocalPlayerData.PlayerController = this;
+            }
+            else if (_pView.IsMine)
+            {
+                Debug.LogWarning("My ID is: " + _pView.ViewID);
                 LocalPlayerData.PlayerController = this;
             }
-            
+
             NetworkData.AddPlayer(this);
             Debug.LogWarning("Network Data updated: " + NetworkData.PlayerCount);
-            //Debug.LogWarning(pViewSelfID);
         }
 
         public void SetIsCarried(in bool statement) => _isCarried = statement;
@@ -369,7 +374,7 @@ namespace Hadal.Player
         public PlayerControllerInfo GetInfo
             => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator, _rBody);
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
-        public int ViewID => pViewSelfID;
+        public int ViewID => _pView.ViewID;
         public bool CanMove => !_isKnocked && !_isCarried;
         public bool CanRotate => true;
 
