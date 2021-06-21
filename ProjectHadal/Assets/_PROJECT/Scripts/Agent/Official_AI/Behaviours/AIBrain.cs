@@ -18,6 +18,8 @@ namespace Hadal.AI
 {
     public class AIBrain : MonoBehaviour
     {
+        [ReadOnly, SerializeField] private bool enabled = true;
+        
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
         [ReadOnly, SerializeField] private CavernHandler nextMoveCavern;
@@ -84,6 +86,8 @@ namespace Hadal.AI
 
         private void Awake()
         {
+            if (!enabled) return;
+            
             _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
             graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
@@ -103,6 +107,8 @@ namespace Hadal.AI
 
         private void Start()
         {
+            if (!enabled) return;
+            
             neManager = NetworkEventManager.Instance;
             if (neManager != null && followNetworkManagerOfflineStatus)
                 isOffline = neManager.isOfflineMode;
@@ -148,7 +154,7 @@ namespace Hadal.AI
 
         private void Update()
         {
-            if (!CanUpdate) return;
+            if (!CanUpdate || !enabled) return;
             float deltaTime = DeltaTime;
             preUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
             navigationHandler.DoUpdate(deltaTime);
@@ -158,13 +164,13 @@ namespace Hadal.AI
         }
         private void LateUpdate()
         {
-            if (!CanUpdate) return;
+            if (!CanUpdate || !enabled) return;
             stateMachine?.LateMachineTick();
             allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
         }
         private void FixedUpdate()
         {
-            if (!CanUpdate) return;
+            if (!CanUpdate || !enabled) return;
             float fixedDeltaTime = FixedDeltaTime;
             navigationHandler.DoFixedUpdate(fixedDeltaTime);
             stateMachine?.FixedMachineTick();
