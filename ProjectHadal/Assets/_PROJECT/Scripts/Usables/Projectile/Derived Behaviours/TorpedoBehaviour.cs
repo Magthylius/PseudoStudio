@@ -40,23 +40,32 @@ namespace Hadal.Usables.Projectiles
                 return;
             }
 
-            foreach (string layerName in validLayer)
+            int layer = collision.gameObject.layer;
+            if (UsableBlackboard.InPlayerLayers(layer))
             {
-                LayerMask layer = LayerMask.NameToLayer(layerName);
-                if (collision.gameObject.layer == layer.value)
-                {
-                    
-                    if (LayerMask.LayerToName(layer) == "MONSTER")
-                    {
-                        collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
-                    }
+                //! hits player
+                
+                ExplodeAndDespawn();
+            }
+            else if (UsableBlackboard.InAILayers(layer))
+            {
+                //! hits AI
+                collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
+                ExplodeAndDespawn();
+            }
+            else if (UsableBlackboard.InCollidableLayers(layer))
+            {
+                //! hits collidables   
+                ExplodeAndDespawn();
+            }
+            
 
-                    Vector3 collisionSpot = gameObject.transform.position;
-                    object[] content = new object[] {projectileID, collisionSpot};
-                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
-                    ImpactBehaviour();
-                    return;
-                }
+            void ExplodeAndDespawn()
+            {
+                Vector3 collisionSpot = gameObject.transform.position;
+                object[] content = {projectileID, collisionSpot};
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
+                ImpactBehaviour();
             }
         }
 
