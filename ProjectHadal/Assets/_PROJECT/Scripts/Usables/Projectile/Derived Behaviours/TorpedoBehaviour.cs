@@ -9,13 +9,14 @@ namespace Hadal.Usables.Projectiles
     {
         [SerializeField] private float impactVFXTime = 5f;
         private bool projectileTriggered = false;
-        private Vector3 aimedPoint;
+        private Vector3 aimedPoint = Vector3.zero;
         
         #region Unity Lifecycle
 
         protected override void OnEnable()
         {
             projectileTriggered = false;
+            transform.LookAt(aimedPoint);
         }
         
         protected override void Start()
@@ -23,7 +24,6 @@ namespace Hadal.Usables.Projectiles
             base.Start();
             impactDuration = new Timer(impactVFXTime);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
-            transform.LookAt(aimedPoint);
         }
         
         private void Update()
