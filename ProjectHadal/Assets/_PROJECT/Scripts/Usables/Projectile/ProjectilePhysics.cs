@@ -25,7 +25,7 @@ namespace Hadal.Usables.Projectiles
         Timer projectileTimer = new Timer(0);
         bool allowLaunch;
         ProjectileBehaviour behaviour;
-
+        
         void OnValidate()
         {
             SetupProjectileModes();

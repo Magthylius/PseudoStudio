@@ -43,7 +43,7 @@ namespace Hadal.Locomotion
         public override void DoFixedUpdate(in float fixedDeltaTime)
         {
             if (!allowUpdate) return;
-            
+
             HandleAcceleration(fixedDeltaTime);
             CalculateSpeed();
         }
