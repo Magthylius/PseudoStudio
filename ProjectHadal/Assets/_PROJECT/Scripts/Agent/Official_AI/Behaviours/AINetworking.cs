@@ -37,6 +37,10 @@ namespace Hadal.AI
     
         void OnPlayerLeft(Photon.Realtime.Player player)
         {
+            if (brain.CarriedPlayer == NetworkData.GetPlayerController(player))
+            {
+                brain.CarriedPlayer = null;
+            }
             
             brain.RefreshPlayerReferences();
         }
