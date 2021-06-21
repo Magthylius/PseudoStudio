@@ -10,6 +10,7 @@ namespace Hadal.Usables
         public Quaternion Orientation { get; set; }
         public float ChargedTime { get; private set; }
         public Vector3 shooterVelocity { get; private set; }
+        public Vector3 AimedPoint { get; set; }
         public TrapBehaviour Trap { get; set; }
         public static UsableHandlerInfo Null => new UsableHandlerInfo(0,null, 0.0f, Vector3.zero);
 
@@ -25,7 +26,7 @@ namespace Hadal.Usables
         }
 
         #region Mini Builder
-        public UsableHandlerInfo WithTransformForceInfo(int projectileID,Transform fireTransform, float ChargedTime, Vector3 shooterVelocity)
+        public UsableHandlerInfo WithTransformForceInfo(int projectileID,Transform fireTransform, float ChargedTime, Vector3 shooterVelocity, Vector3 aimedPoint)
         {
             if (fireTransform == null) return null;
             ProjectileID = projectileID;
@@ -33,6 +34,7 @@ namespace Hadal.Usables
             Orientation = fireTransform.rotation;
             this.ChargedTime = ChargedTime;
             this.shooterVelocity = shooterVelocity;
+            AimedPoint = aimedPoint;
             return this;
         }
 
