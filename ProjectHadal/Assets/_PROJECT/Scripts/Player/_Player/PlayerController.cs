@@ -157,6 +157,8 @@ namespace Hadal.Player
                 yield return null;
             }
 
+            Debug.LogWarning("ID assigned: " + _pView.ViewID + ", " + _pView.IsMine);
+            
             if (_pView.IsMine)
             {
                 LocalPlayerData.PlayerController = this;
