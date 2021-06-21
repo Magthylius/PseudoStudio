@@ -13,13 +13,14 @@ using Hadal.AI.Graphics;
 using System.Collections;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
     public class AIBrain : MonoBehaviour
     {
         [ReadOnly, SerializeField] private bool enabled = true;
-        
+
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
         [ReadOnly, SerializeField] private CavernHandler nextMoveCavern;
@@ -79,7 +80,7 @@ namespace Hadal.AI
 
         [Header("Stunned Settings (needs a relook)")]
         [SerializeField, ReadOnly] bool isStunned;
-        [SerializeField] public float stunDuration;
+        public float stunDuration;
         AIStateBase stunnedState;
 
         private bool _playersAreReady;
@@ -87,7 +88,7 @@ namespace Hadal.AI
         private void Awake()
         {
             if (!enabled) return;
-            
+
             _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
             graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
@@ -108,7 +109,7 @@ namespace Hadal.AI
         private void Start()
         {
             if (!enabled) return;
-            
+
             neManager = NetworkEventManager.Instance;
             if (neManager != null && followNetworkManagerOfflineStatus)
                 isOffline = neManager.isOfflineMode;
@@ -197,23 +198,18 @@ namespace Hadal.AI
             //! Cooldown
             cooldownState = new CooldownState(this);
 
-            //! Stunned
-            stunnedState = new StunnedState(this);
-
             //! -setup custom transitions-
             stateMachine.AddEventTransition(to: anticipationState, withCondition: IsAnticipating());
             stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
             stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
             stateMachine.AddEventTransition(to: cooldownState, withCondition: IsCooldown());
-            stateMachine.AddEventTransition(to: stunnedState, withCondition: IsStunned());
 
             allStates = new List<AIStateBase>
             {
                 anticipationState,
                 engagementState,
                 recoveryState,
-                cooldownState,
-                stunnedState
+                cooldownState
             };
         }
 
@@ -275,10 +271,7 @@ namespace Hadal.AI
             return RuntimeData.GetBrainState == BrainState.Cooldown && !isStunned;
         };
 
-        Func<bool> IsStunned() => () =>
-        {
-            return isStunned;
-        };
+        public bool IsStunned => isStunned;
 
         #endregion
 
@@ -293,9 +286,23 @@ namespace Hadal.AI
 
             stunDuration = duration;
             isStunned = true;
+            NavigationHandler.SetAIStunned(isStunned);
+            NavigationHandler.StunnedModeSteering();
+            Debug.LogWarning("I am stunned:" + isStunned);
             return true;
         }
-        public void StopStun() => isStunned = false;
+        public void StopStun()
+        {
+            isStunned = false;
+            NavigationHandler.SetAIStunned(isStunned);
+            NavigationHandler.CavernModeSteering();
+            Debug.LogWarning("I am not stunned:" + isStunned);
+        }
+
+        public void ChangeColliderMaterial(PhysicMaterial physicMaterial)
+        {
+            gameObject.GetComponent<Collider>().material = physicMaterial;
+        }
 
         public void RefreshPlayerReferences()
             => Players = FindObjectsOfType<PlayerController>().ToList();
@@ -322,19 +329,19 @@ namespace Hadal.AI
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
                 CarriedPlayer.GetTarget.localPosition = Vector3.zero;
-                
+
                 //! Send event if host
                 if (neManager.IsMasterClient)
                 {
                     neManager.RaiseEvent(ByteEvents.AI_GRAB_PLAYER, grabbedPlayerID);
                 }
-                
+
                 return;
             }
 
-            
+
             mouth.DetachChildren();
-            
+
             //! Send event if host
             if (neManager.IsMasterClient)
             {
@@ -353,7 +360,7 @@ namespace Hadal.AI
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
             foreach (var player in controllers)
                 player.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
-            
+
             MouthObject.transform.DetachChildren();
             CarriedPlayer = null;
         }

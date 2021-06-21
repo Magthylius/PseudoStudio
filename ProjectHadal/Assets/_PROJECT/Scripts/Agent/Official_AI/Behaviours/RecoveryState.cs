@@ -34,7 +34,8 @@ namespace Hadal.AI.States
         {
             if (!AllowStateTick) return;
 
-            RuntimeData.TickRecoveryTicker(Time.deltaTime);
+            if(!Brain.IsStunned)
+                RuntimeData.TickRecoveryTicker(Time.deltaTime);
 
             //! When hit too much or time too long, force back into Engagement State
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.HasCumulativeDamageExceeded)

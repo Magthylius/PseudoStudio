@@ -59,7 +59,6 @@ namespace Hadal.Utility
         private void UpdateAllTimers()
         {
             HandleTimerAdditions();
-
             int i = -1;
             while (++i < _timers.Count)
                 _timers[i].DoUpdate();

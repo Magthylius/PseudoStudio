@@ -7,6 +7,7 @@ using Hadal.AI.Caverns;
 using Hadal.AI.States;
 using Hadal.Player;
 using Tenshi;
+using Hadal.Utility;
 
 namespace Hadal.AI
 {
@@ -20,6 +21,9 @@ namespace Hadal.AI
 
         public bool AllowStateTick = true;
 
+        //! Stun Variables
+        Timer stunTimer;
+
         public void Initialize(AIBrain brain)
         {
             Brain = brain;
@@ -27,6 +31,8 @@ namespace Hadal.AI
             RuntimeData = Brain.RuntimeData;
             MachineData = Brain.MachineData;
             CavernManager = Brain.CavernManager;
+
+
         }
 
         public virtual void FixedStateTick() { }
@@ -51,5 +57,7 @@ namespace Hadal.AI
 
         public CavernHandler AICavern => CavernManager.GetHandlerOfAILocation;
         protected void print(object message) => Debug.Log(message);
+
+    
     }
 }

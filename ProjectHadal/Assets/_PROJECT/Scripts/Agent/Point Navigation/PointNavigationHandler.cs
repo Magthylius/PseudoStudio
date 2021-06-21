@@ -16,9 +16,10 @@ namespace Hadal.AI
     public enum SteeringMode
     {
         Cavern = 0,
-        Tunnel
+        Tunnel,
+        Stunned
     }
-    
+
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
     {
         #region Data Accessors
@@ -52,9 +53,10 @@ namespace Hadal.AI
         public bool Data_IsChasingAPlayer => isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
         public bool Data_CanPath => canPath;
-        
+
         private NavPoint CurrentPoint;
-        private NavPoint currentPoint {
+        private NavPoint currentPoint
+        {
             get => CurrentPoint;
             set
             {
@@ -80,6 +82,7 @@ namespace Hadal.AI
         [SerializeField] private SteeringMode _steeringMode;
         [SerializeField] private AISteeringSettings cavernSteeringSettings;
         [SerializeField] private AISteeringSettings tunnelSteeringSettings;
+        [SerializeField] private AISteeringSettings stunnedSteeringSettings;
         [SerializeField, ReadOnly] private float maxVelocity;
         [SerializeField, ReadOnly] private float thrustForce;
         [SerializeField, ReadOnly] private float additionalAttractionForce;
@@ -91,6 +94,7 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private float closeNavPointDetectionRadius;
         [SerializeField, ReadOnly] private float smoothLookAtSpeed;
         [SerializeField, ReadOnly] private LayerMask obstacleMask;
+        [SerializeField, ReadOnly] private bool isStunned;
 
         private float debugVelocityMultiplier = 1f;
 
@@ -130,7 +134,7 @@ namespace Hadal.AI
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(pilotTrans.position, currentPoint.GetPosition);
         }
-        
+
 
         #region Public Methods
 
@@ -166,8 +170,10 @@ namespace Hadal.AI
             if (!CanMove || !canPath || !enableMovement) return;
             TrySelectNewNavPoint(fixedDeltaTime);
             ElapseCavernLingerTimer(fixedDeltaTime);
-            MoveForwards(fixedDeltaTime);
-            MoveTowardsCurrentNavPoint(fixedDeltaTime);
+            if (isStunned)
+                MoveForwards(fixedDeltaTime);
+            else
+                MoveTowardsCurrentNavPoint(fixedDeltaTime);
             HandleObstacleAvoidance(fixedDeltaTime);
             HandleSpeedAndDirection(fixedDeltaTime);
             ClampMaxVelocity();
@@ -238,7 +244,7 @@ namespace Hadal.AI
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting custom nav point path".Msg();
-            
+
             //ConvertPointPathToList();
         }
 
@@ -255,22 +261,22 @@ namespace Hadal.AI
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
             cachedPointPath.Clear();
-            
-            
-            
+
+
+
             //! First point and its approach point. Enqueue approach first.
             NavPoint first = entryPoints.Single(point => point.CavernTag == currentCavern.cavernTag);
-            if (first.approachPoint != null) 
+            if (first.approachPoint != null)
                 cachedPointPath.Enqueue(first.approachPoint);
-            cachedPointPath.Enqueue(first);    
-            
+            cachedPointPath.Enqueue(first);
+
             //! Second point and its approach point. Enqueue exit first.
             NavPoint second = (entryPoints[0] == first) ? entryPoints[1] : entryPoints[0];
             cachedPointPath.Enqueue(second);
             if (second.approachPoint != null)
                 cachedPointPath.Enqueue(second.approachPoint);
-            
-            
+
+
             var potentialList = navPoints
                         .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
                         .ToList()
@@ -374,10 +380,10 @@ namespace Hadal.AI
                 string debugPath = "";
                 foreach (NavPoint point in pointPath)
                     debugPath += point + ",";
-                
+
                 $"Queued path set: {debugPath}".Msg();
             }
-            
+
             //ConvertPointPathToList();
         }
 
@@ -413,7 +419,7 @@ namespace Hadal.AI
                 pointPath.Clear();
                 StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
                 //Debug.LogWarning("Destroy and Regen ");
-                
+
                 //ConvertPointPathToList();
             }
 
@@ -453,6 +459,12 @@ namespace Hadal.AI
             UpdateSteering();
         }
 
+        public void StunnedModeSteering()
+        {
+            _steeringMode = SteeringMode.Stunned;
+            UpdateSteering();
+        }
+
         private void UpdateSteering()
         {
             AISteeringSettings currentSteer = cavernSteeringSettings;
@@ -461,6 +473,8 @@ namespace Hadal.AI
                 currentSteer = cavernSteeringSettings;
             else if (_steeringMode == SteeringMode.Tunnel)
                 currentSteer = tunnelSteeringSettings;
+            else if (_steeringMode == SteeringMode.Stunned)
+                currentSteer = stunnedSteeringSettings;
 
             maxVelocity = currentSteer.MaxVelocity;
             thrustForce = currentSteer.ThrustForce;
@@ -473,6 +487,7 @@ namespace Hadal.AI
             closeNavPointDetectionRadius = currentSteer.CloseNavPointDetectionRadius;
             smoothLookAtSpeed = currentSteer.SmoothLookAtSpeed;
             obstacleMask = currentSteer.ObstacleMask;
+            FindObjectOfType<AIBrain>().ChangeColliderMaterial(currentSteer.PhysicMaterial);
 
             OnObstacleDetectRadiusChange?.Invoke(obstacleDetectRadius);
         }
@@ -542,7 +557,7 @@ namespace Hadal.AI
                     currentPoint = pointPath.Dequeue();
                     hasReachedPoint = false;
                     ResetTimeoutTimer();
-                    
+
                     //ConvertPointPathToList();
                     //ConvertCachedPointPathToList();
                     return;
@@ -618,10 +633,10 @@ namespace Hadal.AI
         private void ElapseCavernLingerTimer(in float deltaTime)
         {
             if (!_tickCavernLingerTimer) return;
-            
+
             cavernLingerTimer -= deltaTime;
             if (cavernLingerTimer > 0f) return;
-            
+
             _tickCavernLingerTimer = false;
             ResetCavernLingerTimer();
             SetQueuedPathFromCache();
@@ -668,6 +683,8 @@ namespace Hadal.AI
         private void ResetCavernLingerTimer() => cavernLingerTimer = GetNextCavernLingerTime();
         private float GetNextNavPointLingerTime() => Random.Range(navPointLingerTimeRange.x, navPointLingerTimeRange.y);
         private float GetNextCavernLingerTime() => Random.Range(cavernLingerTimeRange.x, cavernLingerTimeRange.y);
+
+        public void SetAIStunned(bool isStun) => isStunned = isStun;
 
         /*private void ConvertPointPathToList()
         {

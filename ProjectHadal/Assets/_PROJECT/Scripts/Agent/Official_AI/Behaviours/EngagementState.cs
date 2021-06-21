@@ -19,18 +19,18 @@ namespace Hadal.AI.States
         public EngagementState(AIBrain brain, AggressiveSubState aggressive, AmbushSubState ambush, JudgementSubState judgement)
         {
             Initialize(brain);
-            
+
 
             //! intialise sub machine and states
             aggressive.SetParent(this);
-			ambush.SetParent(this);
-			judgement.Initialise(this);
+            ambush.SetParent(this);
+            judgement.Initialise(this);
 
             subStateMachine = new StateMachine();
             subStateMachine.AddEventTransition(to: ambush, withCondition: OnAmbush());
             subStateMachine.AddEventTransition(to: aggressive, withCondition: OnAggressive());
             subStateMachine.AddEventTransition(to: judgement, withCondition: OnJudgement());
-            
+
             subStateMachine.SetState(judgement); // default state
 
             //! transition conditions
@@ -46,15 +46,24 @@ namespace Hadal.AI.States
         }
         public override void StateTick()
         {
-            subStateMachine.MachineTick();
+            if (!AllowStateTick) return;
+            
+            if (!Brain.IsStunned)
+                subStateMachine.MachineTick();
         }
         public override void LateStateTick()
         {
-            subStateMachine.LateMachineTick();
+            if (!AllowStateTick) return;
+
+            if (!Brain.IsStunned)
+                subStateMachine.LateMachineTick();
         }
         public override void FixedStateTick()
         {
-            subStateMachine.FixedMachineTick();
+            if (!AllowStateTick) return;
+
+            if (!Brain.IsStunned)
+                subStateMachine.FixedMachineTick();
         }
         public override void OnStateEnd()
         {

@@ -29,7 +29,8 @@ namespace Hadal.AI.States
         {
             if (!AllowStateTick) return;
 
-            RuntimeData.TickCooldownTicker(Time.deltaTime);
+            if (!Brain.IsStunned)
+                RuntimeData.TickCooldownTicker(Time.deltaTime);
 
             if (RuntimeData.GetCooldownTicks >= settings.MaxCooldownTime)
             {
@@ -64,7 +65,7 @@ namespace Hadal.AI.States
             CavernManager.SeedCavernHeuristics(targetCavern);
             DetermineNextCavern();
         }
-        
+
         void DetermineNextCavern()
         {
             Brain.StartCoroutine(WaitForAICavern());
@@ -73,9 +74,9 @@ namespace Hadal.AI.States
             {
                 while (AICavern == null)
                     yield return null;
-                
+
                 CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
-            
+
                 NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
                 NavigationHandler.EnableCachedQueuePathTimer();
                 Brain.UpdateNextMoveCavern(nextCavern);

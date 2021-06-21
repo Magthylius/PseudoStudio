@@ -41,11 +41,11 @@ namespace Hadal.AI.States
 
         public override void StateTick()
         {
-            RuntimeData.TickAnticipationTicker(Time.deltaTime);
-
             if (!AllowStateTick) return;
-            //! Move to target cavern
-            //! Check if players in range/damaged by player
+
+            if(!Brain.IsStunned)
+                RuntimeData.TickAnticipationTicker(Time.deltaTime);
+
         }
 
         public override void LateStateTick()

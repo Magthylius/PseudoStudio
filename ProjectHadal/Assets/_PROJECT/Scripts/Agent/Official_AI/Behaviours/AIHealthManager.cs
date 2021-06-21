@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
+using Hadal.Utility;
+using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
@@ -11,12 +13,21 @@ namespace Hadal.AI
         [SerializeField] int maxHealth;
         int currentHealth;
         AIBrain brain;
+        Timer stunTimer;
 
         public void Initialise(AIBrain brain)
         {
             this.brain = brain;
             if (maxHealth <= 0) maxHealth = 1;
             ResetHealth();
+
+            //! Stun Timer
+            stunTimer = brain.Create_A_Timer()
+                                .WithDuration(brain.stunDuration)
+                                .WithOnCompleteEvent(CancelStun)
+                                .WithShouldPersist(true);
+            stunTimer.Pause();
+
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime) { }
@@ -43,7 +54,7 @@ namespace Hadal.AI
         public GameObject Obj => transform.parent.gameObject;
         public bool IsUnalive => currentHealth <= 0;
         public float GetHealthRatio => currentHealth / maxHealth.AsFloat();
-		public int GetCurrentHealth => currentHealth;
+        public int GetCurrentHealth => currentHealth;
         public bool IsDown => false;
         public int GetMaxHealth => maxHealth;
 
@@ -51,12 +62,24 @@ namespace Hadal.AI
 
         public void ResetHealth() => currentHealth = maxHealth;
 
+        private void CancelStun()
+        {
+            stunTimer.Pause();
+            brain.StopStun();
+        }
+        [Button("StunAI")]
+        void IStunYou()
+        {
+            TryStun(999);
+        }
+
         public bool TryStun(float duration)
         {
             if (brain == null)
                 return false;
-            
+            stunTimer.Resume();
             return brain.TryToStun(duration);
         }
+
     }
 }
