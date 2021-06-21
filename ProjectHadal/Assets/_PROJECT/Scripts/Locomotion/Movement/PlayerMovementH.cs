@@ -44,7 +44,6 @@ namespace Hadal.Locomotion
         {
             if (!allowUpdate) return;
 
-            print("onii chan daisuki");
             HandleAcceleration(fixedDeltaTime);
             CalculateSpeed();
         }
