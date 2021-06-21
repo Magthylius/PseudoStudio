@@ -32,7 +32,7 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
         {
-            /*setIsLocal();*/
+
         }
         protected virtual void Start()
         {

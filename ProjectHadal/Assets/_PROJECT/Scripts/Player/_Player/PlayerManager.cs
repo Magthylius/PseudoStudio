@@ -105,7 +105,7 @@ namespace Hadal.Player
 
             if (allPlayerReady)
             {
-                NetworkEventManager.Instance.RaiseEvent(ByteEvents.START_THE_GAME, null, SendOptions.SendReliable);
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_ACTUAL_START, null, SendOptions.SendReliable);
                 // start the game for host here !!!
                 LoadingManager.Instance.StartEndLoad();
                 instantiatePViewList();
