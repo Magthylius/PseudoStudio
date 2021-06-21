@@ -105,16 +105,10 @@ namespace Hadal.Player.Behaviours
         #region Handler Methods
         public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
         {
-            /*if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
+            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
             {
-                float o = (aimHit.point - aimPoint.position).magnitude;
-                float torpedoAngle = Mathf.Atan(o / aimPointYDelta) * Mathf.Rad2Deg;
-                if (torpedoAngle < torpedoMinAngle) torpedoAngle = torpedoMinAngle;
-                Vector3 newAngle = info.Orientation.eulerAngles - new Vector3(90f - torpedoAngle, 0f, 0f);
-                info.Orientation = Quaternion.Euler(newAngle);
-            }*/
-
-            info.AimedPoint = aimHit.point;
+                info.AimedPoint = aimHit.point;          
+            }
 
             return info;
         }

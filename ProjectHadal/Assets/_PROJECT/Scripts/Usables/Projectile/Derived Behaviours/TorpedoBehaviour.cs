@@ -9,6 +9,7 @@ namespace Hadal.Usables.Projectiles
     {
         [SerializeField] private float impactVFXTime = 5f;
         private bool projectileTriggered = false;
+        private Vector3 aimedPoint;
         
         #region Unity Lifecycle
 
@@ -22,6 +23,7 @@ namespace Hadal.Usables.Projectiles
             base.Start();
             impactDuration = new Timer(impactVFXTime);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
+            transform.LookAt(aimedPoint);
         }
         
         private void Update()
@@ -30,6 +32,7 @@ namespace Hadal.Usables.Projectiles
             {
                 impactDuration.Tick(Time.deltaTime);
             }
+            /*transform.LookAt(aimedPoint);*/
         }
 
         private void OnDisable()
@@ -73,6 +76,7 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
+        #region Protected Overried Function
         protected override void ImpactBehaviour()
         {
             Rigidbody.isKinematic = true;
@@ -89,12 +93,20 @@ namespace Hadal.Usables.Projectiles
             projectileAsset.SetActive(true);
             PPhysics.OnPhysicsFinished();
         }
+        #endregion
 
+        #region Misc Function
         private ExplosionSettings CreateExplosionInfo()
         {
             ExplosionSettings explodeInfo = new ExplosionSettings();
             explodeInfo.Position = this.transform.position;
             return explodeInfo;
         }
+
+        public void SetAimedPoint(Vector3 aimedPoint)
+        {
+            this.aimedPoint = aimedPoint;
+        }
+        #endregion
     }
 }
