@@ -157,7 +157,7 @@ namespace Hadal.Player
                 yield return null;
             }
 
-            Debug.LogWarning("ID assigned: " + _pView.ViewID + ", " + _pView.IsMine);
+            //Debug.LogWarning("ID assigned: " + _pView.ViewID + ", " + _pView.IsMine);
 
             if (NetworkEventManager.Instance.IsMasterClient)
             {
@@ -166,12 +166,12 @@ namespace Hadal.Player
             }
             else if (_pView.IsMine)
             {
-                Debug.LogWarning("My ID is: " + _pView.ViewID);
+                //Debug.LogWarning("My ID is: " + _pView.ViewID);
                 LocalPlayerData.PlayerController = this;
             }
 
             NetworkData.AddPlayer(this);
-            Debug.LogWarning("Network Data updated: " + NetworkData.PlayerCount);
+            //Debug.LogWarning("Network Data updated: " + NetworkData.PlayerCount);
         }
 
         public void SetIsCarried(in bool statement) => _isCarried = statement;

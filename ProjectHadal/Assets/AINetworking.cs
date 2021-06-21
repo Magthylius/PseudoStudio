@@ -45,34 +45,23 @@ public class AINetworking : MonoBehaviour
 
     void OnPlayerLeft(Player player)
     {
+        
         brain.RefreshPlayerReferences();
     }
     
     public void RE_AttachCarriedPlayerToMouth(EventData eventData)
     {
         int data = (int)eventData.CustomData;
-  
-        /*if (LocalPlayerData.ViewID == data)
-        {
-            Debug.LogWarning(("Eat shit"));
-            brain.CarriedPlayer = LocalPlayerData.PlayerController;
-            brain.CarriedPlayer.SetIsCarried(true);
-            brain.AttachCarriedPlayerToMouth(true);
-        }*/
-        Debug.LogWarning("ID: " + data);
         
         PlayerController targetPlayer = NetworkData.GetPlayerController(data);
-        Debug.LogWarning("TP: " + targetPlayer);
+        //Debug.LogWarning("TP: " + targetPlayer);
         
         if (targetPlayer != null)
         {
-            Debug.LogWarning("Player has been grabbed!");
             brain.CarriedPlayer = targetPlayer;
             brain.CarriedPlayer.SetIsCarried(true);
             brain.AttachCarriedPlayerToMouth(true);
         }
-        
-        NetworkData.Debug_PrintAllPlayers();
     }
 
     public void RE_DetachAnyCarriedPlayer(EventData eventData)
