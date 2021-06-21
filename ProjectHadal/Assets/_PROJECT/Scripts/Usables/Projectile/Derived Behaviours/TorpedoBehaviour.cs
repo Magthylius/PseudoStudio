@@ -1,24 +1,29 @@
 using UnityEngine;
 using Magthylius.DataFunctions;
-using Hadal;
 using Hadal.Networking;
 using static Hadal.ExplosivePoint;
-//using Hadal.AI;
 
 namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
     {
-        [SerializeField] private string[] validLayer;
-        [SerializeField] private ExplosivePoint explosivePoint;
-
+        [SerializeField] private float impactVFXTime = 5f;
+        private bool projectileTriggered = false;
+        
         #region Unity Lifecycle
+
+        protected override void OnEnable()
+        {
+            projectileTriggered = false;
+        }
+        
         protected override void Start()
         {
             base.Start();
-            impactDuration = new Timer(5f);
+            impactDuration = new Timer(impactVFXTime);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
         }
+        
         private void Update()
         {
             if (isVisualizing)
@@ -35,28 +40,36 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if(!IsLocal)
-            { 
-                return;
-            }
+            if(!IsLocal || projectileTriggered) return;
 
-            foreach (string layerName in validLayer)
+            projectileTriggered = true;
+
+            int layer = collision.gameObject.layer;
+            if (UsableBlackboard.InPlayerLayers(layer))
             {
-                LayerMask layer = LayerMask.NameToLayer(layerName);
-                if (collision.gameObject.layer == layer.value)
-                {
-                    
-                    if (LayerMask.LayerToName(layer) == "MONSTER")
-                    {
-                        collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
-                    }
+                //! hits player
+                
+                ExplodeAndDespawn();
+            }
+            else if (UsableBlackboard.InAILayers(layer))
+            {
+                //! hits AI
+                collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
+                ExplodeAndDespawn();
+            }
+            else if (UsableBlackboard.InCollidableLayers(layer))
+            {
+                //! hits collidables   
+                ExplodeAndDespawn();
+            }
+            
 
-                    Vector3 collisionSpot = gameObject.transform.position;
-                    object[] content = new object[] {projectileID, collisionSpot};
-                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
-                    ImpactBehaviour();
-                    return;
-                }
+            void ExplodeAndDespawn()
+            {
+                Vector3 collisionSpot = gameObject.transform.position;
+                object[] content = {projectileID, collisionSpot};
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
+                ImpactBehaviour();
             }
         }
 
@@ -66,7 +79,7 @@ namespace Hadal.Usables.Projectiles
             isVisualizing = true;
             particleEffect.SetActive(true);
             projectileAsset.SetActive(false);
-            ExplosivePoint.Create(CreateExplosionInfo());
+            Create(CreateExplosionInfo());
         }
 
         protected override void StopImpactEffect()

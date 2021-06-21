@@ -53,6 +53,21 @@ namespace Hadal.Player
             return null;
         }
 
+        /// <summary>
+        /// Gets PlayerController with PhotonRealtime Player. Returns null if cannot be found.
+        /// </summary>
+        /// <param name="photonPlayer">PhotonRealtime player query</param>
+        /// <returns>Searched PlayerController</returns>
+        public static PlayerController GetPlayerController(Photon.Realtime.Player photonPlayer)
+        {
+            foreach (var controller in AllPlayers)
+            {
+                if (controller.AttachedPlayer == photonPlayer)
+                    return controller;
+            }
+
+            return null;
+        }
         public static void Debug_PrintAllPlayers()
         {
             Debug.LogWarning(("Debug printing network data"));

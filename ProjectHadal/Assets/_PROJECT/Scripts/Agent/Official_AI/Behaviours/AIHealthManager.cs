@@ -62,24 +62,26 @@ namespace Hadal.AI
 
         public void ResetHealth() => currentHealth = maxHealth;
 
-        private void CancelStun()
-        {
-            stunTimer.Pause();
-            brain.StopStun();
-        }
         [Button("StunAI")]
         void IStunYou()
         {
-            TryStun(999);
+            TryStun(5);
         }
 
         public bool TryStun(float duration)
         {
             if (brain == null)
                 return false;
-            stunTimer.Resume();
+            
+            //stunTimer.Resume();
+            stunTimer.RestartWithDuration(duration);
             return brain.TryToStun(duration);
         }
-
+        
+        private void CancelStun()
+        {
+            stunTimer.Pause();
+            brain.StopStun();
+        }
     }
 }

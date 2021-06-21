@@ -88,7 +88,7 @@ namespace Hadal.Player
                     LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
                     LoadingManager.Instance.AllowLoadingCompletion();
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, playerReadyConfirmed);
-                    NetworkEventManager.Instance.AddListener(ByteEvents.START_THE_GAME, StartGame);
+                    NetworkEventManager.Instance.AddListener(ByteEvents.GAME_ACTUAL_START, StartGame);
                     StartCoroutine(SendReady());
                 }
             }
