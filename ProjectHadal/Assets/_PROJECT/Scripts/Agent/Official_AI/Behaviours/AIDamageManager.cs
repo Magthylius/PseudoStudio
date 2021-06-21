@@ -65,7 +65,7 @@ namespace Hadal.AI
             //! raise event with data
             object[] data = { targetViewID, damage };
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_DAMAGE_EVENT, data, options);
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_SEND_DAMAGE, data, options);
         }
 
         private void Receive_DamagePlayer(EventData eventData)
