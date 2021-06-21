@@ -96,7 +96,7 @@ namespace Hadal.AI.Caverns
             }
             if (other.gameObject.CompareTag("NavigationPoint"))
             {
-                Debug.LogWarning(other.gameObject);
+                //Debug.LogWarning(other.gameObject);
                 if (nPoint.CavernTag != CavernTag.Custom_Point)
                     nPoint.SetCavernTag(cavernTag);
             }

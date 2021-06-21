@@ -323,7 +323,7 @@ namespace Hadal.AI
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
             }
-            Debug.LogWarning("Moving");
+            //Debug.LogWarning("Moving");
             ComputeCachedDestinationCavernPath(destination);
             SetQueuedPathFromCache();
         }

@@ -96,7 +96,7 @@ namespace Hadal.Player
             OnInitialiseComplete?.Invoke(this);
             NetworkEventManager.Instance.AddPlayer(gameObject);
             //LocalPlayerData.ViewID = pViewSelfID;
-            StartCoroutine(InitializeLocalData());
+            StartCoroutine(InitializeData());
             //Deactivate();
         }
 
@@ -150,15 +150,20 @@ namespace Hadal.Player
             pViewSelfID = _pView.ViewID;
         }
 
-        IEnumerator InitializeLocalData()
+        IEnumerator InitializeData()
         {
             while (_pView.ViewID == 0)
             {
                 yield return null;
             }
 
-            LocalPlayerData.ViewID = _pView.ViewID;
-            LocalPlayerData.PlayerController = this;
+            if (_pView.IsMine)
+            {
+                LocalPlayerData.PlayerController = this;
+            }
+            
+            NetworkData.AddPlayer(this);
+            Debug.LogWarning("Network Data updated: " + NetworkData.PlayerCount);
             //Debug.LogWarning(pViewSelfID);
         }
 

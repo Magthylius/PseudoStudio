@@ -185,7 +185,7 @@ namespace Hadal.Player
             if (photonPlayer != neManager.LocalPlayer)
             {
                 controller.TransferOwnership(photonPlayer);
-               // print("Created False Camera player");
+                // print("Created False Camera player");
                 controller.HandlePhotonView(false);
             }
             else
