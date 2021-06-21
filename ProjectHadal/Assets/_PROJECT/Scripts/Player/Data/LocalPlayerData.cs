@@ -16,6 +16,11 @@ namespace Hadal.Player
         public static PlayerController PlayerController;
         
         /// <summary>
+        /// Resets and initializes data
+        /// </summary>
+        public static void Reset() => PlayerController = null;
+        
+        /// <summary>
         /// View ID of local player. Returns -1 if PlayerController is null.
         /// </summary>
         public static int ViewID => PlayerController ? PlayerController.ViewID : -1;

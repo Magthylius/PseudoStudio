@@ -294,6 +294,11 @@ namespace Hadal.AI
         public void RefreshPlayerReferences()
             => Players = FindObjectsOfType<PlayerController>().ToList();
 
+        /// <summary>
+        /// Attach or detach players.
+        /// </summary>
+        /// <param name="attachToMouth">Attach or detach</param>
+        /// <remarks>Used for networking</remarks>
         public void AttachCarriedPlayerToMouth(bool attachToMouth)
         {
             Transform mouth = MouthObject.transform;
@@ -304,7 +309,7 @@ namespace Hadal.AI
                 return;
             }
 
-
+            int grabbedPlayerID = CarriedPlayer.GetInfo.PhotonInfo.PView.ViewID;
             if (attachToMouth)
             {
                 //Debug.LogWarning("Player grabbed");
@@ -315,32 +320,37 @@ namespace Hadal.AI
                 //! Send event if host
                 if (neManager.IsMasterClient)
                 {
-                    int GrabbedPlayerID = CarriedPlayer.GetInfo.PhotonInfo.PView.ViewID;
-                    //Debug.LogWarning("GrabID:" + GrabbedPlayerID);
-                    neManager.RaiseEvent(ByteEvents.AI_GRAB_EVENT, GrabbedPlayerID);
+                    neManager.RaiseEvent(ByteEvents.AI_GRAB_PLAYER, grabbedPlayerID);
                 }
                 
                 return;
             }
 
-            //Debug.LogWarning("Player let go :(");
+            
             mouth.DetachChildren();
+            
+            //! Send event if host
+            if (neManager.IsMasterClient)
+            {
+                neManager.RaiseEvent(ByteEvents.AI_RELEASE_PLAYER, null);
+            }
             CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
         }
 
-        public void RE_AttachCarriedPlayerToMouth(EventData eventData)
+        /// <summary>
+        /// Detaches any carried player.
+        /// </summary>
+        /// <remarks>Used as local event</remarks>
+        public void DetachAnyCarriedPlayer()
         {
-            int data = (int)eventData.CustomData;
-  
-            if (LocalPlayerData.ViewID == data)
-            {
-                //Debug.LogWarning(("Eat shit"));
-                CarriedPlayer = LocalPlayerData.PlayerController;
-                CarriedPlayer.SetIsCarried(true);
-                AttachCarriedPlayerToMouth(true);
-            }
+            //! Make sure any player in mouth is released
+            PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
+            foreach (var player in controllers)
+                player.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+            
+            MouthObject.transform.DetachChildren();
+            CarriedPlayer = null;
         }
-
         #endregion
 
         #region Data

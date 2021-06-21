@@ -11,6 +11,11 @@ namespace Hadal.Player
         public static int PlayerCount => AllPlayers.Count;
 
         /// <summary>
+        /// Resets and initializes data
+        /// </summary>
+        public static void Reset() => AllPlayers = new List<PlayerController>();
+
+        /// <summary>
         /// Adds new player if no duplicates are found.
         /// </summary>
         /// <param name="newPlayer">New player to add</param>
