@@ -152,7 +152,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2230733009024200415}
   m_LocalRotation: {x: 0.029669013, y: 0.20201917, z: -0.08218396, w: 0.97547626}
-  m_LocalPosition: {x: 67.3, y: -43.84, z: 16.6}
+  m_LocalPosition: {x: 53.55, y: 11.87, z: -54.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6576420978336463563}
@@ -230,6 +230,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3189345546925591471}
   - component: {fileID: 4297429361851390011}
+  - component: {fileID: 7865573592520856709}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -264,6 +265,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pViewList: []
+--- !u!114 &7865573592520856709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6396702538524357952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c525bac8ec18acd49bb1c77b7220189d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6576420978336463561
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +325,8 @@ MonoBehaviour:
   localPlayerSpawnTrans: {fileID: 4099844762844519294}
   MainMenuScene: MainMenu
   InGameScene: Vertical Slice
+  DummyCount: 0
+  DummyMirrorsMovement: 0
   maxPlayers: 4
   playerTTL: 1000
   emptyRoomTTL: 1000
