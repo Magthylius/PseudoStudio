@@ -1,24 +1,29 @@
 using UnityEngine;
 using Magthylius.DataFunctions;
-using Hadal;
 using Hadal.Networking;
 using static Hadal.ExplosivePoint;
-//using Hadal.AI;
 
 namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
     {
-        [SerializeField] private string[] validLayer;
-        [SerializeField] private ExplosivePoint explosivePoint;
-
+        [SerializeField] private float impactVFXTime = 5f;
+        private bool projectileTriggered = false;
+        
         #region Unity Lifecycle
+
+        protected override void OnEnable()
+        {
+            projectileTriggered = false;
+        }
+        
         protected override void Start()
         {
             base.Start();
-            impactDuration = new Timer(5f);
+            impactDuration = new Timer(impactVFXTime);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
         }
+        
         private void Update()
         {
             if (isVisualizing)
@@ -35,10 +40,9 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if(!IsLocal)
-            { 
-                return;
-            }
+            if(!IsLocal || projectileTriggered) return;
+
+            projectileTriggered = true;
 
             int layer = collision.gameObject.layer;
             if (UsableBlackboard.InPlayerLayers(layer))
@@ -75,7 +79,7 @@ namespace Hadal.Usables.Projectiles
             isVisualizing = true;
             particleEffect.SetActive(true);
             projectileAsset.SetActive(false);
-            ExplosivePoint.Create(CreateExplosionInfo());
+            Create(CreateExplosionInfo());
         }
 
         protected override void StopImpactEffect()

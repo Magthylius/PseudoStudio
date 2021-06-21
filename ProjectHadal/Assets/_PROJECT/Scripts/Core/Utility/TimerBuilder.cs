@@ -23,7 +23,7 @@ namespace Hadal.Utility
         public TimerBuilder WithOnCompleteEvent(Action onComplete)
         {
             _timer.OnCompleteEvent = onComplete;
-            Debug.Log("i complete" + _timer.OnCompleteEvent);
+            //Debug.Log("i complete" + _timer.OnCompleteEvent);
             return this;
         }
         public TimerBuilder WithOnUpdateEvent(Action<float> onUpdate)
