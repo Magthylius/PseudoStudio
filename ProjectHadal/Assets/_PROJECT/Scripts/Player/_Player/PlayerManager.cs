@@ -109,6 +109,7 @@ namespace Hadal.Player
                 // start the game for host here !!!
                 LoadingManager.Instance.StartEndLoad();
                 instantiatePViewList();
+                localPlayerController.Mover.ToggleEnablility();
                 print("All player ready, sending event to notify all players.");
                 if (PhotonNetwork.IsMasterClient) OnAllPlayersReadyEvent?.Invoke();
             }
