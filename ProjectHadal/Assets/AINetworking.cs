@@ -19,21 +19,21 @@ public class AINetworking : MonoBehaviour
         
         // Debug.Log(brain);
         // Debug.Log(neManager);
-        Debug.LogWarning("AI START");
+        //Debug.LogWarning("AI START");
         
         if (neManager.IsMasterClient)
         {
             //! If host
             neManager.PlayerEnteredEvent += OnPlayerEnter;
             neManager.PlayerLeftEvent += OnPlayerLeft;
-            Debug.LogWarning("Player entered event");
+            //Debug.LogWarning("Player entered event");
         }
         else
         {
             //! If not host
             neManager.AddListener(ByteEvents.AI_GRAB_PLAYER, RE_AttachCarriedPlayerToMouth);
             neManager.AddListener(ByteEvents.AI_RELEASE_PLAYER, RE_DetachAnyCarriedPlayer);
-            Debug.LogWarning("AI Listener");
+            //Debug.LogWarning("AI Listener");
         }
             
     }
