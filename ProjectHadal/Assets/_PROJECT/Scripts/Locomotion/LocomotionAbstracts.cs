@@ -12,16 +12,17 @@ namespace Hadal.Locomotion
         public VelocityInfo Velocity;
         protected Transform target;
         protected float _currentForwardSpeed, _currentStrafeSpeed, _currentHoverSpeed;
-        protected bool allowUpdate;
+        protected bool allowUpdate = false;
         public abstract float SqrSpeed { get; }
         public abstract void Initialise(Transform transform);
         public abstract void DoUpdate(in float deltaTime);
-        public abstract void DoFixedUpdate(in float fixedDeltaTime);
+        public abstract void DoFixedUpdate(in float fixedDeltaTime);    
         public abstract void DoLateUpdate(in float deltaTime);
         public virtual void Enable() => allowUpdate = true;
         public virtual void Disable() => allowUpdate = false;
         public void ToggleEnablility() => allowUpdate = !allowUpdate;
-        
+        public void ToggleEnablility(bool isTrue) => allowUpdate = isTrue;
+
         //Delete later
         protected bool allowBoost;
         public void EnableBoost() => allowBoost = true;

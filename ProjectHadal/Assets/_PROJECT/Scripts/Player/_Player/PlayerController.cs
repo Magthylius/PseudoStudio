@@ -215,7 +215,7 @@ namespace Hadal.Player
         private void StartGame(EventData obj)
         {
             print("Everyone ready. Begin !");
-            mover.ToggleEnablility();
+            mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
             _manager.instantiatePViewList();
         }
@@ -256,6 +256,7 @@ namespace Hadal.Player
             else
             {
                 gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
+                mover.ToggleEnablility(true);
             }
             
             if (isMine)
