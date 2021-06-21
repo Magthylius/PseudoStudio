@@ -52,5 +52,14 @@ namespace Hadal.Player
 
             return null;
         }
+
+        public static void Debug_PrintAllPlayers()
+        {
+            Debug.LogWarning(("Debug printing network data"));
+            foreach (var player in AllPlayers)
+            {
+                Debug.LogWarning(player.ViewID);
+            }
+        }
     }
 }

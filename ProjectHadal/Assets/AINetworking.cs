@@ -59,14 +59,20 @@ public class AINetworking : MonoBehaviour
             brain.CarriedPlayer.SetIsCarried(true);
             brain.AttachCarriedPlayerToMouth(true);
         }*/
+        Debug.LogWarning("ID: " + data);
         
         PlayerController targetPlayer = NetworkData.GetPlayerController(data);
+        Debug.LogWarning("TP: " + targetPlayer);
+        
         if (targetPlayer != null)
         {
+            Debug.LogWarning("Player has been grabbed!");
             brain.CarriedPlayer = targetPlayer;
             brain.CarriedPlayer.SetIsCarried(true);
             brain.AttachCarriedPlayerToMouth(true);
         }
+        
+        NetworkData.Debug_PrintAllPlayers();
     }
 
     public void RE_DetachAnyCarriedPlayer(EventData eventData)
