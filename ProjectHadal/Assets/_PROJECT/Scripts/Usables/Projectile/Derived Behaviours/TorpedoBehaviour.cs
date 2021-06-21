@@ -96,6 +96,12 @@ namespace Hadal.Usables.Projectiles
         #endregion
 
         #region Misc Function
+
+        void DoDamageToAI()
+        {
+            
+        }
+        
         private ExplosionSettings CreateExplosionInfo()
         {
             ExplosionSettings explodeInfo = new ExplosionSettings();
