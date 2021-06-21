@@ -30,20 +30,31 @@ namespace Hadal
 
         private void DetonateAndDestroy()
         {
+            print("Detonating");
             List<Rigidbody> rigidbodies = Physics.OverlapSphere(GetPosition, RadiusOfEffect)
                                         .Where(x => x.GetComponent<Rigidbody>() != null)
                                         .Select(x => x.GetComponent<Rigidbody>())
                                         .ToList();
             rigidbodies.ForEach(r =>
             {
-                Vector3 force = (GetPosition - r.transform.position).normalized * ForceAmount;
+                Vector3 forceDistance = GetPosition - r.transform.position;
+                float forceDistanceRatio = 1 - (forceDistance.magnitude / RadiusOfEffect);
+                Vector3 force = (forceDistance).normalized * ForceAmount * forceDistanceRatio;
                 r.AddForce(force, ForceMode.Impulse);
+               /* r.AddTorque(force.magnitude * transform.up, ForceMode.Impulse);*/
+                /*print(r.name +" : " +forceDistance.magnitude);*/
+                /*print(r.name + " : " + forceDistanceRatio);
+                print(r.name + " : " + force.magnitude);*/
             });
             
             OnExplode?.Invoke(GetSettingsForThisObject());
             OnExplode = delegate { };
-            
             Destroy(gameObject);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(transform.position, 30f);
         }
 
         private ExplosionSettings GetSettingsForThisObject()
@@ -79,8 +90,8 @@ namespace Hadal
         public class ExplosionSettings
         {
             public Vector3 Position = Vector3.zero;
-            public float Radius = 1f;
-            public float Force = 1f;
+            public float Radius = 30f;
+            public float Force = -50f;
             public bool DetonateOnRemote = false;
         }
     }

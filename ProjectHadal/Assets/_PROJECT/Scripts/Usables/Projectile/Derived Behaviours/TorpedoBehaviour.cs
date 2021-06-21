@@ -2,6 +2,7 @@ using UnityEngine;
 using Magthylius.DataFunctions;
 using Hadal;
 using Hadal.Networking;
+using static Hadal.ExplosivePoint;
 //using Hadal.AI;
 
 namespace Hadal.Usables.Projectiles
@@ -9,6 +10,7 @@ namespace Hadal.Usables.Projectiles
     public class TorpedoBehaviour : ProjectileBehaviour
     {
         [SerializeField] private string[] validLayer;
+        [SerializeField] private ExplosivePoint explosivePoint;
 
         #region Unity Lifecycle
         protected override void Start()
@@ -64,6 +66,7 @@ namespace Hadal.Usables.Projectiles
             isVisualizing = true;
             particleEffect.SetActive(true);
             projectileAsset.SetActive(false);
+            ExplosivePoint.Create(CreateExplosionInfo());
         }
 
         protected override void StopImpactEffect()
@@ -72,6 +75,13 @@ namespace Hadal.Usables.Projectiles
             particleEffect.SetActive(false);
             projectileAsset.SetActive(true);
             PPhysics.OnPhysicsFinished();
+        }
+
+        private ExplosionSettings CreateExplosionInfo()
+        {
+            ExplosionSettings explodeInfo = new ExplosionSettings();
+            explodeInfo.Position = this.transform.position;
+            return explodeInfo;
         }
     }
 }
