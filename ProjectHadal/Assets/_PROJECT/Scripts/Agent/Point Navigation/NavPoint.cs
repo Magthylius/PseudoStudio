@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hadal.AI.Caverns;
 using UnityEngine;
+using NaughtyAttributes;
 
 namespace Hadal.AI
 {
@@ -29,6 +30,17 @@ namespace Hadal.AI
         public Vector3 GetPosition => transform.position;
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
         public Vector3 GetDirectionTo(Vector3 position) => (GetPosition - position).normalized;
+
+		[Button("Disable All Graphics")]
+		private void Button_DisableAll()
+		{
+			NavPoint.DisableGraphicsAll();
+		}
+		[Button("Enable All Graphics")]
+		private void Button_EnableAll()
+		{
+			NavPoint.EnableGraphicsAll();
+		}
 
         void OnValidate()
         {
@@ -103,7 +115,8 @@ namespace Hadal.AI
 			while (++i < points.Length)
 			{
 				points[i].SetDisableGraphics(true);
-				points[i].transform.GetChild(0).gameObject.SetActive(false);
+				if (points[i].transform.childCount != 0)
+					points[i].transform.GetChild(0).gameObject.SetActive(false);
 			}
 		}
 		public static void EnableGraphicsAll()
@@ -113,7 +126,8 @@ namespace Hadal.AI
 			while (++i < points.Length)
 			{
 				points[i].SetDisableGraphics(false);
-				points[i].transform.GetChild(0).gameObject.SetActive(true);
+				if (points[i].transform.childCount != 0)
+					points[i].transform.GetChild(0).gameObject.SetActive(true);
 			}
 		}
     }
