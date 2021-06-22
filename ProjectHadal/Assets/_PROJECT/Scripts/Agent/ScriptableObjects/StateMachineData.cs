@@ -11,6 +11,7 @@ namespace Hadal.AI.States
     public class StateMachineData : ScriptableObject
     {
         [Header("State Settings reference")]
+        public IdleStateSettings Idle;
         public AnticipationStateSettings Anticipation;
         public EngagementStateSettings Engagement;
         public RecoveryStateSettings Recovery;

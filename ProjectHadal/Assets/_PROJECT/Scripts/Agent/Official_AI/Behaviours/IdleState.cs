@@ -6,28 +6,32 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.AI.Caverns;
 
+
 namespace Hadal.AI.States
 {
     public class IdleState : AIStateBase
     {
         private IEnumerator debugRoutine;
+        IdleStateSettings settings;
 
         public IdleState(AIBrain brain)
         {
             Initialize(brain);
             debugRoutine = null;
+            settings = MachineData.Idle;
         }
 
         public override void OnStateStart()
         {
+
             RuntimeData.ResetIdleTicker();
 
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
 
             Brain.StartCoroutine(InitAfterCaverns());
-
-
+            
+            GameManager.Instance.GameStartedEvent += StartSwitchObjective;
         }
 
         public override void StateTick()
@@ -36,12 +40,6 @@ namespace Hadal.AI.States
 
             if (!Brain.IsStunned)
                 RuntimeData.TickIdleTicker(Time.deltaTime);
-
-            if (RuntimeData.GetIdleTicks > 60)
-            {
-                SwitchObjective(BrainState.Anticipation);
-            }
-
         }
 
         public override void LateStateTick()
@@ -56,7 +54,16 @@ namespace Hadal.AI.States
         {
         }
 
-        void SwitchObjective(BrainState newObjective) => RuntimeData.SetBrainState(newObjective);
+        void StartSwitchObjective()
+        {
+            Brain.StartCoroutine(SwitchObjective(BrainState.Anticipation));
+        }
+
+        IEnumerator SwitchObjective(BrainState newObjective)
+        {
+            yield return new WaitForSeconds(settings.StateExitDelay);
+            RuntimeData.SetBrainState(newObjective);
+        }
 
         IEnumerator InitAfterCaverns()
         {
