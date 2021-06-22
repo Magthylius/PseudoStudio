@@ -245,7 +245,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e70c18810884d874991f08774c3bc117, type: 2}
+  - {fileID: 2100000, guid: 26294c8d22718d44ba59d812b45129df, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -367,19 +367,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7035772332983160154, guid: 82515dfe8fb91cd44a43228d87be4d2c, type: 3}
       propertyPath: m_Range
-      value: 30
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7035772332983160154, guid: 82515dfe8fb91cd44a43228d87be4d2c, type: 3}
       propertyPath: m_Color.b
-      value: 0.21191636
+      value: 0.28526494
       objectReference: {fileID: 0}
     - target: {fileID: 7035772332983160154, guid: 82515dfe8fb91cd44a43228d87be4d2c, type: 3}
       propertyPath: m_Color.g
-      value: 0.0039215684
+      value: 0.2794144
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035772332983160154, guid: 82515dfe8fb91cd44a43228d87be4d2c, type: 3}
+      propertyPath: m_Color.r
+      value: 0.8584906
       objectReference: {fileID: 0}
     - target: {fileID: 7035772332983160154, guid: 82515dfe8fb91cd44a43228d87be4d2c, type: 3}
       propertyPath: m_Intensity
-      value: 100
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 7035772332983160154, guid: 82515dfe8fb91cd44a43228d87be4d2c, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7254348632257709607, guid: 82515dfe8fb91cd44a43228d87be4d2c, type: 3}
       propertyPath: m_Name
