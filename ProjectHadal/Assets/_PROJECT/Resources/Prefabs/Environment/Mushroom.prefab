@@ -245,20 +245,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reactiveTimeoutRange: {x: 3, y: 5}
   reactiveData:
-    BorderColour: {r: 0.93333334, g: 0.91784704, b: 0.10196078, a: 0.6039216}
-    Colour: {r: 0.93333334, g: 0.41568628, b: 0.101960786, a: 0.5372549}
-    BorderPower: 0.5
+    BorderColour: {r: 0.3301887, g: 0.06791261, b: 0.05762727, a: 1}
+    Colour: {r: 0.7735849, g: 0.6871836, b: 0.3977394, a: 0.28235295}
+    BorderPower: 0.4
     NoiseScale: 0.15
+    Alpha: 1
+    EmissionRate: {x: 0.1, y: 5}
+    EmissionBreathing: {x: 2, y: 15}
   unreactiveData:
     BorderColour: {r: 1, g: 1, b: 1, a: 1}
     Colour: {r: 1, g: 1, b: 1, a: 1}
     BorderPower: 0
     NoiseScale: 0
+    Alpha: 0.9
+    EmissionRate: {x: 0, y: 0}
+    EmissionBreathing: {x: 0, y: 0}
   currentData:
     BorderColour: {r: 1, g: 1, b: 1, a: 1}
     Colour: {r: 1, g: 1, b: 1, a: 1}
     BorderPower: 0
     NoiseScale: 0
+    Alpha: 0.9
+    EmissionRate: {x: 0, y: 0}
+    EmissionBreathing: {x: 0, y: 0}
   _percent: 0
   renderersInner:
   - {fileID: 7420513714521603490}
