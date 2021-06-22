@@ -121,7 +121,18 @@ namespace Hadal.AI.Caverns
 
             return new CavernTunnel();
         }
-        
+
+        public List<CavernHandler> GetConnectedCaverns()
+        {
+            List<CavernHandler> returnList = new List<CavernHandler>();
+            foreach (CavernTunnel cT in connectedTunnels)
+            {
+                returnList.Add(cT.ConnectedCavern);
+            }
+
+            return returnList;
+        }
+        public int GetPlayerCount => playersInTunnel.Count;
         public List<PlayerController> GetPlayersInTunnel => playersInTunnel;
     }
 }
