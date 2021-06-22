@@ -34,7 +34,7 @@ namespace Hadal.AI.States
 
             if (RuntimeData.GetCooldownTicks >= settings.MaxCooldownTime)
             {
-                RuntimeData.SetBrainState(BrainState.Idle);
+                RuntimeData.SetBrainState(BrainState.Anticipation);
                 RuntimeData.ResetCooldownTicker();
                 AllowStateTick = false;
             }
