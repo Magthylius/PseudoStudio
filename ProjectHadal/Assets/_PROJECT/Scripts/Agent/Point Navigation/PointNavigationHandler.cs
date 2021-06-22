@@ -159,6 +159,7 @@ namespace Hadal.AI
             _tickCavernLingerTimer = false;
 
             CavernModeSteering();
+			ResetCavernLingerTimer();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
