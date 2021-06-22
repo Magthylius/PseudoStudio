@@ -37,6 +37,9 @@ namespace Hadal.Interactables
         private readonly string Colour = "_Color";
         private readonly string BorderPower = "_BorderPower";
         private readonly string NoiseScale = "_NoiseScale";
+		private readonly string Alpha = "_Alpha";
+		private readonly string EmissionRate = "_EmissionRate";
+		private readonly string EmissionBreathing = "_EmissionBreathing";
 
         private void Awake()
         {
@@ -68,8 +71,13 @@ namespace Hadal.Interactables
                 BorderColour = materialsOuter[0].GetColor(BorderColour),
                 Colour = materialsInner[0].GetColor(Colour),
                 BorderPower = materialsOuter[0].GetFloat(BorderPower),
-                NoiseScale = materialsOuter[0].GetFloat(NoiseScale)
+                NoiseScale = materialsOuter[0].GetFloat(NoiseScale),
+				Alpha = materialsOuter[0].GetFloat(Alpha)
             };
+			
+			//! Default emission settings
+			materialsInner[0].SetFloat(EmissionRate, Random.Range(reactiveData.EmissionRate.x, reactiveData.EmissionRate.y));
+			materialsInner[0].SetFloat(EmissionBreathing, Random.Range(reactiveData.EmissionBreathing.x, reactiveData.EmissionBreathing.y));
         }
 
         private void OnTriggerEnter(Collider other)
@@ -113,6 +121,7 @@ namespace Hadal.Interactables
                 materialsInner[i].SetColor(Colour, currentData.Colour);
                 materialsOuter[i].SetFloat(BorderPower, currentData.BorderPower);
                 materialsOuter[i].SetFloat(NoiseScale, currentData.NoiseScale);
+				materialsOuter[i].SetFloat(Alpha, currentData.Alpha);
             }
         }
 
@@ -169,12 +178,16 @@ namespace Hadal.Interactables
         public Color Colour = Color.white;
         public float BorderPower = 0f;
         public float NoiseScale = 0f;
+		public float Alpha = 0.9f;
+		[MinMaxSlider(0.1f, 50f)] public Vector2 EmissionRate;
+		[MinMaxSlider(0.1f, 50f)] public Vector2 EmissionBreathing;
         public void Lerp(MushroomShaderData a, MushroomShaderData b, in float percent)
         {
             BorderColour = Color.Lerp(a.BorderColour, b.BorderColour, percent);
             Colour = Color.Lerp(a.Colour, b.Colour, percent);
             BorderPower = Mathf.Lerp(a.BorderPower, b.BorderPower, percent);
             NoiseScale = Mathf.Lerp(a.NoiseScale, b.NoiseScale, percent);
+			Alpha = Mathf.Lerp(a.Alpha, b.Alpha, percent);
         }
     }
 }
