@@ -31,7 +31,7 @@ namespace Hadal
             StopCoroutine(TimerNumeration());
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             if (!allowTimerTick) return;
             gameTime += Time.fixedDeltaTime;
