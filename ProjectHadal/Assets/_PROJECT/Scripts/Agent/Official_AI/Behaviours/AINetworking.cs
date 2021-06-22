@@ -22,6 +22,8 @@ namespace Hadal.AI
                 neManager.PlayerEnteredEvent += OnPlayerEnter;
                 neManager.PlayerLeftEvent += OnPlayerLeft;
                 neManager.RaiseEvent(ByteEvents.AI_BRAIN_DISABLE, null, SendOptions.SendReliable);
+                neManager.AddListener(ByteEvents.AI_RECEIVE_DAMAGE, RE_TakeDamage);
+                neManager.AddListener(ByteEvents.AI_RECEIVE_STUN, RE_TakeStun);
             }
             else
             {
@@ -29,8 +31,6 @@ namespace Hadal.AI
                 neManager.AddListener(ByteEvents.AI_GRAB_PLAYER, RE_AttachCarriedPlayerToMouth);
                 neManager.AddListener(ByteEvents.AI_RELEASE_PLAYER, RE_DetachAnyCarriedPlayer);
                 neManager.AddListener(ByteEvents.AI_BRAIN_DISABLE, RE_DisableBrain);
-                neManager.AddListener(ByteEvents.AI_RECEIVE_DAMAGE, RE_TakeDamage);
-                neManager.AddListener(ByteEvents.AI_RECEIVE_STUN, RE_TakeStun);
                 neManager.AddListener(ByteEvents.AI_DEATH, RE_Death);
             }
         }
@@ -80,7 +80,7 @@ namespace Hadal.AI
 
         void RE_TakeStun(EventData eventData)
         {
-            Debug.LogWarning("I kena fucking stun chibai");
+            //Debug.LogWarning("I kena fucking stun chibai");
             brain.HealthManager.TryStun((float)eventData.CustomData);
         }
 
