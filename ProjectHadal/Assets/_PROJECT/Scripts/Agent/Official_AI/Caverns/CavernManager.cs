@@ -175,20 +175,28 @@ namespace Hadal.AI.Caverns
         [NaughtyAttributes.ReadOnly] public bool CavernsInitialized = false;
         IEnumerator CheckCavernInitialization()
         {
-            while (!CavernsInitialized)
+            bool cavernsReady = false;
+            while (!cavernsReady)
             {
-                CavernsInitialized = true;
+                cavernsReady = true;
                 foreach (var cavern in handlerList)
                 {
                     if (!cavern.IsInitialized)
                     {
-                        CavernsInitialized = false;
+                        cavernsReady = false;
                         break;
                     }
                 }
 
                 yield return null;
             }
+            
+            while (GetHandlerOfAILocation == null)
+            {
+                yield return null;
+            }
+
+            CavernsInitialized = true;
         }
 
         /// <summary>
