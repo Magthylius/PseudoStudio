@@ -13,6 +13,7 @@ namespace Hadal.Usables
         static string _AIHitboxLayer = "Monster";
         public static string AIHitboxLayerName => _AIHitboxLayer;
         public static int AIHitboxLayerInt => LayerMask.NameToLayer(_AIHitboxLayer);
+        public static LayerMask AIHitboxLayerMask => LayerMask.GetMask(_AIHitboxLayer);
 
         public static bool InPlayerLayers(int layer) => InPlayerLayers(LayerMask.LayerToName(layer));
         public static bool InPlayerLayers(string layer)

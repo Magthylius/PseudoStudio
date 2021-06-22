@@ -25,11 +25,12 @@ namespace Hadal.AI
         
         public bool TryStun(float duration)
         {
+            //Debug.LogWarning("I kena fucking stun");
             if (NetworkEventManager.Instance.IsMasterClient)
                 return healthManager.TryStun(duration);
             else
             {
-                Debug.LogWarning("Stun event sent");
+                //Debug.LogWarning("Stun event sent");
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_STUN, duration, SendOptions.SendReliable);
                 return true;
             }

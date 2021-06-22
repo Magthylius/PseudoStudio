@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 //using Hadal.AI;
 using Magthylius.DataFunctions;
@@ -25,6 +26,12 @@ namespace Hadal.Usables.Projectiles
         private bool isExploding;
 
         #region Unity Lifecycle
+        private void OnDrawGizmosSelected() // draw circle radius for debug
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawSphere(transform.position, radius);
+        }
+        
         protected override void Start()
         {
             base.Start();
@@ -76,12 +83,15 @@ namespace Hadal.Usables.Projectiles
                 return true;
 
             //! Explode locally, check for AI
+            //Debug.LogWarning("triggered");
             Collider[] creatureCollider = new Collider[1];
-            Physics.OverlapSphereNonAlloc(transform.position, radius, creatureCollider, UsableBlackboard.AIHitboxLayerInt);
-            
+            int r = Physics.OverlapSphereNonAlloc(transform.position, radius, creatureCollider, UsableBlackboard.AIHitboxLayerMask);
+
             if (creatureCollider[0])
             {
-                creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>().TryStun(stunTime);
+                //Debug.LogWarning("Creature hit: " + creatureCollider[0].gameObject.name);
+                if (creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>() != null) 
+                    creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>().TryStun(stunTime);
             }
             
             isExploding = true;
@@ -118,12 +128,6 @@ namespace Hadal.Usables.Projectiles
             PPhysics.OnPhysicsFinished();
         }
         #endregion
-
-        private void OnDrawGizmosSelected() // draw circle radius for debug
-        {
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(transform.position, radius);
-        }
 
         private void ModeOn()
         {
