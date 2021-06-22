@@ -82,19 +82,19 @@ namespace Hadal.Debugging
             });
             
             //! AI
-            C_AIStop = new DebugCommand("AIStop", "Stops the creature movement", "AIStop", () =>
+            C_AIStop = new DebugCommand("aistop", "Stops the creature movement", "aistop", () =>
             {
-                FindObjectOfType<AIBrain>().NavigationHandler.SetDebugVelocityMultiplier(0f);
+                FindObjectOfType<AIBrain>().NavigationHandler.Disable();
             });
-            C_AIMove = new DebugCommand("AIMove", "Allows the creature to move", "AIMove", () =>
+            C_AIMove = new DebugCommand("aimove", "Allows the creature to move", "aimove", () =>
             {
-                FindObjectOfType<AIBrain>().NavigationHandler.ResetDebugVelocityMultiplier();
+                FindObjectOfType<AIBrain>().NavigationHandler.Enable();
             });
-            C_AISetSpeed = new DebugCommand<float>("AISetSpeed", "Sets the speed multiplier of AI", "AISetSpeed", (x) =>
+            C_AISetSpeed = new DebugCommand<float>("aisetspeed", "Sets the speed multiplier of AI", "aisetspeed", (x) =>
             {
                 FindObjectOfType<AIBrain>().NavigationHandler.SetDebugVelocityMultiplier(x);
             });
-            C_AISetState = new DebugCommand<int>("AISetState", "Forces the AI into (1)Anticipation, (2)Engagement, (3)Recovery, (4)Cooldown", "AISetState", (x) =>
+            C_AISetState = new DebugCommand<int>("aisetstate", "Forces the AI into (1)Anticipation, (2)Engagement, (3)Recovery, (4)Cooldown", "aisetstate", (x) =>
             {
                 switch (x)
                 {
@@ -116,23 +116,23 @@ namespace Hadal.Debugging
             });
             
             //! Player
-            C_SetHp = new DebugCommand<int>("SetHp", "Sets the health of player", "SetHp", (x) =>
+            C_SetHp = new DebugCommand<int>("sethp", "Sets the health of player", "sethp", (x) =>
             {
                 //! TODO: bind to player health
             });
-            C_SetSpeed = new DebugCommand<float>("SetSpeed", "Sets the speed multiplier of player", "SetSpeed", (x) =>
+            C_SetSpeed = new DebugCommand<float>("setspeed", "Sets the speed multiplier of player", "setspeed", (x) =>
             {
                 //! TODO: bind to player speed
             });
-            C_SetMaxSpeed = new DebugCommand<float>("SetMaxSpeed", "Sets the max velocity of player", "SetMaxSpeed", (x) =>
+            C_SetMaxSpeed = new DebugCommand<float>("setmaxspeed", "Sets the max velocity of player", "setmaxspeed", (x) =>
             {
                 //! TODO: bind to player max speed
             });
-            C_SetAcce = new DebugCommand<float>("SetAcce", "Sets the acceleration of player", "SetAcce", (x) =>
+            C_SetAcce = new DebugCommand<float>("setacce", "Sets the acceleration of player", "setacce", (x) =>
             {
                 //! TODO: bind to player acceleration
             });
-            C_GodMode = new DebugCommand("God", "Turns the player into god", "God", () =>
+            C_GodMode = new DebugCommand("god", "Turns the player into god", "god", () =>
             {
                 //! TODO: bind to player health
             });

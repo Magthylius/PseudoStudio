@@ -290,6 +290,7 @@ namespace Hadal.AI
 
             stunDuration = duration;
             isStunned = true;
+            NavigationHandler.Disable();
             NavigationHandler.SetAIStunned(isStunned);
             NavigationHandler.StunnedModeSteering();
             Debug.LogWarning("I am stunned:" + isStunned);
@@ -298,6 +299,7 @@ namespace Hadal.AI
         public void StopStun()
         {
             isStunned = false;
+            NavigationHandler.Enable();
             NavigationHandler.SetAIStunned(isStunned);
             NavigationHandler.CavernModeSteering();
             Debug.LogWarning("I am not stunned:" + isStunned);
