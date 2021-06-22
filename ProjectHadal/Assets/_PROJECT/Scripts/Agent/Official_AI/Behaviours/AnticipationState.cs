@@ -28,12 +28,12 @@ namespace Hadal.AI.States
         public override void OnStateStart()
         {
             RuntimeData.ResetAnticipationTicker();
-            
+
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
 
             Brain.StartCoroutine(InitializeAfterCaverns());
-            
+
             //print(RuntimeData.GetEngagementObjective);
             if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
                 ForceEngagementObjective(EngagementSubState.Aggressive);
@@ -43,7 +43,7 @@ namespace Hadal.AI.States
         {
             if (!AllowStateTick) return;
 
-            if(!Brain.IsStunned)
+            if (!Brain.IsStunned)
                 RuntimeData.TickAnticipationTicker(Time.deltaTime);
 
         }
@@ -89,7 +89,7 @@ namespace Hadal.AI.States
             {
                 yield return null;
             }
-            
+
             SetNewTargetCavern();
             if (Brain.TargetMoveCavern == null)
             {
@@ -101,12 +101,12 @@ namespace Hadal.AI.States
 
             AllowStateTick = true;
             RuntimeData.SetEngagementSubState(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
-            
+
             Brain.StartCoroutine(CheckPlayersInRange());
             gameStartupInitialization = true;
             DetermineNextCavern();
         }
-        
+
         void SetNewTargetCavern()
         {
             EngagementSubState currentObj = RuntimeData.GetEngagementObjective;
@@ -120,13 +120,13 @@ namespace Hadal.AI.States
                 ForceEngagementObjective(EngagementSubState.Aggressive);
                 Debug.LogWarning("Forced objective to: " + RuntimeData.GetEngagementObjective);
             }
-            
+
             switch (currentObj)
             {
                 //! fall back to aggressive
                 case EngagementSubState.None:
                 case EngagementSubState.Judgement:
-                    
+
                 case EngagementSubState.Aggressive:
                     if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
                     targetCavern = CavernManager.GetMostPopulatedCavern();
@@ -154,7 +154,7 @@ namespace Hadal.AI.States
                 default:
                     break;
             }
-            
+
             if (targetCavern == null)
             {
                 Debug.LogError("Random target cavern fallback! Something went wrong!");
@@ -170,8 +170,8 @@ namespace Hadal.AI.States
         void DetermineNextCavern()
         {
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, RuntimeData.GetEngagementObjective != EngagementSubState.Aggressive);
-           // NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
-            //NavigationHandler.EnableCachedQueuePathTimer();
+            NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
+            NavigationHandler.EnableCachedQueuePathTimer();
             NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
             Brain.UpdateNextMoveCavern(nextCavern);
         }

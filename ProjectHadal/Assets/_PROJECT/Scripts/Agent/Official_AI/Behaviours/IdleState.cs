@@ -42,7 +42,6 @@ namespace Hadal.AI.States
                 SwitchObjective(BrainState.Anticipation);
             }
 
-            Debug.LogWarning("IdleTick: " + RuntimeData.GetIdleTicks);
         }
 
         public override void LateStateTick()

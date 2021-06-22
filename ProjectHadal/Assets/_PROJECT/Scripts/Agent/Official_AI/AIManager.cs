@@ -30,6 +30,8 @@ namespace Hadal.AI
             {
                 FindObjectOfType<AITransformHandler>().Move(spawnPositions[(int)Random.Range(0, spawnPositions.Count)].position);
             }
+
+            
         }
 
     }
