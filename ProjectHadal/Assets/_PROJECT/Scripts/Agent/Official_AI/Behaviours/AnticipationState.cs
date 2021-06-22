@@ -133,7 +133,17 @@ namespace Hadal.AI.States
 
                     if (targetCavern == null)
                     {
-                        
+                        TunnelBehaviour targetTunnel = CavernManager.GetMostPopulatedTunnel();
+
+                        if (targetTunnel != null)
+                        {
+                            targetCavern = CavernManager.GetRandomCavernExcluding(targetTunnel.GetConnectedCaverns(), AICavern);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Cannot find any players at all! Has the game ended?");
+                            targetCavern = CavernManager.GetRandomCavern();
+                        }
                     }
                     //print(targetCavern);
                     break;
@@ -143,6 +153,12 @@ namespace Hadal.AI.States
                     break;
                 default:
                     break;
+            }
+            
+            if (targetCavern == null)
+            {
+                Debug.LogError("Random target cavern fallback! Something went wrong!");
+                targetCavern = CavernManager.GetRandomCavern();
             }
 
             //targetCavern = CavernManager.GetCavern(CavernTag.Starting);
