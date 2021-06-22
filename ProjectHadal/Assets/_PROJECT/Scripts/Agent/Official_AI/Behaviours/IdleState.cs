@@ -73,7 +73,7 @@ namespace Hadal.AI.States
                 yield return null;
             }
 
-            LingerAroundCavern();
+            //LingerAroundCavern();
         }
 
         void LingerAroundCavern()
