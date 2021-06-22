@@ -35,6 +35,7 @@ namespace Hadal.Usables.Projectiles
         protected virtual void OnEnable()
         {
             projectileTriggered = false;
+            setIsLocal();
         }
         protected virtual void Start()
         {
@@ -44,7 +45,6 @@ namespace Hadal.Usables.Projectiles
             neManager.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
             neManager.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
             PPhysics.PhysicsFinished += Dump;
-            setIsLocal();
         }
         #endregion
 
@@ -111,6 +111,8 @@ namespace Hadal.Usables.Projectiles
 
         private void setIsLocal()
         {
+            if (!neManager) return;
+
             if(neManager.isOfflineMode)
             {
                 IsLocal = true;
