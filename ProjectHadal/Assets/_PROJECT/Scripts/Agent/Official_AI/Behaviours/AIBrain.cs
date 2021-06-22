@@ -299,6 +299,8 @@ namespace Hadal.AI
             if (isStunned)
                 return false;
 
+            DetachAnyCarriedPlayer();
+            
             stunDuration = duration;
             isStunned = true;
             NavigationHandler.Disable();
