@@ -67,6 +67,7 @@ namespace Hadal.AI
         public StateMachineData MachineData => machineData;
         private Rigidbody rBody;
 
+        AIStateBase idleState;
         AIStateBase anticipationState;
         AIStateBase engagementState;
         AIStateBase recoveryState;
@@ -164,8 +165,8 @@ namespace Hadal.AI
             InitialiseStates();
             if (!startWithOverrideState)
             {
-                runtimeData.SetBrainState(BrainState.Anticipation);
-                stateMachine.SetState(anticipationState);
+                runtimeData.SetBrainState(BrainState.Idle);
+                stateMachine.SetState(idleState);
             }
             else
             {
@@ -187,6 +188,9 @@ namespace Hadal.AI
             //! instantiate classes
             stateMachine = new StateMachine();
 
+            //! Idle
+            idleState = new IdleState(this);
+
             //! Anticipation
             anticipationState = new AnticipationState(this);
 
@@ -207,9 +211,11 @@ namespace Hadal.AI
             stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
             stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
             stateMachine.AddEventTransition(to: cooldownState, withCondition: IsCooldown());
+            stateMachine.AddEventTransition(to: idleState, withCondition: IsIdle());
 
             allStates = new List<AIStateBase>
             {
+                idleState,
                 anticipationState,
                 engagementState,
                 recoveryState,
@@ -275,6 +281,11 @@ namespace Hadal.AI
             return RuntimeData.GetBrainState == BrainState.Cooldown && !isStunned;
         };
 
+        Func<bool> IsIdle() => () =>
+        {
+            return RuntimeData.GetBrainState == BrainState.Idle && !isStunned;
+        };
+
         public bool IsStunned => isStunned;
 
         #endregion
@@ -288,6 +299,8 @@ namespace Hadal.AI
             if (isStunned)
                 return false;
 
+            DetachAnyCarriedPlayer();
+            
             stunDuration = duration;
             isStunned = true;
             NavigationHandler.Disable();
@@ -365,7 +378,10 @@ namespace Hadal.AI
             //! Make sure any player in mouth is released
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
             foreach (var player in controllers)
+            {
                 player.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+                player.SetIsCarried(false);
+            }
 
             MouthObject.transform.DetachChildren();
             CarriedPlayer = null;

@@ -14,7 +14,7 @@ namespace Hadal.AI
     [CreateAssetMenu(menuName = "AI/Runtime Data")]
     public class LeviathanRuntimeData : ScriptableObject
     {
-        [Header("Information")] 
+        [Header("Information")]
         public string GrabbedPlayerLayer;
         public string FreePlayerLayer;
         public LayerMask PlayerMask;
@@ -45,15 +45,20 @@ namespace Hadal.AI
         public void AddCumulativeDamage(float damage) => cumulativeDamage += damage.Abs();
         public void UpdateCumulativeDamageThreshold(float newThreshold) => cumulativeDamageThreshold = newThreshold;
         public bool HasCumulativeDamageExceeded => cumulativeDamage > cumulativeDamageThreshold;
-        
+
 
         [Header("State Tickers")]
+        [SerializeField, ReadOnly] float idleTicker = 0f;
         [SerializeField, ReadOnly] float anticipationTicker = 0f;
         [SerializeField, ReadOnly] float engagementTicker = 0f;
         [SerializeField, ReadOnly] float recoveryTicker = 0f;
         [SerializeField, ReadOnly] float cooldownTicker = 0f;
 
         #region Tick Functions
+        public void TickIdleTicker(in float deltaTime) => TickATicker(ref idleTicker, deltaTime);
+        public void ResetIdleTicker() => ResetATicker(ref idleTicker);
+        public float GetIdleTicks => idleTicker;
+
         public void TickAnticipationTicker(in float deltaTime) => TickATicker(ref anticipationTicker, deltaTime);
         public void ResetAnticipationTicker() => ResetATicker(ref anticipationTicker);
         public float GetAnticipationTicks => anticipationTicker;
@@ -78,7 +83,7 @@ namespace Hadal.AI
         public float GetCooldownTicks => cooldownTicker;
 
         void TickATicker(ref float ticker, in float deltaTime) => ticker += deltaTime;
-        void ResetATicker(ref float ticker) => ticker = 0f; 
+        void ResetATicker(ref float ticker) => ticker = 0f;
         #endregion
 
         public void Awake_Initialise()
