@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2905221276de933438305f363fdb07c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allowSwitchTarget: 0
   overlapSphereDetectionRadius: 100
   detectionOffset: {x: 0, y: 0, z: 0}
   checkDelay: 0
@@ -71,9 +72,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2206939684412345072}
   - component: {fileID: 2206939684412345039}
+  - component: {fileID: 8848565156750440696}
   - component: {fileID: 638281922364176427}
   - component: {fileID: 2206939684412345074}
-  m_Layer: 14
+  - component: {fileID: 2007591999211397865}
+  - component: {fileID: 2007591999211397866}
+  m_Layer: 11
   m_Name: '#AI 2.0'
   m_TagString: Monster
   m_Icon: {fileID: 0}
@@ -110,7 +114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae3cbf74d9642e45b10c23ffb58fbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enabled: 1
   targetMoveCavern: {fileID: 0}
+  nextMoveCavern: {fileID: 0}
   healthManager: {fileID: 2206939684562575358}
   navigationHandler: {fileID: 2206939683509102030}
   senseDetection: {fileID: 6021279049498701051}
@@ -125,10 +131,24 @@ MonoBehaviour:
   CurrentTarget: {fileID: 0}
   CarriedPlayer: {fileID: 0}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
+  followNetworkManagerOfflineStatus: 1
   isOffline: 0
   DebugEnabled: 0
   isStunned: 0
-  stunDuration: 1
+  stunDuration: 999
+--- !u!114 &8848565156750440696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206939684412345075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a2b7b919e1d22b45b42aaf6ad1897fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 2206939684412345039}
 --- !u!135 &638281922364176427
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -158,6 +178,64 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &2007591999211397865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206939684412345075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 2
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 2007591999211397866}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &2007591999211397866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206939684412345075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useCustomTransform: 0
+  customTrans: {fileID: 0}
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 3
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 2
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 2
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
 --- !u!1 &2206939684562575328
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshDamage: 25
-  threshTimer: 15
+  threshTimer: 20
   applyEveryNSeconds: 3
   tailWhipDamage: 25
 --- !u!114 &2206939684562575358
@@ -292,12 +370,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2206939684412345072}
     - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: maxVelocity
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: thrustForce
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: attractionForce
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: lingerTimeRange.x
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: lingerTimeRange.y
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: closeRepulsionForce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: obstacleDetectRadius
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: cavernLingerTimeRange.x
@@ -308,12 +406,20 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: stunnedSteeringSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: aa946cb7318bb2e4d92525bd71fa7fc0, type: 2}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: navPointLingerTimeRange.x
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: navPointLingerTimeRange.y
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: axisStalemateDeviationForce
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295891, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: m_RootOrder
@@ -362,6 +468,10 @@ PrefabInstance:
     - target: {fileID: 1642916594410295916, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: m_Name
       value: '#Leviathan Navigation Handler'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8450563343994111741, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: m_Radius
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}

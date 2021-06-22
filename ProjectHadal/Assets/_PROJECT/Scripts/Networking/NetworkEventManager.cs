@@ -24,6 +24,7 @@ namespace Hadal.Networking
         PROJECTILE_DESPAWN,
         PROJECTILE_ACTIVATED,
         PROJECTILE_ATTACH,
+        AI_BRAIN_DISABLE,
         AI_SEND_DAMAGE,
         AI_RECEIVE_DAMAGE,
         AI_PIN_EVENT,

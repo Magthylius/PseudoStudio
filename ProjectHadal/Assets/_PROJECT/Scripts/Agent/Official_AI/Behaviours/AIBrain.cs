@@ -109,7 +109,37 @@ namespace Hadal.AI
         private void Start()
         {
             if (!enabled) return;
+            
+            Setup();
+        }
 
+        private void Update()
+        {
+            if (!CanUpdate || !enabled) return;
+            float deltaTime = DeltaTime;
+            preUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
+            navigationHandler.DoUpdate(deltaTime);
+            stateMachine?.MachineTick();
+            mainUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
+            HandleCarriedPlayer();
+        }
+        private void LateUpdate()
+        {
+            if (!CanUpdate || !enabled) return;
+            stateMachine?.LateMachineTick();
+            allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
+        }
+        private void FixedUpdate()
+        {
+            if (!CanUpdate || !enabled) return;
+            float fixedDeltaTime = FixedDeltaTime;
+            navigationHandler.DoFixedUpdate(fixedDeltaTime);
+            stateMachine?.FixedMachineTick();
+            allAIComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
+        }
+
+        void Setup()
+        {
             neManager = NetworkEventManager.Instance;
             if (neManager != null && followNetworkManagerOfflineStatus)
                 isOffline = neManager.isOfflineMode;
@@ -150,34 +180,8 @@ namespace Hadal.AI
             navigationHandler.SetCavernManager(cavernManager);
             if (graphicsHandler != null) MouthObject = graphicsHandler.MouthObject;
 
-            //neManager.AddListener(ByteEvents.AI_GRAB_EVENT, RE_AttachCarriedPlayerToMouth);
         }
-
-        private void Update()
-        {
-            if (!CanUpdate || !enabled) return;
-            float deltaTime = DeltaTime;
-            preUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
-            navigationHandler.DoUpdate(deltaTime);
-            stateMachine?.MachineTick();
-            mainUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
-            HandleCarriedPlayer();
-        }
-        private void LateUpdate()
-        {
-            if (!CanUpdate || !enabled) return;
-            stateMachine?.LateMachineTick();
-            allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
-        }
-        private void FixedUpdate()
-        {
-            if (!CanUpdate || !enabled) return;
-            float fixedDeltaTime = FixedDeltaTime;
-            navigationHandler.DoFixedUpdate(fixedDeltaTime);
-            stateMachine?.FixedMachineTick();
-            allAIComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
-        }
-
+        
         private void InitialiseStates()
         {
             //! instantiate classes
@@ -420,6 +424,8 @@ namespace Hadal.AI
         private BrainState overrideState = BrainState.None;
         private bool startWithOverrideState = false;
 
+        public void EnableBrain() => enabled = true;
+        public void DisableBrain() => enabled = false;
         public bool StateSuspension => suspendStateLogic;
         public void SuspendState() => suspendStateLogic = true;
         public void ResumeState() => suspendStateLogic = false;

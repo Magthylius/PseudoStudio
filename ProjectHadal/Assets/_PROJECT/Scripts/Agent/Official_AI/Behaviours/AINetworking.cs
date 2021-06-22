@@ -2,6 +2,7 @@ using UnityEngine;
 using ExitGames.Client.Photon;
 using Hadal.Networking;
 using Hadal.Player;
+using Photon.Realtime;
 
 namespace Hadal.AI
 {
@@ -20,12 +21,14 @@ namespace Hadal.AI
                 //! If host
                 neManager.PlayerEnteredEvent += OnPlayerEnter;
                 neManager.PlayerLeftEvent += OnPlayerLeft;
+                neManager.RaiseEvent(ByteEvents.AI_BRAIN_DISABLE, null, SendOptions.SendReliable);
             }
             else
             {
                 //! If not host
                 neManager.AddListener(ByteEvents.AI_GRAB_PLAYER, RE_AttachCarriedPlayerToMouth);
                 neManager.AddListener(ByteEvents.AI_RELEASE_PLAYER, RE_DetachAnyCarriedPlayer);
+                neManager.AddListener(ByteEvents.AI_BRAIN_DISABLE, RE_DisableBrain);
             }
                 
         }
@@ -45,7 +48,7 @@ namespace Hadal.AI
             brain.RefreshPlayerReferences();
         }
         
-        public void RE_AttachCarriedPlayerToMouth(EventData eventData)
+        void RE_AttachCarriedPlayerToMouth(EventData eventData)
         {
             int data = (int)eventData.CustomData;
             
@@ -58,9 +61,14 @@ namespace Hadal.AI
             }
         }
     
-        public void RE_DetachAnyCarriedPlayer(EventData eventData)
+        void RE_DetachAnyCarriedPlayer(EventData eventData)
         {
             brain.DetachAnyCarriedPlayer();
+        }
+
+        void RE_DisableBrain(EventData eventData)
+        {
+            brain.DisableBrain();
         }
     }
 }
