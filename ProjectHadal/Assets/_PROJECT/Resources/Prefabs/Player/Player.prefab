@@ -1393,27 +1393,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
---- !u!114 &5123390768726369869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7826128791420532441}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23d35b4e5ef0e1040ae64065674c2fee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  invertedFin: 0
-  currentQuat: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
-  originalRotation: {x: 0.5792279, y: -0.5792279, z: 0.4055799, w: -0.4055799}
-  forwardRotation: {x: 0.44957453, y: -0.8462512, z: 0.23748973, w: -0.159187}
-  backwardRotation: {x: 0.4330127, y: -0.25000003, z: 0.75, w: -0.43301275}
-  upwardRotation: {x: 0.326692, y: -0.7647114, z: 0.51212406, w: -0.21498327}
-  downwardRotation: {x: -0.7333284, y: 0.3920978, z: -0.16953057, w: 0.52891237}
-  turnLeftRotation: {x: -0.7091447, y: 0.4817022, z: -0.28053835, w: 0.4317118}
-  turnRightRotation: {x: 0.41806325, y: -0.7484293, z: 0.40561834, w: -0.31709695}
 --- !u!114 &4790383674308879192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1435,6 +1414,27 @@ MonoBehaviour:
   downwardRotation: {x: -0.73332834, y: -0.3920977, z: 0.16953065, w: 0.5289124}
   turnLeftRotation: {x: 0.41806313, y: 0.74842924, z: -0.40561846, w: -0.31709713}
   turnRightRotation: {x: -0.70914465, y: -0.48170215, z: 0.2805384, w: 0.43171185}
+--- !u!114 &5123390768726369869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7826128791420532441}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23d35b4e5ef0e1040ae64065674c2fee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invertedFin: 0
+  currentQuat: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+  originalRotation: {x: 0.5792279, y: -0.5792279, z: 0.4055799, w: -0.4055799}
+  forwardRotation: {x: 0.44957453, y: -0.8462512, z: 0.23748973, w: -0.159187}
+  backwardRotation: {x: 0.4330127, y: -0.25000003, z: 0.75, w: -0.43301275}
+  upwardRotation: {x: 0.326692, y: -0.7647114, z: 0.51212406, w: -0.21498327}
+  downwardRotation: {x: -0.7333284, y: 0.3920978, z: -0.16953057, w: 0.52891237}
+  turnLeftRotation: {x: -0.7091447, y: 0.4817022, z: -0.28053835, w: 0.4317118}
+  turnRightRotation: {x: 0.41806325, y: -0.7484293, z: 0.40561834, w: -0.31709695}
 --- !u!1 &7985317543766093472
 GameObject:
   m_ObjectHideFlags: 0
