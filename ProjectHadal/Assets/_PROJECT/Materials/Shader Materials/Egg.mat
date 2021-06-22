@@ -8,20 +8,19 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Egg
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 674fffa35078d1242848efe763bf325e, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_ff53318cd16a4f739e37b216f29ad15f:
-        m_Texture: {fileID: 2800000, guid: 016e95565131cbe4bbe66d399a1c4efa, type: 3}
+        m_Texture: {fileID: 2800000, guid: adf59ccda5c78de45a2c192f1b21bf11, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -87,9 +86,9 @@ Material:
     m_Floats:
     - Vector1_1d185ceeecfe47aa9b522f87c5956b5b: 0
     - Vector1_1d7b299717444ee4a183bb00e07f4e7b: 0
-    - Vector1_37da2d29a251431e869c9971053de8ed: 0.5
+    - Vector1_37da2d29a251431e869c9971053de8ed: 0
     - Vector1_3e8deb1ae8334a9d904b08defb0c8a4a: 1
-    - Vector1_5e57537d2e3641e89eac8cbe4215779e: 25
+    - Vector1_5e57537d2e3641e89eac8cbe4215779e: 50
     - Vector1_a9de4aa6171540d9bd5d9b5f698ff698: 0.3
     - Vector1_ab8b50ea117f4a6c9c3acc7fb731ee0f: 2
     - Vector1_bd1484aa431a42ac97ac0f84693aeb46: 0.1
@@ -122,8 +121,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_1706c207a1f248928a3b7a2d2f51cc74: {r: 0.07843138, g: 0, b: 0.7843137, a: 0}
-    - Color_2671a503fead41b08eefe3113ebf9cfe: {r: 4, g: 4, b: 4, a: 0}
+    - Color_1706c207a1f248928a3b7a2d2f51cc74: {r: 256, g: 256, b: 256, a: 0}
+    - Color_2671a503fead41b08eefe3113ebf9cfe: {r: 10.680627, g: 0, b: 7.4425793, a: 0}
     - Color_b118641dd4664c31af888c4cd535f8f6: {r: 0.047058824, g: 0, b: 2, a: 0}
     - Color_c6f3b57657e642ed92219feb4661a664: {r: 0, g: 1.6941177, b: 2, a: 0}
     - Vector3_d950105c22344192836f9665b16fa458: {r: 0, g: 1, b: 0, a: 0}
