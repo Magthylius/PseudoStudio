@@ -43,8 +43,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.3764706, g: 0.58431375, b: 0.77254903, a: 1}
-  m_Intensity: 50
-  m_Range: 150
+  m_Intensity: 200
+  m_Range: 250
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -316,6 +316,7 @@ MonoBehaviour:
   IsAttached: 0
   particleEffect: {fileID: 0}
   projectileAsset: {fileID: 0}
+  impactVFXTime: 5
   flareLight: {fileID: 6458389941356830930}
   validLayer:
   - Monster
