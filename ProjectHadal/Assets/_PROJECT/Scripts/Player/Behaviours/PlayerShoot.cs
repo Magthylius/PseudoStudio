@@ -121,7 +121,7 @@ namespace Hadal.Player.Behaviours
 
                 if ((int)data[0] == _pView.ViewID)
                 {
-                    FireTorpedo((int)data[1]);
+                    FireTorpedo((int)data[1], true);
                 }
             }
         }
@@ -135,10 +135,10 @@ namespace Hadal.Player.Behaviours
             neManager.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, content);
         }
 
-        public void FireTorpedo(int projectileID)
+        public void FireTorpedo(int projectileID, bool ignoreCooldown)
         {
             if (!AllowUpdate) return;
-            if (!tLauncher.IsChamberLoaded)
+            if (!ignoreCooldown && !tLauncher.IsChamberLoaded)
             {
                 //if (UIManager.IsNull) return;
                 controller.UI.UpdateFiringVFX(true);
@@ -155,9 +155,12 @@ namespace Hadal.Player.Behaviours
             controller.GetInfo.Inventory.IncreaseProjectileCount();
         }
 
-        public void FireUtility(int projectileID, UsableLauncherObject usable, float chargeTime)
+        public void FireUtility(int projectileID, UsableLauncherObject usable, float chargeTime, bool ignoreCooldown)
         {
-            if (!_canUtilityFire || !AllowUpdate) return;
+            if (!ignoreCooldown && (!_canUtilityFire || !AllowUpdate))
+                return;
+   /*         if (!_canUtilityFire || !AllowUpdate) return;*/
+
             HandleUtilityReloadTimer(usable);
             usable.Use(CreateInfoForUtility(projectileID, chargeTime));
             controller.GetInfo.Inventory.IncreaseProjectileCount();
