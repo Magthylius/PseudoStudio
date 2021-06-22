@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Hadal.AI
 {
-    public class AIHitboxHandler : MonoBehaviour, IDamageable, IStunnable
+    public class AIHitboxHandler : MonoBehaviour, IDamageable, IStunnable, ISlowable
     {
         [SerializeField] private AIHealthManager healthManager;
 
@@ -30,13 +30,30 @@ namespace Hadal.AI
                 return healthManager.TryStun(duration);
             else
             {
-                Debug.LogWarning("Stun event sent");
+                //Debug.LogWarning("Stun event sent");
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_STUN, duration, SendOptions.SendReliable);
                 return true;
             }
         }
+        
+        public void AttachProjectile()
+        {
+            Debug.LogWarning("Slower attached!");
+            if (NetworkEventManager.Instance.IsMasterClient)
+                healthManager.UpdateSlowStacks(1);
+            else
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1, SendOptions.SendReliable);
+        }
+
+        public void DetachProjectile()
+        {
+            Debug.LogWarning("Slower detached!");
+            if (NetworkEventManager.Instance.IsMasterClient)
+                healthManager.UpdateSlowStacks(-1);
+            else
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1, SendOptions.SendReliable);
+        }
 
         public GameObject Obj { get; }
-        
     }
 }

@@ -5,7 +5,7 @@ namespace Hadal
 {
     public interface ISlowable
     {
-        void UpdateSlowStacks(int change);
-        void ResetAllSlowStacks();
+        void AttachProjectile();
+        void DetachProjectile();
     }
 }

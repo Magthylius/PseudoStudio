@@ -33,8 +33,9 @@ namespace Hadal.Usables.Projectiles
         protected override void OnEnable()
         {
             base.OnEnable();
-            PPhysics.PhysicsFinished += Send_DecrementLeviathanSlowStacks;
+            //PPhysics.PhysicsFinished += Send_DecrementLeviathanSlowStacks;
             projectileTriggered = false;
+            attachedToMonster = false;
         }
 
         private void OnDisable()
@@ -51,7 +52,30 @@ namespace Hadal.Usables.Projectiles
 
             projectileTriggered = true;
 
-            foreach (string layerName in validLayer)
+            int layer = collision.gameObject.layer;
+            if (UsableBlackboard.InAILayers(layer))
+            {
+                Debug.LogWarning("hit ai!");
+                collision.gameObject.GetComponentInChildren<ISlowable>().AttachProjectile();
+                PPhysics.PhysicsFinished += collision.gameObject.GetComponentInChildren<ISlowable>().DetachProjectile;
+            }
+
+            if (!UsableBlackboard.InPlayerLayers(layer))
+            {
+                transform.parent = collision.gameObject.transform;
+                Rigidbody.isKinematic = true;
+                IsAttached = true;
+            
+                Vector3 collisionSpot = gameObject.transform.position;
+
+                object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
+                ImpactBehaviour(); 
+            }
+            
+            
+            
+            /*foreach (string layerName in validLayer)
             {
                 LayerMask layer = LayerMask.NameToLayer(layerName);
                 if (collision.gameObject.layer == layer.value)
@@ -63,10 +87,11 @@ namespace Hadal.Usables.Projectiles
 
                     //send event data to attach          
                     
-                    if (LayerMask.LayerToName(layer) == "MONSTER")
+                    if (UsableBlackboard.InAILayers(collision.gameObject.layer))
                     {
                         attachedToMonster = true;
                         Send_IncrementLeviathanSlowStacks();
+                        //Debug.LogWarning("attached to monster");
                     }
                     else
                     {
@@ -80,7 +105,7 @@ namespace Hadal.Usables.Projectiles
 
                     
                 }
-            }
+            }*/
         }
 
         protected override void ImpactBehaviour()
@@ -96,18 +121,18 @@ namespace Hadal.Usables.Projectiles
             particleEffect.SetActive(false);
         }
 
-        private void Send_IncrementLeviathanSlowStacks()
+        /*private void Send_IncrementLeviathanSlowStacks()
         {
             var options = new RaiseEventOptions() { Receivers = ReceiverGroup.MasterClient };
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1, options);
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1);
         }
         private void Send_DecrementLeviathanSlowStacks()
         {
             PPhysics.PhysicsFinished -= Send_DecrementLeviathanSlowStacks;
             
             if (!attachedToMonster) return;
-            var options = new RaiseEventOptions() { Receivers = ReceiverGroup.MasterClient };
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1, options);
-        }
+            //var options = new RaiseEventOptions() { Receivers = ReceiverGroup. };
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1);
+        }*/
     }
 }

@@ -11,7 +11,7 @@ using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
-    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, ISlowable, IAmLeviathan, ILeviathanComponent
+    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, IAmLeviathan, ILeviathanComponent
     {
         [SerializeField] int maxHealth;
         
@@ -69,6 +69,9 @@ namespace Hadal.AI
             Obj.SetActive(false);
             brain.GraphicsHandler.gameObject.SetActive(false);
             brain.DetachAnyCarriedPlayer();
+            
+            //! End the game
+            GameManager.Instance.EndGameEvent();
         }
         
         public GameObject Obj => transform.parent.gameObject;
@@ -115,6 +118,7 @@ namespace Hadal.AI
             Debug.LogWarning("AI slowed to: " + GetSlowPercentage());
         }
         public void ResetAllSlowStacks() => currentSlowStacks = 0;
+
         public float GetSlowPercentage()
         {
             float percent = currentSlowStacks * slowPercentPerStack.AsFloat();
