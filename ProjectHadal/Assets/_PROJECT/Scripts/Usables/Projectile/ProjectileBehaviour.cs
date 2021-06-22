@@ -34,6 +34,7 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
         {
+            neManager = NetworkEventManager.Instance;
             projectileTriggered = false;
             setIsLocal();
         }
@@ -41,6 +42,14 @@ namespace Hadal.Usables.Projectiles
         {
             DoDebugEnabling(DebugKey);
             neManager = NetworkEventManager.Instance;
+            /*if(!neManager)
+            {
+                print("network Event Manager not found");
+            }
+            else
+            {
+                print("network Event Manager found");
+            }*/
             neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
             neManager.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
             neManager.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
@@ -111,8 +120,11 @@ namespace Hadal.Usables.Projectiles
 
         private void setIsLocal()
         {
-            if (!neManager) return;
-
+            /*if (!neManager)
+            {
+                print("No Manager found");
+                return;
+            }*/
             if(neManager.isOfflineMode)
             {
                 IsLocal = true;
