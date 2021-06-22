@@ -30,6 +30,7 @@ namespace Hadal.AI
                 neManager.AddListener(ByteEvents.AI_RELEASE_PLAYER, RE_DetachAnyCarriedPlayer);
                 neManager.AddListener(ByteEvents.AI_BRAIN_DISABLE, RE_DisableBrain);
                 neManager.AddListener(ByteEvents.AI_RECEIVE_DAMAGE, RE_TakeDamage);
+                neManager.AddListener(ByteEvents.AI_RECEIVE_STUN, RE_TakeStun);
                 neManager.AddListener(ByteEvents.AI_DEATH, RE_Death);
             }
         }
@@ -75,6 +76,11 @@ namespace Hadal.AI
         void RE_TakeDamage(EventData eventData)
         {
             brain.HealthManager.TakeDamage((int)eventData.CustomData);
+        }
+
+        void RE_TakeStun(EventData eventData)
+        {
+            brain.HealthManager.TryStun((float)eventData.CustomData);
         }
 
         void RE_Death(EventData eventData)

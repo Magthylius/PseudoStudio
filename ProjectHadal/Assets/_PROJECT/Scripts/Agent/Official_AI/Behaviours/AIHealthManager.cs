@@ -82,6 +82,7 @@ namespace Hadal.AI
             if (!brain || brain.IsStunned)
                 return false;
             
+            Debug.LogWarning("stunned");
             //stunTimer.Resume();
             stunTimer.RestartWithDuration(duration);
             return brain.TryToStun(duration);
@@ -89,6 +90,7 @@ namespace Hadal.AI
         
         private void CancelStun()
         {
+            Debug.LogWarning("unstunned");
             stunTimer.Pause();
             brain.StopStun();
         }
