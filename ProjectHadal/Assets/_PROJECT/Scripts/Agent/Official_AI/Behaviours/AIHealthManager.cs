@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
+using Hadal.Networking;
 using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
@@ -40,8 +42,8 @@ namespace Hadal.AI
         {
             if (IsUnalive)
             {
-                $"Leviathan is unalive. Congrats!!!".Msg();
-                Obj.SetActive(false);
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_DEATH, null, SendOptions.SendReliable);
+                Death();
             }
         }
 
@@ -51,6 +53,13 @@ namespace Hadal.AI
             $"AI health: {currentHealth}".Msg();
             return true;
         }
+
+        public void Death()
+        {
+            $"Leviathan is unalive. Congrats!!!".Msg();
+            Obj.SetActive(false);
+        }
+        
         public GameObject Obj => transform.parent.gameObject;
         public bool IsUnalive => currentHealth <= 0;
         public float GetHealthRatio => currentHealth / maxHealth.AsFloat();
