@@ -32,6 +32,7 @@ namespace Hadal.Usables.Projectiles
         {
             base.OnEnable();
             PPhysics.PhysicsFinished += Send_DecrementLeviathanSlowStacks;
+            projectileTriggered = false;
         }
 
         private void OnDisable()
@@ -45,6 +46,8 @@ namespace Hadal.Usables.Projectiles
         {
             if (!IsLocal || IsAttached)
                 return;
+
+            projectileTriggered = true;
 
             foreach (string layerName in validLayer)
             {

@@ -109,13 +109,15 @@ namespace Hadal.AI
 
         public void UpdateSlowStacks(int change)
         {
-            currentSlowStacks = (currentSlowStacks + change).Clamp(0, maxSlowStacks);
+            currentSlowStacks = (currentSlowStacks + change);
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
+            
+            Debug.LogWarning("AI slowed to: " + GetSlowPercentage());
         }
         public void ResetAllSlowStacks() => currentSlowStacks = 0;
         public float GetSlowPercentage()
         {
-            float percent = slowPercentPerStack * maxSlowStacks.AsFloat();
+            float percent = currentSlowStacks * slowPercentPerStack.AsFloat();
             if (percent > maxSlowPercent)
                 percent = maxSlowPercent;
             return percent;
