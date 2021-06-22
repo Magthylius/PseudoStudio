@@ -27,6 +27,7 @@ namespace Hadal.Networking
         AI_BRAIN_DISABLE,
         AI_SEND_DAMAGE,
         AI_RECEIVE_DAMAGE,
+        AI_RECEIVE_STUN,
         AI_PIN_EVENT,
         AI_GRAB_PLAYER,
         AI_RELEASE_PLAYER,
