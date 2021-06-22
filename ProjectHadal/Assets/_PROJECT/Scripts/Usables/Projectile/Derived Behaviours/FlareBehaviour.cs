@@ -16,6 +16,7 @@ namespace Hadal.Usables.Projectiles
         public void OnDisable()
         {
             IsAttached = false;
+            Rigidbody.isKinematic = false;
         }
 
         public void SubscribeModeEvent()

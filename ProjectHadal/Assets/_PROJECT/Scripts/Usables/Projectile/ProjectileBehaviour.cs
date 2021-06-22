@@ -41,7 +41,6 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Start()
         {
             DoDebugEnabling(DebugKey);
-            neManager = NetworkEventManager.Instance;
             /*if(!neManager)
             {
                 print("network Event Manager not found");
@@ -67,7 +66,6 @@ namespace Hadal.Usables.Projectiles
 
         protected virtual void ImpactBehaviour()
         {
-            PPhysics.OnPhysicsFinished();
             return;        
         }
 
@@ -178,6 +176,7 @@ namespace Hadal.Usables.Projectiles
                     gameObject.transform.position = (Vector3)data[1];
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
+                    ImpactBehaviour();
                     print(projectileID + "projectile attaching due to event");
 
                     if((bool)data[2])

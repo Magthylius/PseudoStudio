@@ -30,6 +30,7 @@ namespace Hadal
         }
 
         public void StartGameEvent() => GameStartedEvent?.Invoke();
+        public void EndGameEvent() => GameEndedEvent?.Invoke();
         
         public void ChangeGameState(GameState state) => currentGameState = state;
         public GameState CurrentGameState => currentGameState;
