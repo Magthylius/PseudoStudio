@@ -126,7 +126,8 @@ namespace Hadal.AI
 			while (++i < points.Length)
 			{
 				points[i].SetDisableGraphics(false);
-				points[i].transform.GetChild(0).gameObject.SetActive(true);
+				if (points[i].transform.childCount != 0)
+					points[i].transform.GetChild(0).gameObject.SetActive(true);
 			}
 		}
     }
