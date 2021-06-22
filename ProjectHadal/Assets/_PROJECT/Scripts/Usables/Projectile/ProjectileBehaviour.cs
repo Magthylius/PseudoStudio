@@ -27,6 +27,7 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] protected GameObject projectileAsset;
         protected Timer impactDuration;
         protected bool isVisualizing;
+        [SerializeField] protected float impactVFXTime = 5f;
 
         #region Unity Lifecycle
         protected virtual void Awake() => HandleDependentComponents();

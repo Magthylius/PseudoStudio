@@ -1,6 +1,7 @@
 using UnityEngine;
 using Hadal.Networking;
 using Magthylius.DataFunctions;
+using UnityEngine.VFX;
 //using Hadal.AI;
 
 //Created by Jet
@@ -13,6 +14,7 @@ namespace Hadal.Usables.Projectiles
         #region Unity Lifecycle
         protected override void Start()
         {
+            impactVFXTime = particleEffect.GetComponent<VisualEffect>().GetFloat("Dust Lifetime");
             base.Start();
             impactDuration = new Timer(5f);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);

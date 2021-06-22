@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.VFX;
 using Magthylius.DataFunctions;
 using Hadal.Networking;
 using static Hadal.ExplosivePoint;
@@ -7,7 +8,6 @@ namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
     {
-        [SerializeField] private float impactVFXTime = 5f;
         private bool projectileTriggered = false;
         private Vector3 aimedPoint = Vector3.zero;
         
@@ -22,6 +22,7 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
+            impactVFXTime = particleEffect.GetComponent<VisualEffect>().GetFloat("Explosion Lifetime");
             impactDuration = new Timer(impactVFXTime);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
         }
