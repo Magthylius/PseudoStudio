@@ -50,7 +50,7 @@ namespace Hadal.Interactables
             _percent = 0f;
 
             currentData = new MushroomShaderData();
-            const int count = 2;
+            int count = renderersOuter.Count;
             int i = -1;
             while (++i < count)
             {
@@ -105,7 +105,7 @@ namespace Hadal.Interactables
             _percent = _percent.Clamp01();
             currentData.Lerp(unreactiveData, reactiveData, _percent);
 
-            const int count = 2;
+            int count = materialsOuter.Count;
             int i = -1;
             while (++i < count)
             {
