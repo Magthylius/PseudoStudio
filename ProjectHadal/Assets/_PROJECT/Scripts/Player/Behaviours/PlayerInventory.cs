@@ -75,7 +75,6 @@ namespace Hadal.Player.Behaviours
         {
             if (_uInput.FireKey1)
             {
-                _controllerInfo.Shooter.SendTorpedoEvent(pViewForProj + _projectileCount);
                 _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false);
             }
             if (EquippedUsable.Data.isChargable)
@@ -113,8 +112,6 @@ namespace Hadal.Player.Behaviours
         void FireUtility(int projectileID)
         {
             _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _chargeTime, false);
-            object[] content = new object[] { _pView.ViewID,projectileID, _selectedItem, _chargeTime };
-            neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
         }
 
         private void UpdateUsables(in float deltaTime)
