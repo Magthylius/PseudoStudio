@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f97f7ae0167f1804a90964dbb8f2cf11, type: 3}
   m_Name: _Primary StateMachineData
   m_EditorClassIdentifier: 
+  Idle: {fileID: 11400000, guid: 90008de8cf3e28d499b28c6f7bd0831f, type: 2}
   Anticipation: {fileID: 11400000, guid: eec8d81bbf73292408bfbe489d63be92, type: 2}
   Engagement: {fileID: 11400000, guid: 01d404c5532012f49bce1ce8cbeb6ed0, type: 2}
   Recovery: {fileID: 11400000, guid: dc47404b1c014dc4990ea39d5508e647, type: 2}
   Cooldown: {fileID: 11400000, guid: ff5515e0f63da304ab32e7cb193e8a41, type: 2}
+  RandomiseConfidenceOnAwake: 0
+  MinConfidence: 0
+  MaxConfidence: 0
   InitialConfidence: 50
-  NestDestroyedPermenantConfidence: 50
+  NestDestroyedPermanentConfidence: 0
