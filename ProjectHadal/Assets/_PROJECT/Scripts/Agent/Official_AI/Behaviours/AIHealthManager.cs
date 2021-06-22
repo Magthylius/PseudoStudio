@@ -98,14 +98,14 @@ namespace Hadal.AI
             if (!brain || brain.IsStunned)
                 return false;
             
-            Debug.LogWarning("stunned");
+            //Debug.LogWarning("stunned");
             stunTimer.RestartWithDuration(duration);
             return brain.TryToStun(duration);
         }
         
         private void CancelStun()
         {
-            Debug.LogWarning("unstunned");
+            //Debug.LogWarning("unstunned");
             stunTimer.Pause();
             brain.StopStun();
         }
@@ -117,7 +117,7 @@ namespace Hadal.AI
             
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
             
-            Debug.LogWarning("AI slowed to: " + GetSlowPercentage());
+            //Debug.LogWarning("AI slowed to: " + GetSlowPercentage());
         }
         public void ResetAllSlowStacks() => currentSlowStacks = 0;
 

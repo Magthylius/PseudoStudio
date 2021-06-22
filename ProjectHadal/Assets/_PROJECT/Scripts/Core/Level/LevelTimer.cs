@@ -31,11 +31,16 @@ namespace Hadal
             StopCoroutine(TimerNumeration());
         }
 
+        private void LateUpdate()
+        {
+            if (!allowTimerTick) return;
+            gameTime += Time.fixedDeltaTime;
+        }
+
         IEnumerator TimerNumeration()
         {
             while (allowTimerTick)
             {
-                gameTime += Time.fixedUnscaledDeltaTime;
                 var ts = TimeSpan.FromSeconds(gameTime);
                 timerTMP.text = $"{ts.Minutes:00}:{ts.Seconds:00}";
                 yield return new WaitForSeconds(0.5f);

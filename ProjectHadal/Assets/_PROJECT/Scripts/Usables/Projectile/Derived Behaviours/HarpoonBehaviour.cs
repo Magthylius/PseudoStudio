@@ -55,7 +55,7 @@ namespace Hadal.Usables.Projectiles
             int layer = collision.gameObject.layer;
             if (UsableBlackboard.InAILayers(layer))
             {
-                Debug.LogWarning("hit ai!");
+                //Debug.LogWarning("hit ai!");
                 collision.gameObject.GetComponentInChildren<ISlowable>().AttachProjectile();
                 PPhysics.PhysicsFinished += collision.gameObject.GetComponentInChildren<ISlowable>().DetachProjectile;
             }

@@ -38,7 +38,7 @@ namespace Hadal.AI
         
         public void AttachProjectile()
         {
-            Debug.LogWarning("Slower attached!");
+            //Debug.LogWarning("Slower attached!");
             if (NetworkEventManager.Instance.IsMasterClient)
                 healthManager.UpdateSlowStacks(1);
             else
@@ -47,7 +47,7 @@ namespace Hadal.AI
 
         public void DetachProjectile()
         {
-            Debug.LogWarning("Slower detached!");
+            //Debug.LogWarning("Slower detached!");
             if (NetworkEventManager.Instance.IsMasterClient)
                 healthManager.UpdateSlowStacks(-1);
             else
