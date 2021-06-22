@@ -105,10 +105,6 @@ namespace Hadal.AI
         private CavernManager cavernManager;
 
         //! Misc variables
-        //[Header("Pathing")] 
-        //[SerializeField] private bool enableListConversion;
-        //[SerializeField, ReadOnly] private List<NavPoint> pointPathList;
-        //[SerializeField, ReadOnly] private List<NavPoint> cachedPointPathList;
         private Queue<NavPoint> pointPath;
         private Queue<NavPoint> cachedPointPath;
         private bool _isEnabled;
@@ -317,7 +313,6 @@ namespace Hadal.AI
                     pathQueue += point.gameObject.name + ", ";
             }
 
-            //ConvertCachedPointPathToList();
             // Local Methods
             bool HasTheSameCavernTagAsDestinationCavern(NavPoint point) => point && point.CavernTag == destination.cavernTag;
             bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point && point != other;
@@ -338,7 +333,7 @@ namespace Hadal.AI
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
             }
-            //Debug.LogWarning("Moving");
+            
             ComputeCachedDestinationCavernPath(destination);
             SetQueuedPathFromCache();
         }
@@ -380,20 +375,12 @@ namespace Hadal.AI
             ResetTimeoutTimer();
             if (enableDebug)
             {
-                //! ?? why requeue??
-                /*var first = currentPoint;
-                var second = pointPath.Requeue();
-                var third = pointPath.Requeue();
-                $"Queued path set: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();*/
-
                 string debugPath = "";
                 foreach (NavPoint point in pointPath)
                     debugPath += point + ",";
 
                 $"Queued path set: {debugPath}".Msg();
             }
-
-            //ConvertPointPathToList();
         }
 
         /// <summary>
@@ -427,9 +414,6 @@ namespace Hadal.AI
                 isOnCustomPath = false;
                 pointPath.Clear();
                 StartCoroutine(DestroyAndRegenerateCurrentNavPoint(instantlyFindNewNavPoint));
-                //Debug.LogWarning("Destroy and Regen ");
-
-                //ConvertPointPathToList();
             }
 
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
@@ -533,6 +517,9 @@ namespace Hadal.AI
             float cappedVelocity = maxVelocity * debugVelocityMultiplier;
             if (rBody.velocity.magnitude > cappedVelocity)
                 rBody.velocity = rBody.velocity.normalized * cappedVelocity;
+			
+			if (cappedVelocity == 0f)
+				rBody.velocity = Vector3.zero;
         }
 
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
@@ -544,8 +531,6 @@ namespace Hadal.AI
 
             if (!hasReachedPoint && CloseEnoughToTargetNavPoint())
             {
-                //print("Square Dist: " + currentPoint.GetSqrDistanceTo(pilotTrans.position));
-                //print("Nav Radius: " +closeNavPointDetectionRadius * closeNavPointDetectionRadius);
                 hasReachedPoint = true;
                 OnReachedPoint?.Invoke();
                 EvaluateQueuedPath();
@@ -566,9 +551,6 @@ namespace Hadal.AI
                     currentPoint = pointPath.Dequeue();
                     hasReachedPoint = false;
                     ResetTimeoutTimer();
-
-                    //ConvertPointPathToList();
-                    //ConvertCachedPointPathToList();
                     return;
                 }
 
@@ -694,16 +676,6 @@ namespace Hadal.AI
         private float GetNextCavernLingerTime() => Random.Range(cavernLingerTimeRange.x, cavernLingerTimeRange.y);
 
         public void SetAIStunned(bool isStun) => isStunned = isStun;
-
-        /*private void ConvertPointPathToList()
-        {
-            if (enableListConversion) pointPathList = pointPath.ToList();
-        }*/
-
-        /*private void ConvertCachedPointPathToList()
-        {
-            if (enableListConversion) cachedPointPathList = cachedPointPath.ToList();
-        }*/
 
         #endregion
 
