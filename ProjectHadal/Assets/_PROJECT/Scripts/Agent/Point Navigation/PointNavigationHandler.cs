@@ -262,19 +262,30 @@ namespace Hadal.AI
 
             cachedPointPath.Clear();
 
-
-
-            //! First point and its approach point. Enqueue approach first.
+            //! First point and its approach points. Enqueue approach first.
             NavPoint first = entryPoints.Single(point => point.CavernTag == currentCavern.cavernTag);
-            if (first.approachPoint != null)
-                cachedPointPath.Enqueue(first.approachPoint);
+            
+            NavPoint appChild = first.approachPoint;
+            while (appChild != null)
+            {
+                cachedPointPath.Enqueue(appChild);
+                appChild = appChild.approachPoint;
+            }
+
+            //! Approach points need to reversed so that FirstInLastOut
+            cachedPointPath = new Queue<NavPoint>(cachedPointPath.Reverse());
             cachedPointPath.Enqueue(first);
 
-            //! Second point and its approach point. Enqueue exit first.
+            //! Second point and its approach points. Enqueue exit first.
             NavPoint second = (entryPoints[0] == first) ? entryPoints[1] : entryPoints[0];
             cachedPointPath.Enqueue(second);
-            if (second.approachPoint != null)
-                cachedPointPath.Enqueue(second.approachPoint);
+
+            appChild = second.approachPoint;
+            while (appChild != null)
+            {
+                cachedPointPath.Enqueue(appChild);
+                appChild = appChild.approachPoint;
+            }
 
 
             var potentialList = navPoints
