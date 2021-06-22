@@ -79,7 +79,7 @@ namespace Hadal.AI
 
         public bool TryStun(float duration)
         {
-            if (brain == null)
+            if (!brain || brain.IsStunned)
                 return false;
             
             //stunTimer.Resume();

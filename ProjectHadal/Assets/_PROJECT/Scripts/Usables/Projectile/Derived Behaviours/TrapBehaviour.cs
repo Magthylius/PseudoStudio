@@ -9,6 +9,9 @@ namespace Hadal.Usables.Projectiles
 {
     public class TrapBehaviour : ProjectileBehaviour
     {
+        [Header("Stun Settings")] 
+        public float stunTime = 5f;
+        
         [Header("AOE logic")]
         [SerializeField] private float radius = 70;
         [SerializeField] private bool isSet;
@@ -28,6 +31,11 @@ namespace Hadal.Usables.Projectiles
             meshRenderer = GetComponent<MeshRenderer>();
             explodeDuration = new Timer(1f);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
         }
 
         private void Update()
@@ -58,7 +66,7 @@ namespace Hadal.Usables.Projectiles
             selfDeactivation.selfDeactivated += ModeOn;
         }
 
-        // Trigger locally.
+        //! Trigger locally.
         public override bool TriggerBehavior()
         {
             if (!isSet)
@@ -67,25 +75,27 @@ namespace Hadal.Usables.Projectiles
             if (!IsLocal)
                 return true;
 
-            //Explode locally, check for AI
-            LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
-            detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
-            foreach (Collider col in detectedObjects)
+            //! Explode locally, check for AI
+            Collider[] creatureCollider = new Collider[1];
+            Physics.OverlapSphereNonAlloc(transform.position, radius, creatureCollider, UsableBlackboard.AIHitboxLayerInt);
+            
+            if (creatureCollider[0])
             {
-                col.gameObject.GetComponentInChildren<IStunnable>().TryStun(5.0f);
+                creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>().TryStun(stunTime);
             }
+            
             isExploding = true;
             explodeEffect.SetActive(true);
 
-            //Send event to explode.
+            //! Send event to explode.
             Vector3 activatedSpot = gameObject.transform.position;
-            object[] content = new object[] { projectileID, activatedSpot };
+            object[] content = { projectileID, activatedSpot };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ACTIVATED, content);
 
             return true;   
         }
 
-        // Trigger network clones.
+        //! Trigger network clones.
         public override void ReTriggerBehavior(EventData eventData)
         {
             object[] data = (object[])eventData.CustomData;

@@ -314,7 +314,10 @@ MonoBehaviour:
   DebugKey: 
   projectileID: 0
   IsLocal: 0
+  IsAttached: 0
   particleEffect: {fileID: 3791313692687117044}
+  projectileAsset: {fileID: 0}
+  impactVFXTime: 5
   radius: 70
   isSet: 0
   selfDeactivation: {fileID: 0}
@@ -333,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1306605793903958, guid: 9ce4142b18056ab4b813713b878856ca, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4870030517758886, guid: 9ce4142b18056ab4b813713b878856ca, type: 3}
       propertyPath: m_RootOrder

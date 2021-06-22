@@ -8,14 +8,14 @@ namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
     {
-        private bool projectileTriggered = false;
+        
         private Vector3 aimedPoint = Vector3.zero;
         
         #region Unity Lifecycle
 
         protected override void OnEnable()
         {
-            projectileTriggered = false;
+            base.OnEnable();
             transform.LookAt(aimedPoint);
         }
         
@@ -44,7 +44,7 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if(!IsLocal || projectileTriggered) return;
+            if (!IsLocal || projectileTriggered) return;
 
             projectileTriggered = true;
 

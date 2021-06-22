@@ -10,6 +10,7 @@ namespace Hadal.Usables.Projectiles
 {
     public abstract class ProjectileBehaviour : MonoBehaviourDebug, IProjectile, IPoolable<ProjectileBehaviour>
     {
+        protected bool projectileTriggered = false;
         public string DebugKey;
         public int projectileID = 0;
         public bool IsLocal = false;
@@ -33,7 +34,7 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
         {
-
+            projectileTriggered = false;
         }
         protected virtual void Start()
         {
