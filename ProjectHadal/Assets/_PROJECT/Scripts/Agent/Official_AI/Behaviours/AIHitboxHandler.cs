@@ -29,7 +29,8 @@ namespace Hadal.AI
                 return healthManager.TryStun(duration);
             else
             {
-                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_STUN, null, SendOptions.SendReliable);
+                Debug.LogWarning("Stun event sent");
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_STUN, duration, SendOptions.SendReliable);
                 return true;
             }
         }
