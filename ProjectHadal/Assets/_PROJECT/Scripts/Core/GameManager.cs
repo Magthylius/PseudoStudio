@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace Hadal
 {
+    public delegate void GameEvent();
+    
     public class GameManager : MonoBehaviour
     {
         public enum GameState
@@ -18,12 +20,17 @@ namespace Hadal
         [ReadOnly] GameState currentGameState;
         public List<PhotonView> pViewList;
 
+        public event GameEvent GameStartedEvent;
+        public event GameEvent GameEndedEvent;
+
         void Awake()
         {
             if (Instance != null) Destroy(this);
             else Instance = this;
         }
 
+        public void StartGameEvent() => GameStartedEvent?.Invoke();
+        
         public void ChangeGameState(GameState state) => currentGameState = state;
         public GameState CurrentGameState => currentGameState;
         public bool IsInMainMenu => currentGameState == GameState.IDLE ||
