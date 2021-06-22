@@ -9,10 +9,11 @@ namespace Hadal.AI
     public class AIManager : MonoBehaviour
     {
         public static AIManager Instance;
+        public AIBrain brain;
 
         NetworkEventManager neManager;
 
-        [Header("Spawn Settings")] 
+        [Header("Spawn Settings")]
         [SerializeField] private bool enableAIRandomSpawn = false;
         [SerializeField] private List<Transform> spawnPositions;
 
@@ -22,7 +23,7 @@ namespace Hadal.AI
             else Instance = this;
         }
 
-        void Start()
+        IEnumerator Start()
         {
             neManager = NetworkEventManager.Instance;
 
@@ -31,7 +32,11 @@ namespace Hadal.AI
                 FindObjectOfType<AITransformHandler>().Move(spawnPositions[(int)Random.Range(0, spawnPositions.Count)].position);
             }
 
-            
+            //! The null is to make sure the AI does not go to the NavPoint of where its spawned.
+            yield return null;
+
+            brain.NavigationHandler.SkipCurrentPoint(true);
+
         }
 
     }

@@ -267,6 +267,7 @@ namespace Hadal.Networking.UI.Loading
             }
 
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
+            GameManager.Instance.StartGameEvent();
 
             ResetLoadingElements();
         }
