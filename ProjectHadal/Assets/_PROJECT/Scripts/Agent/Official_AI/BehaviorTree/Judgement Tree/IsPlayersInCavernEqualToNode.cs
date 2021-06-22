@@ -23,7 +23,7 @@ namespace Hadal.AI.TreeNodes
             if (_currentCavern == CavernTag.Invalid) return NodeState.FAILURE;
 
             //! Get the cavern handler of the location
-            CavernHandler handler = _brain.CavernManager.GetHandlerOfTag(_currentCavern);
+            CavernHandler handler = _brain.CavernManager.GetCavern(_currentCavern);
             if (handler == null) return NodeState.FAILURE;
             
             //! Identify how many players are in the location

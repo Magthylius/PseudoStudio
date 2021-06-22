@@ -67,6 +67,7 @@ namespace Hadal.AI.Caverns
     {
         [Header("Cavern Handler List")]
         [NaughtyAttributes.ReadOnly] public List<CavernHandler> handlerList = new List<CavernHandler>();
+        [NaughtyAttributes.ReadOnly] public List<TunnelBehaviour> tunnelList = new List<TunnelBehaviour>();
 
         [Header("Settings")] 
         [SerializeField] private bool debugPlayerEvents = false;
@@ -96,6 +97,18 @@ namespace Hadal.AI.Caverns
             StartCoroutine(CheckCavernInitialization());
         }
 
+        public void InjectHandler(CavernHandler handler)
+        {
+            if (!handlerList.Contains(handler))
+            {
+                handlerList.Add(handler);
+                foreach (TunnelBehaviour tunnel in handler.connectedTunnels)
+                {
+                    if (!tunnelList.Contains(tunnel)) tunnelList.Add(tunnel);
+                }
+            }
+        }
+        
         #region Event Handling
 
         public void OnPlayerEnterCavern(CavernPlayerData data)
@@ -375,20 +388,17 @@ namespace Hadal.AI.Caverns
         
 
         #endregion
-        private void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")
+
+        #region Tunnel Handling
+
+        public TunnelBehaviour GetMostPopulatedTunnel()
         {
-            if (cavernHandlerList == null) return;
-
-            var tags = "";
-            foreach (var cavern in cavernHandlerList)
-            {
-                if (cavern == null) continue;
-                tags += cavern.cavernTag + ", ";
-            }
-
-            print(prefix + " " + tags);
+            return null;
         }
 
+        #endregion
+        
+        #region Player Handling
         /// <summary>
         ///     Attempts to get an isolated player.
         /// </summary>
@@ -407,6 +417,24 @@ namespace Hadal.AI.Caverns
             return isolatedPlayer;
         }
 
+        #endregion
+
+        private void DebugPrintCavernList(List<CavernHandler> cavernHandlerList, string prefix = "")
+        {
+            if (cavernHandlerList == null) return;
+
+            var tags = "";
+            foreach (var cavern in cavernHandlerList)
+            {
+                if (cavern == null) continue;
+                tags += cavern.cavernTag + ", ";
+            }
+
+            print(prefix + " " + tags);
+        }
+
+        #region Accessors
+
         public CavernTag GetCavernTagOfAILocation()
         {
             if (GetHandlerOfAILocation == null)
@@ -422,11 +450,7 @@ namespace Hadal.AI.Caverns
 
             return null;
         }
-
-        public void InjectHandler(CavernHandler handler)
-        {
-            if (!handlerList.Contains(handler)) handlerList.Add(handler);
-        }
+        
 
         public List<CavernHandler> GetHandlerListExcludingAI()
         {
@@ -443,14 +467,9 @@ namespace Hadal.AI.Caverns
 
         public CavernHandler GetHandlerOfAILocation { get; private set; }
 
-        public CavernHandler GetHandlerOfTag(CavernTag tag)
-        {
-            return handlerList.Where(h => h.cavernTag == tag).SingleOrDefault();
-        }
-
-        //public int PlayerLayer => LayerMask.NameToLayer(playerLayer);
-        //public int AILayer => LayerMask.NameToLayer(aiLayer);
         public bool PlayerLayerContains(int layer) => LayerMaskExtend.Contain(playerLayer, layer);
         public bool AILayerContains(int layer) => LayerMaskExtend.Contain(aiLayer, layer);
+
+        #endregion
     }
 }

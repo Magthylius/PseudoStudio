@@ -130,6 +130,11 @@ namespace Hadal.AI.States
                 case EngagementSubState.Aggressive:
                     if (Brain.DebugEnabled) print("Anticipation: Aggressive.");
                     targetCavern = CavernManager.GetMostPopulatedCavern();
+
+                    if (targetCavern == null)
+                    {
+                        
+                    }
                     //print(targetCavern);
                     break;
                 case EngagementSubState.Ambush:
