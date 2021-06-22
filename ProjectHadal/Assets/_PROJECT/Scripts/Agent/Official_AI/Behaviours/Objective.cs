@@ -4,6 +4,7 @@ namespace Hadal.AI
     public enum BrainState
     {
         None,
+        Idle,
         Anticipation,
         Engagement,
         Recovery,
