@@ -15,8 +15,8 @@ namespace Hadal.Usables.Projectiles
         #region Unity Lifecycle
         protected override void Start()
         {
-            impactVFXTime = particleEffect.GetComponent<VisualEffect>().GetFloat("Dust Lifetime");
             base.Start();
+            impactVFXTime = particleEffect.GetComponent<VisualEffect>().GetFloat("Dust Lifetime");
             impactDuration = new Timer(5f);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using Hadal.AI.Graphics;
 using Hadal.Networking;
 using UnityEngine;
 using Tenshi;
@@ -66,6 +67,8 @@ namespace Hadal.AI
         {
             $"Leviathan is unalive. Congrats!!!".Msg();
             Obj.SetActive(false);
+            brain.GraphicsHandler.gameObject.SetActive(false);
+            brain.DetachAnyCarriedPlayer();
         }
         
         public GameObject Obj => transform.parent.gameObject;

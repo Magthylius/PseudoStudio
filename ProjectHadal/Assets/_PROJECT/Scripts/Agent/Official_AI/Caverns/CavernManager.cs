@@ -175,20 +175,28 @@ namespace Hadal.AI.Caverns
         [NaughtyAttributes.ReadOnly] public bool CavernsInitialized = false;
         IEnumerator CheckCavernInitialization()
         {
-            while (!CavernsInitialized)
+            bool cavernsReady = false;
+            while (!cavernsReady)
             {
-                CavernsInitialized = true;
+                cavernsReady = true;
                 foreach (var cavern in handlerList)
                 {
                     if (!cavern.IsInitialized)
                     {
-                        CavernsInitialized = false;
+                        cavernsReady = false;
                         break;
                     }
                 }
 
                 yield return null;
             }
+            
+            while (GetHandlerOfAILocation == null)
+            {
+                yield return null;
+            }
+
+            CavernsInitialized = true;
         }
 
         /// <summary>
@@ -320,7 +328,6 @@ namespace Hadal.AI.Caverns
             return candidateCaverns[0];
         }
         
-
         /// <summary>
         /// Gets the next best cavern based on player accounted heuristics. 
         /// </summary>
@@ -385,14 +392,78 @@ namespace Hadal.AI.Caverns
             else
                 return bestCaverns[Random.Range(0, bestCaverns.Count)];
         }
+
+        /// <summary>
+        /// Get a random cavern from all handler list.
+        /// </summary>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetRandomCavern() => GetRandomCavern(handlerList);
         
+        /// <summary>
+        /// Get a random cavern from a given list.
+        /// </summary>
+        /// <param name="cavernChoices">List to random pick from</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetRandomCavern(List<CavernHandler> cavernChoices) => cavernChoices[Random.Range(0, cavernChoices.Count)];
+        
+        /// <summary>
+        /// Gets a random cavern from all handler list, with exclusion
+        /// </summary>
+        /// <param name="excludedCavern">Excluded cavern</param>
+        /// <returns>CavernHandler information</returns>
+        public CavernHandler GetRandomCavernExcluding(CavernHandler excludedCavern) => GetRandomCavernExcluding(new List<CavernHandler> {excludedCavern});
+        public CavernHandler GetRandomCavernExcluding(List<CavernHandler> excludedCaverns) => GetRandomCavernExcluding(handlerList, excludedCaverns);
+        public CavernHandler GetRandomCavernExcluding(List<CavernHandler> cavernChoices, CavernHandler excludedCavern) => GetRandomCavernExcluding(handlerList, new List<CavernHandler> {excludedCavern});
+        public CavernHandler GetRandomCavernExcluding(List<CavernHandler> cavernChoices, List<CavernHandler> excludedCaverns)
+        {
+            CavernHandler chosenCavern = cavernChoices[Random.Range(0, cavernChoices.Count)];
+
+            if (cavernChoices.Equals(excludedCaverns))
+            {
+                Debug.LogWarning("Random cavern choices is same with excluded cavern choices!");
+                return chosenCavern;
+            }
+            
+            while (excludedCaverns.Contains(chosenCavern))
+            {
+                chosenCavern = cavernChoices[Random.Range(0, cavernChoices.Count)];
+            }
+
+            return chosenCavern;
+        }
 
         #endregion
 
         #region Tunnel Handling
-
-        public TunnelBehaviour GetMostPopulatedTunnel()
+        /// <summary>
+        /// Get most populated tunnel.
+        /// </summary>
+        /// <param name="tiedNumberRandomize">Allow randomization in case of tie</param>
+        /// <returns>Tunnel behaviour, null if no players.</returns>
+        public TunnelBehaviour GetMostPopulatedTunnel(bool tiedNumberRandomize = true)
         {
+            int playerCount = 0;
+            List<TunnelBehaviour> selectedTunnels = new List<TunnelBehaviour>();
+            foreach (TunnelBehaviour tunnel in tunnelList)
+            {
+                if (tunnel.GetPlayerCount > playerCount)
+                {
+                    playerCount = tunnel.GetPlayerCount;
+                    selectedTunnels.Clear();
+                    selectedTunnels.Add(tunnel);
+                }
+                else if (tunnel.GetPlayerCount == playerCount)
+                {
+                    selectedTunnels.Add(tunnel);
+                }
+            }
+
+            if (selectedTunnels.Count == 1 || !tiedNumberRandomize)
+                return selectedTunnels[0];
+            
+            if (selectedTunnels.Count > 1)
+                return selectedTunnels[Random.Range(0, selectedTunnels.Count)];
+            
             return null;
         }
 

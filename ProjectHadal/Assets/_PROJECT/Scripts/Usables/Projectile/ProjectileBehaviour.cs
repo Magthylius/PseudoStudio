@@ -34,17 +34,25 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
         {
+            neManager = NetworkEventManager.Instance;
             projectileTriggered = false;
+            setIsLocal();
         }
         protected virtual void Start()
         {
             DoDebugEnabling(DebugKey);
-            neManager = NetworkEventManager.Instance;
+            /*if(!neManager)
+            {
+                print("network Event Manager not found");
+            }
+            else
+            {
+                print("network Event Manager found");
+            }*/
             neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
             neManager.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
             neManager.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
             PPhysics.PhysicsFinished += Dump;
-            setIsLocal();
         }
         #endregion
 
@@ -58,7 +66,6 @@ namespace Hadal.Usables.Projectiles
 
         protected virtual void ImpactBehaviour()
         {
-            PPhysics.OnPhysicsFinished();
             return;        
         }
 
@@ -111,6 +118,11 @@ namespace Hadal.Usables.Projectiles
 
         private void setIsLocal()
         {
+            /*if (!neManager)
+            {
+                print("No Manager found");
+                return;
+            }*/
             if(neManager.isOfflineMode)
             {
                 IsLocal = true;
@@ -164,6 +176,7 @@ namespace Hadal.Usables.Projectiles
                     gameObject.transform.position = (Vector3)data[1];
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
+                    ImpactBehaviour();
                     print(projectileID + "projectile attaching due to event");
 
                     if((bool)data[2])

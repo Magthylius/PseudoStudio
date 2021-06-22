@@ -4,47 +4,83 @@ using UnityEngine;
 using Tenshi.AIDolls;
 using Tenshi;
 using Tenshi.UnitySoku;
-using Hadal.AI.AStarPathfinding;
-using System;
-using System.Threading.Tasks;
-using System.Linq;
-using Hadal.AI.GeneratorGrid;
+using Hadal.AI.Caverns;
+
 
 namespace Hadal.AI.States
 {
-    public class IdleState : IState
+    public class IdleState : AIStateBase
     {
-        #region Variables
-        private AIBrain Brain;
-        private PointNavigationHandler NavigationHandler;
-
-        public bool IsCurrentState { get; set; }
-
-        #endregion
+        private IEnumerator debugRoutine;
+        IdleStateSettings settings;
 
         public IdleState(AIBrain brain)
         {
-            Brain = brain;
-            NavigationHandler = Brain.NavigationHandler;
-        }
-        public void OnStateStart()
-        {
-            NavigationHandler.SetCanPath(true);
-        }
-        public void StateTick()
-        {
-        }
-        public void LateStateTick()
-        {
-        }
-        public void FixedStateTick()
-        {
-        }
-        public void OnStateEnd()
-        {
-            
+            Initialize(brain);
+            debugRoutine = null;
+            settings = MachineData.Idle;
         }
 
-        public Func<bool> ShouldTerminate() => () => false;
+        public override void OnStateStart()
+        {
+
+            RuntimeData.ResetIdleTicker();
+
+            if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
+            NavigationHandler.SetCanPath(true);
+
+            Brain.StartCoroutine(InitAfterCaverns());
+            
+            GameManager.Instance.GameStartedEvent += StartSwitchObjective;
+        }
+
+        public override void StateTick()
+        {
+            if (!AllowStateTick) return;
+
+            if (!Brain.IsStunned)
+                RuntimeData.TickIdleTicker(Time.deltaTime);
+        }
+
+        public override void LateStateTick()
+        {
+        }
+
+        public override void FixedStateTick()
+        {
+        }
+
+        public override void OnStateEnd()
+        {
+        }
+
+        void StartSwitchObjective()
+        {
+            Brain.StartCoroutine(SwitchObjective(BrainState.Anticipation));
+        }
+
+        IEnumerator SwitchObjective(BrainState newObjective)
+        {
+            yield return new WaitForSeconds(settings.StateExitDelay);
+            RuntimeData.SetBrainState(newObjective);
+        }
+
+        IEnumerator InitAfterCaverns()
+        {
+            //! Wait for caverns to init
+            while (!CavernManager.CavernsInitialized)
+            {
+                yield return null;
+            }
+
+            //LingerAroundCavern();
+        }
+
+        void LingerAroundCavern()
+        {
+            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true, true);
+            NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
+            NavigationHandler.EnableCachedQueuePathTimer();
+        }
     }
 }
