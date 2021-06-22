@@ -118,8 +118,10 @@ namespace Hadal.AI
         public float GetSlowPercentage()
         {
             float percent = currentSlowStacks * slowPercentPerStack.AsFloat();
-            if (percent > maxSlowPercent)
-                percent = maxSlowPercent;
+            
+            if (percent > maxSlowPercent) percent = maxSlowPercent;
+            else if (percent < 0f) percent = 0f;
+            
             return percent;
         }
     }

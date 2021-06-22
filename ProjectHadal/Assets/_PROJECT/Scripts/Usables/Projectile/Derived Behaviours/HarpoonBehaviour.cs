@@ -11,6 +11,8 @@ namespace Hadal.Usables.Projectiles
     public class HarpoonBehaviour : ProjectileBehaviour
     {
         [SerializeField] private string[] validLayer;
+        
+        bool attachedToMonster = false;
 
         #region Unity Lifecycle
         protected override void Start()
@@ -60,10 +62,11 @@ namespace Hadal.Usables.Projectiles
                     IsAttached = true;
 
                     //send event data to attach          
-                    bool attachedToMonster = false;
+                    
                     if (LayerMask.LayerToName(layer) == "MONSTER")
                     {
                         attachedToMonster = true;
+                        Send_IncrementLeviathanSlowStacks();
                     }
                     else
                     {
@@ -75,7 +78,7 @@ namespace Hadal.Usables.Projectiles
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
                     ImpactBehaviour();
 
-                    Send_IncrementLeviathanSlowStacks();
+                    
                 }
             }
         }
@@ -101,6 +104,8 @@ namespace Hadal.Usables.Projectiles
         private void Send_DecrementLeviathanSlowStacks()
         {
             PPhysics.PhysicsFinished -= Send_DecrementLeviathanSlowStacks;
+            
+            if (!attachedToMonster) return;
             var options = new RaiseEventOptions() { Receivers = ReceiverGroup.MasterClient };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1, options);
         }
