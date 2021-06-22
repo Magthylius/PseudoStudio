@@ -31,12 +31,12 @@ namespace Hadal.AI
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
         public Vector3 GetDirectionTo(Vector3 position) => (GetPosition - position).normalized;
 
-		[Button("Disable All")]
+		[Button("Disable All Graphics")]
 		private void Button_DisableAll()
 		{
 			NavPoint.DisableGraphicsAll();
 		}
-		[Button("Enable All")]
+		[Button("Enable All Graphics")]
 		private void Button_EnableAll()
 		{
 			NavPoint.EnableGraphicsAll();
