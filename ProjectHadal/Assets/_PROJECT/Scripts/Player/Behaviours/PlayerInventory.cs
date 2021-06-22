@@ -104,14 +104,14 @@ namespace Hadal.Player.Behaviours
             object[] data = (object[])eventData.CustomData;
             if ((int)data[0] == _pView.ViewID)
             {
-                _controllerInfo.Shooter.FireUtility((int)data[1],utilities[(int)data[2]],(float)data[3], true);
+                _controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);
             }
         }
 
         //Fire when pressed locally, send event
         void FireUtility(int projectileID)
         {
-            _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _chargeTime, false);
+            _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, false);
         }
 
         private void UpdateUsables(in float deltaTime)

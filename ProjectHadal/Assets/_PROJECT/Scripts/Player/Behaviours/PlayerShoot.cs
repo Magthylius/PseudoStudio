@@ -161,7 +161,7 @@ namespace Hadal.Player.Behaviours
             controller.GetInfo.Inventory.IncreaseProjectileCount();
         }
 
-        public void FireUtility(int projectileID, UsableLauncherObject usable, float chargeTime, bool eventFire)
+        public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool eventFire)
         {
             if (!eventFire && (!_canUtilityFire || !AllowUpdate))
                 return;
@@ -169,7 +169,7 @@ namespace Hadal.Player.Behaviours
             //send event to utility ONLY when fire locally. local = (!eventFire)
             if (!eventFire)
             {
-                object[] content = new object[] { _pView.ViewID, projectileID, usable, chargeTime };
+                object[] content = new object[] { _pView.ViewID, projectileID, selectedItem, chargeTime };
                 neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
             }
 
