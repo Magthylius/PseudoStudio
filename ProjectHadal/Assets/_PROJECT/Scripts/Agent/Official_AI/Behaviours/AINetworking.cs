@@ -29,8 +29,9 @@ namespace Hadal.AI
                 neManager.AddListener(ByteEvents.AI_GRAB_PLAYER, RE_AttachCarriedPlayerToMouth);
                 neManager.AddListener(ByteEvents.AI_RELEASE_PLAYER, RE_DetachAnyCarriedPlayer);
                 neManager.AddListener(ByteEvents.AI_BRAIN_DISABLE, RE_DisableBrain);
+                neManager.AddListener(ByteEvents.AI_RECEIVE_DAMAGE, RE_TakeDamage);
+                neManager.AddListener(ByteEvents.AI_DEATH, RE_Death);
             }
-                
         }
     
         void OnPlayerEnter(Photon.Realtime.Player player)
@@ -69,6 +70,16 @@ namespace Hadal.AI
         void RE_DisableBrain(EventData eventData)
         {
             brain.DisableBrain();
+        }
+
+        void RE_TakeDamage(EventData eventData)
+        {
+            brain.HealthManager.TakeDamage((int)eventData.CustomData);
+        }
+
+        void RE_Death(EventData eventData)
+        {
+            brain.HealthManager.Death();
         }
     }
 }
