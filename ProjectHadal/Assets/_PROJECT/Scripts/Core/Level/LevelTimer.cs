@@ -10,6 +10,7 @@ namespace Hadal
     {
         private TextMeshProUGUI timerTMP;
         private bool allowTimerTick = false;
+        private float gameTime = 0f;
 
         void Start()
         {
@@ -34,7 +35,9 @@ namespace Hadal
         {
             while (allowTimerTick)
             {
-                timerTMP.text = TimeSpan.FromSeconds(Time.timeSinceLevelLoad).ToString("mm:ss");
+                gameTime += Time.fixedUnscaledDeltaTime;
+                var ts = TimeSpan.FromSeconds(gameTime);
+                timerTMP.text = $"{ts.Minutes:00}:{ts.Seconds:00}";
                 yield return new WaitForSeconds(0.5f);
             }
         }

@@ -519,7 +519,7 @@ namespace Hadal.AI
 
         private void ClampMaxVelocity()
         {
-            if (rBody.velocity.magnitude > MaxVelocity)
+            if (rBody.velocity.magnitude > MaxVelocity * (1f - slowMultiplier))
                 rBody.velocity = rBody.velocity.normalized * MaxVelocity;
 			
 			if (MaxVelocity == 0f)
