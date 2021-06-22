@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Hadal.AI
 {
-    public class AIDamageHandler : MonoBehaviour, IDamageable
+    public class AIHitboxHandler : MonoBehaviour, IDamageable
     {
         [SerializeField] private AIHealthManager healthManager;
 

@@ -244,8 +244,7 @@ namespace Hadal.AI
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting custom nav point path".Msg();
-
-            //ConvertPointPathToList();
+            
         }
 
         public void ComputeCachedDestinationCavernPath(CavernHandler destination)
@@ -255,8 +254,7 @@ namespace Hadal.AI
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
             }
-
-            //Vector3 curPointPos = currentPoint.GetPosition;
+            
             CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
