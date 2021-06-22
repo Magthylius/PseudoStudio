@@ -8,13 +8,8 @@ namespace Hadal.AI
 {
     public class NavPoint : MonoBehaviour
     {
-		private void Awake()
-		{
-			mRenderer = GetComponentInChildren<MeshRenderer>();
-			if (mRenderer != null) defaultMaterial = mRenderer.material;
-		}
-		
 		[Header("Debug")]
+		[SerializeField] private bool disableGraphics;
 		[SerializeField] private Material selectedMaterial;
 		private Material defaultMaterial;
 		private MeshRenderer mRenderer;
@@ -52,11 +47,22 @@ namespace Hadal.AI
 		        Gizmos.DrawLine(transform.position, approachPoint.GetPosition);
 	        }
         }
+		
+		private void Awake()
+		{
+			mRenderer = GetComponentInChildren<MeshRenderer>();
+			if (mRenderer != null) defaultMaterial = mRenderer.material;
+		}
 
         public void Initialise()
         {
             if (friends == null || friends.Count == 0)
                 friends = new List<NavPoint>();
+			
+			if (disableGraphics)
+			{
+				transform.GetChild(0).gameObject.SetActive(false);
+			}
         }
 
         public void AttachTo(Transform target)
@@ -69,40 +75,15 @@ namespace Hadal.AI
             transform.position = target.position;
             transform.SetParent(target);
         }
-
-        public NavPoint GetMedianNavPointTo(NavPoint end)
-        {
-            NavPoint theStart = this;
-            NavPoint theEnd = end;
-            if (theEnd == null) return null;
-
-            List<NavPoint> path = new List<NavPoint>();
-            NavPoint current = theStart;
-            path.Add(current);
-
-            while (current != theEnd && current != null)
-            {
-                if (current != null) current.Select();
-                current = friends.OrderBy(o => current.GetSqrDistanceTo(theEnd.GetPosition)).FirstOrDefault();
-                if (current != null) path.Add(current);
-            }
-
-            if (path.IsEmpty()) return null;
-
-            int index = path.Count / 2;
-            NavPoint median = path[index];
-            return median;
-        }
-
         
         public void Select()
 		{
-			if (mRenderer == null) return;
+			if (mRenderer == null || disableGraphics) return;
 			mRenderer.material = selectedMaterial;
 		}
 		public void Deselect()
 		{
-			if (mRenderer == null) return;
+			if (mRenderer == null || disableGraphics) return;
 			mRenderer.material = defaultMaterial;
 		}
 
@@ -113,5 +94,27 @@ namespace Hadal.AI
 		}
 
 		public void SetIsTunnelEntry(bool isEntry) => isTunnelEntry = isEntry;
+		public void SetDisableGraphics(bool state) => disableGraphics = state;
+		
+		public static void DisableGraphicsAll()
+		{
+			var points = FindObjectsOfType<NavPoint>();
+			int i = -1;
+			while (++i < points.Length)
+			{
+				points[i].SetDisableGraphics(true);
+				points[i].transform.GetChild(0).gameObject.SetActive(false);
+			}
+		}
+		public static void EnableGraphicsAll()
+		{
+			var points = FindObjectsOfType<NavPoint>();
+			int i = -1;
+			while (++i < points.Length)
+			{
+				points[i].SetDisableGraphics(false);
+				points[i].transform.GetChild(0).gameObject.SetActive(true);
+			}
+		}
     }
 }

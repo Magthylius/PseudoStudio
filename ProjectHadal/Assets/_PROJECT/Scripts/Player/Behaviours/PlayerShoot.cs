@@ -48,7 +48,7 @@ namespace Hadal.Player.Behaviours
         {
             //PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
             neManager = NetworkEventManager.Instance;
-            neManager.AddListener(ByteEvents.PLAYER_TORPEDO_LAUNCH, NetworkingClient_EventReceived);
+            neManager.AddListener(ByteEvents.PLAYER_TORPEDO_LAUNCH, REFireTorpedo);
         }
 
         private void OnDisable()
@@ -113,7 +113,8 @@ namespace Hadal.Player.Behaviours
             return info;
         }
 
-        private void NetworkingClient_EventReceived(EventData obj)
+        //Fire torpedo when received event
+        private void REFireTorpedo(EventData obj)
         {
             if (obj.Code == (byte)ByteEvents.PLAYER_TORPEDO_LAUNCH)
             {
@@ -135,19 +136,24 @@ namespace Hadal.Player.Behaviours
             neManager.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, content);
         }
 
-        public void FireTorpedo(int projectileID, bool ignoreCooldown)
+        public void FireTorpedo(int projectileID, bool eventFire)
         {
             if (!AllowUpdate) return;
-            if (!ignoreCooldown && !tLauncher.IsChamberLoaded)
+            if (!eventFire && !tLauncher.IsChamberLoaded)
             {
                 //if (UIManager.IsNull) return;
                 controller.UI.UpdateFiringVFX(true);
                 return;
             }
+
+            //send event to torpedo ONLY when fire locally. local = (!eventFire)
+            if (!eventFire) SendTorpedoEvent(projectileID);
+
             HandleTorpedoObject(projectileID);
         }
         private void HandleTorpedoObject(int projectileID)
         {
+            //actual firing
             tLauncher.DecrementChamber();
             UsableHandlerInfo info = CreateInfoForTorpedo(projectileID);
             info = CalculateTorpedoAngle(info);
@@ -155,12 +161,19 @@ namespace Hadal.Player.Behaviours
             controller.GetInfo.Inventory.IncreaseProjectileCount();
         }
 
-        public void FireUtility(int projectileID, UsableLauncherObject usable, float chargeTime, bool ignoreCooldown)
+        public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool eventFire)
         {
-            if (!ignoreCooldown && (!_canUtilityFire || !AllowUpdate))
+            if (!eventFire && (!_canUtilityFire || !AllowUpdate))
                 return;
-   /*         if (!_canUtilityFire || !AllowUpdate) return;*/
 
+            //send event to utility ONLY when fire locally. local = (!eventFire)
+            if (!eventFire)
+            {
+                object[] content = new object[] { _pView.ViewID, projectileID, selectedItem, chargeTime };
+                neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
+            }
+
+            //actual firing
             HandleUtilityReloadTimer(usable);
             usable.Use(CreateInfoForUtility(projectileID, chargeTime));
             controller.GetInfo.Inventory.IncreaseProjectileCount();
