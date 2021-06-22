@@ -376,7 +376,10 @@ namespace Hadal.AI
             //! Make sure any player in mouth is released
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
             foreach (var player in controllers)
+            {
                 player.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+                player.SetIsCarried(false);
+            }
 
             MouthObject.transform.DetachChildren();
             CarriedPlayer = null;
