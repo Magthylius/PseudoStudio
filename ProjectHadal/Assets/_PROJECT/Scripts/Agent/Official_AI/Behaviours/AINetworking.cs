@@ -80,6 +80,7 @@ namespace Hadal.AI
 
         void RE_TakeStun(EventData eventData)
         {
+            Debug.LogWarning("I kena fucking stun chibai");
             brain.HealthManager.TryStun((float)eventData.CustomData);
         }
 
