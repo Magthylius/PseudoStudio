@@ -75,7 +75,6 @@ namespace Hadal.Player.Behaviours
         {
             if (_uInput.FireKey1)
             {
-                _controllerInfo.Shooter.SendTorpedoEvent(pViewForProj + _projectileCount);
                 _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false);
             }
             if (EquippedUsable.Data.isChargable)
@@ -105,16 +104,14 @@ namespace Hadal.Player.Behaviours
             object[] data = (object[])eventData.CustomData;
             if ((int)data[0] == _pView.ViewID)
             {
-                _controllerInfo.Shooter.FireUtility((int)data[1],utilities[(int)data[2]],(float)data[3], true);
+                _controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);
             }
         }
 
         //Fire when pressed locally, send event
         void FireUtility(int projectileID)
         {
-            _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _chargeTime, false);
-            object[] content = new object[] { _pView.ViewID,projectileID, _selectedItem, _chargeTime };
-            neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
+            _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, false);
         }
 
         private void UpdateUsables(in float deltaTime)
