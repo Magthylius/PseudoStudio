@@ -10,9 +10,17 @@ using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
-    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, ILeviathanComponent
+    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, ISlowable, IAmLeviathan, ILeviathanComponent
     {
         [SerializeField] int maxHealth;
+        
+        [Header("Slow Stacking Status")]
+        [SerializeField, Range(0f, 1f)] private float slowPercentPerStack;
+        [SerializeField, Min(0)] private int maxSlowStacks;
+        [SerializeField, Range(0f, 1f)] private float maxSlowPercent;
+        private int currentSlowStacks;
+
+
         int currentHealth;
         AIBrain brain;
         Timer stunTimer;
@@ -69,6 +77,8 @@ namespace Hadal.AI
 
         public UpdateMode LeviathanUpdateMode => UpdateMode.LateUpdate;
 
+        public bool IsLeviathan => true;
+
         public void ResetHealth() => currentHealth = maxHealth;
 
         [Button("StunAI")]
@@ -83,7 +93,6 @@ namespace Hadal.AI
                 return false;
             
             Debug.LogWarning("stunned");
-            //stunTimer.Resume();
             stunTimer.RestartWithDuration(duration);
             return brain.TryToStun(duration);
         }
@@ -93,6 +102,20 @@ namespace Hadal.AI
             Debug.LogWarning("unstunned");
             stunTimer.Pause();
             brain.StopStun();
+        }
+
+        public void UpdateSlowStacks(int change)
+        {
+            currentSlowStacks = (currentSlowStacks + change).Clamp(0, maxSlowStacks);
+            brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
+        }
+        public void ResetAllSlowStacks() => currentSlowStacks = 0;
+        public float GetSlowPercentage()
+        {
+            float percent = slowPercentPerStack * maxSlowStacks.AsFloat();
+            if (percent > maxSlowPercent)
+                percent = maxSlowPercent;
+            return percent;
         }
     }
 }

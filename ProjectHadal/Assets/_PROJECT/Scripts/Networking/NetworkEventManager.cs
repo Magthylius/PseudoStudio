@@ -32,6 +32,7 @@ namespace Hadal.Networking
         AI_GRAB_PLAYER,
         AI_RELEASE_PLAYER,
         AI_DEATH,
+        AI_UPDATE_SLOW,
         TOTAL_EVENTS
     }
 

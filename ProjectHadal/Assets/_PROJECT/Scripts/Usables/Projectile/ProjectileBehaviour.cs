@@ -168,7 +168,8 @@ namespace Hadal.Usables.Projectiles
 
                     if((bool)data[2])
                     {
-                        transform.parent = GameObject.FindGameObjectWithTag("Monster").transform;
+                        GameObject lev = GameObject.FindGameObjectWithTag("Monster");
+                        transform.parent = lev.transform;
                     }
                 }
             }
@@ -179,6 +180,8 @@ namespace Hadal.Usables.Projectiles
         {
             return;
         }
+
+        protected int GetProjectileTypeID() => Data.ProjTypeInt;
 
         protected int GetShooterID()
         {

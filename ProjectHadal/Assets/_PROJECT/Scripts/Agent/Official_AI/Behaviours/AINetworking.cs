@@ -3,6 +3,8 @@ using ExitGames.Client.Photon;
 using Hadal.Networking;
 using Hadal.Player;
 using Photon.Realtime;
+using Photon.Pun;
+using Tenshi;
 
 namespace Hadal.AI
 {
@@ -24,6 +26,7 @@ namespace Hadal.AI
                 neManager.RaiseEvent(ByteEvents.AI_BRAIN_DISABLE, null, SendOptions.SendReliable);
                 neManager.AddListener(ByteEvents.AI_RECEIVE_DAMAGE, RE_TakeDamage);
                 neManager.AddListener(ByteEvents.AI_RECEIVE_STUN, RE_TakeStun);
+                neManager.AddListener(ByteEvents.AI_UPDATE_SLOW, RE_UpdateSlow);
             }
             else
             {
@@ -32,6 +35,15 @@ namespace Hadal.AI
                 neManager.AddListener(ByteEvents.AI_RELEASE_PLAYER, RE_DetachAnyCarriedPlayer);
                 neManager.AddListener(ByteEvents.AI_BRAIN_DISABLE, RE_DisableBrain);
                 neManager.AddListener(ByteEvents.AI_DEATH, RE_Death);
+            }
+        }
+
+        void OnDestroy()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                neManager.PlayerEnteredEvent -= OnPlayerEnter;
+                neManager.PlayerLeftEvent -= OnPlayerLeft;
             }
         }
     
@@ -87,6 +99,12 @@ namespace Hadal.AI
         void RE_Death(EventData eventData)
         {
             brain.HealthManager.Death();
+        }
+
+        void RE_UpdateSlow(EventData eventData)
+        {
+            int changeAmount = eventData.CustomData.AsInt();
+            brain.HealthManager.UpdateSlowStacks(changeAmount);
         }
     }
 }

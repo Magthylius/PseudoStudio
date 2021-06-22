@@ -2,6 +2,7 @@ using UnityEngine;
 using Hadal.Networking;
 using Magthylius.DataFunctions;
 using UnityEngine.VFX;
+using Photon.Realtime;
 //using Hadal.AI;
 
 //Created by Jet
@@ -27,6 +28,12 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            PPhysics.PhysicsFinished += Send_DecrementLeviathanSlowStacks;
+        }
+
         private void OnDisable()
         {
             Rigidbody.isKinematic = false;
@@ -36,12 +43,7 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!IsLocal)
-            {
-                return;
-            }
-
-            if (IsAttached)
+            if (!IsLocal || IsAttached)
                 return;
 
             foreach (string layerName in validLayer)
@@ -69,11 +71,8 @@ namespace Hadal.Usables.Projectiles
                     object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
                     ImpactBehaviour();
-                    //if its AI.
-                    //if (collision.gameObject.GetComponent<AIBrain>())
-                    // {
-                    //  collision.gameObject.GetComponent<AIBrain>().SetIsStunned(true);
-                    // }
+
+                    Send_IncrementLeviathanSlowStacks();
                 }
             }
         }
@@ -89,6 +88,18 @@ namespace Hadal.Usables.Projectiles
         {
             isVisualizing = false;
             particleEffect.SetActive(false);
+        }
+
+        private void Send_IncrementLeviathanSlowStacks()
+        {
+            var options = new RaiseEventOptions() { Receivers = ReceiverGroup.MasterClient };
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1, options);
+        }
+        private void Send_DecrementLeviathanSlowStacks()
+        {
+            PPhysics.PhysicsFinished -= Send_DecrementLeviathanSlowStacks;
+            var options = new RaiseEventOptions() { Receivers = ReceiverGroup.MasterClient };
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1, options);
         }
     }
 }

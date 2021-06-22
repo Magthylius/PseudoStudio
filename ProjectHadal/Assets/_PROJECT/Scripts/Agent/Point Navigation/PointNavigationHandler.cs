@@ -54,6 +54,9 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private bool canPath;
         public bool Data_CanPath => canPath;
 
+        private float slowMultiplier = 0f;
+        public void SetSlowMultiplier(float mult) => slowMultiplier = mult;
+
         private NavPoint CurrentPoint;
         private NavPoint currentPoint
         {
@@ -149,6 +152,7 @@ namespace Hadal.AI
             isOnQueuePath = false;
             isChasingAPlayer = false;
             canPath = true;
+            slowMultiplier = 0f;
             if (rBody == null) rBody = GetComponentInParent<Rigidbody>();
             if (numberOfClosestPointsToConsider > navPoints.Count - 1) numberOfClosestPointsToConsider = navPoints.Count - 1;
             currentPoint = GetClosestPointToSelf();
@@ -167,10 +171,8 @@ namespace Hadal.AI
             if (!CanMove || !canPath || !enableMovement) return;
             TrySelectNewNavPoint(fixedDeltaTime);
             ElapseCavernLingerTimer(fixedDeltaTime);
-            if (isStunned)
-                MoveForwards(fixedDeltaTime);
-            else
-                MoveTowardsCurrentNavPoint(fixedDeltaTime);
+            MoveForwards(fixedDeltaTime);
+            if (!isStunned) MoveTowardsCurrentNavPoint(fixedDeltaTime);
             HandleObstacleAvoidance(fixedDeltaTime);
             HandleSpeedAndDirection(fixedDeltaTime);
             ClampMaxVelocity();
@@ -494,7 +496,9 @@ namespace Hadal.AI
 
         private void MoveForwards(in float deltaTime)
         {
-            Vector3 force = pilotTrans.forward * (TotalThrustForce * deltaTime);
+            if (MaxVelocity == 0f) return;
+            float speedDeduction = TotalThrustForce * slowMultiplier;
+            Vector3 force = pilotTrans.forward * ((TotalThrustForce - speedDeduction) * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
         }
 
@@ -515,19 +519,19 @@ namespace Hadal.AI
 
         private void ClampMaxVelocity()
         {
-            float cappedVelocity = maxVelocity * debugVelocityMultiplier;
-            if (rBody.velocity.magnitude > cappedVelocity)
-                rBody.velocity = rBody.velocity.normalized * cappedVelocity;
+            if (rBody.velocity.magnitude > MaxVelocity)
+                rBody.velocity = rBody.velocity.normalized * MaxVelocity;
 			
-			if (cappedVelocity == 0f)
+			if (MaxVelocity == 0f)
 				rBody.velocity = Vector3.zero;
         }
 
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
         {
-            if (currentPoint == null) return;
+            if (currentPoint == null || MaxVelocity == 0f) return;
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
-            Vector3 force = direction * (TotalAttractionForce * deltaTime);
+            float speedDeduction = TotalAttractionForce * slowMultiplier;
+            Vector3 force = direction * ((TotalAttractionForce - speedDeduction) * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
 
             if (!hasReachedPoint && CloseEnoughToTargetNavPoint())
@@ -591,6 +595,8 @@ namespace Hadal.AI
                         force += relativeRight * axisStalemateDeviationForce;
                     }
                 }
+                float speedModifier = force.magnitude * (1f - slowMultiplier);
+                force = force.normalized * speedModifier;
                 rBody.AddForce(force * deltaOfTime, ForceMode.VelocityChange);
             });
 
@@ -682,6 +688,7 @@ namespace Hadal.AI
 
         #region Shorthands
 
+        public float MaxVelocity => maxVelocity * debugVelocityMultiplier;
         private bool CanMove => _isEnabled && pilotTrans != null && rBody != null;
 
         #endregion
