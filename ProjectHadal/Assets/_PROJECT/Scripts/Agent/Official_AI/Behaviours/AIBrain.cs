@@ -385,6 +385,7 @@ namespace Hadal.AI
 
             MouthObject.transform.DetachChildren();
             CarriedPlayer = null;
+            NavigationHandler.StopCustomPath(true);
         }
         #endregion
 
