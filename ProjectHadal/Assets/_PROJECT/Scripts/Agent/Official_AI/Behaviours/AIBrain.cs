@@ -165,8 +165,8 @@ namespace Hadal.AI
             InitialiseStates();
             if (!startWithOverrideState)
             {
-                runtimeData.SetBrainState(BrainState.Idle);
-                stateMachine.SetState(idleState);
+                runtimeData.SetBrainState(BrainState.Anticipation);
+                stateMachine.SetState(anticipationState);
             }
             else
             {

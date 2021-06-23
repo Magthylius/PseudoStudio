@@ -32,11 +32,14 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
 
-            Brain.StartCoroutine(InitializeAfterCaverns());
+            //Brain.StartCoroutine(InitializeAfterCaverns());
+            GameManager.Instance.GameStartedEvent += StartInitialization;
 
             //print(RuntimeData.GetEngagementObjective);
             if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
                 ForceEngagementObjective(EngagementSubState.Aggressive);
+            
+            
         }
 
         public override void StateTick()
@@ -44,8 +47,11 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             if (!Brain.IsStunned)
+            {
                 RuntimeData.TickAnticipationTicker(Time.deltaTime);
-
+                Brain.RuntimeData.SetBrainState(BrainState.Engagement);
+                Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+            }
         }
 
         public override void LateStateTick()
@@ -54,6 +60,14 @@ namespace Hadal.AI.States
 
         public override void FixedStateTick()
         {
+            if (!AllowStateTick) return;
+
+            if (Brain.CurrentTarget != null)
+            {
+                RuntimeData.TickAnticipationTicker(Time.deltaTime);
+                Brain.RuntimeData.SetBrainState(BrainState.Engagement);
+                Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+            }
         }
 
         public override void OnStateEnd()
@@ -77,6 +91,11 @@ namespace Hadal.AI.States
             else if (gameStartupInitialization) DetermineNextCavern();
         }
 
+        void StartInitialization()
+        {
+            Brain.StartCoroutine(InitializeAfterCaverns());
+        }
+        
         IEnumerator CheckPlayersInRange()
         {
             yield return new WaitForSeconds(0.2f);
