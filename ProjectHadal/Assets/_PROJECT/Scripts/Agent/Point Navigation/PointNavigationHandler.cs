@@ -197,9 +197,21 @@ namespace Hadal.AI
         public Transform PilotTransform => pilotTrans;
 
         /// <summary> Enables this component safely. </summary>
-        public void Enable() => _isEnabled = true;
+        public void Enable()
+        {
+            _isEnabled = true;
+            if (rBody != null) rBody.isKinematic = false;
+        }
         /// <summary> Disables this component safely. </summary>
-        public void Disable() => _isEnabled = false;
+        public void Disable()
+        {
+            _isEnabled = false;
+            if (rBody != null)
+            {
+                rBody.isKinematic = true;
+                rBody.velocity = Vector3.zero;
+            }
+        }
         public void SetCavernManager(CavernManager manager) => cavernManager = manager;
         public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
         /// <summary> Resets speed multiplier value back to 1f. </summary>
@@ -705,7 +717,8 @@ namespace Hadal.AI
 
         #region Shorthands
 
-        public float MaxVelocity => maxVelocity * debugVelocityMultiplier;
+        public Rigidbody Rigidbody => rBody;
+        public float MaxVelocity => (maxVelocity * debugVelocityMultiplier) - (maxVelocity * debugVelocityMultiplier * slowMultiplier);
         private bool CanMove => _isEnabled && pilotTrans != null && rBody != null;
 
         #endregion

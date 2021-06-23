@@ -86,7 +86,8 @@ namespace Hadal.Debugging
             //! AI
             C_AIStop = new DebugCommand("aistop", "Stops the creature movement", "aistop", () =>
             {
-                FindObjectOfType<AIBrain>().NavigationHandler.Disable();
+                AIBrain brain = FindObjectOfType<AIBrain>();
+                brain.NavigationHandler.Disable();
             });
             C_AIMove = new DebugCommand("aimove", "Allows the creature to move", "aimove", () =>
             {
