@@ -15,36 +15,38 @@ namespace Hadal.Debugging
     {
         private bool showConsole = false;
         private bool showHelp = false;
-        
+
         private string input;
         private Vector2 helpScroll;
         private PlayerController localPlayerController;
-        
+
         public List<object> commandList;
 
         //! Console
         public static DebugCommand C_Help;
         public static DebugCommand C_Close;
-        
+
         //! AI
         public static DebugCommand C_AIStop;
         public static DebugCommand C_AIMove;
         public static DebugCommand<float> C_AISetSpeed;
         public static DebugCommand<int> C_AISetState;
-        
+        public static DebugCommand<float> C_AIStun;
+        public static DebugCommand<int> C_AISetSlowStacks;
+        public static DebugCommand C_AIClearDebuffs;
+
         //! Player
         public static DebugCommand<int> C_SetHp;
-        public static DebugCommand<float> C_SetSpeed;
         public static DebugCommand<float> C_SetMaxSpeed;
-        public static DebugCommand<float> C_SetAcce;
+        public static DebugCommand<float> C_SetAccel;
         public static DebugCommand C_GodMode;
-        
+
         #region Input system
 
         public void OnToggleDebug(InputValue value)
         {
             showConsole = !showConsole;
-            
+
             if (showConsole)
             {
                 OpenConsole();
@@ -80,7 +82,7 @@ namespace Hadal.Debugging
                 showConsole = false;
                 CloseConsole();
             });
-            
+
             //! AI
             C_AIStop = new DebugCommand("aistop", "Stops the creature movement", "aistop", () =>
             {
@@ -114,41 +116,59 @@ namespace Hadal.Debugging
                         break;
                 }
             });
-            
+            C_AIStun = new DebugCommand<float>("aistun", "Stuns the AI for the provided amount of (x) in seconds.", "aistun", x =>
+            {
+                FindObjectOfType<AIBrain>().HealthManager.TryStun(x);
+            });
+            C_AISetSlowStacks = new DebugCommand<int>("aisetslowstacks", "Sets the current slow stacks of the AI, which affects its overall movement speed.", "aisetslowstacks", x =>
+            {
+                FindObjectOfType<AIBrain>().HealthManager.SetSlowStacks(x);
+            });
+            C_AIClearDebuffs = new DebugCommand("aicleardebuffs", "Clears all negative effects on the AI.", "aicleardebuffs", () =>
+            {
+                AIBrain brain = FindObjectOfType<AIBrain>();
+                brain.StopStun(); // stop stun
+                brain.HealthManager.SetSlowStacks(0); //stop slow
+            });
+
             //! Player
             C_SetHp = new DebugCommand<int>("sethp", "Sets the health of player", "sethp", (x) =>
             {
-                //! TODO: bind to player health
-            });
-            C_SetSpeed = new DebugCommand<float>("setspeed", "Sets the speed multiplier of player", "setspeed", (x) =>
-            {
-                //! TODO: bind to player speed
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.GetInfo.HealthManager.Debug_SetCurrentHealth(x);
             });
             C_SetMaxSpeed = new DebugCommand<float>("setmaxspeed", "Sets the max velocity of player", "setmaxspeed", (x) =>
             {
-                //! TODO: bind to player max speed
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.GetInfo.Mover.Speed.Max = x;
             });
-            C_SetAcce = new DebugCommand<float>("setacce", "Sets the acceleration of player", "setacce", (x) =>
+            C_SetAccel = new DebugCommand<float>("setaccel", "Sets the acceleration of player", "setaccel", (x) =>
             {
-                //! TODO: bind to player acceleration
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.GetInfo.Mover.Accel.MaxCummulation = x;
             });
             C_GodMode = new DebugCommand("god", "Turns the player into god", "god", () =>
             {
-                //! TODO: bind to player health
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.GetInfo.HealthManager.Debug_ToggleGodMode();
             });
 
             commandList = new List<object>
             {
                 C_Help,
                 C_Close,
+                
                 C_AIStop,
                 C_AIMove,
                 C_AISetSpeed,
                 C_AISetState,
+                C_AIStun,
+                C_AISetSlowStacks,
+                C_AIClearDebuffs,
+                
                 C_SetHp,
-                C_SetSpeed,
                 C_SetMaxSpeed,
-                C_SetAcce,
+                C_SetAccel,
                 C_GodMode
             };
         }
@@ -158,7 +178,7 @@ namespace Hadal.Debugging
             if (showConsole)
             {
                 float y = 0f;
-                
+
                 if (showHelp)
                 {
                     GUI.Box(new Rect(0f, y, Screen.width, 100), "");
@@ -176,7 +196,7 @@ namespace Hadal.Debugging
                     GUI.EndScrollView();
                     y = 100f;
                 }
-                
+
                 GUI.Box(new Rect(0, y, Screen.width, 30f), "");
                 GUI.backgroundColor = new Color(0f, 0f, 0f, 0f);
 
@@ -184,14 +204,14 @@ namespace Hadal.Debugging
                 input = GUI.TextField(new Rect(10f, y + 5f, Screen.width - 20f, 20f), input);
                 GUI.FocusControl("console");
             }
-   
+
             //GUI.FocusControl("GUI Console");
         }
 
         void HandleInput()
         {
             string[] properties = input.Split(' ');
-            
+
             foreach (var command in commandList)
             {
                 DebugCommandBase commandBase = command as DebugCommandBase;
@@ -213,14 +233,14 @@ namespace Hadal.Debugging
                 }
             }
         }
-        
+
         void OpenConsole()
         {
             //Cursor.visible = true;
             //Cursor.lockState = CursorLockMode.Confined;
 
             if (ResolvePlayerController()) localPlayerController.UI.PNTR_Pause();
-                
+
             GUI.FocusControl("GUI Console");
             input = "";
         }
@@ -229,14 +249,14 @@ namespace Hadal.Debugging
         {
             Cursor.visible = false;
             //Cursor.lockState = CursorLockMode.Locked;
-                
+
             if (ResolvePlayerController()) localPlayerController.UI.PNTR_Resume();
         }
-        
+
         bool ResolvePlayerController()
         {
             if (localPlayerController != null) return true;
-            
+
             localPlayerController = PlayerManager.Instance.GetController(NetworkEventManager.Instance.LocalPlayer);
             if (localPlayerController != null) return true;
             return false;

@@ -21,10 +21,12 @@ namespace Hadal.Player.Behaviours
         public event Action<int> OnHit;
         public event Action OnDeath;
         public event Action OnDown;
+        private bool _isKami;
 
         private void Awake()
         {
             _isDead = false;
+            _isKami = false;
             ResetHealth();
         }
         private void OnValidate()
@@ -43,6 +45,7 @@ namespace Hadal.Player.Behaviours
 
         public bool TakeDamage(int damage)
         {
+            if (_isKami) return false;
             _currentHealth = (_currentHealth - damage).Clamp0();
             DoOnHitEffects(damage);
             CheckHealthStatus();
@@ -70,6 +73,15 @@ namespace Hadal.Player.Behaviours
             }
         }
         public void ResetHealth() => _currentHealth = maxHealth;
+        /// <summary> Set current health to value for debugging purposes. Values below zero are ignored. Will be affected by god mode. </summary>
+        public void Debug_SetCurrentHealth(int health)
+        {
+            _currentHealth = health.Clamp0();
+            TakeDamage(0);
+        }
+        /// <summary> God mode for debugging purposes. Immunity to damage & death. </summary>
+        public void Debug_SetGodMode(bool statement) => _isKami = statement;
+        public void Debug_ToggleGodMode() => Debug_SetGodMode(!_isKami);
 
         public void ResetManager()
         {

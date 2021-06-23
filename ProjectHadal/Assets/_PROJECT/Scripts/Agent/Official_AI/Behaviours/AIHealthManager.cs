@@ -117,6 +117,11 @@ namespace Hadal.AI
             brain.StopStun();
         }
 
+        public void SetSlowStacks(int value)
+        {
+            currentSlowStacks = value;
+            brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
+        }
         public void UpdateSlowStacks(int change)
         {
             currentSlowStacks = (currentSlowStacks + change).Clamp0();
