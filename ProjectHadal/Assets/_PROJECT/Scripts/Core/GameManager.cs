@@ -29,7 +29,11 @@ namespace Hadal
             else Instance = this;
         }
 
-        public void StartGameEvent() => GameStartedEvent?.Invoke();
+        public void StartGameEvent()
+        {
+           //Debug.LogWarning("heyheybegin");
+            GameStartedEvent?.Invoke();
+        }
         public void EndGameEvent() => GameEndedEvent?.Invoke();
         
         public void ChangeGameState(GameState state) => currentGameState = state;
