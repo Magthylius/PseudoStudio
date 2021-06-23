@@ -112,8 +112,7 @@ namespace Hadal.AI
 
         public void UpdateSlowStacks(int change)
         {
-            currentSlowStacks = (currentSlowStacks + change);
-            if (currentSlowStacks < 0) currentSlowStacks = 0;
+            currentSlowStacks = (currentSlowStacks + change).Clamp0();
             
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
             

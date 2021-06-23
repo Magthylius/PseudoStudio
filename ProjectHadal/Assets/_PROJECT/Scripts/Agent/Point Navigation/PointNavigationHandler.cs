@@ -55,7 +55,11 @@ namespace Hadal.AI
         public bool Data_CanPath => canPath;
 
         private float slowMultiplier = 0f;
-        public void SetSlowMultiplier(float mult) => slowMultiplier = mult;
+        public void SetSlowMultiplier(float mult)
+        {
+            if (mult >= 1.0f) return;
+            slowMultiplier = mult;
+        }
 
         private NavPoint CurrentPoint;
         private NavPoint currentPoint
@@ -171,8 +175,11 @@ namespace Hadal.AI
             if (!CanMove || !canPath || !enableMovement) return;
             TrySelectNewNavPoint(fixedDeltaTime);
             ElapseCavernLingerTimer(fixedDeltaTime);
-            MoveForwards(fixedDeltaTime);
-            if (!isStunned) MoveTowardsCurrentNavPoint(fixedDeltaTime);
+            if (!isStunned)
+            {
+                MoveForwards(fixedDeltaTime);
+                MoveTowardsCurrentNavPoint(fixedDeltaTime);
+            }
             HandleObstacleAvoidance(fixedDeltaTime);
             HandleSpeedAndDirection(fixedDeltaTime);
             ClampMaxVelocity();
@@ -494,17 +501,21 @@ namespace Hadal.AI
 
         #region Private Methods
 
+        /// <summary>
+        /// Provides constant forward force on the pilot
+        /// </summary>
         private void MoveForwards(in float deltaTime)
         {
-            if (MaxVelocity == 0f) return;
-            float speedDeduction = TotalThrustForce * slowMultiplier;
-            Vector3 force = pilotTrans.forward * ((TotalThrustForce - speedDeduction) * deltaTime);
+            if (MaxVelocity < float.Epsilon) return;
+            float thrust = TotalThrustForce;
+            float modifiedSpeed = thrust - (thrust * slowMultiplier);
+            Vector3 force = pilotTrans.forward * (modifiedSpeed * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
         }
 
         private void HandleSpeedAndDirection(in float deltaTime)
         {
-            if (currentPoint == null) return;
+            if (currentPoint == null || MaxVelocity < float.Epsilon || isStunned) return;
 
             //! Chasing player direction
             if (isChasingAPlayer)
@@ -519,19 +530,24 @@ namespace Hadal.AI
 
         private void ClampMaxVelocity()
         {
+            if (MaxVelocity < float.Epsilon)
+			{
+                rBody.velocity = Vector3.zero;
+                return;
+            }
+
             if (rBody.velocity.magnitude > MaxVelocity * (1f - slowMultiplier))
                 rBody.velocity = rBody.velocity.normalized * MaxVelocity;
-			
-			if (MaxVelocity == 0f)
-				rBody.velocity = Vector3.zero;
         }
 
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
         {
-            if (currentPoint == null || MaxVelocity == 0f) return;
+            if (currentPoint == null || MaxVelocity < float.Epsilon) return;
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
-            float speedDeduction = TotalAttractionForce * slowMultiplier;
-            Vector3 force = direction * ((TotalAttractionForce - speedDeduction) * deltaTime);
+
+            float attraction = TotalAttractionForce;
+            float modifiedSpeed = attraction - (attraction * slowMultiplier);
+            Vector3 force = direction * (modifiedSpeed * deltaTime);
             rBody.AddForce(force, ForceMode.VelocityChange);
 
             if (!hasReachedPoint && CloseEnoughToTargetNavPoint())
@@ -569,7 +585,7 @@ namespace Hadal.AI
         private void HandleObstacleAvoidance(in float deltaTime)
         {
             obstacleCheckTimer -= deltaTime;
-            if (!ObstacleTimerReached) return;
+            if (!ObstacleTimerReached || MaxVelocity < float.Epsilon) return;
             if (enableDebug && showObstacleInfo) $"Obstacle count: {repulsionPoints.Count}".Msg();
 
             float deltaOfTime = deltaTime;
@@ -583,12 +599,13 @@ namespace Hadal.AI
 
                 //! Diversion force added if the AI is looking directly at the repulsion point
                 Vector3 force = (pilotTrans.position - p).normalized * (avoidanceForce * multiplier);
+                Vector3 forceNormalised = force.normalized;
                 if (!isChasingAPlayer)
                 {
-                    Vector3 cross = Vector3.Cross(force.normalized, rBody.velocity.normalized);
+                    Vector3 cross = Vector3.Cross(forceNormalised, rBody.velocity.normalized);
                     if (cross.magnitude.Abs() <= 0.2f)
                     {
-                        Vector3 direction = force.normalized;
+                        Vector3 direction = forceNormalised;
 
                         //! Diversion force added is always towards the right
                         Vector3 relativeRight = new Vector3(direction.z, direction.y, -direction.x).normalized;
