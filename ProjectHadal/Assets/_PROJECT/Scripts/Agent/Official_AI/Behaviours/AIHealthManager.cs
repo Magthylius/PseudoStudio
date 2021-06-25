@@ -19,18 +19,25 @@ namespace Hadal.AI
         [SerializeField, Range(0f, 1f)] private float slowPercentPerStack;
         [SerializeField, Min(0)] private int maxSlowStacks;
         [SerializeField, Range(0f, 1f)] private float maxSlowPercent;
-        private int currentSlowStacks;
-
+        [SerializeField, ReadOnly] private float currentMaxSlowPercent;
+        [SerializeField, ReadOnly] private float currentSlowPercent;
+        [SerializeField, ReadOnly] private int currentSlowStacks;
 
         int currentHealth;
         AIBrain brain;
         Timer stunTimer;
+
+        private void OnValidate()
+        {
+            currentMaxSlowPercent = maxSlowStacks * slowPercentPerStack.AsFloat();
+        }
 
         public void Initialise(AIBrain brain)
         {
             this.brain = brain;
             if (maxHealth <= 0) maxHealth = 1;
             ResetHealth();
+            ResetAllSlowStacks();
 
             //! Stun Timer
             stunTimer = brain.Create_A_Timer()
@@ -110,25 +117,27 @@ namespace Hadal.AI
             brain.StopStun();
         }
 
+        public void SetSlowStacks(int value)
+        {
+            currentSlowStacks = value;
+            brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
+        }
         public void UpdateSlowStacks(int change)
         {
-            currentSlowStacks = (currentSlowStacks + change);
-            if (currentSlowStacks < 0) currentSlowStacks = 0;
-            
+            currentSlowStacks = (currentSlowStacks + change).Clamp0();
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
-            
-            //Debug.LogWarning("AI slowed to: " + GetSlowPercentage());
         }
-        public void ResetAllSlowStacks() => currentSlowStacks = 0;
+        public void ResetAllSlowStacks()
+        {
+            currentSlowStacks = 0;
+            currentMaxSlowPercent = maxSlowStacks * slowPercentPerStack.AsFloat();
+            currentSlowPercent = 0;
+        }
 
         public float GetSlowPercentage()
         {
-            float percent = currentSlowStacks * slowPercentPerStack.AsFloat();
-            
-            if (percent > maxSlowPercent) percent = maxSlowPercent;
-            else if (percent < 0f) percent = 0f;
-            
-            return percent;
+            currentSlowPercent = currentSlowStacks * slowPercentPerStack.AsFloat();
+            return currentSlowPercent.Clamp(0f, maxSlowPercent);
         }
     }
 }

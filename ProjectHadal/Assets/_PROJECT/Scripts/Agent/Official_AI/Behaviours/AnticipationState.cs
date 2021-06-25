@@ -12,7 +12,6 @@ namespace Hadal.AI.States
 {
     public class AnticipationState : AIStateBase
     {
-        private IEnumerator debugRoutine;
         AnticipationStateSettings settings;
 
         //! Meant just for startup
@@ -21,8 +20,10 @@ namespace Hadal.AI.States
         public AnticipationState(AIBrain brain)
         {
             Initialize(brain);
-            debugRoutine = null;
             settings = MachineData.Anticipation;
+            
+            //Debug.LogWarning("heyheyinit");
+            GameManager.Instance.GameStartedEvent += StartInitialization;
         }
 
         public override void OnStateStart()
@@ -33,7 +34,7 @@ namespace Hadal.AI.States
             NavigationHandler.SetCanPath(true);
 
             //Brain.StartCoroutine(InitializeAfterCaverns());
-            GameManager.Instance.GameStartedEvent += StartInitialization;
+            
 
             //print(RuntimeData.GetEngagementObjective);
             if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
@@ -46,12 +47,12 @@ namespace Hadal.AI.States
         {
             if (!AllowStateTick) return;
 
-            if (!Brain.IsStunned)
+            /*if (!Brain.IsStunned)
             {
                 RuntimeData.TickAnticipationTicker(Time.deltaTime);
                 Brain.RuntimeData.SetBrainState(BrainState.Engagement);
                 Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
-            }
+            }*/
         }
 
         public override void LateStateTick()
@@ -67,6 +68,7 @@ namespace Hadal.AI.States
                 RuntimeData.TickAnticipationTicker(Time.deltaTime);
                 Brain.RuntimeData.SetBrainState(BrainState.Engagement);
                 Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+                if (Brain.DebugEnabled) Debug.Log("Spotted and entered engagement!");
             }
         }
 
@@ -86,6 +88,7 @@ namespace Hadal.AI.States
                 {
                     Brain.RuntimeData.SetBrainState(BrainState.Engagement);
                     Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+                    if (Brain.DebugEnabled) Debug.Log("Anticipation => Engagement");
                 }
             }
             else if (gameStartupInitialization) DetermineNextCavern();
@@ -93,21 +96,22 @@ namespace Hadal.AI.States
 
         void StartInitialization()
         {
+            //.LogWarning("heyheyxd");
             Brain.StartCoroutine(InitializeAfterCaverns());
         }
         
-        IEnumerator CheckPlayersInRange()
-        {
-            yield return new WaitForSeconds(0.2f);
-        }
 
         IEnumerator InitializeAfterCaverns()
         {
+            //Debug.LogWarning("heyhey0");
+            
             //! Wait for caverns to init
             while (!CavernManager.CavernsInitialized)
             {
                 yield return null;
             }
+            
+            //Debug.LogWarning("heyhey1");
 
             SetNewTargetCavern();
             if (Brain.TargetMoveCavern == null)
@@ -117,13 +121,16 @@ namespace Hadal.AI.States
                 //return;
                 yield return null;
             }
+            
+            //Debug.LogWarning("heyhey2");
 
             AllowStateTick = true;
             RuntimeData.SetEngagementSubState(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
-
-            Brain.StartCoroutine(CheckPlayersInRange());
+            
             gameStartupInitialization = true;
             DetermineNextCavern();
+            //Debug.LogWarning("heyhey3");
+            
         }
 
         void SetNewTargetCavern()
@@ -191,7 +198,7 @@ namespace Hadal.AI.States
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, RuntimeData.GetEngagementObjective != EngagementSubState.Aggressive);
             NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
             NavigationHandler.EnableCachedQueuePathTimer();
-            NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
+            //NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
             Brain.UpdateNextMoveCavern(nextCavern);
         }
 

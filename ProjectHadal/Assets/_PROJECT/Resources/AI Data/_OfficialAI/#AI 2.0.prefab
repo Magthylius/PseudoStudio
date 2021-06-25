@@ -297,6 +297,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  slowPercentPerStack: 0.2
+  maxSlowStacks: 5
+  maxSlowPercent: 0.9
+  currentMaxSlowPercent: 1
+  currentSlowPercent: 0
+  currentSlowStacks: 0
 --- !u!1 &3345266927618080665
 GameObject:
   m_ObjectHideFlags: 0

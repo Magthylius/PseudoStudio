@@ -88,7 +88,10 @@ namespace Hadal.Networking
             
             //! Set game to start when in main game scene
             if (isOfflineMode && SceneManager.GetActiveScene().name == InGameScene)
+            {
                 GameManager.Instance.StartGameEvent();
+                
+            }
         }
 
         public override void OnEnable()
