@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Hadal.Interactables
 {
-    [RequireComponent(typeof(Collider))]
     public class MushroomBehaviour : MonoBehaviour
     {
         [Header("Renderers")]
@@ -74,8 +73,8 @@ namespace Hadal.Interactables
         public float BorderPower = 0f;
         public float NoiseScale = 0f;
         public float Alpha = 0.9f;
-        [MinMaxSlider(0.1f, 50f)] public Vector2 EmissionRate;
-        [MinMaxSlider(0.1f, 50f)] public Vector2 EmissionBreathing;
+        [Range(0.1f, 50f)] public float EmissionRate;
+        [Range(0.1f, 50f)] public float EmissionBreathing;
         public void Lerp(MushroomShaderData a, MushroomShaderData b, in float percent)
         {
             BorderColour = Color.Lerp(a.BorderColour, b.BorderColour, percent);

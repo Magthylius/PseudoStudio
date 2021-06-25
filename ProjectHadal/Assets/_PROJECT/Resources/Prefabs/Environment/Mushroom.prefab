@@ -317,8 +317,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6570819639423113741}
   - component: {fileID: 1361719066703693179}
-  - component: {fileID: 5719331931242065070}
-  - component: {fileID: 4043632581625740157}
   - component: {fileID: 5300878854605013176}
   - component: {fileID: 6441171106893480055}
   m_Layer: 0
@@ -358,32 +356,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderersInner: {fileID: 7420513714521603490}
   renderersOuter: {fileID: 3672968498165392152}
---- !u!65 &5719331931242065070
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5435400376699300281}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5, y: 12, z: 5}
-  m_Center: {x: 0, y: 6, z: 0}
---- !u!135 &4043632581625740157
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5435400376699300281}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: 3, z: 0}
 --- !u!205 &5300878854605013176
 LODGroup:
   m_ObjectHideFlags: 0

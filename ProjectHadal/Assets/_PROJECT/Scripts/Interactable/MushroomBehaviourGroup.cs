@@ -22,7 +22,7 @@ namespace Hadal.Interactables
         private HashSet<Collider> contacts;
 
         [Header("Settings")]
-        [SerializeField, MinMaxSlider(0.1f, 60f)] private Vector2 reactiveTimeoutRange;
+        [SerializeField, Range(0.1f, 60f)] private float reactiveTimeoutRange;
         [SerializeField] private LayerMask reactiveMask;
         [SerializeField] private float reactiveTransitionSpeed;
         [SerializeField] private float unreactiveTransitionSpeed;
@@ -58,9 +58,9 @@ namespace Hadal.Interactables
                 Alpha = rendOuter.sharedMaterial.GetFloat(Alpha)
             };
 
-            //! Randomised starting emission settings
-            float rate = Random.Range(reactiveData.EmissionRate.x, reactiveData.EmissionRate.y);
-            float breathing = Random.Range(reactiveData.EmissionBreathing.x, reactiveData.EmissionBreathing.y);
+            //! Set starting emission settings
+            float rate = reactiveData.EmissionRate;
+            float breathing = reactiveData.EmissionBreathing;
             i = -1;
             while (++i < mushrooms.Count)
                 mushrooms[i].SetMaterialEmissionData(rate, breathing);
@@ -116,7 +116,7 @@ namespace Hadal.Interactables
                 yield return waitTime;
 
             //! Persisting reactivity timeout
-            yield return new WaitForSeconds(Random.Range(reactiveTimeoutRange.x, reactiveTimeoutRange.y));
+            yield return new WaitForSeconds(reactiveTimeoutRange);
 
             StartCoroutine(UnreactiveTransition());
         }
