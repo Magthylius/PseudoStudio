@@ -11,11 +11,10 @@ namespace Hadal.Interactables
         [SerializeField]private Color targetColor;
         [SerializeField]private float targetFogEndDistance;
 
-        [SerializeField][Range(0f, 1f)] float lerpTime;
+        [SerializeField][Range(0f, 0.01f)] float lerpTime;
 
         private void OnTriggerEnter(Collider other)
         {
-
             StartCoroutine(colorLerpIn());
         }
 
