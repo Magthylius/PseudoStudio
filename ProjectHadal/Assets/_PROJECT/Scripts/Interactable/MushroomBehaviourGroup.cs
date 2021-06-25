@@ -142,8 +142,6 @@ namespace Hadal.Interactables
         private readonly string BorderPower = "_BorderPower";
         private readonly string NoiseScale = "_NoiseScale";
         private readonly string Alpha = "_Alpha";
-        private readonly string EmissionRate = "_EmissionRate";
-        private readonly string EmissionBreathing = "_EmissionBreathing";
         #endregion
     }
 }
