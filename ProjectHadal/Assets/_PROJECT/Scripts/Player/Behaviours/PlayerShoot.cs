@@ -24,6 +24,7 @@ namespace Hadal.Player.Behaviours
         public Transform aimParentObject;
         public Transform aimPoint;
         public float torpedoMinAngle = 25f;
+        public LayerMask rayIgnoreMask;
         private Ray aimingRay;
         float aimPointYDelta;
         RaycastHit aimHit;
@@ -101,9 +102,10 @@ namespace Hadal.Player.Behaviours
         #region Handler Methods
         public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
         {
-            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
+            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
+                                Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore))
             {
-                info.AimedPoint = aimHit.point;          
+                info.AimedPoint = aimHit.point;
             }
 
             return info;
