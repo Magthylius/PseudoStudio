@@ -24,7 +24,7 @@ namespace Hadal.Player.Behaviours
         public Transform aimParentObject;
         public Transform aimPoint;
         public float torpedoMinAngle = 25f;
-
+        private Ray aimingRay;
         float aimPointYDelta;
         RaycastHit aimHit;
 
@@ -68,7 +68,7 @@ namespace Hadal.Player.Behaviours
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             DoDebugEnabling(debugKey);
 
-            //aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
+            aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
             aimPointYDelta = (torpedoFirePoint.position - aimPoint.position).magnitude;
         }
 
@@ -81,17 +81,13 @@ namespace Hadal.Player.Behaviours
         void OnDrawGizmos()
         {
             //Gizmos.DrawRay(aimingRay);
-            //Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
+            Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
 
-            /*if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
+            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
             {
                 Gizmos.DrawLine(aimPoint.position, aimHit.point);
                 Gizmos.DrawLine(aimHit.point, torpedoFirePoint.position);
-
-                float o = (aimHit.point - aimPoint.position).magnitude;
-                torpedoAngle = Mathf.Atan(o / aimPointYDelta) * Mathf.Rad2Deg;
-               // DebugManager.Instance.SLog(sl_TorpedoAimer, "Torpedo aimer: ", Mathf.Atan(o / aimPointYDelta) * Mathf.Rad2Deg );
-            }*/
+            }
         }
 
         public void DoUpdate(in float deltaTime)
