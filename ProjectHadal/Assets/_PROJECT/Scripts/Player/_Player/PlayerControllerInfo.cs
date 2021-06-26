@@ -17,10 +17,11 @@ namespace Hadal.Player
         public Mover Mover { get; private set; }
         public Rotator Rotator { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
+        public Collider Collider { get; private set; }
 
         public PlayerControllerInfo(PlayerCameraController camControl, PlayerHealthManager healthM,
             PlayerInventory inventory, PlayerLamp lamp, PlayerShoot shooter, PlayerPhotonInfo pInfo,
-            Mover mover, Rotator rotator, Rigidbody rigidbody)
+            Mover mover, Rotator rotator, Rigidbody rigidbody, Collider collider)
         {
             CameraController = camControl;
             HealthManager = healthM;
@@ -31,6 +32,7 @@ namespace Hadal.Player
             Mover = mover;
             Rotator = rotator;
             Rigidbody = rigidbody;
+            Collider = collider;
         }
     }
 }

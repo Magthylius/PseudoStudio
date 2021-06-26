@@ -91,7 +91,7 @@ namespace Hadal.Player
 
             for(int i = 0; i < playerList.Count; i++)
             {
-                if(playerList[i].getPlayerReady())
+                if(playerList[i].GetPlayerReady())
                 {
                     allPlayerReady = true;
                     continue;
@@ -154,11 +154,11 @@ namespace Hadal.Player
 
             for (int i = 0; i < playerList.Count; i++)
             {
-                if (!playerList[i].getPlayerReady())
+                if (!playerList[i].GetPlayerReady())
                 {
                     if (playerList[i].GetInfo.PhotonInfo.PView.ViewID == (int)obj.CustomData)
                     {
-                        playerList[i].setPlayerReady(true);
+                        playerList[i].SetPlayerReady(true);
                         NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED_CONFIRMED, (int)obj.CustomData, SendOptions.SendReliable);
                         return;
                     }
@@ -194,7 +194,7 @@ namespace Hadal.Player
                 //print("Created True Camera player");
                 localPlayerController = controller;
                 controller.HandlePhotonView(true);
-                controller.setPlayerReady(true);
+                controller.SetPlayerReady(true);
             }
             // Host finish assignming ownerships and cameras
 
