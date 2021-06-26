@@ -44,7 +44,7 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!IsLocal || projectileTriggered) return;
+            if (projectileTriggered) return;
 
             projectileTriggered = true;
 
@@ -70,6 +70,11 @@ namespace Hadal.Usables.Projectiles
 
             void ExplodeAndDespawn()
             {
+                if(!IsLocal)
+                {
+                    projectileAsset.SetActive(false);
+                    return;
+                }
                 Vector3 collisionSpot = gameObject.transform.position;
                 object[] content = {projectileID, collisionSpot};
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
