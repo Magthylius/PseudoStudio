@@ -50,14 +50,18 @@ namespace Hadal.AI.Caverns
     /// </summary>
     public enum CavernTag
     {
+        //! Used
         Invalid = 0,
-        Starting,
-        Lair,
-        Hydrothermal,
+        Crystal,
         Bioluminescent,
+        Hydrothermal_Deep,
+        Lair,
+        Custom_Point,
+
+        //! Unused
         Staglamite,
         Middle,
-        Custom_Point
+        Starting
     }
 
     /// <summary>

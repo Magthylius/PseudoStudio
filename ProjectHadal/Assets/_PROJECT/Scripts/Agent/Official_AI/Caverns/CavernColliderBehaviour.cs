@@ -16,7 +16,10 @@ namespace Hadal.AI.Caverns
 
         void OnValidate()
         {
-            GetComponent<Collider>().isTrigger = true;
+            var colliders = GetComponents<Collider>();
+            int i = -1;
+            while (++i < colliders.Length)
+                colliders[i].isTrigger = true;
         }
         
         private void OnTriggerEnter(Collider other)
