@@ -83,5 +83,11 @@ namespace Hadal.Usables
         public float DeltaTime => Time.deltaTime;
 
         #endregion
+
+        #region Accessors
+
+        public int AssociatedProjectileTypeID => data.ProjectileData.ProjTypeInt;
+
+        #endregion
     }
 }
