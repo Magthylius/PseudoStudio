@@ -164,18 +164,21 @@ namespace Hadal.Player.Behaviours
             if (!eventFire && (!_canUtilityFire || !AllowUpdate))
                 return;
 
-            //send event to utility ONLY when fire locally. local = (!eventFire)
-            if (!eventFire)
-            {
-                print(usable.Data.ProjectileData.ProjTypeInt);
-                object[] content = new object[] { _pView.ViewID, projectileID, selectedItem, chargeTime };
-                neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
-            }
-
             //actual firing
             HandleUtilityReloadTimer(usable);
             usable.Use(CreateInfoForUtility(projectileID, chargeTime));
             controller.GetInfo.Inventory.IncreaseProjectileCount();
+
+            //send event to utility ONLY when fire locally. local = (!eventFire)
+            if (!eventFire)
+            {
+                print(usable.Data.ProjectileData.ProjTypeInt);
+                projectileID += usable.Data.ProjectileData.ProjTypeInt;
+                print(projectileID);
+                object[] content = new object[] { _pView.ViewID, projectileID, selectedItem, chargeTime };
+                neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
+            }
+
         }
         
         private UsableHandlerInfo CreateInfoForTorpedo(int projectileID) => new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint,0f, aimParentRb.velocity, Vector3.zero);
