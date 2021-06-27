@@ -49,9 +49,9 @@ namespace Hadal.Player.Behaviours
 
         private void Initialise(PlayerController player)
         {
-            if (_controller != player)
+            if (_controller != player || !_pView.IsMine)
                 return;
-            
+
             PlayerController.OnInitialiseComplete -= Initialise;
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
         }
@@ -60,7 +60,7 @@ namespace Hadal.Player.Behaviours
         {
             if (!_isKnocked)
                 return;
-            
+
             if (TickKnockTimer(deltaTime) <= 0f)
                 _isKnocked = false;
         }
@@ -71,6 +71,7 @@ namespace Hadal.Player.Behaviours
             _currentHealth = (_currentHealth - damage).Clamp0();
             DoOnHitEffects(damage);
             CheckHealthStatus();
+            Send_HealthUpdateStatus(true);
             return true;
         }
 
@@ -109,9 +110,18 @@ namespace Hadal.Player.Behaviours
         }
 
         /// <summary>
+        /// Sets current health value. Should only be used in network callbacks.
+        /// Can be used to kill the player, but the hp checking event must be manually triggered after this function.
+        /// </summary>
+        private void NetOnly_SetHealthValue(in int health)
+        {
+            _currentHealth = health.Clamp(0, maxHealth);
+        }
+
+        /// <summary>
         /// Safely sets current health value. Cannot be used to kill the player, use <see cref="TakeDamage"/> instead.
         /// </summary>
-        private void SetHealthValue(in int health)
+        private void Safe_SetHealthValue(in int health)
         {
             _currentHealth = health.Clamp(1, maxHealth);
         }
@@ -119,10 +129,10 @@ namespace Hadal.Player.Behaviours
         /// <summary>
         /// Safely sets current health to a percentage of max health. Cannot be used to kill the player, use <see cref="TakeDamage"/> instead.
         /// </summary>
-        private void SetHealthToPercent(float percent)
+        private void Safe_SetHealthToPercent(float percent)
         {
             percent = percent.Clamp01();
-            SetHealthValue((maxHealth * percent).AsInt());
+            Safe_SetHealthValue((maxHealth * percent).AsInt());
         }
 
         /// <summary> Set current health to value for debugging purposes. Values below zero are ignored. Will be affected by god mode. </summary>
@@ -147,7 +157,7 @@ namespace Hadal.Player.Behaviours
         {
             if (_isKnocked)
                 return false;
-            
+
             _isKnocked = true;
             ResetKnockTimer(duration);
             _controller.GetInfo.Rigidbody.AddForce(force, ForceMode.Impulse);
@@ -156,12 +166,14 @@ namespace Hadal.Player.Behaviours
 
         public void Interact()
         {
+            //! Only players on other machine should be able to send the event to the true networked player of this pView
+            if (!_pView.IsMine)
+                return;
             
-        }
+            if (IsDown)
+            {
 
-        private void Receive_HealthUpdate(EventData data)
-        {
-
+            }
         }
 
         private float TickKnockTimer(in float deltaTime) => _knockTimer -= deltaTime;
@@ -173,12 +185,17 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
-            
+
             if (!_initialiseOnce)
             {
                 _initialiseOnce = true;
                 PlayerController.OnInitialiseComplete += Initialise;
             }
+        }
+
+        private void SetRevivalCustomisations()
+        {
+            Safe_SetHealthToPercent(0.5f); //! Revive at x% hp?
         }
 
         private void DeactivateControllerSystem()
@@ -196,10 +213,10 @@ namespace Hadal.Player.Behaviours
         {
             if (IsUnalive || !IsDown)
                 return false;
-            
+
             StopAllCoroutines();
             ResetHealth();
-            SetHealthToPercent(0.5f); //! Revive at x% hp?
+            SetRevivalCustomisations();
             _isDead = false; //! Make sure this is false
 
             _controller.SetIsDown(false); //! Enable movement & rotation
@@ -223,22 +240,44 @@ namespace Hadal.Player.Behaviours
             }
         }
 
-        private void Send_HealthUpdateStatus()
+        /// <summary>
+        /// Sends a health update event. The boolean, "sendToTrueLocalPlayer", should be properly assigned for the event's flow to work as intended.
+        /// </summary>
+        /// <param name="sendToTrueLocalPlayer">If true, the nature of the event will be Non-local duplicates -> Local player.
+        /// If false, the nature will be Local player -> Non-local duplicates.</param>
+        private void Send_HealthUpdateStatus(bool sendToTrueLocalPlayer)
         {
+            //! Only the local player should be able to send the event to report to all the simulated networked players
+            if (!_pView.IsMine)
+                return;
+            
             object[] content = new object[]
             {
-
+                _pView.ViewID,
+                sendToTrueLocalPlayer,
+                _currentHealth,
+                _isDead
             };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_HEALTH_UPDATE, content, SendOptions.SendReliable);
+        }
+
+        private void Receive_HealthUpdate(EventData data)
+        {
+            object[] content = data.CustomData.AsObjArray();
             
-            
-            // LayerMask layersToIgnore = 1;
-            // RaycastHit aimHit;
-            // if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
-            //                     Mathf.Infinity, ~(layersToIgnore), QueryTriggerInteraction.Ignore))
-            // {
-            //     info.AimedPoint = aimHit.point;
-            // }
+            int receivedViewID = content[0].AsInt();
+            if (_pView.ViewID != receivedViewID)
+                return;
+
+            bool sendToTrueLocalPlayer = content[1].AsBool();
+
+            int curHealth = content[2].AsInt();
+            NetOnly_SetHealthValue(curHealth);
+
+            bool isDead = content[3].AsBool();
+            _isDead = isDead;
+
+            CheckHealthStatus();
         }
 
         private void ResetDeathTimer() => _deathTimer = deathTime;
