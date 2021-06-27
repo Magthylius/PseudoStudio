@@ -40,6 +40,15 @@ namespace Hadal.Debugging
         public static DebugCommand<float> C_SetMaxSpeed;
         public static DebugCommand<float> C_SetAccel;
         public static DebugCommand C_GodMode;
+		
+		//! Player Inventory
+		public static DebugCommand C_SimplifyLoadout;
+		public static DebugCommand C_AddGrenadeAndTrap;
+		public static DebugCommand C_AddGrenade;
+		public static DebugCommand C_AddTrap;
+		public static DebugCommand C_AddHarpoon;
+		public static DebugCommand C_AddLure;
+		public static DebugCommand C_AddSonicDart;
 
         #region Input system
 
@@ -153,6 +162,43 @@ namespace Hadal.Debugging
                 var player = PlayerManager.Instance.LocalPlayerController;
                 player.GetInfo.HealthManager.Debug_ToggleGodMode();
             });
+			
+			//! Player Inventory
+			C_SimplifyLoadout = new DebugCommand("SimplifyLoadout", "Sets the utility loadout to only have a flare.", "SimplifyLoadout", () =>
+			{
+				var player = PlayerManager.Instance.LocalPlayerController;
+				
+			});
+			C_AddGrenadeAndTrap = new DebugCommand("AddGrenadeAndTrap", "Adds Grenade & Trap/Paralyzer utilities to the loadout (in order).", "AddGrenadeAndTrap", () =>
+			{
+				var player = PlayerManager.Instance.LocalPlayerController;
+				
+			});
+			C_AddGrenade = new DebugCommand("AddGrenade", "Adds the Grenade utility to the loadout.", "AddGrenade", () =>
+			{
+				var player = PlayerManager.Instance.LocalPlayerController;
+				
+			});
+			C_AddTrap = new DebugCommand("AddTrap", "Adds the Trap/Paralyzer utility to the loadout.", "AddTrap", () =>
+			{
+				var player = PlayerManager.Instance.LocalPlayerController;
+				
+			});
+			C_AddHarpoon = new DebugCommand("AddHarpoon", "Adds the Harpoon utility to the loadout.", "AddHarpoon", () =>
+			{
+				var player = PlayerManager.Instance.LocalPlayerController;
+				
+			});
+			C_AddLure = new DebugCommand("AddLure", "Adds the Lure utility to the loadout.", "AddLure", () =>
+			{
+				var player = PlayerManager.Instance.LocalPlayerController;
+				
+			});
+			C_AddSonicDart = new DebugCommand("AddSonicDart", "Adds the Sonic Dart utility to the loadout.", "AddSonicDart", () =>
+			{
+				var player = PlayerManager.Instance.LocalPlayerController;
+				
+			});
 
             commandList = new List<object>
             {
@@ -170,7 +216,15 @@ namespace Hadal.Debugging
                 C_SetHp,
                 C_SetMaxSpeed,
                 C_SetAccel,
-                C_GodMode
+                C_GodMode,
+				
+				C_SimplifyLoadout,
+				C_AddGrenadeAndTrap,
+				C_AddGrenade,
+				C_AddTrap,
+				C_AddHarpoon,
+				C_AddLure,
+				C_AddSonicDart
             };
         }
 
