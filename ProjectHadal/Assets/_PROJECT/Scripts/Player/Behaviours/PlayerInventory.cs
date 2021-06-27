@@ -167,9 +167,10 @@ namespace Hadal.Player.Behaviours
             }
 
             //reduce the projID to 3 key words : The projTypeInt
-            projTypeID = projTypeID.Substring(0, 3);
+            projTypeID = projTypeID.Substring(4, 1);
             projID = Convert.ToInt32(projTypeID);
-
+            projID *= 100;
+            print("searching for" + projID);
             for (int i = 0; i < utilities.Length; i++)
             {
                 if(utilities[i].Data.ProjectileData.ProjTypeInt == projID)
