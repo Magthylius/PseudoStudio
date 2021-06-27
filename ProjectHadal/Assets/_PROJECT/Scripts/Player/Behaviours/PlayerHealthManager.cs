@@ -63,7 +63,6 @@ namespace Hadal.Player.Behaviours
         {
             _isDead = false;
             _isKami = false;
-            ResetHealth();
         }
         private void OnDestroy()
         {
@@ -80,6 +79,7 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
+			ResetHealth();
 
             if (!_initialiseOnce)
             {
