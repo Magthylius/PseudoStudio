@@ -159,7 +159,7 @@ namespace Hadal.Player.Behaviours
         private UsableLauncherObject FindUtilityWithProjID(int projID)
         {
             string projTypeID = projID.ToString();
-
+            print("searching for" + projID);
             // return if projectile ID's length is less then 3, I.e., when its not shot by anyone.
             if (projTypeID.Length < 3)
             {
