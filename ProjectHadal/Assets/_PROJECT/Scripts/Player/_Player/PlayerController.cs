@@ -166,7 +166,6 @@ namespace Hadal.Player
         public void SetIsCarried(in bool statement) => _isCarried = statement;
         public void SetIsDown(in bool statement) => _isDown = statement;
 
-        public bool TryRevivePlayer() => healthManager.ReviveIfNotDead();
         public void Die() => _manager.TryToKill(attachedPlayer);
         public void ResetController()
         {
@@ -264,17 +263,13 @@ namespace Hadal.Player
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        /// <summary>
-        /// Calls when PhotonView.IsMine == true
-        /// </summary>
+        /// <summary> Calls when PhotonView.IsMine == true </summary>
         private void Activate()
         {
 
         }
 
-        /// <summary>
-        /// Calls when PhotonView.IsMine == false
-        /// </summary>
+        /// <summary> Calls when PhotonView.IsMine == false </summary>
         private void Deactivate()
         {
 

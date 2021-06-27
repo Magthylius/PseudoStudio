@@ -5,6 +5,6 @@ namespace Hadal
 {
     public interface IInteractable
     {
-        void Interact();
+        void Interact(int viewID);
     }
 }
