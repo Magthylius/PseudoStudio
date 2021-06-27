@@ -58,8 +58,11 @@ namespace Hadal.Usables.Projectiles
             else if (UsableBlackboard.InAILayers(layer))
             {
                 //! hits AI
-                collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
+                if(IsLocal)
+                    collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
+                
                 ExplodeAndDespawn();
+                
             }
             else if (UsableBlackboard.InCollidableLayers(layer))
             {
@@ -70,11 +73,13 @@ namespace Hadal.Usables.Projectiles
 
             void ExplodeAndDespawn()
             {
+                //if not local, only hide art asset
                 if(!IsLocal)
                 {
                     projectileAsset.SetActive(false);
                     return;
                 }
+
                 Vector3 collisionSpot = gameObject.transform.position;
                 object[] content = {projectileID, collisionSpot};
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);

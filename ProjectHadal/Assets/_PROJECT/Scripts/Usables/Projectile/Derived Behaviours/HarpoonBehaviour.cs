@@ -47,7 +47,7 @@ namespace Hadal.Usables.Projectiles
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (!IsLocal || IsAttached)
+            if (IsAttached)
                 return;
 
             projectileTriggered = true;
@@ -56,21 +56,36 @@ namespace Hadal.Usables.Projectiles
             if (UsableBlackboard.InAILayers(layer))
             {
                 //Debug.LogWarning("hit ai!");
-                collision.gameObject.GetComponentInChildren<ISlowable>().AttachProjectile();
-                PPhysics.PhysicsFinished += collision.gameObject.GetComponentInChildren<ISlowable>().DetachProjectile;
+                if(IsLocal)
+                {
+                    collision.gameObject.GetComponentInChildren<ISlowable>().AttachProjectile();
+                    PPhysics.PhysicsFinished += collision.gameObject.GetComponentInChildren<ISlowable>().DetachProjectile;
+                }
+                else //if non local, hide art asset upon impact.
+                {
+                    projectileAsset.SetActive(false);
+                }
             }
 
             if (!UsableBlackboard.InPlayerLayers(layer))
             {
-                transform.parent = collision.gameObject.transform;
-                Rigidbody.isKinematic = true;
-                IsAttached = true;
-            
-                Vector3 collisionSpot = gameObject.transform.position;
+                if(IsLocal)
+                {
+                    transform.parent = collision.gameObject.transform;
+                    Rigidbody.isKinematic = true;
+                    IsAttached = true;
 
-                object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
-                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
-                ImpactBehaviour(); 
+                    Vector3 collisionSpot = gameObject.transform.position;
+
+                    object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
+                    ImpactBehaviour();
+                }
+                else //if non local, hide art asset upon impact.
+                {
+                    projectileAsset.SetActive(false);
+                }
+               
             }
             
             
