@@ -1391,8 +1391,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableDeathTimerWhenDown: 0
-  deathTime: 0
+  deathTime: 120
   _deathTimer: 0
+  reviveTime: 5
+  _reviveTimer: 0
+  minPlayerRevivalDistance: 50
   maxHealth: 100
 --- !u!114 &4790383674308879192
 MonoBehaviour:
