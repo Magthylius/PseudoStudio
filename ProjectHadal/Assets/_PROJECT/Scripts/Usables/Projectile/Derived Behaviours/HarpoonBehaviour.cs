@@ -126,6 +126,7 @@ namespace Hadal.Usables.Projectiles
         protected override void ImpactBehaviour()
         {
             Rigidbody.isKinematic = true;
+            projectileAsset.SetActive(true);
             particleEffect.SetActive(true);
             isVisualizing = true;
         }
