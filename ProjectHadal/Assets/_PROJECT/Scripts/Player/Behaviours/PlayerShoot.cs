@@ -82,13 +82,13 @@ namespace Hadal.Player.Behaviours
         void OnDrawGizmos()
         {
             //Gizmos.DrawRay(aimingRay);
-            Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
+            /*Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
 
             if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
             {
                 Gizmos.DrawLine(aimPoint.position, aimHit.point);
                 Gizmos.DrawLine(aimHit.point, torpedoFirePoint.position);
-            }
+            }*/
         }
 
         public void DoUpdate(in float deltaTime)
@@ -167,6 +167,7 @@ namespace Hadal.Player.Behaviours
             //send event to utility ONLY when fire locally. local = (!eventFire)
             if (!eventFire)
             {
+                print(usable.Data.ProjectileData.ProjTypeInt);
                 object[] content = new object[] { _pView.ViewID, projectileID, selectedItem, chargeTime };
                 neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
             }

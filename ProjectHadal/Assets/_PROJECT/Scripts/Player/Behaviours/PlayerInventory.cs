@@ -6,6 +6,7 @@ using Hadal.Usables;
 using Hadal.Inputs;
 using Hadal.Networking;
 using Hadal.UI;
+using System;
 
 //Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
@@ -104,7 +105,16 @@ namespace Hadal.Player.Behaviours
             object[] data = (object[])eventData.CustomData;
             if ((int)data[0] == _pView.ViewID)
             {
-                _controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);
+                if(FindUtilityWithProjID((int)data[1]))
+                {
+                    print(FindUtilityWithProjID((int)data[1]).UtilityName);
+                    _controllerInfo.Shooter.FireUtility((int)data[1], FindUtilityWithProjID((int)data[1]), 0, (float)data[3], true);
+                    /*_controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);*/
+                }
+                else
+                {
+                    print("Cant find the respective launcher");
+                }
             }
         }
 
@@ -143,6 +153,32 @@ namespace Hadal.Player.Behaviours
 
             //if (UIManager.IsNull) return;
             _controller.UI.UpdateCurrentUtility(EquippedUsable.UtilityName);
+        }
+
+        //Find the correct LAUNCHER based on projID
+        private UsableLauncherObject FindUtilityWithProjID(int projID)
+        {
+            string projTypeID = projID.ToString();
+
+            // return if projectile ID's length is less then 3, I.e., when its not shot by anyone.
+            if (projTypeID.Length < 3)
+            {
+                return null;
+            }
+
+            //reduce the projID to 3 key words : The projTypeInt
+            projTypeID = projTypeID.Substring(0, 3);
+            projID = Convert.ToInt32(projTypeID);
+
+            for (int i = 0; i < utilities.Length; i++)
+            {
+                if(utilities[i].Data.ProjectileData.ProjTypeInt == projID)
+                {
+                    return utilities[i];
+                }
+            }
+
+            return null;
         }
 
         private void ToggleItemActiveState()
