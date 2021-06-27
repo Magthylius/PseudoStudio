@@ -166,7 +166,13 @@ namespace Hadal.Player.Behaviours
 
             //actual firing
             HandleUtilityReloadTimer(usable);
-            projectileID += usable.Data.ProjectileData.ProjTypeInt;
+
+            //why is this the case, you need to ask Jin or Jet because of network fuckery
+            if(!eventFire)
+            {
+                projectileID += usable.Data.ProjectileData.ProjTypeInt;
+            }
+            
             usable.Use(CreateInfoForUtility(projectileID, chargeTime));
             controller.GetInfo.Inventory.IncreaseProjectileCount();
 
