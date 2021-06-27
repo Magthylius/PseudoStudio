@@ -12,8 +12,7 @@ namespace Hadal.Usables
         {
             var projectileObj = info.Trap;
             projectileObj.Data = ProjectileData;
-            projectileObj.projectileID = projectileObj.Data.ProjTypeInt;
-            projectileObj.projectileID += info.ProjectileID;
+            projectileObj.projectileID = info.ProjectileID;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.WithGObjectSetActive(true);

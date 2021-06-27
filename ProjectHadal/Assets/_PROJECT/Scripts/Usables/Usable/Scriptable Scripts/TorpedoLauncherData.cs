@@ -12,8 +12,7 @@ namespace Hadal.Usables
         {
             var projectileObj = TorpedoPool.Instance.Scoop();
             projectileObj.Data = ProjectileData;
-            projectileObj.projectileID = projectileObj.Data.ProjTypeInt;
-            projectileObj.projectileID += info.ProjectileID;
+            projectileObj.projectileID = info.ProjectileID;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.Rigidbody.velocity = info.shooterVelocity;

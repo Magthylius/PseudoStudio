@@ -107,7 +107,9 @@ namespace Hadal.Player.Behaviours
             {
                 if(FindUtilityWithProjID((int)data[1]))
                 {
+
                     print(FindUtilityWithProjID((int)data[1]).UtilityName);
+                    //minus here
                     _controllerInfo.Shooter.FireUtility((int)data[1], FindUtilityWithProjID((int)data[1]), 0, (float)data[3], true);
                     /*_controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);*/
                 }
