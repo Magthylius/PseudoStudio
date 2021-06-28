@@ -2,6 +2,7 @@ using Tenshi.AIDolls;
 using System;
 using Tenshi;
 using Tenshi.UnitySoku;
+using Hadal.AI.Caverns;
 
 namespace Hadal.AI.States
 {
@@ -9,59 +10,52 @@ namespace Hadal.AI.States
     {
         EngagementState parent;
         AIBrain b;
+        EngagementStateSettings engagementStateSettings;
+        PointNavigationHandler navigationHandler;
+        CavernHandler cavernHandler;
+        CavernTag currentCavern;
+        float ambushTimer;
 
         public AmbushSubState()
         {
 
         }
-        public void SetParent(EngagementState parent)
+        public void Initialize(EngagementState parent)
         {
             this.parent = parent;
-            b = parent.Brain;
+            Initialize(parent.Brain);
+            Brain = parent.Brain;
+            navigationHandler = Brain.NavigationHandler;
+            engagementStateSettings = MachineData.Engagement;
         }
 
         public override void OnStateStart()
-		{
-			if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
-		}
+        {
+            if (b.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
+            currentCavern = Brain.CavernManager.GetCavernTagOfAILocation();
+            cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
+            ambushTimer = engagementStateSettings.AM_MaxWaitTime;
+        }
         public override void StateTick()
         {
-            //! new logic
-            /*
-            if (has not chosen ambush point)
+            if (!navigationHandler.Data_chosenAmbushPoint)
             {
-                find ambush location { closest to AI? closest to Players? }
+                navigationHandler.SelectAmbushPoint();
             }
 
-            if (has chosen ambush point)
-            {
-                path towards ambush point;
-                if (player interruption)
-                {
-                    confidence--
-                    goto -> Judgement substate and evaluate normally
-                }
-            }
+            ambushTimer -= Brain.DeltaTime;
 
-            if (is in ambush point)
+            if (cavernHandler.GetPlayerCount > 0)
             {
-                if (any player is within bite range)
-                {
-                    try to bite that player;
-                    goto -> Judgement substate and evaluate normally
-                }
-                else
-                {
-                    tick wait timer;
-                    if (wait timer exceeded && no players in current cavern)
-                    {
-                        confidence++
-                        goto -> Anticipation state
-                    }
-                }
+                RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
             }
-            */
+            else if(ambushTimer <= 0)
+            {
+                RuntimeData.SetBrainState(BrainState.Anticipation);
+            }
         }
+
+
         public override void LateStateTick() { }
         public override void FixedStateTick() { }
         public override void OnStateEnd() { }

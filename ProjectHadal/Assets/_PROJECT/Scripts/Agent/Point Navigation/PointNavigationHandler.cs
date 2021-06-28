@@ -53,6 +53,8 @@ namespace Hadal.AI
         public bool Data_IsChasingAPlayer => isChasingAPlayer;
         [SerializeField, ReadOnly] private bool canPath;
         public bool Data_CanPath => canPath;
+        [SerializeField, ReadOnly] private bool chosenAmbushPoint;
+        public bool Data_chosenAmbushPoint => chosenAmbushPoint;
 
         private float slowMultiplier = 0f;
         public void SetSlowMultiplier(float mult)
@@ -167,7 +169,7 @@ namespace Hadal.AI
             _tickCavernLingerTimer = false;
 
             CavernModeSteering();
-			ResetCavernLingerTimer();
+            ResetCavernLingerTimer();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
@@ -262,7 +264,7 @@ namespace Hadal.AI
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug) "Setting custom nav point path".Msg();
-            
+
         }
 
         public void ComputeCachedDestinationCavernPath(CavernHandler destination)
@@ -272,7 +274,7 @@ namespace Hadal.AI
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
             }
-            
+
             CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
@@ -280,7 +282,7 @@ namespace Hadal.AI
 
             //! First point and its approach points. Enqueue approach first.
             NavPoint first = entryPoints.Single(point => point.CavernTag == currentCavern.cavernTag);
-            
+
             NavPoint appChild = first.approachPoint;
             while (appChild != null)
             {
@@ -355,7 +357,7 @@ namespace Hadal.AI
                 if (enableDebug) "CavernManager or Destination cavern is null.".Msg();
                 return;
             }
-            
+
             ComputeCachedDestinationCavernPath(destination);
             SetQueuedPathFromCache();
         }
@@ -462,6 +464,43 @@ namespace Hadal.AI
             }
         }
 
+        /// <summary>
+        /// Select a new ambush point to go
+        /// </summary>
+        public void SelectAmbushPoint()
+        {
+            if (cavernManager == null)
+                return;
+
+            if (currentPoint == null)
+                currentPoint = GetClosestPointToSelf();
+
+            List<NavPoint> ambushPoints = navPoints
+                                          .Where(o => o != null && o != currentPoint && o.CavernTag == cavernManager.GetCavernTagOfAILocation() && o.IsHidingPoint)
+                                          .ToList();
+
+            ambushPoints.RemoveAll(p => p == null);
+            if (ambushPoints.IsEmpty())
+            {
+                if (enableDebug)
+                    $"Ambush points is empty; AI in {cavernManager.GetCavernTagOfAILocation()}".Msg();
+                return;
+            }
+
+            if (currentPoint != null) currentPoint.Deselect();
+
+            currentPoint = ambushPoints.RandomElement();
+            currentPoint.Select();
+            chosenAmbushPoint = true;
+            hasReachedPoint = false;
+            canTimeout = false;
+            canAutoSelectNavPoints = false;
+            pointPath.Clear();
+            ResetNavPointLingerTimer();
+            ResetTimeoutTimer();
+            if (enableDebug)
+                $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
+        }
         public void TunnelModeSteering()
         {
             _steeringMode = SteeringMode.Tunnel;
@@ -543,7 +582,7 @@ namespace Hadal.AI
         private void ClampMaxVelocity()
         {
             if (MaxVelocity < float.Epsilon)
-			{
+            {
                 rBody.velocity = Vector3.zero;
                 return;
             }
@@ -657,6 +696,7 @@ namespace Hadal.AI
             }
         }
 
+
         private void ElapseCavernLingerTimer(in float deltaTime)
         {
             if (!_tickCavernLingerTimer) return;
@@ -700,6 +740,9 @@ namespace Hadal.AI
             if (enableDebug)
                 $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
+
+
+
 
         public Queue<NavPoint> GetPointPath => pointPath;
         public Queue<NavPoint> GetCachedPointPath => cachedPointPath;
