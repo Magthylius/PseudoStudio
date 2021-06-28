@@ -5,10 +5,10 @@ namespace Hadal.Inputs
 {
     public interface IUseableInput
     {
-        bool FireKey1 { get; }
-        bool FireKey2 { get; }
-        bool FireKey2Held { get; }
-        bool FireKey2Release { get; }
+        bool FireKeyTorpedo { get; }
+        bool FireKeyUtility { get; }
+        bool FireKeyUtilityHeld { get; }
+        bool FireKeyUtilityRelease { get; }
         bool EscKeyDown { get; }
         bool EscKeyUp { get; }
     }

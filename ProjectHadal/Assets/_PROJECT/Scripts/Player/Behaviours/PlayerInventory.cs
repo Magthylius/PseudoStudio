@@ -15,6 +15,7 @@ namespace Hadal.Player.Behaviours
 {
     public class PlayerInventory : MonoBehaviourPunCallbacks, IPlayerComponent, IPlayerEnabler
     {
+        [Header("Utility Lists")]
         [SerializeField] private List<UsableLauncherObject> allUtilities;
         [SerializeField] private List<UsableLauncherObject> equippedUtilities;
         private IEquipmentInput _eInput;
@@ -25,12 +26,7 @@ namespace Hadal.Player.Behaviours
         private PlayerController _controller;
         private PlayerControllerInfo _controllerInfo;
         private int _projectileCount;
-
-        [Header("Firing Variable")]
         private float _chargeTime = 0.0f;
-
-        [Header("Event Code")]
-        private const byte PLAYER_UTI_LAUNCH_EVENT = 2;
 
         NetworkEventManager neManager;
 
@@ -44,8 +40,8 @@ namespace Hadal.Player.Behaviours
         void Start()
         {
             neManager = NetworkEventManager.Instance;
-            if (neManager) neManager.AddListener(ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
-            EquipItem(0);
+            if (neManager != null) neManager.AddListener(ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
+            ResetEquipIndex();
         }
 
         public void Inject(PlayerController controller)
@@ -65,6 +61,7 @@ namespace Hadal.Player.Behaviours
             UpdateUsables(deltaTime);
         }
 
+        /// <summary> Checks for keyboard input on the top row numbers, and switching the equip index to such. </summary>
         private void SelectItem()
         {
             if (equippedUtilities.IsNullOrEmpty()) return;
@@ -76,30 +73,31 @@ namespace Hadal.Player.Behaviours
             }
         }
 
+        /// <summary> Checks for inputs that are meant to trigger the torpedo or other utilities. </summary>
         private void HandleItemInput()
         {
-            if (_uInput.FireKey1)
+            if (_uInput.FireKeyTorpedo)
             {
                 _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false);
+                return;
             }
+
             if (EquippedUsable.Data.isChargable)
             {
-                if (_uInput.FireKey2Held)
+                if (_uInput.FireKeyUtilityHeld)
                 {
                     if (_chargeTime < 1f)
-                    {
                         _chargeTime += EquippedUsable.Data.ChargingSpeed * Time.deltaTime;
-                    }
                 }
-                if (_uInput.FireKey2Release)
+                if (_uInput.FireKeyUtilityRelease)
                 {
-                    FireUtility(pViewForProj + _projectileCount);
+                    FireUtilityWithShooter(pViewForProj + _projectileCount);
                     _chargeTime = 0f;
                 }
             }
-            else if (_uInput.FireKey2)
+            else if (_uInput.FireKeyUtility)
             {
-                FireUtility(pViewForProj + _projectileCount);
+                FireUtilityWithShooter(pViewForProj + _projectileCount);
             }
         }
         
@@ -113,7 +111,6 @@ namespace Hadal.Player.Behaviours
                 {
 
                     print(FindUtilityWithProjID((int)data[1]).UtilityName);
-                    //minus here
                     _controllerInfo.Shooter.FireUtility((int)data[1], FindUtilityWithProjID((int)data[1]), 0, (float)data[3], true);
                     /*_controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);*/
                 }
@@ -125,7 +122,7 @@ namespace Hadal.Player.Behaviours
         }
 
         //Fire when pressed locally, send event
-        void FireUtility(int projectileID)
+        void FireUtilityWithShooter(int projectileID)
         {
             _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, false);
         }
@@ -155,9 +152,8 @@ namespace Hadal.Player.Behaviours
             _previousSelectedItem = _selectedItem;
 
             if (!_pView.IsMine) return;
-            UpdateNetworkItem();
+            // UpdateNetworkItem();
 
-            //if (UIManager.IsNull) return;
             _controller.UI.UpdateCurrentUtility(EquippedUsable.UtilityName);
         }
 
@@ -166,11 +162,10 @@ namespace Hadal.Player.Behaviours
         {
             string projTypeID = projID.ToString();
             print("searching for" + projID);
+            
             // return if projectile ID's length is less then 3, I.e., when its not shot by anyone.
             if (projTypeID.Length < 3)
-            {
                 return null;
-            }
 
             //reduce the projID to 3 key words : The projTypeInt
             projTypeID = projTypeID.Substring(4, 1);
@@ -220,9 +215,9 @@ namespace Hadal.Player.Behaviours
 
         public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
         {
-            if (_pView == null) return;
-            if (_pView.IsMine || targetPlayer != _pView.Owner) return;
-            EquipItem((int)changedProps[nameof(_selectedItem)]);
+            // if (_pView == null) return;
+            // if (_pView.IsMine || targetPlayer != _pView.Owner) return;
+            // EquipItem((int)changedProps[nameof(_selectedItem)]);
         }
 
         #endregion
@@ -247,23 +242,48 @@ namespace Hadal.Player.Behaviours
         }
         public List<UsableLauncherObject> GetEquippedUsableObjects => equippedUtilities;
         public List<UsableLauncherObject> GetAllUsableObjects => allUtilities;
+        
+        /// <summary> Checks whether the inventory capacity for equipped utilities is reached.
+        /// This is to prevent large inventory sizes. </summary>
         public bool MaxUtilityCapacityReached => equippedUtilities.Count >= allUtilities.Count;
+        
+        /// <summary> Sets the player's currently equipped item index to the very first slot. </summary>
         public void ResetEquipIndex() => EquipItem(0);
+
+        /// <summary> Deactivates all utilities that are available in the list, <see cref="allUtilities"/>. </summary>
         public void DeactivateAllUtilities() => GetAllUsableObjects.ForEach(u => u.Deactivate());
-        public void AddEquipment(UsableLauncherObject usable)
+        
+        /// <summary> Adds a usable launcher object to the inventory's equipped list. </summary>
+        /// <returns>Returns true if equipment is successfully added.</returns>
+        public bool AddEquipment(UsableLauncherObject usable)
         {
             if (!MaxUtilityCapacityReached && !equippedUtilities.Contains(usable))
+            {
                 equippedUtilities.Add(usable);
+                return true;
+            }
+            return false;
         }
-        public bool AddEquipmentOfType<T>(bool manualActivate = false) where T : UsableLauncherObject
+
+        /// <summary>
+        /// Adds a usable launcher object to the inventory's equipped list based on availability from the all utilities list.
+        /// See <see cref="allUtilities"/>.
+        /// </summary>
+        /// <typeparam name="TLauncher">The class Type of a usable launcher object (e.g. <see cref="HarpoonLauncherObject"/>).</typeparam>
+        /// <param name="manualActivate">Optional boolean to make sure the added usable is activated by default, if True.</param>
+        /// <returns>Returns true if equipment is successfully added.</returns>
+        public bool AddEquipmentOfType<TLauncher>(bool manualActivate = false) where TLauncher : UsableLauncherObject
         {
             for (int i = 0; i < allUtilities.Count; i++)
             {
-                if (allUtilities[i] is T)
+                if (allUtilities[i] is TLauncher)
                 {
-                    AddEquipment(allUtilities[i]);
-                    if (manualActivate) allUtilities[i].Activate();
-                    return true;
+                    bool status = AddEquipment(allUtilities[i]);
+                    if (status)
+                    {
+                        if (manualActivate) allUtilities[i].Activate();
+                        return true;
+                    }
                 }
             }
             return false;
