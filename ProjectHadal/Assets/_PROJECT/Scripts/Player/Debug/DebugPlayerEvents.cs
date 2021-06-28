@@ -39,7 +39,7 @@ namespace Hadal.Player
 
         void RegisterOnFireEvent()
         {
-            foreach(var o in _inv.GetUsableObjects)
+            foreach(var o in _inv.GetEquippedUsableObjects)
             {
                 o.OnFire += CallOnFire;
             }

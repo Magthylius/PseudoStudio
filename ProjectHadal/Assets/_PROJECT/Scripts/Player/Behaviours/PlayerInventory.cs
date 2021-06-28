@@ -7,13 +7,16 @@ using Hadal.Inputs;
 using Hadal.Networking;
 using Hadal.UI;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 //Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
 {
     public class PlayerInventory : MonoBehaviourPunCallbacks, IPlayerComponent, IPlayerEnabler
     {
-        [SerializeField] private UsableLauncherObject[] utilities;
+        [SerializeField] private List<UsableLauncherObject> allUtilities;
+        [SerializeField] private List<UsableLauncherObject> equippedUtilities;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
         private int _selectedItem;
@@ -35,6 +38,7 @@ namespace Hadal.Player.Behaviours
         {
             _eInput = new StandardEquipmentInput();
             _uInput = new StandardUseableInput();
+            allUtilities = GetComponentsInChildren<UsableLauncherObject>().ToList();
         }
 
         void Start()
@@ -63,8 +67,8 @@ namespace Hadal.Player.Behaviours
 
         private void SelectItem()
         {
-            if (utilities.IsNullOrEmpty()) return;
-            for (int i = 0; i < utilities.Length; i++)
+            if (equippedUtilities.IsNullOrEmpty()) return;
+            for (int i = 0; i < equippedUtilities.Count; i++)
             {
                 if (!_eInput.SlotIndex(i)) continue;
                 EquipItem(i);
@@ -129,8 +133,8 @@ namespace Hadal.Player.Behaviours
         private void UpdateUsables(in float deltaTime)
         {
             int i = -1;
-            while(++i < utilities.Length)
-                utilities[i].DoUpdate(deltaTime);
+            while(++i < equippedUtilities.Count)
+                equippedUtilities[i].DoUpdate(deltaTime);
         }
 
         private void EquipItem(int _index)
@@ -173,11 +177,11 @@ namespace Hadal.Player.Behaviours
             projID = Convert.ToInt32(projTypeID);
             projID *= 100;
             print("searching for" + projID);
-            for (int i = 0; i < utilities.Length; i++)
+            for (int i = 0; i < equippedUtilities.Count; i++)
             {
-                if(utilities[i].Data.ProjectileData.ProjTypeInt == projID)
+                if(equippedUtilities[i].Data.ProjectileData.ProjTypeInt == projID)
                 {
-                    return utilities[i];
+                    return equippedUtilities[i];
                 }
             }
 
@@ -186,10 +190,10 @@ namespace Hadal.Player.Behaviours
 
         private void ToggleItemActiveState()
         {
-            if (utilities.IsNullOrEmpty()) return;
-            utilities[_selectedItem].Activate();
+            if (equippedUtilities.IsNullOrEmpty()) return;
+            equippedUtilities[_selectedItem].Activate();
             if (_previousSelectedItem != -1)
-                utilities[_previousSelectedItem].Deactivate();
+                equippedUtilities[_previousSelectedItem].Deactivate();
         }
 
         private void UpdateNetworkItem()
@@ -203,10 +207,10 @@ namespace Hadal.Player.Behaviours
         {
             var camera = _controllerInfo.CameraController.GetCamera;
             int i = -1;
-            while (++i < utilities.Length)
+            while (++i < equippedUtilities.Count)
             {
-                utilities[i].Inject(camera);
-                utilities[i].Deactivate();
+                equippedUtilities[i].Inject(camera);
+                equippedUtilities[i].Deactivate();
             }
         }
 
@@ -241,8 +245,30 @@ namespace Hadal.Player.Behaviours
             else
                 _projectileCount++; 
         }
-        public UsableLauncherObject[] GetUsableObjects => utilities;
-        private UsableLauncherObject EquippedUsable => utilities[_selectedItem];
+        public List<UsableLauncherObject> GetEquippedUsableObjects => equippedUtilities;
+        public List<UsableLauncherObject> GetAllUsableObjects => allUtilities;
+        public bool MaxUtilityCapacityReached => equippedUtilities.Count >= allUtilities.Count;
+        public void ResetEquipIndex() => EquipItem(0);
+        public void DeactivateAllUtilities() => GetAllUsableObjects.ForEach(u => u.Deactivate());
+        public void AddEquipment(UsableLauncherObject usable)
+        {
+            if (!MaxUtilityCapacityReached && !equippedUtilities.Contains(usable))
+                equippedUtilities.Add(usable);
+        }
+        public bool AddEquipmentOfType<T>(bool manualActivate = false) where T : UsableLauncherObject
+        {
+            for (int i = 0; i < allUtilities.Count; i++)
+            {
+                if (allUtilities[i] is T)
+                {
+                    AddEquipment(allUtilities[i]);
+                    if (manualActivate) allUtilities[i].Activate();
+                    return true;
+                }
+            }
+            return false;
+        }
+        private UsableLauncherObject EquippedUsable => equippedUtilities[_selectedItem];
         private int pViewForProj => _pView.ViewID * 1000;
         #endregion
     }
