@@ -8,6 +8,7 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using Tenshi.Shrine;
 using UnityEngine;
+using NaughtyAttributes;
 using ReadOnlyAttribute = Tenshi.ReadOnlyAttribute;
 using Random = UnityEngine.Random;
 
@@ -80,6 +81,7 @@ namespace Hadal.AI
         [SerializeField] private bool enableDebug;
         [SerializeField] private bool showObstacleInfo;
         [SerializeField] private bool enableMovement;
+		[SerializeField] private bool disableOnStart;
 
         [Header("Timer Settings")]
         [SerializeField, MinMaxSlider(1f, 30f)] private Vector2 navPointLingerTimeRange;
@@ -170,6 +172,9 @@ namespace Hadal.AI
 
             CavernModeSteering();
             ResetCavernLingerTimer();
+			
+			if (disableOnStart)
+				Disable();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
@@ -199,12 +204,14 @@ namespace Hadal.AI
         public Transform PilotTransform => pilotTrans;
 
         /// <summary> Enables this component safely. </summary>
+		[Button(nameof(Enable))]
         public void Enable()
         {
             _isEnabled = true;
             if (rBody != null) rBody.isKinematic = false;
         }
         /// <summary> Disables this component safely. </summary>
+		[Button(nameof(Disable))]
         public void Disable()
         {
             _isEnabled = false;
@@ -762,7 +769,7 @@ namespace Hadal.AI
 
         public Rigidbody Rigidbody => rBody;
         public float MaxVelocity => (maxVelocity * debugVelocityMultiplier) - (maxVelocity * debugVelocityMultiplier * slowMultiplier);
-        private bool CanMove => _isEnabled && pilotTrans != null && rBody != null;
+        public bool CanMove => _isEnabled && pilotTrans != null && rBody != null;
 
         #endregion
     }

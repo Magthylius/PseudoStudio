@@ -25,11 +25,14 @@ namespace Hadal.AI
 
         IEnumerator Start()
         {
+			if (brain == null)
+				brain = FindObjectOfType<AIBrain>();
+			
             neManager = NetworkEventManager.Instance;
 
             if (enableAIRandomSpawn)
             {
-                FindObjectOfType<AITransformHandler>().Move(spawnPositions[(int)Random.Range(0, spawnPositions.Count)].position);
+                FindObjectOfType<AITransformHandler>().MoveAndRotate(spawnPositions[(int)Random.Range(0, spawnPositions.Count)]);
             }
 
             //! The null is to make sure the AI does not go to the NavPoint of where its spawned.

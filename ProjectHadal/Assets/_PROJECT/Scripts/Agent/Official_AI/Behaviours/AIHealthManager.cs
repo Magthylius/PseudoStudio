@@ -11,7 +11,7 @@ using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
-    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, IAmLeviathan, ILeviathanComponent
+    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, IAmLeviathan, ISlowable, ILeviathanComponent
     {
         [SerializeField] int maxHealth;
         
@@ -116,16 +116,35 @@ namespace Hadal.AI
             stunTimer.Pause();
             brain.StopStun();
         }
+		
+		public void AttachProjectile()
+        {
+            if (NetworkEventManager.Instance.IsMasterClient)
+                UpdateSlowStacks(1);
+            else
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1, SendOptions.SendReliable);
+        }
+
+        public void DetachProjectile()
+        {
+            if (NetworkEventManager.Instance.IsMasterClient)
+                UpdateSlowStacks(-1);
+            else
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1, SendOptions.SendReliable);
+        }
 
         public void SetSlowStacks(int value)
         {
             currentSlowStacks = value;
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
         }
-        public void UpdateSlowStacks(int change)
+        public void UpdateSlowStacks(int change, bool isLocal = true)
         {
             currentSlowStacks = (currentSlowStacks + change).Clamp0();
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
+			
+			if (isLocal)
+				$"Updated Slow locally. Current stacks are {CurrentSlowStacks}; Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
         }
         public void ResetAllSlowStacks()
         {
@@ -139,5 +158,7 @@ namespace Hadal.AI
             currentSlowPercent = currentSlowStacks * slowPercentPerStack.AsFloat();
             return currentSlowPercent.Clamp(0f, maxSlowPercent);
         }
+		
+		public int CurrentSlowStacks => currentSlowStacks;
     }
 }

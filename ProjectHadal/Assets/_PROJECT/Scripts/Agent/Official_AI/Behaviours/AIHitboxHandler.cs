@@ -38,20 +38,27 @@ namespace Hadal.AI
         
         public void AttachProjectile()
         {
-            //Debug.LogWarning("Slower attached!");
+			healthManager.AttachProjectile();
+            
+			/*
+			//Debug.LogWarning("Slower attached!");
             if (NetworkEventManager.Instance.IsMasterClient)
                 healthManager.UpdateSlowStacks(1);
             else
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1, SendOptions.SendReliable);
+			*/
         }
 
         public void DetachProjectile()
         {
+			healthManager.DetachProjectile();
+			/*
             //Debug.LogWarning("Slower detached!");
             if (NetworkEventManager.Instance.IsMasterClient)
                 healthManager.UpdateSlowStacks(-1);
             else
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1, SendOptions.SendReliable);
+			*/
         }
 
         public GameObject Obj { get; }

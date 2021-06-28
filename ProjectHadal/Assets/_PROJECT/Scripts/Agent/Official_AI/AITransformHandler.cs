@@ -16,6 +16,17 @@ namespace Hadal.AI
                 child.position = worldPosition;
             }
         }
+		
+		public void MoveAndRotate(Transform target)
+		{
+			foreach (var child in AIComponents)
+			{
+				//! ignore self
+                if (child == transform) continue;
+                child.position = target.position;
+				child.rotation = target.rotation;
+			}
+		}
         
         public void MoveLocally(Vector3 localPosition)
         {
