@@ -54,6 +54,11 @@ namespace Hadal.Locomotion
                 return;
             }
         }
+
+        private void CalculateWaterDrag()
+        {
+
+        }
         #endregion
 
         #region Acessors

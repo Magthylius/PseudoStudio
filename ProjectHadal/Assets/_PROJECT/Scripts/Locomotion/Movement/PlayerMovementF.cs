@@ -17,6 +17,7 @@ namespace Hadal.Locomotion
         private bool _isLocal = true;
         private bool _isEnabled = false;
 
+        private Vector3 moveDirection;
      /*   [Header("Physic Stimulation")]
         [SerializeField, ReadOnly] private float drag;
         [SerializeField] private float weightForce;
@@ -60,6 +61,11 @@ namespace Hadal.Locomotion
         }
 
         public void SetIsLocal(bool state) => _isLocal = state;
+        void OnDrawGizmos()
+        {
+            //Gizmos.DrawRay(aimingRay);
+            Gizmos.DrawLine(transform.position, moveDirection * 1000f);         
+        }
 
         static readonly IMovementInput DefaultInputs = new RawKeyboardInput();
         static readonly IMovementInput DisabledInputs = new EmptyKeyboardInput();
@@ -91,7 +97,6 @@ namespace Hadal.Locomotion
         public float GetModifiedDrag() => physicsHandler.Drag / (physicsHandler.Drag * Time.fixedDeltaTime + 1);
 
         #region Private Methods
-
         private void HandleAcceleration(in float deltaTime)
         {
             _currentForwardSpeed = VerticalInputSpeed  * Accel.Forward * deltaTime;
@@ -99,6 +104,9 @@ namespace Hadal.Locomotion
             _currentHoverSpeed = HoverInputSpeed  * Accel.Hover * deltaTime;
 
             Vector3 moveForce = (target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed) * 100 ;
+
+            moveDirection = moveForce.normalized;
+            print("move Vector" + moveDirection);
 
             if(moveForce.magnitude > Accel.MaxCummulation)
             {
