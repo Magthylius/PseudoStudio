@@ -5,23 +5,25 @@ using UnityEngine;
 
 namespace Hadal.Locomotion
 {
+    [RequireComponent(typeof(PhysicsHandler))]
     public class PlayerMovementF : Mover
     {
         [Header("Debug"), SerializeField] private string debugKey;
         [SerializeField] private Rigidbody rigidBody;
+        [SerializeField] private PhysicsHandler physicsHandler;
 
         private Vector3 _lastPosition;
         private Vector3 _currentPosition;
         private bool _isLocal = true;
         private bool _isEnabled = false;
 
-        [Header("Physic Stimulation")]
+     /*   [Header("Physic Stimulation")]
         [SerializeField, ReadOnly] private float drag;
         [SerializeField] private float weightForce;
         [SerializeField] private float buoyantForce;
-        [SerializeField] private float dragForce;
+        [SerializeField] private float dragForce;*/
 
-        public float CalculatedDrag => drag;
+        public float CalculatedDrag => physicsHandler.Drag;
         public Rigidbody Rigidbody { get => rigidBody; set => rigidBody = value; }
 
         public override void Initialise(Transform target)
@@ -37,9 +39,6 @@ namespace Hadal.Locomotion
             _lastPosition = target.position;
             _currentPosition = target.position;
             DoDebugEnabling(debugKey);
-
-            //Real Physics Set Up
-            SetUpRigidBody();
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -73,9 +72,9 @@ namespace Hadal.Locomotion
 
             _isEnabled = true;
             Input = DefaultInputs;
-            
-            drag = Accel.MaxCummulation / Speed.Max;
-            if (rigidBody != null) rigidBody.drag = (drag / (drag * Time.fixedDeltaTime + 1));
+
+            physicsHandler.Drag = Accel.MaxCummulation / Speed.Max;
+            if (rigidBody != null) rigidBody.drag = (physicsHandler.Drag / (physicsHandler.Drag * Time.fixedDeltaTime + 1));
 
             // CalculateDrag();
             // if (rigidBody != null) rigidBody.drag = GetModifiedDrag();
@@ -88,15 +87,10 @@ namespace Hadal.Locomotion
             Input = DisabledInputs;
         }
 
-        public void CalculateDrag() => drag = Accel.MaxCummulation / Speed.Max;
-        public float GetModifiedDrag() => drag / (drag * Time.fixedDeltaTime + 1);
+        public void CalculateDrag() => physicsHandler.Drag = Accel.MaxCummulation / Speed.Max;
+        public float GetModifiedDrag() => physicsHandler.Drag / (physicsHandler.Drag * Time.fixedDeltaTime + 1);
 
         #region Private Methods
-        private void SetUpRigidBody()
-        {
-            rigidBody.mass = weightForce / 10;
-            rigidBody.useGravity = true;
-        }
 
         private void HandleAcceleration(in float deltaTime)
         {
@@ -111,7 +105,7 @@ namespace Hadal.Locomotion
                 moveForce = moveForce.normalized * Accel.MaxCummulation;
             }
 
-            rigidBody.AddForce(moveForce, ForceMode.Force);
+            rigidBody.AddForce(moveForce * rigidBody.mass, ForceMode.Force);
             //print("raw: " + UnityEngine.Input.GetAxis("Vertical"));
             //print("ip: " + Input.VerticalAxis);
         }
