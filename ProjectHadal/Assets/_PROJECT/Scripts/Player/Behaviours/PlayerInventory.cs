@@ -176,6 +176,8 @@ namespace Hadal.Player.Behaviours
             {
                 if(allUtilities[i].Data.ProjectileData.ProjTypeInt == projID)
                 {
+                    DeactivateAllUtilities();
+                    allUtilities[i].Activate();
                     return allUtilities[i];
                 }
             }
