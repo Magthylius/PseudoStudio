@@ -23,7 +23,7 @@ namespace Hadal.AI.States
 
             //! intialise sub machine and states
             aggressive.SetParent(this);
-            ambush.SetParent(this);
+            ambush.Initialize(this);
             judgement.Initialise(this);
 
             subStateMachine = new StateMachine();

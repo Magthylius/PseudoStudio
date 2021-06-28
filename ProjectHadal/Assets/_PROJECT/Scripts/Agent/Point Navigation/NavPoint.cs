@@ -21,10 +21,12 @@ namespace Hadal.AI
 		[Header("Information")]
         [SerializeField] private CavernTag cavernTag;
 		[SerializeField] private bool isTunnelEntry;
+		[SerializeField] private bool isHidingPoint;
 		public CavernTag CavernTag => cavernTag;
         public bool IsTunnelEntry => isTunnelEntry;
+        public bool IsHidingPoint => isHidingPoint;
 
-		[Header("Friend references")]
+        [Header("Friend references")]
         [SerializeField] private List<NavPoint> friends;
 		public Transform GetTransform => transform;
         public Vector3 GetPosition => transform.position;
@@ -107,8 +109,9 @@ namespace Hadal.AI
 
 		public void SetIsTunnelEntry(bool isEntry) => isTunnelEntry = isEntry;
 		public void SetDisableGraphics(bool state) => disableGraphics = state;
-		
-		public static void DisableGraphicsAll()
+        public void SetIsHidingPoint(bool _isHidingPoint) => isHidingPoint = _isHidingPoint;
+
+        public static void DisableGraphicsAll()
 		{
 			var points = FindObjectsOfType<NavPoint>();
 			int i = -1;
