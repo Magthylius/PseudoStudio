@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using Hadal.Player;
 using Hadal.Networking;
 using Hadal.UI;
+using Hadal.Usables;
 
 namespace Hadal.Debugging
 {
@@ -40,6 +41,16 @@ namespace Hadal.Debugging
         public static DebugCommand<float> C_SetMaxSpeed;
         public static DebugCommand<float> C_SetAccel;
         public static DebugCommand C_GodMode;
+		
+		//! Player Inventory
+		public static DebugCommand C_SimplifyLoadout;
+		public static DebugCommand C_AddGrenadeAndTrap;
+		public static DebugCommand C_AddTrapAndGrenade;
+		public static DebugCommand C_AddGrenade;
+		public static DebugCommand C_AddTrap;
+		public static DebugCommand C_AddHarpoon;
+		public static DebugCommand C_AddLure;
+		public static DebugCommand C_AddSonicDart;
 
         #region Input system
 
@@ -153,6 +164,54 @@ namespace Hadal.Debugging
                 var player = PlayerManager.Instance.LocalPlayerController;
                 player.GetInfo.HealthManager.Debug_ToggleGodMode();
             });
+            
+			//! Player Inventory
+			C_SimplifyLoadout = new DebugCommand("SimplifyLoadout", "Sets the utility loadout to only have a flare.", "SimplifyLoadout", () =>
+			{
+				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+
+                playerInv.ResetEquipIndex();
+                playerInv.DeactivateAllUtilities();
+                playerInv.GetEquippedUsableObjects.Clear();
+                playerInv.AddEquipmentOfType<FlareLauncherObject>(true);
+			});
+			C_AddGrenadeAndTrap = new DebugCommand("Add_GrenadeAndTrap", "Adds Grenade & Trap/Paralyzer utilities to the loadout (in order).", "AddGrenadeAndTrap", () =>
+			{
+				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+                playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>();
+				playerInv.AddEquipmentOfType<TrapLauncherObject>();
+			});
+            C_AddTrapAndGrenade = new DebugCommand("Add_TrapAndGrenade", "Adds Trap/Paralyzer & Grenade utilities to the loadout (in order).", "AddTrapAndGrenade", () =>
+            {
+                var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+                playerInv.AddEquipmentOfType<TrapLauncherObject>();
+                playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>();
+            });
+			C_AddGrenade = new DebugCommand("AddGrenade", "Adds the Grenade utility to the loadout.", "AddGrenade", () =>
+			{
+				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+				playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>();
+			});
+			C_AddTrap = new DebugCommand("AddTrap", "Adds the Trap/Paralyzer utility to the loadout.", "AddTrap", () =>
+			{
+				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+				playerInv.AddEquipmentOfType<TrapLauncherObject>();
+			});
+			C_AddHarpoon = new DebugCommand("AddHarpoon", "Adds the Harpoon utility to the loadout.", "AddHarpoon", () =>
+			{
+				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+				playerInv.AddEquipmentOfType<HarpoonLauncherObject>();
+			});
+			C_AddLure = new DebugCommand("AddLure", "Adds the Lure utility to the loadout.", "AddLure", () =>
+			{
+				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+				playerInv.AddEquipmentOfType<LureLauncherObject>();
+			});
+			C_AddSonicDart = new DebugCommand("AddSonicDart", "Adds the Sonic Dart utility to the loadout.", "AddSonicDart", () =>
+			{
+				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+				playerInv.AddEquipmentOfType<SonicDartLauncherObject>();
+			});
 
             commandList = new List<object>
             {
@@ -170,7 +229,16 @@ namespace Hadal.Debugging
                 C_SetHp,
                 C_SetMaxSpeed,
                 C_SetAccel,
-                C_GodMode
+                C_GodMode,
+				
+				C_SimplifyLoadout,
+				C_AddGrenadeAndTrap,
+                C_AddTrapAndGrenade,
+				C_AddGrenade,
+				C_AddTrap,
+				C_AddHarpoon,
+				C_AddLure,
+				C_AddSonicDart
             };
         }
 

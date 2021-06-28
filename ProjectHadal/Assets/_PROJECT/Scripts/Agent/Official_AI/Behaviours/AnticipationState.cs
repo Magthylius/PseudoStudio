@@ -200,6 +200,8 @@ namespace Hadal.AI.States
             NavigationHandler.EnableCachedQueuePathTimer();
             //NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
             Brain.UpdateNextMoveCavern(nextCavern);
+			
+			if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
         }
 
         void ForceEngagementObjective(EngagementSubState newObjective) => RuntimeData.SetEngagementSubState(newObjective);
