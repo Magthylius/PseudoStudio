@@ -143,10 +143,11 @@ namespace Hadal.AI
             currentSlowStacks = (currentSlowStacks + change).Clamp0();
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
 			
+			/*
 			if (isLocal)
 			{
 				$"Updated Slow locally. Current stacks are {CurrentClampedSlowStacks} (exccess: {ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
-			}
+			}*/
         }
         public void ResetAllSlowStacks()
         {
