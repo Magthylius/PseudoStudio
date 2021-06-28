@@ -172,11 +172,11 @@ namespace Hadal.Player.Behaviours
             projID = Convert.ToInt32(projTypeID);
             projID *= 100;
             print("searching for" + projID);
-            for (int i = 0; i < equippedUtilities.Count; i++)
+            for (int i = 0; i < allUtilities.Count; i++)
             {
-                if(equippedUtilities[i].Data.ProjectileData.ProjTypeInt == projID)
+                if(allUtilities[i].Data.ProjectileData.ProjTypeInt == projID)
                 {
-                    return equippedUtilities[i];
+                    return allUtilities[i];
                 }
             }
 
