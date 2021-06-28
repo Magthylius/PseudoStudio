@@ -107,7 +107,7 @@ namespace Hadal.AI
             int changeAmount = eventData.CustomData.AsInt();
             brain.HealthManager.UpdateSlowStacks(changeAmount, false);
 			
-			$"Updated Slow by event. Current stacks are {brain.HealthManager.CurrentSlowStacks}; Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
+			$"Updated Slow by event. Current stacks are {brain.HealthManager.CurrentClampedSlowStacks} (exccess: {brain.HealthManager.ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
         }
     }
 }
