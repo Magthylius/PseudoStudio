@@ -24,13 +24,13 @@ namespace Hadal.AI
 
         private void OnTriggerEnter(Collider other)
         {
-            if (ShouldCollide(other))
+            if (ShouldCollide(other) && navigator.CanMove)
                 navigator.AddRepulsionPoint(other.ClosestPointOnBounds(navigator.PilotTransform.position));
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (ShouldCollide(other))
+            if (ShouldCollide(other) && navigator.CanMove)
                 navigator.AddRepulsionPoint(other.ClosestPointOnBounds(navigator.PilotTransform.position));
         }
 

@@ -11,7 +11,7 @@ using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
-    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, IAmLeviathan, ILeviathanComponent
+    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, IAmLeviathan, ISlowable, ILeviathanComponent
     {
         [SerializeField] int maxHealth;
         
@@ -116,16 +116,37 @@ namespace Hadal.AI
             stunTimer.Pause();
             brain.StopStun();
         }
+		
+		public void AttachProjectile()
+        {
+            if (NetworkEventManager.Instance.IsMasterClient)
+                UpdateSlowStacks(1);
+            else
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1, SendOptions.SendReliable);
+        }
+
+        public void DetachProjectile()
+        {
+            if (NetworkEventManager.Instance.IsMasterClient)
+                UpdateSlowStacks(-1);
+            else
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, -1, SendOptions.SendReliable);
+        }
 
         public void SetSlowStacks(int value)
         {
             currentSlowStacks = value;
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
         }
-        public void UpdateSlowStacks(int change)
+        public void UpdateSlowStacks(int change, bool isLocal = true)
         {
             currentSlowStacks = (currentSlowStacks + change).Clamp0();
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
+			
+			if (isLocal)
+			{
+				$"Updated Slow locally. Current stacks are {CurrentClampedSlowStacks} (exccess: {ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
+			}
         }
         public void ResetAllSlowStacks()
         {
@@ -137,7 +158,12 @@ namespace Hadal.AI
         public float GetSlowPercentage()
         {
             currentSlowPercent = currentSlowStacks * slowPercentPerStack.AsFloat();
-            return currentSlowPercent.Clamp(0f, maxSlowPercent);
+            currentSlowPercent = currentSlowPercent.Clamp(0f, maxSlowPercent);
+			return currentSlowPercent;
         }
+		
+		public int CurrentSlowStacks => currentSlowStacks;
+		public int CurrentClampedSlowStacks => currentSlowStacks > maxSlowStacks ? maxSlowStacks : currentSlowStacks;
+		public int ExcessSlowStacks => currentSlowStacks > maxSlowStacks ? (currentSlowStacks - maxSlowStacks) : 0;
     }
 }

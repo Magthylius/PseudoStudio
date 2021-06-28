@@ -5,6 +5,7 @@ using Hadal.Player;
 using Photon.Realtime;
 using Photon.Pun;
 using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -104,7 +105,9 @@ namespace Hadal.AI
         void RE_UpdateSlow(EventData eventData)
         {
             int changeAmount = eventData.CustomData.AsInt();
-            brain.HealthManager.UpdateSlowStacks(changeAmount);
+            brain.HealthManager.UpdateSlowStacks(changeAmount, false);
+			
+			$"Updated Slow by event. Current stacks are {brain.HealthManager.CurrentClampedSlowStacks} (exccess: {brain.HealthManager.ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
         }
     }
 }

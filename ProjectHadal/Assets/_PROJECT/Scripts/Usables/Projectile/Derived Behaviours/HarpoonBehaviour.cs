@@ -3,7 +3,7 @@ using Hadal.Networking;
 using Magthylius.DataFunctions;
 using UnityEngine.VFX;
 using Photon.Realtime;
-//using Hadal.AI;
+using Tenshi.UnitySoku;
 
 //Created by Jet
 namespace Hadal.Usables.Projectiles
@@ -58,8 +58,13 @@ namespace Hadal.Usables.Projectiles
                 //Debug.LogWarning("hit ai!");
                 if(IsLocal)
                 {
-                    collision.gameObject.GetComponentInChildren<ISlowable>().AttachProjectile();
-                    PPhysics.PhysicsFinished += collision.gameObject.GetComponentInChildren<ISlowable>().DetachProjectile;
+					ISlowable slowable = collision.gameObject.GetComponentInChildren<ISlowable>();
+					if (slowable != null)
+                    {
+						slowable.AttachProjectile();
+						PPhysics.PhysicsFinished += slowable.DetachProjectile;
+					}
+					else { $"AI was hit but it does not have an ISlowable interface implemented. Is the collider on the wrong layer ({collision.gameObject.name})?".Msg(); }
                 }
                 else //if non local, hide art asset upon impact.
                 {
