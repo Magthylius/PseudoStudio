@@ -11,6 +11,11 @@ namespace Hadal.Usables.Projectiles
         private float radius = 10;
         private Collider[] detectedObjects;
 
+        //mode swapping
+        public ImpulseMode impulseMode;
+        [SerializeField] private bool isHighHz;
+        bool triggerOnce;
+
         protected override void Start()
         {
             base.Start();
@@ -18,8 +23,16 @@ namespace Hadal.Usables.Projectiles
 
         public void SubscribeModeEvent()
         {
+            impulseMode = GetComponentInChildren<ImpulseMode>();
+            impulseMode.ModeSwapped += ModeSwap;
             selfDeactivation = GetComponentInChildren<SelfDeactivationMode>();
             selfDeactivation.selfDeactivated += SonicExplode;
+        }
+
+        public void UnSubcribeModeEvent()
+        {
+            impulseMode.ModeSwapped -= ModeSwap;
+            selfDeactivation.selfDeactivated -= SonicExplode;
         }
 
         //Trigger locally
@@ -35,6 +48,12 @@ namespace Hadal.Usables.Projectiles
             foreach (Collider col in detectedObjects)
             {
                 Debug.Log("Sonic : Enemy Detected");
+               /* if(isHighHz)
+                { 
+                }
+                else
+                {
+                }*/
                 col.gameObject.GetComponentInChildren<IStunnable>().TryStun(0.5f);
             }
 
@@ -43,6 +62,7 @@ namespace Hadal.Usables.Projectiles
             object[] content = new object[] { projectileID, activatedSpot };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ACTIVATED, content);
 
+            UnSubcribeModeEvent();
             PPhysics.OnPhysicsFinished();
             return;
         }
@@ -62,16 +82,17 @@ namespace Hadal.Usables.Projectiles
             }
             return;
         }
-      /*  private void SonicExplode()
-        {
-            LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
+        /*  private void SonicExplode()
+          {
+              LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
 
-            detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
+              detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
 
-            foreach (Collider col in detectedObjects)
-            {
-                Debug.Log("Sonic : Enemy Detected");
-            }
-        }*/
+              foreach (Collider col in detectedObjects)
+              {
+                  Debug.Log("Sonic : Enemy Detected");
+              }
+          }*/
+        private void ModeSwap(bool isHighHz) => this.isHighHz = isHighHz;
     }
 }

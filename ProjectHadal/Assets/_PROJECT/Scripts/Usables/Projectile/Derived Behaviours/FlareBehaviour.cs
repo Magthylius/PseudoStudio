@@ -26,6 +26,11 @@ namespace Hadal.Usables.Projectiles
             selfDeactivation = GetComponentInChildren<SelfDeactivationMode>();
             selfDeactivation.selfDeactivated += ModeOff;
         }
+        public void UnSubcribeModeEvent()
+        {
+            impulseMode.ModeSwapped -= ModeSwap;
+            selfDeactivation.selfDeactivated -= ModeOff;
+        }
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -67,7 +72,11 @@ namespace Hadal.Usables.Projectiles
         }
 
         private void ModeSwap(bool isAttach) => this.isAttach = isAttach;
-        private void ModeOff() => isAttach = false;
+        private void ModeOff() 
+        {
+            UnSubcribeModeEvent();
+            isAttach = false; 
+        } 
         public bool IsAttach { get => isAttach; set => isAttach = value; }
     }
 }

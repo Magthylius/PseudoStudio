@@ -73,6 +73,11 @@ namespace Hadal.Usables.Projectiles
             selfDeactivation.selfDeactivated += ModeOn;
         }
 
+        public void UnSubcribeModeEvent()
+        {
+            selfDeactivation.selfDeactivated -= ModeOn;
+        }
+
         //! Trigger locally.
         public override bool TriggerBehavior()
         {
@@ -125,6 +130,7 @@ namespace Hadal.Usables.Projectiles
         private void StopExplosion()
         {
             isExploding = false;
+            UnSubcribeModeEvent();
             PPhysics.OnPhysicsFinished();
         }
         #endregion
