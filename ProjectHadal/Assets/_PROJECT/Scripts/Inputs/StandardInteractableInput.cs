@@ -5,6 +5,6 @@ namespace Hadal.Inputs
     //! Creator: Jet
     public class StandardInteractableInput : IInteractInput
     {
-        public bool InteractKey => Input.GetKeyDown(KeyCode.E);
+        public bool InteractKey => Input.GetKeyDown(KeyCode.F);
     }
 }

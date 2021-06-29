@@ -7,6 +7,7 @@ using System.Collections;
 using ExitGames.Client.Photon;
 using Hadal.Networking;
 using System.Linq;
+using Tenshi.UnitySoku;
 
 //Created by Jet
 namespace Hadal.Player.Behaviours

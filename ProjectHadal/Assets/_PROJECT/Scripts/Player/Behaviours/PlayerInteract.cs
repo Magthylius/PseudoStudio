@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using Hadal.Inputs;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 namespace Hadal.Player
@@ -21,6 +23,12 @@ namespace Hadal.Player
         {
             _iInput = new StandardInteractableInput();
             Enable();
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, interactRadius);
         }
 
         public void Inject(PlayerController controller)
@@ -50,10 +58,28 @@ namespace Hadal.Player
             Collider[] results = new Collider[interactInfoBufferSize];
             Collider ownCollider = _player.GetInfo.Collider;
             
-            Physics.OverlapSphereNonAlloc(PlayerPosition, interactRadius, results, interactableMask, QueryTriggerInteraction.Collide);
-            Collider closestEligibleCollider = results.Where(c => c != ownCollider)
-                                                    .OrderBy(c => Vector_SqrDistance(c.gameObject.transform.position, PlayerPosition))
-                                                    .FirstOrDefault();
+            Physics.OverlapSphereNonAlloc(PlayerPosition, interactRadius, results, interactableMask.value, QueryTriggerInteraction.Collide);
+            Collider closestEligibleCollider = null;
+
+            List<Collider> colliders = new List<Collider>(results);
+            
+            //! Remove own collider (do not evaluate self) & all nulls
+            colliders.Remove(ownCollider);
+            colliders.RemoveAll(c => c == null);
+            
+            //! Take closest collider
+            float closestDistance = float.MaxValue;
+            Vector3 selfPos = PlayerPosition;
+            int i = -1;
+            while (++i < colliders.Count)
+            {
+                float distance = (colliders[i].transform.position - selfPos).sqrMagnitude;
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEligibleCollider = colliders[i];
+                }
+            }
 
             return closestEligibleCollider;
         }
@@ -83,7 +109,6 @@ namespace Hadal.Player
 
         private Vector3 PlayerPosition => _player.GetTarget.position;
         private int PlayerViewID => _player.GetInfo.PhotonInfo.PView.ViewID;
-        private float Vector_SqrDistance(Vector3 first, Vector3 second) => (second - first).sqrMagnitude;
 
         #endregion
     }
