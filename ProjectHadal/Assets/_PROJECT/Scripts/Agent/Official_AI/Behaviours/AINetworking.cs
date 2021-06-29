@@ -27,7 +27,7 @@ namespace Hadal.AI
                 neManager.RaiseEvent(ByteEvents.AI_BRAIN_DISABLE, null, SendOptions.SendReliable);
                 neManager.AddListener(ByteEvents.AI_RECEIVE_DAMAGE, RE_TakeDamage);
                 neManager.AddListener(ByteEvents.AI_RECEIVE_STUN, RE_TakeStun);
-                neManager.AddListener(ByteEvents.AI_UPDATE_SLOW, RE_UpdateSlow);
+				neManager.AddListener(ByteEvents.AI_UPDATE_SLOW, RE_UpdateSlow);
             }
             else
             {
@@ -107,7 +107,7 @@ namespace Hadal.AI
             int changeAmount = eventData.CustomData.AsInt();
             brain.HealthManager.UpdateSlowStacks(changeAmount, false);
 			
-			$"Updated Slow by event. Current stacks are {brain.HealthManager.CurrentClampedSlowStacks} (exccess: {brain.HealthManager.ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
+			//$"Updated Slow by event. Current stacks are {brain.HealthManager.CurrentClampedSlowStacks} (exccess: {brain.HealthManager.ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
         }
     }
 }
