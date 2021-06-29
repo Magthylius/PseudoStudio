@@ -41,6 +41,10 @@ namespace Hadal.Inputs
         float BoostAxis { get; }
         bool BoostActive { get; }
     }
+    public interface IInteractInput
+    {
+        bool InteractKey { get; }
+    }
     public interface ILightInput
     {
         bool SwitchAxis { get; }
