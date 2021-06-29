@@ -24,7 +24,7 @@ namespace Hadal.Usables
             if (isChargable)
             {
                 bool isModeSwap = info.ChargedTime.Clamp01() > ModeToggleTreshold;
-                impluseMode.OverrideForce(info.ChargedTime.Clamp01() * MaxForce, isModeSwap);
+                impluseMode.OverrideForce(MaxForce, isModeSwap);
             }
             else
             {

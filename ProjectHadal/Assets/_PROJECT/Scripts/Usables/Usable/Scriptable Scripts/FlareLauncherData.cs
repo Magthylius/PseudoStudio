@@ -28,7 +28,8 @@ namespace Hadal.Usables
             }
             else
             { 
-                impluseMode.OverrideForce(MaxForce);
+                // set to always attach first.
+                impluseMode.OverrideForce(MaxForce, true);
             }
 
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
