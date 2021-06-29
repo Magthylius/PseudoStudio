@@ -85,6 +85,7 @@ namespace Hadal.Player.Behaviours
             {
                 _initialiseOnce = true;
                 PlayerController.OnInitialiseComplete += Initialise;
+                Debug_InitialiseRevivalTimerScreenLogger();
             }
         }
 
@@ -223,8 +224,11 @@ namespace Hadal.Player.Behaviours
                 return;
             
             //! Can only attempt revival if status is down and not dead
-            if (IsDown && !IsUnalive && !ReviveTimerIsRunning())
+            if (IsDown && !IsUnalive)
             {
+                if (ReviveTimerIsRunning())
+                    return;
+                
                 PlayerController actorPlayer = NetworkEventManager.Instance.PlayerObjects
                                                 .Select(p => p.GetComponent<PlayerController>())
                                                 .Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID)
@@ -398,6 +402,7 @@ namespace Hadal.Player.Behaviours
 
             while (OtherPlayerIsCloseEnoughToRevive())
             {
+                Debug_RevivalTimerStatus();
                 if (ElapseReviveTimer(_controller.DeltaTime) < 0f)
                 {
                     //! Revivalllllllllll
@@ -412,6 +417,20 @@ namespace Hadal.Player.Behaviours
             //! This will run when the timer does not end & the other player goes too far from this player
             ResetReviveTimer();
             OnReviveAttempt?.Invoke(false);
+        }
+
+        private int screenLogReviveTimerIndex;
+        private DebugManager dManager;
+        private void Debug_InitialiseRevivalTimerScreenLogger()
+        {
+            dManager = DebugManager.Instance;
+            screenLogReviveTimerIndex = dManager.CreateScreenLogger();
+        }
+
+        private void Debug_RevivalTimerStatus()
+        {
+            int seconds = (_reviveTimer % 60).AsInt();
+            dManager.SLog(screenLogReviveTimerIndex, $"Player Revive Timer (View id: {PlayerViewID}): ", seconds);
         }
 
         private float TickKnockTimer(in float deltaTime) => _knockTimer -= deltaTime;
@@ -441,6 +460,7 @@ namespace Hadal.Player.Behaviours
 
         #region Shorthands & Interface Getters
 
+        private int PlayerViewID => _pView.ViewID;
         private bool IsLocalPlayer => _pView.IsMine;
         public GameObject Obj => gameObject;
         public float GetHealthRatio => _currentHealth / (float)maxHealth;

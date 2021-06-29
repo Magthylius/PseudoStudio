@@ -19,7 +19,7 @@ namespace Hadal.AI
 {
     public class AIBrain : MonoBehaviour
     {
-        [ReadOnly, SerializeField] private bool enabled = true;
+        [ReadOnly, SerializeField] private bool isEnabled = true;
 
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
@@ -88,7 +88,7 @@ namespace Hadal.AI
 
         private void Awake()
         {
-            if (!enabled) return;
+            if (!isEnabled) return;
 
             _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
@@ -109,14 +109,14 @@ namespace Hadal.AI
 
         private void Start()
         {
-            if (!enabled) return;
+            if (!isEnabled) return;
             
             Setup();
         }
 
         private void Update()
         {
-            if (!CanUpdate || !enabled) return;
+            if (!CanUpdate || !isEnabled) return;
             float deltaTime = DeltaTime;
             preUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
             navigationHandler.DoUpdate(deltaTime);
@@ -126,13 +126,13 @@ namespace Hadal.AI
         }
         private void LateUpdate()
         {
-            if (!CanUpdate || !enabled) return;
+            if (!CanUpdate || !isEnabled) return;
             stateMachine?.LateMachineTick();
             allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
         }
         private void FixedUpdate()
         {
-            if (!CanUpdate || !enabled) return;
+            if (!CanUpdate || !isEnabled) return;
             float fixedDeltaTime = FixedDeltaTime;
             navigationHandler.DoFixedUpdate(fixedDeltaTime);
             stateMachine?.FixedMachineTick();
@@ -443,8 +443,8 @@ namespace Hadal.AI
         private BrainState overrideState = BrainState.None;
         private bool startWithOverrideState = false;
 
-        public void EnableBrain() => enabled = true;
-        public void DisableBrain() => enabled = false;
+        public void EnableBrain() => isEnabled = true;
+        public void DisableBrain() => isEnabled = false;
         public bool StateSuspension => suspendStateLogic;
         public void SuspendState() => suspendStateLogic = true;
         public void ResumeState() => suspendStateLogic = false;
