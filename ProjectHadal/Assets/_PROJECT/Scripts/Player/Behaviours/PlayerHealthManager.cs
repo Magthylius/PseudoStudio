@@ -25,7 +25,7 @@ namespace Hadal.Player.Behaviours
         [SerializeField] private bool enableDeathTimerWhenDown;
         [SerializeField, Tooltip("In seconds. Only applicable with death timer is enabled.")] private float deathTime;
         [SerializeField, ReadOnly] private float _deathTimer;
-        
+
         [Space(10)]
         [SerializeField, Tooltip("In seconds. Only applicable when IsDown is true.")] private float reviveTime;
         [SerializeField, ReadOnly] private float _reviveTimer;
@@ -50,7 +50,7 @@ namespace Hadal.Player.Behaviours
 
         /// <summary> Event will trigger when the player is hit while not in god mode, down mode or dead. <see cref="TakeDamage"/> </summary>
         public event Action<int> OnHit;
-        
+
         /// <summary> Event will trigger when the player becomes dead. </summary>
         public event Action OnDeath;
 
@@ -85,7 +85,7 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
-			ResetHealth();
+            ResetHealth();
 
             if (!_initialiseOnce)
             {
@@ -106,6 +106,7 @@ namespace Hadal.Player.Behaviours
 
             PlayerController.OnInitialiseComplete -= Initialise;
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
+            if (IsLocalPlayer) NetworkEventManager.Instance.AddListener(ByteEvents.SEND_PLAYER_DAMAGE, Receive_TakeDamage);
         }
 
         public void DoUpdate(in float deltaTime)
@@ -133,15 +134,29 @@ namespace Hadal.Player.Behaviours
         /// </summary>
         public bool TakeDamage(int damage)
         {
-            if (_isKami || IsDown || IsUnalive) return false;
+            //! Only evaluate health on local player
+            if (_isKami || IsDown || IsUnalive || !IsLocalPlayer) return false;
             _currentHealth = (_currentHealth - damage.Abs()).Clamp0();
             DoOnHitEffects(damage);
-            if (IsLocalPlayer) //! Only evaluate health status on local player
-            {
-                CheckHealthStatus();
-                Send_HealthUpdateStatus(false);
-            }
+            CheckHealthStatus();
+            Send_HealthUpdateStatus(false);
             return true;
+        }
+
+        /// <summary>
+        /// Receives damage from event, only the Local player can take damage through this function.
+        /// </summary>
+        private void Receive_TakeDamage(EventData data)
+        {
+            object[] content = data.CustomData.AsObjArray();
+
+            int targetViewID = content[0].AsInt();
+            bool allowedToBeDamaged = _pView.ViewID == targetViewID && IsLocalPlayer;
+            if (allowedToBeDamaged)
+            {
+                int damage = content[1].AsInt();
+                TakeDamage(damage);
+            }
         }
 
         /// <summary>
@@ -153,7 +168,11 @@ namespace Hadal.Player.Behaviours
             _currentHealth = maxHealth;
             ResetDeathTimer();
             ResetReviveTimer();
-            if (IsLocalPlayer) OnDown += DeactivateControllerSystem;
+            if (IsLocalPlayer)
+            {
+                if (debugEnabled) "For local player: Subscribing deactivate function in the case of IsDown = true.".Msg();
+                OnDown += DeactivateControllerSystem;
+            }
         }
 
         /// <summary>
@@ -209,9 +228,12 @@ namespace Hadal.Player.Behaviours
                     else
                         "An ally is Dead!".Msg();
                 }
-                OnDeath?.Invoke();
-                _controller.Die();
-                Send_HealthUpdateStatus(false);
+                if (IsLocalPlayer)
+                {
+                    OnDeath?.Invoke();
+                    Send_HealthUpdateStatus(false);
+                    _controller.Die();
+                }
             }
         }
 
@@ -240,15 +262,18 @@ namespace Hadal.Player.Behaviours
         public void Interact(int viewID)
         {
             //! Only players on other machine should be able to send the event to the true networked player of this pView
-            if (!IsLocalPlayer)
+            if (IsLocalPlayer)
                 return;
             
+            if (debugEnabled)
+                $"Player of {PlayerViewID} is being interacted by player of {viewID}. This action will attempt to revive {PlayerViewID}. Please check the screen logger for revival information.".Msg();
+
             //! Can only attempt revival if status is down and not dead
             if (IsDown && !IsUnalive)
             {
-                if (ReviveTimerIsRunning())
+                if (ReviveTimerIsRunning()) //! cannot run two timers simultaneously
                     return;
-                
+
                 PlayerController actorPlayer = NetworkEventManager.Instance.PlayerObjects
                                                 .Select(p => p.GetComponent<PlayerController>())
                                                 .Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID)
@@ -275,13 +300,17 @@ namespace Hadal.Player.Behaviours
         /// </summary>
         private void DeactivateControllerSystem()
         {
+            //! Only the local player can be deactivated
             if (!IsLocalPlayer)
                 return;
+
+            if (debugEnabled)
+                "Deactivating control system for local player.".Msg();
             OnDown -= DeactivateControllerSystem; //! Unsubscribe so it is only called "once per life"
 
             _controller.SetIsDown(true); //! Disable movement & rotation
             _controller.SetPhysicHighFriction(); //! Update physics settings
-			_controller.GetInfo.Shooter.SetCanFire(false);
+            _controller.GetInfo.Shooter.SetCanFire(false);
 
             if (enableDeathTimerWhenDown)
                 StartCoroutine(StartDeathTimer());
@@ -292,9 +321,11 @@ namespace Hadal.Player.Behaviours
         /// </summary>
         private bool TryRestoreControllerSystem()
         {
-            if (IsUnalive || !IsDown)
+            if (IsUnalive || !IsDown || !IsLocalPlayer)
                 return false;
 
+            if (debugEnabled)
+                "Restoring control system for local player.".Msg();
             StopAllCoroutines();
             ResetHealth();
             SetRevivalCustomisations();
@@ -302,7 +333,7 @@ namespace Hadal.Player.Behaviours
 
             _controller.SetIsDown(false); //! Enable movement & rotation
             _controller.SetPhysicNormal(); //! Update physics settings
-			_controller.GetInfo.Shooter.SetCanFire(true);
+            _controller.GetInfo.Shooter.SetCanFire(true);
             return true;
         }
 
@@ -314,7 +345,7 @@ namespace Hadal.Player.Behaviours
         {
             if (!_shouldRevive || !IsLocalPlayer || IsUnalive)
                 return;
-            
+
             //! revive the Local player
             _shouldRevive = false;
             TryRestoreControllerSystem();
@@ -336,7 +367,7 @@ namespace Hadal.Player.Behaviours
             //! Only the local player should be able to send the event to report to all the simulated networked players
             if (!IsLocalPlayer)
                 return;
-            
+
             object[] content;
             if (sendToTrueLocalPlayer) //! Non-local to Local player
             {
@@ -363,7 +394,7 @@ namespace Hadal.Player.Behaviours
                 };
 
                 if (debugEnabled)
-                    $"Sending event from local player to non-local player on another computer. Health: {_currentHealth}; Is Dead: {_isDead}.".Msg(); 
+                    $"Sending event from local player to non-local player on another computer. Health: {_currentHealth}; Is Dead: {_isDead}.".Msg();
             }
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_HEALTH_UPDATE, content, SendOptions.SendReliable);
         }
@@ -377,7 +408,7 @@ namespace Hadal.Player.Behaviours
         private void Receive_HealthUpdate(EventData data)
         {
             object[] content = data.CustomData.AsObjArray();
-            
+
             int receivedViewID = content[0].AsInt();
             if (_pView.ViewID != receivedViewID)
                 return;
@@ -389,7 +420,7 @@ namespace Hadal.Player.Behaviours
                 bool shouldRevive = content[2].AsBool();
                 _shouldRevive = shouldRevive;
                 NetOnly_EvaluateRevive();
-                
+
                 if (debugEnabled)
                     $"Received event from another player's computer, evaluating for local player. Should revive: {_shouldRevive}".Msg();
             }
@@ -398,6 +429,7 @@ namespace Hadal.Player.Behaviours
                 int localPlayerCurHealth = content[2].AsInt();
                 if (localPlayerCurHealth != _currentHealth)
                     NetOnly_SetHealthValue(localPlayerCurHealth); //! sync hp with local player's if needed
+                TakeDamage(localPlayerCurHealth);
 
                 bool isDead = content[3].AsBool();
                 _isDead = isDead; // set is dead or not
@@ -411,7 +443,7 @@ namespace Hadal.Player.Behaviours
         #endregion
 
         #region Timer Control Methods
-        
+
         /// <summary> Coroutine for assessing player death. </summary>
         private IEnumerator StartDeathTimer()
         {
@@ -436,7 +468,7 @@ namespace Hadal.Player.Behaviours
             Transform thisPTrans = _controller.GetTarget;
             Transform otherPTrans = player.GetTarget;
             float sqrMinPlayerRevivalDistance = minPlayerRevivalDistance.Sqr();
-            
+
             float SqrDistanceBetweenPlayers() => (thisPTrans.position - otherPTrans.position).sqrMagnitude;
             bool OtherPlayerIsCloseEnoughToRevive() => SqrDistanceBetweenPlayers() < sqrMinPlayerRevivalDistance;
 
@@ -449,11 +481,11 @@ namespace Hadal.Player.Behaviours
                     _shouldRevive = true;
                     Send_HealthUpdateStatus(true); //! send message of revival to Local player
                     OnReviveAttempt?.Invoke(true);
-					if (reviveLocallyOnTimerReached)
-						TryRestoreControllerSystem();
-					
-					if (debugEnabled)
-						$"Criteria for revival complete.".Msg();
+                    if (reviveLocallyOnTimerReached)
+                        TryRestoreControllerSystem();
+
+                    if (debugEnabled)
+                        $"Criteria for revival complete.".Msg();
                     yield break;
                 }
                 yield return null;
@@ -462,9 +494,9 @@ namespace Hadal.Player.Behaviours
             //! This will run when the timer does not end & the other player goes too far from this player
             ResetReviveTimer();
             OnReviveAttempt?.Invoke(false);
-			
-			if (debugEnabled)
-				$"Revival attempt failed.".Msg();
+
+            if (debugEnabled)
+                $"Revival attempt failed.".Msg();
         }
 
         private int screenLogReviveTimerIndex;
@@ -488,7 +520,7 @@ namespace Hadal.Player.Behaviours
         private bool ReviveTimerIsRunning() => _reviveTimer < reviveTime && _reviveTimer > 0f;
         private void ResetReviveTimer() => _reviveTimer = reviveTime;
         private float ElapseReviveTimer(in float deltaTime) => _reviveTimer -= deltaTime;
-        
+
         #endregion
 
         #region Debug Methods
@@ -550,25 +582,25 @@ namespace Hadal.Player.Behaviours
                 "Try to make alive someone who is not unalive sounds like a plot to obtain godhood. Please no".Msg();
                 return;
             }
-            
+
             TryRestoreControllerSystem();
 
             if (!IsDown && !IsUnalive)
                 "Player successfully revived.".Msg();
         }
-		
-		/// <summary> Sets the health manager state to the criteria for revival after the intended timer (i.e. from teammates' interaction). </summary>
+
+        /// <summary> Sets the health manager state to the criteria for revival after the intended timer (i.e. from teammates' interaction). </summary>
         [Button(nameof(Debug_LocalReviveWithTimer))]
-		private void Debug_LocalReviveWithTimer()
-		{
-			if (!IsDown && !IsUnalive || ReviveTimerIsRunning())
+        private void Debug_LocalReviveWithTimer()
+        {
+            if (!IsDown && !IsUnalive || ReviveTimerIsRunning())
             {
                 "Try to make alive someone who is not unalive sounds like a plot to obtain godhood. Please no".Msg();
                 return;
             }
-			
-			StartCoroutine(StartReviveTimer(_controller, true));
-		}
+
+            StartCoroutine(StartReviveTimer(_controller, true));
+        }
 
         #endregion
 
