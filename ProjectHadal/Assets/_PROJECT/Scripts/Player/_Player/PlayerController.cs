@@ -11,6 +11,7 @@ using Hadal.Networking;
 using ExitGames.Client.Photon;
 using System.Collections;
 using Hadal.Networking.UI.Loading;
+using Hadal.Usables;
 
 // Created by Jet, E: Jon, Jin
 namespace Hadal.Player
@@ -41,6 +42,8 @@ namespace Hadal.Player
         private bool _isKnocked;
         private bool _isCarried;
         private bool _isDown;
+        [SerializeField] LureLauncherObject lureLauncherObject;
+        public bool HasLureActivated => lureLauncherObject != null ? lureLauncherObject.LureIsActive : false;
 
         //! Ready checks
         bool playerReady = false;

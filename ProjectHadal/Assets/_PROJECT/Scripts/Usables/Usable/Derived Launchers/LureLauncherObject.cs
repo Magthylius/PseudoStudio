@@ -6,6 +6,7 @@ namespace Hadal.Usables
     public class LureLauncherObject : UsableLauncherObject
     {
         [SerializeField] private bool isActive;
+        public bool LureIsActive => isActive;
         [SerializeField] private float lureCD;
         [SerializeField] private float lureCDMax;
 
