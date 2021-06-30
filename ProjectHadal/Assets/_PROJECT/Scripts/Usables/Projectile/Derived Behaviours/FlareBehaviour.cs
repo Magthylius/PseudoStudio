@@ -24,7 +24,7 @@ namespace Hadal.Usables.Projectiles
             if (enableRandomTorque)
             {
                 Vector3 randTorque = new Vector3(Random.value, Random.value, Random.value);
-                print(randTorque);
+                //print(randTorque);
                 rb.AddTorque(randTorque.normalized * randomTorqueMult, ForceMode.Impulse);
             }
         }
