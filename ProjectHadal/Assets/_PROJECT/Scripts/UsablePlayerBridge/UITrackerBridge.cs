@@ -9,21 +9,17 @@ public static class UITrackerBridge
     public static event OtherPlayerAdded PlayerAddedEvent;
     public static event OtherPlayerAdded PlayerRemovedEvent;
 
-    public struct PlayerTransformName
-    {
-        public Transform Transform;
-        public string Name;
-
-        public PlayerTransformName(Transform newTransform, string newName)
-        {
-            Transform = newTransform;
-            Name = newName;
-        }
-    }
-    
     public static UIManager LocalPlayerUIManager;
     public static Dictionary<Transform, string> OtherPlayerNames = new Dictionary<Transform, string>();
 
+    public static void Reset()
+    {
+        LocalPlayerUIManager = null;
+        OtherPlayerNames = new Dictionary<Transform, string>();
+        PlayerAddedEvent = null;
+        PlayerRemovedEvent = null;
+    }
+    
     public static void AddPlayerTransform(Transform otherPlayer, string name)
     {
         if (!OtherPlayerNames.ContainsKey(otherPlayer))
