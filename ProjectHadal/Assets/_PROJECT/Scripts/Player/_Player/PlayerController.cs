@@ -31,7 +31,7 @@ namespace Hadal.Player
         [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] string localPlayerLayer;
         [Foldout("Physic Settings"), SerializeField] private PlayerPhysicData physicNormal;
-        [Foldout("Physic Settings"), SerializeField] private PlayerPhysicData physicHighFriction;
+        [Foldout("Physic Settings"), SerializeField] private PlayerPhysicData physicHighGravityFriction;
 
         PhotonView _pView;
         PlayerManager _manager;
@@ -163,7 +163,7 @@ namespace Hadal.Player
         }
 
         public void SetPhysicNormal() => physicNormal.SetPhysicDataForController(this);
-        public void SetPhysicHighFriction() => physicHighFriction.SetPhysicDataForController(this);
+        public void SetPhysicHighFriction() => physicHighGravityFriction.SetPhysicDataForController(this);
 
         public void SetIsCarried(in bool statement) => _isCarried = statement;
         public void SetIsDown(in bool statement) => _isDown = statement;

@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d5ed407a4cbb1c45bab4b3df925734f, type: 3}
-  m_Name: High Friction Physic Data
+  m_Name: High Gravity Friction Physic Data
   m_EditorClassIdentifier: 
   mass: 200
+  angularDrag: 100
   useGravity: 1
   isKinematic: 0
   physicMaterial: {fileID: 13400000, guid: 12b7e352e9550d84bbf9c128e37f9c3f, type: 2}
