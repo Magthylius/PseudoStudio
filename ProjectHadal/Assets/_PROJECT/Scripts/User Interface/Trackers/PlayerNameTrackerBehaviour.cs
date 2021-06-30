@@ -7,11 +7,11 @@ namespace Hadal.UI
 {
     public class PlayerNameTrackerBehaviour : UITrackerBehaviour
     {
-        TextMeshProUGUI nameText;
+        public TextMeshProUGUI NameText;
         
         public void UpdateText(string name)
         {
-            nameText.text = name;
+            NameText.text = name;
         }
 
     }

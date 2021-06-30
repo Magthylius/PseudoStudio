@@ -24,6 +24,45 @@ MonoBehaviour:
     dstType: 0
     dstTextureId: 
     dstTextureObject: {fileID: 0}
+--- !u!114 &-1426451523226748003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: UI Opaque
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    passTag: UI Opaque
+    Event: 550
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 32
+      PassNames: []
+    overrideMaterial: {fileID: 0}
+    overrideMaterialPassIndex: 0
+    overrideDepthState: 0
+    depthCompareFunction: 4
+    enableWrite: 1
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 0}
+      cameraFieldOfView: 60
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39,7 +78,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -2175915334453168368}
   - {fileID: 6871624700251851988}
-  m_RendererFeatureMap: 10f797248898cde1d4cc4fe841ea5c5f
+  - {fileID: -1426451523226748003}
+  m_RendererFeatureMap: 10f797248898cde1d4cc4fe841ea5c5f9d3bc1b4e53934ec
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
