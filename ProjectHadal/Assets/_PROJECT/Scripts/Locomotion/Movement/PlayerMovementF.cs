@@ -63,8 +63,37 @@ namespace Hadal.Locomotion
         public void SetIsLocal(bool state) => _isLocal = state;
         void OnDrawGizmos()
         {
-            //Gizmos.DrawRay(aimingRay);
-            Gizmos.DrawLine(transform.position, moveDirection * 1000f);         
+            Vector3 v1 = Vector3.Cross(moveDirection, Vector3.up);
+            Vector3 v2 = Vector3.Cross(moveDirection, v1);
+            Gizmos.DrawLine(transform.position, transform.position + moveDirection * 10);
+
+            Vector3 movePoint = transform.position + moveDirection * 10f;
+            Gizmos.DrawLine(movePoint, movePoint + v1 * 10);
+            Gizmos.DrawLine(movePoint, movePoint + v2 * 10);
+
+            int width = 10;
+            /*int height = 10;*/
+
+            for(float x = -width; x<=width; x++)
+            {
+                for (float y = -width; y <= width; y++)
+                {
+                    Vector3 start = movePoint + (v1 * x) + (v2 * y);
+                    Gizmos.DrawLine(transform.position, start);
+                }
+            }
+            //Gizmos.DrawLine(transform.position, transform.position + v1 * 10);
+
+
+            /* Vector3 movePoint = transform.position + (moveDirection * 10f);
+             Gizmos.DrawLine(transform.position, movePoint);
+
+             Vector3 dir = movePoint;
+             Vector3 v1 = Vector3.Cross(movePoint, transform.position + Vector3.up);
+             Vector3 v2 = Vector3.Cross(movePoint, v1);
+             Gizmos.DrawLine(movePoint, movePoint + rigidBody.gameObject.transform.up * 10);
+             Gizmos.DrawLine(movePoint, movePoint - rigidBody.gameObject.transform.up * 10);*/
+
         }
 
         static readonly IMovementInput DefaultInputs = new RawKeyboardInput();
@@ -106,7 +135,7 @@ namespace Hadal.Locomotion
             Vector3 moveForce = (target.forward * _currentForwardSpeed + target.right * _currentStrafeSpeed + target.up * _currentHoverSpeed) * 100 ;
 
             moveDirection = moveForce.normalized;
-            print("move Vector" + moveDirection);
+           /* print("move Vector" + moveDirection);*/
 
             if(moveForce.magnitude > Accel.MaxCummulation)
             {
@@ -114,6 +143,7 @@ namespace Hadal.Locomotion
             }
 
             rigidBody.AddForce(moveForce * rigidBody.mass, ForceMode.Force);
+
             //print("raw: " + UnityEngine.Input.GetAxis("Vertical"));
             //print("ip: " + Input.VerticalAxis);
         }

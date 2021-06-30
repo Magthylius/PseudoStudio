@@ -15,6 +15,9 @@ namespace Hadal.Locomotion
         [SerializeField] private float buoyantForce;
         [SerializeField] private float dragForce;
 
+        [Header("Drag Raycasting")]
+        [SerializeField] private int rayCastLayerMask;
+        RaycastHit aimHit;
         #region Unity LifeCycle
         void Start()
         {
@@ -33,6 +36,7 @@ namespace Hadal.Locomotion
         {
             rigidBody.mass = weightForce / 9.8f;
             rigidBody.useGravity = true;
+            rayCastLayerMask = rigidBody.gameObject.layer;
         }
 
         private void CalculateBuoyantForce()
@@ -55,9 +59,13 @@ namespace Hadal.Locomotion
             }
         }
 
-        private void CalculateWaterDrag()
+        public void CalculateWaterDrag(Vector3 moveVector)
         {
+            /*if (Physics.Raycast(aimPoint.position, moveVector, out aimHit,
+                                Mathf.Infinity, rayCastLayerMask, QueryTriggerInteraction.Ignore))
+            {
 
+            }*/
         }
         #endregion
 
