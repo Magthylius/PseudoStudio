@@ -44,7 +44,11 @@ namespace Hadal.UI
             float maxX = Screen.width - minX;
             float maxY = Screen.height - minY;
 
-            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position + positionOffset);
+            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position);
+            pos.x -= Screen.width * 0.5f;
+            pos.y -= Screen.height * 0.5f;
+            //print(pos);
+            //print(trackingTransform.position);
 
             //! When tracker is behind player
             float dotProduct = Vector3.Dot((trackingTransform.position - playerTransform.position), playerTransform.forward);
@@ -59,12 +63,15 @@ namespace Hadal.UI
                 pos.x = Mathf.Clamp(pos.x, minX, maxX);
                 pos.y = Mathf.Clamp(pos.y, minY, maxY);
 
-                transform.position = pos;
+                //transform.position = pos;
+                rectTransform.anchoredPosition = pos;
             }
             else
             {
-                transform.position = pos;
-                transform.position *= Mathf.Sign(dotProduct);
+                //transform.position = pos;
+                rectTransform.anchoredPosition = pos;
+                //flexRect.MoveTo(pos);
+                //transform.position *= Mathf.Sign(dotProduct);
             }
         }
 
@@ -72,6 +79,7 @@ namespace Hadal.UI
         {
             this.playerCamera = playerCamera;
             this.playerTransform = playerTransform;
+
         }
         public void TrackTransform(Transform transform)
         {
