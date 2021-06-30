@@ -20,7 +20,6 @@ namespace Hadal.UI
         Transform trackingTransform;
         Camera playerCamera;
         Transform playerTransform;
-        float scaleFactor;
 
         FlexibleRect flexRect;
 
@@ -48,7 +47,7 @@ namespace Hadal.UI
             Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position);
             pos.x -= Screen.width * 0.5f;
             pos.y -= Screen.height * 0.5f;
-            print(pos);
+            //print(pos);
             //print(trackingTransform.position);
 
             //! When tracker is behind player
@@ -76,15 +75,11 @@ namespace Hadal.UI
             }
         }
 
-        public void InjectDependencies(Camera playerCamera, Transform playerTransform, float scaleFactor)
+        public void InjectDependencies(Camera playerCamera, Transform playerTransform)
         {
             this.playerCamera = playerCamera;
             this.playerTransform = playerTransform;
 
-            if (scaleFactor == 0) this.scaleFactor = 1f;
-            else this.scaleFactor = scaleFactor;
-            
-            print(scaleFactor);
         }
         public void TrackTransform(Transform transform)
         {

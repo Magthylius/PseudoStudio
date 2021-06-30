@@ -28,16 +28,13 @@ public class UITrackerHandler : MonoBehaviour
 
     [SerializeField] Camera playerCamera;
     [SerializeField] Transform playerTransform;
-    [SerializeField] Canvas displayCanvas;
     [SerializeField] List<TrackerPool> trackerPoolList;
 
     List<UITrackerBehaviour> trackerList;
-    private float scaleFactor;
 
     void Start()
     {
         trackerList = new List<UITrackerBehaviour>();
-        scaleFactor = displayCanvas.scaleFactor;
         foreach (TrackerPool tracker in trackerPoolList)
         {
             StartCoroutine(InstantiateTrackers(tracker));
@@ -57,7 +54,7 @@ public class UITrackerHandler : MonoBehaviour
         {
             var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
             trackerList.Add(track.GetComponent<UITrackerBehaviour>());
-            track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform, scaleFactor);
+            track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform);
 
             yield return new WaitForEndOfFrame();
             count++;
