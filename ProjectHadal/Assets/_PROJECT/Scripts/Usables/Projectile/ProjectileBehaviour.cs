@@ -4,6 +4,7 @@ using UnityEngine;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
 using Magthylius.DataFunctions;
+using Random = UnityEngine.Random;
 
 //Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
@@ -29,7 +30,8 @@ namespace Hadal.Usables.Projectiles
         protected Timer impactDuration;
         protected bool isVisualizing;
         [SerializeField] protected float impactVFXTime = 5f;
-
+        
+        
         #region Unity Lifecycle
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
@@ -37,6 +39,7 @@ namespace Hadal.Usables.Projectiles
             neManager = NetworkEventManager.Instance;
             projectileTriggered = false;
             setIsLocal();
+
         }
         protected virtual void Start()
         {
@@ -49,9 +52,10 @@ namespace Hadal.Usables.Projectiles
             {
                 print("network Event Manager found");
             }*/
-            neManager.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
-            neManager.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
-            neManager.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
+            
+            NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
+            NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
+            NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
             PPhysics.PhysicsFinished += Dump;
         }
         #endregion
