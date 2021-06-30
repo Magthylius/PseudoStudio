@@ -96,6 +96,7 @@ namespace Hadal.AI
         [SerializeField] private AISteeringSettings tunnelSteeringSettings;
         [SerializeField] private AISteeringSettings stunnedSteeringSettings;
 		[SerializeField] private AISteeringSettings engagementSteeringSettings;
+		private AISteeringSettings currentSteer;
         [SerializeField, ReadOnly] private float maxVelocity;
         [SerializeField, ReadOnly] private float thrustForce;
         [SerializeField, ReadOnly] private float additionalAttractionForce;
@@ -517,31 +518,32 @@ namespace Hadal.AI
         public void TunnelModeSteering()
         {
             _steeringMode = SteeringMode.Tunnel;
-            UpdateSteering();
+            DecideCurrentSteeringMode();
         }
 
         public void CavernModeSteering()
         {
             _steeringMode = SteeringMode.Cavern;
-            UpdateSteering();
+            DecideCurrentSteeringMode();
         }
 
         public void StunnedModeSteering()
         {
             _steeringMode = SteeringMode.Stunned;
-            UpdateSteering();
+            DecideCurrentSteeringMode();
         }
 		
 		public void EngageModeSteering()
 		{
 			_steeringMode = SteeringMode.Engage;
-			UpdateSteering();
+			DecideCurrentSteeringMode();
 		}
-
-        private void UpdateSteering()
-        {
-            AISteeringSettings currentSteer = cavernSteeringSettings;
-
+		
+		private void DecideCurrentSteeringMode()
+		{
+			if (currentSteer != null)
+				currentSteer.UnsubscribeAllEvents();
+			
 			currentSteer = _steeringMode switch
 			{
 				SteeringMode.Cavern => cavernSteeringSettings,
@@ -549,7 +551,14 @@ namespace Hadal.AI
 				SteeringMode.Stunned => stunnedSteeringSettings,
 				SteeringMode.Engage => engagementSteeringSettings
 			};
+			
+			currentSteer.OnSettingsUpdate += UpdateSteering;
+			
+			UpdateSteering();
+		}
 
+        private void UpdateSteering()
+        {
             maxVelocity = currentSteer.MaxVelocity;
             thrustForce = currentSteer.ThrustForce;
             additionalAttractionForce = currentSteer.AdditionalAttractionForce;
