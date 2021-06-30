@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using ExitGames.Client.Photon;
-using Hadal.AI.Graphics;
 using Hadal.Networking;
 using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.Utility;
 using Button = NaughtyAttributes.ButtonAttribute;
+using Photon.Pun;
 
 namespace Hadal.AI
 {
     public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, IAmLeviathan, ISlowable, ILeviathanComponent
     {
+        [Header("Health")]
         [SerializeField] int maxHealth;
         
         [Header("Slow Stacking Status")]
@@ -35,7 +34,7 @@ namespace Hadal.AI
         public void Initialise(AIBrain brain)
         {
             this.brain = brain;
-            if (maxHealth <= 0) maxHealth = 1;
+            if (maxHealth <= 0) maxHealth = 1; //! max health must be at least 1 if we do not want the AI to die immediately on spawn
             ResetHealth();
             ResetAllSlowStacks();
 
@@ -45,7 +44,6 @@ namespace Hadal.AI
                                 .WithOnCompleteEvent(CancelStun)
                                 .WithShouldPersist(true);
             stunTimer.Pause();
-
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime) { }
@@ -54,6 +52,7 @@ namespace Hadal.AI
             CheckHealthStatus();
         }
 
+        /// <summary> Checks whether the AI should die on the master client's computer and send the death event over the network. </summary>
         public void CheckHealthStatus()
         {
             if (IsUnalive)
@@ -63,19 +62,27 @@ namespace Hadal.AI
             }
         }
 
+        /// <summary>
+        /// Only the AI can be actually damaged on the master client's computer. Other players will ask the master client to register the
+        /// damage they do.
+        /// </summary>
         public bool TakeDamage(int damage)
         {
-            currentHealth = (currentHealth - damage).Clamp0();
-            $"AI health: {currentHealth}".Msg();
+            if (!PhotonNetwork.IsMasterClient)
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_DAMAGE, damage.Abs(), SendOptions.SendReliable);
+            else
+                currentHealth = (currentHealth - damage).Clamp0();
+            
             return true;
         }
 
+        /// <summary> Local death method to handle the AI death sequence & end the game. </summary>
         public void Death()
         {
             $"Leviathan is unalive. Congrats!!!".Msg();
-            Obj.SetActive(false);
             brain.GraphicsHandler.gameObject.SetActive(false);
             brain.DetachAnyCarriedPlayer();
+            Obj.SetActive(false);
             
             //! End the game
             GameManager.Instance.EndGameEvent();
@@ -87,10 +94,8 @@ namespace Hadal.AI
         public int GetCurrentHealth => currentHealth;
         public bool IsDown => false;
         public int GetMaxHealth => maxHealth;
-
-        public UpdateMode LeviathanUpdateMode => UpdateMode.LateUpdate;
-
         public bool IsLeviathan => true;
+        public UpdateMode LeviathanUpdateMode => UpdateMode.LateUpdate;
 
         public void ResetHealth() => currentHealth = maxHealth;
 
@@ -100,23 +105,26 @@ namespace Hadal.AI
             TryStun(5);
         }
 
+        /// <summary> Attempts to stun the AI for the given duration. </summary>
+        /// <param name="duration">Custom stun duration.</param>
+        /// <returns>Success if the AI can be and has been stunned.</returns>
         public bool TryStun(float duration)
         {
             if (!brain || brain.IsStunned)
                 return false;
             
-            //Debug.LogWarning("stunned");
             stunTimer.RestartWithDuration(duration);
             return brain.TryToStun(duration);
         }
         
+        /// <summary> Stops the stun effect and returns control to the AI. </summary>
         private void CancelStun()
         {
-            //Debug.LogWarning("unstunned");
             stunTimer.Pause();
             brain.StopStun();
         }
 		
+        /// <summary> Meant for registering a projectile that can stack for a slow effect on the AI. </summary>
 		public void AttachProjectile()
         {
             if (NetworkEventManager.Instance.IsMasterClient)
@@ -125,6 +133,7 @@ namespace Hadal.AI
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_UPDATE_SLOW, 1, SendOptions.SendReliable);
         }
 
+        /// <summary> Meant for unregistering a projectile that can stack for a slow effect on the AI. </summary>
         public void DetachProjectile()
         {
             if (NetworkEventManager.Instance.IsMasterClient)
@@ -138,16 +147,16 @@ namespace Hadal.AI
             currentSlowStacks = value;
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
         }
+        /// <summary> Updates the current slow stacks on the AI and computes the slow percentage before sending it to the navigation handler. </summary>
+        /// <param name="change">Change of stacks can be either positive or negative.</param>
+        /// <param name="isLocal">If this function is called over the network (i.e. in a callback), this must be set to False.</param>
         public void UpdateSlowStacks(int change, bool isLocal = true)
         {
             currentSlowStacks = (currentSlowStacks + change).Clamp0();
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
 			
-			/*
-			if (isLocal)
-			{
-				$"Updated Slow locally. Current stacks are {CurrentClampedSlowStacks} (exccess: {ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
-			}*/
+			// if (isLocal)
+            //     $"Updated Slow locally. Current stacks are {CurrentClampedSlowStacks} (exccess: {ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
         }
         public void ResetAllSlowStacks()
         {
@@ -162,9 +171,12 @@ namespace Hadal.AI
             currentSlowPercent = currentSlowPercent.Clamp(0f, maxSlowPercent);
 			return currentSlowPercent;
         }
-		
+
+        /// <summary> Current Total slow stacks on the AI. </summary>
 		public int CurrentSlowStacks => currentSlowStacks;
+        /// <summary> Returns the current total slow stacks clamped by the max allowed slow stacks value. </summary>
 		public int CurrentClampedSlowStacks => currentSlowStacks > maxSlowStacks ? maxSlowStacks : currentSlowStacks;
+        /// <summary> Returns the excess slow stacks over the max allowed amount if <see cref="CurrentSlowStacks"/> ever exceeds it. Otherwise, it will return 0. </summary>
 		public int ExcessSlowStacks => currentSlowStacks > maxSlowStacks ? (currentSlowStacks - maxSlowStacks) : 0;
     }
 }

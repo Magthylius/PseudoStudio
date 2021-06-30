@@ -3,7 +3,7 @@
 //Created by Jet
 namespace Hadal.Inputs
 {
-    public class KeyboardInput : IMovementInput
+    public class KeyboardMoveInput : IMovementInput
     {
         public float VerticalAxis => Input.GetAxis("Vertical");
         public bool VerticalForward => VerticalAxis >= float.Epsilon;

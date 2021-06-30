@@ -24,6 +24,7 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] PlayerInventory inventory;
         [Foldout("Components"), SerializeField] PlayerLamp lamp;
         [Foldout("Components"), SerializeField] PlayerShoot shooter;
+        [Foldout("Components"), SerializeField] PlayerInteract interact;
         [Foldout("Components"), SerializeField] PlayerCollisions collisions;
         [Foldout("Components"), SerializeField] UIManager playerUI;
 
@@ -102,6 +103,7 @@ namespace Hadal.Player
             if (!_pView.IsMine || isDummy) return;
 
             cameraController.CameraTransition(DeltaTime, IsBoosted);
+            interact.DoUpdate(DeltaTime);
             inventory.DoUpdate(DeltaTime);
             lamp.DoUpdate(DeltaTime);
             healthManager.DoUpdate(DeltaTime);
@@ -323,7 +325,7 @@ namespace Hadal.Player
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
-            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, photonInfo, mover, rotator, _rBody, _collider);
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, interact, photonInfo, mover, rotator, _rBody, _collider);
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => _pView.ViewID;
         public bool CanMove => !_isKnocked && !_isCarried && !_isDown;
