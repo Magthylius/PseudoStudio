@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae3cbf74d9642e45b10c23ffb58fbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enabled: 1
+  isEnabled: 1
   targetMoveCavern: {fileID: 0}
   nextMoveCavern: {fileID: 0}
   healthManager: {fileID: 2206939684562575358}
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshDamage: 25
-  threshTimer: 20
+  threshTimer: 10
   applyEveryNSeconds: 3
   tailWhipDamage: 25
 --- !u!114 &2206939684562575358
