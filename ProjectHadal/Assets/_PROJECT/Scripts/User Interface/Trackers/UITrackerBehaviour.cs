@@ -44,7 +44,7 @@ namespace Hadal.UI
             float maxX = Screen.width - minX;
             float maxY = Screen.height - minY;
 
-            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position);
+            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position + positionOffset);
             pos.x -= Screen.width * 0.5f;
             pos.y -= Screen.height * 0.5f;
             //print(pos);
