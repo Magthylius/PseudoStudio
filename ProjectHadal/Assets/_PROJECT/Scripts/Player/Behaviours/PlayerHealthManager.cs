@@ -33,7 +33,7 @@ namespace Hadal.Player.Behaviours
 
         [Header("Health Settings")]
         [SerializeField] private int maxHealth;
-        private int _currentHealth;
+        [SerializeField, ReadOnly] private int _currentHealth;
         private bool _isDead;
         private bool _isKnocked;
         private float _knockTimer;
@@ -160,7 +160,7 @@ namespace Hadal.Player.Behaviours
         /// Sets current health value. Should only be used in network callbacks.
         /// Can be used to kill the player, but the hp checking event must be manually triggered after this function.
         /// </summary>
-        private void NetOnly_SetHealthValue(in int health)
+        private void NetOnly_SetHealthValue(int health)
         {
             _currentHealth = health.Clamp(0, maxHealth);
         }
@@ -168,7 +168,7 @@ namespace Hadal.Player.Behaviours
         /// <summary>
         /// Safely sets current health value. Cannot be used to kill the player, use <see cref="TakeDamage"/> instead.
         /// </summary>
-        private void Safe_SetHealthValue(in int health)
+        private void Safe_SetHealthValue(int health)
         {
             _currentHealth = health.Clamp(1, maxHealth);
         }
@@ -179,7 +179,7 @@ namespace Hadal.Player.Behaviours
         private void Safe_SetHealthToPercent(float percent)
         {
             percent = percent.Clamp01();
-            Safe_SetHealthValue((maxHealth * percent).AsInt());
+            Safe_SetHealthValue((int)(maxHealth * percent));
         }
 
         #endregion
@@ -428,7 +428,7 @@ namespace Hadal.Player.Behaviours
         }
 
         /// <summary> Coroutine for assessing player revival. </summary>
-        private IEnumerator StartReviveTimer(PlayerController player)
+        private IEnumerator StartReviveTimer(PlayerController player, bool reviveLocallyOnTimerReached = false)
         {
             ResetReviveTimer();
             Transform thisPTrans = _controller.GetTarget;
@@ -447,6 +447,11 @@ namespace Hadal.Player.Behaviours
                     _shouldRevive = true;
                     Send_HealthUpdateStatus(true); //! send message of revival to Local player
                     OnReviveAttempt?.Invoke(true);
+					if (reviveLocallyOnTimerReached)
+						TryRestoreControllerSystem();
+					
+					if (debugEnabled)
+						$"Criteria for revival complete.".Msg();
                     yield break;
                 }
                 yield return null;
@@ -455,6 +460,9 @@ namespace Hadal.Player.Behaviours
             //! This will run when the timer does not end & the other player goes too far from this player
             ResetReviveTimer();
             OnReviveAttempt?.Invoke(false);
+			
+			if (debugEnabled)
+				$"Revival attempt failed.".Msg();
         }
 
         private int screenLogReviveTimerIndex;
@@ -467,7 +475,7 @@ namespace Hadal.Player.Behaviours
 
         private void Debug_RevivalTimerStatus()
         {
-            int seconds = (_reviveTimer % 60).AsInt();
+            int seconds = (int)(_reviveTimer % 60);
             dManager.SLog(screenLogReviveTimerIndex, $"Player Revive Timer (View id: {PlayerViewID}): ", seconds);
         }
 
@@ -532,8 +540,8 @@ namespace Hadal.Player.Behaviours
         }
 
         /// <summary> Sets the health manager state to the criteria for revival (i.e. from teammates' interaction). </summary>
-        [Button(nameof(Debug_ReviveFromDown))]
-        private void Debug_ReviveFromDown()
+        [Button(nameof(Debug_InstantReviveFromDown))]
+        private void Debug_InstantReviveFromDown()
         {
             if (!IsDown && !IsUnalive)
             {
@@ -541,13 +549,24 @@ namespace Hadal.Player.Behaviours
                 return;
             }
             
-            Debug_SetCurrentHealth(maxHealth);
-            _isDead = false;
-            CheckHealthStatus();
+            TryRestoreControllerSystem();
 
             if (!IsDown && !IsUnalive)
                 "Player successfully revived.".Msg();
         }
+		
+		/// <summary> Sets the health manager state to the criteria for revival after the intended timer (i.e. from teammates' interaction). </summary>
+        [Button(nameof(Debug_LocalReviveWithTimer))]
+		private void Debug_LocalReviveWithTimer()
+		{
+			if (!IsDown && !IsUnalive || ReviveTimerIsRunning())
+            {
+                "Try to make alive someone who is not unalive sounds like a plot to obtain godhood. Please no".Msg();
+                return;
+            }
+			
+			StartCoroutine(StartReviveTimer(_controller, true));
+		}
 
         #endregion
 
