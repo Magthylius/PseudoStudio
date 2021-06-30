@@ -110,7 +110,7 @@ namespace Hadal.AI
         private void Start()
         {
             if (!isEnabled) return;
-            
+
             Setup();
         }
 
@@ -182,7 +182,7 @@ namespace Hadal.AI
             if (graphicsHandler != null) MouthObject = graphicsHandler.MouthObject;
 
         }
-        
+
         private void InitialiseStates()
         {
             //! instantiate classes
@@ -274,7 +274,7 @@ namespace Hadal.AI
         };
         Func<bool> HasEngageObjective() => () =>
         {
-            return RuntimeData.GetBrainState == BrainState.Engagement && !isStunned;
+            return RuntimeData.GetBrainState == BrainState.Engagement && !isStunned && cavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid;
         };
         Func<bool> IsCooldown() => () =>
         {
@@ -300,7 +300,7 @@ namespace Hadal.AI
                 return false;
 
             DetachAnyCarriedPlayer();
-            
+
             stunDuration = duration;
             isStunned = true;
             NavigationHandler.Disable();

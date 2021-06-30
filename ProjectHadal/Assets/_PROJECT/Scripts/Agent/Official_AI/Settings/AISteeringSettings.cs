@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace Hadal.AI.Settings
@@ -20,5 +19,16 @@ namespace Hadal.AI.Settings
         [Min(0f), Tooltip("The lerp speed for syncing the transform.forward of the AI to the rigidbody's velocity. This is only needed for the AI Graphics to function properly.")] public float SmoothLookAtSpeed;
         [Tooltip("Layers for which the AI should consider to be obstacles to avoid.")] public LayerMask ObstacleMask;
         [Tooltip("The physic material to apply to the AI associated with this steering setting.")] public PhysicMaterial PhysicMaterial;
+		
+		public event Action OnSettingsUpdate;
+		public void UnsubscribeAllEvents()
+		{
+			OnSettingsUpdate = null;
+		}
+		
+		private void OnValidate()
+		{
+			OnSettingsUpdate?.Invoke();
+		}
     }
 }

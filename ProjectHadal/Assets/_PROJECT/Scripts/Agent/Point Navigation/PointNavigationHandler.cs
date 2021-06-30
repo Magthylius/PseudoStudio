@@ -96,6 +96,7 @@ namespace Hadal.AI
         [SerializeField] private AISteeringSettings tunnelSteeringSettings;
         [SerializeField] private AISteeringSettings stunnedSteeringSettings;
 		[SerializeField] private AISteeringSettings engagementSteeringSettings;
+		private AISteeringSettings currentSteer;
         [SerializeField, ReadOnly] private float maxVelocity;
         [SerializeField, ReadOnly] private float thrustForce;
         [SerializeField, ReadOnly] private float additionalAttractionForce;
@@ -113,6 +114,8 @@ namespace Hadal.AI
 
         [Header("Nav Components")]
         [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
+		[SerializeField, Range(1, 3)] private int numberOfClosestPointsToConsiderAfterTunnelExit;
+		[SerializeField] private bool shuffleTunnelExitPoint;
         [SerializeField] private Transform pilotTrans;
         [SerializeField] private Rigidbody rBody;
         private CavernManager cavernManager;
@@ -318,13 +321,28 @@ namespace Hadal.AI
             }
 
 
-            var potentialList = navPoints
+            List<NavPoint> potentialList = new List<NavPoint>();
+						
+			if (shuffleTunnelExitPoint)
+			{
+				potentialList = navPoints
                         .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
                         .ToList()
                         .Shuffle(Time.frameCount)
-                        .Take(numberOfClosestPointsToConsider)
+                        .Take(numberOfClosestPointsToConsiderAfterTunnelExit)
                         .Where(p => p != null)
                         .ToList();
+			}
+			else
+			{
+				Vector3 position = pilotTrans.position;
+				potentialList = navPoints
+                        .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
+                        .OrderBy(p => p.GetSqrDistanceTo(position))
+                        .Take(numberOfClosestPointsToConsiderAfterTunnelExit)
+                        .Where(p => p != null)
+                        .ToList();
+			}
 
             if (potentialList.IsEmpty())
             {
@@ -343,10 +361,11 @@ namespace Hadal.AI
 
             if (enableDebug)
             {
-                //$"Created cached Queued Path: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
                 string pathQueue = "Created cached queued path: ";
                 foreach (NavPoint point in cachedPointPath)
-                    pathQueue += point.gameObject.name + ", ";
+                    pathQueue += point.Name + ", ";
+				
+				pathQueue.Msg();
             }
 
             // Local Methods
@@ -413,7 +432,7 @@ namespace Hadal.AI
             {
                 string debugPath = "";
                 foreach (NavPoint point in pointPath)
-                    debugPath += point + ",";
+                    debugPath += point.Name + ",";
 
                 $"Queued path set: {debugPath}".Msg();
             }
@@ -517,31 +536,32 @@ namespace Hadal.AI
         public void TunnelModeSteering()
         {
             _steeringMode = SteeringMode.Tunnel;
-            UpdateSteering();
+            DecideCurrentSteeringMode();
         }
 
         public void CavernModeSteering()
         {
             _steeringMode = SteeringMode.Cavern;
-            UpdateSteering();
+            DecideCurrentSteeringMode();
         }
 
         public void StunnedModeSteering()
         {
             _steeringMode = SteeringMode.Stunned;
-            UpdateSteering();
+            DecideCurrentSteeringMode();
         }
 		
 		public void EngageModeSteering()
 		{
 			_steeringMode = SteeringMode.Engage;
-			UpdateSteering();
+			DecideCurrentSteeringMode();
 		}
-
-        private void UpdateSteering()
-        {
-            AISteeringSettings currentSteer = cavernSteeringSettings;
-
+		
+		private void DecideCurrentSteeringMode()
+		{
+			if (currentSteer != null)
+				currentSteer.UnsubscribeAllEvents();
+			
 			currentSteer = _steeringMode switch
 			{
 				SteeringMode.Cavern => cavernSteeringSettings,
@@ -549,7 +569,14 @@ namespace Hadal.AI
 				SteeringMode.Stunned => stunnedSteeringSettings,
 				SteeringMode.Engage => engagementSteeringSettings
 			};
+			
+			currentSteer.OnSettingsUpdate += UpdateSteering;
+			
+			UpdateSteering();
+		}
 
+        private void UpdateSteering()
+        {
             maxVelocity = currentSteer.MaxVelocity;
             thrustForce = currentSteer.ThrustForce;
             additionalAttractionForce = currentSteer.AdditionalAttractionForce;
