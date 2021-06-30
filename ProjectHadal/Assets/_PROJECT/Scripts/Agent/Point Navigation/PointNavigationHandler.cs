@@ -361,10 +361,11 @@ namespace Hadal.AI
 
             if (enableDebug)
             {
-                //$"Created cached Queued Path: {first.gameObject.name}, {second.gameObject.name}, {third.gameObject.name}".Msg();
                 string pathQueue = "Created cached queued path: ";
                 foreach (NavPoint point in cachedPointPath)
-                    pathQueue += point.gameObject.name + ", ";
+                    pathQueue += point.Name + ", ";
+				
+				pathQueue.Msg();
             }
 
             // Local Methods
@@ -431,7 +432,7 @@ namespace Hadal.AI
             {
                 string debugPath = "";
                 foreach (NavPoint point in pointPath)
-                    debugPath += point + ",";
+                    debugPath += point.Name + ",";
 
                 $"Queued path set: {debugPath}".Msg();
             }
