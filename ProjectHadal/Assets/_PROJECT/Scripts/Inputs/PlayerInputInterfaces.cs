@@ -9,6 +9,7 @@ namespace Hadal.Inputs
         bool FireKeyUtility { get; }
         bool FireKeyUtilityHeld { get; }
         bool FireKeyUtilityRelease { get; }
+        bool FireKeyQuickFlare { get; }
         bool EscKeyDown { get; }
         bool EscKeyUp { get; }
     }

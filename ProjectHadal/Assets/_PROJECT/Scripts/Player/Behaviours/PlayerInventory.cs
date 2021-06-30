@@ -18,6 +18,10 @@ namespace Hadal.Player.Behaviours
         [Header("Utility Lists")]
         [SerializeField] private List<UsableLauncherObject> allUtilities;
         [SerializeField] private List<UsableLauncherObject> equippedUtilities;
+        
+        [Header("Settings")]
+        [SerializeField] private bool enableQuickFlare;
+        private UsableLauncherObject flareUtility;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
         private int _selectedItem;
@@ -35,6 +39,9 @@ namespace Hadal.Player.Behaviours
             _eInput = new StandardEquipmentInput();
             _uInput = new StandardUseableInput();
             allUtilities = GetComponentsInChildren<UsableLauncherObject>().ToList();
+            flareUtility = allUtilities.Where(u => u is FlareLauncherObject).Single();
+            if (enableQuickFlare)
+                flareUtility.Activate();
         }
 
         void Start()
@@ -82,6 +89,11 @@ namespace Hadal.Player.Behaviours
                 return;
             }
 
+            if (_uInput.FireKeyQuickFlare && enableQuickFlare)
+            {
+                FireFlareWithShooter(pViewForProj + _projectileCount);
+            }
+
             if (EquippedUsable.Data.isChargable)
             {
                 if (_uInput.FireKeyUtilityHeld)
@@ -119,6 +131,11 @@ namespace Hadal.Player.Behaviours
                     print("Cant find the respective launcher");
                 }
             }
+        }
+
+        void FireFlareWithShooter(int projectileID)
+        {
+            _controllerInfo.Shooter.FireUtility(projectileID, flareUtility, -1, -1, false);
         }
 
         //Fire when pressed locally, send event
