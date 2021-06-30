@@ -65,7 +65,7 @@ namespace Hadal.AI
             //! raise event with data
             object[] data = { targetViewID, damage };
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_SEND_DAMAGE, data, options);
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.SEND_PLAYER_DAMAGE, data, options, SendOptions.SendReliable);
         }
 
         private void Receive_DamagePlayer(EventData eventData)
@@ -86,25 +86,7 @@ namespace Hadal.AI
             player.GetComponentInChildren<IDamageable>().TakeDamage(damage);
         }
 
-        private void HandlePlayerThreshEvent(Transform player, Vector3 destination)
-        {
-            var p = player.GetComponent<PlayerController>();
-            //! DoT?
-        }
-
-        private void UpdatePlayerControllers()
-        {
-            // playerObjects = NetworkEventManager.Instance.PlayerObjects;
-            // players = NetworkEventManager.Instance.PlayerObjects.Select(p => p.GetComponent<PlayerController>()).ToList();
-            // Brain.InjectPlayerTransforms(players.Select(p => p.transform).ToList());
-        }
-
         public int GetViewIDFromTransform(Transform trans)
             => trans.GetComponentInChildren<PlayerController>().GetInfo.PhotonInfo.PView.ViewID;
-
-        public bool ViewIDBelongsToTransform(int id, Transform trans)
-            => GetViewIDFromTransform(trans) == id;
-
-
     }
 }
