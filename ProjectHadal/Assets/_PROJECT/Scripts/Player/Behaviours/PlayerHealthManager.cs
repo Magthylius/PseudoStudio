@@ -85,7 +85,6 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
-            ResetHealth();
 
             if (!_initialiseOnce)
             {
@@ -105,6 +104,13 @@ namespace Hadal.Player.Behaviours
                 return;
 
             PlayerController.OnInitialiseComplete -= Initialise;
+            StartCoroutine(InitialiseRoutine());
+        }
+
+        private IEnumerator InitialiseRoutine()
+        {
+            yield return new WaitForSeconds(0.1f);
+            ResetHealth();
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
             if (IsLocalPlayer) NetworkEventManager.Instance.AddListener(ByteEvents.SEND_PLAYER_DAMAGE, Receive_TakeDamage);
         }
