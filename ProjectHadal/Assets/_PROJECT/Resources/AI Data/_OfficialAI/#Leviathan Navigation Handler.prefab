@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleCheckTimer: 0
   timeoutTimer: 0
-  lingerTimer: 0
+  navPointLingerTimer: 0
+  cavernLingerTimer: 0
   speedMultiplier: 1
   navPoints: []
   repulsionPoints: []
@@ -54,30 +55,37 @@ MonoBehaviour:
   canTimeout: 0
   canAutoSelectNavPoints: 0
   isOnCustomPath: 0
+  isOnQueuePath: 0
   isChasingAPlayer: 0
   canPath: 0
-  currentPoint: {fileID: 0}
+  chosenAmbushPoint: 0
   enableDebug: 0
+  showObstacleInfo: 0
   enableMovement: 1
-  minLingerTime: 4
-  maxLingerTime: 10
+  disableOnStart: 0
+  navPointLingerTimeRange: {x: 0, y: 0}
+  cavernLingerTimeRange: {x: 0, y: 0}
   timeoutNewPointTime: 12
   obstacleCheckTime: 0.1
   _steeringMode: 0
   cavernSteeringSettings: {fileID: 11400000, guid: 2236f65e4060cb7408fcfad93410d504, type: 2}
   tunnelSteeringSettings: {fileID: 11400000, guid: 5019088c4761ab84c9761c44cad629c9, type: 2}
+  stunnedSteeringSettings: {fileID: 11400000, guid: aa946cb7318bb2e4d92525bd71fa7fc0, type: 2}
+  engagementSteeringSettings: {fileID: 11400000, guid: 44a0c41d5529f0e488952b15e71d6c79, type: 2}
   maxVelocity: 50
   thrustForce: 12
-  additionalBoostThrustForce: 10
+  additionalAttractionForce: 0
   attractionForce: 20
   avoidanceForce: 5
   closeRepulsionForce: 5
   axisStalemateDeviationForce: 2
   obstacleDetectRadius: 30
+  closeNavPointDetectionRadius: 0
   smoothLookAtSpeed: 12
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4352
+  isStunned: 0
   numberOfClosestPointsToConsider: 4
   pilotTrans: {fileID: 0}
   rBody: {fileID: 0}

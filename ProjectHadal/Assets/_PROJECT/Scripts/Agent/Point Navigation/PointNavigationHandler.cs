@@ -18,7 +18,8 @@ namespace Hadal.AI
     {
         Cavern = 0,
         Tunnel,
-        Stunned
+        Stunned,
+		Engage
     }
 
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
@@ -94,6 +95,7 @@ namespace Hadal.AI
         [SerializeField] private AISteeringSettings cavernSteeringSettings;
         [SerializeField] private AISteeringSettings tunnelSteeringSettings;
         [SerializeField] private AISteeringSettings stunnedSteeringSettings;
+		[SerializeField] private AISteeringSettings engagementSteeringSettings;
         [SerializeField, ReadOnly] private float maxVelocity;
         [SerializeField, ReadOnly] private float thrustForce;
         [SerializeField, ReadOnly] private float additionalAttractionForce;
@@ -267,9 +269,12 @@ namespace Hadal.AI
             isChasingAPlayer = targetIsPlayer;
             canTimeout = true;
             canAutoSelectNavPoints = !targetIsPlayer;
-            print("custom: " + canAutoSelectNavPoints);
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
+			if (targetIsPlayer)
+			{
+				EngageModeSteering();
+			}
             if (enableDebug) "Setting custom nav point path".Msg();
 
         }
@@ -450,11 +455,12 @@ namespace Hadal.AI
             IEnumerator DestroyAndRegenerateCurrentNavPoint(bool justFindNewPoint)
             {
                 currentPoint.Deselect();
-
-                //Debug.LogWarning("start coroutine: " + currentPoint.CavernTag);
                 if (isChasingAPlayer)
                 {
                     isChasingAPlayer = false;
+					if (!isStunned) CavernModeSteering();
+					else StunnedModeSteering();
+					
                     Destroy(currentPoint.gameObject);
                 }
 
@@ -525,17 +531,24 @@ namespace Hadal.AI
             _steeringMode = SteeringMode.Stunned;
             UpdateSteering();
         }
+		
+		public void EngageModeSteering()
+		{
+			_steeringMode = SteeringMode.Engage;
+			UpdateSteering();
+		}
 
         private void UpdateSteering()
         {
             AISteeringSettings currentSteer = cavernSteeringSettings;
 
-            if (_steeringMode == SteeringMode.Cavern)
-                currentSteer = cavernSteeringSettings;
-            else if (_steeringMode == SteeringMode.Tunnel)
-                currentSteer = tunnelSteeringSettings;
-            else if (_steeringMode == SteeringMode.Stunned)
-                currentSteer = stunnedSteeringSettings;
+			currentSteer = _steeringMode switch
+			{
+				SteeringMode.Cavern => cavernSteeringSettings,
+				SteeringMode.Tunnel => tunnelSteeringSettings,
+				SteeringMode.Stunned => stunnedSteeringSettings,
+				SteeringMode.Engage => engagementSteeringSettings
+			};
 
             maxVelocity = currentSteer.MaxVelocity;
             thrustForce = currentSteer.ThrustForce;
