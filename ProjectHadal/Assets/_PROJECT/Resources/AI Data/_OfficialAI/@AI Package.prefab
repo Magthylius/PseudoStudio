@@ -83,7 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overrideState: 1
   startWithOverrideState: 0
-  targetCavern: 2
+  targetCavern: 4
 --- !u!114 &8522931565436803644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,6 +109,34 @@ PrefabInstance:
     - target: {fileID: 2007591999211397865, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: viewIdField
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: obstacleCheckTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: cavernLingerTimeRange.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: cavernLingerTimeRange.y
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: navPointLingerTimeRange.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: navPointLingerTimeRange.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939683509102030, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: numberOfClosestPointsToConsiderAfterTunnelExit
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939684412345039, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: stunDuration
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2206939684412345072, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: m_RootOrder
@@ -157,6 +185,26 @@ PrefabInstance:
     - target: {fileID: 2206939684412345075, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: m_Name
       value: '#AI 2.0'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939684562575357, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: threshTimer
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939684562575357, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: threshDamage
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939684562575358, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: maxHealth
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6021279049498701051, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: checkDelay
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6021279049498701051, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: overlapSphereDetectionRadius
+      value: 80
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}

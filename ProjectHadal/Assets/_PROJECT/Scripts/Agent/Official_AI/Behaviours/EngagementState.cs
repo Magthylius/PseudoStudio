@@ -35,7 +35,7 @@ namespace Hadal.AI.States
 
             //! transition conditions
             Func<bool> OnAmbush() => () => Brain.RuntimeData.GetEngagementObjective == EngagementSubState.Ambush;
-            Func<bool> OnAggressive() => () => Brain.RuntimeData.GetEngagementObjective == EngagementSubState.Aggressive;
+            Func<bool> OnAggressive() => () => false; //Brain.RuntimeData.GetEngagementObjective == EngagementSubState.Aggressive;
             Func<bool> OnJudgement() => () => Brain.RuntimeData.GetEngagementObjective == EngagementSubState.Judgement;
         }
         public override void OnStateStart()

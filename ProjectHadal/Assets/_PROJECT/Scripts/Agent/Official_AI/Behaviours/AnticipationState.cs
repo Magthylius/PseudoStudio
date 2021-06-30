@@ -21,7 +21,7 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = MachineData.Anticipation;
-            
+
             //Debug.LogWarning("heyheyinit");
             GameManager.Instance.GameStartedEvent += StartInitialization;
         }
@@ -34,13 +34,13 @@ namespace Hadal.AI.States
             NavigationHandler.SetCanPath(true);
 
             //Brain.StartCoroutine(InitializeAfterCaverns());
-            
+
 
             //print(RuntimeData.GetEngagementObjective);
-            if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
-                ForceEngagementObjective(EngagementSubState.Aggressive);
-            
-            
+            // if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
+            //     ForceEngagementObjective(EngagementSubState.Aggressive);
+
+
         }
 
         public override void StateTick()
@@ -67,7 +67,8 @@ namespace Hadal.AI.States
             {
                 RuntimeData.TickAnticipationTicker(Time.deltaTime);
                 Brain.RuntimeData.SetBrainState(BrainState.Engagement);
-                Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+                //Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+                Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                 if (Brain.DebugEnabled) Debug.Log("Spotted and entered engagement!");
             }
         }
@@ -87,7 +88,8 @@ namespace Hadal.AI.States
                 else
                 {
                     Brain.RuntimeData.SetBrainState(BrainState.Engagement);
-                    Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+                    //Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
+                    Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                     if (Brain.DebugEnabled) Debug.Log("Anticipation => Engagement");
                 }
             }
@@ -99,18 +101,18 @@ namespace Hadal.AI.States
             //.LogWarning("heyheyxd");
             Brain.StartCoroutine(InitializeAfterCaverns());
         }
-        
+
 
         IEnumerator InitializeAfterCaverns()
         {
             //Debug.LogWarning("heyhey0");
-            
+
             //! Wait for caverns to init
             while (!CavernManager.CavernsInitialized)
             {
                 yield return null;
             }
-            
+
             //Debug.LogWarning("heyhey1");
 
             SetNewTargetCavern();
@@ -121,16 +123,16 @@ namespace Hadal.AI.States
                 //return;
                 yield return null;
             }
-            
+
             //Debug.LogWarning("heyhey2");
 
             AllowStateTick = true;
             RuntimeData.SetEngagementSubState(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
-            
+
             gameStartupInitialization = true;
             DetermineNextCavern();
             //Debug.LogWarning("heyhey3");
-            
+
         }
 
         void SetNewTargetCavern()
@@ -200,8 +202,8 @@ namespace Hadal.AI.States
             NavigationHandler.EnableCachedQueuePathTimer();
             //NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
             Brain.UpdateNextMoveCavern(nextCavern);
-			
-			if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
+
+            if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
         }
 
         void ForceEngagementObjective(EngagementSubState newObjective) => RuntimeData.SetEngagementSubState(newObjective);
