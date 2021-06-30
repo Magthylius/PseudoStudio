@@ -150,22 +150,6 @@ namespace Hadal.Player.Behaviours
         }
 
         /// <summary>
-        /// Receives damage from event, only the Local player can take damage through this function.
-        /// </summary>
-        private void Receive_TakeDamage(EventData data)
-        {
-            object[] content = data.CustomData.AsObjArray();
-
-            int targetViewID = content[0].AsInt();
-            bool allowedToBeDamaged = _pView.ViewID == targetViewID && IsLocalPlayer;
-            if (allowedToBeDamaged)
-            {
-                int damage = content[1].AsInt();
-                TakeDamage(damage);
-            }
-        }
-
-        /// <summary>
         /// Resets the current health to its max value. Will refresh the (IsDown == true) function detection:
         /// <see cref="DeactivateControllerSystem"/>
         /// </summary>
@@ -362,6 +346,24 @@ namespace Hadal.Player.Behaviours
         #endregion
 
         #region Network Event Methods
+
+        /// <summary>
+        /// Receives damage from event, only the Local player can take damage through this function.
+        /// </summary>
+        private void Receive_TakeDamage(EventData data)
+        {
+            object[] content = data.CustomData.AsObjArray();
+
+            int targetViewID = content[0].AsInt();
+            bool allowedToBeDamaged = _pView.ViewID == targetViewID && IsLocalPlayer;
+            if (allowedToBeDamaged)
+            {
+                int damage = content[1].AsInt();
+                TakeDamage(damage);
+                if (debugEnabled)
+                    $"I am taking damage by AI over the network. Pls halp".Msg();
+            }
+        }
 
         /// <summary>
         /// Sends a health update event. The boolean, "sendToTrueLocalPlayer", should be properly assigned for the event's flow to work as intended.
