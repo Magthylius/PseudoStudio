@@ -71,7 +71,7 @@ namespace Hadal.Locomotion
             Gizmos.DrawLine(movePoint, movePoint + v1 * 10);
             Gizmos.DrawLine(movePoint, movePoint + v2 * 10);
 
-            print(Vector3.Distance(movePoint, movePoint + v1 * 10));
+            //print(Vector3.Distance(movePoint, movePoint + v1 * 10));
             int width = 10;
             int height = 10;
 

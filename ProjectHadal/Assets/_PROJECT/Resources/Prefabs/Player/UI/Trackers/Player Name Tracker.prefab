@@ -61,6 +61,7 @@ MonoBehaviour:
   Type: -1
   startsEnabled: 1
   screenBounded: 0
+  positionOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &-3900907199420164213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,7 +82,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAYER_NAME_UNKOWN
+  m_text: UNKNOWN DIVER
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 97eb2920862a436439bb88f34214afec, type: 2}
   m_sharedMaterial: {fileID: -6266749041970903357, guid: 97eb2920862a436439bb88f34214afec, type: 2}
