@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -144,6 +145,7 @@ namespace Hadal.UI
             PNTR_Resume();
 
             //sl_UI = DebugManager.Instance.CreateScreenLogger();
+            
         }
 
         void Update()
@@ -315,6 +317,25 @@ namespace Hadal.UI
 
         }
 
+        public void TrackPlayerName(Transform otherPlayer, string playerName)
+        {
+            print("tracking: " + playerName);
+            StartCoroutine(TryTracking());
+
+            IEnumerator TryTracking()
+            {
+                while (!trackerHandler.Initialized)
+                {
+                    //nameTracker = trackerHandler.Scoop(TrackerType.PLAYER_NAME);
+                    yield return new WaitForEndOfFrame();
+                }
+                UITrackerBehaviour nameTracker = trackerHandler.Scoop(TrackerType.PLAYER_NAME);
+                nameTracker.TrackTransform(otherPlayer);
+                PlayerNameTrackerBehaviour pNameTracker = nameTracker as PlayerNameTrackerBehaviour;
+                if (pNameTracker) pNameTracker.UpdateText(playerName);
+            }
+        }
+        
         public void TrackProjectile(Transform projectileTransform, TrackerType projectileType)
         {
             switch (projectileType)

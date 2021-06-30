@@ -6159,7 +6159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9190253550278138324
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8469,7 +8469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e51b477b9199be4c963c6acb163f0df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSettings: {fileID: 11400000, guid: c20a812d889f63c40b64ac150c987af0, type: 2}
+  currentSettings: {fileID: 11400000, guid: abd4d56f3271558439f7333633814b95, type: 2}
   glowColor: {r: 0, g: 0, b: 0, a: 0.4509804}
   overrideGlowAlpha: 0
   glowComponents:
@@ -8597,7 +8597,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4133426362654513092}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -9336,7 +9336,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4421072599592505606}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -10241,7 +10241,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5091139438272425131}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -12472,6 +12472,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 200
+--- !u!1 &6965521842594984376
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 519012614753006963}
+  m_Layer: 5
+  m_Name: PlayerName Trackers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &519012614753006963
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6965521842594984376}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5771015257840066395}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7212857039804867188
 GameObject:
   m_ObjectHideFlags: 0
@@ -12576,6 +12611,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3552107636225854205}
+  - {fileID: 519012614753006963}
   m_Father: {fileID: 2011818888471303864}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12599,6 +12635,10 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   playerTransform: {fileID: 0}
   trackerPoolList:
+  - trackerPrefab: {fileID: 5552315013802069465, guid: 64da494cbc68c1047b0aef36de3533e7, type: 3}
+    spawnParent: {fileID: 519012614753006963}
+    trackerType: -1
+    poolCount: 4
   - trackerPrefab: {fileID: 5552315013802069465, guid: cdf214021183f234b833183c92eb36d4, type: 3}
     spawnParent: {fileID: 3552107636225854205}
     trackerType: 0
@@ -12709,7 +12749,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &287085514924289109
 RectTransform:
   m_ObjectHideFlags: 0

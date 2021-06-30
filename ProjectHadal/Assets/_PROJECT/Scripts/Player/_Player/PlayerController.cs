@@ -248,13 +248,13 @@ namespace Hadal.Player
                 Activate();
                 cameraController.Activate();
 
-                print("Camera Activated");
+                //print("Camera Activated");
             }
             else
             {
                 Deactivate();
                 cameraController.Deactivate();
-                print("Camera Deactivated");
+                //print("Camera Deactivated");
 
                 try
                 {
@@ -262,6 +262,13 @@ namespace Hadal.Player
                     playerUI.PauseMenuClosed -= Enable;
                 }
                 catch { }
+                
+                if (_pView.Owner != null)
+                    UITrackerBridge.AddPlayerTransform(transform, _pView.Owner.NickName);
+                else
+                    UITrackerBridge.AddPlayerTransform(transform, gameObject.name);
+                
+                //print(_pView.Owner.NickName);
             }
 
             Cursor.lockState = CursorLockMode.Locked;

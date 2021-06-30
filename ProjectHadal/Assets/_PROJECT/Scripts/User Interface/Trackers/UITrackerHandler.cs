@@ -7,96 +7,116 @@ using UnityEngine;
 /// <summary>
 /// Handles object pooling of trackers
 /// </summary>
-public class UITrackerHandler : MonoBehaviour
+namespace Hadal.UI
 {
-    [System.Serializable]
-    struct TrackerPool
+    public class UITrackerHandler : MonoBehaviour
     {
-        public GameObject trackerPrefab;
-        public Transform spawnParent;
-        public TrackerType trackerType;
-        public int poolCount;
-
-        public TrackerPool(TrackerPool other)
+        [System.Serializable]
+        struct TrackerPool
         {
-            trackerPrefab = other.trackerPrefab;
-            spawnParent = other.spawnParent;
-            trackerType = other.trackerType;
-            poolCount = other.poolCount;
+            public GameObject trackerPrefab;
+            public Transform spawnParent;
+            public TrackerType trackerType;
+            public int poolCount;
+
+            public TrackerPool(TrackerPool other)
+            {
+                trackerPrefab = other.trackerPrefab;
+                spawnParent = other.spawnParent;
+                trackerType = other.trackerType;
+                poolCount = other.poolCount;
+            }
         }
-    }
 
-    [SerializeField] Camera playerCamera;
-    [SerializeField] Transform playerTransform;
-    [SerializeField] List<TrackerPool> trackerPoolList;
+        [SerializeField] private bool initialized = false;
+        public bool Initialized => initialized;
+        [SerializeField] Camera playerCamera;
+        [SerializeField] Transform playerTransform;
+        [SerializeField] List<TrackerPool> trackerPoolList;
 
-    List<UITrackerBehaviour> trackerList;
+        List<UITrackerBehaviour> trackerList;
 
-    void Start()
-    {
-        trackerList = new List<UITrackerBehaviour>();
-        foreach (TrackerPool tracker in trackerPoolList)
+        IEnumerator Start()
         {
-            StartCoroutine(InstantiateTrackers(tracker));
-        }
-        //print(scaleFactor);
-    }
+            trackerList = new List<UITrackerBehaviour>();
+            /*foreach (TrackerPool tracker in trackerPoolList)
+            {
+                StartCoroutine(InstantiateTrackers(tracker));
+            }*/
+            
+            foreach (TrackerPool tracker in trackerPoolList)
+            {
+                int count = 0;
+                while (count < tracker.poolCount)
+                {
+                    var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
+                    trackerList.Add(track.GetComponent<UITrackerBehaviour>());
+                    track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform);
+                    track.SetActive(false);
 
-    void Update()
-    {
+                    yield return new WaitForEndOfFrame();
+                    count++;
+                }
+            }
+
+            initialized = true;
+            //print(scaleFactor);
+        }
         
-    }
 
-    IEnumerator InstantiateTrackers(TrackerPool tracker)
-    {
-        int count = 0;
-        while (count < tracker.poolCount)
+        IEnumerator InstantiateTrackers(TrackerPool tracker)
         {
-            var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
-            trackerList.Add(track.GetComponent<UITrackerBehaviour>());
-            track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform);
-
-            yield return new WaitForEndOfFrame();
-            count++;
-        }
-    }
-
-    public UITrackerBehaviour Scoop(TrackerType type)
-    {
-        foreach (UITrackerBehaviour tracker in trackerList)
-            if (tracker.Type == type && !tracker.isActiveAndEnabled) return tracker;
-
-        foreach (TrackerPool tracker in trackerPoolList)
-        {
-            if (tracker.trackerType == type) 
+            int count = 0;
+            while (count < tracker.poolCount)
             {
                 var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
                 trackerList.Add(track.GetComponent<UITrackerBehaviour>());
-                return track.GetComponent<UITrackerBehaviour>();
+                track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform);
+                track.SetActive(false);
+
+                yield return new WaitForEndOfFrame();
+                count++;
             }
         }
 
-        Debug.LogWarning("Tracker type not found!");
-        return null;
-    }
-
-    public void Dump(UITrackerBehaviour tracker)
-    {
-        tracker.Untrack();
-        tracker.Disable();
-    }
-
-    public void Dump(Transform trackerTransform)
-    {
-        foreach (UITrackerBehaviour tracker in trackerList)
+        public UITrackerBehaviour Scoop(TrackerType type)
         {
-            if (tracker.TrackingTransform == trackerTransform)
+            //print(trackerList);
+            foreach (UITrackerBehaviour tracker in trackerList)
+                if (tracker && tracker.Type == type && !tracker.isActiveAndEnabled) return tracker;
+
+            foreach (TrackerPool tracker in trackerPoolList)
             {
-                Dump(tracker);
-                return;
+                if (tracker.trackerType == type) 
+                {
+                    var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
+                    trackerList.Add(track.GetComponent<UITrackerBehaviour>());
+                    return track.GetComponent<UITrackerBehaviour>();
+                }
             }
+
+            Debug.LogWarning("Tracker type not found!");
+            return null;
         }
 
-        Debug.LogWarning("Tracker not found, cannot dump!");
+        public void Dump(UITrackerBehaviour tracker)
+        {
+            tracker.Untrack();
+            tracker.Disable();
+        }
+
+        public void Dump(Transform trackerTransform)
+        {
+            foreach (UITrackerBehaviour tracker in trackerList)
+            {
+                if (tracker.TrackingTransform == trackerTransform)
+                {
+                    Dump(tracker);
+                    return;
+                }
+            }
+
+            Debug.LogWarning("Tracker not found, cannot dump!");
+        }
     }
 }
