@@ -28,7 +28,7 @@ namespace Hadal.AI.Caverns
         public CavernColliderBehaviour cavernCollider;
         public CavernTag cavernTag;
         public bool forceFirstFrameRecheck = false;
-
+		[SerializeField] private bool autoAssignNavPoints;
         [SerializeField] LayerMask playerMask;
         [SerializeField] LayerMask aiMask;
         [SerializeField] List<AmbushPointBehaviour> ambushPoints;
@@ -96,7 +96,9 @@ namespace Hadal.AI.Caverns
             }
             if (other.gameObject.CompareTag("NavigationPoint"))
             {
-                //Debug.LogWarning(other.gameObject);
+				if (!autoAssignNavPoints)
+					return;
+                
                 if (nPoint.CavernTag != CavernTag.Custom_Point)
                     nPoint.SetCavernTag(cavernTag);
             }
