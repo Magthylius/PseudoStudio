@@ -317,7 +317,6 @@ namespace Hadal.UI
 
         public void TrackProjectile(Transform projectileTransform, TrackerType projectileType)
         {
-            if (IsNull) return;
             switch (projectileType)
             {
                 case TrackerType.SONIC_DART:

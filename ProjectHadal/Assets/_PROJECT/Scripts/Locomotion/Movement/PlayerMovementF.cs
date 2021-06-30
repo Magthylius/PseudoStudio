@@ -63,37 +63,26 @@ namespace Hadal.Locomotion
         public void SetIsLocal(bool state) => _isLocal = state;
         void OnDrawGizmos()
         {
-            Vector3 v1 = Vector3.Cross(moveDirection, Vector3.up);
-            Vector3 v2 = Vector3.Cross(moveDirection, v1);
+            Vector3 v1 = Vector3.Cross(moveDirection, Vector3.up).normalized;
+            Vector3 v2 = Vector3.Cross(moveDirection, v1).normalized;
             Gizmos.DrawLine(transform.position, transform.position + moveDirection * 10);
 
             Vector3 movePoint = transform.position + moveDirection * 10f;
             Gizmos.DrawLine(movePoint, movePoint + v1 * 10);
             Gizmos.DrawLine(movePoint, movePoint + v2 * 10);
 
+            //print(Vector3.Distance(movePoint, movePoint + v1 * 10));
             int width = 10;
-            /*int height = 10;*/
+            int height = 10;
 
             for(float x = -width; x<=width; x++)
             {
                 for (float y = -width; y <= width; y++)
                 {
                     Vector3 start = movePoint + (v1 * x) + (v2 * y);
-                    Gizmos.DrawLine(transform.position, start);
+                    Gizmos.DrawLine(start - moveDirection, start);
                 }
             }
-            //Gizmos.DrawLine(transform.position, transform.position + v1 * 10);
-
-
-            /* Vector3 movePoint = transform.position + (moveDirection * 10f);
-             Gizmos.DrawLine(transform.position, movePoint);
-
-             Vector3 dir = movePoint;
-             Vector3 v1 = Vector3.Cross(movePoint, transform.position + Vector3.up);
-             Vector3 v2 = Vector3.Cross(movePoint, v1);
-             Gizmos.DrawLine(movePoint, movePoint + rigidBody.gameObject.transform.up * 10);
-             Gizmos.DrawLine(movePoint, movePoint - rigidBody.gameObject.transform.up * 10);*/
-
         }
 
         static readonly IMovementInput DefaultInputs = new RawKeyboardInput();

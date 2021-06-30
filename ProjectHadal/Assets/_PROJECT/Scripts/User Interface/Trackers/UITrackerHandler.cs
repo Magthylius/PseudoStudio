@@ -39,6 +39,7 @@ public class UITrackerHandler : MonoBehaviour
         {
             StartCoroutine(InstantiateTrackers(tracker));
         }
+        //print(scaleFactor);
     }
 
     void Update()
