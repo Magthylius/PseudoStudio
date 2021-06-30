@@ -285,31 +285,7 @@ namespace Hadal.UI
             velocity = -velocity / maxMovementInfluence * uiDisplacement;
             allUIParentFR.StartLerp(velocity);
             allUIParentFR.Step(uiLerpReactionSpeed * Time.deltaTime);
-/*
-            float velProgress = (Mathf.Abs(velocity.y) - moverYVelocityBounds.x) / moverYVelocityBounds.y;
 
-            if (velocity.y > 0)
-            {
-                umgCGF.SetAlpha(Mathf.Lerp(moverGroupOpacityBounds.x, moverGroupOpacityBounds.y, velProgress));
-                umgVLG.spacing = Mathf.Lerp(moverGroupPaddingBounds.x, moverGroupPaddingBounds.y, velProgress);
-            }
-            else if (velocity.y < 0)
-            {
-                lmgCGF.SetAlpha(Mathf.Lerp(moverGroupOpacityBounds.x, moverGroupOpacityBounds.y, velProgress));
-                lmgVLG.spacing = Mathf.Lerp(moverGroupPaddingBounds.x, moverGroupPaddingBounds.y, velProgress);
-            }*/
-
-
-           //DebugManager.Instance.SLog(sl_UI, velocity.y);
-
-            /*float upperShaderAlpha = upperMoverImage.material.GetFloat("_Alpha");
-            float lowerShaderAlpha = lowerMoverImage.material.GetFloat("_Alpha");
-
-            if (destination.y > moverYVelocityGate) upperMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(upperShaderAlpha, 1f, moverLerpSpeed));
-            else upperMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(upperShaderAlpha, 0f, moverLerpSpeed));
-
-            if (destination.y < -moverYVelocityGate) lowerMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(lowerShaderAlpha, 1f, moverLerpSpeed));
-            else lowerMoverImage.material.SetFloat("_Alpha", Mathf.Lerp(lowerShaderAlpha, 0f, moverLerpSpeed));*/
         }
 
         void UpdateProjectileTracking()
