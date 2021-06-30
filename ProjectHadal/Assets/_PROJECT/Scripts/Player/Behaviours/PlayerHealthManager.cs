@@ -370,10 +370,6 @@ namespace Hadal.Player.Behaviours
         /// If false, the nature will be Local player -> Non-local player.</param>
         private void Send_HealthUpdateStatus(bool sendToTrueLocalPlayer)
         {
-            //! Only the local player should be able to send the event to report to all the simulated networked players
-            if (!IsLocalPlayer)
-                return;
-
             object[] content;
             if (sendToTrueLocalPlayer) //! Non-local to Local player
             {
