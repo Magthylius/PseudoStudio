@@ -1275,6 +1275,7 @@ MonoBehaviour:
   weightForce: 81466.41
   buoyantForce: 0
   dragForce: 0
+  rayCastLayerMask: 0
 --- !u!1 &6287583129589580556
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,6 +1436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c94f27529d81af4ca128b49412ca581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugEnabled: 0
   enableDeathTimerWhenDown: 0
   deathTime: 120
   _deathTimer: 0
