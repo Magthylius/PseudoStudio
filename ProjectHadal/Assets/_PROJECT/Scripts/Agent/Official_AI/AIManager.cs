@@ -36,7 +36,7 @@ namespace Hadal.AI
             }
 
             //! The null is to make sure the AI does not go to the NavPoint of where its spawned.
-            yield return null;
+            yield return new WaitForSeconds(0.1f);
 
             brain.NavigationHandler.SkipCurrentPoint(true);
 
