@@ -114,6 +114,8 @@ namespace Hadal.AI
 
         [Header("Nav Components")]
         [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
+		[SerializeField, Range(1, 3)] private int numberOfClosestPointsToConsiderAfterTunnelExit;
+		[SerializeField] private bool shuffleTunnelExitPoint;
         [SerializeField] private Transform pilotTrans;
         [SerializeField] private Rigidbody rBody;
         private CavernManager cavernManager;
@@ -319,13 +321,28 @@ namespace Hadal.AI
             }
 
 
-            var potentialList = navPoints
+            List<NavPoint> potentialList = new List<NavPoint>();
+						
+			if (shuffleTunnelExitPoint)
+			{
+				potentialList = navPoints
                         .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
                         .ToList()
                         .Shuffle(Time.frameCount)
-                        .Take(numberOfClosestPointsToConsider)
+                        .Take(numberOfClosestPointsToConsiderAfterTunnelExit)
                         .Where(p => p != null)
                         .ToList();
+			}
+			else
+			{
+				Vector3 position = pilotTrans.position;
+				potentialList = navPoints
+                        .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
+                        .OrderBy(p => p.GetSqrDistanceTo(position))
+                        .Take(numberOfClosestPointsToConsiderAfterTunnelExit)
+                        .Where(p => p != null)
+                        .ToList();
+			}
 
             if (potentialList.IsEmpty())
             {
