@@ -32,6 +32,7 @@ namespace Hadal.AI
         public Vector3 GetPosition => transform.position;
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
         public Vector3 GetDirectionTo(Vector3 position) => (GetPosition - position).normalized;
+		public string Name => gameObject.name;
 
 		[Button("Disable All Graphics")]
 		private void Button_DisableAll()
@@ -103,7 +104,6 @@ namespace Hadal.AI
 
 		public void SetCavernTag(CavernTag newTag)
 		{
-			//Debug.LogWarning(newTag);
 			cavernTag = newTag;
 		}
 
