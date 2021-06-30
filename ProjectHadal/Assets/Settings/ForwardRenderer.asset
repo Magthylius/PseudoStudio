@@ -38,13 +38,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: NewRenderObjects
-    Event: 300
+    passTag: UI Opaque
+    Event: 550
     filterSettings:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 0
+        m_Bits: 32
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
