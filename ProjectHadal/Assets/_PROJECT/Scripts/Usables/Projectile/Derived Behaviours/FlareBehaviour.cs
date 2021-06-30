@@ -6,17 +6,35 @@ namespace Hadal.Usables.Projectiles
 {
     public class FlareBehaviour : ProjectileBehaviour
     {
-        [SerializeField] Light flareLight;
+        [Header("Flare settings")]
+        [SerializeField] private bool enableRandomTorque = true;
+        [SerializeField] private float randomTorqueMult = 5f;
+        [SerializeField] private Rigidbody rb;
 
         [SerializeField] private string[] validLayer;
         [SerializeField] private bool isAttach;
         public ImpulseMode impulseMode;
         public SelfDeactivationMode selfDeactivation;
 
+        public void OnEnable()
+        {
+            if(!rb) rb = GetComponent<Rigidbody>();
+            rb.useGravity = true;
+
+            if (enableRandomTorque)
+            {
+                Vector3 randTorque = new Vector3(Random.value, Random.value, Random.value);
+                //print(randTorque);
+                rb.AddTorque(randTorque.normalized * randomTorqueMult, ForceMode.Impulse);
+            }
+        }
+        
         public void OnDisable()
         {
             IsAttached = false;
             Rigidbody.isKinematic = false;
+            
+            rb.useGravity = false;
         }
 
         public void SubscribeModeEvent()
@@ -53,6 +71,7 @@ namespace Hadal.Usables.Projectiles
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
 
+                    rb.useGravity = false;
                     //send event data to attach          
                     bool attachedToMonster = false;
                     if (LayerMask.LayerToName(layer) == "MONSTER")
