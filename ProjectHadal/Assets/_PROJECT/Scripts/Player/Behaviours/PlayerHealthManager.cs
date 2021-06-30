@@ -281,6 +281,7 @@ namespace Hadal.Player.Behaviours
 
             _controller.SetIsDown(true); //! Disable movement & rotation
             _controller.SetPhysicHighFriction(); //! Update physics settings
+			_controller.GetInfo.Shooter.SetCanFire(false);
 
             if (enableDeathTimerWhenDown)
                 StartCoroutine(StartDeathTimer());
@@ -301,6 +302,7 @@ namespace Hadal.Player.Behaviours
 
             _controller.SetIsDown(false); //! Enable movement & rotation
             _controller.SetPhysicNormal(); //! Update physics settings
+			_controller.GetInfo.Shooter.SetCanFire(true);
             return true;
         }
 

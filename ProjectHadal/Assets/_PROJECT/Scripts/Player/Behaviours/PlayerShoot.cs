@@ -18,6 +18,8 @@ namespace Hadal.Player.Behaviours
 
         [Header("Player")]
         [SerializeField] PlayerController controller;
+		private bool _allowUpdate;
+		private bool _canFire;
 
         [Header("Aiming")]
         public Rigidbody aimParentRb;
@@ -59,6 +61,8 @@ namespace Hadal.Player.Behaviours
 
         private void Awake()
         {
+			_allowUpdate = true;
+			_canFire = true;
             BuildTimers();
             tLauncher.OnChamberChanged += OnChamberChangedMethod;
             tLauncher.OnReservesChanged += OnReserveChangedMethod;
@@ -192,10 +196,11 @@ namespace Hadal.Player.Behaviours
 
         #region Enabling Component Methods
 
-        public bool AllowUpdate { get; private set; }
-        public void Enable() => AllowUpdate = true;
-        public void Disable() => AllowUpdate = false;
-        public void ToggleEnablility() => AllowUpdate = !AllowUpdate;
+		public void SetCanFire(bool statement) => _canFire = statement;
+        public bool AllowUpdate => _allowUpdate && _canFire;
+        public void Enable() => _allowUpdate = true;
+        public void Disable() => _allowUpdate = false;
+        public void ToggleEnablility() => _allowUpdate = !_allowUpdate;
 
         #endregion
 
