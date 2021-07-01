@@ -16,6 +16,7 @@ namespace Hadal.AI.States
         public EngagementStateSettings Engagement;
         public RecoveryStateSettings Recovery;
         public CooldownStateSettings Cooldown;
+        public LureStateSettings Lure;
 
         [Header("Confidence Settings")]
         public bool RandomiseConfidenceOnAwake;

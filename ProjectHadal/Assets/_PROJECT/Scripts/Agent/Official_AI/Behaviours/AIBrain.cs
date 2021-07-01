@@ -17,7 +17,7 @@ using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
-    public class AIBrain : MonoBehaviour
+    public class AIBrain : MonoBehaviour, IAmLeviathan
     {
         [ReadOnly, SerializeField] private bool isEnabled = true;
 
@@ -72,6 +72,7 @@ namespace Hadal.AI
         AIStateBase engagementState;
         AIStateBase recoveryState;
         AIStateBase cooldownState;
+        AIStateBase lureState;
 
         AggressiveSubState eAggressiveState;
         AmbushSubState eAmbushState;
@@ -206,12 +207,16 @@ namespace Hadal.AI
             //! Cooldown
             cooldownState = new CooldownState(this);
 
+            //! Lure
+            lureState = new LureState(this);
+
             //! -setup custom transitions-
             stateMachine.AddEventTransition(to: anticipationState, withCondition: IsAnticipating());
             stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
             stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
             stateMachine.AddEventTransition(to: cooldownState, withCondition: IsCooldown());
             stateMachine.AddEventTransition(to: idleState, withCondition: IsIdle());
+            stateMachine.AddEventTransition(to: lureState, withCondition: IsLure());
 
             allStates = new List<AIStateBase>
             {
@@ -219,7 +224,8 @@ namespace Hadal.AI
                 anticipationState,
                 engagementState,
                 recoveryState,
-                cooldownState
+                cooldownState,
+                lureState
             };
         }
 
@@ -284,6 +290,11 @@ namespace Hadal.AI
         Func<bool> IsIdle() => () =>
         {
             return RuntimeData.GetBrainState == BrainState.Idle && !isStunned;
+        };
+
+        Func<bool> IsLure() => () =>
+        {
+            return RuntimeData.GetBrainState == BrainState.Lure && !isStunned && RuntimeData.GetBrainState != BrainState.Engagement;
         };
 
         public bool IsStunned => isStunned;
@@ -434,6 +445,17 @@ namespace Hadal.AI
         public bool CanUpdate => (PhotonNetwork.IsMasterClient || isOffline) && (_playersAreReady || isOffline);
         public float DeltaTime => Time.deltaTime;
         public float FixedDeltaTime => Time.fixedDeltaTime;
+
+        #endregion
+
+        #region Interface Methods
+
+        public bool IsLeviathan => true;
+        public void TryToMakeRunAway()
+        {
+            RuntimeData.SetBrainState(BrainState.Recovery);
+        }
+        public GameObject Obj => gameObject;
 
         #endregion
 

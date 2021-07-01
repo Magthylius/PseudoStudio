@@ -7,6 +7,7 @@ using UnityEngine;
 using Hadal.Inputs;
 using Hadal.UI;
 using Tenshi;
+using Tenshi.UnitySoku;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
 using System.Collections;
@@ -19,6 +20,8 @@ namespace Hadal.Player
     public class PlayerController : Controller, IPlayerEnabler
     {
         #region Variable Definitions
+
+        [SerializeField] private bool debugEnabled;
 
         [Foldout("Components"), SerializeField] PlayerCameraController cameraController;
         [Foldout("Components"), SerializeField] PlayerHealthManager healthManager;
@@ -43,7 +46,14 @@ namespace Hadal.Player
         private bool _isCarried;
         private bool _isDown;
         [SerializeField] LureLauncherObject lureLauncherObject;
-        public bool HasLureActivated => lureLauncherObject != null ? lureLauncherObject.LureIsActive : false;
+        public Action<bool, PlayerController> OnLureHasActivated;
+        public bool HasLureLauncher => lureLauncherObject != null;
+        private void InvokeLureActivatedEvent(bool statement)
+        {
+            if (debugEnabled && PhotonNetwork.IsMasterClient)
+                $"Invoking lure event, isActive: {statement}.".Msg();
+            OnLureHasActivated?.Invoke(statement, this);
+        }
 
         //! Ready checks
         bool playerReady = false;
@@ -79,6 +89,7 @@ namespace Hadal.Player
         void Start()
         {
             _rBody.maxDepenetrationVelocity = 1f; //! This is meant to make sure the collider does not penetrate too deeply into environmental collider (thus reducing bouncing)
+            lureLauncherObject.OnLureActivate += InvokeLureActivatedEvent;
             TryInjectDependencies();
 
             if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
@@ -136,6 +147,8 @@ namespace Hadal.Player
             //! Might need to uninject player
             playerUI.PauseMenuOpened -= Disable;
             playerUI.PauseMenuClosed -= Enable;
+            lureLauncherObject.OnLureActivate -= InvokeLureActivatedEvent;
+            OnLureHasActivated = null;
         }
 
         #endregion

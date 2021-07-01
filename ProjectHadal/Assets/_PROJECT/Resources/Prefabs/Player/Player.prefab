@@ -595,6 +595,7 @@ MonoBehaviour:
   mover: {fileID: 1660193984053905730}
   rotator: {fileID: 6974425459141417505}
   pTrans: {fileID: 2719752003713521067}
+  debugEnabled: 0
   cameraController: {fileID: 3755182030028118020}
   healthManager: {fileID: 3000268046229200806}
   inventory: {fileID: 6945771040949894967}
@@ -1187,7 +1188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed:
-    Max: 22
+    Max: 30
     InputForward: 4
     InputStrafe: 2
     InputHover: 3
@@ -1196,12 +1197,12 @@ MonoBehaviour:
     Strafe: 0
     Hover: 0
   Accel:
-    Forward: 1.5
+    Forward: 10
     Strafe: 1
     Hover: 1
     Boost: 1.5
     CummulationSpeed: 2
-    MaxCummulation: 39
+    MaxCummulation: 50
     CummulatedAcceleration: 0
   Velocity:
     Total: {x: 0, y: 0, z: 0}
