@@ -137,6 +137,10 @@ namespace Hadal.Usables.Projectiles
                 Debug.LogWarning("Finding whatever is null");
                 Debug.LogWarning("GameManager Instance: " + GameManager.Instance);
                 Debug.LogWarning("GameManager Instance: " + GameManager.Instance.pViewList[i]);
+                if(!GameManager.Instance.pViewList[i])
+                {
+                    return;
+                }
                 Debug.LogWarning("shooterID: " + GetShooterID());
                 if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
                 {
