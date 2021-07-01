@@ -123,16 +123,16 @@ namespace Hadal.Networking
         #endregion
 
         #region Raising Events
-        Dictionary<ByteEvents, Action<EventData>> recieverDict;
+        Dictionary<ByteEvents, Action<EventData>> receiverDict;
 
         void SetupEventRaising()
         {
-            recieverDict = new Dictionary<ByteEvents, Action<EventData>>();
+            receiverDict = new Dictionary<ByteEvents, Action<EventData>>();
 
             for (int i = 0; i < (int)ByteEvents.TOTAL_EVENTS; i++)
             {
                 //! init dict
-                recieverDict.Add((ByteEvents)i, null);
+                receiverDict.Add((ByteEvents)i, null);
             }
         }
 
@@ -179,9 +179,9 @@ namespace Hadal.Networking
             {
                 if (eventObject.Code == (byte)(ByteEvents)i)
                 {
-                    if (recieverDict.ContainsKey((ByteEvents)eventObject.Code))
+                    if (receiverDict.ContainsKey((ByteEvents)eventObject.Code))
                     {
-                        if (recieverDict[(ByteEvents)eventObject.Code] != null) recieverDict[(ByteEvents)eventObject.Code].Invoke(eventObject);
+                        if (receiverDict[(ByteEvents)eventObject.Code] != null) receiverDict[(ByteEvents)eventObject.Code].Invoke(eventObject);
                         return;
                     }
                 }
@@ -194,10 +194,10 @@ namespace Hadal.Networking
         /// <param name="action">Attached listener function.</param>
         public void AddListener(ByteEvents eventCode, Action<EventData> action)
         {
-            if (recieverDict.ContainsKey(eventCode))
+            if (receiverDict.ContainsKey(eventCode))
             {
-                if (recieverDict[eventCode] == null) recieverDict[eventCode] = action;
-                else recieverDict[eventCode] += action;
+                if (receiverDict[eventCode] == null) receiverDict[eventCode] = action;
+                else receiverDict[eventCode] += action;
 
                 return;
             }
@@ -210,17 +210,28 @@ namespace Hadal.Networking
         /// <param name="action">Target remove listener function.</param>
         public void RemoveListener(ByteEvents eventCode, Action<EventData> action)
         {
-            if (recieverDict.ContainsKey(eventCode))
+            if (receiverDict.ContainsKey(eventCode))
             {
-                if (recieverDict[eventCode] != null)
+                if (receiverDict[eventCode] != null)
                 {
-                    recieverDict[eventCode] -= action;
-                    recieverDict.Remove(eventCode);
+                    receiverDict[eventCode] -= action;
+                    receiverDict.Remove(eventCode);
                     return;
                 }
             }
 
             Debug.LogWarning(eventCode.ToString() + " is not found, unable to remove listener.");
+        }
+
+        /// <summary>
+        /// Removes every listener attached for events. This is destructive. Fuck you Jin.
+        /// </summary>
+        public void RemoveAllListeners()
+        {
+            foreach (ByteEvents events in receiverDict.Keys)
+            {
+                receiverDict[events] = null;
+            }
         }
         #endregion
 
