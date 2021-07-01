@@ -9,7 +9,7 @@ using Photon.Pun;
 
 namespace Hadal.AI
 {
-    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, IAmLeviathan, ISlowable, ILeviathanComponent
+    public class AIHealthManager : MonoBehaviour, IDamageable, IUnalivable, IStunnable, ISlowable, ILeviathanComponent
     {
         [Header("Health")]
         [SerializeField] int maxHealth;
@@ -94,7 +94,6 @@ namespace Hadal.AI
         public int GetCurrentHealth => currentHealth;
         public bool IsDown => false;
         public int GetMaxHealth => maxHealth;
-        public bool IsLeviathan => true;
         public UpdateMode LeviathanUpdateMode => UpdateMode.LateUpdate;
 
         public void ResetHealth() => currentHealth = maxHealth;

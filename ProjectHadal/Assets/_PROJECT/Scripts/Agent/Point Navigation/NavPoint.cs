@@ -22,9 +22,11 @@ namespace Hadal.AI
         [SerializeField] private CavernTag cavernTag;
 		[SerializeField] private bool isTunnelEntry;
 		[SerializeField] private bool isHidingPoint;
+		private bool isLurePoint = false;
 		public CavernTag CavernTag => cavernTag;
         public bool IsTunnelEntry => isTunnelEntry;
         public bool IsHidingPoint => isHidingPoint;
+		public bool IsLurePoint => isLurePoint;
 
         [Header("Friend references")]
         [SerializeField] private List<NavPoint> friends;
@@ -33,6 +35,8 @@ namespace Hadal.AI
         public float GetSqrDistanceTo(Vector3 position) => (position - GetPosition).sqrMagnitude;
         public Vector3 GetDirectionTo(Vector3 position) => (GetPosition - position).normalized;
 		public string Name => gameObject.name;
+
+		public void SetIsLurePoint(bool statement) => isLurePoint = statement;
 
 		[Button("Disable All Graphics")]
 		private void Button_DisableAll()

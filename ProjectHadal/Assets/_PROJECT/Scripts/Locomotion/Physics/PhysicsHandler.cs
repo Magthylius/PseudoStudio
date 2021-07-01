@@ -10,6 +10,7 @@ namespace Hadal.Locomotion
         [SerializeField] private Collider objectCollider;
 
         [Header("Physic Stimulation")]
+        [SerializeField] private float density;
         [SerializeField] private float drag;
         [SerializeField] private float weightForce;
         [SerializeField] private float buoyantForce;
@@ -17,7 +18,7 @@ namespace Hadal.Locomotion
 
         [Header("Drag Raycasting")]
         [SerializeField] private Vector3 moveDirection;
-        [SerializeField] private int rayCastLayerMask;
+        [SerializeField] private LayerMask rayCastLayerMask;
         [SerializeField] private int testHitCount;
       RaycastHit aimHit;
         #region Unity LifeCycle
@@ -62,7 +63,6 @@ namespace Hadal.Locomotion
         {
             rigidBody.mass = weightForce / 9.8f;
             rigidBody.useGravity = true;
-            rayCastLayerMask = rigidBody.gameObject.layer;
         }
 
         private void CalculateBuoyantForce()
@@ -78,7 +78,6 @@ namespace Hadal.Locomotion
                 CapsuleCollider collider = (CapsuleCollider)objectCollider;
                 float volume = collider.height * Mathf.Pow(2, (collider.radius * 2));
                 print(volume);
-                float density = 1029;
                 buoyantForce = volume * density * 10;
                 print(buoyantForce);
                 return;
@@ -88,7 +87,7 @@ namespace Hadal.Locomotion
         public void CalculateWaterDrag(Vector3 moveVector)
         {
             testHitCount = 0;
-            moveDirection = moveVector;
+            moveDirection = moveVector.normalized;
             Vector3 v1 = Vector3.Cross(moveDirection, Vector3.up).normalized;
             Vector3 v2 = Vector3.Cross(moveDirection, v1).normalized;
             
@@ -111,12 +110,10 @@ namespace Hadal.Locomotion
                     }
                 }
             }
-            print(testHitCount);
-            /*if (Physics.Raycast(aimPoint.position, moveVector, out aimHit,
-                                Mathf.Infinity, rayCastLayerMask, QueryTriggerInteraction.Ignore))
-            {
-
-            }*/
+                                   //1/2  *  Density * Vector^2                                        * area
+            Vector3 finalDragForce = 0.5f * density * Vector3.SqrMagnitude(moveVector) * moveDirection * testHitCount;
+            rigidBody.AddForce(-finalDragForce, ForceMode.Force);
+            print(finalDragForce);
         }
         #endregion
 

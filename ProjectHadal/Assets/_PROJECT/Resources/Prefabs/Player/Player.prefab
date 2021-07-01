@@ -595,6 +595,7 @@ MonoBehaviour:
   mover: {fileID: 1660193984053905730}
   rotator: {fileID: 6974425459141417505}
   pTrans: {fileID: 2719752003713521067}
+  debugEnabled: 0
   cameraController: {fileID: 3755182030028118020}
   healthManager: {fileID: 3000268046229200806}
   inventory: {fileID: 6945771040949894967}
@@ -604,7 +605,7 @@ MonoBehaviour:
   collisions: {fileID: 3306862700224671012}
   playerUI: {fileID: 2041580312169042142}
   photonInfo: {fileID: 155871750561701772}
-  localPlayerLayer: Player
+  localPlayerLayer: LocalPlayer
   physicNormal: {fileID: 11400000, guid: b1d01ccf9a2b25240914457911e9d96b, type: 2}
   physicHighGravityFriction: {fileID: 11400000, guid: 09c9c0efa4022f143b1e7d5e0bf294f4, type: 2}
   lureLauncherObject: {fileID: 1859198439131529991}
@@ -1174,7 +1175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed:
-    Max: 22
+    Max: 30
     InputForward: 4
     InputStrafe: 2
     InputHover: 3
@@ -1183,12 +1184,12 @@ MonoBehaviour:
     Strafe: 0
     Hover: 0
   Accel:
-    Forward: 1.5
+    Forward: 10
     Strafe: 1
     Hover: 1
     Boost: 1.5
     CummulationSpeed: 2
-    MaxCummulation: 39
+    MaxCummulation: 50
     CummulatedAcceleration: 0
   Velocity:
     Total: {x: 0, y: 0, z: 0}
@@ -1224,7 +1225,7 @@ MonoBehaviour:
     Hover: 1
     Boost: 1.5
     CummulationSpeed: 2
-    MaxCummulation: 30
+    MaxCummulation: 11
     CummulatedAcceleration: 0
   Velocity:
     Total: {x: 0, y: 0, z: 0}
@@ -1247,12 +1248,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidBody: {fileID: 6419753948795626213}
   objectCollider: {fileID: 2116983133358566779}
+  density: 1059
   drag: 0
   weightForce: 81466.41
   buoyantForce: 0
   dragForce: 0
   moveDirection: {x: 0, y: 0, z: 0}
-  rayCastLayerMask: 0
+  rayCastLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   testHitCount: 0
 --- !u!1 &6287583129589580556
 GameObject:
