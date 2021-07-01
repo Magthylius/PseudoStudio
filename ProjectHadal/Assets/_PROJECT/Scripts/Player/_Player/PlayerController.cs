@@ -199,13 +199,19 @@ namespace Hadal.Player
             }
         }
 
-        private void StartGame(EventData obj)
+        public void StartGame(EventData obj)
         {
+            //! This is online called in online mode, this function is called on PlayerManager for host
             print("Everyone ready. Begin !");
+            
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
-            _manager.instantiatePViewList();
+            _manager.InstantiatePViewList();
+            TrackNamesOnline();
+        }
 
+        public void TrackNamesOnline()
+        {
             PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
 
             if (!NetworkEventManager.Instance.isOfflineMode)

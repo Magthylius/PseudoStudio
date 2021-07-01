@@ -105,10 +105,13 @@ namespace Hadal.Player
             if (allPlayerReady)
             {
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_ACTUAL_START, null, SendOptions.SendReliable);
-                // start the game for host here !!!
-                LoadingManager.Instance.StartEndLoad();
-                instantiatePViewList();
+                
+                //! Host start games here
+                /*LoadingManager.Instance.StartEndLoad();
+                InstantiatePViewList();
                 localPlayerController.Mover.ToggleEnablility(true);
+                localPlayerController.TrackNamesOnline();*/
+                localPlayerController.StartGame(null);
                 print("All player ready, sending event to notify all players.");
                 if (PhotonNetwork.IsMasterClient) OnAllPlayersReadyEvent?.Invoke();
             }
@@ -240,7 +243,7 @@ namespace Hadal.Player
             controller.TrackNamesOffline();
         }
 
-        public void instantiatePViewList()
+        public void InstantiatePViewList()
         {
             print("instantiate PView Called");
             var playerControllers = FindObjectsOfType<PlayerController>();
