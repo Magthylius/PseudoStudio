@@ -8,7 +8,8 @@ namespace Hadal.AI
         Anticipation,
         Engagement,
         Recovery,
-        Cooldown
+        Cooldown,
+        Lure
     }
 
     public enum EngagementSubState

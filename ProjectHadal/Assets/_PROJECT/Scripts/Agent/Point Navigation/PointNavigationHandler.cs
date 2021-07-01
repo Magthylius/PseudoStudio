@@ -66,6 +66,7 @@ namespace Hadal.AI
             slowMultiplier = mult;
         }
 
+        public NavPoint GetCurrentPoint => currentPoint;
         private NavPoint CurrentPoint;
         private NavPoint currentPoint
         {
@@ -197,7 +198,7 @@ namespace Hadal.AI
             {
                 MoveForwards(fixedDeltaTime);
                 MoveTowardsCurrentNavPoint(fixedDeltaTime);
-            }
+            } 
             HandleObstacleAvoidance(fixedDeltaTime);
             HandleSpeedAndDirection(fixedDeltaTime);
             ClampMaxVelocity();

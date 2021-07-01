@@ -33,12 +33,13 @@ namespace Hadal.AI.TreeNodes
         {
             if (timer > 0)
             {
-                timer = timer - 1;
+                timer = timer - Time.deltaTime;
                 Debug.Log("Timer Thresh:" + timer);
                 if (Time.time > nextActionTime)
                 {
                     nextActionTime = Time.time + _damageManager.ApplyEveryNSeconds;
                     _damageManager.Send_DamagePlayer(_brain.CarriedPlayer.transform, AIDamageType.Thresh);
+                    Debug.Log("Damage:" + AIDamageType.Thresh);
                 }
 
             }
