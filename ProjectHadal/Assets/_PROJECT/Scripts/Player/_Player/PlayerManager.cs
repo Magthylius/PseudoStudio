@@ -76,6 +76,7 @@ namespace Hadal.Player
                     //NetworkEventManager.Instance.LeftRoomEvent -= TryToKill;
                     NetworkEventManager.Instance.PlayerEnteredEvent -= SpawnPlayer;
                     NetworkEventManager.Instance.PlayerLeftEvent -= TryToKill;
+                    NetworkEventManager.Instance.RemoveListener(ByteEvents.PLAYER_SPAWNED, PlayerReadyEvent);
                 }
                 return;
             }

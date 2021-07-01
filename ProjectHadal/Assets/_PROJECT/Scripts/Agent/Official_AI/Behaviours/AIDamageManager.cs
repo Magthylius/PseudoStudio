@@ -69,6 +69,6 @@ namespace Hadal.AI
         }
 
         public int GetViewIDFromTransform(Transform trans)
-            => trans.GetComponentInChildren<PlayerController>().GetInfo.PhotonInfo.PView.ViewID;
+            => trans.GetComponentInChildren<PlayerController>().ViewID;
     }
 }

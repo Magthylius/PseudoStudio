@@ -38,8 +38,7 @@ namespace Hadal.Usables.Projectiles
         {
             neManager = NetworkEventManager.Instance;
             projectileTriggered = false;
-            setIsLocal();
-
+            SetIsLocal();
         }
         protected virtual void Start()
         {
@@ -120,7 +119,7 @@ namespace Hadal.Usables.Projectiles
             if (PPhysics != null) PPhysics.SetBehaviour(this);
         }
 
-        private void setIsLocal()
+        private void SetIsLocal()
         {
             /*if (!neManager)
             {
@@ -135,8 +134,10 @@ namespace Hadal.Usables.Projectiles
 
             for (int i = 0; i < GameManager.Instance.pViewList.Count; i++)
             {
-                Debug.LogWarning("Finding whatever is null");
-                //Debug.LogWarning("GameManager Instance: " + GameManager.Instance);
+                if(!GameManager.Instance.pViewList[i])
+                {
+                    return;
+                }
                 Debug.LogWarning("shooterID: " + GetShooterID());
                 if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
                 {

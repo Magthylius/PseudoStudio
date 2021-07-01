@@ -6,6 +6,9 @@ namespace Hadal.Usables.Projectiles
 {
     public class SonicGrenadeBehaviour : ProjectileBehaviour
     {
+        [Header("Stun Settings")]
+        public float stunTime = 1f;
+
         public SelfDeactivationMode selfDeactivation;
 
         private float radius = 10;
@@ -48,13 +51,11 @@ namespace Hadal.Usables.Projectiles
             foreach (Collider col in detectedObjects)
             {
                 Debug.Log("Sonic : Enemy Detected");
-               /* if(isHighHz)
-                { 
-                }
-                else
-                {
-                }*/
-                col.gameObject.GetComponentInChildren<IStunnable>().TryStun(0.5f);
+                col.gameObject.GetComponentInChildren<IStunnable>()?.TryStun(stunTime);
+                /*if(isHighHz)
+                 { 
+                    // do high frequency stuff here
+                 }*/
             }
 
             //Send event to clones

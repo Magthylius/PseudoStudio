@@ -86,6 +86,18 @@ namespace Hadal.Player
             Enable();
         }
 
+        void OnDisable()
+        {
+            if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
+            {
+                if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
+                {
+                    LoadingManager.Instance.LoadingCompletedEvent.RemoveListener(SetLoadingReady);
+                    NetworkEventManager.Instance.RemoveListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, PlayerReadyConfirmed);
+                    NetworkEventManager.Instance.RemoveListener(ByteEvents.GAME_ACTUAL_START, StartGame);
+                }
+            }
+        }
         void Start()
         {
             _rBody.maxDepenetrationVelocity = 1f; //! This is meant to make sure the collider does not penetrate too deeply into environmental collider (thus reducing bouncing)
@@ -99,6 +111,7 @@ namespace Hadal.Player
                 if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
                     cameraReady = true;
+                    Debug.LogWarning("Added Listener For Loading!");
                     LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
                     LoadingManager.Instance.AllowLoadingCompletion();
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, PlayerReadyConfirmed);
@@ -206,10 +219,17 @@ namespace Hadal.Player
             {
                 if (cameraReady && loadingReady)
                 {
+                    print("sending my readiness!");
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID, SendOptions.SendReliable);
+                }
+                else
+                {
+                    Debug.LogWarning("CameraReady: " + cameraReady + "loadingReady: " + loadingReady) ;
                 }
                 yield return new WaitForSeconds(1);
             }
+
+            Debug.LogWarning("All players are ready");
         }
 
         public void StartGame(EventData obj)
@@ -290,7 +310,7 @@ namespace Hadal.Player
                 mover.ToggleEnablility(true);
             }
             
-            if (!UITrackerBridge.LocalPlayerUIManager == isMine)
+            if (!UITrackerBridge.LocalPlayerUIManager && isMine)
             {
                 //! Make sure player UI is inactive in prefab!
                 playerUI.gameObject.SetActive(true);

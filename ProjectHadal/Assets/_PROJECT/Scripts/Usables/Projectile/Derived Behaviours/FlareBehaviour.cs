@@ -16,8 +16,9 @@ namespace Hadal.Usables.Projectiles
         public ImpulseMode impulseMode;
         public SelfDeactivationMode selfDeactivation;
 
-        public void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             if(!rb) rb = GetComponent<Rigidbody>();
             rb.useGravity = true;
 
