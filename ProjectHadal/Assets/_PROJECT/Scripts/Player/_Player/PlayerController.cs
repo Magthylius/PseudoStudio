@@ -247,24 +247,18 @@ namespace Hadal.Player
                 playerUI.PauseMenuClosed += Enable;
 
                 UITrackerBridge.LocalPlayerUIManager = playerUI;
-                //StartCoroutine(CheckQueuedPlayerName());
-                
+
                 Debug.LogWarning("Initing UI, tracking queued players");
                 
                 //! Track all queued players
                 foreach (var tr in UITrackerBridge.OtherPlayerNames)
+                {
+                    Debug.LogWarning("Queue: " + tr.Value);
                     playerUI.TrackPlayerName(tr.Key, tr.Value);
+                }
 
                 Activate();
                 cameraController.Activate();
-
-                
-                /*IEnumerator CheckQueuedPlayerName()
-                {
-                    while
-                }*/
-                
-                //print("Camera Activated");
             }
             else
             {
@@ -279,8 +273,10 @@ namespace Hadal.Player
                 }
                 catch { }
 
-                UITrackerBridge.AddPlayerTransform(transform, _pView.Owner != null ? _pView.Owner.NickName : gameObject.name);
+                string pName = _pView.Owner != null ? _pView.Owner.NickName : gameObject.name;
+                UITrackerBridge.AddPlayerTransform(transform, name);
 
+                Debug.LogWarning("Queued player name: " + pName);
                 //print(_pView.Owner.NickName);
             }
 

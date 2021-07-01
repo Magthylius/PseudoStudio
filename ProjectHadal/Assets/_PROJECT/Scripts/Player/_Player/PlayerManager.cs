@@ -139,7 +139,6 @@ namespace Hadal.Player
         #region Player
         void SpawnPlayer(Photon.Realtime.Player player)
         {
-            //if (!player.IsMasterClient) return;
             if (IsOnNetwork) CreateNetworkController(player);
             else CreateLocalController(player);
         }
@@ -186,32 +185,17 @@ namespace Hadal.Player
             if (photonPlayer != neManager.LocalPlayer)
             {
                 controller.TransferOwnership(photonPlayer);
-                // print("Created False Camera player");
                 controller.HandlePhotonView(false);
             }
             else
             {
-                //print("Created True Camera player");
                 localPlayerController = controller;
                 controller.HandlePhotonView(true);
                 controller.SetPlayerReady(true);
             }
             // Host finish assignming ownerships and cameras
-
-
-
-            /*if (playerList.Count > 0)
-            {
-                foreach (PlayerController pControl in playerList)
-                {
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID + ", " + GetController(neManager.localPlayerController).ViewID);
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.localPlayerController).ViewID);
-                    pControl.HandlePhotonView(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.localPlayerController).ViewID);
-                }
-            }*/
-
+            
             AddPlayerEvent?.Invoke();
-            //Debug.Log("Added a player "); 
         }
 
         #endregion
