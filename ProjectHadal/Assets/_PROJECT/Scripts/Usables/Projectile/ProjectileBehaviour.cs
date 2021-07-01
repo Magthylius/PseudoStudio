@@ -136,8 +136,8 @@ namespace Hadal.Usables.Projectiles
             for (int i = 0; i < GameManager.Instance.pViewList.Count; i++)
             {
                 Debug.LogWarning("Finding whatever is null");
-                Debug.LogWarning("GameManager Instance: " + GameManager.Instance);
-                Debug.LogWarning("GameManager PVIEWLIST: " + GameManager.Instance.pViewList);
+                //Debug.LogWarning("GameManager Instance: " + GameManager.Instance);
+                Debug.LogWarning("shooterID: " + GetShooterID());
                 if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
                 {
                     IsLocal = true;

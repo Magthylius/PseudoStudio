@@ -199,13 +199,19 @@ namespace Hadal.Player
             }
         }
 
-        private void StartGame(EventData obj)
+        public void StartGame(EventData obj)
         {
+            //! This is online called in online mode, this function is called on PlayerManager for host
             print("Everyone ready. Begin !");
+            
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
-            _manager.instantiatePViewList();
+            _manager.InstantiatePViewList();
+            TrackNamesOnline();
+        }
 
+        public void TrackNamesOnline()
+        {
             PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
 
             if (!NetworkEventManager.Instance.isOfflineMode)
@@ -271,7 +277,7 @@ namespace Hadal.Player
                 mover.ToggleEnablility(true);
             }
             
-            if (isMine)
+            if (!UITrackerBridge.LocalPlayerUIManager == isMine)
             {
                 //! Make sure player UI is inactive in prefab!
                 playerUI.gameObject.SetActive(true);
@@ -279,16 +285,7 @@ namespace Hadal.Player
                 playerUI.PauseMenuOpened += Disable;
                 playerUI.PauseMenuClosed += Enable;
 
-                /*UITrackerBridge.LocalPlayerUIManager = playerUI;
-
-                Debug.LogWarning("Initing UI, tracking queued players");
-                
-                //! Track all queued players
-                foreach (var tr in UITrackerBridge.OtherPlayerNames)
-                {
-                    Debug.LogWarning("Queue: " + tr.Value);
-                    playerUI.TrackPlayerName(tr.Key, tr.Value);
-                }*/
+                UITrackerBridge.LocalPlayerUIManager = playerUI;
 
                 Activate();
                 cameraController.Activate();
@@ -306,11 +303,6 @@ namespace Hadal.Player
                 }
                 catch { }
 
-                //string pName = _pView.Owner != null ? _pView.Owner.NickName : gameObject.name;
-                //UITrackerBridge.AddPlayerTransform(transform, name);
-
-                //Debug.LogWarning("Queued player name: " + pName);
-                //print(_pView.Owner.NickName);
             }
 
             Cursor.lockState = CursorLockMode.Locked;

@@ -40,8 +40,8 @@ namespace Hadal.Usables
                     sonicDart.transform.SetParent(SonicDartPool.Instance.transform); ;
                 }
                 //if (!UIManager.IsNull) UIManager.Instance.UntrackProjectile(obj.transform);
-                UITrackerBridge.LocalPlayerUIManager.UntrackProjectile(obj.transform);
                 SonicDartPool.Instance.Dump(sonicDart);
+                UITrackerBridge.LocalPlayerUIManager.UntrackProjectile(obj.transform);
             }
         }
     }
