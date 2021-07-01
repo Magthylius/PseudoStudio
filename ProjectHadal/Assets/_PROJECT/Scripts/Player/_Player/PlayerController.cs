@@ -76,6 +76,18 @@ namespace Hadal.Player
             Enable();
         }
 
+        void OnDisable()
+        {
+            if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
+            {
+                if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
+                {
+                    LoadingManager.Instance.LoadingCompletedEvent.RemoveListener(SetLoadingReady);
+                    NetworkEventManager.Instance.RemoveListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, PlayerReadyConfirmed);
+                    NetworkEventManager.Instance.RemoveListener(ByteEvents.GAME_ACTUAL_START, StartGame);
+                }
+            }
+        }
         void Start()
         {
             _rBody.maxDepenetrationVelocity = 1f; //! This is meant to make sure the collider does not penetrate too deeply into environmental collider (thus reducing bouncing)
