@@ -205,6 +205,7 @@ namespace Hadal.Player
             {
                 if (cameraReady && loadingReady)
                 {
+                    print("sending my readiness!");
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID, SendOptions.SendReliable);
                 }
                 yield return new WaitForSeconds(1);
