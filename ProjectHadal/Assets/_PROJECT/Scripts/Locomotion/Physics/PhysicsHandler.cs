@@ -17,7 +17,7 @@ namespace Hadal.Locomotion
 
         [Header("Drag Raycasting")]
         [SerializeField] private Vector3 moveDirection;
-        [SerializeField] private int rayCastLayerMask;
+        [SerializeField] private LayerMask rayCastLayerMask;
         [SerializeField] private int testHitCount;
       RaycastHit aimHit;
         #region Unity LifeCycle
@@ -62,7 +62,6 @@ namespace Hadal.Locomotion
         {
             rigidBody.mass = weightForce / 9.8f;
             rigidBody.useGravity = true;
-            rayCastLayerMask = rigidBody.gameObject.layer;
         }
 
         private void CalculateBuoyantForce()
