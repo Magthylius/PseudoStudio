@@ -53,7 +53,8 @@ namespace Hadal.Locomotion
 
             HandleAcceleration(fixedDeltaTime);
             CalculateSpeed();
-            physicsHandler.CalculateWaterDrag(moveDirection);
+            /*physicsHandler.CalculateWaterDrag(moveDirection);*/
+            physicsHandler.CalculateWaterDrag(rigidBody.velocity);
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -110,6 +111,7 @@ namespace Hadal.Locomotion
             }
 
             rigidBody.AddForce(moveForce * rigidBody.mass, ForceMode.Force);
+            /*print(moveForce * rigidBody.mass);*/
 
             //print("raw: " + UnityEngine.Input.GetAxis("Vertical"));
             //print("ip: " + Input.VerticalAxis);
