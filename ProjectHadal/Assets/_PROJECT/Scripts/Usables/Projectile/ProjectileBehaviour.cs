@@ -134,9 +134,6 @@ namespace Hadal.Usables.Projectiles
 
             for (int i = 0; i < GameManager.Instance.pViewList.Count; i++)
             {
-                Debug.LogWarning("Finding whatever is null");
-                Debug.LogWarning("GameManager Instance: " + GameManager.Instance);
-                Debug.LogWarning("GameManager Instance: " + GameManager.Instance.pViewList[i]);
                 if(!GameManager.Instance.pViewList[i])
                 {
                     return;

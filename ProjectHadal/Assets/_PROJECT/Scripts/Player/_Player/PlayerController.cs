@@ -208,8 +208,14 @@ namespace Hadal.Player
                     print("sending my readiness!");
                     NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_SPAWNED, _pView.ViewID, SendOptions.SendReliable);
                 }
+                else
+                {
+                    Debug.LogError("CameraReady: " + cameraReady + "loadingReady: " + loadingReady) ;
+                }
                 yield return new WaitForSeconds(1);
             }
+
+            Debug.LogError("All players are ready");
         }
 
         public void StartGame(EventData obj)
