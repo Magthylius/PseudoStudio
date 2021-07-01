@@ -48,7 +48,7 @@ namespace Hadal.AI
 
         public UpdateMode LeviathanUpdateMode => UpdateMode.MainUpdate;
 
-        /// <summary> Damages the chosen player</summary>
+        /// <summary> Damages the chosen player over the network.</summary>
         /// <param name="player">Target player</param>
         /// <param name="type">The damage type</param>
         public void Send_DamagePlayer(Transform player, AIDamageType type)
