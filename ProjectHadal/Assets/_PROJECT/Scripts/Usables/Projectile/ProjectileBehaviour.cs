@@ -39,7 +39,6 @@ namespace Hadal.Usables.Projectiles
             neManager = NetworkEventManager.Instance;
             projectileTriggered = false;
             SetIsLocal();
-
         }
         protected virtual void Start()
         {
