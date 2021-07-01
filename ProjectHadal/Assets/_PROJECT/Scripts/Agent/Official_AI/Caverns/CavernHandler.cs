@@ -181,7 +181,7 @@ namespace Hadal.AI.Caverns
             playersInCavern.RemoveAll(p => p == null);
             for (int i = 0; i < playersInCavern.Count; i++)
             {
-                if (playersInCavern[i].GetInfo.PhotonInfo.PView.ViewID == viewID)
+                if (playersInCavern[i].ViewID == viewID)
                     return true;
             }
             return false;
