@@ -94,7 +94,6 @@ namespace Hadal.Player
                 if(playerList[i].GetPlayerReady())
                 {
                     allPlayerReady = true;
-                    continue;
                 }
                 else
                 {
@@ -237,6 +236,8 @@ namespace Hadal.Player
                     dummyControllers.SetDummyState(true);
                 }
             }
+            
+            controller.TrackNamesOffline();
         }
 
         public void instantiatePViewList()
