@@ -36,6 +36,8 @@ namespace Hadal.AI
                 ResetTimer();
                 SenseSurroundings();
             }
+
+            PlayerActivatedLure();
         }
 
         public void DoFixedUpdate(in float fixedDeltaTime) { }
@@ -57,6 +59,21 @@ namespace Hadal.AI
             if (_brain.CurrentTarget && allowSwitchTarget)
                 _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
 
+        }
+
+        void PlayerActivatedLure()
+        {
+            foreach (var players in _brain.Players)
+            {
+                // if(players.HasLureActivated && _brain.CavernManager.GetCavernTagOfAILocation())
+                // {
+                //     _brain.NavigationHandler.SetCustomPath(_brain.RuntimeData.navPointPrefab, false);
+                //     _brain.RuntimeData.SetBrainState(BrainState.Idle);
+                // }
+
+            }
+
+            
         }
 
         private float TickTimer(in float deltaTime) => _checkTimer -= deltaTime;
