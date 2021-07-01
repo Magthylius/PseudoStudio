@@ -155,7 +155,6 @@ namespace Hadal.Networking.UI.Loading
                 if (a && b) allowPostProcess = false;
             }
 
-            //print(connectionAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         }
 
         void LoadingCompletedPrint()
