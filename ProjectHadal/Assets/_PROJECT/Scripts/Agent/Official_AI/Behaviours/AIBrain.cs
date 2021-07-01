@@ -17,6 +17,8 @@ using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
+    public delegate void PhaseEvents(bool isStarting);
+    
     public class AIBrain : MonoBehaviour, IAmLeviathan
     {
         [ReadOnly, SerializeField] private bool isEnabled = true;
@@ -244,6 +246,10 @@ namespace Hadal.AI
         }
 
         #region Event Handlers
+        //! State events
+        public event PhaseEvents JudgementPhaseEvent;
+        public void TriggerJudgementStateEvent(bool isStarting) => JudgementPhaseEvent?.Invoke(isStarting);
+        
         /// <summary>Calls when AI enters a cavern</summary>
         void OnCavernEnter(CavernHandler cavern)
         {
