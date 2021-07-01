@@ -100,6 +100,7 @@ namespace Hadal.Player
                 if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
                     cameraReady = true;
+                    Debug.LogWarning("Added Listener For Loading!");
                     LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
                     LoadingManager.Instance.AllowLoadingCompletion();
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, PlayerReadyConfirmed);
@@ -210,12 +211,12 @@ namespace Hadal.Player
                 }
                 else
                 {
-                    Debug.LogError("CameraReady: " + cameraReady + "loadingReady: " + loadingReady) ;
+                    Debug.LogWarning("CameraReady: " + cameraReady + "loadingReady: " + loadingReady) ;
                 }
                 yield return new WaitForSeconds(1);
             }
 
-            Debug.LogError("All players are ready");
+            Debug.LogWarning(("All players are ready");
         }
 
         public void StartGame(EventData obj)
