@@ -216,7 +216,7 @@ namespace Hadal.Player
                 yield return new WaitForSeconds(1);
             }
 
-            Debug.LogWarning(("All players are ready");
+            Debug.LogWarning("All players are ready");
         }
 
         public void StartGame(EventData obj)
