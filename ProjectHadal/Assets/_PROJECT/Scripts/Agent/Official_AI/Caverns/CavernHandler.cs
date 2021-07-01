@@ -172,6 +172,21 @@ namespace Hadal.AI.Caverns
             return null;
         }
 
+        //! Player enquiry
+        /// <summary>
+        /// Checks if there is a player in this handler with a specified view id.
+        /// </summary>
+        public bool HasPlayerWithViewID(in int viewID)
+        {
+            playersInCavern.RemoveAll(p => p == null);
+            for (int i = 0; i < playersInCavern.Count; i++)
+            {
+                if (playersInCavern[i].GetInfo.PhotonInfo.PView.ViewID == viewID)
+                    return true;
+            }
+            return false;
+        }
+
         //! Data
         public void SetCavernInitialize(bool newStatus) => cavernInitialized = newStatus;
         public bool IsInitialized => cavernInitialized;

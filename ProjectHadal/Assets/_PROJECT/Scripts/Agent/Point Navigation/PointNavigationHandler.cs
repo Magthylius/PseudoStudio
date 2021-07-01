@@ -11,6 +11,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using ReadOnlyAttribute = Tenshi.ReadOnlyAttribute;
 using Random = UnityEngine.Random;
+using Photon.Pun;
 
 namespace Hadal.AI
 {
@@ -152,11 +153,16 @@ namespace Hadal.AI
 
         public void Initialise()
         {
+            //! Get all navpoints in scene & intialise
             navPoints = FindObjectsOfType<NavPoint>().ToList();
             navPoints.ForEach(p => p.Initialise());
+            
+            //! Timers
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             obstacleCheckTimer = 0f;
+
+            //! Runtime data
             hasReachedPoint = false;
             canTimeout = true;
             currentPoint = null;
@@ -809,7 +815,7 @@ namespace Hadal.AI
 
         public Rigidbody Rigidbody => rBody;
         public float MaxVelocity => (maxVelocity * debugVelocityMultiplier) - (maxVelocity * debugVelocityMultiplier * slowMultiplier);
-        public bool CanMove => _isEnabled && pilotTrans != null && rBody != null;
+        public bool CanMove => _isEnabled && pilotTrans != null && rBody != null && PhotonNetwork.IsMasterClient;
 
         #endregion
     }
