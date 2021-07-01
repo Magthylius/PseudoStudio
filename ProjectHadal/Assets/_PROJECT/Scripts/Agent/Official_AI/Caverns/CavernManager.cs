@@ -170,7 +170,6 @@ namespace Hadal.AI.Caverns
             if (debugAIEvents) print("AI left " + tunnel.name);
             AILeftTunnelEvent?.Invoke(tunnel);
         }
-        
 
         #endregion
 
@@ -490,6 +489,20 @@ namespace Hadal.AI.Caverns
                 }
 
             return isolatedPlayer;
+        }
+
+        #endregion
+
+        #region Cavern | Player enquiry
+
+        public CavernHandler GetCavernWithPlayerOfViewID(in int viewID)
+        {
+            for (int i = 0; i < handlerList.Count; i++)
+            {
+                if (handlerList[i].HasPlayerWithViewID(viewID))
+                    return handlerList[i];
+            }
+            return null;
         }
 
         #endregion
