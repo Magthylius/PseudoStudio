@@ -68,24 +68,6 @@ namespace Hadal.AI
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.SEND_PLAYER_DAMAGE, data, options, SendOptions.SendReliable);
         }
 
-        private void Receive_DamagePlayer(EventData eventData)
-        {
-            object[] data = eventData.CustomData.AsObjArray();
-            if (data == null) return;
-            int viewID = data[0].AsInt();
-            int damage = data[1].AsInt();
-
-            PlayerController player = Brain.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
-            if (player == null)
-            {
-                Brain.RefreshPlayerReferences();
-                player = Brain.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
-            }
-
-            if (player == null) { $"Cannot find player with view ID of {viewID}!".Msg(); return; }
-            player.GetComponentInChildren<IDamageable>().TakeDamage(damage);
-        }
-
         public int GetViewIDFromTransform(Transform trans)
             => trans.GetComponentInChildren<PlayerController>().GetInfo.PhotonInfo.PView.ViewID;
     }

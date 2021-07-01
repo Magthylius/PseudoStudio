@@ -423,10 +423,11 @@ namespace Hadal.Player.Behaviours
             {
                 bool shouldRevive = content[2].AsBool();
                 _shouldRevive = shouldRevive;
-                NetOnly_EvaluateRevive();
 
                 if (debugEnabled)
                     $"Received event from another player's computer, evaluating for local player. Should revive: {_shouldRevive}".Msg();
+				
+				NetOnly_EvaluateRevive();
             }
             else //! Evaluate on Non-local player
             {
