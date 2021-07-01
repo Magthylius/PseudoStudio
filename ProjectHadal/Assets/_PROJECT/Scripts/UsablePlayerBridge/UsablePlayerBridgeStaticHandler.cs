@@ -1,13 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hadal.UsablePlayerBridge;
 
 //! For resetting static classes
-public class UsablePlayerBridgeStaticHandler : MonoBehaviour
+namespace Hadal.UsablePlayerBridge
 {
-    void Start()
+    public class UsablePlayerBridgeStaticHandler : MonoBehaviour, IStaticResetter
     {
-        UITrackerBridge.Reset();
+        public void Start()
+        {
+            Reset();
+            GameManager.Instance.SceneLoadedEvent += Reset;
+        }
+        
+        public void Reset()
+        {
+            UITrackerBridge.Reset();
+        }
+
     }
-    
 }

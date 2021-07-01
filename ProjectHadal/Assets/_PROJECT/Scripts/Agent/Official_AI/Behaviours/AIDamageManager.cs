@@ -48,7 +48,7 @@ namespace Hadal.AI
 
         public UpdateMode LeviathanUpdateMode => UpdateMode.MainUpdate;
 
-        /// <summary> Damages the chosen player</summary>
+        /// <summary> Damages the chosen player over the network.</summary>
         /// <param name="player">Target player</param>
         /// <param name="type">The damage type</param>
         public void Send_DamagePlayer(Transform player, AIDamageType type)
@@ -66,24 +66,6 @@ namespace Hadal.AI
             object[] data = { targetViewID, damage };
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.SEND_PLAYER_DAMAGE, data, options, SendOptions.SendReliable);
-        }
-
-        private void Receive_DamagePlayer(EventData eventData)
-        {
-            object[] data = eventData.CustomData.AsObjArray();
-            if (data == null) return;
-            int viewID = data[0].AsInt();
-            int damage = data[1].AsInt();
-
-            PlayerController player = Brain.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
-            if (player == null)
-            {
-                Brain.RefreshPlayerReferences();
-                player = Brain.Players.Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID).FirstOrDefault();
-            }
-
-            if (player == null) { $"Cannot find player with view ID of {viewID}!".Msg(); return; }
-            player.GetComponentInChildren<IDamageable>().TakeDamage(damage);
         }
 
         public int GetViewIDFromTransform(Transform trans)

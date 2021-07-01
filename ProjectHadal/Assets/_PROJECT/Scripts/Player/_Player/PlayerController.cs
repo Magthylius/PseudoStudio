@@ -199,12 +199,51 @@ namespace Hadal.Player
             }
         }
 
-        private void StartGame(EventData obj)
+        public void StartGame(EventData obj)
         {
+            //! This is online called in online mode, this function is called on PlayerManager for host
             print("Everyone ready. Begin !");
+            
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
-            _manager.instantiatePViewList();
+            _manager.InstantiatePViewList();
+            TrackNamesOnline();
+        }
+
+        public void TrackNamesOnline()
+        {
+            PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
+
+            if (!NetworkEventManager.Instance.isOfflineMode)
+            {
+                //! Track player names online, offline tracking called from player manager
+                foreach (PlayerController controller in allPlayerControllers)
+                {
+                    //! ignore self
+                    if (controller == this) continue;
+                
+                    foreach (var dict in NetworkEventManager.Instance.AllPlayers)
+                    {
+                        if (controller._pView.Owner == dict.Value)
+                        {
+                            playerUI.TrackPlayerName(controller.transform, dict.Value.NickName);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void TrackNamesOffline()
+        {
+            PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
+            //! Track player names offline
+            foreach (PlayerController controller in allPlayerControllers)
+            {
+                //! ignore self
+                if (controller == this) continue;
+                
+                playerUI.TrackPlayerName(controller.transform, controller.gameObject.name);
+            }
         }
 
         private void PlayerReadyConfirmed(EventData obj)
@@ -238,7 +277,7 @@ namespace Hadal.Player
                 mover.ToggleEnablility(true);
             }
             
-            if (isMine)
+            if (!UITrackerBridge.LocalPlayerUIManager == isMine)
             {
                 //! Make sure player UI is inactive in prefab!
                 playerUI.gameObject.SetActive(true);
@@ -247,24 +286,9 @@ namespace Hadal.Player
                 playerUI.PauseMenuClosed += Enable;
 
                 UITrackerBridge.LocalPlayerUIManager = playerUI;
-                //StartCoroutine(CheckQueuedPlayerName());
-                
-                Debug.LogWarning("Initing UI, tracking queued players");
-                
-                //! Track all queued players
-                foreach (var tr in UITrackerBridge.OtherPlayerNames)
-                    playerUI.TrackPlayerName(tr.Key, tr.Value);
 
                 Activate();
                 cameraController.Activate();
-
-                
-                /*IEnumerator CheckQueuedPlayerName()
-                {
-                    while
-                }*/
-                
-                //print("Camera Activated");
             }
             else
             {
@@ -279,9 +303,6 @@ namespace Hadal.Player
                 }
                 catch { }
 
-                UITrackerBridge.AddPlayerTransform(transform, _pView.Owner != null ? _pView.Owner.NickName : gameObject.name);
-
-                //print(_pView.Owner.NickName);
             }
 
             Cursor.lockState = CursorLockMode.Locked;

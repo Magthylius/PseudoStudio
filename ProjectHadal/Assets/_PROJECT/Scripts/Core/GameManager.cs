@@ -2,6 +2,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using Photon.Pun;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 namespace Hadal
 {
@@ -22,19 +23,19 @@ namespace Hadal
 
         public event GameEvent GameStartedEvent;
         public event GameEvent GameEndedEvent;
+        public event GameEvent SceneLoadedEvent;
 
         void Awake()
         {
             if (Instance != null) Destroy(this);
             else Instance = this;
+
+            SceneManager.sceneLoaded += LoadSceneEvent;
         }
 
-        public void StartGameEvent()
-        {
-           //Debug.LogWarning("heyheybegin");
-            GameStartedEvent?.Invoke();
-        }
+        public void StartGameEvent() => GameStartedEvent?.Invoke();
         public void EndGameEvent() => GameEndedEvent?.Invoke();
+        void LoadSceneEvent(Scene scene, LoadSceneMode mode) => SceneLoadedEvent?.Invoke();
         
         public void ChangeGameState(GameState state) => currentGameState = state;
         public GameState CurrentGameState => currentGameState;

@@ -94,7 +94,6 @@ namespace Hadal.Player
                 if(playerList[i].GetPlayerReady())
                 {
                     allPlayerReady = true;
-                    continue;
                 }
                 else
                 {
@@ -106,10 +105,13 @@ namespace Hadal.Player
             if (allPlayerReady)
             {
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_ACTUAL_START, null, SendOptions.SendReliable);
-                // start the game for host here !!!
-                LoadingManager.Instance.StartEndLoad();
-                instantiatePViewList();
+                
+                //! Host start games here
+                /*LoadingManager.Instance.StartEndLoad();
+                InstantiatePViewList();
                 localPlayerController.Mover.ToggleEnablility(true);
+                localPlayerController.TrackNamesOnline();*/
+                localPlayerController.StartGame(null);
                 print("All player ready, sending event to notify all players.");
                 if (PhotonNetwork.IsMasterClient) OnAllPlayersReadyEvent?.Invoke();
             }
@@ -139,7 +141,6 @@ namespace Hadal.Player
         #region Player
         void SpawnPlayer(Photon.Realtime.Player player)
         {
-            //if (!player.IsMasterClient) return;
             if (IsOnNetwork) CreateNetworkController(player);
             else CreateLocalController(player);
         }
@@ -186,32 +187,17 @@ namespace Hadal.Player
             if (photonPlayer != neManager.LocalPlayer)
             {
                 controller.TransferOwnership(photonPlayer);
-                // print("Created False Camera player");
                 controller.HandlePhotonView(false);
             }
             else
             {
-                //print("Created True Camera player");
                 localPlayerController = controller;
                 controller.HandlePhotonView(true);
                 controller.SetPlayerReady(true);
             }
             // Host finish assignming ownerships and cameras
-
-
-
-            /*if (playerList.Count > 0)
-            {
-                foreach (PlayerController pControl in playerList)
-                {
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID + ", " + GetController(neManager.localPlayerController).ViewID);
-                    //print(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.localPlayerController).ViewID);
-                    pControl.HandlePhotonView(pControl.GetInfo.PhotonInfo.PView.ViewID == GetController(neManager.localPlayerController).ViewID);
-                }
-            }*/
-
+            
             AddPlayerEvent?.Invoke();
-            //Debug.Log("Added a player "); 
         }
 
         #endregion
@@ -253,9 +239,11 @@ namespace Hadal.Player
                     dummyControllers.SetDummyState(true);
                 }
             }
+            
+            controller.TrackNamesOffline();
         }
 
-        public void instantiatePViewList()
+        public void InstantiatePViewList()
         {
             print("instantiate PView Called");
             var playerControllers = FindObjectsOfType<PlayerController>();
