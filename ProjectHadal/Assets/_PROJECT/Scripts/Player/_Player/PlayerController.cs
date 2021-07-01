@@ -277,7 +277,7 @@ namespace Hadal.Player
                 mover.ToggleEnablility(true);
             }
             
-            if (!UITrackerBridge.LocalPlayerUIManager == isMine)
+            if (!UITrackerBridge.LocalPlayerUIManager && isMine)
             {
                 //! Make sure player UI is inactive in prefab!
                 playerUI.gameObject.SetActive(true);
