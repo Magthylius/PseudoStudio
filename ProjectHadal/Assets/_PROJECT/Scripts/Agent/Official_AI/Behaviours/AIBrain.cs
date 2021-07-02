@@ -357,6 +357,10 @@ namespace Hadal.AI
         /// <remarks>Used for networking</remarks>
         public void AttachCarriedPlayerToMouth(bool attachToMouth)
         {
+            if (MouthObject == null)
+            {
+                MouthObject = FindObjectOfType<AIGraphicsHandler>().MouthObject;
+            }
             Transform mouth = MouthObject.transform;
             if (CarriedPlayer == null)
             {
@@ -399,6 +403,11 @@ namespace Hadal.AI
         /// <remarks>Used as local event</remarks>
         public void DetachAnyCarriedPlayer()
         {
+            if (MouthObject == null)
+            {
+                MouthObject = FindObjectOfType<AIGraphicsHandler>().MouthObject;
+            }
+
             //! Make sure any player in mouth is released
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
             foreach (var player in controllers)

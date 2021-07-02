@@ -7,6 +7,7 @@ using Hadal.Utility;
 using Button = NaughtyAttributes.ButtonAttribute;
 using Photon.Pun;
 using System.Linq;
+using Hadal.AI.Graphics;
 
 namespace Hadal.AI
 {
@@ -96,7 +97,11 @@ namespace Hadal.AI
                 extraMsg = " ..., you sure you did not cheat???".Bold();
             
             $"Leviathan is unalive. Congrats!!!{extraMsg}".Msg();
-            brain.GraphicsHandler.gameObject.SetActive(false);
+            
+            AIGraphicsHandler gHandler = brain.GraphicsHandler;
+            if (gHandler == null) gHandler = FindObjectOfType<AIGraphicsHandler>();
+            gHandler.gameObject.SetActive(false);
+            
             brain.DetachAnyCarriedPlayer();
             Obj.SetActive(false);
             
