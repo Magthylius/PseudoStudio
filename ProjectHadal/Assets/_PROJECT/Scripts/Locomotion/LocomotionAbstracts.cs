@@ -20,7 +20,7 @@ namespace Hadal.Locomotion
             set
             {
                 _allowUpdate = value;
-                $"Allow update changed to {value}".Msg();
+                $"Allow update changed to {value}, for player name: {gameObject.transform.parent.gameObject.name}".Msg();
             }
         }
         public abstract float SqrSpeed { get; }
