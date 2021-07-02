@@ -14,11 +14,13 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private int _currentKillCount;
         private AIBrain _brain;
 
+        /// <summary> Call this to end game and signify players win. </summary>
         public void AILoseGame()
         {
             GameManager.Instance.EndGameEvent(true);
         }
 
+        /// <summary> Call this to end game and signify players lose. </summary>
         public void PlayersLoseGame()
         {
             GameManager.Instance.EndGameEvent(false);
@@ -32,6 +34,8 @@ namespace Hadal.AI
         {
             _brain = brain;
             _currentKillCount = 0;
+
+            //! Only setup listeners on master client
             if (PhotonNetwork.IsMasterClient)
                 PlayerManager.Instance.OnAllPlayersReadyEvent += SetupEventListeners;
         }
@@ -45,13 +49,15 @@ namespace Hadal.AI
 
             players.ForEach(p => p.GetInfo.HealthManager.OnDeath += IncreaseKillCounter);
         }
-
+        
+        /// <summary> Increase counter per player death. </summary>
         private void IncreaseKillCounter()
         {
             _currentKillCount++;
             EvaluatePlayerLoseGameEndState();
         }
 
+        /// <summary> If all players in current room die, then end the game + send event. </summary>
         private void EvaluatePlayerLoseGameEndState()
         {
             _brain.RefreshPlayerReferences();

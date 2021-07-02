@@ -415,7 +415,7 @@ namespace Hadal.UI
 
         public void PNTR_Disconnect()
         {
-            neManager.LeaveRoom(true);
+            neManager.LeaveRoom(true,true);
         }
         #endregion
 

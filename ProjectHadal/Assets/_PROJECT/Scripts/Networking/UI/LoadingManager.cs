@@ -397,7 +397,7 @@ namespace Hadal.Networking.UI.Loading
                 endsScreenHandler.Enable();
                 endsScreenHandler.UpdateEndData(playersWon, 600f);
                 
-                NetworkEventManager.Instance.LeaveRoom(true);
+                NetworkEventManager.Instance.LeaveRoom(false, true);
             }
         }
 
