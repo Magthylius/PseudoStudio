@@ -14,7 +14,7 @@ public static class UITrackerBridge
 
     public static void Reset()
     {
-        Debug.LogWarning("what?");
+        //Debug.LogWarning("what?");
         LocalPlayerUIManager = null;
         OtherPlayerNames = new Dictionary<Transform, string>();
         PlayerAddedEvent = null;
