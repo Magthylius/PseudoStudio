@@ -86,7 +86,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 3
-  endTime: 10
+  endTime: 60
   armsProjectile: 0
   skipsOnContact: 0
 --- !u!114 &4943504598434740513
@@ -184,8 +184,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: 
+  projectileID: 0
+  IsLocal: 0
+  IsAttached: 0
+  particleEffect: {fileID: 0}
+  projectileAsset: {fileID: 0}
+  impactVFXTime: 5
   validLayer:
-  - Wall
+  - Obstacle
   - Monster
 --- !u!1 &7553957830394924370
 GameObject:
