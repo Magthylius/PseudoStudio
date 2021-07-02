@@ -39,18 +39,28 @@ namespace Hadal
         {
             if (Instance != null) Destroy(this);
             else Instance = this;
+        }
 
+        private void OnEnable()
+        {
             SceneManager.sceneLoaded += LoadSceneEvent;
             SceneManager.sceneLoaded += HandleSceneLoad;
             GameEndedEvent += HandleGameEndedEvent;
         }
-        
+
         private void FixedUpdate()
         {
             if (enableLevelTimer)
             {
                 levelTimer += Time.fixedDeltaTime;
             }
+        }
+        
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= LoadSceneEvent;
+            SceneManager.sceneLoaded -= HandleSceneLoad;
+            GameEndedEvent -= HandleGameEndedEvent;
         }
 
         void HandleSceneLoad(Scene scene, LoadSceneMode mode)

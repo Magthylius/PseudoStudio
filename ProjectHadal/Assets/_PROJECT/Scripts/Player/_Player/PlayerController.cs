@@ -320,7 +320,7 @@ namespace Hadal.Player
                 playerUI.PauseMenuClosed += Enable;
 
                 UITrackerBridge.LocalPlayerUIManager = playerUI;
-                Debug.LogWarning(UITrackerBridge.LocalPlayerUIManager);
+                //Debug.LogWarning(UITrackerBridge.LocalPlayerUIManager);
 
                 Activate();
                 cameraController.Activate();
