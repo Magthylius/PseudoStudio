@@ -33,8 +33,6 @@ namespace Hadal.Networking.UI.EndScreen
         public void Disable()
         {
             gameObject.SetActive(false);
-            /*Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;*/
             StopCoroutine(UpdateTimeText());
             currentTime = 0f;
         }
@@ -44,10 +42,12 @@ namespace Hadal.Networking.UI.EndScreen
             gameObject.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
+ 
         }
 
         public void UpdateEndData(bool gameWon, float timeTaken)
         {
+          
             MissionSuccess = gameWon;
             TimeTaken = timeTaken;
 
@@ -68,11 +68,13 @@ namespace Hadal.Networking.UI.EndScreen
 
         IEnumerator UpdateTimeText()
         {
-            while (TimeTaken - currentTime > 1f)
+            
+            while (TimeTaken - currentTime > 10f)
             {
                 currentTime += 1f;
                 TimeSpan timeSpan = TimeSpan.FromSeconds(currentTime);
                 timeTakenTMP.text = $"{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+                yield return null;
             }
 
             currentTime = TimeTaken;
