@@ -38,7 +38,7 @@ namespace Hadal.Player.Behaviours
 
         internal void CollisionExit(Collision collision)
         {
-            _playerController.GetInfo.Mover.Speed.Max = 75;
+            
         }
 
         internal void TriggerEnter(Collider collider) { }
