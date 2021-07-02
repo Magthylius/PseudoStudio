@@ -36,6 +36,7 @@ namespace Hadal.AI
         [SerializeField] private AISightDetection sightDetection;
         [SerializeField] private AITailManager tailManager;
         [SerializeField] private AIDamageManager damageManager;
+        [SerializeField] private AIGameHandler gameHandler;
         [SerializeField] private AIGraphicsHandler graphicsHandler;
         [SerializeField] private CavernManager cavernManager;
         NetworkEventManager neManager;
@@ -45,6 +46,7 @@ namespace Hadal.AI
         public AISightDetection SightDetection => sightDetection;
         public AITailManager TailManager => tailManager;
         public AIDamageManager DamageManager => damageManager;
+        public AIGameHandler GameHandler => gameHandler;
         public AIGraphicsHandler GraphicsHandler => graphicsHandler;
         public CavernManager CavernManager => cavernManager;
 

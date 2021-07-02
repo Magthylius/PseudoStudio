@@ -23,6 +23,7 @@ namespace Hadal
 
         public event GameEvent GameStartedEvent;
         public event GameEvent GameEndedEvent;
+        public event GameEvent GameEndedWithLossEvent;
         public event GameEvent SceneLoadedEvent;
 
         void Awake()
@@ -35,6 +36,7 @@ namespace Hadal
 
         public void StartGameEvent() => GameStartedEvent?.Invoke();
         public void EndGameEvent() => GameEndedEvent?.Invoke();
+        public void EndGameWithLossEvent() => GameEndedWithLossEvent?.Invoke();
         void LoadSceneEvent(Scene scene, LoadSceneMode mode) => SceneLoadedEvent?.Invoke();
         
         public void ChangeGameState(GameState state) => currentGameState = state;
