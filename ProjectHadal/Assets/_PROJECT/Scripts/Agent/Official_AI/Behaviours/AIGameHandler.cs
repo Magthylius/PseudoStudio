@@ -12,6 +12,16 @@ namespace Hadal.AI
         private AIBrain _brain;
         private List<PlayerController> _players;
 
+        public void AILoseGame()
+        {
+            GameManager.Instance.EndGameEvent(true);
+        }
+
+        public void PlayersLoseGame()
+        {
+            GameManager.Instance.EndGameEvent(false);
+        }
+
         public void DoLateUpdate(in float deltaTime) { }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime) { }
