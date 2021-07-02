@@ -11,7 +11,7 @@ namespace Hadal.Usables.Projectiles
 
         public SelfDeactivationMode selfDeactivation;
 
-        private float radius = 10;
+        [SerializeField] private float radius = 20;
         private Collider[] detectedObjects;
 
         //mode swapping
@@ -22,6 +22,12 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
+        }
+
+        private void OnDrawGizmosSelected() // draw circle radius for debug
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawSphere(transform.position, radius);
         }
 
         public void SubscribeModeEvent()
