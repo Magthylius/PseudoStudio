@@ -97,7 +97,7 @@ namespace Hadal.Networking.UI.Loading
             neManager.AddListener(ByteEvents.GAME_START_LOAD, NetworkedLoad);
             ResetLoadingElements();
 
-            if (loadingMode == LoadMode.Load_After_Event) allowLoadingCompletion = false;
+            
             LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
         }
 
@@ -200,23 +200,16 @@ namespace Hadal.Networking.UI.Loading
         void ActivateLoadingElements()
         {
             loadingCGF.SetOpaque();
-            //hiveParentAnimator.gameObject.SetActive(true);
             background.gameObject.SetActive(true);
-            //hiveSpinnerAnimator.gameObject.SetActive(true);
 
             GetCG(hiveParentAnimator.gameObject).alpha = 1f;
             GetCG(hiveSpinnerAnimator.gameObject).alpha = 1f;
 
-            //hiveParentAnimator.enabled = true;
-            //hiveSpinnerAnimator.enabled = true;
         }
         void ResetLoadingElements()
         {
             GetCG(hiveParentAnimator.gameObject).alpha = 0f;
             GetCG(hiveSpinnerAnimator.gameObject).alpha = 0f;
-            //hiveParentAnimator.enabled = false;
-            //hiveSpinnerAnimator.enabled = false;
-            //hiveParentAnimator.gameObject.SetActive(false);
 
             //StopHiveSpinner();
             hiveSpinnerAnimator.SetBool("LoadingReady", false);
@@ -233,6 +226,8 @@ namespace Hadal.Networking.UI.Loading
             allowLoading = false;
             allowContinue = false;
             networkedLoad = false;
+            
+            if (loadingMode == LoadMode.Load_After_Event) allowLoadingCompletion = false;
         }
 
         public void StartEndLoad()
@@ -243,12 +238,9 @@ namespace Hadal.Networking.UI.Loading
         IEnumerator EndLoading()
         {
             yield return new WaitForSeconds(fadeOutDelay);
-
-            //StopHiveSpinner();
+            
             connectionAnimator.SetTrigger("LoadingReady");
             hiveSpinnerAnimator.SetBool("LoadingReady", true);
-
-            //yield return null;
 
             background.gameObject.SetActive(false);
             //hiveSpinnerAnimator.gameObject.SetActive(false);

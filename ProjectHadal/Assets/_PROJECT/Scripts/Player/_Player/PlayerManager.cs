@@ -1,7 +1,6 @@
 ﻿using ExitGames.Client.Photon;
 using Hadal.Legacy;
 using Hadal.Networking;
-using Hadal.Networking.UI.Loading;
 using Photon.Pun;
 using System.Collections.Generic;
 using System.IO;
