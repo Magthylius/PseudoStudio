@@ -13,7 +13,7 @@ namespace Hadal.Locomotion
         public VelocityInfo Velocity;
         protected Transform target;
         protected float _currentForwardSpeed, _currentStrafeSpeed, _currentHoverSpeed;
-        private bool _allowUpdate = true;
+        private bool _allowUpdate = false;
         protected bool allowUpdate
         {
             get => _allowUpdate;
