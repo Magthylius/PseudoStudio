@@ -21,6 +21,7 @@ namespace Hadal.Networking
         PLAYER_ALL_UNALIVE,
         GAME_START_LOAD,
         GAME_ACTUAL_START,
+        GAME_HOST_FORCEDKICK,
         PLAYER_UTILITIES_LAUNCH,
         PLAYER_TORPEDO_LAUNCH,
         PROJECTILE_DESPAWN,
@@ -47,6 +48,7 @@ namespace Hadal.Networking
         [Header("Network Settings")]
         public bool isOfflineMode;
         public Transform localPlayerSpawnTrans;
+        public bool hostKicksAllOnLeave = true;
 
         [Header("Scene References")]
         [Scene] public string MainMenuScene;
@@ -76,9 +78,8 @@ namespace Hadal.Networking
             }
 
             SetupNetworking();
-            //print("awake");
-
             playerObjects = new List<GameObject>();
+            if (hostKicksAllOnLeave) AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ForcedLeaveRoom);
             
             //! Force disconnect because PhotonNetwork does not disconnect after offline mode
             if (IsConnected && !isOfflineMode) Disconnect();
@@ -92,7 +93,6 @@ namespace Hadal.Networking
             if (isOfflineMode && SceneManager.GetActiveScene().name == InGameScene)
             {
                 GameManager.Instance.StartGameEvent();
-                
             }
         }
 
@@ -299,14 +299,20 @@ namespace Hadal.Networking
         public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
         public void LeaveRoom(bool returnsToMainMenu = false)
         {
-            PhotonNetwork.LeaveRoom();
-
+            
             if (returnsToMainMenu)
             {
                 if (LeftRoomEvent != null) LeftRoomEvent.Invoke();
                 //LoadLevel(MainMenuScene);
                 loadsToMainMenu = true;
             }
+
+            if (hostKicksAllOnLeave && IsMasterClient)
+            {
+                RaiseEvent(ByteEvents.GAME_HOST_FORCEDKICK, null);
+            }
+            
+            PhotonNetwork.LeaveRoom();
         }
         public void LoadLevel(int index) => PhotonNetwork.LoadLevel(index);
         public void LoadLevel(string levelName) => PhotonNetwork.LoadLevel(levelName);
@@ -562,6 +568,15 @@ namespace Hadal.Networking
         public bool InRoom => PhotonNetwork.InRoom;
         public bool IsMasterClient => PhotonNetwork.IsMasterClient;
         public PeerStateValue PeerState => PhotonNetwork.NetworkingClient.LoadBalancingPeer.PeerState;
+        #endregion
+
+        #region Connection Listeners
+
+        public void ForcedLeaveRoom(EventData data)
+        {
+            LeaveRoom(true);
+        }
+
         #endregion
     }
 }

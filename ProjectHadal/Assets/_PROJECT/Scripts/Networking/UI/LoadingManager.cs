@@ -378,8 +378,6 @@ namespace Hadal.Networking.UI.Loading
         }
         void StopConnectionParent()
         {
-            //connectionAnimator.Play(0, 0, 0);
-            //connectionAnimator.speed = 0f;
             connectionAnimator.enabled = false;
         }
         #endregion
