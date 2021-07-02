@@ -9,6 +9,7 @@ using Hadal.PostProcess;
 using Hadal.PostProcess.Settings;
 using UnityEngine.Rendering.Universal;
 using ExitGames.Client.Photon;
+using Hadal.Networking.UI.EndScreen;
 
 namespace Hadal.Networking.UI.Loading
 {
@@ -56,6 +57,9 @@ namespace Hadal.Networking.UI.Loading
         int objectPoolersCompleted;
         bool objectPoolersCheckedIn;
 
+        [Header("End screen")] 
+        [SerializeField] private EndScreenHandler endsScreenHandler;
+
         [Header("Post processing effects")]
         [SerializeField] float postProcessEffectSpeed = 2f;
 
@@ -96,9 +100,9 @@ namespace Hadal.Networking.UI.Loading
 
             neManager.AddListener(ByteEvents.GAME_START_LOAD, NetworkedLoad);
             ResetLoadingElements();
-
             
             LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
+            GameManager.Instance.GameEndedEvent += StartEndScreenAndReturn;
         }
 
         void FixedUpdate()
@@ -234,7 +238,6 @@ namespace Hadal.Networking.UI.Loading
         {
             StartCoroutine(EndLoading());
         }
-
         IEnumerator EndLoading()
         {
             yield return new WaitForSeconds(fadeOutDelay);
@@ -378,6 +381,26 @@ namespace Hadal.Networking.UI.Loading
             //connectionAnimator.speed = 0f;
             connectionAnimator.enabled = false;
         }
+        #endregion
+
+        #region EndScreen
+
+        void StartEndScreenAndReturn(bool playersWon)
+        {
+            Debug.LogWarning("Game ended!");
+            StartCoroutine(TriggerEndScreen());
+
+            IEnumerator TriggerEndScreen()
+            {
+                yield return new WaitForSeconds(5f);
+                //LoadLevel();
+                endsScreenHandler.UpdateEndData(playersWon, 9999f);
+                endsScreenHandler.Enable();
+                
+                NetworkEventManager.Instance.LeaveRoom(true);
+            }
+        }
+
         #endregion
 
         #region Accessors
