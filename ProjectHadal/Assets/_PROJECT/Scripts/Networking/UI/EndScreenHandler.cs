@@ -21,8 +21,9 @@ namespace Hadal.Networking.UI.EndScreen
         [SerializeField] private Color failureColor;
         
         [Header("Data")] 
-        [ReadOnly] public bool MissionSuccess = false;
-        [ReadOnly] public float TimeTaken = 0f;
+        [ReadOnly, SerializeField] bool MissionSuccess = false;
+        [ReadOnly, SerializeField] float TimeTaken = 0f;
+        private float currentTime = 0f;
         
         void Start()
         {
@@ -32,11 +33,17 @@ namespace Hadal.Networking.UI.EndScreen
         public void Disable()
         {
             gameObject.SetActive(false);
+            /*Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;*/
+            StopCoroutine(UpdateTimeText());
+            currentTime = 0f;
         }
 
         public void Enable()
         {
             gameObject.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
         }
 
         public void UpdateEndData(bool gameWon, float timeTaken)
@@ -47,14 +54,31 @@ namespace Hadal.Networking.UI.EndScreen
             string outcomeText = missionOutcomeText;
 
             if (MissionSuccess)
-                outcomeText += " <color=" + successColor.ToString() + "> " + successOutcomeText;
+                outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(successColor) + "> " + successOutcomeText;
             else
-                outcomeText += " <color=" + failureColor.ToString() + "> " + failureOutcomeText;
+                outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(failureColor) + "> " + failureOutcomeText;
 
             TimeSpan timeSpan = TimeSpan.FromSeconds(TimeTaken);
             missionOutcomeTMP.text = outcomeText;
             //timeTakenTMP.text = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
             timeTakenTMP.text = $"{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+
+            StartCoroutine(UpdateTimeText());
+        }
+
+        IEnumerator UpdateTimeText()
+        {
+            while (TimeTaken - currentTime > 1f)
+            {
+                currentTime += 1f;
+                TimeSpan timeSpan = TimeSpan.FromSeconds(currentTime);
+                timeTakenTMP.text = $"{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+                yield return null;
+            }
+
+            currentTime = TimeTaken;
+            TimeSpan timeSpan2 = TimeSpan.FromSeconds(currentTime);
+            timeTakenTMP.text = $"{timeSpan2.Hours:D2}:{timeSpan2.Minutes:D2}:{timeSpan2.Seconds:D2}";
         }
     }
 }

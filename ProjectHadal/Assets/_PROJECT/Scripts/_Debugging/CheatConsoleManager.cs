@@ -1,14 +1,12 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Hadal.AI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Hadal.Player;
 using Hadal.Networking;
-using Hadal.UI;
 using Hadal.Usables;
+using UnityEngine.SceneManagement;
+
 
 namespace Hadal.Debugging
 {
@@ -323,7 +321,10 @@ namespace Hadal.Debugging
 
         void CloseConsole()
         {
-            Cursor.visible = false;
+            //! Dont disable if in MainMenu
+            if (SceneManager.GetActiveScene().name != NetworkEventManager.Instance.MainMenuScene)
+                Cursor.visible = false;
+            
             //Cursor.lockState = CursorLockMode.Locked;
 
             if (ResolvePlayerController()) localPlayerController.UI.PNTR_Resume();

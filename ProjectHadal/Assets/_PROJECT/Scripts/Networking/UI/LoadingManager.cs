@@ -28,6 +28,7 @@ namespace Hadal.Networking.UI.Loading
 
         [Header("Base settings")]
         [SerializeField] GameObject background;
+        [SerializeField] GameObject loadingMenuParent;
         [SerializeField] LoadMode loadingMode = LoadMode.Load_After_Delay;
         [SerializeField] float fadeOutDelay = 5f;
 
@@ -90,9 +91,9 @@ namespace Hadal.Networking.UI.Loading
             ppManager = PostProcessingManager.Instance;
             ResetPostProcessing();
 
-            transform.GetChild(0).gameObject.SetActive(true);
+            loadingMenuParent.SetActive(true);
 
-            loadingCG = GetComponent<CanvasGroup>();
+            loadingCG = loadingMenuParent.GetComponent<CanvasGroup>();
             loadingCGF = new CanvasGroupFader(loadingCG, true, true);
 
             continueCGF = new CanvasGroupFader(continueCG, true, false);
@@ -393,9 +394,10 @@ namespace Hadal.Networking.UI.Loading
             IEnumerator TriggerEndScreen()
             {
                 yield return new WaitForSeconds(5f);
-                //LoadLevel();
-                endsScreenHandler.UpdateEndData(playersWon, 9999f);
+                
+                //! Enable first before update!
                 endsScreenHandler.Enable();
+                endsScreenHandler.UpdateEndData(playersWon, 600f);
                 
                 NetworkEventManager.Instance.LeaveRoom(true);
             }
