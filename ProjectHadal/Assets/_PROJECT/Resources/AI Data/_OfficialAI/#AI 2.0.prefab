@@ -1,5 +1,48 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1312510409462500907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8001679023775102921}
+  - component: {fileID: 5734814273914985085}
+  m_Layer: 0
+  m_Name: Game Handler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8001679023775102921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312510409462500907}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2206939684412345072}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5734814273914985085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312510409462500907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ede73851d76c14b9d39c052118036f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1793168799261823607
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,6 +87,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2905221276de933438305f363fdb07c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugEnabled: 0
   allowSwitchTarget: 0
   overlapSphereDetectionRadius: 100
   detectionOffset: {x: 0, y: 0, z: 0}
@@ -99,6 +143,7 @@ Transform:
   - {fileID: 2206939684562575359}
   - {fileID: 1692377485682228084}
   - {fileID: 1099430620692770243}
+  - {fileID: 8001679023775102921}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -115,6 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnabled: 1
+  onMasterClient: 0
   targetMoveCavern: {fileID: 0}
   nextMoveCavern: {fileID: 0}
   healthManager: {fileID: 2206939684562575358}
@@ -123,6 +169,7 @@ MonoBehaviour:
   sightDetection: {fileID: 9221971048963321059}
   tailManager: {fileID: 6414438567741730858}
   damageManager: {fileID: 2206939684562575357}
+  gameHandler: {fileID: 5734814273914985085}
   graphicsHandler: {fileID: 0}
   cavernManager: {fileID: 0}
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
