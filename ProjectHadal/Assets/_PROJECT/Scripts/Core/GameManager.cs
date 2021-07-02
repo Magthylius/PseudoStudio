@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 namespace Hadal
 {
-    public delegate void GameEvent();
-    
+    public delegate void GameEvent(bool booleanData);
+
     public class GameManager : MonoBehaviour
     {
         public enum GameState
@@ -32,10 +32,15 @@ namespace Hadal
 
             SceneManager.sceneLoaded += LoadSceneEvent;
         }
+        
+        void StartEndScreenAndReturn()
+        {
+            Debug.LogWarning("Game ended!");
+        }
 
-        public void StartGameEvent() => GameStartedEvent?.Invoke();
-        public void EndGameEvent() => GameEndedEvent?.Invoke();
-        void LoadSceneEvent(Scene scene, LoadSceneMode mode) => SceneLoadedEvent?.Invoke();
+        public void StartGameEvent() => GameStartedEvent?.Invoke(false);
+        public void EndGameEvent(bool playersWon) => GameEndedEvent?.Invoke(playersWon);
+        void LoadSceneEvent(Scene scene, LoadSceneMode mode) => SceneLoadedEvent?.Invoke(false);
         
         public void ChangeGameState(GameState state) => currentGameState = state;
         public GameState CurrentGameState => currentGameState;

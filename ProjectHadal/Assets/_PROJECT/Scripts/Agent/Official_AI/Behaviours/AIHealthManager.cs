@@ -92,7 +92,7 @@ namespace Hadal.AI
             Obj.SetActive(false);
             
             //! End the game
-            GameManager.Instance.EndGameEvent();
+            GameManager.Instance.EndGameEvent(true);
         }
         
         public GameObject Obj => transform.parent.gameObject;

@@ -54,7 +54,7 @@ namespace Hadal.AI.States
         {
         }
 
-        void StartSwitchObjective()
+        void StartSwitchObjective(bool booleanData)
         {
             Brain.StartCoroutine(SwitchObjective(BrainState.Anticipation));
         }

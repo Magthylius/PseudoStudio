@@ -19,13 +19,13 @@ namespace Hadal
             GameManager.Instance.GameEndedEvent += StopTimer;
         }
 
-        void StartTimer()
+        void StartTimer(bool booleanData)
         {
             allowTimerTick = true;
             StartCoroutine(TimerNumeration());
         }
 
-        void StopTimer()
+        void StopTimer(bool booleanData)
         {
             allowTimerTick = false;
             StopCoroutine(TimerNumeration());
