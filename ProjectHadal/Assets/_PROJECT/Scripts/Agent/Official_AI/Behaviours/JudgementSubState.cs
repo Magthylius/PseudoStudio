@@ -257,6 +257,8 @@ namespace Hadal.AI.States
             //nextTick = Time.time + DelayInterval;
             tickTimer = 10;
             DelayInterval = 30;
+            
+            Brain.TriggerJudgementStateEvent(true);
         }
 
         public override void StateTick()
@@ -296,6 +298,7 @@ namespace Hadal.AI.States
                 Brain.NavigationHandler.StopCustomPath(false);
             }*/
             Brain.NavigationHandler.StopCustomPath(false);
+            Brain.TriggerJudgementStateEvent(false);
         }
         public override Func<bool> ShouldTerminate() => () => false;
 
