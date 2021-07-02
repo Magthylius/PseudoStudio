@@ -420,6 +420,10 @@ namespace Hadal.Networking.UI.Loading
                 
             //! Enable first before update!
             endsScreenHandler.Enable();
+
+            //! have to wait for it to enable
+            yield return null;
+
             endsScreenHandler.UpdateEndData(playersWon, timeTaken);
                 
             NetworkEventManager.Instance.LeaveRoom(false, true);

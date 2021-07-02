@@ -22,8 +22,8 @@ namespace Hadal
         public static GameManager Instance;
 
         [Header("Settings")] 
-        [Scene] private string MainMenuScene;
-        [Scene] private string InGameScene;
+        [Scene] public string MainMenuScene;
+        [Scene] public string InGameScene;
         
         [Header("Data")]
         [ReadOnly] GameState currentGameState;
@@ -49,7 +49,10 @@ namespace Hadal
         private void FixedUpdate()
         {
             if (enableLevelTimer)
+            {
                 levelTimer += Time.fixedDeltaTime;
+                Debug.LogWarning(levelTimer);
+            }
         }
 
         void HandleSceneLoad(Scene scene, LoadSceneMode mode)
