@@ -22,6 +22,8 @@ namespace Hadal.Usables.Projectiles
         [Header("Visual Effect")]
         [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private GameObject explodeEffect;
+        [ColorUsageAttribute(true, true)]
+        [SerializeField] private Color activateColor;
         private Timer explodeDuration;
         private bool isExploding;
 
@@ -35,7 +37,6 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            meshRenderer = GetComponent<MeshRenderer>();
             explodeDuration = new Timer(1f);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
@@ -137,7 +138,7 @@ namespace Hadal.Usables.Projectiles
 
         private void ModeOn()
         {
-            meshRenderer.material.color = Color.red;
+            meshRenderer.material.SetColor("_EmissiveColor", activateColor);
             isSet = true;
         }
     }
