@@ -321,7 +321,7 @@ MonoBehaviour:
   impactVFXTime: 5
   stunTime: 1
   selfDeactivation: {fileID: 0}
-  radius: 20
+  radius: 15
   impulseMode: {fileID: 0}
   isHighHz: 0
   explodeEffect: {fileID: 1382363811699004463}
@@ -354,7 +354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7465129731039626558, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7465129731039626559, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: speed
@@ -370,15 +370,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalPosition.x
