@@ -63,6 +63,8 @@ namespace Hadal.Interactables
                 explosion2.SetPropertyBlock(materialProp2);
                 yield return null;
             }
+            materialProp2.SetFloat("_Alpha", 0.0f);
+            explosion2.SetPropertyBlock(materialProp2);
         }
 
         IEnumerator ExplosionActivate3()
