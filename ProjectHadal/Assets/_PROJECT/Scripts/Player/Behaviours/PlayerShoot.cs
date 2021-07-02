@@ -193,9 +193,35 @@ namespace Hadal.Player.Behaviours
             }
 
         }
-        
-        private UsableHandlerInfo CreateInfoForTorpedo(int projectileID) => new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint,0f, aimParentRb.velocity, Vector3.zero);
-        private UsableHandlerInfo CreateInfoForUtility(int projectileID, float chargedTime) => new UsableHandlerInfo().WithTransformForceInfo(projectileID, utilityFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero);
+
+        private UsableHandlerInfo CreateInfoForTorpedo(int projectileID)
+        {
+            if (aimParentRb)
+            {
+                Debug.LogWarning("Rigidbody torpedo found");
+                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint, 0f, aimParentRb.velocity, Vector3.zero);
+            }
+            else
+            {
+                Debug.LogWarning("Rigidbody torpedo not found");
+                return null;
+            }
+
+            return null;
+        }
+        private UsableHandlerInfo CreateInfoForUtility(int projectileID, float chargedTime)
+        {
+            if(aimParentRb)
+            {
+                Debug.LogWarning("Rigidbody utility found");
+                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, utilityFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero);
+            }
+            else
+            {
+                Debug.LogWarning("Rigidbody utility not found");
+                return null;
+            }
+        }
 
         #endregion
 
