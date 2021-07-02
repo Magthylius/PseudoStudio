@@ -546,6 +546,7 @@ namespace Hadal.Networking
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
         public Player LocalPlayer => PhotonNetwork.LocalPlayer;
         public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;
+        public int PlayerCount => AllPlayers.Count;
         public List<GameObject> PlayerObjects => playerObjects;
         public bool IsConnected => PhotonNetwork.IsConnected;
         public bool InLobby => PhotonNetwork.InLobby;
