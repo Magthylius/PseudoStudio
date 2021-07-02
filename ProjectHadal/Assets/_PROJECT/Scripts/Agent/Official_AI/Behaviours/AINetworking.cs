@@ -66,9 +66,9 @@ namespace Hadal.AI
         
         void RE_AttachCarriedPlayerToMouth(EventData eventData)
         {
-            int data = (int)eventData.CustomData;
+            int targetViewID = (int)eventData.CustomData;
             
-            PlayerController targetPlayer = NetworkData.GetPlayerController(data);
+            PlayerController targetPlayer = NetworkData.GetPlayerController(targetViewID);
             if (targetPlayer != null)
             {
                 brain.CarriedPlayer = targetPlayer;
