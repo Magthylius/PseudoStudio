@@ -22,7 +22,8 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            impactVFXTime = particleEffect.GetComponent<VisualEffect>().GetFloat("Explosion Lifetime");
+            //impactVFXTime = particleEffect.GetComponent<VisualEffect>().GetFloat("Explosion Lifetime");
+            impactVFXTime = 4f;
             impactDuration = new Timer(impactVFXTime);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
         }
