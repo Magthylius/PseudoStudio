@@ -40,9 +40,17 @@ namespace Hadal.AI.Caverns
         
         IEnumerator ColliderRecheck()
         {
-            GetComponent<Collider>().enabled = false;
+            var colliders = GetComponents<Collider>();
+            int i = -1;
+            while (++i < colliders.Length)
+                colliders[i].isTrigger = false;
+            
             yield return null;
-            GetComponent<Collider>().enabled = true;
+            
+            i = -1;
+            while (++i < colliders.Length)
+                colliders[i].isTrigger = true;
+            
             parentCavern.SetCavernInitialize(true);
         }
     }
