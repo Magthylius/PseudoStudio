@@ -33,9 +33,10 @@ namespace Hadal.AI
             DetectedPlayersCount = 0;
 
             _brain.RefreshPlayerReferences();
-            PlayerController host = _brain.Players.Where(p => p.HasLureLauncher).Single();
+            PlayerController host = _brain.Players.Where(p => p.HasLureLauncher).SingleOrDefault();
             if (debugEnabled)
                 $"Host is not null: {host != null}".Msg();
+            if (host == null) return;
             host.OnLureHasActivated += HostActivatedLure;
         }
 
