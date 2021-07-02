@@ -29,8 +29,16 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            explodeDuration = new Timer(1f);
+            explodeDuration = new Timer(5f);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
+        }
+
+        private void Update()
+        {
+            if (isExploding)
+            {
+                explodeDuration.Tick(Time.deltaTime);
+            }
         }
 
         private void OnDrawGizmosSelected() // draw circle radius for debug
@@ -104,12 +112,14 @@ namespace Hadal.Usables.Projectiles
 
         private void StartExplosionEffect()
         {
+            print("i explode");
             isExploding = true;
             explodeEffect.SetActive(true);
         }
 
         private void StopExplosion()
         {
+            print("i stop explode");
             isExploding = false;
             explodeEffect.SetActive(false);
             UnSubcribeModeEvent();
