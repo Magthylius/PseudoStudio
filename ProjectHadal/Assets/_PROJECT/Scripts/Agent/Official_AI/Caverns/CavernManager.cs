@@ -145,7 +145,7 @@ namespace Hadal.AI.Caverns
                 GetHandlerOfAILocation = null;
 
             AILeftCavernEvent?.Invoke(handler);
-            Debug.Break();
+            // Debug.Break();
         }
 
         public void OnPlayerEnterTunnel(TunnelPlayerData data)
