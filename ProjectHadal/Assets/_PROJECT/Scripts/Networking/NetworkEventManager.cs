@@ -22,6 +22,7 @@ namespace Hadal.Networking
         GAME_START_LOAD,
         GAME_ACTUAL_START,
         GAME_HOST_FORCEDKICK,
+        GAME_CLIENT_FORCEDKICKCALLBACK,
         PLAYER_UTILITIES_LAUNCH,
         PLAYER_TORPEDO_LAUNCH,
         PROJECTILE_DESPAWN,
@@ -101,7 +102,13 @@ namespace Hadal.Networking
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
             SceneManager.sceneLoaded += OnSceneLoaded;
             SetupEventRaising();
-            if (hostKicksAllOnLeave) AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ForcedLeaveRoom);
+            if (hostKicksAllOnLeave)
+            {
+                if (IsMasterClient)
+                    AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ClientForcedLeaveRoom);
+                else 
+                    AddListener(ByteEvents.GAME_CLIENT_FORCEDKICKCALLBACK, HostForcedLeaveRoomCallback);
+            }
         }
 
         public override void OnDisable()
@@ -216,7 +223,6 @@ namespace Hadal.Networking
                 if (receiverDict[eventCode] != null)
                 {
                     receiverDict[eventCode] -= action;
-                    //receiverDict.Remove(eventCode);
                     return;
                 }
             }
@@ -265,9 +271,6 @@ namespace Hadal.Networking
 
         void SetupNetworking()
         {
-            //if (!PhotonNetwork.IsConnected)
-                //PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
-
             if (isOfflineMode)
                 PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, isOfflineMode);
 
@@ -310,9 +313,13 @@ namespace Hadal.Networking
             if (hostKicksAllOnLeave && IsMasterClient)
             {
                 RaiseEvent(ByteEvents.GAME_HOST_FORCEDKICK, null);
+                connectedNumCounter = PlayerCount - 1;
             }
-            
-            PhotonNetwork.LeaveRoom();
+            else
+            {
+                PhotonNetwork.LeaveRoom();
+            }
+   
         }
         public void LoadLevel(int index) => PhotonNetwork.LoadLevel(index);
         public void LoadLevel(string levelName) => PhotonNetwork.LoadLevel(levelName);
@@ -571,12 +578,27 @@ namespace Hadal.Networking
         #endregion
 
         #region Connection Listeners
-
-        public void ForcedLeaveRoom(EventData data)
+        private int connectedNumToKick = 0;
+        private int connectedNumCounter = 0;
+        
+        public void ClientForcedLeaveRoom(EventData data)
         {
             LeaveRoom(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
+            RaiseEvent(ByteEvents.GAME_CLIENT_FORCEDKICKCALLBACK, LocalPlayer);
         }
 
+        public void HostForcedLeaveRoomCallback(EventData data)
+        {
+            connectedNumCounter++;
+            if (connectedNumCounter >= connectedNumToKick)
+            {
+                LeaveRoom(true);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+        }
         #endregion
     }
 }
