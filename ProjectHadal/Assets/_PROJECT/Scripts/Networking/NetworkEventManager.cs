@@ -307,7 +307,6 @@ namespace Hadal.Networking
             if (returnsToMainMenu)
             {
                 if (LeftRoomEvent != null) LeftRoomEvent.Invoke();
-                //LoadLevel(MainMenuScene);
                 loadsToMainMenu = true;
             }
 
@@ -319,6 +318,12 @@ namespace Hadal.Networking
                     RaiseEvent(ByteEvents.GAME_HOST_FORCEDKICK, null);
                     connectedNumCounter = PlayerCount - 1;
                     Debug.LogWarning("Telling all players to leave, expected call backs: " + connectedNumCounter);
+
+                    if (connectedNumCounter <= 0)
+                    {
+                        Debug.LogWarning("No players in room, disconnecting immediately.");
+                        PhotonNetwork.LeaveRoom();
+                    }
                 }
                 else
                 {
