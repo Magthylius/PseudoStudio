@@ -310,7 +310,7 @@ namespace Hadal.Networking
                 loadsToMainMenu = true;
             }
 
-            if (voluntary)
+            if (voluntary && !isOfflineMode)
             {
                 if (IsInMainMenu) PhotonNetwork.LeaveRoom();
                 else if (hostKicksAllOnLeave && IsMasterClient)
