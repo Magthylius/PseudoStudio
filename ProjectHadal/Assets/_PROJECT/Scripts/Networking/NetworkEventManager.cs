@@ -215,7 +215,7 @@ namespace Hadal.Networking
                 if (receiverDict[eventCode] != null)
                 {
                     receiverDict[eventCode] -= action;
-                    receiverDict.Remove(eventCode);
+                    //receiverDict.Remove(eventCode);
                     return;
                 }
             }
@@ -224,7 +224,7 @@ namespace Hadal.Networking
         }
 
         /// <summary>
-        /// Removes every listener attached for events. This is destructive. Fuck you Jin.
+        /// Removes every listener attached for events. This is destructive.
         /// </summary>
         public void RemoveAllListeners()
         {
