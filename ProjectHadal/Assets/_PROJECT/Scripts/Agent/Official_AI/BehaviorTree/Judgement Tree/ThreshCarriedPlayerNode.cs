@@ -70,8 +70,11 @@ namespace Hadal.AI.TreeNodes
             }
             else
             {
-                timer = 0f;
-                _threshDone = true;
+                if (_timerRunning)
+                {
+                    timer = 0f;
+                    _threshDone = true;
+                }
             }
         }
 
@@ -106,7 +109,7 @@ namespace Hadal.AI.TreeNodes
         {
             if (_brain.CarriedPlayer == null)
                 return false;
-            
+
             _brain.CarriedPlayer.SetIsCarried(false);
             _brain.AttachCarriedPlayerToMouth(false);
             _brain.NavigationHandler.StopCustomPath(true);

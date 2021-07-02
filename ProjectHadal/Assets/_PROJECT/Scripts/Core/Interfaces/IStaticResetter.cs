@@ -6,6 +6,9 @@ namespace Hadal
 {
     public interface IStaticResetter
     {
-        void Reset(bool booleanData);
+        /// <summary>
+        /// Used for StaticClassManager to call reset. Remember to tie the reset to StaticClassManager's ResetEvent.
+        /// </summary>
+        void Reset();
     }
 }
