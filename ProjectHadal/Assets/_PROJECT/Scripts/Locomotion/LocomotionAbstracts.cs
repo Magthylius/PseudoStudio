@@ -1,4 +1,5 @@
 using Hadal.Inputs;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 namespace Hadal.Locomotion
@@ -12,7 +13,16 @@ namespace Hadal.Locomotion
         public VelocityInfo Velocity;
         protected Transform target;
         protected float _currentForwardSpeed, _currentStrafeSpeed, _currentHoverSpeed;
-        protected bool allowUpdate = false;
+        private bool _allowUpdate = false;
+        protected bool allowUpdate
+        {
+            get => _allowUpdate;
+            set
+            {
+                _allowUpdate = value;
+                $"Allow update changed to {value}".Msg();
+            }
+        }
         public abstract float SqrSpeed { get; }
         public abstract void Initialise(Transform transform);
         public abstract void DoUpdate(in float deltaTime);
