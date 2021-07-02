@@ -15,7 +15,7 @@ namespace Hadal.AI.Graphics
 
         [Header("Color")]
         [ColorUsageAttribute(true, true)]
-        public Color idleStateColor;
+        public Color anticipationStateColor;
         [ColorUsageAttribute(true, true)]
         public Color judgementStateColor;
 
@@ -24,13 +24,19 @@ namespace Hadal.AI.Graphics
             brain = FindObjectOfType<AIBrain>();
             brain.JudgementPhaseEvent += JudgementColor;
         }
-
         public void JudgementColor(bool isStarting)
         {
             if(isStarting)
+            {
                 StartCoroutine(AIColorLerp(judgementStateColor));
+                //Debug.Log("judgementstartcolor");
+            }
             else
-                StartCoroutine(AIColorLerp(idleStateColor));
+            {
+                StartCoroutine(AIColorLerp(anticipationStateColor));
+                //Debug.Log("judgementendcolor");
+            }
+                
         }
 
         IEnumerator AIColorLerp(Color targetColor)
