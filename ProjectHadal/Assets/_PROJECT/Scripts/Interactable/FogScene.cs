@@ -1,6 +1,8 @@
 // Created by Harry
 using System.Collections;
 using UnityEngine;
+using System.Linq;
+using Tenshi;
 
 namespace Hadal.Interactables
 {
@@ -13,9 +15,12 @@ namespace Hadal.Interactables
 
         [SerializeField][Range(0f, 0.01f)] float lerpTime;
 
+        [SerializeField] private LayerMask reactiveMask;
+
         private void OnTriggerEnter(Collider other)
         {
-            StartCoroutine(colorLerpIn());
+            if(CanCollide(other))
+                StartCoroutine(colorLerpIn());
         }
 
         IEnumerator colorLerpIn()
@@ -27,5 +32,7 @@ namespace Hadal.Interactables
                 yield return null;
             }
         }
+
+        private bool CanCollide(Collider other) => other.gameObject.layer.IsAMatchingMask(reactiveMask);
     }
 }
