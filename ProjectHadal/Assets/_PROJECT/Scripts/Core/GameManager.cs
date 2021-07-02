@@ -1,6 +1,7 @@
 using UnityEngine;
 using NaughtyAttributes;
 using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -33,11 +34,6 @@ namespace Hadal
             SceneManager.sceneLoaded += LoadSceneEvent;
         }
         
-        void StartEndScreenAndReturn()
-        {
-            Debug.LogWarning("Game ended!");
-        }
-
         public void StartGameEvent() => GameStartedEvent?.Invoke(false);
         public void EndGameEvent(bool playersWon) => GameEndedEvent?.Invoke(playersWon);
         void LoadSceneEvent(Scene scene, LoadSceneMode mode) => SceneLoadedEvent?.Invoke(false);
