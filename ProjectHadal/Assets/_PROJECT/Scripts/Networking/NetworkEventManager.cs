@@ -102,9 +102,10 @@ namespace Hadal.Networking
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
             SceneManager.sceneLoaded += OnSceneLoaded;
             SetupEventRaising();
+            
             if (hostKicksAllOnLeave)
             {
-                if (IsMasterClient)
+                if (!IsMasterClient)
                     AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ClientForcedLeaveRoom);
                 else 
                     AddListener(ByteEvents.GAME_CLIENT_FORCEDKICKCALLBACK, HostForcedLeaveRoomCallback);
