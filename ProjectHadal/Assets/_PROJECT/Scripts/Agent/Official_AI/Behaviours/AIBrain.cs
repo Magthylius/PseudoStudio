@@ -59,7 +59,19 @@ namespace Hadal.AI
         [ReadOnly] public GameObject MouthObject;
         [ReadOnly] public List<PlayerController> Players;
         [ReadOnly] public PlayerController CurrentTarget;
-        [ReadOnly] public PlayerController CarriedPlayer;
+
+        private PlayerController carriedPlayer;
+
+        //[ReadOnly]
+        public PlayerController CarriedPlayer
+        {
+            get { return carriedPlayer; }
+            set
+            {
+                carriedPlayer = value;
+                Debug.LogWarning("Carried player changed into: " + value);
+            }
+        }
 
         [Header("Settings Data")]
         [SerializeField] private StateMachineData machineData;

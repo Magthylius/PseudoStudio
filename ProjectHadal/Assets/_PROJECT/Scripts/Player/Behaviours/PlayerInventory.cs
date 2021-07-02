@@ -125,7 +125,7 @@ namespace Hadal.Player.Behaviours
                 if(FindUtilityWithProjID((int)data[1]))
                 {
 
-                    print(FindUtilityWithProjID((int)data[1]).UtilityName);
+                    //print(FindUtilityWithProjID((int)data[1]).UtilityName);
                     _controllerInfo.Shooter.FireUtility((int)data[1], FindUtilityWithProjID((int)data[1]), 0, (float)data[3], true);
                     /*_controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);*/
                 }
@@ -182,7 +182,7 @@ namespace Hadal.Player.Behaviours
         private UsableLauncherObject FindUtilityWithProjID(int projID)
         {
             string projTypeID = projID.ToString();
-            print("searching for" + projID);
+            //print("searching for" + projID);
             
             // return if projectile ID's length is less then 3, I.e., when its not shot by anyone.
             if (projTypeID.Length < 3)
@@ -192,7 +192,7 @@ namespace Hadal.Player.Behaviours
             projTypeID = projTypeID.Substring(4, 1);
             projID = Convert.ToInt32(projTypeID);
             projID *= 100;
-            print("searching for" + projID);
+            //print("searching for" + projID);
             for (int i = 0; i < allUtilities.Count; i++)
             {
                 if(allUtilities[i].Data.ProjectileData.ProjTypeInt == projID)

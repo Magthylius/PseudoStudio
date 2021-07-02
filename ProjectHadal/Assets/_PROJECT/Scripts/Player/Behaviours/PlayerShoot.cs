@@ -198,12 +198,12 @@ namespace Hadal.Player.Behaviours
         {
             if (aimParentRb)
             {
-                Debug.LogWarning("Rigidbody torpedo found");
+                //Debug.LogWarning("Rigidbody torpedo found");
                 return new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint, 0f, aimParentRb.velocity, Vector3.zero);
             }
             else
             {
-                Debug.LogWarning("Rigidbody torpedo not found");
+                //Debug.LogWarning("Rigidbody torpedo not found");
                 return null;
             }
         }
@@ -211,12 +211,12 @@ namespace Hadal.Player.Behaviours
         {
             if(aimParentRb)
             {
-                Debug.LogWarning("Rigidbody utility found");
+                //Debug.LogWarning("Rigidbody utility found");
                 return new UsableHandlerInfo().WithTransformForceInfo(projectileID, utilityFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero);
             }
             else
             {
-                Debug.LogWarning("Rigidbody utility not found");
+                //Debug.LogWarning("Rigidbody utility not found");
                 return null;
             }
         }

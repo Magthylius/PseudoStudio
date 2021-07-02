@@ -43,17 +43,20 @@ namespace Hadal.AI.TreeNodes
             }
             else
             {
-                TryDetachCarriedPlayer();
+                //! Dont detach! Trust in the AI!
+                //TryDetachCarriedPlayer();
             }
         }
 
         void StartTimer()
         {
             timer = _damageManager.ThreshTimer;
+            Debug.LogWarning("Start timer:" + timer);
         }
 
         void ThreshPlayer()
         {
+            Debug.LogWarning("Timer Thresh:" + timer);
             if (timer > 0f)
             {
                 timer -= _brain.DeltaTime;
@@ -81,7 +84,10 @@ namespace Hadal.AI.TreeNodes
         public override NodeState Evaluate(float deltaTime)
         {
             if (_brain.CarriedPlayer == null)
+            {
+                Debug.LogWarning("Carried player null");
                 return NodeState.FAILURE;
+            }
             Debugger();
 
             if (!_timerRunning)
