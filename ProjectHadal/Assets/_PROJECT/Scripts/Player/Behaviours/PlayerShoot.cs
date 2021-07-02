@@ -148,6 +148,11 @@ namespace Hadal.Player.Behaviours
                 return;
             }
 
+            if (!eventFire)
+            {
+                projectileID += tLauncher.Data.ProjectileData.ProjTypeInt;
+            }
+
             //send event to torpedo ONLY when fire locally. local = (!eventFire)
             if (!eventFire) SendTorpedoEvent(projectileID);
 
