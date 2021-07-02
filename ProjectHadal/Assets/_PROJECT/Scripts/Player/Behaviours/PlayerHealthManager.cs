@@ -303,7 +303,7 @@ namespace Hadal.Player.Behaviours
             _controller.SetPhysicHighFriction(); //! Update physics settings
             _controller.GetInfo.Shooter.SetCanFire(false);
 
-            Vector3 downwardForce = -50.0f * transform.up;
+            Vector3 downwardForce = -200.0f * transform.up;
             _controller.GetInfo.Rigidbody.AddForce(downwardForce, ForceMode.Impulse);
 
             if (enableDeathTimerWhenDown)

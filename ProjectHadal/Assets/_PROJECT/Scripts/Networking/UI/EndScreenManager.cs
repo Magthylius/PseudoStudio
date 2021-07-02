@@ -7,9 +7,12 @@ using UnityEngine;
 
 namespace Hadal.Networking.UI.EndScreen
 {
-    public class EndScreenHandler : MonoBehaviour
+    public class EndScreenManager : MonoBehaviour
     {
+        public static EndScreenManager Instance;
+        
         [Header("References")]
+        [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private TextMeshProUGUI missionOutcomeTMP;
         [SerializeField] private TextMeshProUGUI timeTakenTMP;
 
@@ -24,24 +27,35 @@ namespace Hadal.Networking.UI.EndScreen
         [ReadOnly, SerializeField] bool MissionSuccess = false;
         [ReadOnly, SerializeField] float TimeTaken = 0f;
         private float currentTime = 0f;
-        
+
+        private void Awake()
+        {
+            if (Instance == null) Instance = this;
+            else Destroy(this);
+        }
+
         void Start()
         {
+            //Debug.LogWarning("START IS CALLED?????");
             Disable();
         }
 
         public void Disable()
         {
-            gameObject.SetActive(false);
-            /*Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;*/
+            //gameObject.SetActive(false);
+            canvasGroup.alpha = 0f;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
             StopCoroutine(UpdateTimeText());
             currentTime = 0f;
         }
 
         public void Enable()
         {
-            gameObject.SetActive(true);
+            //gameObject.SetActive(true);
+            canvasGroup.alpha = 1f;
+            canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
         }
@@ -63,16 +77,20 @@ namespace Hadal.Networking.UI.EndScreen
             //timeTakenTMP.text = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
             timeTakenTMP.text = $"{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
 
-            StartCoroutine(UpdateTimeText());
+            //Debug.LogWarning(IsActive);
+            //StartCoroutine(UpdateTimeText());
         }
 
         IEnumerator UpdateTimeText()
         {
+            Debug.LogWarning(IsActive);
             while (TimeTaken - currentTime > 1f)
             {
+                Debug.LogWarning(IsActive);
                 currentTime += 1f;
                 TimeSpan timeSpan = TimeSpan.FromSeconds(currentTime);
                 timeTakenTMP.text = $"{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+                yield return null;
             }
 
             currentTime = TimeTaken;
@@ -81,5 +99,7 @@ namespace Hadal.Networking.UI.EndScreen
             
             yield return null;
         }
+
+        public bool IsActive => gameObject.activeInHierarchy;
     }
 }

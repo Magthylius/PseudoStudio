@@ -146,6 +146,18 @@ Transform:
   m_Father: {fileID: 6576420978336463563}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 5.226, y: 23.009, z: -8.567}
+--- !u!225 &533662756
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6125628879687998579}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &6298132451773036751
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,7 +253,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1da6c2fdcd6134bb2da8652919637c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainMenuScene: MainMenu
+  InGameScene: Post Vertical Slice
   pViewList: []
+  enableLevelTimer: 0
+  levelTimer: 0
 --- !u!114 &7865573592520856709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOfflineMode: 0
   localPlayerSpawnTrans: {fileID: 4099844762844519294}
+  hostKicksAllOnLeave: 1
   MainMenuScene: MainMenu
   InGameScene: Post Vertical Slice
   DummyCount: 2
@@ -558,10 +575,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Loading Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8269545702940435045, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+      propertyPath: canvasGroup
+      value: 
+      objectReference: {fileID: 533662756}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
 --- !u!224 &3558804987589490339 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4982535942677956897, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+  m_PrefabInstance: {fileID: 8378643974000705410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6125628879687998579 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2397172086048695281, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
   m_PrefabInstance: {fileID: 8378643974000705410}
   m_PrefabAsset: {fileID: 0}
