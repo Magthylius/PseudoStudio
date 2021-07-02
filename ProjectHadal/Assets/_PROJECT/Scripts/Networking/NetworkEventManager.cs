@@ -19,17 +19,18 @@ namespace Hadal.Networking
         PLAYER_SPAWNED_CONFIRMED,
         PLAYER_HEALTH_UPDATE,
         PLAYER_ALL_UNALIVE,
+        PLAYER_RECEIVE_DAMAGE,
         GAME_START_LOAD,
         GAME_ACTUAL_START,
         GAME_HOST_FORCEDKICK,
         GAME_CLIENT_FORCEDKICKCALLBACK,
+        GAME_START_END,
         PLAYER_UTILITIES_LAUNCH,
         PLAYER_TORPEDO_LAUNCH,
         PROJECTILE_DESPAWN,
         PROJECTILE_ACTIVATED,
         PROJECTILE_ATTACH,
         AI_BRAIN_DISABLE,
-        SEND_PLAYER_DAMAGE,
         AI_RECEIVE_DAMAGE,
         AI_RECEIVE_STUN,
         AI_PIN_EVENT,
@@ -105,10 +106,11 @@ namespace Hadal.Networking
             
             if (hostKicksAllOnLeave)
             {
-                if (!IsMasterClient)
-                    AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ClientForcedLeaveRoom);
-                else 
+                if (IsMasterClient)
                     AddListener(ByteEvents.GAME_CLIENT_FORCEDKICKCALLBACK, HostForcedLeaveRoomCallback);
+                else 
+                    AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ClientForcedLeaveRoom);
+                    
             }
         }
 

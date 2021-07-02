@@ -98,8 +98,13 @@ namespace Hadal.Networking.UI.Loading
 
             continueCGF = new CanvasGroupFader(continueCG, true, false);
             continueCGF.SetTransparent();
-
-            neManager.AddListener(ByteEvents.GAME_START_LOAD, NetworkedLoad);
+            
+            if (!neManager.IsMasterClient)
+            {
+                neManager.AddListener(ByteEvents.GAME_START_LOAD, NetworkedLoad);
+                neManager.AddListener(ByteEvents.GAME_START_END, RE_StartEndScreenAndReturn);
+            }
+            
             ResetLoadingElements();
             
             LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
@@ -387,18 +392,32 @@ namespace Hadal.Networking.UI.Loading
         void StartEndScreenAndReturn(bool playersWon)
         {
             Debug.LogWarning("Game ended!");
-            StartCoroutine(TriggerEndScreen());
 
-            IEnumerator TriggerEndScreen()
-            {
-                yield return new WaitForSeconds(5f);
+            object[] data = {playersWon, GameManager.Instance.LevelTimer};
+            
+            if (NetworkEventManager.Instance.IsMasterClient)
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_END, data);
+            
+            StartCoroutine(TriggerEndScreen(playersWon, GameManager.Instance.LevelTimer));
+        }
+
+        void RE_StartEndScreenAndReturn(EventData data)
+        {
+            object[] parsedData = (object[])data.CustomData;
+            bool playersWon = (bool)parsedData[0];
+            float timeTaken = (float)parsedData[1];
+            StartCoroutine(TriggerEndScreen(playersWon, timeTaken));
+        }
+        
+        IEnumerator TriggerEndScreen(bool playersWon, float timeTaken)
+        {
+            yield return new WaitForSeconds(5f);
                 
-                //! Enable first before update!
-                endsScreenHandler.Enable();
-                endsScreenHandler.UpdateEndData(playersWon, 600f);
+            //! Enable first before update!
+            endsScreenHandler.Enable();
+            endsScreenHandler.UpdateEndData(playersWon, timeTaken);
                 
-                NetworkEventManager.Instance.LeaveRoom(false, true);
-            }
+            NetworkEventManager.Instance.LeaveRoom(false, true);
         }
 
         #endregion
