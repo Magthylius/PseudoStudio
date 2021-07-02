@@ -221,6 +221,7 @@ namespace Hadal.Player.Behaviours
                 if (IsLocalPlayer)
                 {
                     OnDeath?.Invoke();
+                    OnDeath = null;
                     Send_HealthUpdateStatus(false);
                     _controller.Die();
                 }
