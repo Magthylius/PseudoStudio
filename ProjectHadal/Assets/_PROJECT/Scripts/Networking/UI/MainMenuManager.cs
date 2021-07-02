@@ -345,7 +345,7 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(lobbyMenu);
             OpenMenu(gameOptions);
 
-            NetworkEventManager.Instance.LeaveRoom();
+            NetworkEventManager.Instance.LeaveRoom(true, true);
         }
 
         public void TMP_CheckRoomNameEligibility()
