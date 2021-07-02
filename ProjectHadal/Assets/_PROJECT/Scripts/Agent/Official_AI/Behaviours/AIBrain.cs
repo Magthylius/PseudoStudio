@@ -119,7 +119,11 @@ namespace Hadal.AI
                 isOffline = neManager.isOfflineMode;
 
             onMasterClient = PhotonNetwork.IsMasterClient || isOffline;
-            if (!onMasterClient) return;
+            if (!onMasterClient)
+            {
+                healthManager.Initialise(this);
+                return;
+            }
             if (!isEnabled) return;
 
             Setup();
