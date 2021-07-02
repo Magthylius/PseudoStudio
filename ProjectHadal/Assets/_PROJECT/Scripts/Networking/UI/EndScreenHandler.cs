@@ -73,12 +73,13 @@ namespace Hadal.Networking.UI.EndScreen
                 currentTime += 1f;
                 TimeSpan timeSpan = TimeSpan.FromSeconds(currentTime);
                 timeTakenTMP.text = $"{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
-                yield return null;
             }
 
             currentTime = TimeTaken;
             TimeSpan timeSpan2 = TimeSpan.FromSeconds(currentTime);
             timeTakenTMP.text = $"{timeSpan2.Hours:D2}:{timeSpan2.Minutes:D2}:{timeSpan2.Seconds:D2}";
+            
+            yield return null;
         }
     }
 }
