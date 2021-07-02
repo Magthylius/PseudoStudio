@@ -300,7 +300,7 @@ namespace Hadal.Networking
         public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
         public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName, roomOptionsDefault);
         public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
-        public void LeaveRoom(bool returnsToMainMenu = false)
+        public void LeaveRoom(bool voluntary, bool returnsToMainMenu)
         {
             
             if (returnsToMainMenu)
@@ -310,16 +310,24 @@ namespace Hadal.Networking
                 loadsToMainMenu = true;
             }
 
-            if (hostKicksAllOnLeave && IsMasterClient)
+            if (voluntary)
             {
-                RaiseEvent(ByteEvents.GAME_HOST_FORCEDKICK, null);
-                connectedNumCounter = PlayerCount - 1;
+                if (IsInMainMenu) PhotonNetwork.LeaveRoom();
+                else if (hostKicksAllOnLeave && IsMasterClient)
+                {
+                    RaiseEvent(ByteEvents.GAME_HOST_FORCEDKICK, null);
+                    connectedNumCounter = PlayerCount - 1;
+                }
+                else
+                {
+                    PhotonNetwork.LeaveRoom();
+                }
             }
             else
             {
                 PhotonNetwork.LeaveRoom();
             }
-   
+
         }
         public void LoadLevel(int index) => PhotonNetwork.LoadLevel(index);
         public void LoadLevel(string levelName) => PhotonNetwork.LoadLevel(levelName);
@@ -583,10 +591,10 @@ namespace Hadal.Networking
         
         public void ClientForcedLeaveRoom(EventData data)
         {
-            LeaveRoom(true);
+            RaiseEvent(ByteEvents.GAME_CLIENT_FORCEDKICKCALLBACK, LocalPlayer);
+            LeaveRoom(false, true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
-            RaiseEvent(ByteEvents.GAME_CLIENT_FORCEDKICKCALLBACK, LocalPlayer);
         }
 
         public void HostForcedLeaveRoomCallback(EventData data)
@@ -594,7 +602,7 @@ namespace Hadal.Networking
             connectedNumCounter++;
             if (connectedNumCounter >= connectedNumToKick)
             {
-                LeaveRoom(true);
+                LeaveRoom(false, true);
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.Confined;
             }
