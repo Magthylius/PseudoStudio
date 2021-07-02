@@ -96,7 +96,7 @@ namespace Hadal.AI.States
             else if (gameStartupInitialization) DetermineNextCavern();
         }
 
-        void StartInitialization()
+        void StartInitialization(bool booleanData)
         {
             //.LogWarning("heyheyxd");
             Brain.StartCoroutine(InitializeAfterCaverns());

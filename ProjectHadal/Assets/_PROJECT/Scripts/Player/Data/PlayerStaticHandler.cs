@@ -10,11 +10,11 @@ namespace Hadal.Player
     {
         public void Start()
         {
-            Reset();
+            Reset(false);
             GameManager.Instance.SceneLoadedEvent += Reset;
         }
 
-        public void Reset()
+        public void Reset(bool booleanData)
         {
             LocalPlayerData.Reset();
             NetworkData.Reset();
