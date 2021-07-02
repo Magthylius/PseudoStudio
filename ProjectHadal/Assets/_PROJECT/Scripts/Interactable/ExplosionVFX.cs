@@ -31,7 +31,7 @@ namespace Hadal.Interactables
 
         IEnumerator ExplosionActivate()
         {
-            for(float t = 1.0f; t >= -1.1f; t-= Time.deltaTime * speed)
+            for(float t = 1.0f; t >= -1.2f; t-= Time.deltaTime * speed)
             {
                 explosion.SetFloat("_Addition", t);
                 yield return null;

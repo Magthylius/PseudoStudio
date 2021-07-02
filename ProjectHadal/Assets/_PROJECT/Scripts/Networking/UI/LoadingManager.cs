@@ -394,9 +394,12 @@ namespace Hadal.Networking.UI.Loading
             Debug.LogWarning("Game ended!");
 
             object[] data = {playersWon, GameManager.Instance.LevelTimer};
-            
+
             if (NetworkEventManager.Instance.IsMasterClient)
+            {
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_END, data);
+                Debug.LogWarning("Sending event to end game");
+            }
             
             StartCoroutine(TriggerEndScreen(playersWon, GameManager.Instance.LevelTimer));
         }
@@ -406,6 +409,8 @@ namespace Hadal.Networking.UI.Loading
             object[] parsedData = (object[])data.CustomData;
             bool playersWon = (bool)parsedData[0];
             float timeTaken = (float)parsedData[1];
+            
+            Debug.LogWarning("Received order to end myself: " + playersWon + ", " + timeTaken);
             StartCoroutine(TriggerEndScreen(playersWon, timeTaken));
         }
         
