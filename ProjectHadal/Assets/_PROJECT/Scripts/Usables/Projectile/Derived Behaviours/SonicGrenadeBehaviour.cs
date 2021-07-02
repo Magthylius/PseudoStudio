@@ -52,10 +52,10 @@ namespace Hadal.Usables.Projectiles
             {
                 Debug.Log("Sonic : Enemy Detected");
                 col.gameObject.GetComponentInChildren<IStunnable>()?.TryStun(stunTime);
-                /*if(isHighHz)
-                 { 
-                    // do high frequency stuff here
-                 }*/
+                if(isHighHz)
+                { 
+                    col.gameObject.GetComponent<IAmLeviathan>()?.TryToMakeRunAway();
+                }
             }
 
             //Send event to clones

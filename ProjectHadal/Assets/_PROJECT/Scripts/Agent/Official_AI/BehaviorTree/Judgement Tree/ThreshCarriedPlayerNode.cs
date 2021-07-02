@@ -77,9 +77,9 @@ namespace Hadal.AI.TreeNodes
 
         public override NodeState Evaluate(float deltaTime)
         {
-            Debugger();
             if (_brain.CarriedPlayer == null)
                 return NodeState.FAILURE;
+            Debugger();
 
             if (!_timerRunning)
             {
@@ -121,7 +121,7 @@ namespace Hadal.AI.TreeNodes
         private void Debugger()
         {
             if (EnableDebug)
-                $"Name: {debugName}, Target: {_brain.CarriedPlayer}".Msg();
+                $"Name: {debugName}, Target: {_brain.CarriedPlayer.gameObject.name}".Msg();
         }
     }
 }
