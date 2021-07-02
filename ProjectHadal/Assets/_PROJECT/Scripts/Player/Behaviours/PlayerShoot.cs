@@ -206,8 +206,6 @@ namespace Hadal.Player.Behaviours
                 Debug.LogWarning("Rigidbody torpedo not found");
                 return null;
             }
-
-            return null;
         }
         private UsableHandlerInfo CreateInfoForUtility(int projectileID, float chargedTime)
         {
