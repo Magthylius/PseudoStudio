@@ -25,6 +25,7 @@ namespace Hadal.AI
         int currentHealth;
         AIBrain brain;
         Timer stunTimer;
+        private bool _killedWithCheat = false;
 
         private void OnValidate()
         {
@@ -68,6 +69,8 @@ namespace Hadal.AI
         /// </summary>
         public bool TakeDamage(int damage)
         {
+            _killedWithCheat = damage == int.MaxValue;
+
             if (!PhotonNetwork.IsMasterClient)
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_DAMAGE, damage.Abs(), SendOptions.SendReliable);
             else
@@ -79,7 +82,11 @@ namespace Hadal.AI
         /// <summary> Local death method to handle the AI death sequence & end the game. </summary>
         public void Death()
         {
-            $"Leviathan is unalive. Congrats!!!".Msg();
+            string extraMsg = string.Empty;
+            if (_killedWithCheat)
+                extraMsg = " ..., you sure you did not cheat???".Bold();
+            
+            $"Leviathan is unalive. Congrats!!!{extraMsg}".Msg();
             brain.GraphicsHandler.gameObject.SetActive(false);
             brain.DetachAnyCarriedPlayer();
             Obj.SetActive(false);

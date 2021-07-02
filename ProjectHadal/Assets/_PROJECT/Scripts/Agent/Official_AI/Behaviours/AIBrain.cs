@@ -22,6 +22,7 @@ namespace Hadal.AI
     public class AIBrain : MonoBehaviour, IAmLeviathan
     {
         [ReadOnly, SerializeField] private bool isEnabled = true;
+        [ReadOnly, SerializeField] private bool onMasterClient;
 
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
@@ -91,7 +92,7 @@ namespace Hadal.AI
 
         private void Awake()
         {
-            if (!isEnabled) return;
+            if (!isEnabled || isOffline) return;
 
             _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
@@ -112,6 +113,12 @@ namespace Hadal.AI
 
         private void Start()
         {
+            neManager = NetworkEventManager.Instance;
+            if (neManager != null && followNetworkManagerOfflineStatus)
+                isOffline = neManager.isOfflineMode;
+
+            onMasterClient = PhotonNetwork.IsMasterClient || isOffline;
+            if (!onMasterClient) return;
             if (!isEnabled) return;
 
             Setup();
@@ -119,6 +126,7 @@ namespace Hadal.AI
 
         private void Update()
         {
+            if (!onMasterClient) return;
             if (!CanUpdate || !isEnabled) return;
             float deltaTime = DeltaTime;
             preUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
@@ -129,12 +137,14 @@ namespace Hadal.AI
         }
         private void LateUpdate()
         {
+            if (!onMasterClient) return;
             if (!CanUpdate || !isEnabled) return;
             stateMachine?.LateMachineTick();
             allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
         }
         private void FixedUpdate()
         {
+            if (!onMasterClient) return;
             if (!CanUpdate || !isEnabled) return;
             float fixedDeltaTime = FixedDeltaTime;
             navigationHandler.DoFixedUpdate(fixedDeltaTime);
@@ -144,10 +154,6 @@ namespace Hadal.AI
 
         void Setup()
         {
-            neManager = NetworkEventManager.Instance;
-            if (neManager != null && followNetworkManagerOfflineStatus)
-                isOffline = neManager.isOfflineMode;
-
             if (DebugEnabled && isOffline)
                 "Leviathan brain initialising in Offline mode.".Msg();
 

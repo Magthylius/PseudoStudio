@@ -35,6 +35,7 @@ namespace Hadal.Debugging
         public static DebugCommand<float> C_AIStun;
         public static DebugCommand<int> C_AISetSlowStacks;
         public static DebugCommand C_AIClearDebuffs;
+        public static DebugCommand C_AISmite;
 
         //! Player
         public static DebugCommand<int> C_SetHp;
@@ -142,6 +143,11 @@ namespace Hadal.Debugging
                 brain.StopStun(); // stop stun
                 brain.HealthManager.SetSlowStacks(0); //stop slow
             });
+            C_AISmite = new DebugCommand("aigodie", "Unalives the AI.", "aigodie", () =>
+            {
+                AIBrain brain = FindObjectOfType<AIBrain>();
+                brain.HealthManager.TakeDamage(int.MaxValue);
+            });
 
             //! Player
             C_SetHp = new DebugCommand<int>("sethp", "Sets the health of player", "sethp", (x) =>
@@ -225,6 +231,7 @@ namespace Hadal.Debugging
                 C_AIStun,
                 C_AISetSlowStacks,
                 C_AIClearDebuffs,
+                C_AISmite,
                 
                 C_SetHp,
                 C_SetMaxSpeed,
