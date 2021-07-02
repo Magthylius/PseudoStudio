@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.AI.Caverns;
+using Photon.Pun;
 using UnityEngine;
 using ReadOnly = NaughtyAttributes.ReadOnlyAttribute;
 
@@ -46,12 +47,18 @@ namespace Hadal.AI.Information
         
         void Start()
         {
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                enableUpdate = false;
+                return;
+            }
+            
             StartCoroutine(TryInitialize());
         }
         
         private void OnDrawGizmosSelected()
         {
-            if (!drawPathing) return;
+            if (!drawPathing || !PhotonNetwork.IsMasterClient) return;
             for (int i = 0; i < cachedPointPathList.Count - 1; i++)
             {
                 Gizmos.color = Color.cyan;
