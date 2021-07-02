@@ -6583,7 +6583,6 @@ GameObject:
   - component: {fileID: 1135540896}
   - component: {fileID: 1135540895}
   - component: {fileID: 1135540894}
-  - component: {fileID: 1135540897}
   m_Layer: 0
   m_Name: Blood
   m_TagString: Untagged
@@ -6719,18 +6718,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1135540897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1135540893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98a37fe35a6a41b4cb848cb5cfd0bbaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1214839389
 GameObject:
   m_ObjectHideFlags: 0
@@ -8102,7 +8089,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &1534322947
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8151,7 +8138,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1534322946}
-  m_Mesh: {fileID: 9127120572191758296, guid: 34992115dcc9e5540a5ec485ab8fd8a8, type: 3}
+  m_Mesh: {fileID: -5495902117074765545, guid: 61559fba1613317429667ee4d4bce778, type: 3}
 --- !u!4 &1534322949
 Transform:
   m_ObjectHideFlags: 0
