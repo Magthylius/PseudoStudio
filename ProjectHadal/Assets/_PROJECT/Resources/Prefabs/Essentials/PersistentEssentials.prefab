@@ -218,6 +218,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3189345546925591471}
   - component: {fileID: 4297429361851390011}
+  - component: {fileID: 2059736876725262861}
   - component: {fileID: 7865573592520856709}
   - component: {fileID: 5548288211505355130}
   m_Layer: 0
@@ -258,6 +259,18 @@ MonoBehaviour:
   pViewList: []
   enableLevelTimer: 0
   levelTimer: 0
+--- !u!114 &2059736876725262861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6396702538524357952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30a9b216a42821142990dbccb91362c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7865573592520856709
 MonoBehaviour:
   m_ObjectHideFlags: 0

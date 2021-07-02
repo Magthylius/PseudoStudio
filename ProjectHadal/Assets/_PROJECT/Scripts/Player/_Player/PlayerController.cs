@@ -311,7 +311,7 @@ namespace Hadal.Player
                 mover.ToggleEnablility(true);
             }
             
-            if (!UITrackerBridge.LocalPlayerUIManager && isMine)
+            if (UITrackerBridge.LocalPlayerUIManager == null && isMine)
             {
                 //! Make sure player UI is inactive in prefab!
                 playerUI.gameObject.SetActive(true);
@@ -320,6 +320,7 @@ namespace Hadal.Player
                 playerUI.PauseMenuClosed += Enable;
 
                 UITrackerBridge.LocalPlayerUIManager = playerUI;
+                Debug.LogWarning(UITrackerBridge.LocalPlayerUIManager);
 
                 Activate();
                 cameraController.Activate();
