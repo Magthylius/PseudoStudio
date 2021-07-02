@@ -7,19 +7,18 @@ namespace Hadal.Interactables
     public class SonicVFX : MonoBehaviour
     {
         [Header("Settings")]
-        [SerializeField] private Material sonicVFX;
-        //[SerializeField] private MeshRenderer sonicRenderer;
+        [SerializeField] private MeshRenderer sonicRenderer;
         [SerializeField] private float startHeight;
         [SerializeField] private float endHeight;
         [SerializeField] private float speed;
 
-        //private MaterialPropertyBlock materialProp;
+        private MaterialPropertyBlock materialProp;
 
-        void Start()
+        void Awake()
         {
-            /* materialProp = new MaterialPropertyBlock();
+            materialProp = new MaterialPropertyBlock();
             if (materialProp != null) sonicRenderer.GetPropertyBlock(materialProp);
-            sonicRenderer.SetPropertyBlock(materialProp); */
+            sonicRenderer.SetPropertyBlock(materialProp);
         }
         void OnEnable()
         {
@@ -32,13 +31,14 @@ namespace Hadal.Interactables
         }
 
         IEnumerator DissolveAnim() {
-            sonicVFX.SetFloat("_CuttoffHeight", startHeight);
+            materialProp.SetFloat("_CuttoffHeight", startHeight);
             for(float t = startHeight; t <= endHeight; t+= Time.deltaTime * speed)
             {
+                materialProp.SetFloat("_CuttoffHeight", t);
+                sonicRenderer.SetPropertyBlock(materialProp);
                 yield return null;
-                sonicVFX.SetFloat("_CuttoffHeight", t);
             }
-            sonicVFX.SetFloat("_CuttoffHeight", endHeight);
+            materialProp.SetFloat("_CuttoffHeight", endHeight);
         }
     }
 }
