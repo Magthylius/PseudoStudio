@@ -124,6 +124,11 @@ namespace Hadal.AI.States
                 yield return null;
             }
 
+            while (AICavern == null)
+            {
+                yield return null;
+            }
+
             //Debug.LogWarning("heyhey2");
 
             AllowStateTick = true;
