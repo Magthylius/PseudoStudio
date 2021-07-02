@@ -6,6 +6,7 @@ using Tenshi.UnitySoku;
 using Hadal.Utility;
 using Button = NaughtyAttributes.ButtonAttribute;
 using Photon.Pun;
+using System.Linq;
 
 namespace Hadal.AI
 {
@@ -22,6 +23,10 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private float currentMaxSlowPercent;
         [SerializeField, ReadOnly] private float currentSlowPercent;
         [SerializeField, ReadOnly] private int currentSlowStacks;
+
+        [Header("VFX")]
+        [SerializeField, ReadOnly, Tooltip("This will reference the graphics handler's hit positions.")] private Vector3[] randomHitPositions;
+        [SerializeField] private VFXData vfx_OnDamaged;
 
         AIBrain brain;
         Timer stunTimer;
@@ -45,6 +50,8 @@ namespace Hadal.AI
                                 .WithOnCompleteEvent(CancelStun)
                                 .WithShouldPersist(true);
             stunTimer.Pause();
+
+            randomHitPositions = brain.GraphicsHandler.potentialHitPositions.Select(t => t.position).ToArray();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime) { }
@@ -76,6 +83,8 @@ namespace Hadal.AI
             else
                 currentHealth = (currentHealth - damage).Clamp0();
             
+            DoOnHitEffects(damage);
+
             return true;
         }
 
@@ -184,5 +193,19 @@ namespace Hadal.AI
 		public int CurrentClampedSlowStacks => currentSlowStacks > maxSlowStacks ? maxSlowStacks : currentSlowStacks;
         /// <summary> Returns the excess slow stacks over the max allowed amount if <see cref="CurrentSlowStacks"/> ever exceeds it. Otherwise, it will return 0. </summary>
 		public int ExcessSlowStacks => currentSlowStacks > maxSlowStacks ? (currentSlowStacks - maxSlowStacks) : 0;
+
+        /// <summary> On hit effects should be stuffed into this function. VFX, audio, etc. </summary>
+        private void DoOnHitEffects(int damageReceived)
+        {
+            if (randomHitPositions.IsNotEmpty())
+                PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+        }
+
+        /// <summary> A wrapper function that automatically handles null reference cases, just call this function with no worries. </summary>
+        private void PlayVFXAt(VFXData vfx, Vector3 position)
+        {
+            if (vfx == null) return;
+            vfx.SpawnAt(position);
+        }
     }
 }

@@ -2221,6 +2221,33 @@ namespace Photon.Pun
 
             return NetworkingClient.OpRaiseEvent(eventCode, eventContent, raiseEventOptions, sendOptions);
         }
+        
+        public enum ByteEvents
+        {
+            PLAYER_SPAWNED = 0,
+            PLAYER_SPAWNED_CONFIRMED,
+            PLAYER_HEALTH_UPDATE,
+            PLAYER_ALL_UNALIVE,
+            GAME_START_LOAD,
+            GAME_ACTUAL_START,
+            GAME_HOST_FORCEDKICK,
+            GAME_CLIENT_FORCEDKICKCALLBACK,
+            PLAYER_UTILITIES_LAUNCH,
+            PLAYER_TORPEDO_LAUNCH,
+            PROJECTILE_DESPAWN,
+            PROJECTILE_ACTIVATED,
+            PROJECTILE_ATTACH,
+            AI_BRAIN_DISABLE,
+            SEND_PLAYER_DAMAGE,
+            AI_RECEIVE_DAMAGE,
+            AI_RECEIVE_STUN,
+            AI_PIN_EVENT,
+            AI_GRAB_PLAYER,
+            AI_RELEASE_PLAYER,
+            AI_DEATH,
+            AI_UPDATE_SLOW,
+            TOTAL_EVENTS
+        }
 
         /// <summary>Sends PUN-specific events to the server, unless in offlineMode.</summary>
         /// <param name="eventCode">A byte identifying the type of event.</param>
@@ -2237,7 +2264,9 @@ namespace Photon.Pun
 
             if (!InRoom)
             {
-                Debug.LogWarning("RaiseEvent(" + eventCode + ") failed. Your event is not being sent! Check if your are in a Room");
+                
+                
+                Debug.LogWarning("RaiseEvent(" + (ByteEvents)eventCode + ") failed. Your event is not being sent! Check if your are in a Room");
                 return false;
             }
 
