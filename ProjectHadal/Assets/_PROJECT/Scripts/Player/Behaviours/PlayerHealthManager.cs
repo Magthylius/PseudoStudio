@@ -508,18 +508,18 @@ namespace Hadal.Player.Behaviours
                 $"Revival attempt failed.".Msg();
         }
 
-        private int screenLogReviveTimerIndex;
-        private DebugManager dManager;
+        // private int screenLogReviveTimerIndex;
+        // private DebugManager dManager;
         private void Debug_InitialiseRevivalTimerScreenLogger()
         {
-            dManager = DebugManager.Instance;
-            screenLogReviveTimerIndex = dManager.CreateScreenLogger();
+            // dManager = DebugManager.Instance;
+            // screenLogReviveTimerIndex = dManager.CreateScreenLogger();
         }
 
         private void Debug_RevivalTimerStatus()
         {
-            int seconds = (int)(_reviveTimer % 60);
-            dManager.SLog(screenLogReviveTimerIndex, $"Player Revive Timer (View id: {PlayerViewID}): ", seconds);
+            // int seconds = (int)(_reviveTimer % 60);
+            // dManager.SLog(screenLogReviveTimerIndex, $"Player Revive Timer (View id: {PlayerViewID}): ", seconds);
         }
 
         private float TickKnockTimer(in float deltaTime) => _knockTimer -= deltaTime;

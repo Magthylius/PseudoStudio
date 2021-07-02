@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88ede73851d76c14b9d39c052118036f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentKillCount: 0
 --- !u!1 &1793168799261823607
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,12 +345,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  currentHealth: 0
   slowPercentPerStack: 0.2
   maxSlowStacks: 5
   maxSlowPercent: 0.9
   currentMaxSlowPercent: 1
   currentSlowPercent: 0
   currentSlowStacks: 0
+  randomHitPositions: []
+  vfx_OnDamaged: {fileID: 11400000, guid: 801216130b69d5544a53c2a323082230, type: 2}
 --- !u!1 &3345266927618080665
 GameObject:
   m_ObjectHideFlags: 0
