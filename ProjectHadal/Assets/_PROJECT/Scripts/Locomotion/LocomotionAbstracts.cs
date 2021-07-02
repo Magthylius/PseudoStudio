@@ -21,7 +21,11 @@ namespace Hadal.Locomotion
         public virtual void Enable() => allowUpdate = true;
         public virtual void Disable() => allowUpdate = false;
         public void ToggleEnablility() => allowUpdate = !allowUpdate;
-        public void ToggleEnablility(bool isTrue) => allowUpdate = isTrue;
+        public void ToggleEnablility(bool isTrue)
+        {
+            print("Toggle allow Update !");
+            allowUpdate = isTrue;
+        }
 
         //Delete later
         protected bool allowBoost;
