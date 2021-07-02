@@ -258,7 +258,8 @@ namespace Hadal.AI.States
             tickTimer = 10;
             DelayInterval = 30;
             
-            Brain.TriggerJudgementStateEvent(true);
+            if (Brain.RuntimeData.GetBrainState == BrainState.Engagement)
+                Brain.TriggerJudgementStateEvent(true);
         }
 
         public override void StateTick()
@@ -298,7 +299,8 @@ namespace Hadal.AI.States
                 Brain.NavigationHandler.StopCustomPath(false);
             }*/
             Brain.NavigationHandler.StopCustomPath(false);
-            Brain.TriggerJudgementStateEvent(false);
+            if (Brain.RuntimeData.GetBrainState == BrainState.Engagement)
+                Brain.TriggerJudgementStateEvent(false);
         }
         public override Func<bool> ShouldTerminate() => () => false;
 
