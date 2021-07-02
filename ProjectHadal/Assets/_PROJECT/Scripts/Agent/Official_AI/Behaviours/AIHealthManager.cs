@@ -91,8 +91,8 @@ namespace Hadal.AI
             brain.DetachAnyCarriedPlayer();
             Obj.SetActive(false);
             
-            //! End the game
-            GameManager.Instance.EndGameEvent(true);
+            //! Handle End the game
+            brain.GameHandler.AILoseGame();
         }
         
         public GameObject Obj => transform.parent.gameObject;

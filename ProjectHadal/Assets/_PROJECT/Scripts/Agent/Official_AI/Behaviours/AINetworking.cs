@@ -36,6 +36,7 @@ namespace Hadal.AI
                 neManager.AddListener(ByteEvents.AI_RELEASE_PLAYER, RE_DetachAnyCarriedPlayer);
                 neManager.AddListener(ByteEvents.AI_BRAIN_DISABLE, RE_DisableBrain);
                 neManager.AddListener(ByteEvents.AI_DEATH, RE_Death);
+                neManager.AddListener(ByteEvents.PLAYER_ALL_UNALIVE, RE_AllPlayerDeath);
             }
         }
 
@@ -100,6 +101,11 @@ namespace Hadal.AI
         void RE_Death(EventData eventData)
         {
             brain.HealthManager.Death();
+        }
+
+        void RE_AllPlayerDeath(EventData eventData)
+        {
+            brain.GameHandler.PlayersLoseGame();
         }
 
         void RE_UpdateSlow(EventData eventData)

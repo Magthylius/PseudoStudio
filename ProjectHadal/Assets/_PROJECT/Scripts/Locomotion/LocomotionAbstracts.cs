@@ -1,4 +1,5 @@
 using Hadal.Inputs;
+using Tenshi.UnitySoku;
 using UnityEngine;
 
 namespace Hadal.Locomotion
@@ -12,7 +13,16 @@ namespace Hadal.Locomotion
         public VelocityInfo Velocity;
         protected Transform target;
         protected float _currentForwardSpeed, _currentStrafeSpeed, _currentHoverSpeed;
-        protected bool allowUpdate = false;
+        private bool _allowUpdate = false;
+        protected bool allowUpdate
+        {
+            get => _allowUpdate;
+            set
+            {
+                _allowUpdate = value;
+                $"Allow update changed to {value}, for player name: {gameObject.transform.parent.gameObject.name}".Msg();
+            }
+        }
         public abstract float SqrSpeed { get; }
         public abstract void Initialise(Transform transform);
         public abstract void DoUpdate(in float deltaTime);
@@ -21,7 +31,11 @@ namespace Hadal.Locomotion
         public virtual void Enable() => allowUpdate = true;
         public virtual void Disable() => allowUpdate = false;
         public void ToggleEnablility() => allowUpdate = !allowUpdate;
-        public void ToggleEnablility(bool isTrue) => allowUpdate = isTrue;
+        public void ToggleEnablility(bool isTrue)
+        {
+            print("Toggle allow Update !");
+            allowUpdate = isTrue;
+        }
 
         //Delete later
         protected bool allowBoost;

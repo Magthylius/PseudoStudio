@@ -28,7 +28,6 @@ namespace Hadal.AI
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
         [ReadOnly, SerializeField] private CavernHandler nextMoveCavern;
 
-        //[Header("Debugging")] 
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
