@@ -10,6 +10,7 @@ using Hadal.PostProcess.Settings;
 using UnityEngine.Rendering.Universal;
 using ExitGames.Client.Photon;
 using Hadal.Networking.UI.EndScreen;
+using UnityEngine.Serialization;
 
 namespace Hadal.Networking.UI.Loading
 {
@@ -58,8 +59,9 @@ namespace Hadal.Networking.UI.Loading
         int objectPoolersCompleted;
         bool objectPoolersCheckedIn;
 
+        [FormerlySerializedAs("endsScreenHandler")]
         [Header("End screen")] 
-        [SerializeField] private EndScreenHandler endsScreenHandler;
+        [SerializeField] private EndScreenManager endsScreenManager;
 
         [Header("Post processing effects")]
         [SerializeField] float postProcessEffectSpeed = 2f;
@@ -113,6 +115,8 @@ namespace Hadal.Networking.UI.Loading
 
         void FixedUpdate()
         {
+            //Debug.LogWarning(gameObject.activeInHierarchy);
+            
             loadingCGF.Step(loadingFadeSpeed * Time.unscaledDeltaTime);
             continueCGF.Step(continueFadeSpeed * Time.unscaledDeltaTime);
 
@@ -391,9 +395,10 @@ namespace Hadal.Networking.UI.Loading
 
         void StartEndScreenAndReturn(bool playersWon)
         {
-            Debug.LogWarning("Game ended!");
+            Debug.LogWarning("Game ended! Players Won? " + playersWon);
 
             object[] data = {playersWon, GameManager.Instance.LevelTimer};
+            //Debug.LogWarning(GameManager.Instance.LevelTimer);
 
             if (NetworkEventManager.Instance.IsMasterClient)
             {
@@ -419,12 +424,13 @@ namespace Hadal.Networking.UI.Loading
             yield return new WaitForSeconds(5f);
                 
             //! Enable first before update!
-            endsScreenHandler.Enable();
+            endsScreenManager.Enable();
+            //endsScreenHandler.gameObject.SetActive(true);
 
             //! have to wait for it to enable
-            yield return null;
+            //while (!endsScreenHandler.IsActive) yield return null;
 
-            endsScreenHandler.UpdateEndData(playersWon, timeTaken);
+            endsScreenManager.UpdateEndData(playersWon, timeTaken);
                 
             NetworkEventManager.Instance.LeaveRoom(false, true);
         }
