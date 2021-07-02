@@ -51,10 +51,9 @@ namespace Hadal.AI
         /// <summary> Damages the chosen player over the network.</summary>
         /// <param name="player">Target player</param>
         /// <param name="type">The damage type</param>
-        public void Send_DamagePlayer(Transform player, AIDamageType type)
+        public void Send_DamagePlayer(PlayerController player, AIDamageType type)
         {
             //! compute data
-            int targetViewID = GetViewIDFromTransform(player);
             int damage = type switch
             {
                 AIDamageType.Thresh => threshDamage,
@@ -63,7 +62,7 @@ namespace Hadal.AI
             };
 
             //! raise event with data
-            object[] data = { targetViewID, damage };
+            object[] data = { player.ViewID, damage };
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.SEND_PLAYER_DAMAGE, data, options, SendOptions.SendReliable);
         }

@@ -1,12 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
-using Hadal.AI.Caverns;
+using System;
 using Hadal.AI.States;
-using Hadal.Networking;
-using Hadal.Player;
 using Tenshi;
-using Tenshi.UnitySoku;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 //! C: Jet, E: Jon
 namespace Hadal.AI
@@ -27,8 +23,17 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] EngagementSubState engagementSubState;
         public BrainState GetBrainState => brainState;
         public EngagementSubState GetEngagementObjective => engagementSubState;
-        public void SetBrainState(BrainState state) => brainState = state;
-        public void SetEngagementSubState(EngagementSubState state) => engagementSubState = state;
+        public event Action<BrainState, EngagementSubState> OnAIStateChange;
+        public void SetBrainState(BrainState state)
+        {
+            brainState = state;
+            OnAIStateChange?.Invoke(brainState, engagementSubState);
+        }
+        public void SetEngagementSubState(EngagementSubState state)
+        {
+            engagementSubState = state;
+            OnAIStateChange?.Invoke(brainState, engagementSubState);
+        }
 
         [Header("Confidence")]
         [SerializeField, ReadOnly] int confidence;

@@ -86,7 +86,7 @@ namespace Hadal.Player
             Enable();
         }
 
-        void OnDisable()
+        public override void OnDisable()
         {
             if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
             {
@@ -195,6 +195,7 @@ namespace Hadal.Player
         public void SetPhysicHighFriction() => physicHighGravityFriction.SetPhysicDataForController(this);
 
         public void SetIsCarried(in bool statement) => _isCarried = statement;
+        public bool GetIsCarried => _isCarried;
         public void SetIsDown(in bool statement) => _isDown = statement;
 
         public void Die() => _manager.TryToKill(attachedPlayer);
