@@ -11,7 +11,6 @@ namespace Hadal.AI.TreeNodes
         AIDamageManager _damageManager;
         bool _threshDone;
         bool _timerRunning;
-        bool _doOnce;
         float timer;
         float nextActionTime = 0;
 
@@ -21,7 +20,31 @@ namespace Hadal.AI.TreeNodes
             _damageManager = damageManager;
             _threshDone = false;
             _timerRunning = false;
-            _doOnce = false;
+            nextActionTime = 0f;
+            _brain.RuntimeData.OnAIStateChange += ResetThreshNode;
+        }
+
+        ~ThreshCarriedPlayerNode()
+        {
+            _brain.RuntimeData.OnAIStateChange -= ResetThreshNode;
+        }
+
+        /// <summary>
+        /// Resets only when switched to engagement + judgement state
+        /// </summary>
+        private void ResetThreshNode(BrainState bState, EngagementSubState eState)
+        {
+            if (bState == BrainState.Engagement && eState == EngagementSubState.Judgement)
+            {
+                timer = 0f;
+                _timerRunning = false;
+                nextActionTime = 0f;
+                _threshDone = false;
+            }
+            else
+            {
+                TryDetachCarriedPlayer();
+            }
         }
 
         void StartTimer()
@@ -31,21 +54,23 @@ namespace Hadal.AI.TreeNodes
 
         void ThreshPlayer()
         {
-            if (timer > 0)
+            if (timer > 0f)
             {
-                timer = timer - Time.deltaTime;
-                Debug.Log("Timer Thresh:" + timer);
-                if (Time.time > nextActionTime)
+                timer -= _brain.DeltaTime;
+                // Debug.Log("Timer Thresh:" + timer);
+                if (NextActionTimeReached())
                 {
-                    nextActionTime = Time.time + _damageManager.ApplyEveryNSeconds;
-                    _damageManager.Send_DamagePlayer(_brain.CarriedPlayer.transform, AIDamageType.Thresh);
-                    Debug.Log("Damage:" + AIDamageType.Thresh);
+                    ResetNextActionTime();
+                    _damageManager.Send_DamagePlayer(_brain.CarriedPlayer, AIDamageType.Thresh);
+                    // Debug.Log("Damage:" + AIDamageType.Thresh);
                 }
 
+                bool NextActionTimeReached() => Time.time > nextActionTime;
+                void ResetNextActionTime() => nextActionTime = Time.time + _damageManager.ApplyEveryNSeconds;
             }
             else
             {
-                timer = 0;
+                timer = 0f;
                 _threshDone = true;
             }
         }
@@ -56,9 +81,9 @@ namespace Hadal.AI.TreeNodes
             if (_brain.CarriedPlayer == null)
                 return NodeState.FAILURE;
 
-            if (!_doOnce)
+            if (!_timerRunning)
             {
-                _doOnce = true;
+                _timerRunning = true;
                 StartTimer();
             }
 
@@ -66,11 +91,8 @@ namespace Hadal.AI.TreeNodes
 
             if (_threshDone)
             {
-                Debug.LogWarning("thresh finished " + _brain.NavigationHandler.Data_CurrentPoint.CavernTag);
-                _brain.CarriedPlayer.SetIsCarried(false);
-                _brain.CarriedPlayer = null;
-                _brain.AttachCarriedPlayerToMouth(false);
-                _brain.NavigationHandler.StopCustomPath(false);
+                Debug.LogWarning("thresh finished at " + _brain.NavigationHandler.Data_CurrentPoint.CavernTag);
+                TryDetachCarriedPlayer();
                 return NodeState.SUCCESS;
             }
 
@@ -78,7 +100,19 @@ namespace Hadal.AI.TreeNodes
 
         }
 
-         public ThreshCarriedPlayerNode WithDebugName(string msg)
+        private bool TryDetachCarriedPlayer()
+        {
+            if (_brain.CarriedPlayer == null)
+                return false;
+            
+            _brain.CarriedPlayer.SetIsCarried(false);
+            _brain.AttachCarriedPlayerToMouth(false);
+            _brain.NavigationHandler.StopCustomPath(true);
+            _brain.CarriedPlayer = null;
+            return true;
+        }
+
+        public ThreshCarriedPlayerNode WithDebugName(string msg)
         {
             debugName = msg.AddSpacesBeforeCapitalLetters(false) + "?";
             return this;
