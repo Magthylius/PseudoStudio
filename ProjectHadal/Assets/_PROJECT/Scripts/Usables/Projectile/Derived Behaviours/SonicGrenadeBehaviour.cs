@@ -29,7 +29,7 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            explodeDuration = new Timer(5f);
+            explodeDuration = new Timer(1f);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
 
