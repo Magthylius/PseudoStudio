@@ -6,6 +6,6 @@ namespace Hadal
 {
     public interface IStaticResetter
     {
-        void Reset();
+        void Reset(bool booleanData);
     }
 }
