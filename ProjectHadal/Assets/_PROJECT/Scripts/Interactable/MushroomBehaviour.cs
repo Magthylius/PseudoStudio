@@ -68,7 +68,9 @@ namespace Hadal.Interactables
     [System.Serializable]
     public class MushroomShaderData
     {
+        [ColorUsageAttribute(true, true)]
         public Color BorderColour = Color.white;
+        [ColorUsageAttribute(true, true)]
         public Color Colour = Color.white;
         public float BorderPower = 0f;
         public float NoiseScale = 0f;
