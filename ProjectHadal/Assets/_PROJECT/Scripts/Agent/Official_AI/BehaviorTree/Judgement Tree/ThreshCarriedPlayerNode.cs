@@ -89,7 +89,9 @@ namespace Hadal.AI.TreeNodes
 
             ThreshPlayer();
 
-            if (_threshDone)
+            bool isDownOrIsUnalive = _brain.CarriedPlayer.GetInfo.HealthManager.IsDown || _brain.CarriedPlayer.GetInfo.HealthManager.IsUnalive;
+
+            if (_threshDone || isDownOrIsUnalive)
             {
                 Debug.LogWarning("thresh finished at " + _brain.NavigationHandler.Data_CurrentPoint.CavernTag);
                 TryDetachCarriedPlayer();
