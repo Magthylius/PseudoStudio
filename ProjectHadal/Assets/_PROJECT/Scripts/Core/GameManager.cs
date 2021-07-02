@@ -30,7 +30,7 @@ namespace Hadal
         [ReadOnly] public List<PhotonView> pViewList;
         [ReadOnly, SerializeField] private bool enableLevelTimer = false;
         [ReadOnly, SerializeField] private float levelTimer = 0f;
-        
+
         public event GameEvent GameStartedEvent;
         public event GameEvent GameEndedEvent;
         public event GameEvent SceneLoadedEvent;
@@ -43,9 +43,8 @@ namespace Hadal
             SceneManager.sceneLoaded += LoadSceneEvent;
             SceneManager.sceneLoaded += HandleSceneLoad;
             GameEndedEvent += HandleGameEndedEvent;
-            //GameEndedEvent += EndGameNetworking;
         }
-
+        
         private void FixedUpdate()
         {
             if (enableLevelTimer)
@@ -62,6 +61,8 @@ namespace Hadal
                 DisableTimer();
             else if (scene.name == InGameScene)
                 EnableTimer();
+            
+            StaticClassManager.Instance.CallForReset();
         }
 
         void HandleGameEndedEvent(bool playersWon)

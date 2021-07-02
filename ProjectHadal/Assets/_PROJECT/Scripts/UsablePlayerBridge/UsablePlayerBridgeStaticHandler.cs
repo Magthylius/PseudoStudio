@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,13 +9,12 @@ namespace Hadal.UsablePlayerBridge
 {
     public class UsablePlayerBridgeStaticHandler : MonoBehaviour, IStaticResetter
     {
-        public void Start()
+        private void Start()
         {
-            Reset(false);
-            GameManager.Instance.SceneLoadedEvent += Reset;
+            StaticClassManager.Instance.ResetEvent += Reset;
         }
-        
-        public void Reset(bool booleanData)
+
+        public void Reset()
         {
             UITrackerBridge.Reset();
         }
