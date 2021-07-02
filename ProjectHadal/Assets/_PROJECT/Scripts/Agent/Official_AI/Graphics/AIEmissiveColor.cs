@@ -31,6 +31,9 @@ namespace Hadal.AI.Graphics
             //! initialise property block (needs to use a renderer, since it has the functions to set up)
             materialProp = new MaterialPropertyBlock();
             if (materialProp != null) leviathanRenderer.GetPropertyBlock(materialProp);
+
+            percent = 0f;
+            UpdateMaterialData();
         }
         public void JudgementColor(bool isStarting)
         {
