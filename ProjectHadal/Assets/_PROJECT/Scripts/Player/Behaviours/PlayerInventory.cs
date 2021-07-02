@@ -138,6 +138,7 @@ namespace Hadal.Player.Behaviours
 
         void FireFlareWithShooter(int projectileID)
         {
+            flareUtility.Activate();
             _controllerInfo.Shooter.FireUtility(projectileID, flareUtility, -1, -1, false);
         }
 

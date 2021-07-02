@@ -13,6 +13,7 @@ namespace Hadal.AI
     {
         [Header("Health")]
         [SerializeField] int maxHealth;
+        [SerializeField, ReadOnly] int currentHealth;
         
         [Header("Slow Stacking Status")]
         [SerializeField, Range(0f, 1f)] private float slowPercentPerStack;
@@ -22,7 +23,6 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private float currentSlowPercent;
         [SerializeField, ReadOnly] private int currentSlowStacks;
 
-        int currentHealth;
         AIBrain brain;
         Timer stunTimer;
         private bool _killedWithCheat = false;
