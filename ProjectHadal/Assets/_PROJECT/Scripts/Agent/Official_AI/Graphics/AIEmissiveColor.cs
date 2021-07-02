@@ -67,6 +67,8 @@ namespace Hadal.AI.Graphics
                 percent = 0f;
             }
 
+            UpdateMaterialData();
+
             // while (percent < 1f)
             // {
             //     percent += Time.deltaTime * transitionSpeed;
