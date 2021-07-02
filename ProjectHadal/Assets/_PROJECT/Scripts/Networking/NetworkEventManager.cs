@@ -317,6 +317,7 @@ namespace Hadal.Networking
                 {
                     RaiseEvent(ByteEvents.GAME_HOST_FORCEDKICK, null);
                     connectedNumCounter = PlayerCount - 1;
+                    Debug.LogWarning("Telling all players to leave, expected call backs: " + connectedNumCounter);
                 }
                 else
                 {
@@ -591,6 +592,7 @@ namespace Hadal.Networking
         
         public void ClientForcedLeaveRoom(EventData data)
         {
+            Debug.LogWarning("Received order to leave, sending ok callback");
             RaiseEvent(ByteEvents.GAME_CLIENT_FORCEDKICKCALLBACK, LocalPlayer);
             LeaveRoom(false, true);
             Cursor.visible = true;
@@ -600,6 +602,7 @@ namespace Hadal.Networking
         public void HostForcedLeaveRoomCallback(EventData data)
         {
             connectedNumCounter++;
+            Debug.LogWarning("Received leave callback, counter: " + connectedNumCounter);
             if (connectedNumCounter >= connectedNumToKick)
             {
                 LeaveRoom(false, true);
