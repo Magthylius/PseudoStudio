@@ -8,11 +8,16 @@ namespace Hadal.Player
 {
     public class PlayerStaticHandler : MonoBehaviour, IStaticResetter
     {
-        private void Start()
+        private void OnEnable()
         {
             StaticClassManager.Instance.ResetEvent += Reset;
         }
-
+        
+        private void OnDisable()
+        {
+            StaticClassManager.Instance.ResetEvent -= Reset;
+        }
+        
         public void Reset()
         {
             LocalPlayerData.Reset();
