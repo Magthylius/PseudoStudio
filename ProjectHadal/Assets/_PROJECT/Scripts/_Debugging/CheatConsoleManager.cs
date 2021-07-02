@@ -322,7 +322,7 @@ namespace Hadal.Debugging
         void CloseConsole()
         {
             //! Dont disable if in MainMenu
-            if (SceneManager.GetActiveScene().name != NetworkEventManager.Instance.MainMenuScene)
+            if (NetworkEventManager.Instance.IsInGame)
                 Cursor.visible = false;
             
             //Cursor.lockState = CursorLockMode.Locked;

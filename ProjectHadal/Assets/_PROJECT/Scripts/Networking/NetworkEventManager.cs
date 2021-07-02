@@ -542,13 +542,21 @@ namespace Hadal.Networking
         #endregion
 
         #region Accessors
-        
         public Transform LocalSpawn => localPlayerSpawnTrans;
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
+        
+        //! Scenes
+        public bool IsInMainMenu => CurrentSceneName == MainMenuScene;
+        public bool IsInGame => CurrentSceneName == InGameScene;
+        public string CurrentSceneName => SceneManager.GetActiveScene().name;
+        
+        //! Players
         public Player LocalPlayer => PhotonNetwork.LocalPlayer;
         public Dictionary<int, Player> AllPlayers => PhotonNetwork.CurrentRoom.Players;
         public int PlayerCount => AllPlayers.Count;
         public List<GameObject> PlayerObjects => playerObjects;
+        
+        //! Connections
         public bool IsConnected => PhotonNetwork.IsConnected;
         public bool InLobby => PhotonNetwork.InLobby;
         public bool InRoom => PhotonNetwork.InRoom;
