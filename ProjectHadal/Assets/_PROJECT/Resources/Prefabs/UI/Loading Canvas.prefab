@@ -1906,6 +1906,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4061648257424313698}
+  - component: {fileID: 8269545702940435045}
   m_Layer: 5
   m_Name: EndScreen Menu
   m_TagString: Untagged
@@ -1933,6 +1934,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8269545702940435045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2397172086048695281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2099d4c4a267194083ef4684cf23ff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missionOutcomeTMP: {fileID: 1657666725717265851}
+  timeTakenTMP: {fileID: 8103586503314740976}
+  missionOutcomeText: 'MISSION OUTCOME:'
+  successOutcomeText: SUCCESS
+  failureOutcomeText: FAILURE
+  successColor: {r: 0, g: 1, b: 0.15811014, a: 1}
+  failureColor: {r: 1, g: 0, b: 0, a: 1}
+  MissionSuccess: 0
+  TimeTaken: 0
 --- !u!1 &2703973941704028837
 GameObject:
   m_ObjectHideFlags: 0
@@ -2102,7 +2124,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1205218857537273065}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8269545702940435045}
+        m_TargetAssemblyTypeName: Hadal.Networking.UI.EndScreen.EndScreenHandler,
+          Hadal.Networking
+        m_MethodName: Disable
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2991821069858830930
 GameObject:
   m_ObjectHideFlags: 0
@@ -4754,7 +4789,7 @@ GameObject:
   - component: {fileID: 1617573103423167629}
   - component: {fileID: 8103586503314740976}
   m_Layer: 5
-  m_Name: Time
+  m_Name: Time Taken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6764,7 +6799,7 @@ GameObject:
   - component: {fileID: 8361837484315820631}
   - component: {fileID: 4182184906998219840}
   m_Layer: 5
-  m_Name: Time Taken
+  m_Name: Time Taken Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
