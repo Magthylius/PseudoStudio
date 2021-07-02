@@ -77,7 +77,7 @@ namespace Hadal.AI.Graphics
 
         private void UpdateMaterialData()
         {
-            materialProp.SetColor(LerpColourValue(percent));
+            materialProp.SetColor("_EmissionColor", LerpColourValue(percent));
             leviathanRenderer.SetPropertyBlock(materialProp);
         }
 
