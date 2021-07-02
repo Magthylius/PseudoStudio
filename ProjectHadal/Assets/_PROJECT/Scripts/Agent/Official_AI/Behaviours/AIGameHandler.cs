@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using ExitGames.Client.Photon;
+using Hadal.Networking;
 using Hadal.Player;
+using Photon.Pun;
 using Tenshi;
 using UnityEngine;
 
@@ -10,7 +13,6 @@ namespace Hadal.AI
     {
         [SerializeField, ReadOnly] private int _currentKillCount;
         private AIBrain _brain;
-        private List<PlayerController> _players;
 
         public void AILoseGame()
         {
@@ -29,9 +31,9 @@ namespace Hadal.AI
         public void Initialise(AIBrain brain)
         {
             _brain = brain;
-            _players = brain.Players;
             _currentKillCount = 0;
-            PlayerManager.Instance.OnAllPlayersReadyEvent += SetupEventListeners;
+            if (PhotonNetwork.IsMasterClient)
+                PlayerManager.Instance.OnAllPlayersReadyEvent += SetupEventListeners;
         }
 
         private void SetupEventListeners()
@@ -39,9 +41,9 @@ namespace Hadal.AI
             PlayerManager.Instance.OnAllPlayersReadyEvent -= SetupEventListeners;
 
             _brain.RefreshPlayerReferences();
-            _players = _brain.Players.ToList();
+            List<PlayerController> players = _brain.Players.ToList();
 
-            _players.ForEach(p => p.GetInfo.HealthManager.OnDeath += IncreaseKillCounter);
+            players.ForEach(p => p.GetInfo.HealthManager.OnDeath += IncreaseKillCounter);
         }
 
         private void IncreaseKillCounter()
@@ -53,9 +55,14 @@ namespace Hadal.AI
         private void EvaluatePlayerLoseGameEndState()
         {
             _brain.RefreshPlayerReferences();
-            if (_currentKillCount == 0)
+            int networkPlayerCount = NetworkEventManager.Instance.PlayerCount;
+            
+            bool killCountExceeded = _currentKillCount >= networkPlayerCount;
+            bool leviathanIsNotDead = !_brain.HealthManager.IsUnalive;
+            if (killCountExceeded && leviathanIsNotDead)
             {
-
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_ALL_UNALIVE, null, SendOptions.SendReliable);
+                PlayersLoseGame();
             }
         }
 
