@@ -112,7 +112,7 @@ namespace Hadal.Player.Behaviours
             yield return new WaitForSeconds(0.1f);
             ResetHealth();
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
-            if (IsLocalPlayer) NetworkEventManager.Instance.AddListener(ByteEvents.SEND_PLAYER_DAMAGE, Receive_TakeDamage);
+            if (IsLocalPlayer) NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_RECEIVE_DAMAGE, Receive_TakeDamage);
         }
 
         public void DoUpdate(in float deltaTime)

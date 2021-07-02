@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using NaughtyAttributes;
 using Photon.Pun;
@@ -19,9 +20,17 @@ namespace Hadal
         }
 
         public static GameManager Instance;
-        [ReadOnly] GameState currentGameState;
-        public List<PhotonView> pViewList;
 
+        [Header("Settings")] 
+        [Scene] private string MainMenuScene;
+        [Scene] private string InGameScene;
+        
+        [Header("Data")]
+        [ReadOnly] GameState currentGameState;
+        [ReadOnly] public List<PhotonView> pViewList;
+        [ReadOnly, SerializeField] private bool enableLevelTimer = false;
+        [ReadOnly, SerializeField] private float levelTimer = 0f;
+        
         public event GameEvent GameStartedEvent;
         public event GameEvent GameEndedEvent;
         public event GameEvent SceneLoadedEvent;
@@ -32,18 +41,41 @@ namespace Hadal
             else Instance = this;
 
             SceneManager.sceneLoaded += LoadSceneEvent;
-            GameEndedEvent += EndGameNetworking;
+            SceneManager.sceneLoaded += HandleSceneLoad;
+            GameEndedEvent += HandleGameEndedEvent;
+            //GameEndedEvent += EndGameNetworking;
+        }
+
+        private void FixedUpdate()
+        {
+            if (enableLevelTimer)
+                levelTimer += Time.fixedDeltaTime;
+        }
+
+        void HandleSceneLoad(Scene scene, LoadSceneMode mode)
+        {
+            ResetTimer();
+     
+            if (scene.name == MainMenuScene)
+                DisableTimer();
+            else if (scene.name == InGameScene)
+                EnableTimer();
+        }
+
+        void HandleGameEndedEvent(bool playersWon)
+        {
+            DisableTimer();
         }
         
+        public void EnableTimer() => enableLevelTimer = true;
+        public void DisableTimer() => enableLevelTimer = false;
+        public void ResetTimer() => levelTimer = 0f;
+        public float LevelTimer => levelTimer;
+
         public void StartGameEvent() => GameStartedEvent?.Invoke(false);
         public void EndGameEvent(bool playersWon) => GameEndedEvent?.Invoke(playersWon);
         void LoadSceneEvent(Scene scene, LoadSceneMode mode) => SceneLoadedEvent?.Invoke(false);
 
-        void EndGameNetworking(bool playersWon)
-        {
-            
-        }
-        
         public void ChangeGameState(GameState state) => currentGameState = state;
         public GameState CurrentGameState => currentGameState;
         public bool IsInMainMenu => currentGameState == GameState.IDLE ||

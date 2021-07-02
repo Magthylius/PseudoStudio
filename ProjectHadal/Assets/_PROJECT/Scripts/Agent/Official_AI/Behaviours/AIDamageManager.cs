@@ -64,7 +64,7 @@ namespace Hadal.AI
             //! raise event with data
             object[] data = { player.ViewID, damage };
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.SEND_PLAYER_DAMAGE, data, options, SendOptions.SendReliable);
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_RECEIVE_DAMAGE, data, options, SendOptions.SendReliable);
         }
 
         public int GetViewIDFromTransform(Transform trans)
