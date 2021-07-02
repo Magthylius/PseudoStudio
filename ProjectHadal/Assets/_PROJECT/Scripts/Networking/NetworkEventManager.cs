@@ -79,8 +79,7 @@ namespace Hadal.Networking
 
             SetupNetworking();
             playerObjects = new List<GameObject>();
-            if (hostKicksAllOnLeave) AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ForcedLeaveRoom);
-            
+
             //! Force disconnect because PhotonNetwork does not disconnect after offline mode
             if (IsConnected && !isOfflineMode) Disconnect();
         }
@@ -102,6 +101,7 @@ namespace Hadal.Networking
             PhotonNetwork.NetworkingClient.EventReceived += InvokeRecievedEvents;
             SceneManager.sceneLoaded += OnSceneLoaded;
             SetupEventRaising();
+            if (hostKicksAllOnLeave) AddListener(ByteEvents.GAME_HOST_FORCEDKICK, ForcedLeaveRoom);
         }
 
         public override void OnDisable()
