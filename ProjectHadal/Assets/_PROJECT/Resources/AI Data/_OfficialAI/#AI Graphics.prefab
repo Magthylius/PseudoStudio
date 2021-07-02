@@ -390,6 +390,7 @@ GameObject:
   - component: {fileID: 8918437484995442052}
   - component: {fileID: 274833003004990504}
   - component: {fileID: 9008419341255410924}
+  - component: {fileID: 2345265172381996678}
   m_Layer: 0
   m_Name: '#AI Graphics'
   m_TagString: Untagged
@@ -442,6 +443,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MouthObject: {fileID: 7178468667555277903}
+--- !u!114 &2345265172381996678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4083596117388400861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc58708ae4f746d43ab35e47e0362718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leviathanBody: {fileID: 2100000, guid: bc12ffc3ce76c0c4c8bd082539246af0, type: 2}
+  transitionSpeed: 1
+  idleStateColor: {r: 0, g: 0.20392157, b: 2.9960785, a: 0}
+  judgementStateColor: {r: 6.0535517, g: 0.11502131, b: 0, a: 0}
 --- !u!1 &5140033063587931876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1268,7 +1285,7 @@ PrefabInstance:
     - target: {fileID: -6748924078858820254, guid: 11be67f6e1bda55c6a76f3a811bbb942, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1882afac907e68d1472682a0297fd552, type: 2}
+      objectReference: {fileID: 2100000, guid: bc12ffc3ce76c0c4c8bd082539246af0, type: 2}
     - target: {fileID: -4216859302048453862, guid: 11be67f6e1bda55c6a76f3a811bbb942, type: 3}
       propertyPath: m_RootOrder
       value: 1

@@ -159,7 +159,7 @@ namespace Hadal.AI
             cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
             cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
             cavernManager.AILeftTunnelEvent += OnTunnelLeave;
-
+            
             PlayerManager pManager = PlayerManager.Instance;
             if (pManager != null && PhotonNetwork.IsMasterClient)
                 pManager.OnAllPlayersReadyEvent += PlayersAreReadySignal;
