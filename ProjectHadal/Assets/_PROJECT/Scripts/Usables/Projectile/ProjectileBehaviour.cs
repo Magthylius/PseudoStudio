@@ -138,7 +138,7 @@ namespace Hadal.Usables.Projectiles
                 {
                     return;
                 }
-                Debug.LogWarning("shooterID: " + GetShooterID());
+                //Debug.LogWarning("shooterID: " + GetShooterID());
                 if (GetShooterID() == GameManager.Instance.pViewList[i].ViewID && GameManager.Instance.pViewList[i].IsMine)
                 {
                     IsLocal = true;

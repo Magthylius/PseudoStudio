@@ -32,11 +32,17 @@ namespace Hadal
             else Instance = this;
 
             SceneManager.sceneLoaded += LoadSceneEvent;
+            GameEndedEvent += EndGameNetworking;
         }
         
         public void StartGameEvent() => GameStartedEvent?.Invoke(false);
         public void EndGameEvent(bool playersWon) => GameEndedEvent?.Invoke(playersWon);
         void LoadSceneEvent(Scene scene, LoadSceneMode mode) => SceneLoadedEvent?.Invoke(false);
+
+        void EndGameNetworking(bool playersWon)
+        {
+            
+        }
         
         public void ChangeGameState(GameState state) => currentGameState = state;
         public GameState CurrentGameState => currentGameState;

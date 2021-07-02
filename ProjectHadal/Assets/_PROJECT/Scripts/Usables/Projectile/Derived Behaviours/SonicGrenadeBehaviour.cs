@@ -1,6 +1,7 @@
 using UnityEngine;
 using ExitGames.Client.Photon;
 using Hadal.Networking;
+using Magthylius.DataFunctions;
 //Created by Jet, edited Jin
 namespace Hadal.Usables.Projectiles
 {
@@ -11,7 +12,7 @@ namespace Hadal.Usables.Projectiles
 
         public SelfDeactivationMode selfDeactivation;
 
-        private float radius = 10;
+        [SerializeField] private float radius = 20;
         private Collider[] detectedObjects;
 
         //mode swapping
@@ -19,11 +20,26 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] private bool isHighHz;
         bool triggerOnce;
 
+        [Header("Visual Effect")]
+        [SerializeField] private GameObject explodeEffect;
+        private Timer explodeDuration;
+        private bool isExploding;
+
+        #region Unity LifeCycle
         protected override void Start()
         {
             base.Start();
+            explodeDuration = new Timer(1f);
+            explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
 
+        private void OnDrawGizmosSelected() // draw circle radius for debug
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawSphere(transform.position, radius);
+        }
+
+        #endregion
         public void SubscribeModeEvent()
         {
             impulseMode = GetComponentInChildren<ImpulseMode>();
@@ -63,8 +79,9 @@ namespace Hadal.Usables.Projectiles
             object[] content = new object[] { projectileID, activatedSpot };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ACTIVATED, content);
 
-            UnSubcribeModeEvent();
-            PPhysics.OnPhysicsFinished();
+            StartExplosionEffect();
+           /* UnSubcribeModeEvent();
+            PPhysics.OnPhysicsFinished();*/
             return;
         }
 
@@ -78,11 +95,27 @@ namespace Hadal.Usables.Projectiles
                 if (gameObject.activeSelf)
                 {
                     gameObject.transform.position = (Vector3)data[1];
-                    PPhysics.OnPhysicsFinished();
+                    StartExplosionEffect();
+                    /*PPhysics.OnPhysicsFinished();*/
                 }
             }
             return;
         }
+
+        private void StartExplosionEffect()
+        {
+            isExploding = true;
+            explodeEffect.SetActive(true);
+        }
+
+        private void StopExplosion()
+        {
+            isExploding = false;
+            explodeEffect.SetActive(false);
+            UnSubcribeModeEvent();
+            PPhysics.OnPhysicsFinished();
+        }
+
         /*  private void SonicExplode()
           {
               LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
