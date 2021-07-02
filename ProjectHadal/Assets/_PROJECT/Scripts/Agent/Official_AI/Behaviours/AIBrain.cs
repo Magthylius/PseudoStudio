@@ -91,7 +91,7 @@ namespace Hadal.AI
 
         private void Awake()
         {
-            if (!isEnabled) return;
+            if (!isEnabled || !PhotonNetwork.IsMasterClient) return;
 
             _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
@@ -112,7 +112,7 @@ namespace Hadal.AI
 
         private void Start()
         {
-            if (!isEnabled) return;
+            if (!isEnabled || !PhotonNetwork.IsMasterClient) return;
 
             Setup();
         }
