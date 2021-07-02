@@ -51,7 +51,6 @@ namespace Hadal
             if (enableLevelTimer)
             {
                 levelTimer += Time.fixedDeltaTime;
-                Debug.LogWarning(levelTimer);
             }
         }
 
