@@ -83,6 +83,9 @@ namespace Hadal.Player.Behaviours
         /// <summary> Checks for inputs that are meant to trigger the torpedo or other utilities. </summary>
         private void HandleItemInput()
         {
+            if (_controller.GetIsCarried)
+                return;
+
             if (_uInput.FireKeyTorpedo)
             {
                 _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false);
