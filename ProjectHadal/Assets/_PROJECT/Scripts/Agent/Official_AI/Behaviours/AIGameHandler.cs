@@ -48,6 +48,7 @@ namespace Hadal.AI
             List<PlayerController> players = _brain.Players.ToList();
 
             players.ForEach(p => p.GetInfo.HealthManager.OnDeath += IncreaseKillCounter);
+            players.ForEach(p => p.GetInfo.HealthManager.OnDown += CheckPlayersDown);
         }
         
         /// <summary> Increase counter per player death. </summary>
@@ -55,6 +56,19 @@ namespace Hadal.AI
         {
             _currentKillCount++;
             EvaluatePlayerLoseGameEndState();
+        }
+
+        /// <summary> Check if all players are down. </summary>
+        void CheckPlayersDown()
+        {
+            List<PlayerController> players = _brain.Players.ToList();
+            
+            foreach (PlayerController p in players)
+            {
+                if (!p.GetInfo.HealthManager.IsDown) return;
+            }
+
+            PlayersLoseGame();
         }
 
         /// <summary> If all players in current room die, then end the game + send event. </summary>

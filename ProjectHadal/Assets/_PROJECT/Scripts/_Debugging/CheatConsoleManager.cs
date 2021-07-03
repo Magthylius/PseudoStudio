@@ -36,6 +36,8 @@ namespace Hadal.Debugging
         public static DebugCommand C_AISmite;
 
         //! Player
+        public static DebugCommand C_DownSelf;
+        public static DebugCommand C_Revive;
         public static DebugCommand<int> C_SetHp;
         public static DebugCommand<float> C_SetMaxSpeed;
         public static DebugCommand<float> C_SetAccel;
@@ -148,6 +150,16 @@ namespace Hadal.Debugging
             });
 
             //! Player
+            C_DownSelf = new DebugCommand("downself", "Instantly down yourself", "downself", () =>
+            {
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.GetInfo.HealthManager.Debug_BecomeDownButNotOut();
+            });
+            C_Revive = new DebugCommand("revive", "Instantly down yourself", "revive", () =>
+            {
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.GetInfo.HealthManager.Debug_InstantReviveFromDown();
+            });
             C_SetHp = new DebugCommand<int>("sethp", "Sets the health of player", "sethp", (x) =>
             {
                 var player = PlayerManager.Instance.LocalPlayerController;
@@ -231,6 +243,8 @@ namespace Hadal.Debugging
                 C_AIClearDebuffs,
                 C_AISmite,
                 
+                C_DownSelf,
+                C_Revive,
                 C_SetHp,
                 C_SetMaxSpeed,
                 C_SetAccel,

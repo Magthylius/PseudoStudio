@@ -58,7 +58,7 @@ namespace Hadal.AI.Information
         
         private void OnDrawGizmosSelected()
         {
-            if (!drawPathing || !PhotonNetwork.IsMasterClient) return;
+            if (!PhotonNetwork.IsConnected || !drawPathing || !PhotonNetwork.IsMasterClient) return;
             for (int i = 0; i < cachedPointPathList.Count - 1; i++)
             {
                 Gizmos.color = Color.cyan;

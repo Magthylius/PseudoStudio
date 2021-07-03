@@ -547,7 +547,7 @@ namespace Hadal.Player.Behaviours
 
         /// <summary> Sets the health manager state to the criteria for <see cref="IsDown"/> to be true (i.e. 0 hp). </summary>
         [Button(nameof(Debug_BecomeDownButNotOut))]
-        private void Debug_BecomeDownButNotOut()
+        public void Debug_BecomeDownButNotOut()
         {
             if (IsDown)
             {
@@ -584,7 +584,7 @@ namespace Hadal.Player.Behaviours
 
         /// <summary> Sets the health manager state to the criteria for revival (i.e. from teammates' interaction). </summary>
         [Button(nameof(Debug_InstantReviveFromDown))]
-        private void Debug_InstantReviveFromDown()
+        public void Debug_InstantReviveFromDown()
         {
             if (!IsDown && !IsUnalive)
             {
