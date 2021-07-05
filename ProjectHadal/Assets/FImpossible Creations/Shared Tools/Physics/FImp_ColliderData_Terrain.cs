@@ -10,6 +10,7 @@ namespace FIMSpace
         public FImp_ColliderData_Terrain(TerrainCollider collider)
         {
             Collider = collider;
+            Transform = collider.transform;
             TerrCollider = collider;
             ColliderType = EFColliderType.Terrain;
             TerrainComponent = collider.GetComponent<Terrain>();
@@ -25,42 +26,7 @@ namespace FIMSpace
             Vector3 offsettedPosition = segmentPosition + segmentOffset;
             Vector3 terrPoint = offsettedPosition;
             terrPoint.y = TerrCollider.transform.position.y + TerrainComponent.SampleHeight(offsettedPosition);
-            //Vector3 terrPushedPoint = terrPoint;
-            //terrPushedPoint.y += segmentRadius;
-
-
-            //Vector3 rayOrigin = offsettedPosition;
-            //rayOrigin.y = TerrCollider.transform.position.y + TerrainComponent.SampleHeight(offsettedPosition) + segmentRadius;
-
-            //Ray ray = new Ray(rayOrigin, Vector3.down);
-
-            //RaycastHit hit;
-            //if (TerrCollider.Raycast(ray, out hit, segmentRadius * 2f))
-            //{
-            //    float hitToPointDist = (offsettedPosition - hit.point).magnitude;
-
-            //    float underMul = 1f;
-            //    if (hit.point.y > offsettedPosition.y + segmentRadius * 0.9f)
-            //    {
-            //        underMul = 8f;
-            //    }
-            //    else
-            //    if (hit.point.y > offsettedPosition.y)
-            //    {
-            //        underMul = 4f;
-            //    }
-
-            //    if (hitToPointDist < segmentRadius * underMul)
-            //    {
-            //        Vector3 toNormal = hit.point - offsettedPosition;
-            //        Vector3 pushNormal;
-
-            //        if (underMul > 1f) pushNormal = toNormal + toNormal.normalized * segmentRadius; else pushNormal = toNormal - toNormal.normalized * segmentRadius;
-            //        segmentPosition = segmentPosition + pushNormal;
-
-            //        return true;
-            //    }
-            //}
+            
 
             float hitToPointDist = (offsettedPosition - terrPoint).magnitude;
             float underMul = 1f;

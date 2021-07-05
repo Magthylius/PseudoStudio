@@ -7,7 +7,10 @@ namespace FIMSpace
     /// </summary>
     public abstract class FImp_ColliderData_Base
     {
+        public Transform Transform { get; protected set; }
         public Collider Collider { get; protected set; }
+        public Collider2D Collider2D { get; protected set; }
+        public bool Is2D = false;
 
         public bool IsStatic { get; private set; }
         public enum EFColliderType { Box, Sphere, Capsule, Mesh, Terrain }
@@ -56,11 +59,61 @@ namespace FIMSpace
 
 
         /// <summary>
+        /// Generating class for given collider
+        /// </summary>
+        public static FImp_ColliderData_Base GetColliderDataFor(Collider2D collider)
+        {
+            CircleCollider2D s = collider as CircleCollider2D;
+
+            if (s)
+                return new FImp_ColliderData_Sphere(s);
+            else
+            {
+                CapsuleCollider2D c = collider as CapsuleCollider2D;
+                if (c)
+                    return new FImp_ColliderData_Capsule(c);
+                else
+                {
+                    BoxCollider2D b = collider as BoxCollider2D;
+                    if (b)
+                        return new FImp_ColliderData_Box(b);
+                    else
+                    {
+                        PolygonCollider2D m = collider as PolygonCollider2D;
+                        if (m)
+                            return new FImp_ColliderData_Mesh(m);
+                        //else
+                        //{
+                        //    EdgeCollider2D e = collider as EdgeCollider2D;
+                        //    if (e)
+                        //        return new FImp_ColliderData_Mesh(e);
+                        //    else
+                        //    {
+                        //        TilemapCollider2D t = collider as TilemapCollider2D;
+                        //        if (t)
+                        //            return new FImp_ColliderData_Mesh(t);
+                        //        else
+                        //        {
+                        //            CompositeCollider2D cps = collider as CompositeCollider2D;
+                        //            if (cps)
+                        //                return new FImp_ColliderData_Mesh(cps);
+                        //        }
+                        //    }
+                        //}
+                    }
+                }
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
         /// When collider moves / rotates / scales this method should be called
         /// </summary>
         public virtual void RefreshColliderData()
         {
-            if (Collider.gameObject.isStatic) IsStatic = true;
+            if (Transform.gameObject.isStatic) IsStatic = true; else IsStatic = false;
         }
 
 
@@ -79,5 +132,18 @@ namespace FIMSpace
             return false;
         }
 
+        /// <summary>
+        /// If not implemented 3D algorithm will be applied
+        /// </summary>
+        public virtual bool PushIfInside2D(ref Vector3 point, float pointRadius, Vector3 pointOffset)
+        {
+            return PushIfInside(ref point, pointRadius, pointOffset);
+        }
+
+
+        public static bool VIsSame(Vector3 vec1, Vector3 vec2)
+        {
+            if (vec1.x != vec2.x) return false; if (vec1.y != vec2.y) return false; if (vec1.z != vec2.z) return false; return true;
+        }
     }
 }

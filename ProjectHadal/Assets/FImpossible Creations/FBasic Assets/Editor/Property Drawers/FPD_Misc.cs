@@ -97,7 +97,7 @@ namespace FIMSpace.FEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            FEditor_Styles.DrawUILine(Attribute.color);
+            FGUI_Inspector.DrawUILine(Attribute.color);
         }
     }
 }

@@ -31,6 +31,7 @@ public class FHierarchyIcons
     private static void DrawIcon(string texName, Rect rect)
     {
 #if UNITY_EDITOR
+        if (string.IsNullOrEmpty(texName)) return;
         Rect r = new Rect(rect.x + rect.width - 16f, rect.y, 16f, 16f);
         GUI.DrawTexture(r, GetTex(texName));
 #endif
