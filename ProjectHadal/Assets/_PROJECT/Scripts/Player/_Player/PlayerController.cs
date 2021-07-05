@@ -135,6 +135,9 @@ namespace Hadal.Player
             lamp.DoUpdate(DeltaTime);
             healthManager.DoUpdate(DeltaTime);
             shooter.DoUpdate(DeltaTime);
+
+            // mover for Vector Type.
+            if (CanMove) mover.DoUpdate(DeltaTime);
         }
 
         protected override void FixedUpdate()

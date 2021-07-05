@@ -4,15 +4,16 @@ using UnityEngine;
 //Created by Jet, E: Jon
 namespace Hadal.Locomotion
 {
-    public class PlayerRotation : Rotator
+    public class PlayerRotationF : Rotator
     {
+        [SerializeField] Rigidbody rb;
         [SerializeField, Min(0f)] float maxInputAxisClamp = 5f;
         [SerializeField, Range(0f, 1f)] float yawInfluenceOnRollFactor = 0.3f;
 
         Quaternion currentQT;
         Quaternion targetQT;
 
-        //int sl_MP;
+        int sl_MP;
 
         public override void Initialise(Transform target)
         {
@@ -24,7 +25,7 @@ namespace Hadal.Locomotion
             currentQT = target.localRotation;
             targetQT = currentQT;
 
-            /*sl_MP = DebugManager.Instance.CreateScreenLogger();*/
+            sl_MP = DebugManager.Instance.CreateScreenLogger();
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -36,8 +37,7 @@ namespace Hadal.Locomotion
         public override void DoFixedUpdate(in float fixedDeltaTime)
         {
             //if (!allowUpdate) return;
-
-            RotateByQT();
+            RototateByForce();
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -82,7 +82,14 @@ namespace Hadal.Locomotion
             float yaw = input.x * Rotary.GetYawSensitivity;
             float roll = input.z * Rotary.GetRollSensivity;
 
-            //DebugManager.Instance.SLog(sl_MP, input.x + "|" + -input.y + "|" + input.z);
+            float yawInfluence = 0f;
+            if (input.x != 0)
+                yawInfluence = - input.x / 2 ;
+
+            Vector3 torqueDirection = new Vector3(-input.y, input.x, input.z + yawInfluence);
+            rb.AddRelativeTorque(torqueDirection, ForceMode.Acceleration);
+            /*print(Rotary.GetPitchSensitivity);*/
+            DebugManager.Instance.SLog(sl_MP, /*-input.y + "|" + input.x + "|" + */input.z + "|" + input.z + yawInfluence);
         }
     }
 }

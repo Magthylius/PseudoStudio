@@ -103,7 +103,12 @@ namespace Hadal.Locomotion
 
         private void CalculateSpeed()
         {
-            Speed.Normalised = rigidBody.velocity.magnitude;
+            _lastPosition = _currentPosition;
+            _currentPosition = target.localPosition;
+            float distance = Vector3.Distance(_currentPosition, _lastPosition);
+            Speed.Normalised = distance / Time.deltaTime;
+
+            /*Speed.Normalised = rigidBody.velocity.magnitude;*/
             Speed.Forward = rigidBody.velocity.x;
             Speed.Strafe = rigidBody.velocity.z;
             Speed.Hover = rigidBody.velocity.y;
