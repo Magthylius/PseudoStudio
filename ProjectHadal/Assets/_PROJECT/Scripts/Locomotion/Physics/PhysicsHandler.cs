@@ -59,7 +59,7 @@ namespace Hadal.Locomotion
         #endregion
 
         #region Private Methods
-        private void SetUpRigidBody()
+        public void SetUpRigidBody()
         {
             rigidBody.mass = weightForce / 9.8f;
             rigidBody.useGravity = true;

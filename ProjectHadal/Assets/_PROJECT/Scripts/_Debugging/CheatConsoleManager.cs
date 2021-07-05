@@ -42,9 +42,13 @@ namespace Hadal.Debugging
         public static DebugCommand<float> C_SetMaxSpeed;
         public static DebugCommand<float> C_SetAccel;
         public static DebugCommand C_GodMode;
-		
-		//! Player Inventory
-		public static DebugCommand C_SimplifyLoadout;
+        public static DebugCommand C_ChangeMoverToF;
+        public static DebugCommand C_ChangeMoverToV;
+        public static DebugCommand C_ChangeMoverToH;
+        public static DebugCommand C_ChangeRotatorToF;
+        public static DebugCommand C_ChangeRotatorToV;
+        //! Player Inventory
+        public static DebugCommand C_SimplifyLoadout;
 		public static DebugCommand C_AddGrenadeAndTrap;
 		public static DebugCommand C_AddTrapAndGrenade;
 		public static DebugCommand C_AddGrenade;
@@ -180,9 +184,34 @@ namespace Hadal.Debugging
                 var player = PlayerManager.Instance.LocalPlayerController;
                 player.GetInfo.HealthManager.Debug_ToggleGodMode();
             });
-            
-			//! Player Inventory
-			C_SimplifyLoadout = new DebugCommand("SimplifyLoadout", "Sets the utility loadout to only have a flare.", "SimplifyLoadout", () =>
+            C_ChangeMoverToF = new DebugCommand("movertof", "Switching player movement to ForceMode", "movertof", () =>
+            {
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.ChangeMoverToForce();
+            });
+            C_ChangeMoverToV = new DebugCommand("movertov", "Switching player movement to VectorMode", "movertov", () =>
+            {
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.ChangeMoverToVector();
+            });
+            C_ChangeMoverToH = new DebugCommand("movertoh", "Switching player movement to HybridMode", "movertoh", () =>
+            {
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.ChangeMoverToHyrid();
+            });
+            C_ChangeRotatorToF = new DebugCommand("rotatortof", "Switching player rotator to ForceMode", "rotatortof", () =>
+            {
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.ChangeRotatorToForce();
+            });
+            C_ChangeRotatorToV = new DebugCommand("rotatortov", "Switching player rotator to VectorMode", "rotatortov", () =>
+            {
+                var player = PlayerManager.Instance.LocalPlayerController;
+                player.ChangeRotatorToVector();
+            });
+
+        //! Player Inventory
+        C_SimplifyLoadout = new DebugCommand("SimplifyLoadout", "Sets the utility loadout to only have a flare.", "SimplifyLoadout", () =>
 			{
 				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
 
@@ -249,8 +278,13 @@ namespace Hadal.Debugging
                 C_SetMaxSpeed,
                 C_SetAccel,
                 C_GodMode,
-				
-				C_SimplifyLoadout,
+                C_ChangeMoverToF,
+                C_ChangeMoverToV,
+                C_ChangeMoverToH,
+                C_ChangeRotatorToF,
+                C_ChangeRotatorToV,
+
+        C_SimplifyLoadout,
 				C_AddGrenadeAndTrap,
                 C_AddTrapAndGrenade,
 				C_AddGrenade,

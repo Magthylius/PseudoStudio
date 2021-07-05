@@ -59,6 +59,7 @@ namespace Hadal.Locomotion
         public override void Enable()
         {
             $"Enable is called".Warn();
+            base.Enable();
             Input = DefaultInputs;
         }
 

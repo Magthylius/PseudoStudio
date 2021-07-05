@@ -13,6 +13,7 @@ using ExitGames.Client.Photon;
 using System.Collections;
 using Hadal.Networking.UI.Loading;
 using Hadal.Usables;
+using Hadal.Locomotion;
 
 // Created by Jet, E: Jon, Jin
 namespace Hadal.Player
@@ -397,6 +398,61 @@ namespace Hadal.Player
             Disable();
         }
 
+        #endregion
+
+        #region Player Mover/Rotator Changer (For Jin's physics)
+        public void ChangeMoverToForce()
+        {
+            mover.Disable();
+            mover = GetComponentInChildren<PlayerMovementF>();
+            mover.Initialise(pTrans);
+            mover.Enable();
+
+            PhysicsHandler phyHandler = GetComponentInChildren<PhysicsHandler>();
+            phyHandler.enabled = true;
+            phyHandler.SetUpRigidBody();
+        }
+
+        public void ChangeMoverToVector()
+        {
+            mover.Disable();
+            mover = GetComponentInChildren<PlayerMovementV>();
+            mover.Initialise(pTrans);
+            mover.Enable();
+
+            _rBody.useGravity = false;
+            _rBody.mass = 1;
+            GetComponentInChildren<PhysicsHandler>().enabled = false;
+            
+        }
+
+        public void ChangeMoverToHyrid()
+        {
+            mover.Disable();
+            mover = GetComponentInChildren<PlayerMovementH>();
+            mover.Initialise(pTrans);
+            mover.Enable();
+
+            _rBody.useGravity = false;
+            _rBody.mass = 1;
+            GetComponentInChildren<PhysicsHandler>().enabled = false;
+        }
+
+        public void ChangeRotatorToForce()
+        {
+            rotator.Disable();
+            rotator = GetComponentInChildren<PlayerRotationF>();
+            rotator.Initialise(pTrans);
+            rotator.Enable();
+        }
+
+        public void ChangeRotatorToVector()
+        {
+            rotator.Disable();
+            rotator = GetComponentInChildren<PlayerRotation>();
+            rotator.Initialise(pTrans);
+            rotator.Enable();
+        }
         #endregion
 
         #region Shorthands

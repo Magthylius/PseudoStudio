@@ -73,6 +73,8 @@ namespace Hadal.Locomotion
             if (_isEnabled)
                 return;
 
+            base.Enable();
+
             _isEnabled = true;
             Input = DefaultInputs;
 
