@@ -16,7 +16,7 @@ namespace Hadal.Locomotion
 
         public override void Initialise(Transform target)
         {
-            base.Enable();
+            /*base.Enable();*/
             Enable();
             EnableBoost();
             this.target = target;
@@ -34,8 +34,9 @@ namespace Hadal.Locomotion
             if (!allowUpdate) return;
             LerpCummulatedAcceleration(deltaTime);
             HandleAcceleration(deltaTime);
-            AddVelocity();
-            LoseVelocity(deltaTime);
+            //AddVelocity();
+            InstantVelocity();
+            //LoseVelocity(deltaTime);
             Move(deltaTime);
             CalculateSpeed(deltaTime);
         }
@@ -87,6 +88,21 @@ namespace Hadal.Locomotion
                 Velocity.Speed = Speed.Max;
             }
         }
+
+        private void InstantVelocity()
+        {
+            if (!IsMoving)
+            {
+                Velocity.Total = Vector3.zero;
+                Velocity.Speed = 0;
+                return;
+            }
+
+            Velocity.Total += ForwardVelocity + StrafeVelocity + HoverVelocity;
+            Velocity.Total = Velocity.Total.normalized * Speed.Max;
+            Velocity.Speed = Speed.Max;
+        }
+
         private void LoseVelocity(float deltaTime)
         {
             Vector3 total = Velocity.Total;
