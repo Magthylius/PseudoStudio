@@ -60,6 +60,8 @@ namespace Hadal.AudioSystem
             {
                 //if (handler)
             }
+
+            return null;
         }
         #endregion
         
