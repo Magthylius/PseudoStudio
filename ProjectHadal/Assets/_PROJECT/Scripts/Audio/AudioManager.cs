@@ -27,13 +27,21 @@ namespace Hadal.AudioSystem
             StartCoroutine(HandleObjectPooling());
         }
 
-        public void PlayAudioAt(Transform audioTransform) => PlayAudioAt(audioTransform.position);
-
-        public void PlayAudioAt(Vector3 position)
+        /// <summary>
+        /// Returns an available audio source handler from the object pool, setting it up with the dump event and activating its game object.
+        /// </summary>
+        /// <param name="isSfx">Is the retreived handler meant for SFX? (Used to setup volume calculations)</param>
+        public AudioSourceHandler GetAvailableAudioSourceHandler(bool isSfx)
         {
             AudioSourceHandler handler = Scoop();
-            handler.DirectPlay();
+            
+            // if (isSfx) handler.Source.volume = (master * sfx);
+            // else handler.Source.volume = (master * bgm);
+
             if (handler.DumpOnFinish) handler.AudioFinishedEvent += Dump;
+            handler.SetActive(true);
+            
+            return handler;
         }
 
         #region Object pooling
@@ -71,9 +79,11 @@ namespace Hadal.AudioSystem
             return InstantiateAudioSource();
         }
 
-        public void Dump(AudioSourceHandler handler)
+        /// <summary> Unsubscribes this callback from the audio finished event of a handler and deactivate it. </summary>
+        private void Dump(AudioSourceHandler handler)
         {
-            
+            handler.AudioFinishedEvent -= Dump;
+            handler.SetActive(false);
         }
         
         #endregion
