@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Test Audio
   m_EditorClassIdentifier: 
   Clips: []
-  Volume: 0
-  Pitch: 0
-  SpatialBlend: 0
-  MixerGroup: {fileID: 0}
+  Settings:
+    Volume: 1
+    Pitch: {x: 1, y: 1}
+    SpatialBlend: 0.7
+    MixerGroup: {fileID: 0}
