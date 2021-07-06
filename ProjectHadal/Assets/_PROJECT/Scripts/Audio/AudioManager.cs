@@ -14,6 +14,8 @@ namespace Hadal.AudioSystem
         public GameObject AudioObjectPrefab;
         [SerializeField] private int poolingCount = 10;
 
+        private List<AudioSourceHandler> audioSourceHandlers = new List<AudioSourceHandler>();
+
         void Awake()
         {
             if (Instance == null) Instance = this;
@@ -25,21 +27,19 @@ namespace Hadal.AudioSystem
             StartCoroutine(HandleObjectPooling());
         }
 
-        public void PlaySFXAt(Transform position) => PlaySFXAt(position.position);
+        public void PlayAudioAt(Transform audioTransform) => PlayAudioAt(audioTransform.position);
 
-        public void PlaySFXAt(Vector3 position)
+        public void PlayAudioAt(Vector3 position)
         {
             
         }
 
         #region Object pooling
-
         IEnumerator HandleObjectPooling()
         {
             for (int i = 0; i < poolingCount; i++)
             {
-                GameObject audioSource = Instantiate(AudioObjectPrefab, transform);
-                audioSource.SetActive(false);
+                InstantiateAudioSource();
                 yield return new WaitForEndOfFrame();
             }
             
@@ -47,6 +47,20 @@ namespace Hadal.AudioSystem
             yield return null;
         }
 
+        void InstantiateAudioSource()
+        {
+            GameObject audioSource = Instantiate(AudioObjectPrefab, transform);
+            audioSource.SetActive(false);
+            audioSourceHandlers.Add(audioSource.GetComponent<AudioSourceHandler>());
+        }
+        
+        AudioSourceHandler Scoop()
+        {
+            foreach (AudioSourceHandler handler in audioSourceHandlers)
+            {
+                //if (handler)
+            }
+        }
         #endregion
         
     }

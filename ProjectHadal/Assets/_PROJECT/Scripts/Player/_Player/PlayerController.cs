@@ -184,12 +184,19 @@ namespace Hadal.Player
 
             if (NetworkEventManager.Instance.IsMasterClient)
             {
-                //! Host treats everything as isMine
-                if (LocalPlayerData.PlayerController == null) LocalPlayerData.PlayerController = this;
+                //! Host treats everything as isMine. This is bad, it relies on host first instantiate. Too bad!
+                if (LocalPlayerData.PlayerController == null)
+                {
+                    LocalPlayerData.PlayerController = this;
+                    gameObject.AddComponent<AudioListener>();
+                    Debug.LogWarning("Audio listener added");
+                }
             }
             else if (_pView.IsMine)
             {
                 LocalPlayerData.PlayerController = this;
+                gameObject.AddComponent<AudioListener>();
+                Debug.LogWarning("Audio listener added");
             }
 
             NetworkData.AddPlayer(this);
