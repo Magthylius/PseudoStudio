@@ -31,7 +31,9 @@ namespace Hadal.AudioSystem
 
         public void PlayAudioAt(Vector3 position)
         {
-            
+            AudioSourceHandler handler = Scoop();
+            handler.DirectPlay();
+            if (handler.DumpOnFinish) handler.AudioFinishedEvent += Dump;
         }
 
         #region Object pooling
@@ -47,22 +49,33 @@ namespace Hadal.AudioSystem
             yield return null;
         }
 
-        void InstantiateAudioSource()
+        AudioSourceHandler InstantiateAudioSource()
         {
             GameObject audioSource = Instantiate(AudioObjectPrefab, transform);
             audioSource.SetActive(false);
-            audioSourceHandlers.Add(audioSource.GetComponent<AudioSourceHandler>());
+            AudioSourceHandler handler = audioSource.GetComponent<AudioSourceHandler>();
+            audioSourceHandlers.Add(handler);
+            return handler;
         }
         
+        /// <summary> Gets an inactive audio source in pool. </summary>
         AudioSourceHandler Scoop()
         {
             foreach (AudioSourceHandler handler in audioSourceHandlers)
             {
-                //if (handler)
+                if (!handler.IsActive) return handler;
             }
 
-            return null;
+            //! Cannot find any inactive sources
+            Debug.LogWarning("No inactive sources found, instantiating new source.");
+            return InstantiateAudioSource();
         }
+
+        public void Dump(AudioSourceHandler handler)
+        {
+            
+        }
+        
         #endregion
         
     }
