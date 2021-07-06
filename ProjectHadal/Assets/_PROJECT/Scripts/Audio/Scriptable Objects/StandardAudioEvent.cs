@@ -10,16 +10,28 @@ namespace Hadal.AudioSystem
         [SerializeField] private AudioClip[] Clips;
         [SerializeField] private AudioSourceSettings Settings;
 
-        public override bool Play(Vector3 position)
+        public override bool Play(Vector3 position, AudioSource source = null)
         {
             if (Clips.IsNullOrEmpty()) return false;
-            
-            var manager = AudioManager.Instance;
-            if (manager != null)
+            if (Application.isPlaying)
             {
-                manager.PlaySFXAt(position);
-                return true;
+                var manager = AudioManager.Instance;
+                if (manager != null)
+                {
+                    manager.PlayAudioAt(position);
+                    return true;
+                }
             }
+            else
+            {
+                if (source != null)
+                {
+                    Settings.AssignSettings(ref source);
+                    source.clip = Clips.RandomElement();
+                    source.Play();
+                }
+            }
+
             return false;
         }
 

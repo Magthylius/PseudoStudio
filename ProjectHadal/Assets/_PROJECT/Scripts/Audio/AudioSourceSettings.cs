@@ -12,7 +12,7 @@ namespace Hadal.AudioSystem
         [SerializeField, Range(0f, 1f)] private float SpatialBlend = 0.7f;
         [SerializeField] private AudioMixerGroup MixerGroup;
 
-        public void AssignSettings(AudioSource source)
+        public void AssignSettings(ref AudioSource source)
         {
             source.volume = Volume.RandomBetweenXY();
             source.pitch = Pitch.RandomBetweenXY();

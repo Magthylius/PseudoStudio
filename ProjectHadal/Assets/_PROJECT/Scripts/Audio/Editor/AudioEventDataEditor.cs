@@ -27,18 +27,9 @@ namespace Hadal.AudioSystem.Editorial
             EditorGUI.BeginDisabledGroup(serializedObject.isEditingMultipleObjects);
             if (GUILayout.Button("Preview"))
             {
-                if (Application.isPlaying)
-                    ((AudioEventData)target).Play(Vector3.zero);
-                else
-                    PlayOnEditor();
+                ((AudioEventData)target).Play(Vector3.zero, previewSource);
             }
             EditorGUI.EndDisabledGroup();
-        }
-
-        private void PlayOnEditor()
-        {
-            
-            
         }
     }
 }
