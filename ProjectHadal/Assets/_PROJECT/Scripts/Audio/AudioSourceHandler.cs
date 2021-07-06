@@ -42,7 +42,11 @@ namespace Hadal.AudioSystem
         }
         public void PlayOneShot(AudioClip clip) => Source.PlayOneShot(clip);
         public void Pause() => Source.Pause();
-        public void Stop() => Source.Stop();
+        public void Stop()
+        {
+            Source.Stop();
+            AudioStoppedEvent?.Invoke(this);
+        }
         public bool IsPlaying => Source.isPlaying;
 
         public bool IsActive => gameObject.activeInHierarchy;

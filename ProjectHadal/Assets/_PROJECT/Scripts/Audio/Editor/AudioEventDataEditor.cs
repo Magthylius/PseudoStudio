@@ -10,10 +10,7 @@ namespace Hadal.AudioSystem.Editorial
 
         public void OnEnable()
         {
-            if (previewSource == null)
-                previewSource = EditorUtility
-                    .CreateGameObjectWithHideFlags("Audio previewer", HideFlags.HideAndDontSave, typeof(AudioSource))
-                    .GetComponent<AudioSource>();
+            CreateAudioSourceIfNull();
         }
         public void OnDisable()
         {
@@ -27,9 +24,18 @@ namespace Hadal.AudioSystem.Editorial
             EditorGUI.BeginDisabledGroup(serializedObject.isEditingMultipleObjects);
             if (GUILayout.Button("Preview"))
             {
+                CreateAudioSourceIfNull();
                 ((AudioEventData)target).Play(previewSource);
             }
             EditorGUI.EndDisabledGroup();
+        }
+
+        private void CreateAudioSourceIfNull()
+        {
+            if (previewSource == null)
+                previewSource = EditorUtility
+                    .CreateGameObjectWithHideFlags("Audio previewer", HideFlags.HideAndDontSave, typeof(AudioSource))
+                    .GetComponent<AudioSource>();
         }
     }
 }

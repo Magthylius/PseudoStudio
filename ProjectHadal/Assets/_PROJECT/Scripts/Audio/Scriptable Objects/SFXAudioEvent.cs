@@ -7,7 +7,7 @@ namespace Hadal.AudioSystem
     /// Standard audio event meant to manage SFX playing.
     /// </summary>
     [CreateAssetMenu(menuName = "Audio Event/Standard")]
-    public class StandardAudioEvent : AudioEventData
+    public class SFXAudioEvent : AudioEventData
     {
         [SerializeField] private AudioClip[] Clips;
         [SerializeField] private AudioSourceSettings Settings;
@@ -27,7 +27,7 @@ namespace Hadal.AudioSystem
             var manager = AudioManager.Instance;
             if (manager != null)
             {
-                var handler = manager.GetAvailableAudioSourceHandler(true);
+                var handler = manager.GetAvailableAudioSourceHandler();
                 handler.Setup(in Settings);
                 handler.SetWorldPosition(position);
                 handler.Source.clip = Clips.RandomElement();

@@ -30,14 +30,9 @@ namespace Hadal.AudioSystem
         /// <summary>
         /// Returns an available audio source handler from the object pool, setting it up with the dump event and activating its game object.
         /// </summary>
-        /// <param name="isSfx">Is the retreived handler meant for SFX? (Used to setup volume calculations)</param>
-        public AudioSourceHandler GetAvailableAudioSourceHandler(bool isSfx)
+        public AudioSourceHandler GetAvailableAudioSourceHandler()
         {
             AudioSourceHandler handler = Scoop();
-            
-            // if (isSfx) handler.Source.volume = (master * sfx);
-            // else handler.Source.volume = (master * bgm);
-
             if (handler.DumpOnFinish) handler.AudioFinishedEvent += Dump;
             handler.SetActive(true);
             
