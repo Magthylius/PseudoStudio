@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 
 namespace Hadal.AudioSystem
 {
+    /// <summary> Simulates the settings of an audio source and will assign these settings to any passed in audio source. </summary>
     [System.Serializable]
     public class AudioSourceSettings
     {
@@ -25,7 +26,7 @@ namespace Hadal.AudioSystem
         [SerializeField] private bool Loop = false;
 
         [Header("3D Sound")]
-        [SerializeField, Range(0f, 5f)] private float DopplerLevel;
+        [SerializeField, Range(0f, 5f)] private float DopplerLevel = 1f;
         [SerializeField, Range(0f, 360f)] private float Spread;
         [SerializeField] private AudioRolloffMode VolumeRolloff = AudioRolloffMode.Logarithmic;
         [SerializeField] private float MinDistance = 1f;

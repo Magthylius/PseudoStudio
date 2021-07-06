@@ -19,10 +19,17 @@ namespace Hadal.AudioSystem.Editorial
 
         public override void OnInspectorGUI()
         {
+            EditorGUILayout.LabelField(string.Empty);
+            EditorGUILayout.HelpBox(((AudioEventData)target).Description, MessageType.Info, true);
+            EditorGUILayout.LabelField(string.Empty);
+
             DrawDefaultInspector();
 
+            EditorGUILayout.Space(20);
+
+            //! it will be chaotic if we allowed multiple previews to trigger at once, composite audio events are made specifically for this
             EditorGUI.BeginDisabledGroup(serializedObject.isEditingMultipleObjects);
-            if (GUILayout.Button("Preview"))
+            if (GUILayout.Button("Preview Sound"))
             {
                 CreateAudioSourceIfNull();
                 ((AudioEventData)target).Play(previewSource);
@@ -30,7 +37,7 @@ namespace Hadal.AudioSystem.Editorial
             EditorGUI.EndDisabledGroup();
         }
 
-        private void CreateAudioSourceIfNull()
+        protected void CreateAudioSourceIfNull()
         {
             if (previewSource == null)
                 previewSource = EditorUtility

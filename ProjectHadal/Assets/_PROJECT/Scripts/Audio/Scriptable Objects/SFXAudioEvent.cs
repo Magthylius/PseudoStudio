@@ -3,14 +3,15 @@ using UnityEngine;
 
 namespace Hadal.AudioSystem
 {
-    /// <summary>
-    /// Standard audio event meant to manage SFX playing.
-    /// </summary>
-    [CreateAssetMenu(menuName = "Audio Event/Standard")]
+    /// <summary> Audio event meant for SFX sounds. </summary>
+    [CreateAssetMenu(menuName = "Audio Event/SFX")]
     public class SFXAudioEvent : AudioEventData
     {
         [SerializeField] private AudioClip[] Clips;
         [SerializeField] private AudioSourceSettings Settings;
+        public override string Description => "Audio event meant to play SFX sounds. Clip variants may be used per each audio event (refer to examples or ask the Tech for help). "
+                                            + "\n\nSupports 3D Playing, and 2D Playing functions. "
+                                            + "\n\nNote: Preview Button will only play 2D audio for now.";
 
         #region Locational based Play
 
@@ -94,6 +95,6 @@ namespace Hadal.AudioSystem
 
         //! No need to pause or stop for SFX sounds
         public override void Pause(bool isPaused) { }
-        public override void Stop() { }
+        public override void Stop(bool isEditor = false) { }
     }
 }

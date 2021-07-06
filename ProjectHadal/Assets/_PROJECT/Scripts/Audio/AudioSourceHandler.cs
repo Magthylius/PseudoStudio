@@ -17,7 +17,7 @@ namespace Hadal.AudioSystem
 
         private void OnEnable()
         {
-            if (!Source) Source = GetComponent<AudioSource>();
+            if (!Source) RefreshSource();
         }
 
         /// <summary> Sets position of this handler's game object. </summary>
@@ -42,6 +42,7 @@ namespace Hadal.AudioSystem
         }
         public void PlayOneShot(AudioClip clip) => Source.PlayOneShot(clip);
         public void Pause() => Source.Pause();
+        public void UnPause() => Source.UnPause();
         public void Stop()
         {
             Source.Stop();
@@ -51,5 +52,6 @@ namespace Hadal.AudioSystem
 
         public bool IsActive => gameObject.activeInHierarchy;
         public void SetActive(bool activeState) => gameObject.SetActive(activeState);
+        public void RefreshSource() => Source = GetComponent<AudioSource>();
     }
 }

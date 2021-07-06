@@ -15,11 +15,12 @@ namespace Hadal.AudioSystem
         [Space(10)]
         [Header("SFX")]
         [SerializeField] AudioEventData testSfx;
+        [SerializeField] Vector3 offset;
         [Button(nameof(PlaySFX), EButtonEnableMode.Playmode)]
         private void PlaySFX()
         {
             if (testSfx == null) { "Test SFX is null.".Warn(); return; }
-            testSfx.Play(listener.transform.position);
+            testSfx.Play(listener.transform.position + offset);
         }
 
         [Space(5)]
