@@ -200,6 +200,7 @@ namespace Tenshi
 
         public static void Print(this object item) => Debug.Log(item);
 
+        public static float RandomBetweenXY(this Vector2 vector) => UnityEngine.Random.Range(vector.x, vector.y);
         public static int ToLayer(this LayerMask mask)
         {
             int index = 0;

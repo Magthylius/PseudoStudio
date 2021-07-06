@@ -8,17 +8,19 @@ namespace Hadal.AudioSystem
     public class StandardAudioEvent : AudioEventData
     {
         [SerializeField] private AudioClip[] Clips;
-        [SerializeField, Range(0f, 1f)] private float Volume;
-        [SerializeField, Range(0.1f, 3f)] private float Pitch;
-        [SerializeField, Range(0f, 1f)] private float SpatialBlend;
-        [SerializeField] private AudioMixerGroup MixerGroup;
+        [SerializeField] private AudioSourceSettings Settings;
 
-        public override void Play(Vector3 position)
+        public override bool Play(Vector3 position)
         {
-            if (Clips.IsNullOrEmpty()) return;
+            if (Clips.IsNullOrEmpty()) return false;
             
-            // AudioSource source;
-            // source.
+            var manager = AudioManager.Instance;
+            if (manager != null)
+            {
+                manager.PlaySFXAt(position);
+                return true;
+            }
+            return false;
         }
 
         public override void Stop() { }
