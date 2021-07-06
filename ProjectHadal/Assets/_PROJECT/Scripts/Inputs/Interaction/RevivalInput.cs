@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Hadal.Inputs
 {
     //! Creator: Jet
-    public class StandardInteractableInput : IInteractInput
+    public class ReviveInteractionInput : IInteractInput
     {
         public bool InteractKey => Input.GetKeyDown(KeyCode.R);
     }

@@ -37,7 +37,7 @@ namespace Hadal.Locomotion
 
         public override void DoUpdate(in float deltaTime)
         {
-
+            
         }
 
         public override void DoFixedUpdate(in float fixedDeltaTime)
@@ -55,8 +55,8 @@ namespace Hadal.Locomotion
 
         public void SetIsLocal(bool state) => _isLocal = state;
 
-        static readonly IMovementInput DefaultInputs = new RawKeyboardInput();
-        static readonly IMovementInput DisabledInputs = new EmptyKeyboardInput();
+        static readonly IMovementInput DefaultInputs = new RawMovementInput();
+        static readonly IMovementInput DisabledInputs = new EmptyMovementInput();
 
         public override void Enable()
         {

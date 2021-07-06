@@ -16,12 +16,12 @@ namespace Hadal.Player
         [SerializeField] private LayerMask interactableMask;
         [SerializeField, Range(1, 4)] private int interactInfoBufferSize;
         private PlayerController _player;
-        private IInteractInput _iInput;
+        private IInteractInput _reviveInput;
         private bool _interactionEnabled;
 
         private void Awake()
         {
-            _iInput = new StandardInteractableInput();
+            _reviveInput = new ReviveInteractionInput();
             Enable();
         }
 
@@ -39,7 +39,9 @@ namespace Hadal.Player
         public void DoUpdate(in float deltaTime)
         {
             if (!AllowUpdate) return;
-            if (_iInput.InteractKey)
+
+            //! Check for revive key
+            if (_reviveInput.InteractKey)
             {
                 Collider collider = GetClosestEligibleCollider();
                 if (collider == null) return;
@@ -47,6 +49,8 @@ namespace Hadal.Player
                 //! Interact
                 collider.GetComponentInChildren<IInteractable>()?.Interact(PlayerViewID);
             }
+
+            //! check for other interaction keys here (e.g. torpedo pickup)
         }
 
         /// <summary>

@@ -39,6 +39,15 @@ namespace Hadal.Inputs
         float HoverAxis { get; }
         bool HoverUp { get; }
         bool HoverDown { get; }
+
+        float DoubleTapDetectionTime { get; set; }
+        bool DoubleVerticalForward { get; }
+        bool DoubleVerticalBackward { get; }
+        bool DoubleHorizontalLeft { get; }
+        bool DoubleHorizontalRight { get; }
+        bool DoubleHoverUp { get; }
+        bool DoubleHoverDown { get; }
+
         float BoostAxis { get; }
         bool BoostActive { get; }
     }

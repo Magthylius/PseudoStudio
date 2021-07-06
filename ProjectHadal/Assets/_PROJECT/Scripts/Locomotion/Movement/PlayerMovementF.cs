@@ -64,8 +64,8 @@ namespace Hadal.Locomotion
 
         public void SetIsLocal(bool state) => _isLocal = state;
  
-        static readonly IMovementInput DefaultInputs = new RawKeyboardInput();
-        static readonly IMovementInput DisabledInputs = new EmptyKeyboardInput();
+        static readonly IMovementInput DefaultInputs = new RawMovementInput();
+        static readonly IMovementInput DisabledInputs = new EmptyMovementInput();
 
         public override void Enable()
         {

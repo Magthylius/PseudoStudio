@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Hadal.Inputs
 {
-    public class EmptyKeyboardInput : IMovementInput
+    public class EmptyMovementInput : IMovementInput
     {
         public float VerticalAxis => 0f;
         public bool VerticalForward => false;
@@ -17,5 +17,13 @@ namespace Hadal.Inputs
         public bool HoverDown => false;
         public float BoostAxis => 0f;
         public bool BoostActive => false;
+
+        public float DoubleTapDetectionTime { get => 0f; set => DoubleTapDetectionTime = 0f; }
+        public bool DoubleVerticalForward => false;
+        public bool DoubleVerticalBackward => false;
+        public bool DoubleHorizontalLeft => false;
+        public bool DoubleHorizontalRight => false;
+        public bool DoubleHoverUp => false;
+        public bool DoubleHoverDown => false;
     }
 }
