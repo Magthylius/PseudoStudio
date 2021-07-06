@@ -54,10 +54,13 @@ namespace Hadal.Networking.UI.Loading
         bool allowContinue = false;
 
         [Header("Loading Checks")]
-        [SerializeField] int expectedObjectPoolersCount = 6;
+        //[SerializeField] int expectedObjectPoolersCount = 6;
 
-        int objectPoolersCompleted;
-        bool objectPoolersCheckedIn;
+        //int objectPoolersCompleted;
+        //bool objectPoolersCheckedIn;
+
+        [SerializeField, ReadOnly] private bool projectilePoolersCheckedIn = false;
+        [SerializeField, ReadOnly] private bool audioPoolersCheckedIn = false;
 
         [FormerlySerializedAs("endsScreenHandler")]
         [Header("End screen")] 
@@ -180,7 +183,7 @@ namespace Hadal.Networking.UI.Loading
         IEnumerator CheckAllLoaded()
         {
             //! Suspend until all poolers ready
-            while (!objectPoolersCheckedIn)
+            while (!AllPoolersCheckedIn())
             {
                 yield return null;
             }
@@ -201,14 +204,12 @@ namespace Hadal.Networking.UI.Loading
             }
 
             yield return null;
+            
+            bool AllPoolersCheckedIn() => projectilePoolersCheckedIn && audioPoolersCheckedIn;
         }
-        public void CheckInObjectPool()
-        {
-            if (objectPoolersCheckedIn) return;
 
-            objectPoolersCompleted++;
-            if (objectPoolersCompleted >= expectedObjectPoolersCount) objectPoolersCheckedIn = true;
-        }
+        public void CheckInProjectilePool() => projectilePoolersCheckedIn = true;
+        public void CheckInAudioPool() => audioPoolersCheckedIn = true;
         #endregion
 
         void ActivateLoadingElements()

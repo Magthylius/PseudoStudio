@@ -17,8 +17,9 @@ namespace Hadal.Usables.Projectiles
             prefab = data.ProjectilePrefab.GetComponent<T>();
             InitialisationCompleted += AssignProjData;
             InitialisationCompleted += AssignProjID;
+            InitialisationCompleted += InformLoadingManager;
             base.Start();
-            LoadingManager.Instance.CheckInObjectPool();
+            //LoadingManager.Instance.CheckInObjectPool();
         }
 
         #region Private Function
@@ -38,6 +39,11 @@ namespace Hadal.Usables.Projectiles
                 var projectileBehavior = projectileBehaviors.Requeue();
                 projectileBehavior.Data = data;
             }
+        }
+
+        void InformLoadingManager(Queue<T> projectileBehaviors)
+        {
+            LoadingManager.Instance.CheckInProjectilePool();
         }
         #endregion
     }
