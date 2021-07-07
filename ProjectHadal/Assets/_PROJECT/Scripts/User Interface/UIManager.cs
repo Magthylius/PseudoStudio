@@ -145,7 +145,8 @@ namespace Hadal.UI
             PNTR_Resume();
 
             //sl_UI = DebugManager.Instance.CreateScreenLogger();
-            
+            Debug.LogWarning(Screen.width);
+            Debug.LogWarning(Screen.currentResolution);
         }
 
         void Update()
