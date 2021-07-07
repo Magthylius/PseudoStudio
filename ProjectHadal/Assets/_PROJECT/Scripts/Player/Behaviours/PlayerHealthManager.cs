@@ -623,6 +623,7 @@ namespace Hadal.Player.Behaviours
         public int GetMaxHealth => maxHealth;
         public bool IsUnalive => _isDead;
         public bool IsDown => _currentHealth <= 0;
+        public bool IsDownOrUnalive => IsDown || IsUnalive;
         public bool IsKnocked => _isKnocked;
 
         #endregion

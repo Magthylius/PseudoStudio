@@ -58,7 +58,11 @@ namespace Hadal.AI
             Collider[] playerSphere = new Collider[4];
             DetectedPlayersCount = Physics.OverlapSphereNonAlloc(transform.position + detectionOffset, overlapSphereDetectionRadius, playerSphere, _brain.RuntimeData.PlayerMask);
 
-            _detectedPlayers = playerSphere.Where(c => c != null).Select(c => c.GetComponent<PlayerController>()).ToList();
+            _detectedPlayers = playerSphere
+                    .Where(c => c != null)
+                    .Select(c => c.GetComponent<PlayerController>())
+                    .Where(p => !p.GetInfo.HealthManager.IsDown || !p.GetInfo.HealthManager.IsUnalive)
+                    .ToList();
 
 
             if (DetectedPlayersCount <= 0) _brain.CurrentTarget = null;

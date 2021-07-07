@@ -36,6 +36,7 @@ namespace Hadal.Player
         [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] string localPlayerLayer;
         [Foldout("Physic Settings"), SerializeField] private PlayerPhysicData physicNormal;
+        [Foldout("Physic Settings"), SerializeField] private PlayerPhysicData physicIncapacitated;
         [Foldout("Physic Settings"), SerializeField] private PlayerPhysicData physicHighGravityFriction;
 
         PhotonView _pView;
@@ -202,10 +203,22 @@ namespace Hadal.Player
             NetworkData.AddPlayer(this);
         }
 
+        public void SetPhysicDefault()
+        {
+            if (healthManager.IsDownOrUnalive) { SetPhysicHighFriction(); return; }
+            SetPhysicNormal();
+
+        }
         public void SetPhysicNormal() => physicNormal.SetPhysicDataForController(this);
         public void SetPhysicHighFriction() => physicHighGravityFriction.SetPhysicDataForController(this);
+        public void SetPhysicIncapacitated() => physicIncapacitated.SetPhysicDataForController(this);
 
-        public void SetIsCarried(in bool statement) => _isCarried = statement;
+        public void SetIsCarried(in bool statement)
+        {
+            _isCarried = statement;
+            if (_isCarried) SetPhysicIncapacitated();
+            else SetPhysicDefault();
+        }
         public bool GetIsCarried => _isCarried;
         public void SetIsDown(in bool statement) => _isDown = statement;
 
