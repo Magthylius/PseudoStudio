@@ -16,6 +16,7 @@ namespace Hadal.UI
         [SerializeField] bool startsEnabled = false;
         [SerializeField] bool screenBounded = true;
         [SerializeField] Vector3 positionOffset = Vector3.zero;
+        [SerializeField] private Graphic graphic;
         
         [Header("Fade Settings")]
         [SerializeField] private bool fadeWhenDistant = false;
@@ -24,7 +25,6 @@ namespace Hadal.UI
         [SerializeField] private float fadeSpeed = 2f;
 
         private CanvasGroup canvasGroup;
-        private Graphic graphic;
         private RectTransform rectTransform;
         private Transform trackingTransform;
         private Camera playerCamera;
@@ -42,7 +42,7 @@ namespace Hadal.UI
 
         public virtual void Start()
         {
-            graphic = GetComponent<Graphic>();
+            //graphic = GetComponent<Graphic>();
             rectTransform = GetComponent<RectTransform>();
             canvasGroup = GetComponent<CanvasGroup>();
 
@@ -171,7 +171,7 @@ namespace Hadal.UI
 
         public void Disable()
         {
-            Debug.LogWarning("Disabled!");
+            //Debug.LogWarning("Disabled!");
             gameObject.SetActive(false);
         }
         public Transform TrackingTransform => trackingTransform;
