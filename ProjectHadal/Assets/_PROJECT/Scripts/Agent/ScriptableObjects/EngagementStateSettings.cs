@@ -11,6 +11,13 @@ namespace Hadal.AI.States
     [CreateAssetMenu(fileName = "EngagementSettings", menuName = "StateSettings/Engagement")]
     public class EngagementStateSettings : StateSettings
     {
+        [Header("General")]
+        [Min(0f)] public float G_ApproachCloseDistanceThreshold;
+        [Min(0f)] public float G_ApproachFarDistanceThreshold;
+        [Min(0f)] public float G_CarryDelayTimer;
+        [Min(0)] public int G_TotalThreshTimeInSeconds;
+        [Min(0f)] public float G_ThreshDamagePerSecond;
+
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;
         [Min(0f)] public float AM_MaxWaitTime = 120f;
@@ -23,6 +30,7 @@ namespace Hadal.AI.States
         public bool AllowTarget_IsolatedPlayer = true;
 
         [Header("Judgement Settings")]
+        [Min(0f)] public float HealthRatioThreshold = 0.5f;
         [Min(0f)] public float JudgementTickRate = 60f;
         [Min(0f)] public float JudgementTimer1 = 30f;
         [Min(0f)] public float JudgementTimer2 = 45f;

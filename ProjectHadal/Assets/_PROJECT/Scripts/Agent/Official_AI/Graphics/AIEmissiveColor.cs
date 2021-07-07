@@ -26,7 +26,7 @@ namespace Hadal.AI.Graphics
         void Start()
         {
             brain = FindObjectOfType<AIBrain>();
-            brain.JudgementPhaseEvent += JudgementColor;
+            brain.RuntimeData.OnAIStateChange += JudgementColor;
 
             //! initialise property block (needs to use a renderer, since it has the functions to set up)
             materialProp = new MaterialPropertyBlock();
@@ -35,10 +35,10 @@ namespace Hadal.AI.Graphics
             percent = 0f;
             UpdateMaterialData();
         }
-        public void JudgementColor(bool isStarting)
+        public void JudgementColor(BrainState state, EngagementObjective objective)
         {
             StopAllCoroutines(); //! stopping any running coroutines so it will never run more than once per event call
-            StartCoroutine(AIColorLerp(isStarting));
+            StartCoroutine(AIColorLerp(state == BrainState.Judgement));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Hadal.AI.Graphics
 
         void OnDestroy()
         {
-            brain.JudgementPhaseEvent -= JudgementColor;
+            brain.RuntimeData.OnAIStateChange -= JudgementColor;
         }
     }
 }

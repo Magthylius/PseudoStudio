@@ -40,7 +40,7 @@ namespace Hadal.AI.Information
             brain.ResumeState();
 
             brain.CavernManager.SeedCavernHeuristics(brain.CavernManager.GetCavern(targetCavern));
-            CavernHandler nextCavern = brain.CavernManager.GetNextBestCavern(brain.CavernManager.GetHandlerOfAILocation, brain.RuntimeData.GetEngagementObjective != EngagementSubState.Aggressive);
+            CavernHandler nextCavern = brain.CavernManager.GetNextBestCavern(brain.CavernManager.GetHandlerOfAILocation, brain.RuntimeData.GetBrainState != BrainState.Judgement);
  
             navHandler.SetImmediateDestinationToCavern(nextCavern);
         }

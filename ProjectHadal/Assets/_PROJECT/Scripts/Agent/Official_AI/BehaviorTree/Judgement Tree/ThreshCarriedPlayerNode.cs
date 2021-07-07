@@ -32,9 +32,9 @@ namespace Hadal.AI.TreeNodes
         /// <summary>
         /// Resets only when switched to engagement + judgement state
         /// </summary>
-        private void ResetThreshNode(BrainState bState, EngagementSubState eState)
+        private void ResetThreshNode(BrainState bState, EngagementObjective eState)
         {
-            if (bState == BrainState.Engagement && eState == EngagementSubState.Judgement)
+            if (bState == BrainState.Engagement && eState == EngagementObjective.Judgement)
             {
                 timer = 0f;
                 _timerRunning = false;
@@ -64,7 +64,7 @@ namespace Hadal.AI.TreeNodes
                 if (NextActionTimeReached())
                 {
                     ResetNextActionTime();
-                    _damageManager.Send_DamagePlayer(_brain.CarriedPlayer, AIDamageType.Thresh);
+                    // _damageManager.Send_DamagePlayer(_brain.CarriedPlayer, AIDamageType.Thresh);
                     // Debug.Log("Damage:" + AIDamageType.Thresh);
                 }
 

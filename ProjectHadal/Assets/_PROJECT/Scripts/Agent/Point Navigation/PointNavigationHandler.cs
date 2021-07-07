@@ -817,6 +817,7 @@ namespace Hadal.AI
         public Rigidbody Rigidbody => rBody;
         public float MaxVelocity => (maxVelocity * debugVelocityMultiplier) - (maxVelocity * debugVelocityMultiplier * slowMultiplier);
         public bool CanMove => _isEnabled && pilotTrans != null && rBody != null && PhotonNetwork.IsMasterClient;
+        public bool HasPlayerTarget => isChasingAPlayer && isOnCustomPath;
 
         #endregion
     }
