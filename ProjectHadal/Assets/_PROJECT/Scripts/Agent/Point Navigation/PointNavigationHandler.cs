@@ -20,7 +20,7 @@ namespace Hadal.AI
         Cavern = 0,
         Tunnel,
         Stunned,
-		Engage
+        Engage
     }
 
     public class PointNavigationHandler : MonoBehaviour, IUnityServicer
@@ -34,8 +34,11 @@ namespace Hadal.AI
         public float Data_TimeoutTimer => timeoutTimer;
         [SerializeField, ReadOnly] private float navPointLingerTimer;
         public float Data_NavPointLingerTimer => navPointLingerTimer;
-        [SerializeField, ReadOnly] private float cavernLingerTimer;
-        public float Data_CavernLingerTimer => cavernLingerTimer;
+        [SerializeField, ReadOnly] private float lairCavernLingerTimer;
+        public float Data_LairCavernLingerTimer => lairCavernLingerTimer;
+        [SerializeField, ReadOnly] private float hydrothermalCavernLingerTimer;
+        [SerializeField, ReadOnly] private float crystalCavernLingerTimer;
+        [SerializeField, ReadOnly] private float biolumiCavernLingerTimer;
         [SerializeField, ReadOnly] private float speedMultiplier = 1f;
         public float Data_SpeedMultiplier => speedMultiplier;
         [SerializeField, ReadOnly] private List<NavPoint> navPoints;
@@ -84,11 +87,14 @@ namespace Hadal.AI
         [SerializeField] private bool enableDebug;
         [SerializeField] private bool showObstacleInfo;
         [SerializeField] private bool enableMovement;
-		[SerializeField] private bool disableOnStart;
+        [SerializeField] private bool disableOnStart;
 
         [Header("Timer Settings")]
         [SerializeField, MinMaxSlider(1f, 30f)] private Vector2 navPointLingerTimeRange;
-        [SerializeField, MinMaxSlider(1f, 120f)] private Vector2 cavernLingerTimeRange;
+        [SerializeField, MinMaxSlider(1f, 120f)] private Vector2 crystalCavernLingerTimeRange;
+        [SerializeField, MinMaxSlider(1f, 120f)] private Vector2 lairCavernLingerTimeRange;
+        [SerializeField, MinMaxSlider(1f, 120f)] private Vector2 hydrothermalCavernLingerTimeRange;
+        [SerializeField, MinMaxSlider(1f, 120f)] private Vector2 biolumiCavernLingerTimeRange;
         [SerializeField] private float timeoutNewPointTime;
         [SerializeField] private float obstacleCheckTime;
 
@@ -97,8 +103,8 @@ namespace Hadal.AI
         [SerializeField] private AISteeringSettings cavernSteeringSettings;
         [SerializeField] private AISteeringSettings tunnelSteeringSettings;
         [SerializeField] private AISteeringSettings stunnedSteeringSettings;
-		[SerializeField] private AISteeringSettings engagementSteeringSettings;
-		private AISteeringSettings currentSteer;
+        [SerializeField] private AISteeringSettings engagementSteeringSettings;
+        private AISteeringSettings currentSteer;
         [SerializeField, ReadOnly] private float maxVelocity;
         [SerializeField, ReadOnly] private float thrustForce;
         [SerializeField, ReadOnly] private float additionalAttractionForce;
@@ -116,8 +122,8 @@ namespace Hadal.AI
 
         [Header("Nav Components")]
         [SerializeField, Range(2, 10)] private int numberOfClosestPointsToConsider;
-		[SerializeField, Range(1, 3)] private int numberOfClosestPointsToConsiderAfterTunnelExit;
-		[SerializeField] private bool shuffleTunnelExitPoint;
+        [SerializeField, Range(1, 3)] private int numberOfClosestPointsToConsiderAfterTunnelExit;
+        [SerializeField] private bool shuffleTunnelExitPoint;
         [SerializeField] private Transform pilotTrans;
         [SerializeField] private Rigidbody rBody;
         private CavernManager cavernManager;
@@ -157,7 +163,7 @@ namespace Hadal.AI
             //! Get all navpoints in scene & intialise
             navPoints = FindObjectsOfType<NavPoint>().ToList();
             navPoints.ForEach(p => p.Initialise());
-            
+
             //! Timers
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
@@ -184,9 +190,9 @@ namespace Hadal.AI
 
             CavernModeSteering();
             ResetCavernLingerTimer();
-			
-			if (disableOnStart)
-				Disable();
+
+            if (disableOnStart)
+                Disable();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime)
@@ -198,7 +204,7 @@ namespace Hadal.AI
             {
                 MoveForwards(fixedDeltaTime);
                 MoveTowardsCurrentNavPoint(fixedDeltaTime);
-            } 
+            }
             HandleObstacleAvoidance(fixedDeltaTime);
             HandleSpeedAndDirection(fixedDeltaTime);
             ClampMaxVelocity();
@@ -281,10 +287,10 @@ namespace Hadal.AI
             canAutoSelectNavPoints = !targetIsPlayer;
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
-			if (targetIsPlayer)
-			{
-				EngageModeSteering();
-			}
+            if (targetIsPlayer)
+            {
+                EngageModeSteering();
+            }
             if (enableDebug) "Setting custom nav point path".Msg();
 
         }
@@ -329,27 +335,27 @@ namespace Hadal.AI
 
 
             List<NavPoint> potentialList = new List<NavPoint>();
-						
-			if (shuffleTunnelExitPoint)
-			{
-				potentialList = navPoints
+
+            if (shuffleTunnelExitPoint)
+            {
+                potentialList = navPoints
                         .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
                         .ToList()
                         .Shuffle(Time.frameCount)
                         .Take(numberOfClosestPointsToConsiderAfterTunnelExit)
                         .Where(p => p != null)
                         .ToList();
-			}
-			else
-			{
-				Vector3 position = pilotTrans.position;
-				potentialList = navPoints
+            }
+            else
+            {
+                Vector3 position = pilotTrans.position;
+                potentialList = navPoints
                         .Where(point => HasTheSameCavernTagAsDestinationCavern(point) && IsNotTheSamePoint(point, second) && !point.IsTunnelEntry)
                         .OrderBy(p => p.GetSqrDistanceTo(position))
                         .Take(numberOfClosestPointsToConsiderAfterTunnelExit)
                         .Where(p => p != null)
                         .ToList();
-			}
+            }
 
             if (potentialList.IsEmpty())
             {
@@ -371,8 +377,8 @@ namespace Hadal.AI
                 string pathQueue = "Created cached queued path: ";
                 foreach (NavPoint point in cachedPointPath)
                     pathQueue += point.Name + ", ";
-				
-				pathQueue.Msg();
+
+                pathQueue.Msg();
             }
 
             // Local Methods
@@ -484,9 +490,9 @@ namespace Hadal.AI
                 if (isChasingAPlayer)
                 {
                     isChasingAPlayer = false;
-					if (!isStunned) CavernModeSteering();
-					else StunnedModeSteering();
-					
+                    if (!isStunned) CavernModeSteering();
+                    else StunnedModeSteering();
+
                     Destroy(currentPoint.gameObject);
                 }
 
@@ -557,30 +563,30 @@ namespace Hadal.AI
             _steeringMode = SteeringMode.Stunned;
             DecideCurrentSteeringMode();
         }
-		
-		public void EngageModeSteering()
-		{
-			_steeringMode = SteeringMode.Engage;
-			DecideCurrentSteeringMode();
-		}
-		
-		private void DecideCurrentSteeringMode()
-		{
-			if (currentSteer != null)
-				currentSteer.UnsubscribeAllEvents();
-			
-			currentSteer = _steeringMode switch
-			{
-				SteeringMode.Cavern => cavernSteeringSettings,
-				SteeringMode.Tunnel => tunnelSteeringSettings,
-				SteeringMode.Stunned => stunnedSteeringSettings,
-				SteeringMode.Engage => engagementSteeringSettings
-			};
-			
-			currentSteer.OnSettingsUpdate += UpdateSteering;
-			
-			UpdateSteering();
-		}
+
+        public void EngageModeSteering()
+        {
+            _steeringMode = SteeringMode.Engage;
+            DecideCurrentSteeringMode();
+        }
+
+        private void DecideCurrentSteeringMode()
+        {
+            if (currentSteer != null)
+                currentSteer.UnsubscribeAllEvents();
+
+            currentSteer = _steeringMode switch
+            {
+                SteeringMode.Cavern => cavernSteeringSettings,
+                SteeringMode.Tunnel => tunnelSteeringSettings,
+                SteeringMode.Stunned => stunnedSteeringSettings,
+                SteeringMode.Engage => engagementSteeringSettings
+            };
+
+            currentSteer.OnSettingsUpdate += UpdateSteering;
+
+            UpdateSteering();
+        }
 
         private void UpdateSteering()
         {
@@ -755,8 +761,17 @@ namespace Hadal.AI
         {
             if (!_tickCavernLingerTimer) return;
 
-            cavernLingerTimer -= deltaTime;
-            if (cavernLingerTimer > 0f) return;
+            if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Crystal)
+                crystalCavernLingerTimer -= deltaTime;
+            else if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Bioluminescent)
+                biolumiCavernLingerTimer -= deltaTime;
+            else if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Lair)
+                lairCavernLingerTimer -= deltaTime;
+            else if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Hydrothermal_Deep)
+                hydrothermalCavernLingerTimer -= deltaTime;
+
+            if (crystalCavernLingerTimer > 0f || biolumiCavernLingerTimer > 0f
+                || lairCavernLingerTimer > 0f || hydrothermalCavernLingerTimer > 0f) return;
 
             _tickCavernLingerTimer = false;
             ResetCavernLingerTimer();
@@ -804,9 +819,20 @@ namespace Hadal.AI
         private void ResetTimeoutTimer() => timeoutTimer = timeoutNewPointTime;
         private void ResetObstacleCheckTimer() => obstacleCheckTimer = obstacleCheckTime;
         private void ResetNavPointLingerTimer() => navPointLingerTimer = GetNextNavPointLingerTime();
-        private void ResetCavernLingerTimer() => cavernLingerTimer = GetNextCavernLingerTime();
+        private void ResetCavernLingerTimer()
+        {
+            crystalCavernLingerTimer = GetNextCrystalCavernLingerTime();
+            biolumiCavernLingerTimer = GetNextBiolumiCavernLingerTime();
+            lairCavernLingerTimer = GetNextLairCavernLingerTime();
+            hydrothermalCavernLingerTimer = GetNextHydrothermalCavernLingerTime();
+        }
+
         private float GetNextNavPointLingerTime() => Random.Range(navPointLingerTimeRange.x, navPointLingerTimeRange.y);
-        private float GetNextCavernLingerTime() => Random.Range(cavernLingerTimeRange.x, cavernLingerTimeRange.y);
+        private float GetNextCrystalCavernLingerTime() => Random.Range(crystalCavernLingerTimeRange.x, crystalCavernLingerTimeRange.y);
+        private float GetNextBiolumiCavernLingerTime() => Random.Range(biolumiCavernLingerTimeRange.x, biolumiCavernLingerTimeRange.y);
+        private float GetNextLairCavernLingerTime() => Random.Range(lairCavernLingerTimeRange.x, lairCavernLingerTimeRange.y);
+        private float GetNextHydrothermalCavernLingerTime() => Random.Range(hydrothermalCavernLingerTimeRange.x, hydrothermalCavernLingerTimeRange.y);
+
 
         public void SetAIStunned(bool isStun) => isStunned = isStun;
 
