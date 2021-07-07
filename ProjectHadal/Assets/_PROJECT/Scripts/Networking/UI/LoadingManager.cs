@@ -176,7 +176,7 @@ namespace Hadal.Networking.UI.Loading
 
         void LoadingCompletedPrint()
         {
-            //print("Loading Completed.");
+            Debug.LogWarning("Loading Completed.");
         }
 
         #region Load Checks
@@ -196,6 +196,7 @@ namespace Hadal.Networking.UI.Loading
             {
                 yield return null;
             }
+
             LoadingCompletedEvent.Invoke();
 
             if (loadingMode == LoadMode.Load_After_Delay)
@@ -214,7 +215,7 @@ namespace Hadal.Networking.UI.Loading
 
         void ActivateLoadingElements()
         {
-            loadingCGF.SetOpaque();
+            //loadingCGF.SetOpaque();
             background.gameObject.SetActive(true);
 
             GetCG(hiveParentAnimator.gameObject).alpha = 1f;
@@ -294,8 +295,10 @@ namespace Hadal.Networking.UI.Loading
 
         void ActualLoad()
         {
+            //Debug.LogWarning("actual load starting");
             allowLoading = true;
             loadingAO = neManager.LoadLevelAsync(nextLoadLevelName);
+            //loadingCGF.FadeInEndedEvent -= ActualLoad;
         }
 
         /// <summary>
@@ -309,7 +312,9 @@ namespace Hadal.Networking.UI.Loading
             SetupPostProcess();
             ActivateLoadingElements();
             loadingCGF.fadeEndedEvent.AddListener(ActualLoad);
+            //loadingCGF.FadeInEndedEvent += ActualLoad;
 
+            //Debug.LogWarning("load the level!");
             nextLoadLevelName = levelName; 
         }
         public void FinishLoading()
