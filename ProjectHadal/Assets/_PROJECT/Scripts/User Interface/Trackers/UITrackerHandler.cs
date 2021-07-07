@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //! C: Jon
-/// <summary>
-/// Handles object pooling of trackers
-/// </summary>
 namespace Hadal.UI
 {
+    /// <summary> Handles object pooling of trackers </summary>
     public class UITrackerHandler : MonoBehaviour
     {
         [System.Serializable]
@@ -62,7 +60,6 @@ namespace Hadal.UI
             initialized = true;
             //print(scaleFactor);
         }
-        
 
         IEnumerator InstantiateTrackers(TrackerPool tracker)
         {

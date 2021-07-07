@@ -145,8 +145,9 @@ namespace Hadal.UI
             PNTR_Resume();
 
             //sl_UI = DebugManager.Instance.CreateScreenLogger();
-            Debug.LogWarning(Screen.width);
-            Debug.LogWarning(Screen.currentResolution);
+            //Debug.LogWarning("w: " + Screen.width + " | h: " + Screen.height);
+            //Debug.LogWarning(Screen.currentResolution);
+            //Debug.LogWarning("screen scale: " + (Screen.width / Screen.currentResolution.width));
         }
 
         void Update()

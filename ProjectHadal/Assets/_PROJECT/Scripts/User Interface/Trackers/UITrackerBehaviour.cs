@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Magthylius.LerpFunctions;
@@ -10,25 +11,45 @@ namespace Hadal.UI
 {
     public class UITrackerBehaviour : MonoBehaviour
     {
+        [Header("Overall settings")]
         public TrackerType Type;
         [SerializeField] bool startsEnabled = false;
         [SerializeField] bool screenBounded = true;
         [SerializeField] Vector3 positionOffset = Vector3.zero;
+        
+        [Header("Fade Settings")]
+        [SerializeField] private bool fadeWhenDistant = false;
+        [SerializeField] private float fadeOutDistance = 100f;
+        [SerializeField] private float fadeInDistance = 100f;
+        [SerializeField] private float fadeSpeed = 2f;
 
-        Graphic graphic;
-        RectTransform rectTransform;
-        Transform trackingTransform;
-        Camera playerCamera;
-        Transform playerTransform;
+        private CanvasGroup canvasGroup;
+        private Graphic graphic;
+        private RectTransform rectTransform;
+        private Transform trackingTransform;
+        private Camera playerCamera;
+        private Transform playerTransform;
 
-        FlexibleRect flexRect;
+        private FlexibleRect flexRect;
+        private CanvasGroupFader cgf;
 
-        void Start()
+        //! UI Scaling
+        private float resoScale;
+        private float playerScale;
+        
+        //! Fading properties
+        protected float distanceToTransform;
+
+        public virtual void Start()
         {
             graphic = GetComponent<Graphic>();
             rectTransform = GetComponent<RectTransform>();
+            canvasGroup = GetComponent<CanvasGroup>();
 
             flexRect = new FlexibleRect(rectTransform);
+            cgf = new CanvasGroupFader(canvasGroup, false, false, 0.01f);
+            cgf.SetOpaque();
+
             if (!startsEnabled) Disable();
         }
 
@@ -44,14 +65,15 @@ namespace Hadal.UI
             float maxX = Screen.width - minX;
             float maxY = Screen.height - minY;
 
-            Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position + positionOffset);
+            Vector3 trackedPosition = trackingTransform.position;
+            Vector2 pos = playerCamera.WorldToScreenPoint(trackedPosition + positionOffset);
             pos.x -= Screen.width * 0.5f;
             pos.y -= Screen.height * 0.5f;
-            //print(pos);
-            //print(trackingTransform.position);
+            
+            pos *= resoScale * playerScale;
 
             //! When tracker is behind player
-            float dotProduct = Vector3.Dot((trackingTransform.position - playerTransform.position), playerTransform.forward);
+            float dotProduct = Vector3.Dot(trackedPosition - playerTransform.position, playerTransform.forward);
             if (dotProduct < 0)
             {
                 if (pos.x < Screen.width * 0.5f) pos.x = maxX;
@@ -62,24 +84,45 @@ namespace Hadal.UI
             {
                 pos.x = Mathf.Clamp(pos.x, minX, maxX);
                 pos.y = Mathf.Clamp(pos.y, minY, maxY);
-
-                //transform.position = pos;
+                
                 rectTransform.anchoredPosition = pos;
             }
             else
             {
-                //transform.position = pos;
                 rectTransform.anchoredPosition = pos;
-                //flexRect.MoveTo(pos);
-                //transform.position *= Mathf.Sign(dotProduct);
             }
+        }
+        
+        private void LateUpdate()
+        {
+            if (!fadeWhenDistant) return;
+
+            distanceToTransform = Vector3.Distance(playerTransform.position, trackingTransform.position);
+            if (distanceToTransform >= fadeOutDistance)
+                cgf.StartFadeOut();
+            else if (distanceToTransform <= fadeInDistance)
+                cgf.StartFadeIn();
+            
+            cgf.Step(fadeSpeed * Time.deltaTime);
         }
 
         public void InjectDependencies(Camera playerCamera, Transform playerTransform)
         {
             this.playerCamera = playerCamera;
             this.playerTransform = playerTransform;
+            
+            resoScale = 1f / (Screen.width / Screen.currentResolution.width);
+            playerScale = 1f / PlayerScaleAverage();
 
+            float PlayerScaleAverage()
+            {
+                float s = playerTransform.localScale.x + playerTransform.localScale.y + playerTransform.localScale.z;
+                s /= 3;
+                return s;
+            }
+            
+            //Debug.LogWarning("p scale: " + playerScale);
+            //Debug.LogWarning("r scale: " + resoScale);
         }
         public void TrackTransform(Transform transform)
         {
@@ -92,6 +135,16 @@ namespace Hadal.UI
             flexRect.MoveTo(Vector2.zero);
             Disable();
         }
+
+        public void EnableFadeEffects(float fadeOutDist, float fadeInDist)
+        {
+            fadeWhenDistant = true;
+            fadeOutDistance = fadeOutDist;
+            fadeInDistance = fadeInDist;
+        }
+
+        public void DisableFadeEffects() => fadeWhenDistant = false;
+        
         public void Enable() => gameObject.SetActive(true);
         public void Disable() => gameObject.SetActive(false);
         public Transform TrackingTransform => trackingTransform;

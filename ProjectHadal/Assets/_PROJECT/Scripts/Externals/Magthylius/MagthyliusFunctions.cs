@@ -3,8 +3,10 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
-// Version 1.5.0
+// Version 1.5.1
 namespace Magthylius
 {
     namespace Utilities
@@ -40,6 +42,17 @@ namespace Magthylius
     {
         using Utilities;
 
+        public delegate void FadeEvent();
+        public delegate void FadeOpacityEvent(OpacityState state);
+
+        public enum OpacityState
+        {
+            Transparent = 0,
+            Opaque,
+            FadeToTransparent,
+            FadeToOpaque
+        }
+        
         public enum FaderState
         {
             OPAQUE = 0,
@@ -112,9 +125,7 @@ namespace Magthylius
         }
 
         [Serializable]
-        ///<summary>
-        ///For easy movement of RectTransform with lerp utilities.
-        ///</summary>
+        ///<summary> For easy movement of RectTransform with lerp utilities. </summary>
         public class FlexibleRect
         {
             public RectTransform rectTransform;
@@ -480,20 +491,17 @@ namespace Magthylius
         [Serializable]
         public class CanvasGroupFader
         {
-            public enum CanvasState
-            {
-                FADE_OUT,
-                FADE_IN
-            }
-
             public CanvasGroup canvas;
             public bool affectsTouch;
             public float precision;
-            public UnityEvent fadeEndedEvent;
-
-            CanvasState state;
-            bool allowFade;
-
+            [Obsolete] public UnityEvent fadeEndedEvent;
+            public event FadeOpacityEvent FadeEndedEvent;
+            public event FadeEvent FadeInEndedEvent;
+            public event FadeEvent FadeOutEndedEvent;
+            
+            private OpacityState _state;
+            private bool _isPaused = false;
+            
             public CanvasGroupFader(CanvasGroup canvasGroup, bool startFadeInState, bool canAffectTouch, float alphaPrecision = 0.001f)
             {
                 canvas = canvasGroup;
@@ -501,90 +509,104 @@ namespace Magthylius
                 if (startFadeInState) SetStateFadeIn();
                 else SetStateFadeOut();
 
-                allowFade = false;
                 precision = alphaPrecision;
                 fadeEndedEvent = new UnityEvent();
             }
 
+            /// <summary> Essential to check for animation. Insert this in an Update function. </summary>
+            /// <param name="speed">Speed of lerp, without deltaTime</param>
             public void Step(float speed)
             {
-                if (allowFade)
+                if (_isPaused) return;
+
+                if (_state == OpacityState.FadeToOpaque)
                 {
-                    if (state == CanvasState.FADE_IN)
+                    canvas.alpha = Mathf.Lerp(canvas.alpha, 1f, speed);
+
+                    if (1f - canvas.alpha <= precision)
                     {
-                        canvas.alpha = Mathf.Lerp(canvas.alpha, 1f, speed);
-
-                        if (1f - canvas.alpha <= precision)
-                        {
-                            allowFade = false;
-                            canvas.alpha = 1f;
-
-                            if (affectsTouch)
-                            {
-                                canvas.blocksRaycasts = true;
-                                canvas.interactable = true;
-                            }
-
-                            fadeEndedEvent.Invoke();
-                        }
+                        _state = OpacityState.Opaque;
+                        canvas.alpha = 1f;
+                
+                        if (affectsTouch) SetInteraction(true);
+                        
+                        fadeEndedEvent.Invoke();
+                        FadeEndedEvent?.Invoke(_state);
+                        FadeInEndedEvent?.Invoke();
+                        Pause();
                     }
-                    else
+                }
+                else if (_state == OpacityState.FadeToTransparent)
+                {
+                    canvas.alpha = Mathf.Lerp(canvas.alpha, 0f, speed);
+                
+                    if (canvas.alpha <= precision)
                     {
-                        canvas.alpha = Mathf.Lerp(canvas.alpha, 0f, speed);
-
-                        if (canvas.alpha <= precision)
-                        {
-                            allowFade = false;
-                            canvas.alpha = 0f;
-
-                            if (affectsTouch)
-                            {
-                                canvas.blocksRaycasts = false;
-                                canvas.interactable = false;
-                            }
-
-                            fadeEndedEvent.Invoke();
-                        }
+                        _state = OpacityState.Transparent;
+                        canvas.alpha = 0f;
+                
+                        if (affectsTouch) SetInteraction(false);
+                
+                        fadeEndedEvent.Invoke();
+                        FadeEndedEvent?.Invoke(_state);
+                        FadeOutEndedEvent?.Invoke();
+                        
+                        Pause();
                     }
                 }
             }
 
+            /// <summary> Force sets alpha of the canvas. </summary>
+            /// <param name="alpha">Alpha to set</param>
             public void SetAlpha(float alpha)
             {
                 canvas.alpha = alpha;
             }
+            /// <summary> Force sets the interaction of canvas, both BlockRaycast and Interactable </summary>
+            /// <param name="interaction">Interaction mode to set</param>
             public void SetInteraction(bool interaction)
             {
                 canvas.blocksRaycasts = interaction;
                 canvas.interactable = interaction;
             }
+            /// <summary> Sets state to FadeToOpaque and allows the fade </summary>
             public void StartFadeIn()
             {
                 SetStateFadeIn();
-                TriggerFade();
+                Continue();
             }
+            /// <summary> Sets state to FadeToTransparent and allows the fade </summary>
             public void StartFadeOut()
             {
                 SetStateFadeOut();
-                TriggerFade();
+                Continue();
             }
 
+            /// <summary> Forces state to Transparent and disables the fade </summary>
             public void SetTransparent()
             {
                 SetAlpha(0f);
+                _state = OpacityState.Transparent;
                 if (affectsTouch) SetInteraction(false);
+                Pause();
             }
+            /// <summary> Forces state to Opaque and disables the fade </summary>
             public void SetOpaque()
             {
                 SetAlpha(1f);
+                _state = OpacityState.Opaque;
                 if (affectsTouch) SetInteraction(true);
+                Pause();
             }
+            
+            public void SetStateFadeIn() => _state = OpacityState.FadeToOpaque;
+            public void SetStateFadeOut() => _state = OpacityState.FadeToTransparent;
+            public bool IsFading => _state == OpacityState.FadeToOpaque || _state == OpacityState.FadeToTransparent;
 
-            public void TriggerFade() => allowFade = true;
-            public void SetStateFadeIn() => state = CanvasState.FADE_IN;
-            public void SetStateFadeOut() => state = CanvasState.FADE_OUT;
-            public bool IsFading => allowFade;
-            public CanvasState State => state;
+            public void Pause() => _isPaused = true;
+            public void Continue() => _isPaused = false;
+
+            public float Alpha => canvas.alpha;
         }
 
         //! Graphic (Images and TMP)
