@@ -99,7 +99,7 @@ namespace Hadal.UI
         public void Dump(UITrackerBehaviour tracker)
         {
             tracker.Untrack();
-            tracker.Disable();
+            //tracker.Disable();
         }
 
         public void Dump(Transform trackerTransform)

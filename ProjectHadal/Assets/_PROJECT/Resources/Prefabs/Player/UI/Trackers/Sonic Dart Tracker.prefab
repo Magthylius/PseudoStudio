@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5722380932417454944}
   - component: {fileID: 3974778478053815083}
   - component: {fileID: 5020941258254903772}
+  - component: {fileID: 2064632893367142510}
   m_Layer: 5
   m_Name: Sonic Dart Tracker
   m_TagString: Untagged
@@ -92,3 +93,19 @@ MonoBehaviour:
   startsEnabled: 0
   screenBounded: 0
   positionOffset: {x: 0, y: 0, z: 0}
+  fadeWhenDistant: 0
+  fadeOutDistance: 100
+  fadeInDistance: 100
+  fadeSpeed: 2
+--- !u!225 &2064632893367142510
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5552315013802069465}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
