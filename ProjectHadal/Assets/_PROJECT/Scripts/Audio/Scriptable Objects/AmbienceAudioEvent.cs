@@ -19,10 +19,10 @@ namespace Hadal.AudioSystem
             return false;
         }
 
-        /// <summary> 2D Ambience playing </summary>
+        /// <summary> 2D Ambience playing, passed in source can be null. </summary>
         public override void Play(AudioSource source)
         {
-            if (source == null || Clip == null) return;
+            if (Clip == null) return;
 
             HandleAnyExistingHandler();
 

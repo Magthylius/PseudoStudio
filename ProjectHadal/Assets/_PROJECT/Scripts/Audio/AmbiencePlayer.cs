@@ -38,7 +38,7 @@ namespace Hadal.AudioSystem
             else
                 yield return new WaitForSeconds(delay);
 
-            ambienceAsset.Play(GetComponent<AudioSource>());
+            ambienceAsset.Play(null);
         }
 
         public AudioEventData AmbienceEvent => ambienceAsset;

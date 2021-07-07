@@ -13,38 +13,37 @@ namespace Hadal.AudioSystem
         private void Awake() => listener = FindObjectOfType<AudioListener>();
 
         [Space(10)]
-        [Header("SFX")]
+        [Header("3D SFX")]
         [SerializeField] AudioEventData testSfx;
-        [SerializeField] Vector3 offset;
+        [SerializeField] Vector3 offsetFromListener;
         [Button(nameof(PlaySFX), EButtonEnableMode.Playmode)]
         private void PlaySFX()
         {
             if (testSfx == null) { "Test SFX is null.".Warn(); return; }
-            testSfx.Play(listener.transform.position + offset);
+            testSfx.Play(listener.transform.position + offsetFromListener);
         }
 
-        [Space(5)]
+        [Space(10)]
         [Header("Ambience")]
-        [SerializeField] AudioSource ambSource;
         [SerializeField] AudioEventData testAmb;
         bool isPaused = false;
         [Button(nameof(PlayAmbience), EButtonEnableMode.Playmode)]
         private void PlayAmbience()
         {
-            if (testAmb == null || ambSource == null) { "Test AMB or Source is null.".Warn(); return; }
-            testAmb.Play(ambSource);
+            if (testAmb == null) { "Test AMB is null.".Warn(); return; }
+            testAmb.Play(null);
         }
         [Button(nameof(TogglePauseAmbience), EButtonEnableMode.Playmode)]
         private void TogglePauseAmbience()
         {
-            if (testAmb == null || ambSource == null) { "Test AMB or Source is null.".Warn(); return; }
+            if (testAmb == null) { "Test AMB is null.".Warn(); return; }
             isPaused = !isPaused;
             testAmb.Pause(isPaused);
         }
         [Button(nameof(StopAmbience), EButtonEnableMode.Playmode)]
         private void StopAmbience()
         {
-            if (testAmb == null || ambSource == null) { "Test AMB or Source is null.".Warn(); return; }
+            if (testAmb == null) { "Test AMB is null.".Warn(); return; }
             testAmb.Stop();
         }
     }
