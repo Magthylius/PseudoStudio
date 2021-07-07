@@ -50,7 +50,7 @@ namespace Hadal.UI
             cgf = new CanvasGroupFader(canvasGroup, false, false, 0.01f);
             cgf.SetOpaque();
 
-            if (!startsEnabled) Disable();
+            //if (!startsEnabled) Disable();
         }
 
         void Update()
@@ -130,9 +130,6 @@ namespace Hadal.UI
                 s /= 3;
                 return s;
             }
-            
-            //Debug.LogWarning("p scale: " + playerScale);
-            //Debug.LogWarning("r scale: " + resoScale);
         }
         public void TrackTransform(Transform transform)
         {
@@ -171,7 +168,12 @@ namespace Hadal.UI
         public void DisableFadeEffects() => fadeWhenDistant = false;
         
         public void Enable() => gameObject.SetActive(true);
-        public void Disable() => gameObject.SetActive(false);
+
+        public void Disable()
+        {
+            Debug.LogWarning("Disabled!");
+            gameObject.SetActive(false);
+        }
         public Transform TrackingTransform => trackingTransform;
     }
 }

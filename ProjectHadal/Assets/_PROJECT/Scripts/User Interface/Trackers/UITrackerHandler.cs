@@ -37,11 +37,7 @@ namespace Hadal.UI
         IEnumerator Start()
         {
             trackerList = new List<UITrackerBehaviour>();
-            /*foreach (TrackerPool tracker in trackerPoolList)
-            {
-                StartCoroutine(InstantiateTrackers(tracker));
-            }*/
-            
+
             foreach (TrackerPool tracker in trackerPoolList)
             {
                 int count = 0;
@@ -80,7 +76,12 @@ namespace Hadal.UI
         {
             //print(trackerList);
             foreach (UITrackerBehaviour tracker in trackerList)
-                if (tracker && tracker.Type == type && !tracker.isActiveAndEnabled) return tracker;
+            {
+                if (tracker && tracker.Type == type && !tracker.isActiveAndEnabled)
+                {
+                    return tracker;
+                }
+            }
 
             foreach (TrackerPool tracker in trackerPoolList)
             {
