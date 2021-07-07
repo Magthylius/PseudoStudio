@@ -71,15 +71,18 @@ namespace Hadal.AI
             PlayerController targetPlayer = NetworkData.GetPlayerController(targetViewID);
             if (targetPlayer != null)
             {
-                brain.CarriedPlayer = targetPlayer;
-                brain.CarriedPlayer.SetIsCarried(true);
-                brain.AttachCarriedPlayerToMouth(true);
+                brain.CurrentTarget = targetPlayer;
+                brain.TryCarryTargetPlayer();
+                // brain.CarriedPlayer = targetPlayer;
+                // brain.CarriedPlayer.SetIsCarried(true);
+                // brain.AttachCarriedPlayerToMouth(true);
             }
         }
     
         void RE_DetachAnyCarriedPlayer(EventData eventData)
         {
             brain.DetachAnyCarriedPlayer();
+            brain.CurrentTarget = null;
         }
 
         void RE_DisableBrain(EventData eventData)

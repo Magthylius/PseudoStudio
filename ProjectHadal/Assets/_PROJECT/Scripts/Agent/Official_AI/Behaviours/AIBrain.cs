@@ -381,42 +381,37 @@ namespace Hadal.AI
         public void AttachCarriedPlayerToMouth(bool attachToMouth)
         {
             if (MouthObject == null)
-            {
                 MouthObject = FindObjectOfType<AIGraphicsHandler>().MouthObject;
-            }
+            
             Transform mouth = MouthObject.transform;
             if (CarriedPlayer == null)
             {
-                //Debug.LogError("null detach!");
-                mouth.DetachChildren();
+                DetachAnyCarriedPlayer();
                 return;
             }
 
-            int grabbedPlayerID = CarriedPlayer.GetInfo.PhotonInfo.PView.ViewID;
+            int grabbedPlayerID = CarriedPlayer.ViewID;
             if (attachToMouth)
             {
-                //Debug.LogWarning("Player grabbed");
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
                 CarriedPlayer.GetTarget.localPosition = Vector3.zero;
 
                 //! Send event if host
                 if (neManager.IsMasterClient)
-                {
                     neManager.RaiseEvent(ByteEvents.AI_GRAB_PLAYER, grabbedPlayerID);
-                }
 
                 return;
             }
 
 
-            mouth.DetachChildren();
+            DetachAnyCarriedPlayer();
+            CarriedPlayer.SetIsCarried(false);
 
             //! Send event if host
             if (neManager.IsMasterClient)
-            {
                 neManager.RaiseEvent(ByteEvents.AI_RELEASE_PLAYER, null);
-            }
+            
             CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
         }
 
@@ -427,9 +422,7 @@ namespace Hadal.AI
         public void DetachAnyCarriedPlayer()
         {
             if (MouthObject == null)
-            {
                 MouthObject = FindObjectOfType<AIGraphicsHandler>().MouthObject;
-            }
 
             //! Make sure any player in mouth is released
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
@@ -439,9 +432,9 @@ namespace Hadal.AI
                 player.SetIsCarried(false);
             }
 
-            MouthObject.transform.DetachChildren();
+            CarriedPlayer.SetIsCarried(false);
             CarriedPlayer = null;
-            NavigationHandler.StopCustomPath(true);
+            MouthObject.transform.DetachChildren();
         }
 
         /// <summary>
@@ -456,6 +449,15 @@ namespace Hadal.AI
             CurrentTarget.SetIsCarried(true);
             CarriedPlayer = CurrentTarget;
             AttachCarriedPlayerToMouth(true);
+            return true;
+        }
+
+        public bool TryDropCarriedPlayer()
+        {
+            if (CarriedPlayer == null)
+                return false;
+            
+            DetachAnyCarriedPlayer();
             return true;
         }
 

@@ -21,7 +21,7 @@ namespace Hadal.AI.States
 
         public override void OnStateStart()
         {
-            if (Brain.DebugEnabled) $"Switch substate to: {this.NameOfClass()}".Msg();
+            if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             currentCavern = Brain.CavernManager.GetCavernTagOfAILocation();
             cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
             ambushTimer = settings.AM_MaxWaitTime;

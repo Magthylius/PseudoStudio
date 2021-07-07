@@ -15,6 +15,11 @@ MonoBehaviour:
   PlayerDetectRange: 100
   ConfidenceIncrementValue: 10
   ConfidenceDecrementValue: 10
+  G_ApproachCloseDistanceThreshold: 10
+  G_ApproachFarDistanceThreshold: 500
+  G_CarryDelayTimer: 0.5
+  G_TotalThreshTimeInSeconds: 10
+  G_ThreshDamagePerSecond: 4
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 120
   AG_TargetPlayerRange: 100
@@ -22,6 +27,7 @@ MonoBehaviour:
   AllowTarget_HighestDMGPlayer: 1
   AllowTarget_HighestHPPlayer: 1
   AllowTarget_IsolatedPlayer: 1
+  HealthRatioThreshold: 0.5
   JudgementTickRate: 30
   JudgementTimer1: 30
   JudgementTimer2: 45
