@@ -31,6 +31,7 @@ namespace Hadal.AudioSystem
         [SerializeField] private AudioRolloffMode VolumeRolloff = AudioRolloffMode.Logarithmic;
         [SerializeField] private float MinDistance = 1f;
         [SerializeField] private float MaxDistance = 500f;
+        [SerializeField] private AudioSource RolloffCurveTemplate = null;
 
         public void AssignSettings(ref AudioSource source)
         {
@@ -52,10 +53,29 @@ namespace Hadal.AudioSystem
             source.dopplerLevel = DopplerLevel;
             source.spread = Spread;
             source.rolloffMode = VolumeRolloff;
-            if (VolumeRolloff != AudioRolloffMode.Custom)
+            if (VolumeRolloff != AudioRolloffMode.Custom) source.minDistance = MinDistance;
+            source.maxDistance = MaxDistance;
+
+            if (RolloffCurveTemplate != null)
             {
-                source.minDistance = MinDistance;
-                source.maxDistance = MaxDistance;
+                //! Only need to inject volume roll off
+                var animCurveForRolloff = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.CustomRolloff);
+                // var animCurveForSpatialBlend = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.SpatialBlend);
+                // var animCurveForReverb = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.ReverbZoneMix);
+                // var animCurveForSpread = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.Spread);
+                
+                source.SetCustomCurve(AudioSourceCurveType.CustomRolloff, animCurveForRolloff);
+                // source.SetCustomCurve(AudioSourceCurveType.SpatialBlend, animCurveForSpatialBlend);
+                // source.SetCustomCurve(AudioSourceCurveType.ReverbZoneMix, animCurveForReverb);
+                // source.SetCustomCurve(AudioSourceCurveType.Spread, animCurveForSpread);
+            }
+        }
+
+        internal void OnValidate()
+        {
+            if (RolloffCurveTemplate != null)
+            {
+                VolumeRolloff = AudioRolloffMode.Custom;
             }
         }
     }

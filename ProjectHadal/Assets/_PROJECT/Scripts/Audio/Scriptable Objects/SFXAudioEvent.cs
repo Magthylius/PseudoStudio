@@ -96,5 +96,7 @@ namespace Hadal.AudioSystem
         //! No need to pause or stop for SFX sounds
         public override void Pause(bool isPaused) { }
         public override void Stop(bool isEditor = false) { }
+
+        private void OnValidate() => Settings.OnValidate();
     }
 }

@@ -117,6 +117,8 @@ namespace Hadal.AudioSystem
         public override void Pause(bool isPaused) { }
         public override void Stop(bool isEditor = false) { }
 
+        private void OnValidate() => Settings.OnValidate();
+
         [System.Serializable]
         private struct WeightedAudioClip
         {
