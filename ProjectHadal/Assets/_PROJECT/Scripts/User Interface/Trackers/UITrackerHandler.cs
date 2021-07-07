@@ -63,8 +63,9 @@ namespace Hadal.UI
             while (count < tracker.poolCount)
             {
                 var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
-                trackerList.Add(track.GetComponent<UITrackerBehaviour>());
-                track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform);
+                UITrackerBehaviour trackerBehav = track.GetComponent<UITrackerBehaviour>();
+                trackerList.Add(trackerBehav);
+                trackerBehav.InjectDependencies(playerCamera, playerTransform);
                 track.SetActive(false);
 
                 yield return new WaitForEndOfFrame();
@@ -88,8 +89,10 @@ namespace Hadal.UI
                 if (tracker.trackerType == type) 
                 {
                     var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
-                    trackerList.Add(track.GetComponent<UITrackerBehaviour>());
-                    return track.GetComponent<UITrackerBehaviour>();
+                    UITrackerBehaviour trackerBehav = track.GetComponent<UITrackerBehaviour>();
+                    trackerList.Add(trackerBehav);
+                    trackerBehav.InjectDependencies(playerCamera, playerTransform);
+                    return trackerBehav;
                 }
             }
 

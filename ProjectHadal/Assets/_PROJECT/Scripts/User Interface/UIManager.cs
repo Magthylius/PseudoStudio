@@ -316,7 +316,6 @@ namespace Hadal.UI
         
         public void TrackProjectile(Transform projectileTransform, TrackerType projectileType)
         {
-            //Debug.LogWarning("Tracking proj: " + projectileType);
             UITrackerBehaviour tracker = trackerHandler.Scoop(projectileType);
 
             if (tracker)
@@ -326,12 +325,6 @@ namespace Hadal.UI
             }
 
             Debug.LogWarning("Failed to scoop projectile!");
-            /*switch (projectileType)
-            {
-                case TrackerType.SONIC_DART:
-                    trackerHandler.Scoop(projectileType).TrackTransform(projectileTransform);
-                    break;
-            }*/
         }
 
         public void UntrackProjectile(Transform projectileTransform)
