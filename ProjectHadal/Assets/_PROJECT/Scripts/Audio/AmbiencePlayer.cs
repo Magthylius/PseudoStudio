@@ -25,20 +25,19 @@ namespace Hadal.AudioSystem
 
         public void StartAmbience()
         {
-            if (ambienceAsset == null) return;
+            if (ambienceAsset == null || hasStartedPlaying) return;
             StartCoroutine(AmbienceRoutine(playWithDelay ? playDelaySeconds : 0f));
         }
 
         private IEnumerator AmbienceRoutine(float delay)
         {
-            if (hasStartedPlaying) yield break;
+            hasStartedPlaying = true;
             
             if (delay < float.Epsilon)
                 yield return null;
             else
                 yield return new WaitForSeconds(delay);
 
-            hasStartedPlaying = true;
             ambienceAsset.Play(GetComponent<AudioSource>());
         }
 

@@ -15,7 +15,7 @@ namespace Hadal.AudioSystem
         [SerializeField, Range(0, 256)] private int Priority = 128;
         [SerializeField, Range(-1f, 1f)] private float StereoPan = 0;
         [SerializeField, Range(0f, 1.1f)] private float ReverbZoneMix = 1f;
-        
+
         [Header("Effects & Lifecycle")]
         [SerializeField] private AudioMixerGroup OutputMixerGroup;
         [SerializeField] private bool Mute = false;
@@ -52,8 +52,11 @@ namespace Hadal.AudioSystem
             source.dopplerLevel = DopplerLevel;
             source.spread = Spread;
             source.rolloffMode = VolumeRolloff;
-            source.minDistance = MinDistance;
-            source.maxDistance = MaxDistance;
+            if (VolumeRolloff != AudioRolloffMode.Custom)
+            {
+                source.minDistance = MinDistance;
+                source.maxDistance = MaxDistance;
+            }
         }
     }
 }
