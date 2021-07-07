@@ -37,11 +37,7 @@ namespace Hadal.UI
         IEnumerator Start()
         {
             trackerList = new List<UITrackerBehaviour>();
-            /*foreach (TrackerPool tracker in trackerPoolList)
-            {
-                StartCoroutine(InstantiateTrackers(tracker));
-            }*/
-            
+
             foreach (TrackerPool tracker in trackerPoolList)
             {
                 int count = 0;
@@ -67,8 +63,9 @@ namespace Hadal.UI
             while (count < tracker.poolCount)
             {
                 var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
-                trackerList.Add(track.GetComponent<UITrackerBehaviour>());
-                track.GetComponent<UITrackerBehaviour>().InjectDependencies(playerCamera, playerTransform);
+                UITrackerBehaviour trackerBehav = track.GetComponent<UITrackerBehaviour>();
+                trackerList.Add(trackerBehav);
+                trackerBehav.InjectDependencies(playerCamera, playerTransform);
                 track.SetActive(false);
 
                 yield return new WaitForEndOfFrame();
@@ -80,15 +77,22 @@ namespace Hadal.UI
         {
             //print(trackerList);
             foreach (UITrackerBehaviour tracker in trackerList)
-                if (tracker && tracker.Type == type && !tracker.isActiveAndEnabled) return tracker;
+            {
+                if (tracker && tracker.Type == type && !tracker.isActiveAndEnabled)
+                {
+                    return tracker;
+                }
+            }
 
             foreach (TrackerPool tracker in trackerPoolList)
             {
                 if (tracker.trackerType == type) 
                 {
                     var track = Instantiate(tracker.trackerPrefab, tracker.spawnParent);
-                    trackerList.Add(track.GetComponent<UITrackerBehaviour>());
-                    return track.GetComponent<UITrackerBehaviour>();
+                    UITrackerBehaviour trackerBehav = track.GetComponent<UITrackerBehaviour>();
+                    trackerList.Add(trackerBehav);
+                    trackerBehav.InjectDependencies(playerCamera, playerTransform);
+                    return trackerBehav;
                 }
             }
 
@@ -99,7 +103,7 @@ namespace Hadal.UI
         public void Dump(UITrackerBehaviour tracker)
         {
             tracker.Untrack();
-            tracker.Disable();
+            //tracker.Disable();
         }
 
         public void Dump(Transform trackerTransform)

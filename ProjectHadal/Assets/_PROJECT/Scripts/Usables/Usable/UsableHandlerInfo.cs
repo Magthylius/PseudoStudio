@@ -12,6 +12,7 @@ namespace Hadal.Usables
         public Vector3 shooterVelocity { get; private set; }
         public Vector3 AimedPoint { get; set; }
         public TrapBehaviour Trap { get; set; }
+        public bool LocallyFired { get; private set; }
         public static UsableHandlerInfo Null => new UsableHandlerInfo(0,null, 0.0f, Vector3.zero);
 
         public UsableHandlerInfo() { }
@@ -26,7 +27,7 @@ namespace Hadal.Usables
         }
 
         #region Mini Builder
-        public UsableHandlerInfo WithTransformForceInfo(int projectileID,Transform fireTransform, float ChargedTime, Vector3 shooterVelocity, Vector3 aimedPoint)
+        public UsableHandlerInfo WithTransformForceInfo(int projectileID,Transform fireTransform, float ChargedTime, Vector3 shooterVelocity, Vector3 aimedPoint, bool isLocal)
         {
             if (fireTransform == null) return null;
             ProjectileID = projectileID;
@@ -35,6 +36,7 @@ namespace Hadal.Usables
             this.ChargedTime = ChargedTime;
             this.shooterVelocity = shooterVelocity;
             AimedPoint = aimedPoint;
+            LocallyFired = isLocal;
             return this;
         }
 

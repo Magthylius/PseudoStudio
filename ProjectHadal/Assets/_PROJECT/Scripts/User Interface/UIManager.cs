@@ -316,12 +316,15 @@ namespace Hadal.UI
         
         public void TrackProjectile(Transform projectileTransform, TrackerType projectileType)
         {
-            switch (projectileType)
+            UITrackerBehaviour tracker = trackerHandler.Scoop(projectileType);
+
+            if (tracker)
             {
-                case TrackerType.SONIC_DART:
-                    trackerHandler.Scoop(projectileType).TrackTransform(projectileTransform);
-                    break;
+                tracker.TrackTransform(projectileTransform);
+                return;
             }
+
+            Debug.LogWarning("Failed to scoop projectile!");
         }
 
         public void UntrackProjectile(Transform projectileTransform)

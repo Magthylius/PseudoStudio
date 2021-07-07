@@ -156,13 +156,13 @@ namespace Hadal.Player.Behaviours
             //send event to torpedo ONLY when fire locally. local = (!eventFire)
             if (!eventFire) SendTorpedoEvent(projectileID);
 
-            HandleTorpedoObject(projectileID);
+            HandleTorpedoObject(projectileID, !eventFire);
         }
-        private void HandleTorpedoObject(int projectileID)
+        private void HandleTorpedoObject(int projectileID, bool isLocal)
         {
             //actual firing
             tLauncher.DecrementChamber();
-            UsableHandlerInfo info = CreateInfoForTorpedo(projectileID);
+            UsableHandlerInfo info = CreateInfoForTorpedo(projectileID, isLocal);
             info = CalculateTorpedoAngle(info);
             tLauncher.Use(info);
             controller.GetInfo.Inventory.IncreaseProjectileCount();
@@ -182,7 +182,7 @@ namespace Hadal.Player.Behaviours
                 projectileID += usable.Data.ProjectileData.ProjTypeInt;
             }
             
-            usable.Use(CreateInfoForUtility(projectileID, chargeTime));
+            usable.Use(CreateInfoForUtility(projectileID, chargeTime, !eventFire));
             controller.GetInfo.Inventory.IncreaseProjectileCount();
 
             //send event to utility ONLY when fire locally. local = (!eventFire)
@@ -194,12 +194,12 @@ namespace Hadal.Player.Behaviours
 
         }
 
-        private UsableHandlerInfo CreateInfoForTorpedo(int projectileID)
+        private UsableHandlerInfo CreateInfoForTorpedo(int projectileID, bool isLocal)
         {
             if (aimParentRb)
             {
                 //Debug.LogWarning("Rigidbody torpedo found");
-                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint, 0f, aimParentRb.velocity, Vector3.zero);
+                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, torpedoFirePoint, 0f, aimParentRb.velocity, Vector3.zero, isLocal);
             }
             else
             {
@@ -207,12 +207,12 @@ namespace Hadal.Player.Behaviours
                 return null;
             }
         }
-        private UsableHandlerInfo CreateInfoForUtility(int projectileID, float chargedTime)
+        private UsableHandlerInfo CreateInfoForUtility(int projectileID, float chargedTime, bool isLocal)
         {
             if(aimParentRb)
             {
                 //Debug.LogWarning("Rigidbody utility found");
-                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, utilityFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero);
+                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, utilityFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
             }
             else
             {

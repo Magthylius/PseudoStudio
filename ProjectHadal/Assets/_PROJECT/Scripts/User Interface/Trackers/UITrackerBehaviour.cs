@@ -50,14 +50,18 @@ namespace Hadal.UI
             cgf = new CanvasGroupFader(canvasGroup, false, false, 0.01f);
             cgf.SetOpaque();
 
-            if (!startsEnabled) Disable();
+            //if (!startsEnabled) Disable();
         }
 
         void Update()
         {
             if (!gameObject.activeInHierarchy) return;
             //if (trackingTransform != null && playerCamera != null) flexRect.MoveTo(playerCamera.WorldToScreenPoint(trackingTransform.position));
-            if (trackingTransform == null || playerCamera == null) return;
+            if (!IsValid())
+            {
+                Untrack();
+                return;
+            }
 
             float minX = graphic.GetPixelAdjustedRect().width * 0.5f;
             float minY = graphic.GetPixelAdjustedRect().height * 0.5f;
@@ -96,6 +100,12 @@ namespace Hadal.UI
         private void LateUpdate()
         {
             if (!fadeWhenDistant) return;
+            
+            if (!IsValid())
+            {
+                Untrack();
+                return;
+            }
 
             distanceToTransform = Vector3.Distance(playerTransform.position, trackingTransform.position);
             if (distanceToTransform >= fadeOutDistance)
@@ -120,9 +130,6 @@ namespace Hadal.UI
                 s /= 3;
                 return s;
             }
-            
-            //Debug.LogWarning("p scale: " + playerScale);
-            //Debug.LogWarning("r scale: " + resoScale);
         }
         public void TrackTransform(Transform transform)
         {
@@ -136,6 +143,21 @@ namespace Hadal.UI
             Disable();
         }
 
+        /// <summary>
+        /// Checks if still valid to track. 
+        /// </summary>
+        /// <returns>True if valid, false if not</returns>
+        bool IsValid()
+        {
+            if (trackingTransform == null || playerCamera == null)
+            {
+                Debug.LogWarning( "Track transform or player camera null!");
+                return false;
+            }
+
+            return true;
+        }
+        
         public void EnableFadeEffects(float fadeOutDist, float fadeInDist)
         {
             fadeWhenDistant = true;
@@ -146,7 +168,12 @@ namespace Hadal.UI
         public void DisableFadeEffects() => fadeWhenDistant = false;
         
         public void Enable() => gameObject.SetActive(true);
-        public void Disable() => gameObject.SetActive(false);
+
+        public void Disable()
+        {
+            Debug.LogWarning("Disabled!");
+            gameObject.SetActive(false);
+        }
         public Transform TrackingTransform => trackingTransform;
     }
 }
