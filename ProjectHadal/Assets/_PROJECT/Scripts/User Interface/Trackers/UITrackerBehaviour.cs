@@ -23,6 +23,9 @@ namespace Hadal.UI
 
         FlexibleRect flexRect;
 
+        private float resoScale;
+        private float playerScale;
+
         void Start()
         {
             graphic = GetComponent<Graphic>();
@@ -47,8 +50,8 @@ namespace Hadal.UI
             Vector2 pos = playerCamera.WorldToScreenPoint(trackingTransform.position + positionOffset);
             pos.x -= Screen.width * 0.5f;
             pos.y -= Screen.height * 0.5f;
-            //print(pos);
-            //print(trackingTransform.position);
+            
+            pos *= resoScale * playerScale;
 
             //! When tracker is behind player
             float dotProduct = Vector3.Dot((trackingTransform.position - playerTransform.position), playerTransform.forward);
@@ -79,7 +82,19 @@ namespace Hadal.UI
         {
             this.playerCamera = playerCamera;
             this.playerTransform = playerTransform;
+            
+            resoScale = 1f / (Screen.width / Screen.currentResolution.width);
+            playerScale = 1f / PlayerScaleAverage();
 
+            float PlayerScaleAverage()
+            {
+                float s = playerTransform.localScale.x + playerTransform.localScale.y + playerTransform.localScale.z;
+                s /= 3;
+                return s;
+            }
+            
+            //Debug.LogWarning("p scale: " + playerScale);
+            //Debug.LogWarning("r scale: " + resoScale);
         }
         public void TrackTransform(Transform transform)
         {
