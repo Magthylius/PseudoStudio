@@ -222,6 +222,7 @@ namespace Hadal.Player
             controller.InjectDependencies(this, photonPlayer);
 
             localPlayerController = controller;
+            player.AddComponent<AudioListener>();
             
             //create dummy players
             for(int i = 0; i < DummyPlayerCount; i++)
