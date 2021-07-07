@@ -51,20 +51,36 @@ namespace Hadal.AI
         /// <summary> Damages the chosen player over the network.</summary>
         /// <param name="player">Target player</param>
         /// <param name="type">The damage type</param>
-        public void Send_DamagePlayer(PlayerController player, AIDamageType type)
+        public void Send_DamagePlayer(PlayerController player, float damage)
         {
-            //! compute data
-            int damage = type switch
-            {
-                AIDamageType.Thresh => threshDamage,
-                AIDamageType.Tail => tailWhipDamage,
-                _ => 0
-            };
-
             //! raise event with data
             object[] data = { player.ViewID, damage };
             RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_RECEIVE_DAMAGE, data, options, SendOptions.SendReliable);
+        }
+
+        private Coroutine doTRoutine;
+
+        /// <summary>
+        /// The damage function that the AI's thresh attack uses.
+        /// </summary>
+        public void ApplyDoT(PlayerController player, int durationSeconds, float damagePerSecond)
+        {
+            if (doTRoutine != null) StopCoroutine(doTRoutine);
+            doTRoutine = null;
+            doTRoutine = StartCoroutine(TickDamageInSeconds(player, durationSeconds, damagePerSecond));
+        }
+
+        private IEnumerator TickDamageInSeconds(PlayerController player, int durationSeconds, float dps)
+        {
+            int timer = durationSeconds;
+            var waitTime = new WaitForSeconds(1f);
+            while (timer > 0)
+            {
+                timer -= 1;
+                Send_DamagePlayer(player, dps);
+                yield return waitTime;
+            }
         }
 
         public int GetViewIDFromTransform(Transform trans)

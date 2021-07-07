@@ -90,9 +90,8 @@ namespace Hadal.AI
         AIStateBase cooldownState;
         AIStateBase lureState;
 
-        AggressiveSubState eAggressiveState;
-        AmbushSubState eAmbushState;
-        JudgementSubState eJudgementState;
+        AmbushState ambushState;
+        JudgementState judgementState;
 
         List<AIStateBase> allStates;
 
@@ -221,10 +220,9 @@ namespace Hadal.AI
             anticipationState = new AnticipationState(this);
 
             //! Engagement
-            eAggressiveState = new AggressiveSubState();
-            eAmbushState = new AmbushSubState();
-            eJudgementState = new JudgementSubState();
-            engagementState = new EngagementState(this, eAggressiveState, eAmbushState, eJudgementState);
+            ambushState = new AmbushState(this);
+            judgementState = new JudgementState(this);
+            engagementState = new EngagementState(this);
 
             //! Recovery
             recoveryState = new RecoveryState(this);
@@ -237,6 +235,8 @@ namespace Hadal.AI
 
             //! -setup custom transitions-
             stateMachine.AddEventTransition(to: anticipationState, withCondition: IsAnticipating());
+            stateMachine.AddEventTransition(to: judgementState, withCondition: CanJudge());
+            stateMachine.AddEventTransition(to: ambushState, withCondition: WantsToAmbush());
             stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
             stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
             stateMachine.AddEventTransition(to: cooldownState, withCondition: IsCooldown());
@@ -245,11 +245,13 @@ namespace Hadal.AI
 
             allStates = new List<AIStateBase>
             {
-                idleState,
                 anticipationState,
+                judgementState,
+                ambushState,
                 engagementState,
                 recoveryState,
                 cooldownState,
+                idleState,
                 lureState
             };
         }
@@ -269,9 +271,6 @@ namespace Hadal.AI
         }
 
         #region Event Handlers
-        //! State events
-        public event PhaseEvents JudgementPhaseEvent;
-        public void TriggerJudgementStateEvent(bool isStarting) => JudgementPhaseEvent?.Invoke(isStarting);
         
         /// <summary>Calls when AI enters a cavern</summary>
         void OnCavernEnter(CavernHandler cavern)
@@ -306,6 +305,14 @@ namespace Hadal.AI
         Func<bool> IsRecovering() => () =>
         {
             return RuntimeData.GetBrainState == BrainState.Recovery && !isStunned;
+        };
+        Func<bool> CanJudge() => () =>
+        {
+            return RuntimeData.GetBrainState == BrainState.Judgement && !isStunned;
+        };
+        Func<bool> WantsToAmbush() => () =>
+        {
+            return RuntimeData.GetBrainState == BrainState.Ambush && !isStunned;
         };
         Func<bool> HasEngageObjective() => () =>
         {
@@ -436,6 +443,22 @@ namespace Hadal.AI
             CarriedPlayer = null;
             NavigationHandler.StopCustomPath(true);
         }
+
+        /// <summary>
+        /// Makes the AI carry its current target player
+        /// </summary>
+        public bool TryCarryTargetPlayer()
+        {
+            DetachAnyCarriedPlayer();
+            if (CurrentTarget == null)
+                return false;
+            
+            CurrentTarget.SetIsCarried(true);
+            CarriedPlayer = CurrentTarget;
+            AttachCarriedPlayerToMouth(true);
+            return true;
+        }
+
         #endregion
 
         #region Data
@@ -494,6 +517,18 @@ namespace Hadal.AI
             RuntimeData.SetBrainState(BrainState.Recovery);
         }
         public GameObject Obj => gameObject;
+
+        #endregion
+
+        #region Verbose Shorthands
+
+        public bool IsCarryingAPlayer(bool carriedMustBeTargetPlayer = false)
+        {
+            if (carriedMustBeTargetPlayer)
+                return CarriedPlayer != null && CarriedPlayer == CurrentTarget;
+            
+            return CarriedPlayer != null;
+        }
 
         #endregion
 

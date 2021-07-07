@@ -44,8 +44,8 @@ namespace Hadal.AI.States
                 if (AICavern && AICavern.GetPlayerCount > 0)
                 {
                     RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-                    RuntimeData.SetBrainState(BrainState.Engagement);
-                    RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
+                    RuntimeData.SetBrainState(BrainState.Judgement);
+                    // RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                     RuntimeData.ResetRecoveryTicker();
                     AllowStateTick = false;
                 }

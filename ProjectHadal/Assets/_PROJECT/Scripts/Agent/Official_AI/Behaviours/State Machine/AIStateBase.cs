@@ -18,6 +18,8 @@ namespace Hadal.AI
         public LeviathanRuntimeData RuntimeData;
         public StateMachineData MachineData;
         public CavernManager CavernManager;
+        public AIDamageManager DamageManager;
+        public AIHealthManager HealthManager;
 
         public bool AllowStateTick = true;
 
@@ -31,8 +33,8 @@ namespace Hadal.AI
             RuntimeData = Brain.RuntimeData;
             MachineData = Brain.MachineData;
             CavernManager = Brain.CavernManager;
-
-
+            DamageManager = Brain.DamageManager;
+            HealthManager = Brain.HealthManager;
         }
 
         public virtual void FixedStateTick() { }

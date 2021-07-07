@@ -7,15 +7,16 @@ namespace Hadal.AI
         Idle,
         Anticipation,
         Engagement,
+        Judgement,
+        Ambush,
         Recovery,
         Cooldown,
         Lure
     }
 
-    public enum EngagementSubState
+    public enum EngagementObjective
     {
 		None,
-        Aggressive,
         Ambush,
         Judgement
     }

@@ -20,20 +20,16 @@ namespace Hadal.AI
 
         [Header("Objectives")]
         [SerializeField, ReadOnly] BrainState brainState;
-        [SerializeField, ReadOnly] EngagementSubState engagementSubState;
+        [SerializeField, ReadOnly] EngagementObjective engagementObjective;
         public BrainState GetBrainState => brainState;
-        public EngagementSubState GetEngagementObjective => engagementSubState;
-        public event Action<BrainState, EngagementSubState> OnAIStateChange;
+        public EngagementObjective GetEngagementObjective => engagementObjective;
+        public event Action<BrainState, EngagementObjective> OnAIStateChange;
         public void SetBrainState(BrainState state)
         {
             brainState = state;
-            OnAIStateChange?.Invoke(brainState, engagementSubState);
+            OnAIStateChange?.Invoke(brainState, engagementObjective);
         }
-        public void SetEngagementSubState(EngagementSubState state)
-        {
-            engagementSubState = state;
-            OnAIStateChange?.Invoke(brainState, engagementSubState);
-        }
+        public void SetEngagementObjective(EngagementObjective objective) => engagementObjective = objective;
 
         [Header("Confidence")]
         [SerializeField, ReadOnly] int confidence;
@@ -73,11 +69,7 @@ namespace Hadal.AI
         public float GetEngagementTicks => engagementTicker;
 
         public bool HasJudgementTimerOfIndexExceeded(int index)
-        {
-            //Debug.Log("ET: "+ engagementTicker + " JT: " + machineData.Engagement.GetJudgementTimerThreshold(index));
-            //Debug.Log(engagementTicker > machineData.Engagement.GetJudgementTimerThreshold(index));
-            return engagementTicker > machineData.Engagement.GetJudgementTimerThreshold(index);
-        }
+            => engagementTicker > machineData.Engagement.GetJudgementTimerThreshold(index);
 
         public void TickRecoveryTicker(in float deltaTime) => TickATicker(ref recoveryTicker, deltaTime);
         public void ResetRecoveryTicker() => ResetATicker(ref recoveryTicker);
@@ -89,6 +81,15 @@ namespace Hadal.AI
 
         void TickATicker(ref float ticker, in float deltaTime) => ticker += deltaTime;
         void ResetATicker(ref float ticker) => ticker = 0f;
+        private void ResetAllTickers()
+        {
+            ResetIdleTicker();
+            ResetAnticipationTicker();
+            ResetEngagementTicker();
+            ResetRecoveryTicker();
+            ResetCooldownTicker();
+        }
+
         #endregion
 
         public void Awake_Initialise()
@@ -99,9 +100,9 @@ namespace Hadal.AI
             if (PlayerMask == default) PlayerMask = LayerMask.GetMask("LocalPlayer");
             if (ObstacleMask == default) ObstacleMask = LayerMask.GetMask("Wall");
 
-            //! ObjectivesReset
-            brainState = BrainState.None;
-            engagementSubState = EngagementSubState.Aggressive;
+            //! Objectives Reset
+            SetBrainState(BrainState.None);
+            SetEngagementObjective(EngagementObjective.Ambush);
 
             //! Confidence
             if (machineData.RandomiseConfidenceOnAwake)
@@ -113,8 +114,8 @@ namespace Hadal.AI
             //! Cumulative Damage
             ResetCumulativeDamage();
 
-            //! Judgement
-            ResetEngagementTicker();
+            //! Tickers
+            ResetAllTickers();
         }
 
         public void Start_Initialise()
