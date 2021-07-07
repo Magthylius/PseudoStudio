@@ -86,5 +86,7 @@ namespace Hadal.AudioSystem
             usingSimulatedHandler = true;
             return handler;
         }
+
+        private void OnValidate() => Settings.OnValidate();
     }
 }

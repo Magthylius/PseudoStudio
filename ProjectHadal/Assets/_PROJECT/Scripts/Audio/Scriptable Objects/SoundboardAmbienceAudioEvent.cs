@@ -4,12 +4,12 @@ using UnityEngine;
 namespace Hadal.AudioSystem
 {
     /// <summary> Audio event meant for Ambience sounds that can play multiple Ambience events at once. </summary>
-    [CreateAssetMenu(menuName = "Audio Event/Composite Ambience")]
-    public class CompositeAmbienceAudioEvent : AudioEventData
+    [CreateAssetMenu(menuName = "Audio Event/Soundboard Ambience")]
+    public class SoundboardAmbienceAudioEvent : AudioEventData
     {
         [SerializeField] private AudioEventData[] Composites;
         public override string Description => "Audio event meant to play other audio events for Ambience. Audio events put in the composite will be called all at once by the respective functions [listed below] (refer to examples or ask the Tech for help). "
-                                            + "\n\nSupports 2D Composite Playing, Composite [Un]Pausing, and Composite Stopping functions.";
+                                            + "\n\nSupports 2D Composite Playing, Soundboard [Un]Pausing, and Soundboard Stopping functions.";
 
         public override bool Play(Vector3 position)
         {

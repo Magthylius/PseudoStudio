@@ -4,12 +4,12 @@ using UnityEngine;
 namespace Hadal.AudioSystem
 {
     /// <summary> Audio event meant for SFX sounds that can play multiple SFX events at once. </summary>
-    [CreateAssetMenu(menuName = "Audio Event/Composite SFX")]
-    public class CompositeSFXAudioEvent : AudioEventData
+    [CreateAssetMenu(menuName = "Audio Event/Soundboard SFX")]
+    public class SoundboardSFXAudioEvent : AudioEventData
     {
         [SerializeField] private AudioEventData[] Composites;
         public override string Description => "Audio event meant to play other audio events for SFX sounds. Audio events put in the composite will be called all at once by the respective functions [listed below] (refer to examples or ask the Tech for help). "
-                                            + "\n\nSupports 3D Composite Playing, and 2D Composite Playing functions."
+                                            + "\n\nSupports 3D Soundboard Playing, and 2D Soundboard Playing functions."
                                             + "\n\nNote: Preview Button will only play 2D audio for now.";
 
         public override bool Play(Vector3 position)
