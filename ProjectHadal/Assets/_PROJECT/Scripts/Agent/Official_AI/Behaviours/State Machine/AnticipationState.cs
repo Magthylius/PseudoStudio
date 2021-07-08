@@ -181,7 +181,9 @@ namespace Hadal.AI.States
                     break;
                 case EngagementObjective.Ambush:
                     if (Brain.DebugEnabled) print("Anticipation: Ambush.");
-                    targetCavern = CavernManager.GetLeastPopulatedCavern(CavernManager.GetMostPopulatedCavern().ConnectedCaverns);
+                    var mostPopulatedCavern = CavernManager.GetMostPopulatedCavern();
+                    bool hasConnectedCaverns = mostPopulatedCavern != null && mostPopulatedCavern.ConnectedCaverns.IsNotEmpty();
+                    targetCavern = CavernManager.GetLeastPopulatedCavern(hasConnectedCaverns);
                     break;
                 default:
                     break;
