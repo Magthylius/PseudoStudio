@@ -69,7 +69,7 @@ namespace Hadal.AI
             set
             {
                 carriedPlayer = value;
-                Debug.LogWarning("Carried player changed into: " + value);
+                if (DebugEnabled) Debug.LogWarning("Carried player changed into: " + value);
             }
         }
 
@@ -437,7 +437,7 @@ namespace Hadal.AI
                 player.SetIsCarried(false);
             }
 
-            CarriedPlayer.SetIsCarried(false);
+            if (CarriedPlayer != null) CarriedPlayer.SetIsCarried(false);
             CarriedPlayer = null;
             MouthObject.transform.DetachChildren();
         }

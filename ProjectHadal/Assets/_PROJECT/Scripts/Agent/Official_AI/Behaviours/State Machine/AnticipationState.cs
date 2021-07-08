@@ -13,6 +13,7 @@ namespace Hadal.AI.States
     public class AnticipationState : AIStateBase
     {
         AnticipationStateSettings settings;
+        private float toGoAmbushTimer = 0f;
 
         //! Meant just for startup
         private bool gameStartupInitialization = false;
@@ -33,44 +34,25 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
 
-            //Brain.StartCoroutine(InitializeAfterCaverns());
-
-
-            //print(RuntimeData.GetEngagementObjective);
-            // if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
-            //     ForceEngagementObjective(EngagementSubState.Aggressive);
-
-
+            toGoAmbushTimer = settings.ToGoAmbushTime;
         }
 
         public override void StateTick()
         {
             if (!AllowStateTick) return;
 
-            /*if (!Brain.IsStunned)
-            {
-                RuntimeData.TickAnticipationTicker(Time.deltaTime);
-                Brain.RuntimeData.SetBrainState(BrainState.Engagement);
-                Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
-            }*/
+            if (CheckForJudgementStateCondition()) return;
+            if (CheckForAmbushStateCondition()) return;
         }
 
         public override void LateStateTick()
         {
+            if (!AllowStateTick) return;
         }
 
         public override void FixedStateTick()
         {
             if (!AllowStateTick) return;
-
-            if (Brain.CurrentTarget != null)
-            {
-                RuntimeData.TickAnticipationTicker(Time.deltaTime);
-                Brain.RuntimeData.SetBrainState(BrainState.Judgement);
-                //Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
-                // Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
-                if (Brain.DebugEnabled) Debug.Log("Spotted and entered engagement!");
-            }
         }
 
         public override void OnStateEnd()
@@ -88,8 +70,6 @@ namespace Hadal.AI.States
                 else
                 {
                     Brain.RuntimeData.SetBrainState(BrainState.Judgement);
-                    //Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
-                    // Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                     if (Brain.DebugEnabled) Debug.Log("Anticipation => Engagement");
                 }
             }
@@ -101,7 +81,6 @@ namespace Hadal.AI.States
             //.LogWarning("heyheyxd");
             Brain.StartCoroutine(InitializeAfterCaverns());
         }
-
 
         IEnumerator InitializeAfterCaverns()
         {
@@ -210,6 +189,36 @@ namespace Hadal.AI.States
             Brain.UpdateNextMoveCavern(nextCavern);
 
             if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
+        }
+
+        private bool CheckForJudgementStateCondition()
+        {
+            if (Brain.CurrentTarget != null)
+            {
+                RuntimeData.TickAnticipationTicker(Time.deltaTime);
+                RuntimeData.SetBrainState(BrainState.Judgement);
+                if (Brain.DebugEnabled) Debug.Log("Spotted and entered engagement!");
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CheckForAmbushStateCondition()
+        {
+            toGoAmbushTimer -= Brain.DeltaTime;
+            if (ToGoAmbushTimerReached())
+            {
+                ResetToGoAmbushTimer();
+                RuntimeData.SetBrainState(BrainState.Ambush);
+                if (Brain.DebugEnabled) Debug.Log("Took too long and VERY HANGRY, preparing to ambush!!!");
+                return true;
+            }
+
+            return false;
+
+            void ResetToGoAmbushTimer() => toGoAmbushTimer = settings.ToGoAmbushTime;
+            bool ToGoAmbushTimerReached() => toGoAmbushTimer <= 0f;
         }
 
         void ForceEngagementObjective(EngagementObjective newObjective) => RuntimeData.SetEngagementObjective(newObjective);

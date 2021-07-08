@@ -24,7 +24,7 @@ namespace Hadal.AI
         public UpdateMode LeviathanUpdateMode => UpdateMode.MainUpdate;
 
         /// <summary> Damages the chosen player over the network (even the local player gets the event). </summary>
-        public void Send_DamagePlayer(PlayerController player, float damage)
+        public void Send_DamagePlayer(PlayerController player, int damage)
         {
             //! raise event with data
             object[] data = { player.ViewID, damage };
@@ -39,14 +39,14 @@ namespace Hadal.AI
         /// <summary>
         /// The damage function that the AI's thresh attack uses.
         /// </summary>
-        public void ApplyDoT(PlayerController player, int durationSeconds, float damagePerSecond, Action dotFinishedEvent)
+        public void ApplyDoT(PlayerController player, int durationSeconds, int damagePerSecond, Action dotFinishedEvent)
         {
             if (doTRoutine != null) StopCoroutine(doTRoutine);
             doTRoutine = null;
             doTRoutine = StartCoroutine(TickDamageInSeconds(player, durationSeconds, damagePerSecond, dotFinishedEvent));
         }
 
-        private IEnumerator TickDamageInSeconds(PlayerController player, int durationSeconds, float dps, Action dotFinishedEvent)
+        private IEnumerator TickDamageInSeconds(PlayerController player, int durationSeconds, int dps, Action dotFinishedEvent)
         {
             int timer = durationSeconds;
             var waitTime = new WaitForSeconds(1f);

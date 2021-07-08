@@ -182,7 +182,10 @@ namespace Hadal.AI
         private void TryDebug(object msg)
         {
             if (Brain.DebugEnabled)
+            {
+                msg = "Judgement: " + msg;
                 msg.Msg();
+            }
         }
 
         private bool PlayerCountDroppedTo0
