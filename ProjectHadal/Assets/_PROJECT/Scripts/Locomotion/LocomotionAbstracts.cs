@@ -20,7 +20,7 @@ namespace Hadal.Locomotion
             set
             {
                 _allowUpdate = value;
-                $"Allow update changed to {value}, for player name: {gameObject.transform.parent.gameObject.name}".Msg();
+                // $"Allow update changed to {value}, for player name: {gameObject.transform.parent.gameObject.name}".Msg();
             }
         }
         public abstract float SqrSpeed { get; }
@@ -33,7 +33,7 @@ namespace Hadal.Locomotion
         public void ToggleEnablility() => allowUpdate = !allowUpdate;
         public void ToggleEnablility(bool isTrue)
         {
-            print("Toggle allow Update !");
+            // print("Toggle allow Update !");
             allowUpdate = isTrue;
         }
 
