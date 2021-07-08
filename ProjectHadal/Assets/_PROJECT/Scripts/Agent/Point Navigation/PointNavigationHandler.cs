@@ -141,6 +141,11 @@ namespace Hadal.AI
             if (!enableDebug) showObstacleInfo = false;
         }
 
+        private void OnDestroy()
+        {
+            
+        }
+
         private void OnDrawGizmos()
         {
             if (!enableDebug || pilotTrans == null) return;
@@ -770,7 +775,6 @@ namespace Hadal.AI
             }
         }
 
-
         private void ElapseCavernLingerTimer(in float deltaTime)
         {
             if (!_tickCavernLingerTimer) return;
@@ -781,7 +785,7 @@ namespace Hadal.AI
                 case CavernTag.Bioluminescent: { biolumiCavernLingerTimer -= deltaTime; break; }
                 case CavernTag.Hydrothermal_Deep: { hydrothermalCavernLingerTimer -= deltaTime; break; }
                 case CavernTag.Lair: { lairCavernLingerTimer -= deltaTime; break; }
-                default: break;
+                default: { break; }
             }
             if (crystalCavernLingerTimer > 0f || biolumiCavernLingerTimer > 0f
                 || lairCavernLingerTimer > 0f || hydrothermalCavernLingerTimer > 0f) return;

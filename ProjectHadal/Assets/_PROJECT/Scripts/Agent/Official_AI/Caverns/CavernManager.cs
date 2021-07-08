@@ -88,6 +88,7 @@ namespace Hadal.AI.Caverns
         public event TunnelBehaviourPlayerReturn PlayerLeftTunnelEvent;
         public event TunnelBehaviourAIReturn AIEnterTunnelEvent;
         public event TunnelBehaviourAIReturn AILeftTunnelEvent;
+        public event System.Action<CavernHandler> CurrentCavernChangedEvent;
 
         private void OnValidate()
         {
@@ -132,7 +133,10 @@ namespace Hadal.AI.Caverns
             if (debugAIEvents) print("AI entered " + handler.CavernName);
             
             if (GetHandlerOfAILocation != handler)
+            {
                 GetHandlerOfAILocation = handler;
+                CurrentCavernChangedEvent?.Invoke(handler);
+            }
 
             AIEnterCavernEvent?.Invoke(handler);
         }
