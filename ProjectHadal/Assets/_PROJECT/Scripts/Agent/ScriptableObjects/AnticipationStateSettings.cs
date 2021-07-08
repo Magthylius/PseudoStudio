@@ -10,6 +10,10 @@ namespace Hadal.AI.States
     [CreateAssetMenu(fileName = "AnticipationSettings", menuName = "StateSettings/Anticipation")]
     public class AnticipationStateSettings : StateSettings
     {
+        [Header("Debug")]
+        [Min(0f)] public float ToGoAmbushTime = 20f;
+
+        [Header("General")]
         [Range(0f, 1f)] public float ConfidenceObjectiveGate = 0.5f;
         [MinMaxSlider(0f, 0.5f)] public Vector2 RandomConfidenceInfluence = Vector2.zero;
 

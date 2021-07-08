@@ -13,6 +13,7 @@ namespace Hadal.AI.States
     public class AnticipationState : AIStateBase
     {
         AnticipationStateSettings settings;
+        private float toGoAmbushTimer = 0f;
 
         //! Meant just for startup
         private bool gameStartupInitialization = false;
@@ -33,26 +34,23 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             NavigationHandler.SetCanPath(true);
 
-            //Brain.StartCoroutine(InitializeAfterCaverns());
-
-
-            //print(RuntimeData.GetEngagementObjective);
-            // if (RuntimeData.GetEngagementObjective == EngagementSubState.Judgement || RuntimeData.GetEngagementObjective == EngagementSubState.None)
-            //     ForceEngagementObjective(EngagementSubState.Aggressive);
-
-
+            toGoAmbushTimer = settings.ToGoAmbushTime;
         }
 
         public override void StateTick()
         {
             if (!AllowStateTick) return;
 
-            /*if (!Brain.IsStunned)
+            toGoAmbushTimer -= Brain.DeltaTime;
+            if (ToGoAmbushTimerReached())
             {
-                RuntimeData.TickAnticipationTicker(Time.deltaTime);
-                Brain.RuntimeData.SetBrainState(BrainState.Engagement);
-                Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
-            }*/
+                ResetToGoAmbushTimer();
+                RuntimeData.SetBrainState(BrainState.Ambush);
+                if (Brain.DebugEnabled) Debug.Log("Took too long and VERY HANGRY, preparing to ambush!!!");
+            }
+
+            void ResetToGoAmbushTimer() => toGoAmbushTimer = settings.ToGoAmbushTime;
+            bool ToGoAmbushTimerReached() => toGoAmbushTimer <= 0f;
         }
 
         public override void LateStateTick()
@@ -66,9 +64,7 @@ namespace Hadal.AI.States
             if (Brain.CurrentTarget != null)
             {
                 RuntimeData.TickAnticipationTicker(Time.deltaTime);
-                Brain.RuntimeData.SetBrainState(BrainState.Judgement);
-                //Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
-                // Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
+                RuntimeData.SetBrainState(BrainState.Judgement);
                 if (Brain.DebugEnabled) Debug.Log("Spotted and entered engagement!");
             }
         }
