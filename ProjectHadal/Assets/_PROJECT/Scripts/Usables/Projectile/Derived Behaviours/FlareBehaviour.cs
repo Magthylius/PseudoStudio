@@ -6,20 +6,29 @@ namespace Hadal.Usables.Projectiles
 {
     public class FlareBehaviour : ProjectileBehaviour
     {
-        [Header("Flare settings")]
+        [Header("Flare General Settings")]
+        [SerializeField] private bool isAttach;
+        [SerializeField] private bool isPowerForm;
+        [SerializeField] private Light flareLight;
+
+        [Header("Flare Default Settings")]
+        [SerializeField] private float defaultLightIntensity;
+        [Header("Flare Powered Settings")]
+        [SerializeField] private float poweredLightIntensit;
+
+        [Header("Flare Physics")]
         [SerializeField] private bool enableRandomTorque = true;
         [SerializeField] private float randomTorqueMult = 5f;
         [SerializeField] private Rigidbody rb;
 
         [SerializeField] private string[] validLayer;
-        [SerializeField] private bool isAttach;
         public ImpulseMode impulseMode;
         public SelfDeactivationMode selfDeactivation;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            if(!rb) rb = GetComponent<Rigidbody>();
+            if (!rb) rb = GetComponent<Rigidbody>();
             rb.useGravity = true;
 
             if (enableRandomTorque)
@@ -29,12 +38,12 @@ namespace Hadal.Usables.Projectiles
                 rb.AddTorque(randTorque.normalized * randomTorqueMult, ForceMode.Impulse);
             }
         }
-        
+
         public void OnDisable()
         {
             IsAttached = false;
+            isPowerForm = false;
             Rigidbody.isKinematic = false;
-            
             rb.useGravity = false;
         }
 
@@ -91,11 +100,19 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
-        private void ModeSwap(bool isAttach) => this.isAttach = isAttach;
+        private void ModeSwap(bool isPowered) 
+        {
+            this.isPowerForm = isPowered;
+
+            if (!isPowerForm)
+                flareLight.intensity = defaultLightIntensity;
+            else
+                flareLight.intensity = poweredLightIntensit;
+        }
+
         private void ModeOff() 
         {
             UnSubcribeModeEvent();
-            isAttach = false; 
         } 
         public bool IsAttach { get => isAttach; set => isAttach = value; }
     }

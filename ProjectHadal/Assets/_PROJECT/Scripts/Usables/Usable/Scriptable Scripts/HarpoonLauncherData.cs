@@ -17,9 +17,11 @@ namespace Hadal.Usables
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
             projectileObj.Rigidbody.velocity = info.shooterVelocity;
             projectileObj.WithGObjectSetActive(true);
+            projectileObj.SubscribeModeEvent();
 
-            projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce
-                (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce);
+            ImpulseMode impluseMode = projectileObj.GetComponentInChildren<ImpulseMode>();
+            impluseMode.OverrideForce
+                (isChargable ? info.ChargedTime.Clamp01() * MaxForce : MaxForce, info.IsPowered);
 
             if (projectileObj.PPhysics != null) projectileObj.PPhysics.LaunchProjectile();
         }
