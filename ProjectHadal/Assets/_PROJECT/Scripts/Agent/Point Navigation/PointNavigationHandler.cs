@@ -198,17 +198,30 @@ namespace Hadal.AI
         public void DoFixedUpdate(in float fixedDeltaTime)
         {
             if (!CanMove || !canPath || !enableMovement) return;
-            TrySelectNewNavPoint(fixedDeltaTime);
-            ElapseCavernLingerTimer(fixedDeltaTime);
+
             if (!isStunned)
             {
+                TrySelectNewNavPoint(fixedDeltaTime);
+                ElapseCavernLingerTimer(fixedDeltaTime);
                 MoveForwards(fixedDeltaTime);
                 MoveTowardsCurrentNavPoint(fixedDeltaTime);
+                HandleObstacleAvoidance(fixedDeltaTime);
             }
-            HandleObstacleAvoidance(fixedDeltaTime);
+            
             HandleSpeedAndDirection(fixedDeltaTime);
             ClampMaxVelocity();
         }
+
+        public Func<bool> OnCollisionDetected() => () =>
+        {
+            if (!isStunned)
+                return false;
+
+            if (rBody != null)
+                rBody.velocity = Vector3.zero;
+            
+            return true;
+        };
 
         public float ElapsedTime => Time.time;
         public float DeltaTime => Time.deltaTime;
@@ -580,7 +593,8 @@ namespace Hadal.AI
                 SteeringMode.Cavern => cavernSteeringSettings,
                 SteeringMode.Tunnel => tunnelSteeringSettings,
                 SteeringMode.Stunned => stunnedSteeringSettings,
-                SteeringMode.Engage => engagementSteeringSettings
+                SteeringMode.Engage => engagementSteeringSettings,
+                _ => null
             };
 
             currentSteer.OnSettingsUpdate += UpdateSteering;
@@ -761,15 +775,14 @@ namespace Hadal.AI
         {
             if (!_tickCavernLingerTimer) return;
 
-            if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Crystal)
-                crystalCavernLingerTimer -= deltaTime;
-            else if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Bioluminescent)
-                biolumiCavernLingerTimer -= deltaTime;
-            else if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Lair)
-                lairCavernLingerTimer -= deltaTime;
-            else if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Hydrothermal_Deep)
-                hydrothermalCavernLingerTimer -= deltaTime;
-
+            switch (cavernManager.GetCavernTagOfAILocation())
+            {
+                case CavernTag.Crystal: { crystalCavernLingerTimer -= deltaTime; break; }
+                case CavernTag.Bioluminescent: { biolumiCavernLingerTimer -= deltaTime; break; }
+                case CavernTag.Hydrothermal_Deep: { hydrothermalCavernLingerTimer -= deltaTime; break; }
+                case CavernTag.Lair: { lairCavernLingerTimer -= deltaTime; break; }
+                default: break;
+            }
             if (crystalCavernLingerTimer > 0f || biolumiCavernLingerTimer > 0f
                 || lairCavernLingerTimer > 0f || hydrothermalCavernLingerTimer > 0f) return;
 
