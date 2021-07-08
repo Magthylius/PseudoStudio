@@ -34,12 +34,14 @@ namespace Hadal.AI.States
             }
 
             ambushTimer -= Brain.DeltaTime;
+            $"AMBUSHTIMER: {ambushTimer}".Msg();
 
             if (cavernHandler.GetPlayerCount > 0)
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
             }
-            else if(ambushTimer <= 0)
+
+            if(ambushTimer < 0)
             {
                 RuntimeData.SetBrainState(BrainState.Anticipation);
             }
@@ -48,7 +50,12 @@ namespace Hadal.AI.States
 
         public override void LateStateTick() { }
         public override void FixedStateTick() { }
-        public override void OnStateEnd() { }
+        public override void OnStateEnd() 
+        { 
+            NavigationHandler.ResetAmbushPoint();
+        }
         public override Func<bool> ShouldTerminate() => () => false;
+
+         
     }
 }

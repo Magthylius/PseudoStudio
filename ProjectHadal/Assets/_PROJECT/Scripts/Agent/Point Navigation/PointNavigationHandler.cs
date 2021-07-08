@@ -204,8 +204,9 @@ namespace Hadal.AI
         {
             if (!CanMove || !canPath || !enableMovement) return;
 
-            if (!isStunned)
+            if (!isStunned && (!hasReachedPoint || !chosenAmbushPoint))
             {
+                Debug.LogWarning("YO");
                 TrySelectNewNavPoint(fixedDeltaTime);
                 ElapseCavernLingerTimer(fixedDeltaTime);
                 MoveForwards(fixedDeltaTime);
@@ -564,6 +565,16 @@ namespace Hadal.AI
             if (enableDebug)
                 $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
+
+        public void ResetAmbushPoint()
+        {
+            canTimeout = true;
+            canAutoSelectNavPoints = true;
+            chosenAmbushPoint = false;
+            ResetNavPointLingerTimer();
+            ResetTimeoutTimer();
+            SkipCurrentPoint(true);
+        }
         public void TunnelModeSteering()
         {
             _steeringMode = SteeringMode.Tunnel;
@@ -705,8 +716,19 @@ namespace Hadal.AI
                     return;
                 }
 
-                canTimeout = true;
-                canAutoSelectNavPoints = true;
+                if(!chosenAmbushPoint)
+                {
+                    canTimeout = true;
+                    canAutoSelectNavPoints = true;
+                }
+                else
+                {
+                    rBody.isKinematic = true;
+                    rBody.velocity = Vector3.zero;
+                    pilotTrans.position = currentPoint.GetPosition;
+                    pilotTrans.rotation = Quaternion.Euler(currentPoint.transform.rotation.x, currentPoint.transform.rotation.y, currentPoint.transform.rotation.z + 180);
+                }
+
                 isOnQueuePath = false;
                 if (enableDebug) "Queued path is done.".Msg();
             }
