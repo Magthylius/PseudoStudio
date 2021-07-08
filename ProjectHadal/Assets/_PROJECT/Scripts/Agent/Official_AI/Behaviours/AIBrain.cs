@@ -69,7 +69,7 @@ namespace Hadal.AI
             set
             {
                 carriedPlayer = value;
-                Debug.LogWarning("Carried player changed into: " + value);
+                if (DebugEnabled) Debug.LogWarning("Carried player changed into: " + value);
             }
         }
 

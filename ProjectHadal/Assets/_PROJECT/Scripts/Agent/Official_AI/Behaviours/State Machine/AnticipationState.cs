@@ -41,32 +41,18 @@ namespace Hadal.AI.States
         {
             if (!AllowStateTick) return;
 
-            toGoAmbushTimer -= Brain.DeltaTime;
-            if (ToGoAmbushTimerReached())
-            {
-                ResetToGoAmbushTimer();
-                RuntimeData.SetBrainState(BrainState.Ambush);
-                if (Brain.DebugEnabled) Debug.Log("Took too long and VERY HANGRY, preparing to ambush!!!");
-            }
-
-            void ResetToGoAmbushTimer() => toGoAmbushTimer = settings.ToGoAmbushTime;
-            bool ToGoAmbushTimerReached() => toGoAmbushTimer <= 0f;
+            if (CheckForJudgementStateCondition()) return;
+            if (CheckForAmbushStateCondition()) return;
         }
 
         public override void LateStateTick()
         {
+            if (!AllowStateTick) return;
         }
 
         public override void FixedStateTick()
         {
             if (!AllowStateTick) return;
-
-            if (Brain.CurrentTarget != null)
-            {
-                RuntimeData.TickAnticipationTicker(Time.deltaTime);
-                RuntimeData.SetBrainState(BrainState.Judgement);
-                if (Brain.DebugEnabled) Debug.Log("Spotted and entered engagement!");
-            }
         }
 
         public override void OnStateEnd()
@@ -84,8 +70,6 @@ namespace Hadal.AI.States
                 else
                 {
                     Brain.RuntimeData.SetBrainState(BrainState.Judgement);
-                    //Brain.RuntimeData.SetEngagementSubState(RuntimeData.GetEngagementObjective);
-                    // Brain.RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                     if (Brain.DebugEnabled) Debug.Log("Anticipation => Engagement");
                 }
             }
@@ -97,7 +81,6 @@ namespace Hadal.AI.States
             //.LogWarning("heyheyxd");
             Brain.StartCoroutine(InitializeAfterCaverns());
         }
-
 
         IEnumerator InitializeAfterCaverns()
         {
@@ -206,6 +189,36 @@ namespace Hadal.AI.States
             Brain.UpdateNextMoveCavern(nextCavern);
 
             if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
+        }
+
+        private bool CheckForJudgementStateCondition()
+        {
+            if (Brain.CurrentTarget != null)
+            {
+                RuntimeData.TickAnticipationTicker(Time.deltaTime);
+                RuntimeData.SetBrainState(BrainState.Judgement);
+                if (Brain.DebugEnabled) Debug.Log("Spotted and entered engagement!");
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CheckForAmbushStateCondition()
+        {
+            toGoAmbushTimer -= Brain.DeltaTime;
+            if (ToGoAmbushTimerReached())
+            {
+                ResetToGoAmbushTimer();
+                RuntimeData.SetBrainState(BrainState.Ambush);
+                if (Brain.DebugEnabled) Debug.Log("Took too long and VERY HANGRY, preparing to ambush!!!");
+                return true;
+            }
+
+            return false;
+
+            void ResetToGoAmbushTimer() => toGoAmbushTimer = settings.ToGoAmbushTime;
+            bool ToGoAmbushTimerReached() => toGoAmbushTimer <= 0f;
         }
 
         void ForceEngagementObjective(EngagementObjective newObjective) => RuntimeData.SetEngagementObjective(newObjective);
