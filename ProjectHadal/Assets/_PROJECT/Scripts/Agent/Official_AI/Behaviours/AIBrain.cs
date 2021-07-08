@@ -437,7 +437,7 @@ namespace Hadal.AI
                 player.SetIsCarried(false);
             }
 
-            CarriedPlayer.SetIsCarried(false);
+            if (CarriedPlayer != null) CarriedPlayer.SetIsCarried(false);
             CarriedPlayer = null;
             MouthObject.transform.DetachChildren();
         }

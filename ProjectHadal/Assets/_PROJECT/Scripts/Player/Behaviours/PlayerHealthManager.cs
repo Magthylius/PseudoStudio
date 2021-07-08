@@ -20,6 +20,7 @@ namespace Hadal.Player.Behaviours
 
         [Header("Debug")]
         [SerializeField] private bool debugEnabled;
+        [SerializeField] private bool redErrorsAsDamageSignal;
 
         [Header("Lifeline Settings")]
         [SerializeField] private bool enableDeathTimerWhenDown;
@@ -144,6 +145,14 @@ namespace Hadal.Player.Behaviours
             if (_isKami || IsDown || IsUnalive || !IsLocalPlayer) return false;
             _currentHealth = (_currentHealth - damage.Abs()).Clamp0();
             DoOnHitEffects(damage);
+
+            if (debugEnabled)
+            {
+                string msg = $"Taking {damage} Damage!";
+                if (redErrorsAsDamageSignal) msg.Error();
+                else msg.Msg();
+            }
+
             CheckHealthStatus();
             Send_HealthUpdateStatus(false);
             return true;
@@ -358,11 +367,11 @@ namespace Hadal.Player.Behaviours
         {
             object[] content = data.CustomData.AsObjArray();
 
-            int targetViewID = content[0].AsInt();
+            int targetViewID = (int)content[0];
             bool allowedToBeDamaged = _pView.ViewID == targetViewID && IsLocalPlayer;
             if (allowedToBeDamaged)
             {
-                int damage = content[1].AsInt();
+                int damage = (int)content[1];
                 TakeDamage(damage);
                 if (debugEnabled)
                     $"I am taking damage by AI over the network. Pls halp".Msg();
