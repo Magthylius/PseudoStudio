@@ -17,14 +17,24 @@ namespace Hadal.Usables
             if (activeTrap && activeTrap.gameObject.activeSelf)
             {
                 bool triggered = activeTrap.TriggerBehavior();
-                if(triggered) activeTrap = null;
-                return true;
+                if (triggered)
+                {
+                    activeTrap = null;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
             
             info.Trap = TrapPool.Instance.Scoop();
             activeTrap = info.Trap;
 
-            return base.Use(info);
+            base.Use(info);
+            print("work with me");
+            return false;
         }
     }
 }
