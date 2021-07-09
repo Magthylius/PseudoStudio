@@ -122,7 +122,8 @@ namespace Hadal.AI
         [Button("StunAI")]
         void IStunYou()
         {
-            TryStun(5);
+            float duration = 5f;
+            TryStun(duration);
         }
 
         /// <summary> Attempts to stun the AI for the given duration. </summary>
@@ -134,7 +135,21 @@ namespace Hadal.AI
                 return false;
             
             stunTimer.RestartWithDuration(duration);
+            SendStunEvent();
             return brain.TryToStun(duration);
+
+            void SendStunEvent()
+                => NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_STUN, duration, SendOptions.SendReliable);
+        }
+
+        /// <summary> Same as the normal TryStun but this should always be called on network event callbacks. </summary>
+        public void Receive_TryStun(float duration)
+        {
+            if (!brain || brain.IsStunned)
+                return;
+            
+            stunTimer.RestartWithDuration(duration);
+            brain.TryToStun(duration);
         }
         
         /// <summary> Stops the stun effect and returns control to the AI. </summary>

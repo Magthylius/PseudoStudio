@@ -262,6 +262,7 @@ namespace Hadal.Player
             //! This is online called in online mode, this function is called on PlayerManager for host
             print("Everyone ready. Begin !");
             
+            gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
             _manager.InstantiatePViewList();
@@ -323,8 +324,6 @@ namespace Hadal.Player
 
         public void HandlePhotonView(bool isMine)
         {
-            gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
-            
             if(!NetworkEventManager.Instance.isOfflineMode)
             {
                 gameObject.name = "Player " + photonInfo.PView.ViewID.ToString();
