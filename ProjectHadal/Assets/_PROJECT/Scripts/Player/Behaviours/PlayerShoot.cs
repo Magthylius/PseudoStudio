@@ -262,13 +262,10 @@ namespace Hadal.Player.Behaviours
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
 
-            if (enableTracer)
-            {
-                aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
-                    Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
+            aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
+                Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
                 
-                controller.UI.ShootTracer.SetEndPoint(aimHit.point);
-            }
+            controller.UI.ShootTracer.SetEndPoint(aimHit.point);
         }
         private void UpdateUITorpedoCount(bool isReloadEvent)
         {

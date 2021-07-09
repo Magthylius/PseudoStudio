@@ -11,25 +11,34 @@ namespace Hadal.UI
         public Transform lineStartTransform;
         private Vector3 lineEndPoint;
 
+        private bool isActive = false;
+
         private void Start()
         {
-            Deactivate();
+            //Deactivate();
+            Vector3 startPos = lineStartTransform.position;
+            line.SetPositions(new [] {startPos, startPos});
         }
 
         private void FixedUpdate()
         {
-            if (!IsActive) return;
+            if (!isActive) return;
             line.SetPositions(new [] {lineStartTransform.position, lineEndPoint});
-            print(lineEndPoint);
         }
 
         public void SetStartPoint(Transform startTransform) => lineStartTransform = startTransform;
         public void SetEndPoint(Vector3 endWorldPoint) => lineEndPoint = endWorldPoint;
 
-        public void Activate() => line.gameObject.SetActive(true);
-        public void Deactivate() => line.gameObject.SetActive(false);
+        public void Activate() => isActive = true;
 
-        public bool IsActive => line.gameObject.activeInHierarchy;
+        public void Deactivate()
+        {
+            isActive = false;
+            //! make it hide itself
+            line.SetPosition(1, lineStartTransform.position);
+        }
+
+        public bool IsActive => isActive;
     }
 
 }
