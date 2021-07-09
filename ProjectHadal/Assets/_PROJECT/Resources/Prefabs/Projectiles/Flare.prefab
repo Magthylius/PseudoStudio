@@ -1036,13 +1036,17 @@ MonoBehaviour:
   particleEffect: {fileID: 0}
   projectileAsset: {fileID: 0}
   impactVFXTime: 5
+  isAttach: 1
+  isPowerForm: 0
+  flareLight: {fileID: 6458389941356830930}
+  defaultLightIntensity: 100
+  poweredLightIntensit: 1000
   enableRandomTorque: 1
   randomTorqueMult: 100
   rb: {fileID: 1726207187124534749}
   validLayer:
   - Monster
   - Obstacle
-  isAttach: 0
   impulseMode: {fileID: 0}
   selfDeactivation: {fileID: 0}
 --- !u!1 &8887327238280558887

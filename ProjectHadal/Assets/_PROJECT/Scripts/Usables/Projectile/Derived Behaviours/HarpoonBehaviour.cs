@@ -10,9 +10,20 @@ namespace Hadal.Usables.Projectiles
 {
     public class HarpoonBehaviour : ProjectileBehaviour
     {
+        [Header("Harpoon General Settings")]
+        [SerializeField] private bool isPowerForm;
         [SerializeField] private string[] validLayer;
-        
         bool attachedToMonster = false;
+
+        [Header("Harpoon Default Settings")]
+        [SerializeField] float defaultAttachDuration;
+        [Header("Harpoon Powered Settings")]
+        [SerializeField] float poweredAttachDuration;
+
+        [Header("Misc")]
+        public ImpulseMode impulseMode;
+        public AttachMode attachMode;
+        public SelfDeactivationMode selfDeactivation;
 
         #region Unity Lifecycle
         protected override void Start()
@@ -44,6 +55,20 @@ namespace Hadal.Usables.Projectiles
             IsAttached = false;
         }
         #endregion
+
+        public void SubscribeModeEvent()
+        {
+            impulseMode = GetComponentInChildren<ImpulseMode>();
+            impulseMode.ModeSwapped += ModeSwap;
+            attachMode = GetComponentInChildren<AttachMode>();
+            selfDeactivation = GetComponentInChildren<SelfDeactivationMode>();
+            selfDeactivation.selfDeactivated += ModeOff;
+        }
+        public void UnSubcribeModeEvent()
+        {
+            impulseMode.ModeSwapped -= ModeSwap;
+            selfDeactivation.selfDeactivated -= ModeOff;
+        }
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -142,6 +167,24 @@ namespace Hadal.Usables.Projectiles
             particleEffect.SetActive(false);
         }
 
+        private void ModeSwap(bool isPowered)
+        {
+            this.isPowerForm = isPowered;
+
+            if (!isPowerForm)
+            {
+                attachMode.endTime = defaultAttachDuration;
+            } 
+            else
+            {
+                attachMode.endTime = poweredAttachDuration;
+            }
+        }
+
+        private void ModeOff()
+        {
+            UnSubcribeModeEvent();
+        }
         /*private void Send_IncrementLeviathanSlowStacks()
         {
             var options = new RaiseEventOptions() { Receivers = ReceiverGroup.MasterClient };

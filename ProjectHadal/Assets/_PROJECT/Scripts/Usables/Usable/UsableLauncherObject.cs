@@ -11,7 +11,9 @@ namespace Hadal.Usables
 
         /// <summary> For display usage of utility name. </summary>
         public string UtilityName;
-        
+
+        /// <summary> For display if the launcher is Powered. </summary>
+        public bool IsPowered;
         /// <summary> Event is called when <see cref="Use"/> is called succesfully. Can be used to cue sfx or animations. </summary>
         public virtual event Action<UsableLauncherObject> OnFire;
 

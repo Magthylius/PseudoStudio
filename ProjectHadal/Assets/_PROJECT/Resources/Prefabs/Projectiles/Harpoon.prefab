@@ -272,9 +272,17 @@ MonoBehaviour:
   particleEffect: {fileID: 6004869895138044315}
   projectileAsset: {fileID: 7553957830394924370}
   impactVFXTime: 5
+  isPowerForm: 0
   validLayer:
   - Monster
   - Obstacle
+  defaultImpulseForce: 0.25
+  defaultAttachDuration: 10
+  poweredImpulseForce: 0.5
+  poweredAttachDuration: 50
+  impulseMode: {fileID: 0}
+  attachMode: {fileID: 0}
+  selfDeactivation: {fileID: 0}
 --- !u!1 &7553957830394924370
 GameObject:
   m_ObjectHideFlags: 0
