@@ -12,6 +12,7 @@ namespace Hadal.Inputs
         bool FireKeyUtilityHeld { get; }
         bool FireKeyUtilityRelease { get; }
         bool FireKeyQuickFlare { get; }
+        bool FireKeyQuickHarpoon { get; }
         bool EscKeyDown { get; }
         bool EscKeyUp { get; }
     }
@@ -55,7 +56,8 @@ namespace Hadal.Inputs
     }
     public interface IInteractInput
     {
-        bool InteractKey { get; }
+        bool ReviveKey { get; }
+        bool PickupKey { get; }
     }
     public interface ILightInput
     {
