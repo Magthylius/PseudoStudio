@@ -137,7 +137,6 @@ namespace Hadal.AI
                 if (Brain.IsCarryingAPlayer() && !isAttacking)
                 {
                     isAttacking = true;
-                    WaitForSeconds waitTime = new WaitForSeconds(0.5f);
 
                     TryDebug("Starting threshing routine.");
                     threshRoutineData = new CoroutineData(Brain, DoThreshAttack());
