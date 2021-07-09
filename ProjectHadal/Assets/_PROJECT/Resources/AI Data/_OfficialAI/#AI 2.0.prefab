@@ -180,7 +180,7 @@ MonoBehaviour:
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   followNetworkManagerOfflineStatus: 1
   isOffline: 0
-  DebugEnabled: 1
+  DebugEnabled: 0
   isStunned: 0
   stunDuration: 999
 --- !u!114 &8848565156750440696
@@ -327,10 +327,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaaffe75309867347a447d5cad18889c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  threshDamage: 10
-  threshTimer: 10
-  applyEveryNSeconds: 3
-  tailWhipDamage: 25
 --- !u!114 &2206939684562575358
 MonoBehaviour:
   m_ObjectHideFlags: 0

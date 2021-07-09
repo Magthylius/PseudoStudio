@@ -41,12 +41,29 @@ namespace Hadal.AI
         private bool canCarry;
         private bool isAttacking;
         private bool isDamaging;
+        private CoroutineData threshRoutineData;
 
         #region Coroutines
 
+        public IEnumerator DoThreshAttack()
+        {
+            isDamaging = true;
+            void StopAttack() => isDamaging = false;
+
+            DamageManager.ApplyDoT(Brain.CarriedPlayer,
+                Settings.G_TotalThreshTimeInSeconds,
+                Settings.G_ThreshDamagePerSecond,
+                StopAttack);
+
+            while (isDamaging && DamageManager != null)
+                yield return null;
+
+            TryDebug("Thresh damage in inner routine is finished!");
+        }
+
         public IEnumerator DefensiveStance(int stanceIndex)
         {
-            TryDebug($"Starting Defensive Behaviour for playcount: {stanceIndex}.");
+            TryDebug($"Starting Defensive Behaviour for player count: {stanceIndex}.");
             JState.IsBehaviourRunning = true;
             bool waitForJtimer = false;
             int jTimerIndex = 5 - stanceIndex;
@@ -90,22 +107,29 @@ namespace Hadal.AI
                 if (Brain.IsCarryingAPlayer() && !isAttacking)
                 {
                     isAttacking = true;
-                    isDamaging = true;
-                    WaitForSeconds waitDoTTime = new WaitForSeconds(1f);
+                    WaitForSeconds waitTime = new WaitForSeconds(0.5f);
 
-                    DamageManager.ApplyDoT(Brain.CarriedPlayer,
-                        Settings.G_TotalThreshTimeInSeconds,
-                        Settings.G_ThreshDamagePerSecond,
-                        StopAttack);
+                    TryDebug("Starting threshing routine.");
+                    threshRoutineData = new CoroutineData(Brain, DoThreshAttack());
+                    yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
-                    while (isDamaging)
-                        yield return waitDoTTime;
+                    TryDebug("Thresh damage in outer routine is finished!");
+
+                    // DamageManager.ApplyDoT(Brain.CarriedPlayer,
+                    //     Settings.G_TotalThreshTimeInSeconds,
+                    //     Settings.G_ThreshDamagePerSecond,
+                    //     StopAttack);
+
+                    // while (isDamaging)
+                    //     yield return waitDoTTime;
 
                     bool success = Brain.TryDropCarriedPlayer();
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
 
-                    void StopAttack() => isDamaging = false;
+                    
+
+
                 }
 
                 //! Set custom nav point to destination: current target player if not already moving towards it.
@@ -147,8 +171,25 @@ namespace Hadal.AI
 
         public IEnumerator AggressiveStance(int stanceIndex)
         {
-            //! will be added
-            yield break;
+            TryDebug($"Starting Aggressive Behaviour for player count: {stanceIndex}.");
+            JState.IsBehaviourRunning = true;
+            bool waitForJtimer = false;
+            int jTimerIndex = 5 - stanceIndex;
+
+            while (JState.IsBehaviourRunning)
+            {
+
+                yield return null;
+            }
+
+            //! If the wait boolean is true, will wait until the judgement timer is exceeded before handling behaviour end
+            while (!IsJudgementThresholdReached(jTimerIndex) && waitForJtimer)
+                yield return null;
+
+            //! Handle Behaviour ending
+            ResetStateValues();
+            RuntimeData.SetBrainState(BrainState.Recovery);
+            yield return null;
         }
 
         #endregion
@@ -176,13 +217,17 @@ namespace Hadal.AI
             canCarry = false;
             isAttacking = false;
             isDamaging = false;
+            threshRoutineData = null;
             JState.ResetStateValues();
         }
 
         private void TryDebug(object msg)
         {
             if (Brain.DebugEnabled)
+            {
+                msg = "Judgement: " + msg;
                 msg.Msg();
+            }
         }
 
         private bool PlayerCountDroppedTo0

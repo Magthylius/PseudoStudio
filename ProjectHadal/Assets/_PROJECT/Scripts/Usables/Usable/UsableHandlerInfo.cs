@@ -8,6 +8,7 @@ namespace Hadal.Usables
         public int ProjectileID { get; private set; }
         public Vector3 FirePoint { get; private set; }
         public Quaternion Orientation { get; set; }
+        public bool IsPowered { get; set; }
         public float ChargedTime { get; private set; }
         public Vector3 shooterVelocity { get; private set; }
         public Vector3 AimedPoint { get; set; }
