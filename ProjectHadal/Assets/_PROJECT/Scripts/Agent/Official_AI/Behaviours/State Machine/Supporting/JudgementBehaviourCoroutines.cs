@@ -42,10 +42,16 @@ namespace Hadal.AI
         private bool isAttacking;
         private bool isDamaging;
         private CoroutineData threshRoutineData;
+        private CoroutineData moveToTargetRoutineData;
 
         #region Coroutines
 
-        public IEnumerator DoThreshAttack()
+        private IEnumerator MoveToCurrentTarget()
+        {
+            yield return null;
+        }
+
+        private IEnumerator DoThreshAttack()
         {
             isDamaging = true;
             void StopAttack() => isDamaging = false;
@@ -206,6 +212,7 @@ namespace Hadal.AI
             isAttacking = false;
             isDamaging = false;
             threshRoutineData = null;
+            moveToTargetRoutineData = null;
             JState.ResetStateValues();
         }
 
