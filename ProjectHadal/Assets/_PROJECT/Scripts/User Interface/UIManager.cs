@@ -78,6 +78,7 @@ namespace Hadal.UI
         [Header("Prefab Settings")]
         public GameObject torpedoFillerPrefab;
         public Transform torpedoFillerParent;
+        public GameObject torpedoEmptyText;
         
         [Header("Torpedo Settings")]
         public int torpCount;
@@ -170,6 +171,8 @@ namespace Hadal.UI
         {
             torpedoFillers = new List<UIFillerBehaviour>();
             StartCoroutine(SpawnFillers(totalTorpedoCount, true));
+            
+            torpedoEmptyText.SetActive(false);
         }
         
         IEnumerator SpawnFillers(int totalTorpedoCount, bool startFilled)
@@ -221,34 +224,6 @@ namespace Hadal.UI
         {
             torpCount = torpedoCount;
 
-            /*if (torpCount <= 0)
-            {
-                foreach (GameObject tube in tubeIcons) tube.SetActive(false);
-                //torpedoEmptyVFX.Emit(1);
-            }
-            else
-            {
-                foreach (GameObject tube in tubeIcons)
-                {
-                    int result = 0;
-                    if (int.TryParse(tube.name, out result))
-                    {
-                        if (result == torpCount)
-                        {
-                            tube.SetActive(true);
-
-                            if (reloadedEvent)
-                            {
-                                torpedoReloadedVFX.Emit(1);
-                                //Invoke("StoptorpedoReloadedVFX", 0.5f);
-                            }
-                            
-                            continue;
-                        }
-                    }
-                    tube.SetActive(false);
-                }  
-            }*/
             int count = 0;
             foreach (UIFillerBehaviour filler in torpedoFillers)
             {
