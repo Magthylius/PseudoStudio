@@ -143,7 +143,7 @@ namespace Hadal.AI
 
         private void OnDestroy()
         {
-            
+
         }
 
         private void OnDrawGizmos()
@@ -212,7 +212,7 @@ namespace Hadal.AI
                 MoveTowardsCurrentNavPoint(fixedDeltaTime);
                 HandleObstacleAvoidance(fixedDeltaTime);
             }
-            
+
             HandleSpeedAndDirection(fixedDeltaTime);
             ClampMaxVelocity();
         }
@@ -224,7 +224,7 @@ namespace Hadal.AI
 
             if (rBody != null)
                 rBody.velocity = Vector3.zero;
-            
+
             return true;
         };
 
@@ -570,6 +570,7 @@ namespace Hadal.AI
             canTimeout = true;
             canAutoSelectNavPoints = true;
             chosenAmbushPoint = false;
+            if (rBody != null) rBody.isKinematic = false;
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             SkipCurrentPoint(true);
@@ -715,21 +716,27 @@ namespace Hadal.AI
                     return;
                 }
 
-                if(!chosenAmbushPoint)
+                if (!chosenAmbushPoint)
                 {
                     canTimeout = true;
                     canAutoSelectNavPoints = true;
                 }
                 else
                 {
-                    rBody.isKinematic = true;
-                    rBody.velocity = Vector3.zero;
+                    if (rBody != null)
+                    {
+                        rBody.isKinematic = true;
+                        rBody.velocity = Vector3.zero;
+                    }
                     pilotTrans.position = currentPoint.GetPosition;
                     pilotTrans.rotation = Quaternion.Euler(currentPoint.transform.rotation.x, currentPoint.transform.rotation.y, currentPoint.transform.rotation.z + 180);
                 }
 
-                isOnQueuePath = false;
-                if (enableDebug) "Queued path is done.".Msg();
+                if (isOnQueuePath)
+                {
+                    isOnQueuePath = false;
+                    if (enableDebug) "Queued path is done.".Msg();
+                }
             }
         }
 

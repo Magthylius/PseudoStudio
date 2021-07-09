@@ -49,7 +49,7 @@ namespace Hadal.Usables.Projectiles
         {
             if (allowLaunch)
             {
-                projectileTimer.Tick(Time.deltaTime); 
+                projectileTimer.Tick(Time.fixedDeltaTime); 
             }
         }
 
