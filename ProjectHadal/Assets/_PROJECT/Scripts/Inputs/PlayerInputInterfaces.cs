@@ -6,6 +6,7 @@ namespace Hadal.Inputs
     public interface IUseableInput
     {
         bool FireKeyTorpedo { get; }
+        bool FireKeyTorpedoRelease { get; }
         bool FireKeyUtility { get; }
         bool FireKeyUtilityHeld { get; }
         bool FireKeyUtilityRelease { get; }

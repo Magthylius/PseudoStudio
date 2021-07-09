@@ -86,7 +86,7 @@ namespace Hadal.Player.Behaviours
             if (_controller.GetIsCarried)
                 return;
 
-            if (_uInput.FireKeyTorpedo)
+            if (_uInput.FireKeyTorpedoRelease)
             {
                 _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false);
                 return;
