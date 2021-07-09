@@ -86,8 +86,13 @@ namespace Hadal.Player.Behaviours
             if (_controller.GetIsCarried)
                 return;
 
+            if (_uInput.FireKeyTorpedoDown)
+            {
+                _controllerInfo.Shooter.StartShootTracer();
+            }
             if (_uInput.FireKeyTorpedoRelease)
             {
+                _controllerInfo.Shooter.StopShootTracer();
                 _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false);
                 return;
             }

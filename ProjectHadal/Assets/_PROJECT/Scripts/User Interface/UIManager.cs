@@ -31,6 +31,9 @@ namespace Hadal.UI
 
         NetworkEventManager neManager;
 
+        [Header("External References")] 
+        public UIShootTracer ShootTracer;
+
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleGroup;
         [SerializeField] RectTransform reticleDirectors;

@@ -1,4 +1,6 @@
 //created by Jin, edited by Jon, edited by Jey
+
+using System;
 using UnityEngine;
 using System.Collections;
 using Hadal.Usables;
@@ -29,7 +31,11 @@ namespace Hadal.Player.Behaviours
         public LayerMask rayIgnoreMask;
         private Ray aimingRay;
         float aimPointYDelta;
+        
         RaycastHit aimHit;
+        private bool aimHitBool;
+
+        private bool enableTracer = false;
 
         [Header("Torpedo")]
         [SerializeField] TorpedoLauncherObject tLauncher;
@@ -53,12 +59,7 @@ namespace Hadal.Player.Behaviours
             neManager = NetworkEventManager.Instance;
             neManager.AddListener(ByteEvents.PLAYER_TORPEDO_LAUNCH, REFireTorpedo);
         }
-
-        private void OnDisable()
-        {
-            //PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
-        }
-
+        
         private void Awake()
         {
 			_allowUpdate = true;
@@ -76,42 +77,43 @@ namespace Hadal.Player.Behaviours
             aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
             aimPointYDelta = (torpedoFirePoint.position - aimPoint.position).magnitude;
         }
-
+        
         private void OnDestroy()
         {
             tLauncher.OnChamberChanged -= OnChamberChangedMethod;
             tLauncher.OnReservesChanged -= OnReserveChangedMethod;
         }
-
-        void OnDrawGizmos()
-        {
-            //Gizmos.DrawRay(aimingRay);
-            /*Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
-
-            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
-            {
-                Gizmos.DrawLine(aimPoint.position, aimHit.point);
-                Gizmos.DrawLine(aimHit.point, torpedoFirePoint.position);
-            }*/
-        }
+        
 
         public void DoUpdate(in float deltaTime)
         {
             if (!AllowUpdate) return;
             OnUnityUpdateUI();
+            tLauncher.DoUpdate(deltaTime);
         }
 
         #endregion
 
         #region Handler Methods
+
+        public void StartShootTracer()
+        {
+            controller.UI.ShootTracer.Activate();
+            enableTracer = true;
+        }
+
+        public void StopShootTracer()
+        {
+            controller.UI.ShootTracer.Deactivate();
+            enableTracer = false;
+        }
+        
         public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
         {
-            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
-                                Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore))
+            if (aimHitBool)
             {
                 info.AimedPoint = aimHit.point;
             }
-
             return info;
         }
 
@@ -170,7 +172,7 @@ namespace Hadal.Player.Behaviours
 
         public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool isPowered ,bool eventFire)
         {
-            if (!eventFire && (!_canUtilityFire || !AllowUpdate))
+            if (!eventFire && (!usable.IsChamberLoaded || !AllowUpdate))
                 return;
 
             //actual firing
@@ -181,7 +183,8 @@ namespace Hadal.Player.Behaviours
             {
                 projectileID += usable.Data.ProjectileData.ProjTypeInt;
             }
-            
+
+            usable.DecrementChamber();
             usable.Use(CreateInfoForUtility(projectileID, isPowered, chargeTime, !eventFire));
             controller.GetInfo.Inventory.IncreaseProjectileCount();
             //send event to utility ONLY when fire locally. local = (!eventFire)
@@ -260,12 +263,17 @@ namespace Hadal.Player.Behaviours
         {
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
+
+            aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
+                Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
+                
+            controller.UI.ShootTracer.SetEndPoint(aimHit.point);
         }
         private void UpdateUITorpedoCount(bool isReloadEvent)
         {
             //if (UIManager.IsNull) return;
 
-            controller.UI.UpdateTubes(tLauncher.TotalTorpedoes, isReloadEvent);
+            controller.UI.UpdateTubes(tLauncher.TotalAmmoCount, isReloadEvent);
         }
         private void UpdateUIRegenRatio(in float ratio)
         {
