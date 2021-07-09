@@ -194,7 +194,7 @@ namespace Hadal.AI
             NavPoint point = player.GetComponentInChildren<NavPoint>();
             if (point == null)
             {
-                point = Object.Instantiate(RuntimeData.navPointPrefab, player.GetTarget.position, Quaternion.identity);
+                point = Object.Instantiate(RuntimeData.navPointPrefab.gameObject, player.GetTarget.position, Quaternion.identity).GetComponent<NavPoint>();
                 point.tag = "NavigationPoint";
                 point.AttachTo(player.transform);
                 point.SetCavernTag(CavernTag.Custom_Point);
