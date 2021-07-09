@@ -127,6 +127,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: c16672f926632d04993d50c664e3a1a5, type: 2}
   UtilityName: Sonic Grenade
+  IsPowered: 0
+  maxReserveCapacity: 2
+  reserveRegenerationTime: 20
+  maxChamberCapacity: 1
+  chamberReloadTime: 1
+  maxOnLoadOut: 1
 --- !u!1 &5799704096644430337
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2055576277570380379
 Transform:
   m_ObjectHideFlags: 0

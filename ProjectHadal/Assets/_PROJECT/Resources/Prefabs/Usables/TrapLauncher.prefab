@@ -127,6 +127,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 0df54adfd0f9e704b9b7c166899d2911, type: 2}
   UtilityName: Paralyzer
+  IsPowered: 0
+  maxReserveCapacity: 10
+  reserveRegenerationTime: 5
+  maxChamberCapacity: 1
+  chamberReloadTime: 1
+  maxOnLoadOut: 1
   activeTrap: {fileID: 0}
 --- !u!1 &5799704096644430337
 GameObject:
@@ -224,7 +230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2055576277570380379
 Transform:
   m_ObjectHideFlags: 0
