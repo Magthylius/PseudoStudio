@@ -18,7 +18,7 @@ using Button = NaughtyAttributes.ButtonAttribute;
 namespace Hadal.AI
 {
     public delegate void PhaseEvents(bool isStarting);
-    
+
     public class AIBrain : MonoBehaviour, IAmLeviathan
     {
         [ReadOnly, SerializeField] private bool isEnabled = true;
@@ -181,7 +181,7 @@ namespace Hadal.AI
             cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
             cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
             cavernManager.AILeftTunnelEvent += OnTunnelLeave;
-            
+
             PlayerManager pManager = PlayerManager.Instance;
             if (pManager != null && PhotonNetwork.IsMasterClient)
                 pManager.OnAllPlayersReadyEvent += PlayersAreReadySignal;
@@ -271,7 +271,7 @@ namespace Hadal.AI
         }
 
         #region Event Handlers
-        
+
         /// <summary>Calls when AI enters a cavern</summary>
         void OnCavernEnter(CavernHandler cavern)
         {
@@ -357,16 +357,22 @@ namespace Hadal.AI
 
             stunDuration = duration;
             isStunned = true;
-            NavigationHandler.SetAIStunned(isStunned);
-            NavigationHandler.StunnedModeSteering();
+            if (onMasterClient)
+            {
+                NavigationHandler.SetAIStunned(isStunned);
+                NavigationHandler.StunnedModeSteering();
+            }
             Debug.LogWarning("I am stunned:" + isStunned);
             return true;
         }
         public void StopStun()
         {
             isStunned = false;
-            NavigationHandler.SetAIStunned(isStunned);
-            NavigationHandler.CavernModeSteering();
+            if (onMasterClient)
+            {
+                NavigationHandler.SetAIStunned(isStunned);
+                NavigationHandler.CavernModeSteering();
+            }
             Debug.LogWarning("I am not stunned:" + isStunned);
         }
 
@@ -387,7 +393,7 @@ namespace Hadal.AI
         {
             if (MouthObject == null)
                 MouthObject = FindObjectOfType<AIGraphicsHandler>().MouthObject;
-            
+
             Transform mouth = MouthObject.transform;
             if (CarriedPlayer == null)
             {
@@ -409,14 +415,11 @@ namespace Hadal.AI
                 return;
             }
 
-
-            DetachAnyCarriedPlayer();
-
             //! Send event if host
             if (neManager.IsMasterClient)
                 neManager.RaiseEvent(ByteEvents.AI_RELEASE_PLAYER, null);
-            
-            CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+
+            DetachAnyCarriedPlayer();
         }
 
         /// <summary>
@@ -430,13 +433,18 @@ namespace Hadal.AI
 
             //! Make sure any player in mouth is released
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
+            int freeLayerIndex = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
             foreach (var player in controllers)
             {
-                player.gameObject.layer = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+                player.gameObject.layer = freeLayerIndex;
                 player.SetIsCarried(false);
             }
 
-            if (CarriedPlayer != null) CarriedPlayer.SetIsCarried(false);
+            if (CarriedPlayer != null)
+            {
+                CarriedPlayer.gameObject.layer = freeLayerIndex;
+                CarriedPlayer.SetIsCarried(false);
+            }
             CarriedPlayer = null;
             MouthObject.transform.DetachChildren();
         }
@@ -449,7 +457,7 @@ namespace Hadal.AI
             DetachAnyCarriedPlayer();
             if (CurrentTarget == null)
                 return false;
-            
+
             CurrentTarget.SetIsCarried(true);
             CarriedPlayer = CurrentTarget;
             AttachCarriedPlayerToMouth(true);
@@ -460,7 +468,7 @@ namespace Hadal.AI
         {
             if (CarriedPlayer == null)
                 return false;
-            
+
             AttachCarriedPlayerToMouth(false);
             return true;
         }
@@ -532,7 +540,7 @@ namespace Hadal.AI
         {
             if (carriedMustBeTargetPlayer)
                 return CarriedPlayer != null && CarriedPlayer == CurrentTarget;
-            
+
             return CarriedPlayer != null;
         }
 
