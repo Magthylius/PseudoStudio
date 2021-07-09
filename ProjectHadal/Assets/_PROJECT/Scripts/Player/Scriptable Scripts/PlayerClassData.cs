@@ -18,7 +18,7 @@ namespace Hadal.Player
 
         public void SetUpUtility()
         {
-            var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+            var playerInv = LocalPlayerData.PlayerController.GetInfo.Inventory;
             playerInv.ResetEquipIndex();
             playerInv.DeactivateAllUtilities();
             playerInv.GetEquippedUsableObjects.Clear();
