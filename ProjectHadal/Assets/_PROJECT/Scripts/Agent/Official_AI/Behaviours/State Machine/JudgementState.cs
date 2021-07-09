@@ -77,7 +77,7 @@ namespace Hadal.AI.States
             IsBehaviourRunning = false;
         }
 
-        private void StopAnyRunningCoroutines()
+        public void StopAnyRunningCoroutines()
         {
             if (currentRoutine == null) return;
             Brain.StopCoroutine(currentRoutine);

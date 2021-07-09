@@ -89,7 +89,6 @@ namespace Hadal.AI
         AIStateBase recoveryState;
         AIStateBase cooldownState;
         AIStateBase lureState;
-
         AmbushState ambushState;
         JudgementState judgementState;
 
@@ -98,7 +97,7 @@ namespace Hadal.AI
         [Header("Stunned Settings (needs a relook)")]
         [SerializeField, ReadOnly] bool isStunned;
         public float stunDuration;
-        AIStateBase stunnedState;
+        public event Action<bool> OnStunnedEvent;
 
         private bool _playersAreReady;
 
@@ -363,6 +362,7 @@ namespace Hadal.AI
                 NavigationHandler.StunnedModeSteering();
             }
             Debug.LogWarning("I am stunned:" + isStunned);
+            OnStunnedEvent?.Invoke(true);
             return true;
         }
         public void StopStun()
@@ -374,6 +374,7 @@ namespace Hadal.AI
                 NavigationHandler.CavernModeSteering();
             }
             Debug.LogWarning("I am not stunned:" + isStunned);
+            OnStunnedEvent?.Invoke(false);
         }
 
         public void ChangeColliderMaterial(PhysicMaterial physicMaterial)
@@ -438,12 +439,14 @@ namespace Hadal.AI
             {
                 player.gameObject.layer = freeLayerIndex;
                 player.SetIsCarried(false);
+                player.SetIsTaggedByLeviathan(false);
             }
 
             if (CarriedPlayer != null)
             {
                 CarriedPlayer.gameObject.layer = freeLayerIndex;
                 CarriedPlayer.SetIsCarried(false);
+                CarriedPlayer.SetIsTaggedByLeviathan(false);
             }
             CarriedPlayer = null;
             MouthObject.transform.DetachChildren();

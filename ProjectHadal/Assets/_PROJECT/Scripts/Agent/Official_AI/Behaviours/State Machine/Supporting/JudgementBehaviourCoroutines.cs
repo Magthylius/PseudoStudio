@@ -5,7 +5,6 @@ using Hadal.Player;
 using Tenshi;
 using Tenshi.UnitySoku;
 using UnityEngine;
-using Action = System.Action;
 
 namespace Hadal.AI
 {
@@ -34,61 +33,27 @@ namespace Hadal.AI
             JState = judgementState;
 
             ResetStateValues();
+
+            Brain.OnStunnedEvent += HandleStunEvent;
+        }
+
+        ~JudgementBehaviourCoroutines()
+        {
+            Brain.OnStunnedEvent -= HandleStunEvent;
         }
 
         private float carryDelayTimer;
         private bool canCarry;
         private bool isAttacking;
         private bool isDamaging;
-        private CoroutineData threshRoutineData;
-        private CoroutineData moveToTargetRoutineData;
+        private bool waitForJtimer;
 
         #region Coroutines
 
         private IEnumerator MoveToCurrentTarget()
         {
-            yield return null;
-        }
-
-        private IEnumerator DoThreshAttack()
-        {
-            isDamaging = true;
-            void StopAttack() => isDamaging = false;
-
-            DamageManager.ApplyDoT(Brain.CarriedPlayer,
-                Settings.G_TotalThreshTimeInSeconds,
-                Settings.G_ThreshDamagePerSecond,
-                StopAttack);
-
-            while (isDamaging && DamageManager != null)
-                yield return null;
-
-            TryDebug("Thresh damage in inner routine is finished!");
-        }
-
-        public IEnumerator DefensiveStance(int stanceIndex)
-        {
-            TryDebug($"Starting Defensive Behaviour for player count: {stanceIndex}.");
-            JState.IsBehaviourRunning = true;
-            bool waitForJtimer = false;
-            int jTimerIndex = 5 - stanceIndex;
-
             while (JState.IsBehaviourRunning)
             {
-                //! When the behaviour takes too long
-                if (IsJudgementThresholdReached(jTimerIndex))
-                {
-                    TryDebug("Defensive behaviour took too long, ending immediately.");
-                    break;
-                }
-
-                //! Stop when there are no more players
-                if (PlayerCountDroppedTo0)
-                {
-                    TryDebug("No more players detected in cavern, stopping defensive behaviour.");
-                    break;
-                }
-
                 //! Set custom nav point to destination: current target player if not already moving towards it.
                 if (Brain.CurrentTarget != null)
                 {
@@ -132,18 +97,63 @@ namespace Hadal.AI
                     }
                 }
 
+                yield return null;
+            }
+        }
+
+        private IEnumerator DoThreshAttack()
+        {
+            isDamaging = true;
+            void StopAttack() => isDamaging = false;
+
+            DamageManager.ApplyDoT(Brain.CarriedPlayer,
+                Settings.G_TotalThreshTimeInSeconds,
+                Settings.G_ThreshDamagePerSecond,
+                StopAttack);
+
+            while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
+                yield return null;
+
+            TryDebug("Thresh damage in inner routine is finished!");
+        }
+
+        public IEnumerator DefensiveStance(int stanceIndex)
+        {
+            TryDebug($"Starting Defensive Behaviour for player count: {stanceIndex}.");
+            JState.IsBehaviourRunning = true;
+            waitForJtimer = false;
+            int jTimerIndex = 5 - stanceIndex;
+
+            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget());
+
+            while (JState.IsBehaviourRunning)
+            {
+                //! When the behaviour takes too long
+                if (IsJudgementThresholdReached(jTimerIndex))
+                {
+                    TryDebug("Defensive behaviour took too long, ending immediately.");
+                    break;
+                }
+
+                //! Stop when there are no more players
+                if (PlayerCountDroppedTo0)
+                {
+                    TryDebug("No more players detected in cavern, stopping defensive behaviour.");
+                    break;
+                }
+
                 //! Thresh if is carrying a player & is not yet threshing
                 if (Brain.IsCarryingAPlayer() && !isAttacking)
                 {
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    threshRoutineData = new CoroutineData(Brain, DoThreshAttack());
+                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack());
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
                     TryDebug("Thresh damage in outer routine is finished!");
 
-                    bool success = Brain.TryDropCarriedPlayer();
+                    Brain.TryDropCarriedPlayer();
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
                 }
@@ -158,7 +168,8 @@ namespace Hadal.AI
             //! Handle Behaviour ending
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
-            yield return null;
+            
+            yield return approachRoutineData.Coroutine;
         }
 
         public IEnumerator AggressiveStance(int stanceIndex)
@@ -190,17 +201,28 @@ namespace Hadal.AI
 
         private bool TrySetCustomNavPoint(PlayerController player)
         {
-            NavPoint point = player.GetComponentInChildren<NavPoint>();
-            if (point == null)
-            {
-                point = Object.Instantiate(RuntimeData.navPointPrefab.gameObject, player.GetTarget.position, Quaternion.identity).GetComponent<NavPoint>();
-                point.tag = "NavigationPoint";
-                point.AttachTo(player.transform);
-                point.SetCavernTag(CavernTag.Custom_Point);
-                NavigationHandler.SetCustomPath(point, true);
-                return true;
-            }
-            return false;
+            if (player.GetIsTaggedByLeviathan)
+                return false;
+
+            NavPoint point = Object.Instantiate(RuntimeData.navPointPrefab.gameObject, player.GetTarget.position, Quaternion.identity).GetComponent<NavPoint>();
+            point.tag = "NavigationPoint";
+            point.AttachTo(player.transform);
+            point.SetCavernTag(CavernTag.Custom_Point);
+            NavigationHandler.SetCustomPath(point, true);
+            player.SetIsTaggedByLeviathan(true);
+            return true;
+        }
+
+        private void HandleStunEvent(bool isStunned)
+        {
+            if (!isStunned)
+                return;
+
+            JState.IsBehaviourRunning = false;
+            JState.StopAnyRunningCoroutines();
+            ResetStateValues();
+            RuntimeData.SetBrainState(BrainState.Judgement);
+            TryDebug("The Leviathan has been stunned. Stopping behaviour but not exiting Judgement state.");
         }
 
         public void ResetStateValues()
@@ -209,8 +231,6 @@ namespace Hadal.AI
             canCarry = false;
             isAttacking = false;
             isDamaging = false;
-            threshRoutineData = null;
-            moveToTargetRoutineData = null;
             JState.ResetStateValues();
         }
 

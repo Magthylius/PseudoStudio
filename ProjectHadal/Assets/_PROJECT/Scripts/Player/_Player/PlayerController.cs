@@ -46,6 +46,7 @@ namespace Hadal.Player
 
         private bool _isKnocked;
         private bool _isCarried;
+        private bool _isTaggedByLeviathan;
         private bool _isDown;
         [SerializeField] LureLauncherObject lureLauncherObject;
         public Action<bool, PlayerController> OnLureHasActivated;
@@ -220,6 +221,8 @@ namespace Hadal.Player
             else SetPhysicDefault();
         }
         public bool GetIsCarried => _isCarried;
+        public void SetIsTaggedByLeviathan(in bool statement) => _isTaggedByLeviathan = statement;
+        public bool GetIsTaggedByLeviathan => _isTaggedByLeviathan;
         public void SetIsDown(in bool statement) => _isDown = statement;
 
         public void Die() => _manager.TryToKill(attachedPlayer);
