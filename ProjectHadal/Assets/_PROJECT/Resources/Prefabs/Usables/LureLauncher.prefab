@@ -126,7 +126,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: dc958f29e6f7bad4582f32f33a6e11c3, type: 2}
-  UtilityName: 
+  UtilityName: Whalesong Lure
+  IsPowered: 0
+  maxReserveCapacity: 0
+  reserveRegenerationTime: 0
+  maxChamberCapacity: 0
+  chamberReloadTime: 0
+  maxOnLoadOut: 1
+  isActive: 0
+  lureCD: 0
+  lureCDMax: 5
 --- !u!1 &5799704096644430337
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2055576277570380379
 Transform:
   m_ObjectHideFlags: 0

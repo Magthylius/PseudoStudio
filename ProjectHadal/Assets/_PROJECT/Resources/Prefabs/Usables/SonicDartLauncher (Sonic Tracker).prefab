@@ -127,6 +127,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: c760e39ea59da124e834b1517d523ee6, type: 2}
   UtilityName: Sonic Dart
+  IsPowered: 0
+  maxReserveCapacity: 1
+  reserveRegenerationTime: 10
+  maxChamberCapacity: 1
+  chamberReloadTime: 1
+  maxOnLoadOut: 1
 --- !u!1 &5799704096644430337
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2055576277570380379
 Transform:
   m_ObjectHideFlags: 0
