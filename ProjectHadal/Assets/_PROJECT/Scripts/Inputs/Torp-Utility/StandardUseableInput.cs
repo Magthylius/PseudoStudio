@@ -5,7 +5,8 @@ namespace Hadal.Inputs
     //! E: Jon
     public class StandardUseableInput : IUseableInput
     {
-        public bool FireKeyTorpedo => MB(0) || MBDown(0);
+        public bool FireKeyTorpedo => MB(0);
+        public bool FireKeyTorpedoDown => MBDown(0);
         public bool FireKeyTorpedoRelease => MBUp(0);
         public bool FireKeyUtility => MBDown(1);
         public bool FireKeyUtilityHeld => MB(1);

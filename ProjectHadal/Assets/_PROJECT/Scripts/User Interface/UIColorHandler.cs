@@ -5,7 +5,9 @@ using UnityEngine.UI;
 using Hadal.PostProcess;
 using NaughtyAttributes;
 
-public class ReticleHandler : MonoBehaviour
+namespace Hadal.UI
+{
+    public class UIColorHandler : MonoBehaviour
 {
     [Header("Primary Color")]
     [SerializeField] ReticleEmissiveSettings currentSettings;
@@ -80,4 +82,6 @@ public class ReticleHandler : MonoBehaviour
             img.material.SetFloat("_Alpha", currentSettings.quarternaryEmissiveAlpha);
         }
     }
+}
+
 }

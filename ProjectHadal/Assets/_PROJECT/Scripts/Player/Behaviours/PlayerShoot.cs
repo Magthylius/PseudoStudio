@@ -1,4 +1,6 @@
 //created by Jin, edited by Jon, edited by Jey
+
+using System;
 using UnityEngine;
 using System.Collections;
 using Hadal.Usables;
@@ -29,7 +31,11 @@ namespace Hadal.Player.Behaviours
         public LayerMask rayIgnoreMask;
         private Ray aimingRay;
         float aimPointYDelta;
+        
         RaycastHit aimHit;
+        private bool aimHitBool;
+
+        private bool enableTracer = false;
 
         [Header("Torpedo")]
         [SerializeField] TorpedoLauncherObject tLauncher;
@@ -53,12 +59,7 @@ namespace Hadal.Player.Behaviours
             neManager = NetworkEventManager.Instance;
             neManager.AddListener(ByteEvents.PLAYER_TORPEDO_LAUNCH, REFireTorpedo);
         }
-
-        private void OnDisable()
-        {
-            //PhotonNetwork.NetworkingClient.EventReceived -= NetworkingClient_EventReceived;
-        }
-
+        
         private void Awake()
         {
 			_allowUpdate = true;
@@ -76,24 +77,13 @@ namespace Hadal.Player.Behaviours
             aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
             aimPointYDelta = (torpedoFirePoint.position - aimPoint.position).magnitude;
         }
-
+        
         private void OnDestroy()
         {
             tLauncher.OnChamberChanged -= OnChamberChangedMethod;
             tLauncher.OnReservesChanged -= OnReserveChangedMethod;
         }
-
-        void OnDrawGizmos()
-        {
-            //Gizmos.DrawRay(aimingRay);
-            /*Gizmos.DrawLine(aimPoint.position, aimParentObject.forward * 1000f);
-
-            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit))
-            {
-                Gizmos.DrawLine(aimPoint.position, aimHit.point);
-                Gizmos.DrawLine(aimHit.point, torpedoFirePoint.position);
-            }*/
-        }
+        
 
         public void DoUpdate(in float deltaTime)
         {
@@ -104,14 +94,25 @@ namespace Hadal.Player.Behaviours
         #endregion
 
         #region Handler Methods
+
+        public void StartShootTracer()
+        {
+            controller.UI.ShootTracer.Activate();
+            enableTracer = true;
+        }
+
+        public void StopShootTracer()
+        {
+            controller.UI.ShootTracer.Deactivate();
+            enableTracer = false;
+        }
+        
         public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
         {
-            if (Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
-                                Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore))
+            if (aimHitBool)
             {
                 info.AimedPoint = aimHit.point;
             }
-
             return info;
         }
 
@@ -260,6 +261,14 @@ namespace Hadal.Player.Behaviours
         {
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
+
+            if (enableTracer)
+            {
+                aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
+                    Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
+                
+                controller.UI.ShootTracer.SetEndPoint(aimHit.point);
+            }
         }
         private void UpdateUITorpedoCount(bool isReloadEvent)
         {
