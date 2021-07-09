@@ -13,7 +13,9 @@ namespace Hadal.AI
         [SerializeField] private bool debugEnabled;
 
         [SerializeField] private bool allowSwitchTarget = false;
+        [HideInInspector] public bool useAmbushDetection;
         [SerializeField] float overlapSphereDetectionRadius;
+        [SerializeField] float ambushSphereDetectionRadius;
         [SerializeField] Vector3 detectionOffset;
         [SerializeField] float checkDelay;
         public int DetectedPlayersCount { get; private set; }
@@ -56,7 +58,10 @@ namespace Hadal.AI
         private void SenseSurroundings()
         {
             Collider[] playerSphere = new Collider[4];
-            DetectedPlayersCount = Physics.OverlapSphereNonAlloc(transform.position + detectionOffset, overlapSphereDetectionRadius, playerSphere, _brain.RuntimeData.PlayerMask);
+            if (useAmbushDetection)
+                DetectedPlayersCount = Physics.OverlapSphereNonAlloc(transform.position + detectionOffset, ambushSphereDetectionRadius, playerSphere, _brain.RuntimeData.PlayerMask);
+            else
+                DetectedPlayersCount = Physics.OverlapSphereNonAlloc(transform.position + detectionOffset, overlapSphereDetectionRadius, playerSphere, _brain.RuntimeData.PlayerMask);
 
             _detectedPlayers = playerSphere
                     .Where(c => c != null)
@@ -112,7 +117,7 @@ namespace Hadal.AI
                     $"AI should no longer be lured.".Msg();
 
                 //_brain.NavigationHandler.StopCustomPath();
-               
+
             }
         }
 
@@ -121,8 +126,11 @@ namespace Hadal.AI
 
         void OnDrawGizmos()
         {
-            Gizmos.color = Color.grey;
-            Gizmos.DrawWireSphere(transform.position + detectionOffset, overlapSphereDetectionRadius);
+            Gizmos.color = Color.white;
+            if (useAmbushDetection)
+                Gizmos.DrawWireSphere(transform.position + detectionOffset, ambushSphereDetectionRadius);
+            else
+                Gizmos.DrawWireSphere(transform.position + detectionOffset, overlapSphereDetectionRadius);
         }
     }
 }
