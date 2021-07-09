@@ -126,7 +126,7 @@ namespace Hadal.Player.Behaviours
                 {
 
                     //print(FindUtilityWithProjID((int)data[1]).UtilityName);
-                    _controllerInfo.Shooter.FireUtility((int)data[1], FindUtilityWithProjID((int)data[1]), 0, (float)data[3], true);
+                    _controllerInfo.Shooter.FireUtility((int)data[1], FindUtilityWithProjID((int)data[1]), 0, (float)data[3], (bool)data[4], true);
                     /*_controllerInfo.Shooter.FireUtility((int)data[1], utilities[(int)data[2]], 0, (float)data[3], true);*/
                 }
                 else
@@ -139,13 +139,13 @@ namespace Hadal.Player.Behaviours
         void FireFlareWithShooter(int projectileID)
         {
             flareUtility.Activate();
-            _controllerInfo.Shooter.FireUtility(projectileID, flareUtility, -1, -1, false);
+            _controllerInfo.Shooter.FireUtility(projectileID, flareUtility, -1, -1, flareUtility.IsPowered, false);
         }
 
         //Fire when pressed locally, send event
         void FireUtilityWithShooter(int projectileID)
         {
-            _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, false);
+            _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, EquippedUsable.IsPowered, false);
         }
 
         private void UpdateUsables(in float deltaTime)

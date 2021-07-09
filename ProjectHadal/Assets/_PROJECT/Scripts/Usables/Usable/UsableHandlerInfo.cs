@@ -28,10 +28,11 @@ namespace Hadal.Usables
         }
 
         #region Mini Builder
-        public UsableHandlerInfo WithTransformForceInfo(int projectileID,Transform fireTransform, float ChargedTime, Vector3 shooterVelocity, Vector3 aimedPoint, bool isLocal)
+        public UsableHandlerInfo WithTransformForceInfo(int projectileID, bool isPowered, Transform fireTransform, float ChargedTime, Vector3 shooterVelocity, Vector3 aimedPoint, bool isLocal)
         {
             if (fireTransform == null) return null;
             ProjectileID = projectileID;
+            this.IsPowered = isPowered;
             FirePoint = fireTransform.position;
             Orientation = fireTransform.rotation;
             this.ChargedTime = ChargedTime;

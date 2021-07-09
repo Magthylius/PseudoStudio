@@ -12,6 +12,7 @@ namespace Hadal.AI.States
         CavernHandler cavernHandler;
         CavernTag currentCavern;
         float ambushTimer;
+        float ambushDetectionRadius;
 
         public AmbushState(AIBrain brain)
         {
@@ -25,6 +26,7 @@ namespace Hadal.AI.States
             currentCavern = Brain.CavernManager.GetCavernTagOfAILocation();
             cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
             ambushTimer = settings.AM_MaxWaitTime;
+            Brain.SenseDetection.useAmbushDetection = true;
         }
         public override void StateTick()
         {
@@ -53,9 +55,8 @@ namespace Hadal.AI.States
         public override void OnStateEnd() 
         { 
             NavigationHandler.ResetAmbushPoint();
+            Brain.SenseDetection.useAmbushDetection = false;
         }
         public override Func<bool> ShouldTerminate() => () => false;
-
-         
     }
 }

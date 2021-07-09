@@ -30,13 +30,6 @@ namespace Hadal.UI
         public string debugKey;
 
         NetworkEventManager neManager;
-        PostProcessingManager ppManager;
-        LoadingManager loadingManager;
-
-        [Header("Essentials")]
-        [SerializeField] Camera playerCamera;
-        [SerializeField] Canvas overlayCanvas;
-        [SerializeField] Canvas cameraCanvas;
 
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleGroup;
@@ -57,15 +50,6 @@ namespace Hadal.UI
         [Header("Reticle Mover Settings")]
         [SerializeField] RectTransform upperMoverGroup;
         [SerializeField] RectTransform lowerMoverGroup;
-        [SerializeField, MinMaxSlider(0f, 1f)] Vector2 moverGroupOpacityBounds;
-        [SerializeField, MinMaxSlider(0f, 20f)] Vector2 moverGroupPaddingBounds;
-        [SerializeField, MinMaxSlider(0f, 20f)] Vector2 moverYVelocityBounds;
-        [SerializeField] float moverLerpSpeed;
-
-        CanvasGroupFader umgCGF;
-        CanvasGroupFader lmgCGF;
-        VerticalLayoutGroup umgVLG;
-        VerticalLayoutGroup lmgVLG;
 
         [Header("Loader Filler Settings")]
         [SerializeField] Image leftLoaderFiller;
@@ -91,12 +75,17 @@ namespace Hadal.UI
         Transform playerTransform;
         Rigidbody playerRigidbody;
 
+        [Header("Prefab Settings")]
+        public GameObject torpedoFillerPrefab;
+        public Transform torpedoFillerParent;
+        
         [Header("Torpedo Settings")]
         public int torpCount;
-        public List<GameObject> tubeIcons;
         public List<Image> reloadProgressors;
         public GameObject floodText;
         public GameObject reloadText;
+        
+        List<UIFillerBehaviour> torpedoFillers;
 
         [Header("VFX Settings")]
         public ParticleSystem torpedoReloadedVFX;
@@ -104,7 +93,6 @@ namespace Hadal.UI
 
         [Header("Module Settings")]
         [SerializeField] UITrackerHandler trackerHandler;
-        List<Transform> sonicDartTransforms;
 
         [Header("Utilities Settings")]
         [SerializeField] UIUtilitiesHandler utilitiesHandler;
@@ -125,29 +113,23 @@ namespace Hadal.UI
         void Start()
         {
             neManager = NetworkEventManager.Instance;
-            ppManager = PostProcessingManager.Instance;
-            loadingManager = LoadingManager.Instance;
 
             reticleDirectorsFR = new FlexibleRect(reticleDirectors);
             allUIParentFR = new FlexibleRect(allUIParent);
-
-            //cameraCanvas.worldCamera = playerCamera;
-            umgCGF = new CanvasGroupFader(upperMoverGroup.GetComponent<CanvasGroup>(), true, false);
-            lmgCGF = new CanvasGroupFader(lowerMoverGroup.GetComponent<CanvasGroup>(), true, false);
-            umgVLG = upperMoverGroup.GetComponent<VerticalLayoutGroup>();
-            lmgVLG = lowerMoverGroup.GetComponent<VerticalLayoutGroup>();
+            
 
             DoDebugEnabling(debugKey);
 
             SetupReticle();
-            SetupModules();
             SetupPauseMenu();
             PNTR_Resume();
 
+            Initialize(4);
             //sl_UI = DebugManager.Instance.CreateScreenLogger();
             //Debug.LogWarning("w: " + Screen.width + " | h: " + Screen.height);
             //Debug.LogWarning(Screen.currentResolution);
             //Debug.LogWarning("screen scale: " + (Screen.width / Screen.currentResolution.width));
+
         }
 
         void Update()
@@ -183,6 +165,30 @@ namespace Hadal.UI
         #endregion
 
         #region External calls
+
+        void Initialize(int totalTorpedoCount)
+        {
+            torpedoFillers = new List<UIFillerBehaviour>();
+            StartCoroutine(SpawnFillers(totalTorpedoCount, true));
+        }
+        
+        IEnumerator SpawnFillers(int totalTorpedoCount, bool startFilled)
+        {
+            for (int i = 0; i < totalTorpedoCount; i++)
+            {
+                GameObject go = Instantiate(torpedoFillerPrefab, torpedoFillerParent);
+                UIFillerBehaviour filler = go.GetComponent<UIFillerBehaviour>();
+                torpedoFillers.Add(filler);
+                
+                if (startFilled) filler.ToFilled();
+                else filler.ToHollow();
+
+                yield return new WaitForEndOfFrame();
+            }
+            
+            torpedoFillers.Reverse();
+        }
+        
         public void Activate()
         {
             gameObject.SetActive(true);
@@ -215,7 +221,7 @@ namespace Hadal.UI
         {
             torpCount = torpedoCount;
 
-            if (torpCount <= 0)
+            /*if (torpCount <= 0)
             {
                 foreach (GameObject tube in tubeIcons) tube.SetActive(false);
                 //torpedoEmptyVFX.Emit(1);
@@ -242,6 +248,13 @@ namespace Hadal.UI
                     }
                     tube.SetActive(false);
                 }  
+            }*/
+            int count = 0;
+            foreach (UIFillerBehaviour filler in torpedoFillers)
+            {
+                if (count < torpCount) filler.ToFilled();
+                else filler.ToHollow();
+                count++;
             }
         }
 
@@ -269,12 +282,7 @@ namespace Hadal.UI
 
             playerRigidbody = playerTransform.GetComponent<Rigidbody>();
         }
-
-        void SetupModules()
-        {
-            sonicDartTransforms = new List<Transform>();
-        }
-
+        
         void UpdateInformation()
         {
             if (leftLoaderFiller.fillAmount >= 0.5f) leftLoaderFiller.fillAmount = 0.5f;
