@@ -73,15 +73,12 @@ namespace Hadal.AI
             {
                 brain.CurrentTarget = targetPlayer;
                 brain.TryCarryTargetPlayer();
-                // brain.CarriedPlayer = targetPlayer;
-                // brain.CarriedPlayer.SetIsCarried(true);
-                // brain.AttachCarriedPlayerToMouth(true);
             }
         }
     
         void RE_DetachAnyCarriedPlayer(EventData eventData)
         {
-            brain.DetachAnyCarriedPlayer();
+            brain.TryDropCarriedPlayer();
             brain.CurrentTarget = null;
         }
 
