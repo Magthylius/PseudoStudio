@@ -123,14 +123,7 @@ namespace Hadal.AI
         void IStunYou()
         {
             float duration = 5f;
-            if (PhotonNetwork.IsMasterClient)
-            {
-                TryStun(duration);
-            }
-            else
-            {
-                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_STUN, duration, SendOptions.SendReliable);
-            }
+            TryStun(duration);
         }
 
         /// <summary> Attempts to stun the AI for the given duration. </summary>
