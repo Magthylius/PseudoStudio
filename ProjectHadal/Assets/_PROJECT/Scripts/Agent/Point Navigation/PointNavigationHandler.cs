@@ -206,7 +206,6 @@ namespace Hadal.AI
 
             if (!isStunned && (!hasReachedPoint || !chosenAmbushPoint))
             {
-                Debug.LogWarning("YO");
                 TrySelectNewNavPoint(fixedDeltaTime);
                 ElapseCavernLingerTimer(fixedDeltaTime);
                 MoveForwards(fixedDeltaTime);

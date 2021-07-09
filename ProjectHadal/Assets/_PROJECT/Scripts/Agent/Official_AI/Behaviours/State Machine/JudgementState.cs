@@ -26,7 +26,14 @@ namespace Hadal.AI.States
         public override void OnStateStart()
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
+            AllowStateTick = true;
             RuntimeData.ResetEngagementTicker();
+
+            if (RuntimeData.IsPreviousBrainStateEqualTo(BrainState.Ambush))
+            {
+                AllowStateTick = false;
+                //do stuff
+            }
         }
 
         public override void StateTick()
@@ -34,7 +41,7 @@ namespace Hadal.AI.States
             float deltaTime = Brain.DeltaTime;
             RuntimeData.TickEngagementTicker(deltaTime);
 
-            if (IsBehaviourRunning)
+            if (IsBehaviourRunning || !AllowStateTick)
                 return;
 
             int playerCount = CavernManager.GetHandlerOfAILocation.GetPlayerCount;
@@ -49,11 +56,12 @@ namespace Hadal.AI.States
             //! Aggressive (?)
             PerformBehaviour(false, playerCount);
         }
-        public override void LateStateTick() { }
-        public override void FixedStateTick() { }
+        public override void LateStateTick() { if (AllowStateTick) return; }
+        public override void FixedStateTick() { if (AllowStateTick) return; }
         public override void OnStateEnd()
         {
             StopAnyRunningCoroutines();
+            if (behaviour != null) behaviour.ResetStateValues();
             NavigationHandler.StopCustomPath(true);
         }
 

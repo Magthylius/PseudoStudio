@@ -21,6 +21,7 @@ namespace Hadal.AI.States
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;
         [Min(0f)] public float AM_MaxWaitTime = 120f;
+        [Min(0f)] public float AM_PounceSpeedMultiplier = 1.5f;
 
         [Header("Aggressive Settings")]
         [Min(0f)] public float AG_TargetPlayerRange = 100f;

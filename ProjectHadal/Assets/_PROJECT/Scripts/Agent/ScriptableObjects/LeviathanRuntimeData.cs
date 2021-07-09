@@ -20,14 +20,25 @@ namespace Hadal.AI
 
         [Header("Objectives")]
         [SerializeField, ReadOnly] BrainState brainState;
+        [SerializeField, ReadOnly] BrainState previousBrainState;
         [SerializeField, ReadOnly] EngagementObjective engagementObjective;
         public BrainState GetBrainState => brainState;
+        public BrainState GetPreviousBrainState => previousBrainState;
         public EngagementObjective GetEngagementObjective => engagementObjective;
         public event Action<BrainState, EngagementObjective> OnAIStateChange;
-        public void SetBrainState(BrainState state)
+        public void SetBrainState(BrainState newState)
         {
-            brainState = state;
+            SetPreviousBrainState(GetBrainState);
+            brainState = newState;
             OnAIStateChange?.Invoke(brainState, engagementObjective);
+        }
+        public bool IsPreviousBrainStateEqualTo(BrainState thisState) => GetPreviousBrainState == thisState;
+        private void SetPreviousBrainState(BrainState prevState)
+        {
+            if (GetPreviousBrainState == GetBrainState) // do not set previous state if current state is already unchanged
+                return;
+            
+            previousBrainState = prevState;
         }
         public void SetEngagementObjective(EngagementObjective objective) => engagementObjective = objective;
 
@@ -101,6 +112,7 @@ namespace Hadal.AI
             if (ObstacleMask == default) ObstacleMask = LayerMask.GetMask("Wall");
 
             //! Objectives Reset
+            SetPreviousBrainState(BrainState.None);
             SetBrainState(BrainState.None);
             SetEngagementObjective(EngagementObjective.Judgement);
 
