@@ -3,6 +3,7 @@ using System;
 using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.AI.Caverns;
+using UnityEngine;
 
 namespace Hadal.AI.States
 {
@@ -40,6 +41,8 @@ namespace Hadal.AI.States
 
             if (cavernHandler.GetPlayerCount > 0)
             {
+                RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
+                Debug.LogWarning("MY CONFIDENCE: " + Brain.RuntimeData.ActualConfidenceValue);
                 RuntimeData.SetBrainState(BrainState.Judgement);
             }
 
