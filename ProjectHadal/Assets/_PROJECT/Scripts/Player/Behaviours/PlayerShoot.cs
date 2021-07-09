@@ -89,6 +89,7 @@ namespace Hadal.Player.Behaviours
         {
             if (!AllowUpdate) return;
             OnUnityUpdateUI();
+            tLauncher.DoUpdate(deltaTime);
         }
 
         #endregion
@@ -171,7 +172,7 @@ namespace Hadal.Player.Behaviours
 
         public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool isPowered ,bool eventFire)
         {
-            if (!eventFire && (!_canUtilityFire || !AllowUpdate))
+            if (!eventFire && (!usable.IsChamberLoaded || !AllowUpdate))
                 return;
 
             //actual firing
@@ -182,7 +183,8 @@ namespace Hadal.Player.Behaviours
             {
                 projectileID += usable.Data.ProjectileData.ProjTypeInt;
             }
-            
+
+            usable.DecrementChamber();
             usable.Use(CreateInfoForUtility(projectileID, isPowered, chargeTime, !eventFire));
             controller.GetInfo.Inventory.IncreaseProjectileCount();
             //send event to utility ONLY when fire locally. local = (!eventFire)
@@ -271,7 +273,7 @@ namespace Hadal.Player.Behaviours
         {
             //if (UIManager.IsNull) return;
 
-            controller.UI.UpdateTubes(tLauncher.TotalTorpedoes, isReloadEvent);
+            controller.UI.UpdateTubes(tLauncher.TotalAmmoCount, isReloadEvent);
         }
         private void UpdateUIRegenRatio(in float ratio)
         {

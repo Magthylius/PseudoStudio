@@ -8,7 +8,7 @@ namespace Hadal.Usables
 {
     public class TorpedoLauncherObject : UsableLauncherObject
     {
-        private const string ReserveGroupName = "Reserves";
+      /*  private const string ReserveGroupName = "Reserves";
         private const string ChamberGroupName = "Chamber";
 
         #region Variable Definitions
@@ -105,6 +105,6 @@ namespace Hadal.Usables
             if (maxOnLoadOut) UpdateChamberCount(maxChamberCapacity);
             IsRegenerating = false;
             IsReloading = false;
-        }
+        }*/
     }
 }
