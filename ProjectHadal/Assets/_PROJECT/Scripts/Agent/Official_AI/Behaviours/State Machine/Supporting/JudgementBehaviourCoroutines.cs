@@ -42,10 +42,16 @@ namespace Hadal.AI
         private bool isAttacking;
         private bool isDamaging;
         private CoroutineData threshRoutineData;
+        private CoroutineData moveToTargetRoutineData;
 
         #region Coroutines
 
-        public IEnumerator DoThreshAttack()
+        private IEnumerator MoveToCurrentTarget()
+        {
+            yield return null;
+        }
+
+        private IEnumerator DoThreshAttack()
         {
             isDamaging = true;
             void StopAttack() => isDamaging = false;
@@ -84,6 +90,30 @@ namespace Hadal.AI
                     break;
                 }
 
+                //! Set custom nav point to destination: current target player if not already moving towards it.
+                if (Brain.CurrentTarget != null)
+                {
+                    bool success = TrySetCustomNavPoint(Brain.CurrentTarget);
+                    if (success) TryDebug("Set custom nav point onto target. Moving to chase target.");
+                }
+
+                //! Start delay timer if close enough to player & is waiting to be allowed to carry
+                if (CloseThresholdReached && !canCarry)
+                {
+                    canCarry = true;
+                    SetCarryDelayTimer();
+                    TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
+                    continue;
+                }
+
+                //! Stop behaviour and wait for Jtimer if too far away from current target player
+                if (FarThresholdReached)
+                {
+                    waitForJtimer = true;
+                    TryDebug("Target got too far from the Leviathan, stopping behaviour.");
+                    break;
+                }
+
                 //! Carry if delay timer is reached & is allowed to carry
                 if (CarryDelayTimerReached && canCarry)
                 {
@@ -107,7 +137,6 @@ namespace Hadal.AI
                 if (Brain.IsCarryingAPlayer() && !isAttacking)
                 {
                     isAttacking = true;
-                    WaitForSeconds waitTime = new WaitForSeconds(0.5f);
 
                     TryDebug("Starting threshing routine.");
                     threshRoutineData = new CoroutineData(Brain, DoThreshAttack());
@@ -115,44 +144,8 @@ namespace Hadal.AI
 
                     TryDebug("Thresh damage in outer routine is finished!");
 
-                    // DamageManager.ApplyDoT(Brain.CarriedPlayer,
-                    //     Settings.G_TotalThreshTimeInSeconds,
-                    //     Settings.G_ThreshDamagePerSecond,
-                    //     StopAttack);
-
-                    // while (isDamaging)
-                    //     yield return waitDoTTime;
-
                     bool success = Brain.TryDropCarriedPlayer();
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
-                    break;
-
-                    
-
-
-                }
-
-                //! Set custom nav point to destination: current target player if not already moving towards it.
-                if (Brain.CurrentTarget != null)
-                {
-                    bool success = TrySetCustomNavPoint(Brain.CurrentTarget);
-                    if (success) TryDebug("Set custom nav point onto target. Moving to chase target.");
-                }
-
-                //! Start delay timer if close enough to player & is waiting to be allowed to carry
-                if (CloseThresholdReached && !canCarry)
-                {
-                    canCarry = true;
-                    SetCarryDelayTimer();
-                    TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
-                    continue;
-                }
-
-                //! Stop behaviour and wait for Jtimer if too far away from current target player
-                if (FarThresholdReached)
-                {
-                    waitForJtimer = true;
-                    TryDebug("Target got too far from the Leviathan, stopping behaviour.");
                     break;
                 }
 
@@ -211,13 +204,14 @@ namespace Hadal.AI
             return false;
         }
 
-        private void ResetStateValues()
+        public void ResetStateValues()
         {
             carryDelayTimer = 0f;
             canCarry = false;
             isAttacking = false;
             isDamaging = false;
             threshRoutineData = null;
+            moveToTargetRoutineData = null;
             JState.ResetStateValues();
         }
 

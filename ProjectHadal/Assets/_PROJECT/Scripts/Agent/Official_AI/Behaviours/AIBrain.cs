@@ -411,7 +411,6 @@ namespace Hadal.AI
 
 
             DetachAnyCarriedPlayer();
-            CarriedPlayer.SetIsCarried(false);
 
             //! Send event if host
             if (neManager.IsMasterClient)
@@ -462,7 +461,7 @@ namespace Hadal.AI
             if (CarriedPlayer == null)
                 return false;
             
-            DetachAnyCarriedPlayer();
+            AttachCarriedPlayerToMouth(false);
             return true;
         }
 
