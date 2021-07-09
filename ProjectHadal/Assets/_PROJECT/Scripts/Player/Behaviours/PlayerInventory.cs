@@ -21,7 +21,9 @@ namespace Hadal.Player.Behaviours
         
         [Header("Settings")]
         [SerializeField] private bool enableQuickFlare;
+        [SerializeField] private bool enableQuickHarpoon;
         private UsableLauncherObject flareUtility;
+        private UsableLauncherObject harpoonUtility;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
         private int _selectedItem;
@@ -40,8 +42,7 @@ namespace Hadal.Player.Behaviours
             _uInput = new StandardUseableInput();
             allUtilities = GetComponentsInChildren<UsableLauncherObject>().ToList();
             flareUtility = allUtilities.Where(u => u is FlareLauncherObject).Single();
-            if (enableQuickFlare)
-                flareUtility.Activate();
+            harpoonUtility = allUtilities.Where(u => u is HarpoonLauncherObject).Single();
         }
 
         void Start()
@@ -98,9 +99,10 @@ namespace Hadal.Player.Behaviours
             }
 
             if (_uInput.FireKeyQuickFlare && enableQuickFlare)
-            {
                 FireFlareWithShooter(pViewForProj + _projectileCount);
-            }
+
+            if (_uInput.FireKeyQuickHarpoon && enableQuickHarpoon)
+                FireHarpoonWithShooter(pViewForProj + _projectileCount);
 
             if (EquippedUsable.Data.isChargable)
             {
@@ -145,6 +147,12 @@ namespace Hadal.Player.Behaviours
         {
             flareUtility.Activate();
             _controllerInfo.Shooter.FireUtility(projectileID, flareUtility, -1, -1, flareUtility.IsPowered, false);
+        }
+
+        void FireHarpoonWithShooter(int projectileID)
+        {
+            harpoonUtility.Activate();
+            _controllerInfo.Shooter.FireUtility(projectileID, harpoonUtility, -1, -1, harpoonUtility.IsPowered, false);
         }
 
         //Fire when pressed locally, send event

@@ -15,13 +15,15 @@ namespace Hadal.Player
         [SerializeField, Min(0f)] private float interactRadius;
         [SerializeField] private LayerMask interactableMask;
         [SerializeField, Range(1, 4)] private int interactInfoBufferSize;
+        [SerializeField] private float interactCheckTime;
+        private float _interactCheckTimer;
         private PlayerController _player;
-        private IInteractInput _reviveInput;
+        private IInteractInput _interactInput;
         private bool _interactionEnabled;
 
         private void Awake()
         {
-            _reviveInput = new ReviveInteractionInput();
+            _interactInput = new StandardInteractionInput();
             Enable();
         }
 
@@ -40,37 +42,36 @@ namespace Hadal.Player
         {
             if (!AllowUpdate) return;
 
-            //! Check for revive key
-            if (_reviveInput.InteractKey)
+            if (TickInteractCheckTimer(deltaTime) <= 0f)
             {
-                Collider collider = GetClosestEligibleCollider();
+                ResetReviveCheckTimer();
+
+                Collider collider = GetClosestElligibleCollider();
                 if (collider == null) return;
 
                 //! Interact
                 collider.GetComponentInChildren<IInteractable>()?.Interact(PlayerViewID);
             }
-
-            //! check for other interaction keys here (e.g. torpedo pickup)
         }
 
         /// <summary>
         /// Gets the closest collider in the interactable layermask (excluding self). Buffer size can be changed on the script inspector.
         /// </summary>
-        private Collider GetClosestEligibleCollider()
+        private Collider GetClosestElligibleCollider()
         {
             //! Check for interactable colliders in nearby radius
             Collider[] results = new Collider[interactInfoBufferSize];
             Collider ownCollider = _player.GetInfo.Collider;
-            
+
             Physics.OverlapSphereNonAlloc(PlayerPosition, interactRadius, results, interactableMask.value, QueryTriggerInteraction.Collide);
             Collider closestEligibleCollider = null;
 
             List<Collider> colliders = new List<Collider>(results);
-            
+
             //! Remove own collider (do not evaluate self) & all nulls
             colliders.Remove(ownCollider);
             colliders.RemoveAll(c => c == null);
-            
+
             //! Take closest collider
             float closestDistance = float.MaxValue;
             Vector3 selfPos = PlayerPosition;
@@ -113,6 +114,8 @@ namespace Hadal.Player
 
         private Vector3 PlayerPosition => _player.GetTarget.position;
         private int PlayerViewID => _player.GetInfo.PhotonInfo.PView.ViewID;
+        private void ResetReviveCheckTimer() => _interactCheckTimer = interactCheckTime;
+        private float TickInteractCheckTimer(in float deltaTime) => _interactCheckTimer -= deltaTime;
 
         #endregion
     }
