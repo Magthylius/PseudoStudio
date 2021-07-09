@@ -18,7 +18,7 @@ namespace Hadal.AudioSystem
 
         public override void Play(AudioSource source)
         {
-            if (source == null || Composites.IsNullOrEmpty()) return;
+            if (Composites.IsNullOrEmpty()) return;
 
             int i = -1;
             while (++i < Composites.Length)
