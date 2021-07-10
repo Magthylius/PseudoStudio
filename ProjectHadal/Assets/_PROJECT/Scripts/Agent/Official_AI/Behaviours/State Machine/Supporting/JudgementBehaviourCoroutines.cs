@@ -109,7 +109,7 @@ namespace Hadal.AI
 
             DamageManager.ApplyDoT(Brain.CarriedPlayer,
                 totalDamageSeconds,
-                dps,
+                dps.Abs(),
                 StopAttack);
 
             while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
@@ -150,7 +150,7 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.G_ThreshDamagePerSecond));
+                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.GetThreshDamagePerSecond(EngagementType.Defensive, RuntimeData.IsEggDestroyed)));
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
                     TryDebug("Thresh damage in outer routine is finished!");
@@ -221,7 +221,7 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.AM_ThreshDamagePerSecond));
+                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.GetThreshDamagePerSecond(EngagementType.Ambushing, RuntimeData.IsEggDestroyed)));
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
                     TryDebug("Thresh damage in outer routine is finished!");

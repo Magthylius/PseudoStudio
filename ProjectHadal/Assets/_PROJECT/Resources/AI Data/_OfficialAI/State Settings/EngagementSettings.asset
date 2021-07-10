@@ -19,23 +19,21 @@ MonoBehaviour:
   G_ApproachFarDistanceThreshold: 500
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 10
-  G_ThreshDamagePerSecond: 5
-  G_ConfidenceCentralPercent: 0.5
-  G_XPercentForDamageMod: 0.3
-  G_DamageModPerXPercent: 1
+  G_BaseThreshDamagePerSecond: 5
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 120
   AM_PounceSpeedMultiplier: 1.5
   AM_CarryDelayTimer: 0.8
-  AM_ThreshDamagePerSecond: 5
-  AG_TargetPlayerRange: 100
+  AM_AdditionalThreshDamagePerSecond: 0
   AG_AccumulatedDamageThresholdPercentage: 0.4
   AllowTarget_HighestDMGPlayer: 1
   AllowTarget_HighestHPPlayer: 1
   AllowTarget_IsolatedPlayer: 1
   HealthRatioThreshold: 0.5
-  JudgementTickRate: 30
   JudgementTimer1: 30
   JudgementTimer2: 30
-  JudgementTimer3: 30
-  JudgementTimer4: 30
+  JudgementTimer3: 25
+  JudgementTimer4: 20
+  AGG_AdditionalThreshDamagePerSecond: 1
+  DEF_AdditionalThreshDamagePerSecond: 0
+  EGG_PermanentThreshDamagePerSecond: 1

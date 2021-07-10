@@ -16,7 +16,10 @@ namespace Hadal.AI
         public LayerMask PlayerMask;
         public LayerMask ObstacleMask;
         public NavPoint navPointPrefab;
+        [SerializeField] private bool eggDestroyed;
         [SerializeField] private StateMachineData machineData;
+        public bool IsEggDestroyed => eggDestroyed;
+        public void SetIsEggDestroyed(bool statement) => eggDestroyed = statement;
 
         [Header("Objectives")]
         [SerializeField, ReadOnly] BrainState brainState;
@@ -110,6 +113,7 @@ namespace Hadal.AI
             //! Information
             if (PlayerMask == default) PlayerMask = LayerMask.GetMask("LocalPlayer");
             if (ObstacleMask == default) ObstacleMask = LayerMask.GetMask("Wall");
+            SetIsEggDestroyed(false);
 
             //! Objectives Reset
             SetPreviousBrainState(BrainState.None);
