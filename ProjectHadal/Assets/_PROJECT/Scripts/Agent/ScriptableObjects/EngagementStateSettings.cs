@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Player;
+using Tenshi;
 
 namespace Hadal.AI.States
 {
@@ -17,6 +18,9 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_CarryDelayTimer;
         [Min(0)] public int G_TotalThreshTimeInSeconds;
         [Min(0)] public int G_ThreshDamagePerSecond;
+        [Min(0)] public int G_ConfidenceCentralPercent;
+        [Min(0)] public int G_XPercentForDamageMod;
+        [Min(0)] public int G_DamageModPerXPercent;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;
@@ -118,5 +122,27 @@ namespace Hadal.AI.States
                 4 => JudgementTimer4,
                 _ => 0f
             };
+        
+        /// <summary>
+        /// Gets a damage modifier based off normalised confidence.
+        /// </summary>
+        /// <param name="percent">It is expected that this value is the normalised confidence value.</param>
+        public int GetDamageModifierFromConfidence(float percent)
+        {
+            percent = percent.Clamp01();
+            if (percent >= G_ConfidenceCentralPercent) //damage buff
+            {
+
+            }
+            else //damage nerf
+            {
+
+            }
+            return 0;
+        }
+
+        // G_ConfidenceCentralPercent
+        // [Min(0)] public int G_XPercentForDamageMod;
+        // [Min(0)] public int G_DamageModPerXPercent;
     }
 }
