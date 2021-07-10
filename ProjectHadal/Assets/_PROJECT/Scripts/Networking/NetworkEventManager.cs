@@ -20,6 +20,7 @@ namespace Hadal.Networking
         PLAYER_HEALTH_UPDATE,
         PLAYER_ALL_UNALIVE,
         PLAYER_RECEIVE_DAMAGE,
+        PLAYER_INTERACT,
         GAME_START_LOAD,
         GAME_ACTUAL_START,
         GAME_HOST_FORCEDKICK,

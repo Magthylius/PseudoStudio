@@ -76,6 +76,12 @@ namespace Hadal.Player.Behaviours
 
             aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
             aimPointYDelta = (torpedoFirePoint.position - aimPoint.position).magnitude;
+
+            // listen to salvage event, if local.
+            if (controller == LocalPlayerData.PlayerController)
+            {
+                tLauncher.SubscribeToSalvageEvent();
+            }
         }
         
         private void OnDestroy()
