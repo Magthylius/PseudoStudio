@@ -1,14 +1,13 @@
 using UnityEngine;
-using UnityEngine.VFX;
 using Magthylius.DataFunctions;
 using Hadal.Networking;
 using static Hadal.ExplosivePoint;
+using Hadal.AudioSystem;
 
 namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
     {
-        
         private Vector3 aimedPoint = Vector3.zero;
         
         #region Unity Lifecycle
@@ -96,6 +95,7 @@ namespace Hadal.Usables.Projectiles
             particleEffect.SetActive(true);
             projectileAsset.SetActive(false);
             Create(CreateExplosionInfo());
+            InvokeOnHit(false);
         }
 
         protected override void StopImpactEffect()
@@ -108,11 +108,6 @@ namespace Hadal.Usables.Projectiles
         #endregion
 
         #region Misc Function
-
-        void DoDamageToAI()
-        {
-            
-        }
         
         private ExplosionSettings CreateExplosionInfo()
         {

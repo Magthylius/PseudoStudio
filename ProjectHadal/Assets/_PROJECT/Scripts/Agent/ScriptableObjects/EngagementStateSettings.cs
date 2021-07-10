@@ -16,12 +16,14 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_ApproachFarDistanceThreshold;
         [Min(0f)] public float G_CarryDelayTimer;
         [Min(0)] public int G_TotalThreshTimeInSeconds;
-        [Min(0f)] public int G_ThreshDamagePerSecond;
+        [Min(0)] public int G_ThreshDamagePerSecond;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;
         [Min(0f)] public float AM_MaxWaitTime = 120f;
         [Min(0f)] public float AM_PounceSpeedMultiplier = 1.5f;
+        [Min(0f)] public float AM_CarryDelayTimer;
+        [Min(0)] public int AM_ThreshDamagePerSecond;
 
         [Header("Aggressive Settings")]
         [Min(0f)] public float AG_TargetPlayerRange = 100f;
