@@ -7731,7 +7731,7 @@ LineRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2313861442030021928}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 0
@@ -7765,16 +7765,16 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 2.05}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 0.03
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.30327797
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -7836,6 +7836,8 @@ MonoBehaviour:
   line: {fileID: 3561190949982853669}
   hitLight: {fileID: 3892335548075747641}
   lineStartTransform: {fileID: 0}
+  redMat: {fileID: 2100000, guid: 3d2afbbc725e8a34cb0c1d58ca64ad8e, type: 2}
+  blueMat: {fileID: 2100000, guid: e90c60920d7247447b2efcd7fa4ab030, type: 2}
 --- !u!1 &2397147961561102071
 GameObject:
   m_ObjectHideFlags: 0
@@ -8805,7 +8807,7 @@ MonoBehaviour:
   torpedoFillerParent: {fileID: 4892359317959318659}
   torpedoEmptyText: {fileID: 8105387952954281432}
   torpCount: 3
-  torpFiller: {fileID: 4449351797091005590}
+  torpLoader: {fileID: 4449351797091005590}
   reloadProgressors:
   - {fileID: 4767926059475334190}
   - {fileID: 4337467426110101391}
