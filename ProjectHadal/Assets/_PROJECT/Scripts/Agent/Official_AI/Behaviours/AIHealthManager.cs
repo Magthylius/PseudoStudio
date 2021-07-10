@@ -84,7 +84,7 @@ namespace Hadal.AI
             else
                 currentHealth = (currentHealth - damage).Clamp0();
             
-            brain.RuntimeData.UpdateConfidenceValue(Random.Range(-5, -10));
+            brain.RuntimeData.AddDamageCount();
             DoOnHitEffects(damage);
 
             return true;

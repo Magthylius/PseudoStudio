@@ -54,12 +54,12 @@ namespace Hadal.AI
         public void UpdateBonusConfidence(int change) => bonusConfidence += bonusConfidence;
 
         [Header("Cummulative Damage")]
-        [SerializeField, ReadOnly] float cumulativeDamage;
-        [SerializeField, ReadOnly] float cumulativeDamageThreshold;
-        public void ResetCumulativeDamage() => cumulativeDamage = 0f;
-        public void AddCumulativeDamage(float damage) => cumulativeDamage += damage.Abs();
-        public void UpdateCumulativeDamageThreshold(float newThreshold) => cumulativeDamageThreshold = newThreshold;
-        public bool HasCumulativeDamageExceeded => cumulativeDamage > cumulativeDamageThreshold;
+        [SerializeField, ReadOnly] int cumulativeDamageCount;
+        [SerializeField, ReadOnly] int cumulativeDamageCountThreshold;
+        public void ResetCumulativeDamageCount() => cumulativeDamageCount = 0;
+        public void AddDamageCount() => cumulativeDamageCount++;
+        public void UpdateCumulativeDamageCountThreshold(int newThreshold) => cumulativeDamageCountThreshold = newThreshold;
+        public bool IsCumulativeDamageCountReached => cumulativeDamageCount >= cumulativeDamageCountThreshold;
 
 
         [Header("State Tickers")]
@@ -128,7 +128,8 @@ namespace Hadal.AI
             bonusConfidence = 0;
 
             //! Cumulative Damage
-            ResetCumulativeDamage();
+            UpdateCumulativeDamageCountThreshold(machineData.Engagement.G_DisruptionDamageCount);
+            ResetCumulativeDamageCount();
 
             //! Tickers
             ResetAllTickers();

@@ -84,14 +84,17 @@ namespace Hadal.Player.Behaviours
                 {
                     Debug.LogWarning("Subscribed to Salvage");
                     tLauncher.SubscribeToSalvageEvent();
+                    controller.UI.Initialize(tLauncher.TotalAmmoCount);
                 }
             }
             else
             {
+               // need to only subscribe if local
+                Debug.LogWarning("Subscribed to Salvage");
                 tLauncher.SubscribeToSalvageEvent();
+                controller.UI.Initialize(tLauncher.TotalAmmoCount);
+                
             }
-            
-            controller.UI.Initialize(tLauncher.TotalAmmoCount);
         }
         
         private void OnDestroy()
@@ -305,7 +308,7 @@ namespace Hadal.Player.Behaviours
         {
             //if (UIManager.IsNull) return;
 
-            controller.UI.UpdateFlooding(ratio, tLauncher.IsReloading);
+            //controller.UI.UpdateFlooding(ratio, tLauncher.IsReloading);
         }
 
         #endregion

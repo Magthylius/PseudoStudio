@@ -29,9 +29,10 @@ namespace Hadal.AI.States
 
         public override void OnStateStart()
         {
-            RuntimeData.ResetAnticipationTicker();
-
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
+
+            RuntimeData.ResetAnticipationTicker();
+            RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
             NavigationHandler.SetCanPath(true);
 
             toGoAmbushTimer = settings.ToGoAmbushTime;

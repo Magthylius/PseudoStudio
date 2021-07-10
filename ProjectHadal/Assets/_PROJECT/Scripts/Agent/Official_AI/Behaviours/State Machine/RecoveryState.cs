@@ -25,7 +25,6 @@ namespace Hadal.AI.States
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
-            RuntimeData.UpdateCumulativeDamageThreshold(settings.GetEscapeDamageThreshold(Brain.HealthManager.GetCurrentHealth));
             SetNewTargetCavern();
             AllowStateTick = true;
         }
@@ -38,14 +37,13 @@ namespace Hadal.AI.States
                 RuntimeData.TickRecoveryTicker(Time.deltaTime);
 
             //! When hit too much or time too long, force back into Engagement State
-            if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.HasCumulativeDamageExceeded)
+            if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.IsCumulativeDamageCountReached)
             {
                 //! If not travelling and has players in same cavern
                 if (AICavern && AICavern.GetPlayerCount > 0)
                 {
                     RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
-                    // RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                     RuntimeData.ResetRecoveryTicker();
                     AllowStateTick = false;
                 }

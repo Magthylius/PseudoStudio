@@ -99,11 +99,12 @@ namespace Hadal.AI
             }
         }
 
-        private IEnumerator DoThreshAttack(int dps)
+        private IEnumerator DoThreshAttack(int dps, System.Action successCallback, System.Action failureCallback)
         {
+            bool success = true;
             int totalDamageSeconds = Settings.G_TotalThreshTimeInSeconds;
             isDamaging = true;
-            NavigationHandler.Disable(false);
+            NavigationHandler.DisableWithLerp(2f);
 
             void StopAttack() => isDamaging = false;
 
@@ -113,10 +114,24 @@ namespace Hadal.AI
                 StopAttack);
 
             while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
+            {
+                if (RuntimeData.IsCumulativeDamageCountReached)
+                {
+                    RuntimeData.ResetCumulativeDamageCount();
+                    success = false;
+                    TryDebug("Cumulative damage count threshold reached. Ending thresh damage early.");
+                    break;
+                }
                 yield return null;
+            }
 
             NavigationHandler.Enable();
             TryDebug("Thresh damage in inner routine is finished!");
+
+            if (success)
+                successCallback?.Invoke();
+            else
+                failureCallback?.Invoke();
         }
 
         public IEnumerator DefensiveStance(int stanceIndex)
@@ -150,7 +165,10 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.GetThreshDamagePerSecond(EngagementType.Defensive, RuntimeData.IsEggDestroyed)));
+                    var threshRoutineData = new CoroutineData(Brain,
+                        DoThreshAttack(
+                            Settings.GetThreshDamagePerSecond(EngagementType.Defensive, RuntimeData.IsEggDestroyed),
+                            null, null));
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
                     TryDebug("Thresh damage in outer routine is finished!");
@@ -181,9 +199,45 @@ namespace Hadal.AI
             bool waitForJtimer = false;
             int jTimerIndex = 5 - stanceIndex;
 
+            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
+
             while (JState.IsBehaviourRunning)
             {
+                //! When the behaviour takes too long
+                if (IsJudgementThresholdReached(jTimerIndex))
+                {
+                    TryDebug("Aggressive behaviour took too long, ending immediately.");
+                    break;
+                }
 
+                //! Stop when there are no more players
+                if (PlayerCountDroppedTo0)
+                {
+                    TryDebug("No more players detected in cavern, stopping aggressive behaviour.");
+                    break;
+                }
+
+                //! Thresh if is carrying a player & is not yet threshing
+                if (Brain.IsCarryingAPlayer() && !isAttacking)
+                {
+                    isAttacking = true;
+
+                    TryDebug("Starting threshing routine.");
+                    var threshRoutineData = new CoroutineData(Brain,
+                        DoThreshAttack(
+                            Settings.GetThreshDamagePerSecond(EngagementType.Aggressive, RuntimeData.IsEggDestroyed),
+                            () => RuntimeData.UpdateConfidenceValue(Settings.ConfidenceIncrementValue),
+                            null
+                        )
+                    );
+                    yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
+
+                    TryDebug("Thresh damage in outer routine is finished!");
+
+                    Brain.TryDropCarriedPlayer();
+                    TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
+                    break;
+                }
                 yield return null;
             }
 
@@ -194,7 +248,8 @@ namespace Hadal.AI
             //! Handle Behaviour ending
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
-            yield return null;
+
+            yield return approachRoutineData.Coroutine;
         }
 
         public IEnumerator AmbushStance()
@@ -221,7 +276,13 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.GetThreshDamagePerSecond(EngagementType.Ambushing, RuntimeData.IsEggDestroyed)));
+                    var threshRoutineData = new CoroutineData(Brain,
+                        DoThreshAttack(
+                            Settings.GetThreshDamagePerSecond(EngagementType.Ambushing, RuntimeData.IsEggDestroyed),
+                            () => RuntimeData.UpdateConfidenceValue(Settings.ConfidenceIncrementValue),
+                            () => RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue)
+                        )
+                    );
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
                     TryDebug("Thresh damage in outer routine is finished!");

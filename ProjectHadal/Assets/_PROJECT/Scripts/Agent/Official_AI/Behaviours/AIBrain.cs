@@ -167,16 +167,14 @@ namespace Hadal.AI
 
         private void OnDestroy()
         {
-            try
+            if (cavernManager != null)
             {
                 cavernManager.AIEnterCavernEvent -= OnCavernEnter;
                 cavernManager.PlayerEnterCavernEvent -= OnPlayerEnterAICavern;
                 cavernManager.AIEnterTunnelEvent -= OnTunnelEnter;
                 cavernManager.AILeftTunnelEvent -= OnTunnelLeave;
             }
-            catch { }
-            
-            Egg.eggDestroyedEvent -= HandleEggDestroyedEvent;
+            if (Egg != null) Egg.eggDestroyedEvent -= HandleEggDestroyedEvent;
         }
 
         void Setup()
@@ -189,11 +187,14 @@ namespace Hadal.AI
             Egg = FindObjectOfType<AIEgg>();
 
             //! Event handling
-            cavernManager.AIEnterCavernEvent += OnCavernEnter;
-            cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
-            cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
-            cavernManager.AILeftTunnelEvent += OnTunnelLeave;
-            Egg.eggDestroyedEvent += HandleEggDestroyedEvent;
+            if (cavernManager != null)
+            {
+                cavernManager.AIEnterCavernEvent += OnCavernEnter;
+                cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
+                cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
+                cavernManager.AILeftTunnelEvent += OnTunnelLeave;
+            }
+            if (Egg != null) Egg.eggDestroyedEvent += HandleEggDestroyedEvent;
 
             PlayerManager pManager = PlayerManager.Instance;
             if (pManager != null && PhotonNetwork.IsMasterClient)
@@ -491,7 +492,15 @@ namespace Hadal.AI
 
         private void HandleEggDestroyedEvent(bool isDestroyed)
         {
-            RuntimeData.SetIsEggDestroyed(isDestroyed);
+            if (isDestroyed)
+            {
+                RuntimeData.SetIsEggDestroyed(true);
+                RuntimeData.UpdateBonusConfidence(MachineData.EggDestroyedPermanentConfidence);
+                return;
+            }
+
+            RuntimeData.SetIsEggDestroyed(false);
+            RuntimeData.UpdateBonusConfidence(0);
         }
 
         #endregion

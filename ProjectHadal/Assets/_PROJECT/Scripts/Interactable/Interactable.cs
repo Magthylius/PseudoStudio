@@ -34,11 +34,12 @@ namespace Hadal.Interactables
 
         public void REInteract(EventData obj)
         {
+            Debug.LogWarning("YO I RECEIVED EVENT");
             if (obj.Code == (byte)ByteEvents.PLAYER_INTERACT)
             {  
-                object[] data = (object[])obj.CustomData;
+                int data = (int)obj.CustomData;
 
-                if ((int)data[0] == interactableID)
+                if (data == interactableID)
                 {
                     ableToInteract = false;
                 }

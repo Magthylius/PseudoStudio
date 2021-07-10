@@ -18,6 +18,7 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_CarryDelayTimer;
         [Min(0)] public int G_TotalThreshTimeInSeconds;
         [Min(0)] public int G_BaseThreshDamagePerSecond;
+        [Min(0)] public int G_DisruptionDamageCount;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;
@@ -33,7 +34,6 @@ namespace Hadal.AI.States
         public bool AllowTarget_IsolatedPlayer = true;
 
         [Header("Judgement Settings")]
-        [Min(0f)] public float HealthRatioThreshold = 0.5f;
         [Min(0f)] public float JudgementTimer1 = 30f;
         [Min(0f)] public float JudgementTimer2 = 45f;
         [Min(0f)] public float JudgementTimer3 = 60f;

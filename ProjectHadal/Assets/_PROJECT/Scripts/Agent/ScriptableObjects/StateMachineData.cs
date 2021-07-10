@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hadal.AI.States
@@ -23,6 +21,6 @@ namespace Hadal.AI.States
         [Min(0)] public int MinConfidence;
         [Min(0)] public int MaxConfidence;
         [Min(0)] public int InitialConfidence;
-        [Min(0)] public int NestDestroyedPermanentConfidence;
+        [Min(0)] public int EggDestroyedPermanentConfidence;
     }
 }
