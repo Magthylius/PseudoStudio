@@ -478,9 +478,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leviathanBody: {fileID: 2100000, guid: bc12ffc3ce76c0c4c8bd082539246af0, type: 2}
   leviathanRenderer: {fileID: 6212149658417784948}
-  transitionSpeed: 1
-  anticipationStateColor: {r: 0, g: 0.20392157, b: 2.9960785, a: 0}
+  transitionSpeed: 2
+  otherStateColor: {r: 0, g: 0.20392157, b: 2.9960785, a: 0}
   judgementStateColor: {r: 6.0535517, g: 0.11502131, b: 0, a: 0}
+  ambushStateColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &5140033063587931876
 GameObject:
   m_ObjectHideFlags: 0
