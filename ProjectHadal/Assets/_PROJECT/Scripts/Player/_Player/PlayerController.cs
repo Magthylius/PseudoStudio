@@ -32,6 +32,7 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] PlayerInteract interact;
         [Foldout("Components"), SerializeField] PlayerCollisions collisions;
         [Foldout("Components"), SerializeField] UIManager playerUI;
+        [Foldout("Components"), SerializeField] DodgeBooster dodgeBooster;
 
         [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] string localPlayerLayer;
@@ -140,7 +141,11 @@ namespace Hadal.Player
             shooter.DoUpdate(DeltaTime);
 
             // mover for Vector Type.
-            if (CanMove) mover.DoUpdate(DeltaTime);
+            if (CanMove)
+            {
+                mover.DoUpdate(DeltaTime);
+                dodgeBooster.DoUpdate(DeltaTime);
+            }
         }
 
         protected override void FixedUpdate()
