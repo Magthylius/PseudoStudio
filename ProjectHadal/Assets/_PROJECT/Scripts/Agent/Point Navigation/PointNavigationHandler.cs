@@ -852,7 +852,7 @@ namespace Hadal.AI
                     if (lairCavernLingerTimer > 0f) return;
                     break;
                 }
-                default: break;
+                default: return;
             }
 
             _tickCavernLingerTimer = false;
