@@ -88,6 +88,7 @@ namespace Hadal.Player.Behaviours
             }
             else
             {
+                Debug.LogWarning("Subscribed to Salvage");
                 tLauncher.SubscribeToSalvageEvent();
             }
         }
