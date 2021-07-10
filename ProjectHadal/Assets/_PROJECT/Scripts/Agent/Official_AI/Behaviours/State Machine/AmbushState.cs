@@ -37,12 +37,10 @@ namespace Hadal.AI.States
             }
 
             ambushTimer -= Brain.DeltaTime;
-            $"AMBUSHTIMER: {ambushTimer}".Msg();
 
             if (cavernHandler.GetPlayerCount > 0)
             {
                 RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
-                Debug.LogWarning("MY CONFIDENCE: " + Brain.RuntimeData.ActualConfidenceValue);
                 RuntimeData.SetBrainState(BrainState.Judgement);
             }
 
