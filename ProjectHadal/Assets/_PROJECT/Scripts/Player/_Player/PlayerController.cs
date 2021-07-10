@@ -154,6 +154,7 @@ namespace Hadal.Player
             if (isDummy) return;
 
             if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
+            if (CanMove) dodgeBooster.DoFixedUpdate(FixedDeltaTime);
             if (CanRotate) rotator.DoFixedUpdate(FixedDeltaTime);
         }
 

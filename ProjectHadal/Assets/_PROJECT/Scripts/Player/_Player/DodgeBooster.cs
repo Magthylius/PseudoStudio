@@ -7,6 +7,15 @@ using Hadal.Inputs;
 
 namespace Hadal.Player
 {
+    enum BoostDirection
+    {
+        Left = 0,
+        Right,
+        Up,
+        Down,
+        Forward,
+        Backward,
+    };
     public class DodgeBooster : MonoBehaviour, IPlayerComponent
     {
         public event Action<DodgeBooster> OnRestock;
@@ -15,6 +24,10 @@ namespace Hadal.Player
 
         [SerializeField, Range(0.1f, 0.6f)] private float tapDetectionTime;
         [SerializeField] private float dodgeForce;
+        private bool isBoosting;
+        private float boostTimer;
+        private BoostDirection boostDirection;
+        [SerializeField] private float boostTimerMax;
 
         #region Boost Refill logic
         [SerializeField] private int maxReserveCapacity;
@@ -59,6 +72,18 @@ namespace Hadal.Player
                 }
             }
 
+            if (isBoosting)
+            {
+                boostTimer += deltaTime;
+
+                if (boostTimer > boostTimerMax)
+                {
+                    isBoosting = false;
+                    playerController.GetInfo.Rigidbody.velocity /= 2;
+                    boostTimer = 0;
+                }
+            }
+
             if (ReserveCount < maxReserveCapacity && !IsRegenerating)
             {
                 IsRegenerating = true;
@@ -71,6 +96,40 @@ namespace Hadal.Player
                 _chamberReloadTimer.Restart();
             }
         }
+
+        public void DoFixedUpdate(float fixedDeltaTime)
+        {
+            if(isBoosting)
+            {
+                switch (boostDirection) 
+                {
+                    case BoostDirection.Left:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.left * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.Right:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.right * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.Up:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.up * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.Down:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.down * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.Forward:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.forward * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.Backward:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.back * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                }
+            }
+        }
         #endregion
 
         public void Inject(PlayerController controller)
@@ -80,36 +139,41 @@ namespace Hadal.Player
 
         private bool CheckForInput()
         {
+            if (isBoosting)
+                return false;
+
             bool result = true;
+
             if (input.DoubleHorizontalRight)
             {
-                playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.right * dodgeForce, ForceMode.Impulse);
+                boostDirection = BoostDirection.Right;
             }
             else if (input.DoubleHorizontalLeft)
             {
-                playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.left * dodgeForce, ForceMode.Impulse);
+                boostDirection = BoostDirection.Left;
             }
             else if (input.DoubleHoverUp)
             {
-                playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.up * dodgeForce, ForceMode.Impulse);
+                boostDirection = BoostDirection.Up;
             }
             else if (input.DoubleHoverDown)
             {
-                playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.down * dodgeForce, ForceMode.Impulse);
+                boostDirection = BoostDirection.Down;
             }
             else if (input.DoubleVerticalForward)
             {
-                playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.forward * dodgeForce, ForceMode.Impulse);
+                boostDirection = BoostDirection.Forward;
             }
             else if (input.DoubleVerticalBackward)
             {
-                playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.back * dodgeForce, ForceMode.Impulse);
+                boostDirection = BoostDirection.Backward;
             }
             else
             {
                 result = false;
             }
 
+            isBoosting = result;
             return result;
         }
 

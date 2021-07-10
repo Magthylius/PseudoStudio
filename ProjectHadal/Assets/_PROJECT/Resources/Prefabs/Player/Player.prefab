@@ -991,9 +991,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tapDetectionTime: 0.3
-  dodgeForce: 20
+  dodgeForce: 70
+  boostTimerMax: 0.5
   maxReserveCapacity: 2
-  reserveRegenerationTime: 2
+  reserveRegenerationTime: 10
   maxChamberCapacity: 1
   chamberReloadTime: 0
   maxOnLoadOut: 1
