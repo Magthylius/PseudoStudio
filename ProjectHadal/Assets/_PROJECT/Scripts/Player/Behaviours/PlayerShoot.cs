@@ -89,8 +89,9 @@ namespace Hadal.Player.Behaviours
             else
             {
                 tLauncher.SubscribeToSalvageEvent();
-                controller.UI.Initialize(tLauncher.TotalAmmoCount);
             }
+            
+            controller.UI.Initialize(tLauncher.TotalAmmoCount);
         }
         
         private void OnDestroy()
