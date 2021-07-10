@@ -71,7 +71,7 @@ namespace Hadal.Player.Behaviours
 
         private void Start()
         {
-            /*UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);*/
+            UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             DoDebugEnabling(debugKey);
 
             aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
@@ -305,7 +305,7 @@ namespace Hadal.Player.Behaviours
         {
             //if (UIManager.IsNull) return;
 
-            controller.UI.UpdateFlooding(ratio, tLauncher.IsReloading);
+            //controller.UI.UpdateFlooding(ratio, tLauncher.IsReloading);
         }
 
         #endregion
