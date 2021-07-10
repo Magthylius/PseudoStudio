@@ -101,15 +101,14 @@ namespace Hadal.AI
 
         private IEnumerator DoThreshAttack(int dps)
         {
-            int totalDamagePerSecond = Settings.G_TotalThreshTimeInSeconds;
-
+            int totalDamageSeconds = Settings.G_TotalThreshTimeInSeconds;
             isDamaging = true;
             NavigationHandler.Disable(false);
 
             void StopAttack() => isDamaging = false;
 
             DamageManager.ApplyDoT(Brain.CarriedPlayer,
-                totalDamagePerSecond,
+                totalDamageSeconds,
                 dps,
                 StopAttack);
 
