@@ -27,6 +27,12 @@ namespace Tenshi.UnitySoku
             }
         }
 
+        public void Stop()
+        {
+            if (Coroutine == null) return; 
+            _owner.StopCoroutine(Coroutine);
+        }
+
         ~CoroutineData()
         {
             if (Coroutine == null) return;
