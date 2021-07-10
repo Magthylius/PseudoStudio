@@ -7,16 +7,20 @@ namespace Hadal.UI
 {
     public class UIShootTracer : MonoBehaviour
     {
+        [Header("References")]
         public LineRenderer line;
         public Light hitLight;
         public Transform lineStartTransform;
 
         private Transform playerCamera;
-        
+ 
         private bool isActive = false;
         private RaycastHit forwardHit;
-
         private LayerMask rayIgnoreMask;
+
+        [Header("Color settings")] 
+        public Material redMat;
+        public Material blueMat;
 
         private void Start()
         {
@@ -44,6 +48,9 @@ namespace Hadal.UI
 
         public void InjectDependencies(Camera pCamera) => playerCamera = pCamera.transform;
 
+        public void ToBlue() => line.material = blueMat;
+        public void ToRed() => line.material = redMat;
+        
         public void Activate()
         {
             isActive = true;

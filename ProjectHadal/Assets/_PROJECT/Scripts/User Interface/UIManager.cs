@@ -206,14 +206,16 @@ namespace Hadal.UI
         {
             torpLoader.fillAmount = progress;
             floodText.SetActive(showFlooding);
+            if (showFlooding) ShootTracer.ToBlue();
+            else ShootTracer.ToRed();
         }
 
         public void UpdateTubes(int torpedoCount, bool reloadedEvent = false)
         {
             torpCount = torpedoCount;
 
-            //! TorpedoCount does not
-            int count = 1;
+            //! TorpedoCount is -1 due to loader being represented thru other code
+            int count = 0;
             foreach (UIFillerBehaviour filler in torpedoFillers)
             {
                 if (count < torpCount) filler.ToFilled();
@@ -223,6 +225,11 @@ namespace Hadal.UI
 
             torpIsEmpty = torpCount == 0;
             torpedoEmptyText.SetActive(torpIsEmpty);
+
+            if (torpIsEmpty)
+            {
+                ShootTracer.ToBlue();
+            }
         }
 
         public void UpdateFiringVFX(bool emptyChamber)
