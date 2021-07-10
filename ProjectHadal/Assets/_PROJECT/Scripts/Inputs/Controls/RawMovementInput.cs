@@ -19,6 +19,7 @@ namespace Hadal.Inputs
 
         //! Double tapping
         bool forwardPressedPreviously = false;
+        bool forwardLetGoPreviously = true;
         bool backwardPressedPreviously = false;
         bool leftPressedPreviously = false;
         bool rightPressedPreviously = false;
@@ -31,10 +32,16 @@ namespace Hadal.Inputs
         {
             get
             {
+                if (!forwardLetGoPreviously)
+                {
+                    if (VerticalAxis == 0f)
+                        forwardLetGoPreviously = true;
+                }
+
                 if (!VerticalForward)
                     return false;
 
-                if (forwardPressedPreviously)
+                if (forwardPressedPreviously && forwardLetGoPreviously)
                 {
                     forwardPressedPreviously = false;
 
@@ -52,6 +59,7 @@ namespace Hadal.Inputs
                 //detect first press
                 ResetAllPreviousKeys();
                 forwardPressedPreviously = true;
+                forwardLetGoPreviously = false;
                 firstPressTime = Time.time;
                 return false;
             }
@@ -206,6 +214,7 @@ namespace Hadal.Inputs
         private void ResetAllPreviousKeys()
         {
             forwardPressedPreviously = false;
+            forwardLetGoPreviously = true;
             backwardPressedPreviously = false;
             leftPressedPreviously = false;
             rightPressedPreviously = false;
