@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Player;
+using Tenshi;
 
 namespace Hadal.AI.States
 {
@@ -118,5 +119,6 @@ namespace Hadal.AI.States
                 4 => JudgementTimer4,
                 _ => 0f
             };
+        
     }
 }

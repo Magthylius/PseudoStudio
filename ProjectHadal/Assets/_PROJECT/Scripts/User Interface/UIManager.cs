@@ -33,6 +33,7 @@ namespace Hadal.UI
 
         [Header("External References")] 
         public UIShootTracer ShootTracer;
+        public Camera playerCamera;
 
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleGroup;
@@ -259,6 +260,8 @@ namespace Hadal.UI
             playerRotationInput = RotationInput;
 
             playerRigidbody = playerTransform.GetComponent<Rigidbody>();
+            
+            ShootTracer.InjectDependencies(playerCamera);
         }
         
         void UpdateInformation()

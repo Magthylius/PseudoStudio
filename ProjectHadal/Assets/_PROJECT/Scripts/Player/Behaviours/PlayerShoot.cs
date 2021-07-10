@@ -32,8 +32,8 @@ namespace Hadal.Player.Behaviours
         private Ray aimingRay;
         float aimPointYDelta;
         
-        RaycastHit aimHit;
-        private bool aimHitBool;
+        //RaycastHit aimHit;
+        //private bool aimHitBool;
 
         private bool enableTracer = false;
 
@@ -116,10 +116,11 @@ namespace Hadal.Player.Behaviours
         
         public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
         {
-            if (aimHitBool)
+            /*if (aimHitBool)
             {
                 info.AimedPoint = aimHit.point;
-            }
+            }*/
+            info.AimedPoint = controller.UI.ShootTracer.HitPoint;
             return info;
         }
 
@@ -273,10 +274,10 @@ namespace Hadal.Player.Behaviours
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
 
-            aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
+            /*aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
                 Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
                 
-            controller.UI.ShootTracer.SetEndPoint(aimHit.point);
+            controller.UI.ShootTracer.SetEndPoint(aimHit.point);*/
         }
         private void UpdateUITorpedoCount(bool isReloadEvent)
         {
