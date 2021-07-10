@@ -47,6 +47,8 @@ namespace Hadal.AI
         private bool isAttacking;
         private bool isDamaging;
         private bool waitForJtimer;
+        private CoroutineData threshRoutineData;
+        private CoroutineData approachRoutineData;
 
         #region Coroutines
 
@@ -259,7 +261,7 @@ namespace Hadal.AI
             waitForJtimer = false;
             int jTimerIndex = 1;
 
-            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer));
+            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer));
 
             while (JState.IsBehaviourRunning)
             {
@@ -276,7 +278,7 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain,
+                    threshRoutineData = new CoroutineData(Brain,
                         DoThreshAttack(
                             Settings.GetThreshDamagePerSecond(EngagementType.Ambushing, RuntimeData.IsEggDestroyed),
                             () => RuntimeData.UpdateConfidenceValue(Settings.ConfidenceIncrementValue),
@@ -284,6 +286,8 @@ namespace Hadal.AI
                         )
                     );
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
+                    threshRoutineData.Stop();
+                    threshRoutineData = null;
 
                     TryDebug("Thresh damage in outer routine is finished!");
 
@@ -300,10 +304,12 @@ namespace Hadal.AI
                 yield return null;
 
             //! Handle Behaviour ending
+            approachRoutineData.Stop();
+            approachRoutineData = null;
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
             
-            yield return approachRoutineData.Coroutine;
+            yield return null;
         }
 
         #endregion
@@ -329,6 +335,10 @@ namespace Hadal.AI
             if (!isStunned)
                 return;
 
+            threshRoutineData?.Stop();
+            threshRoutineData = null;
+            approachRoutineData?.Stop();
+            approachRoutineData = null;
             JState.IsBehaviourRunning = false;
             JState.StopAnyRunningCoroutines();
             NavigationHandler.Enable();

@@ -33,7 +33,7 @@ namespace Hadal.Usables
             if(interactionType == InteractionType.Salvage_Torpedo)
             {
                 Debug.LogError("Torpedo Added");
-                IncrementChamber();
+                IncrementReserve();
             }
         }
             /*  private const string ReserveGroupName = "Reserves";
