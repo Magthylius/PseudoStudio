@@ -78,7 +78,15 @@ namespace Hadal.Player.Behaviours
             aimPointYDelta = (torpedoFirePoint.position - aimPoint.position).magnitude;
 
             // listen to salvage event, if local.
-            if (controller == LocalPlayerData.PlayerController)
+            if (NetworkEventManager.Instance.isOfflineMode)
+            {
+                if (controller == LocalPlayerData.PlayerController)
+                {
+                    Debug.LogWarning("Subscribed to Salvage");
+                    tLauncher.SubscribeToSalvageEvent();
+                }
+            }
+            else
             {
                 tLauncher.SubscribeToSalvageEvent();
                 controller.UI.Initialize(tLauncher.TotalAmmoCount);
