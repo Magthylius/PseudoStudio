@@ -729,7 +729,7 @@ namespace Hadal.AI
                         rBody.velocity = Vector3.zero;
                     }
                     pilotTrans.position = currentPoint.GetPosition;
-                    pilotTrans.rotation = Quaternion.Euler(currentPoint.transform.rotation.x, currentPoint.transform.rotation.y, currentPoint.transform.rotation.z + 180);
+                    pilotTrans.rotation = Quaternion.Euler(currentPoint.transform.rotation.x, currentPoint.transform.rotation.y + 180, currentPoint.transform.rotation.z);
                 }
 
                 if (isOnQueuePath)
