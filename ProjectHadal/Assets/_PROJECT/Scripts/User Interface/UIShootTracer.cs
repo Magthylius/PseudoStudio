@@ -54,7 +54,7 @@ namespace Hadal.UI
         {
             isActive = false;
             //! make it hide itself
-            line.SetPosition(1, lineStartTransform.position);
+            line.SetPosition(1, line.GetPosition(0));
             
             hitLight.gameObject.SetActive(false);
             hitLight.transform.position = lineStartTransform.position;
@@ -63,6 +63,7 @@ namespace Hadal.UI
         public bool IsActive => isActive;
 
         public Vector3 HitPoint => forwardHit.point;
+        public float HitDistance => forwardHit.distance;
     }
 
 }
