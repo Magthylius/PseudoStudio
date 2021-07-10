@@ -80,6 +80,7 @@ namespace Hadal.Player.Behaviours
             // listen to salvage event, if local.
             if (controller == LocalPlayerData.PlayerController)
             {
+                Debug.LogWarning("Subscribed to Salvage"); 
                 tLauncher.SubscribeToSalvageEvent();
             }
         }
