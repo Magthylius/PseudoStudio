@@ -71,18 +71,15 @@ namespace Hadal.AI.States
         {
             if (sensory.DetectedPlayersCount > 0 && sensory.DetectedPlayersCount < 4)
             {
-                Debug.LogWarning("BRAIN NULL?: "  + Brain.CurrentTarget);
                 float distance = Vector3.Distance(Brain.transform.position, Brain.CurrentTarget.transform.position);
                 if (distance < settings.AM_TargetPlayerRange && Brain.CurrentTarget != null)
                 {
                     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
-                    Debug.LogWarning("VALUE CONF: " + RuntimeData.ActualConfidenceValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
                 }
                 else
                 {
                     RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-                    Debug.LogWarning("VALUE CONF: " + RuntimeData.ActualConfidenceValue);
                     RuntimeData.SetBrainState(BrainState.Recovery);
                 }
 
