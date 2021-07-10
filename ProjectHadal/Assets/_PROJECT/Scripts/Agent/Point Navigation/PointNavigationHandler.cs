@@ -857,7 +857,7 @@ namespace Hadal.AI
 
             _tickCavernLingerTimer = false;
             ResetCavernLingerTimer();
-            SetQueuedPathFromCache();
+            SetQueuedPathFromCache(true);
         }
 
         /// <summary> The actual logic that selects a new nav point. The algorithm behaviour can be adjusted with
