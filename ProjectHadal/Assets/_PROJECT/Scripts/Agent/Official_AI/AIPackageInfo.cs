@@ -95,6 +95,9 @@ namespace Hadal.AI.Information
         {
             while (enableUpdate)
             {
+                while (brain.CavernManager == null)
+                    yield return null;
+
                 //! AIBrain
                 targetCavern = brain.TargetMoveCavern ? brain.TargetMoveCavern.cavernTag : CavernTag.Invalid;
                 nextCavern = brain.NextMoveCavern ? brain.NextMoveCavern.cavernTag : CavernTag.Invalid;
