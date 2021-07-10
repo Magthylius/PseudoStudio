@@ -19,10 +19,10 @@ MonoBehaviour:
   G_ApproachFarDistanceThreshold: 500
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 10
-  G_BaseThreshDamagePerSecond: 5
+  G_BaseThreshDamagePerSecond: 4
   G_DisruptionDamageCount: 2
   AM_TargetPlayerRange: 100
-  AM_MaxWaitTime: 120
+  AM_MaxWaitTime: 35
   AM_PounceSpeedMultiplier: 1.5
   AM_CarryDelayTimer: 0.8
   AM_AdditionalThreshDamagePerSecond: 0
@@ -35,5 +35,5 @@ MonoBehaviour:
   JudgementTimer3: 25
   JudgementTimer4: 20
   AGG_AdditionalThreshDamagePerSecond: 1
-  DEF_AdditionalThreshDamagePerSecond: 0
+  DEF_AdditionalThreshDamagePerSecond: -1
   EGG_PermanentThreshDamagePerSecond: 1
