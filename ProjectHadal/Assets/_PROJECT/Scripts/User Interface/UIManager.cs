@@ -10,6 +10,7 @@ using Hadal.Networking;
 using Hadal.Networking.UI.Loading;
 using Hadal.PostProcess;
 using Hadal.Locomotion;
+using UnityEngine.Serialization;
 
 //Created by Jet, Edited by Jon 
 namespace Hadal.UI
@@ -57,11 +58,11 @@ namespace Hadal.UI
         [SerializeField] RectTransform lowerMoverGroup;
 
         [Header("Loader Filler Settings")]
-        [SerializeField] Image leftLoaderFiller;
+        /*[SerializeField] Image leftLoaderFiller;
         [SerializeField] Image rightLoaderFiller;
         [SerializeField, Range(0f, 1f)] float fillerMinFillClamp = 0.1f;
         [SerializeField, Range(0f, 1f)] float fillerMaxFillClamp = 0.5f;
-        [SerializeField] float loaderFillLerpSpeed = 5f;
+        [SerializeField] float loaderFillLerpSpeed = 5f;*/
 
         FlexibleRect reticleDirectorsFR;
 
@@ -80,18 +81,19 @@ namespace Hadal.UI
         Transform playerTransform;
         Rigidbody playerRigidbody;
 
-        [Header("Prefab Settings")]
+        [Header("Torpedo Settings")] 
         public GameObject torpedoFillerPrefab;
         public Transform torpedoFillerParent;
         public GameObject torpedoEmptyText;
-        
-        [Header("Torpedo Settings")]
+
         public int torpCount;
+        public Image torpLoader;
         public List<Image> reloadProgressors;
         public GameObject floodText;
         public GameObject reloadText;
         
         List<UIFillerBehaviour> torpedoFillers;
+        private bool torpIsEmpty = false;
 
         [Header("VFX Settings")]
         public ParticleSystem torpedoReloadedVFX;
@@ -130,7 +132,7 @@ namespace Hadal.UI
             SetupPauseMenu();
             PNTR_Resume();
 
-            Initialize(4);
+            //Initialize(3);
             //sl_UI = DebugManager.Instance.CreateScreenLogger();
             //Debug.LogWarning("w: " + Screen.width + " | h: " + Screen.height);
             //Debug.LogWarning(Screen.currentResolution);
@@ -153,29 +155,18 @@ namespace Hadal.UI
         {
             if (playerTransform == null) return;
 
-            /*if (!pauseMenuOpen)
-            {
-                UpdateReticle();
-                UpdateInformation();
-                UpdateProjectileTracking();
-                UpdateUIDisplacement();
-            }*/
-
             UpdateReticle();
-            UpdateInformation();
-            UpdateProjectileTracking();
             UpdateUIDisplacement();
         }
-
-        //private void OnDestroy() => OnHealthChange -= UpdateHealthBar;
+        
         #endregion
 
         #region External calls
 
-        void Initialize(int totalTorpedoCount)
+        public void Initialize(int totalTorpedoCount)
         {
             torpedoFillers = new List<UIFillerBehaviour>();
-            StartCoroutine(SpawnFillers(totalTorpedoCount, true));
+            StartCoroutine(SpawnFillers(totalTorpedoCount - 1, true));
             
             torpedoEmptyText.SetActive(false);
         }
@@ -190,11 +181,13 @@ namespace Hadal.UI
                 
                 if (startFilled) filler.ToFilled();
                 else filler.ToHollow();
-
-                yield return new WaitForEndOfFrame();
+                
+                //! We can delay here to make an effect
+                //yield return new WaitForEndOfFrame();
             }
             
             torpedoFillers.Reverse();
+            yield return new WaitForEndOfFrame();
         }
         
         public void Activate()
@@ -211,31 +204,25 @@ namespace Hadal.UI
         #region Torpedoes
         public void UpdateFlooding(float progress, bool showFlooding)
         {
-            /*foreach (Image img in floodIndicators) img.fillAmount = progress;
-
-            if (progress < 1f) fireReticle.SetActive(false);
-            else fireReticle.SetActive(true);*/
-
-            float fillProgress = Mathf.Lerp(fillerMinFillClamp, fillerMaxFillClamp, progress);
-            leftLoaderFiller.fillAmount = fillProgress;
-            rightLoaderFiller.fillAmount = fillProgress;
-
+            torpLoader.fillAmount = progress;
             floodText.SetActive(showFlooding);
-
-            //DebugLog("Flood Progress: " + progress);
         }
 
         public void UpdateTubes(int torpedoCount, bool reloadedEvent = false)
         {
             torpCount = torpedoCount;
 
-            int count = 0;
+            //! TorpedoCount does not
+            int count = 1;
             foreach (UIFillerBehaviour filler in torpedoFillers)
             {
                 if (count < torpCount) filler.ToFilled();
                 else filler.ToHollow();
                 count++;
             }
+
+            torpIsEmpty = torpCount == 0;
+            torpedoEmptyText.SetActive(torpIsEmpty);
         }
 
         public void UpdateFiringVFX(bool emptyChamber)
@@ -265,12 +252,6 @@ namespace Hadal.UI
             ShootTracer.InjectDependencies(PlayerCamera);
             ScreenDataHandler.InjectDependencies(this, playerTransform);
         }
-        
-        void UpdateInformation()
-        {
-            if (leftLoaderFiller.fillAmount >= 0.5f) leftLoaderFiller.fillAmount = 0.5f;
-            if (rightLoaderFiller.fillAmount >= 0.5f) rightLoaderFiller.fillAmount = 0.5f;
-        }
 
         void UpdateUIDisplacement()
         {
@@ -278,14 +259,8 @@ namespace Hadal.UI
             velocity = -velocity / maxMovementInfluence * uiDisplacement;
             allUIParentFR.StartLerp(velocity);
             allUIParentFR.Step(uiLerpReactionSpeed * Time.deltaTime);
-
         }
-
-        void UpdateProjectileTracking()
-        {
-
-        }
-
+        
         public void TrackPlayerName(Transform otherPlayer, string playerName)
         {
             print("tracking: " + playerName);
