@@ -32,7 +32,7 @@ namespace Hadal.AI.States
             if (RuntimeData.IsPreviousBrainStateEqualTo(BrainState.Ambush))
             {
                 AllowStateTick = false;
-                //do stuff
+                PerformAmbushLinkBehaviour();
             }
         }
 
@@ -67,9 +67,17 @@ namespace Hadal.AI.States
 
         private void PerformBehaviour(bool isDefensive, int playerCount)
         {
+            StopAnyRunningCoroutines();
+
             //! When the aggressive routine has finished implementation, will uncomment the boolean
             // if (isDefensive)
                 currentRoutine = Brain.StartCoroutine(behaviour.DefensiveStance(playerCount));
+        }
+
+        private void PerformAmbushLinkBehaviour()
+        {
+            StopAnyRunningCoroutines();
+            currentRoutine = Brain.StartCoroutine(behaviour.AmbushStance());
         }
 
         public void ResetStateValues()

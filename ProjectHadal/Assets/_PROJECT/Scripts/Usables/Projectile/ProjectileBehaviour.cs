@@ -5,6 +5,7 @@ using Hadal.Networking;
 using ExitGames.Client.Photon;
 using Magthylius.DataFunctions;
 using Random = UnityEngine.Random;
+using Hadal.AudioSystem;
 
 //Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
@@ -30,6 +31,9 @@ namespace Hadal.Usables.Projectiles
         protected Timer impactDuration;
         protected bool isVisualizing;
         [SerializeField] protected float impactVFXTime = 5f;
+
+        [Header("Audio")]
+        [SerializeField] private AudioEventData impactAudio;
         
         
         #region Unity Lifecycle
@@ -56,7 +60,15 @@ namespace Hadal.Usables.Projectiles
             NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
             NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
             PPhysics.PhysicsFinished += Dump;
+
+            OnHit += PlayImpactAudioAtSelfPosition;
         }
+
+        protected virtual void OnDestroy()
+        {
+            OnHit -= PlayImpactAudioAtSelfPosition;
+        }
+
         #endregion
 
         #region Behavioural Methods
@@ -151,6 +163,15 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
+        private void PlayImpactAudioAtSelfPosition(bool didDamage) => PlayAudioAt(impactAudio, transform.position);
+
+        /// <summary> Players audio at a position. Automatically does null check so use this when playing sounds. </summary>
+        private void PlayAudioAt(AudioEventData audio, Vector3 position)
+        {
+            if (audio == null) return;
+            audio.Play(position);
+        }
+
         public void SetPositionRotation(Vector3 position, Quaternion rotation)
         {
             transform.position = position;
@@ -160,6 +181,9 @@ namespace Hadal.Usables.Projectiles
         #endregion
 
         #region Event Methods
+
+        protected void InvokeOnHit(bool didDamage) => OnHit?.Invoke(didDamage);
+
         protected virtual void REdump(EventData eventData)
         {
             object[] data = (object[])eventData.CustomData;

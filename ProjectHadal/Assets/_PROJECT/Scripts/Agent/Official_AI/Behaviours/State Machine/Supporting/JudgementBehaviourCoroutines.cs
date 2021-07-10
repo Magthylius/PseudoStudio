@@ -50,7 +50,7 @@ namespace Hadal.AI
 
         #region Coroutines
 
-        private IEnumerator MoveToCurrentTarget()
+        private IEnumerator MoveToCurrentTarget(float carryDelayTime)
         {
             while (JState.IsBehaviourRunning)
             {
@@ -65,7 +65,7 @@ namespace Hadal.AI
                 if (CloseThresholdReached && !canCarry)
                 {
                     canCarry = true;
-                    SetCarryDelayTimer();
+                    SetCarryDelayTimer(carryDelayTime);
                     TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
                     continue;
                 }
@@ -90,25 +90,23 @@ namespace Hadal.AI
 
                     bool success = Brain.TryCarryTargetPlayer();
                     TryDebug(success ? "Succeeded in carrying target player." : "Failed to carry target player, stopping behaviour.");
-                    if (!success)
-                    {
-                        waitForJtimer = true;
-                        break;
-                    }
+                    if (!success) waitForJtimer = true;
+
+                    break;
                 }
 
                 yield return null;
             }
         }
 
-        private IEnumerator DoThreshAttack()
+        private IEnumerator DoThreshAttack(int dps)
         {
             isDamaging = true;
             void StopAttack() => isDamaging = false;
 
             DamageManager.ApplyDoT(Brain.CarriedPlayer,
                 Settings.G_TotalThreshTimeInSeconds,
-                Settings.G_ThreshDamagePerSecond,
+                dps,
                 StopAttack);
 
             while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
@@ -124,7 +122,7 @@ namespace Hadal.AI
             waitForJtimer = false;
             int jTimerIndex = 5 - stanceIndex;
 
-            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget());
+            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
 
             while (JState.IsBehaviourRunning)
             {
@@ -148,7 +146,7 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack());
+                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.G_ThreshDamagePerSecond));
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
                     TryDebug("Thresh damage in outer routine is finished!");
@@ -193,6 +191,54 @@ namespace Hadal.AI
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
             yield return null;
+        }
+
+        public IEnumerator AmbushStance()
+        {
+            TryDebug($"Starting Ambush Behaviour in Judgement behaviour.");
+            JState.IsBehaviourRunning = true;
+            waitForJtimer = false;
+            int jTimerIndex = 1;
+
+            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer));
+
+            while (JState.IsBehaviourRunning)
+            {
+                //! When the behaviour takes too long
+                if (IsJudgementThresholdReached(jTimerIndex))
+                {
+                    TryDebug("Ambush behaviour took too long, ending immediately.");
+                    break;
+                }
+
+                //! Thresh if is carrying a player & is not yet threshing
+                if (Brain.IsCarryingAPlayer() && !isAttacking)
+                {
+                    isAttacking = true;
+
+                    TryDebug("Starting threshing routine.");
+                    var threshRoutineData = new CoroutineData(Brain, DoThreshAttack(Settings.AM_ThreshDamagePerSecond));
+                    yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
+
+                    TryDebug("Thresh damage in outer routine is finished!");
+
+                    Brain.TryDropCarriedPlayer();
+                    TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
+                    break;
+                }
+
+                yield return null;
+            }
+
+            //! If the wait boolean is true, will wait until the judgement timer is exceeded before handling behaviour end
+            while (!IsJudgementThresholdReached(jTimerIndex) && waitForJtimer)
+                yield return null;
+
+            //! Handle Behaviour ending
+            ResetStateValues();
+            RuntimeData.SetBrainState(BrainState.Recovery);
+            
+            yield return approachRoutineData.Coroutine;
         }
 
         #endregion
@@ -260,7 +306,7 @@ namespace Hadal.AI
         private bool IsJudgementThresholdReached(int i)
             => RuntimeData.HasJudgementTimerOfIndexExceeded(i);
 
-        private void SetCarryDelayTimer() => carryDelayTimer = Time.time + Settings.G_CarryDelayTimer;
+        private void SetCarryDelayTimer(float delay) => carryDelayTimer = Time.time + delay;
         private bool CarryDelayTimerReached => Time.time > carryDelayTimer;
 
 
