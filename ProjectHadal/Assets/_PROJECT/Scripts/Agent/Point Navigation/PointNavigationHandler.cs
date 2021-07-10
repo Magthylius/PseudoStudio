@@ -809,14 +809,12 @@ namespace Hadal.AI
 
             switch (cavernManager.GetCavernTagOfAILocation())
             {
-                case CavernTag.Crystal: { crystalCavernLingerTimer -= deltaTime; break; }
-                case CavernTag.Bioluminescent: { biolumiCavernLingerTimer -= deltaTime; break; }
-                case CavernTag.Hydrothermal_Deep: { hydrothermalCavernLingerTimer -= deltaTime; break; }
-                case CavernTag.Lair: { lairCavernLingerTimer -= deltaTime; break; }
+                case CavernTag.Crystal: { crystalCavernLingerTimer -= deltaTime;  Debug.Log("crystal: " + crystalCavernLingerTimer); if (crystalCavernLingerTimer > 0f) {return;} break; }
+                case CavernTag.Bioluminescent: { biolumiCavernLingerTimer -= deltaTime; Debug.Log("biolumi: " + biolumiCavernLingerTimer); if(biolumiCavernLingerTimer > 0f) {return;} break; }
+                case CavernTag.Hydrothermal_Deep: { hydrothermalCavernLingerTimer -= deltaTime; Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer); if(hydrothermalCavernLingerTimer > 0f) {return;} break; }
+                case CavernTag.Lair: { lairCavernLingerTimer -= deltaTime; Debug.Log("lair: " + lairCavernLingerTimer); if (lairCavernLingerTimer > 0f) { return; } break; }
                 default: { break; }
             }
-            if (crystalCavernLingerTimer > 0f || biolumiCavernLingerTimer > 0f
-                || lairCavernLingerTimer > 0f || hydrothermalCavernLingerTimer > 0f) return;
 
             _tickCavernLingerTimer = false;
             ResetCavernLingerTimer();
