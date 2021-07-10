@@ -335,9 +335,9 @@ namespace Hadal.AI
             if (!isStunned)
                 return;
 
-            threshRoutineData.Stop();
+            threshRoutineData?.Stop();
             threshRoutineData = null;
-            approachRoutineData.Stop();
+            approachRoutineData?.Stop();
             approachRoutineData = null;
             JState.IsBehaviourRunning = false;
             JState.StopAnyRunningCoroutines();
