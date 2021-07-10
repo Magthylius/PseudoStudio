@@ -81,6 +81,7 @@ namespace Hadal.Player.Behaviours
             if (controller == LocalPlayerData.PlayerController)
             {
                 tLauncher.SubscribeToSalvageEvent();
+                controller.UI.Initialize(tLauncher.TotalAmmoCount);
             }
         }
         

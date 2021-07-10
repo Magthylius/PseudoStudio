@@ -8797,11 +8797,6 @@ MonoBehaviour:
   maxReticleRotation: 7.5
   upperMoverGroup: {fileID: 1508645284559161200}
   lowerMoverGroup: {fileID: 6452786021334323892}
-  leftLoaderFiller: {fileID: 4449351797091005590}
-  rightLoaderFiller: {fileID: 5249372145227359803}
-  fillerMinFillClamp: 0
-  fillerMaxFillClamp: 1
-  loaderFillLerpSpeed: 5
   allUIParent: {fileID: 9094548731335266702}
   uiDisplacement: 15
   maxMovementInfluence: 50
@@ -8810,6 +8805,7 @@ MonoBehaviour:
   torpedoFillerParent: {fileID: 4892359317959318659}
   torpedoEmptyText: {fileID: 8105387952954281432}
   torpCount: 3
+  torpFiller: {fileID: 4449351797091005590}
   reloadProgressors:
   - {fileID: 4767926059475334190}
   - {fileID: 4337467426110101391}
