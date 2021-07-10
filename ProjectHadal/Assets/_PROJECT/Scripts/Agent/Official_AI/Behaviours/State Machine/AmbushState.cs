@@ -58,7 +58,7 @@ namespace Hadal.AI.States
 
         void SelectNewAmbushPoint()
         {
-            if (!NavigationHandler.Data_chosenAmbushPoint)
+            if (!NavigationHandler.Data_ChosenAmbushPoint)
             {
                 NavigationHandler.SelectAmbushPoint();
             }

@@ -187,8 +187,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4568339238276433288}
-  m_LocalRotation: {x: -0.72124493, y: -0.013624436, z: -0.49585977, w: 0.48347005}
-  m_LocalPosition: {x: 140.71, y: 286.44, z: -449.12}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.64, y: -0.62, z: 1.21}
   m_LocalScale: {x: 50, y: 50.000023, z: 50.000023}
   m_Children: []
   m_Father: {fileID: 4705442787074637113}
@@ -252,6 +252,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4705442787074637113}
+  - component: {fileID: 339628171261807218}
+  - component: {fileID: 6374300155031646708}
   m_Layer: 0
   m_Name: Dead Submarine
   m_TagString: Untagged
@@ -266,8 +268,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4705442787074637118}
-  m_LocalRotation: {x: 0.16579224, y: -0.04084591, z: 0.29938644, w: 0.9387291}
-  m_LocalPosition: {x: 149.41183, y: -478.90598, z: 127.50375}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4705442787812856911}
@@ -277,6 +279,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 19.617, y: 1.374, z: 35.615}
+--- !u!65 &339628171261807218
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4705442787074637118}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.5, y: 2.6, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6374300155031646708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4705442787074637118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81fea98f7601fd24cb8feaedd5f919a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionType: 1
 --- !u!1 &4705442787812856914
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,8 +724,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6151610385474337358}
-  m_LocalRotation: {x: -0.00000028251566, y: -0.30775738, z: -0.000000069250675, w: 0.9514649}
-  m_LocalPosition: {x: 140.23624, y: 287.3024, z: -449.9966}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 3481955316035541531}
@@ -734,13 +762,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8178888385581579297}
-  m_LocalRotation: {x: -0.46411157, y: 0.16062017, z: -0.5334796, w: 0.6886228}
-  m_LocalPosition: {x: 138.53108, y: 286.81622, z: -450.68292}
+  m_LocalRotation: {x: -0.51157314, y: -0, z: -0, w: 0.85923976}
+  m_LocalPosition: {x: -0.99, y: -1.17, z: 0.56}
   m_LocalScale: {x: -50, y: 50.000023, z: 50.000023}
   m_Children: []
   m_Father: {fileID: 4705442787074637113}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -27.893, y: 54.152, z: -90}
+  m_LocalEulerAnglesHint: {x: -61.537, y: 0, z: 0}
 --- !u!33 &5576921570747033918
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -803,7 +831,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   invertedFin: 0
-  currentQuat: {x: -0.46411157, y: 0.16062017, z: -0.5334796, w: 0.6886228}
+  currentQuat: {x: -0.51157314, y: -0, z: -0, w: 0.85923976}
   originalRotation: {x: 0.5792279, y: -0.5792279, z: 0.4055799, w: -0.4055799}
   forwardRotation: {x: 0.44957453, y: -0.8462512, z: 0.23748973, w: -0.159187}
   backwardRotation: {x: 0.4330127, y: -0.25000003, z: 0.75, w: -0.43301275}
