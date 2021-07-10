@@ -13,11 +13,30 @@ namespace Hadal.Interactables
         [SerializeField] private bool ableToInteract;
         [SerializeField] private InteractionType interactionType;
         [SerializeField] private int interactableID;
+        [SerializeField] private GameObject flareIndicator;
+
+        [SerializeField] private float regenerateTimer;
+        [SerializeField] private float regenerateTimerMax;
         NetworkEventManager neManager = NetworkEventManager.Instance;
 
         private void Start()
         {
             neManager?.AddListener(ByteEvents.PLAYER_INTERACT, REInteract);
+        }
+
+        private void Update()
+        {
+            if(!ableToInteract)
+            {
+                regenerateTimer += Time.deltaTime;
+
+                if(regenerateTimer > regenerateTimerMax)
+                {
+                    regenerateTimer = 0;
+                    ableToInteract = true;
+                    flareIndicator.SetActive(true);
+                }
+            }
         }
 
         public void Interact(int viewID)
@@ -26,6 +45,7 @@ namespace Hadal.Interactables
                 return;
 
             InteractableEventManager.Instance.InvokeInteraction(interactionType);
+            flareIndicator.SetActive(false);
             ableToInteract = false;
 
             //send event 
@@ -34,14 +54,15 @@ namespace Hadal.Interactables
 
         public void REInteract(EventData obj)
         {
-            Debug.LogWarning("YO I RECEIVED EVENT");
             if (obj.Code == (byte)ByteEvents.PLAYER_INTERACT)
             {  
                 int data = (int)obj.CustomData;
 
                 if (data == interactableID)
                 {
+                    regenerateTimer = 0;
                     ableToInteract = false;
+                    flareIndicator.SetActive(false);
                 }
             }
         }
