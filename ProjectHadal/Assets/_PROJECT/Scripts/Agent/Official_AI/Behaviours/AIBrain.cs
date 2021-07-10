@@ -10,10 +10,7 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.Player;
 using Hadal.AI.Graphics;
-using System.Collections;
 using Hadal.Networking;
-using ExitGames.Client.Photon;
-using Button = NaughtyAttributes.ButtonAttribute;
 
 namespace Hadal.AI
 {
@@ -59,6 +56,7 @@ namespace Hadal.AI
         [ReadOnly] public GameObject MouthObject;
         [ReadOnly] public List<PlayerController> Players;
         [ReadOnly] public PlayerController CurrentTarget;
+        [ReadOnly] public AIEgg Egg;
 
         private PlayerController carriedPlayer;
 
@@ -167,6 +165,20 @@ namespace Hadal.AI
             allAIComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
         }
 
+        private void OnDestroy()
+        {
+            try
+            {
+                cavernManager.AIEnterCavernEvent -= OnCavernEnter;
+                cavernManager.PlayerEnterCavernEvent -= OnPlayerEnterAICavern;
+                cavernManager.AIEnterTunnelEvent -= OnTunnelEnter;
+                cavernManager.AILeftTunnelEvent -= OnTunnelLeave;
+            }
+            catch { }
+            
+            Egg.eggDestroyedEvent -= HandleEggDestroyedEvent;
+        }
+
         void Setup()
         {
             if (DebugEnabled && isOffline)
@@ -174,12 +186,14 @@ namespace Hadal.AI
 
             allAIComponents.ForEach(i => i.Initialise(this));
             cavernManager = FindObjectOfType<CavernManager>();
+            Egg = FindObjectOfType<AIEgg>();
 
             //! Event handling
             cavernManager.AIEnterCavernEvent += OnCavernEnter;
             cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
             cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
             cavernManager.AILeftTunnelEvent += OnTunnelLeave;
+            Egg.eggDestroyedEvent += HandleEggDestroyedEvent;
 
             PlayerManager pManager = PlayerManager.Instance;
             if (pManager != null && PhotonNetwork.IsMasterClient)
@@ -452,9 +466,7 @@ namespace Hadal.AI
             MouthObject.transform.DetachChildren();
         }
 
-        /// <summary>
-        /// Makes the AI carry its current target player
-        /// </summary>
+        /// <summary> Makes the AI carry its current target player. Safe for network call. </summary>
         public bool TryCarryTargetPlayer()
         {
             DetachAnyCarriedPlayer();
@@ -467,6 +479,7 @@ namespace Hadal.AI
             return true;
         }
 
+        /// <summary> Makes the AI drop any player. Safe for network call. </summary>
         public bool TryDropCarriedPlayer()
         {
             if (CarriedPlayer == null)
@@ -474,6 +487,11 @@ namespace Hadal.AI
 
             AttachCarriedPlayerToMouth(false);
             return true;
+        }
+
+        private void HandleEggDestroyedEvent(bool isDestroyed)
+        {
+            RuntimeData.SetIsEggDestroyed(isDestroyed);
         }
 
         #endregion

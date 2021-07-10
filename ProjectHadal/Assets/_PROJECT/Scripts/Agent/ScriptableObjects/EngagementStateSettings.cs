@@ -17,17 +17,16 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_ApproachFarDistanceThreshold;
         [Min(0f)] public float G_CarryDelayTimer;
         [Min(0)] public int G_TotalThreshTimeInSeconds;
-        [Min(0)] public int G_ThreshDamagePerSecond;
+        [Min(0)] public int G_BaseThreshDamagePerSecond;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;
         [Min(0f)] public float AM_MaxWaitTime = 120f;
         [Min(0f)] public float AM_PounceSpeedMultiplier = 1.5f;
         [Min(0f)] public float AM_CarryDelayTimer;
-        [Min(0)] public int AM_ThreshDamagePerSecond;
+        public int AM_AdditionalThreshDamagePerSecond;
 
         [Header("Aggressive Settings")]
-        [Min(0f)] public float AG_TargetPlayerRange = 100f;
         [Range(0f, 1f)] public float AG_AccumulatedDamageThresholdPercentage = 0.4f;
         public bool AllowTarget_HighestDMGPlayer = true;
         public bool AllowTarget_HighestHPPlayer = true;
@@ -35,11 +34,13 @@ namespace Hadal.AI.States
 
         [Header("Judgement Settings")]
         [Min(0f)] public float HealthRatioThreshold = 0.5f;
-        [Min(0f)] public float JudgementTickRate = 60f;
         [Min(0f)] public float JudgementTimer1 = 30f;
         [Min(0f)] public float JudgementTimer2 = 45f;
         [Min(0f)] public float JudgementTimer3 = 60f;
         [Min(0f)] public float JudgementTimer4 = 90f;
+        public int AGG_AdditionalThreshDamagePerSecond;
+        public int DEF_AdditionalThreshDamagePerSecond;
+        public int EGG_PermanentThreshDamagePerSecond;
 
         public PlayerController AM_GetRandomAmbushPoint()
         {
@@ -120,5 +121,25 @@ namespace Hadal.AI.States
                 _ => 0f
             };
         
+        public int GetThreshDamagePerSecond(EngagementType eType, bool eggDestroyed)
+        {
+            int additionalDPS = eType switch
+            {
+                EngagementType.Ambushing    => AM_AdditionalThreshDamagePerSecond,
+                EngagementType.Defensive    => DEF_AdditionalThreshDamagePerSecond,
+                EngagementType.Aggressive   => AGG_AdditionalThreshDamagePerSecond,
+                _ => 0
+            };
+            int permanentDPS = eggDestroyed ? EGG_PermanentThreshDamagePerSecond : 0;
+
+            return G_BaseThreshDamagePerSecond + additionalDPS + permanentDPS;
+        }
+    }
+
+    public enum EngagementType
+    {
+        Ambushing,
+        Defensive,
+        Aggressive
     }
 }

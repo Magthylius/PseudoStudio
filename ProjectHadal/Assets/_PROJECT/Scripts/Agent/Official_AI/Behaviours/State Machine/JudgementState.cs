@@ -32,6 +32,7 @@ namespace Hadal.AI.States
             if (RuntimeData.IsPreviousBrainStateEqualTo(BrainState.Ambush))
             {
                 AllowStateTick = false;
+                NavigationHandler.SetSpeedMultiplier(settings.AM_PounceSpeedMultiplier);
                 PerformAmbushLinkBehaviour();
             }
         }
@@ -62,6 +63,7 @@ namespace Hadal.AI.States
         {
             StopAnyRunningCoroutines();
             if (behaviour != null) behaviour.ResetStateValues();
+            NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
         }
 
