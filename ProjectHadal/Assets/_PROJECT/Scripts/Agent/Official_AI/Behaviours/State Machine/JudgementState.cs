@@ -33,6 +33,7 @@ namespace Hadal.AI.States
             {
                 AllowStateTick = false;
                 NavigationHandler.SetSpeedMultiplier(settings.AM_PounceSpeedMultiplier);
+                RuntimeData.ResetCumulativeDamageCount();
                 PerformAmbushLinkBehaviour();
             }
         }
@@ -46,16 +47,10 @@ namespace Hadal.AI.States
                 return;
 
             int playerCount = CavernManager.GetHandlerOfAILocation.GetPlayerCount;
+            RuntimeData.ResetCumulativeDamageCount();
 
-            //! Defensive (?)
-            if (HealthManager.GetHealthRatio > settings.HealthRatioThreshold)
-            {
-                PerformBehaviour(true, playerCount);
-                return;
-            }
-
-            //! Aggressive (?)
-            PerformBehaviour(false, playerCount);
+            bool isDefensive = RuntimeData.NormalisedConfidence < 0.5f;
+            PerformBehaviour(isDefensive, playerCount);
         }
         public override void LateStateTick() { if (AllowStateTick) return; }
         public override void FixedStateTick() { if (AllowStateTick) return; }
@@ -67,13 +62,14 @@ namespace Hadal.AI.States
             NavigationHandler.StopCustomPath(true);
         }
 
+        /// <summary> Performs a behaviour based on the boolean. If not defensive, it will be aggressive. </summary>
         private void PerformBehaviour(bool isDefensive, int playerCount)
         {
             StopAnyRunningCoroutines();
-
-            //! When the aggressive routine has finished implementation, will uncomment the boolean
-            // if (isDefensive)
+            if (isDefensive)
                 currentRoutine = Brain.StartCoroutine(behaviour.DefensiveStance(playerCount));
+            else
+                currentRoutine = Brain.StartCoroutine(behaviour.AggressiveStance(playerCount));
         }
 
         private void PerformAmbushLinkBehaviour()

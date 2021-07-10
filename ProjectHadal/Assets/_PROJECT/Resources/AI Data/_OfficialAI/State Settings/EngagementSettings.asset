@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerDetectRange: 100
   ConfidenceIncrementValue: 10
-  ConfidenceDecrementValue: 10
+  ConfidenceDecrementValue: 20
   G_ApproachCloseDistanceThreshold: 10
   G_ApproachFarDistanceThreshold: 500
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 10
   G_BaseThreshDamagePerSecond: 5
+  G_DisruptionDamageCount: 2
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 120
   AM_PounceSpeedMultiplier: 1.5
@@ -29,7 +30,6 @@ MonoBehaviour:
   AllowTarget_HighestDMGPlayer: 1
   AllowTarget_HighestHPPlayer: 1
   AllowTarget_IsolatedPlayer: 1
-  HealthRatioThreshold: 0.5
   JudgementTimer1: 30
   JudgementTimer2: 30
   JudgementTimer3: 25

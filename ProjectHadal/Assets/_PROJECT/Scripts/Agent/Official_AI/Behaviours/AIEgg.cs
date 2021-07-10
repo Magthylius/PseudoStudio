@@ -2,30 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.AI.States;
+using Tenshi;
 
 namespace Hadal.AI
 {
-    public class AIEgg : MonoBehaviour
+    public class AIEgg : MonoBehaviour, IDamageable
     {
-        int maxHealth;
+        [SerializeField] int maxHealth = 40;
         int curHealth;
+
+        public GameObject Obj => throw new System.NotImplementedException();
+
         public delegate void MaxConfidenceOnEggDestroyed(bool isEggDestroyed);
         public event MaxConfidenceOnEggDestroyed eggDestroyedEvent;
 
-        public void RaiseOnEggDestroyed()
-        {
-            if (eggDestroyedEvent != null)
-                eggDestroyedEvent(false);
-        }
-
-        // Start is called before the first frame update
         void Start()
         {
-            maxHealth = 40;
             curHealth = maxHealth;
         }
 
-        // Update is called once per frame
         void Update()
         {
             CheckEggDestroyed();
@@ -37,6 +32,13 @@ namespace Hadal.AI
             {
                 eggDestroyedEvent?.Invoke(true);
             }
+        }
+
+        public bool TakeDamage(int damage)
+        {
+            if (curHealth <= 0) return false;
+            curHealth -= damage.Abs();
+            return true;
         }
     }
 }

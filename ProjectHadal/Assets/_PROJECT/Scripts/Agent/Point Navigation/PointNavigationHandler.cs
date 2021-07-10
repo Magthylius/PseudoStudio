@@ -135,6 +135,7 @@ namespace Hadal.AI
         private Queue<NavPoint> cachedPointPath;
         private bool _isEnabled;
         private bool _tickCavernLingerTimer;
+        private Coroutine disableRoutine;
         public event Action<float> OnObstacleDetectRadiusChange;
         public event Action OnReachedPoint;
 
@@ -245,6 +246,10 @@ namespace Hadal.AI
 		[Button(nameof(Enable))]
         public void Enable()
         {
+            if (disableRoutine != null)
+                StopCoroutine(disableRoutine);
+
+            disableRoutine = null;
             _isEnabled = true;
             if (rBody != null) rBody.isKinematic = false;
         }
@@ -256,6 +261,27 @@ namespace Hadal.AI
             if (rBody != null)
             {
                 if (makeKinematic) rBody.isKinematic = true;
+                rBody.velocity = Vector3.zero;
+            }
+        }
+        public void DisableWithLerp(float time)
+        {
+            _isEnabled = false;
+            if (rBody != null)
+                disableRoutine = StartCoroutine(LerpVelocity());
+
+            IEnumerator LerpVelocity()
+            {
+                float percent = 0f;
+                var zero = Vector3.zero;
+                while (percent < 1f)
+                {
+                    float delta = DeltaTime * time;
+                    percent += delta;
+                    rBody.velocity = Vector3.Lerp(rBody.velocity, zero, percent);
+                    yield return null;
+                }
+                rBody.isKinematic = true;
                 rBody.velocity = Vector3.zero;
             }
         }
