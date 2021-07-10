@@ -248,12 +248,12 @@ namespace Hadal.AI
         }
         /// <summary> Disables this component safely. </summary>
 		[Button(nameof(Disable))]
-        public void Disable()
+        public void Disable(bool makeKinematic = true)
         {
             _isEnabled = false;
             if (rBody != null)
             {
-                rBody.isKinematic = true;
+                if (makeKinematic) rBody.isKinematic = true;
                 rBody.velocity = Vector3.zero;
             }
         }
