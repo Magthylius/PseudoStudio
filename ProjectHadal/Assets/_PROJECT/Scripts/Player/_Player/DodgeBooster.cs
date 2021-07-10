@@ -79,7 +79,7 @@ namespace Hadal.Player
                 if (boostTimer > boostTimerMax)
                 {
                     isBoosting = false;
-                    playerController.GetInfo.Rigidbody.velocity = Vector3.zero;
+                    playerController.GetInfo.Rigidbody.velocity /= 2;
                     boostTimer = 0;
                 }
             }
