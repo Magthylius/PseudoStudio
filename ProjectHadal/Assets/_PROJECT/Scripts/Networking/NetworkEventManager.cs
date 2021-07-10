@@ -40,6 +40,7 @@ namespace Hadal.Networking
         AI_RELEASE_PLAYER,
         AI_DEATH,
         AI_UPDATE_SLOW,
+        AI_COLOUR_CHANGE,
         TOTAL_EVENTS
     }
 
