@@ -66,5 +66,10 @@ namespace Hadal.Interactables
                 }
             }
         }
+
+        public void setID(int newID)
+        {
+            interactableID = newID;
+        }
     }
 }
