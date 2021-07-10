@@ -9,7 +9,7 @@ namespace Hadal.Interactables
 
     public class InteractCube : Interactable
     {
-        public Material deflt;
+       /*public Material deflt;
         public Material cubeColor;
         private bool isSwap;
         private const byte CUBE_INTERACT_EVENT = 0;
@@ -43,7 +43,7 @@ namespace Hadal.Interactables
             Material mat = isSwap ? deflt : cubeColor;
             gameObject.GetComponent<Renderer>().material = mat;
             isSwap = !isSwap;
-        }
+        }*/
 
     }
 }

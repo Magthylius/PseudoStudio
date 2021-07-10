@@ -2,6 +2,7 @@ using NaughtyAttributes;
 using System;
 using UnityEngine;
 using Hadal.Utility;
+using Hadal.InteractableEvents;
 
 //Created by Jet
 namespace Hadal.Usables
@@ -44,15 +45,15 @@ namespace Hadal.Usables
         public event Action<bool> OnReservesChanged;
         private Timer _reserveRegenTimer;
 
-        [SerializeField] private int maxChamberCapacity;
+        [SerializeField] protected int maxChamberCapacity;
         [SerializeField] private float chamberReloadTime;
         [SerializeField] private bool maxOnLoadOut = true;
         public int ChamberCount { get; private set; }
-        public bool IsReloading { get; private set; }
+        public bool IsReloading { get; set; }
         public float ChamberReloadRatio => (_chamberReloadTimer.IsCompleted && TotalAmmoCount == 0) ? 0f : _chamberReloadTimer.GetCompletionRatio;
         public bool IsChamberLoaded => ChamberCount > 0;
         public event Action<bool> OnChamberChanged;
-        private Timer _chamberReloadTimer;
+        protected Timer _chamberReloadTimer;
 
         public int TotalAmmoCount => ReserveCount + ChamberCount;
         #endregion
@@ -87,6 +88,11 @@ namespace Hadal.Usables
             Data.ToggleProjectile(HasToggleAmmo);
         }
 
+        public virtual void ReceiveInteractEvent(InteractionType interactionType)
+        {
+            return;
+        }
+
         #endregion
 
         #region Use Method
@@ -113,7 +119,7 @@ namespace Hadal.Usables
             UpdateChamberCount(ChamberCount - 1);
             OnChamberChanged?.Invoke(false);
         }
-        private void IncrementChamber()
+        public void IncrementChamber()
         {
             IsReloading = false;
             DecrementReserve();
@@ -126,7 +132,7 @@ namespace Hadal.Usables
             UpdateReserveCount(ReserveCount - 1);
             OnReservesChanged?.Invoke(false);
         }
-        private void IncrementReserve()
+        public void IncrementReserve()
         {
             IsRegenerating = false;
             UpdateReserveCount(ReserveCount + 1);

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.Inputs;
+using Hadal.Interactables;
+using Hadal.Usables;
 using Tenshi.UnitySoku;
 using UnityEngine;
 
