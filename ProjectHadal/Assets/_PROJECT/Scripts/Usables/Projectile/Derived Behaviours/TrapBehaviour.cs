@@ -58,8 +58,6 @@ namespace Hadal.Usables.Projectiles
         {
             isSet = false;
 
-            print("IS DISABLED DUDE");
-
             if(meshRenderer)
             {
                 meshRenderer.material.SetColor("_EmissionColor", Color.yellow);

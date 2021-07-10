@@ -248,12 +248,12 @@ namespace Hadal.AI
         }
         /// <summary> Disables this component safely. </summary>
 		[Button(nameof(Disable))]
-        public void Disable()
+        public void Disable(bool makeKinematic = true)
         {
             _isEnabled = false;
             if (rBody != null)
             {
-                rBody.isKinematic = true;
+                if (makeKinematic) rBody.isKinematic = true;
                 rBody.velocity = Vector3.zero;
             }
         }
@@ -729,7 +729,7 @@ namespace Hadal.AI
                         rBody.velocity = Vector3.zero;
                     }
                     pilotTrans.position = currentPoint.GetPosition;
-                    pilotTrans.rotation = Quaternion.Euler(currentPoint.transform.rotation.x, currentPoint.transform.rotation.y, currentPoint.transform.rotation.z + 180);
+                    pilotTrans.rotation = Quaternion.Euler(currentPoint.transform.rotation.x, currentPoint.transform.rotation.y + 180, currentPoint.transform.rotation.z);
                 }
 
                 if (isOnQueuePath)
@@ -809,14 +809,12 @@ namespace Hadal.AI
 
             switch (cavernManager.GetCavernTagOfAILocation())
             {
-                case CavernTag.Crystal: { crystalCavernLingerTimer -= deltaTime; break; }
-                case CavernTag.Bioluminescent: { biolumiCavernLingerTimer -= deltaTime; break; }
-                case CavernTag.Hydrothermal_Deep: { hydrothermalCavernLingerTimer -= deltaTime; break; }
-                case CavernTag.Lair: { lairCavernLingerTimer -= deltaTime; break; }
+                case CavernTag.Crystal: { crystalCavernLingerTimer -= deltaTime;  Debug.Log("crystal: " + crystalCavernLingerTimer); if (crystalCavernLingerTimer > 0f) {return;} break; }
+                case CavernTag.Bioluminescent: { biolumiCavernLingerTimer -= deltaTime; Debug.Log("biolumi: " + biolumiCavernLingerTimer); if(biolumiCavernLingerTimer > 0f) {return;} break; }
+                case CavernTag.Hydrothermal_Deep: { hydrothermalCavernLingerTimer -= deltaTime; Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer); if(hydrothermalCavernLingerTimer > 0f) {return;} break; }
+                case CavernTag.Lair: { lairCavernLingerTimer -= deltaTime; Debug.Log("lair: " + lairCavernLingerTimer); if (lairCavernLingerTimer > 0f) { return; } break; }
                 default: { break; }
             }
-            if (crystalCavernLingerTimer > 0f || biolumiCavernLingerTimer > 0f
-                || lairCavernLingerTimer > 0f || hydrothermalCavernLingerTimer > 0f) return;
 
             _tickCavernLingerTimer = false;
             ResetCavernLingerTimer();

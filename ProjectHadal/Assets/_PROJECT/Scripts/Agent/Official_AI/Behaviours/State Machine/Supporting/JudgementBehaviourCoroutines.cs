@@ -101,17 +101,21 @@ namespace Hadal.AI
 
         private IEnumerator DoThreshAttack(int dps)
         {
+            int totalDamageSeconds = Settings.G_TotalThreshTimeInSeconds;
             isDamaging = true;
+            NavigationHandler.Disable(false);
+
             void StopAttack() => isDamaging = false;
 
             DamageManager.ApplyDoT(Brain.CarriedPlayer,
-                Settings.G_TotalThreshTimeInSeconds,
+                totalDamageSeconds,
                 dps,
                 StopAttack);
 
             while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
                 yield return null;
 
+            NavigationHandler.Enable();
             TryDebug("Thresh damage in inner routine is finished!");
         }
 
@@ -266,6 +270,7 @@ namespace Hadal.AI
 
             JState.IsBehaviourRunning = false;
             JState.StopAnyRunningCoroutines();
+            NavigationHandler.Enable();
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Judgement);
             TryDebug("The Leviathan has been stunned. Stopping behaviour but not exiting Judgement state.");
@@ -290,7 +295,8 @@ namespace Hadal.AI
         }
 
         private bool PlayerCountDroppedTo0
-            => CavernManager.GetHandlerOfAILocation.GetPlayerCount == 0;
+            => CavernManager.GetHandlerOfAILocation != null
+            && CavernManager.GetHandlerOfAILocation.GetPlayerCount == 0;
 
         private float SqrDistanceToTarget
             => (Brain.CurrentTarget.GetTarget.position - Brain.transform.position).sqrMagnitude;
