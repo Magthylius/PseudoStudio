@@ -33,7 +33,6 @@ namespace Hadal.Usables
             activeTrap = info.Trap;
 
             base.Use(info);
-            print("work with me");
             return false;
         }
     }

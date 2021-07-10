@@ -187,7 +187,6 @@ namespace Hadal.Player.Behaviours
             //! Use utility here. If utility is used, decrement chamber! //
             if(usable.Use(CreateInfoForUtility(projectileID, isPowered, chargeTime, !eventFire)))
             {
-                print("Chamber Decreased!");
                 usable.DecrementChamber();
             }
             controller.GetInfo.Inventory.IncreaseProjectileCount();
