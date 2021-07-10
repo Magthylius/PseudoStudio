@@ -262,7 +262,7 @@ namespace Hadal.Player.Behaviours
 
         private void OnChamberChangedMethod(bool isIncrement)
         {
-            UpdateUITorpedoCount(false);
+            //UpdateUITorpedoCount(false);
             if (isIncrement)
             {
                 UpdateUIFloodRatio(1f);
@@ -284,8 +284,8 @@ namespace Hadal.Player.Behaviours
         }
         private void OnUnityUpdateUI()
         {
-            UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
-            UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
+            if (tLauncher.TotalAmmoCount > 0) UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
+            //UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
 
             /*aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
                 Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
@@ -308,7 +308,7 @@ namespace Hadal.Player.Behaviours
         {
             //if (UIManager.IsNull) return;
 
-            //controller.UI.UpdateFlooding(ratio, tLauncher.IsReloading);
+            controller.UI.UpdateFlooding(ratio, !tLauncher.IsChamberLoaded);
         }
 
         #endregion
