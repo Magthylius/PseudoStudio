@@ -21,16 +21,22 @@ namespace Hadal.AI
         // Start is called before the first frame update
         void Start()
         {
-
             maxHealth = 40;
+            curHealth = maxHealth;
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            CheckEggDestroyed();
         }
 
-
+        void CheckEggDestroyed()
+        {
+            if(curHealth <= 0)
+            {
+                eggDestroyedEvent?.Invoke(true);
+            }
+        }
     }
 }
