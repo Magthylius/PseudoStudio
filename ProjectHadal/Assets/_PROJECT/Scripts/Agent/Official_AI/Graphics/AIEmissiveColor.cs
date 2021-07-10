@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
+using Hadal.Networking;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Hadal.AI.Graphics
@@ -9,7 +12,7 @@ namespace Hadal.AI.Graphics
         [Header("Settings")]
         [SerializeField] private Material leviathanBody;
         [SerializeField] private MeshRenderer leviathanRenderer;
-        
+
         [SerializeField] private float transitionSpeed;
         private float percent;
         private AIBrain brain;
@@ -26,7 +29,8 @@ namespace Hadal.AI.Graphics
         void Start()
         {
             brain = FindObjectOfType<AIBrain>();
-            brain.RuntimeData.OnAIStateChange += JudgementColor;
+            if (PhotonNetwork.IsMasterClient)
+                brain.RuntimeData.OnAIStateChange += JudgementColor;
 
             //! initialise property block (needs to use a renderer, since it has the functions to set up)
             materialProp = new MaterialPropertyBlock();
@@ -34,11 +38,25 @@ namespace Hadal.AI.Graphics
 
             percent = 0f;
             UpdateMaterialData();
+            if (!PhotonNetwork.IsMasterClient)
+                NetworkEventManager.Instance.AddListener(ByteEvents.AI_COLOUR_CHANGE, Receive_ChangeColour);
         }
+
+        private void Receive_ChangeColour(EventData eventData)
+        {
+            bool judgement = (bool)eventData.CustomData;
+            StopAllCoroutines();
+            StartCoroutine(AIColorLerp(judgement));
+        }
+
         public void JudgementColor(BrainState state, EngagementObjective objective)
         {
+            bool judgement = state == BrainState.Judgement;
             StopAllCoroutines(); //! stopping any running coroutines so it will never run more than once per event call
-            StartCoroutine(AIColorLerp(state == BrainState.Judgement));
+            StartCoroutine(AIColorLerp(judgement));
+
+            if (PhotonNetwork.IsMasterClient)
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_COLOUR_CHANGE, judgement, SendOptions.SendReliable);
         }
 
         /// <summary>
