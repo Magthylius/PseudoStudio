@@ -7,7 +7,7 @@ namespace Hadal.Usables
     public static class UsableBlackboard
     {
         public static string[] PlayerLayers = {"Player", "PlayerGrabbed"};
-        public static string[] AILayers = {"Monster"};
+        public static string[] AILayers = {"Monster", "MonsterEgg"};
         public static string[] CollidableLayers = {"Default", "Obstacle"};
 
         static string _AIHitboxLayer = "Monster";
