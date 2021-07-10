@@ -10,6 +10,7 @@ namespace Hadal.AI.States
     public class AmbushState : AIStateBase
     {
         EngagementStateSettings settings;
+        AISenseDetection sensory;
         CavernHandler cavernHandler;
         CavernTag currentCavern;
         float ambushTimer;
@@ -19,6 +20,7 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = MachineData.Engagement;
+            sensory = brain.SenseDetection;
         }
 
         public override void OnStateStart()
@@ -27,37 +29,79 @@ namespace Hadal.AI.States
             currentCavern = Brain.CavernManager.GetCavernTagOfAILocation();
             cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
             ambushTimer = settings.AM_MaxWaitTime;
-            Brain.SenseDetection.useAmbushDetection = true;
+            sensory.useAmbushDetection = true;
         }
         public override void StateTick()
         {
-            if (!NavigationHandler.Data_chosenAmbushPoint)
-            {
-                NavigationHandler.SelectAmbushPoint();
-            }
 
-            ambushTimer -= Brain.DeltaTime;
+            SelectNewAmbushPoint();
+            CheckPouncingRange();
+            CheckAmbushTimer();
 
-            if (cavernHandler.GetPlayerCount > 0)
-            {
-                RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
-                RuntimeData.SetBrainState(BrainState.Judgement);
-            }
-
-            if(ambushTimer < 0)
-            {
-                RuntimeData.SetBrainState(BrainState.Anticipation);
-            }
         }
 
 
         public override void LateStateTick() { }
         public override void FixedStateTick() { }
-        public override void OnStateEnd() 
-        { 
+        public override void OnStateEnd()
+        {
             NavigationHandler.ResetAmbushPoint();
             Brain.SenseDetection.useAmbushDetection = false;
         }
         public override Func<bool> ShouldTerminate() => () => false;
+
+        void CheckPlayerCountAtNeighbourCaverns()
+        {
+            //cavernHandler.GetPlayerCount > 0
+        }
+
+
+        void SelectNewAmbushPoint()
+        {
+            if (!NavigationHandler.Data_chosenAmbushPoint)
+            {
+                NavigationHandler.SelectAmbushPoint();
+            }
+        }
+
+        /// <summary>
+        /// Detect players and if in range, pounce, else go to recovery. 
+        /// </summary>
+        void CheckPouncingRange()
+        {
+            if (sensory.DetectedPlayersCount > 0 && sensory.DetectedPlayersCount < 4)
+            {
+                Debug.LogWarning("BRAIN NULL?: "  + Brain.CurrentTarget);
+                float distance = Vector3.Distance(Brain.transform.position, Brain.CurrentTarget.transform.position);
+                if (distance < settings.AM_TargetPlayerRange && Brain.CurrentTarget != null)
+                {
+                    RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
+                    Debug.LogWarning("VALUE CONF: " + RuntimeData.ActualConfidenceValue);
+                    RuntimeData.SetBrainState(BrainState.Judgement);
+                }
+                else
+                {
+                    RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
+                    Debug.LogWarning("VALUE CONF: " + RuntimeData.ActualConfidenceValue);
+                    RuntimeData.SetBrainState(BrainState.Recovery);
+                }
+
+            }
+            else if (sensory.DetectedPlayersCount == 4 && Brain.CurrentTarget != null)
+            {
+                RuntimeData.UpdateConfidenceValue(settings.ConfidenceDecrementValue);
+                RuntimeData.SetBrainState(BrainState.Recovery);
+            }
+        }
+
+        void CheckAmbushTimer()
+        {
+            ambushTimer -= Brain.DeltaTime;
+
+            if (ambushTimer < 0)
+            {
+                RuntimeData.SetBrainState(BrainState.Anticipation);
+            }
+        }
     }
 }
