@@ -71,7 +71,7 @@ namespace Hadal.Player.Behaviours
 
         private void Start()
         {
-            UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
+            /*UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);*/
             DoDebugEnabling(debugKey);
 
             aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
