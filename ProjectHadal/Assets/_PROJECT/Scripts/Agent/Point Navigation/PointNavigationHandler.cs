@@ -60,7 +60,9 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private bool canPath;
         public bool Data_CanPath => canPath;
         [SerializeField, ReadOnly] private bool chosenAmbushPoint;
-        public bool Data_chosenAmbushPoint => chosenAmbushPoint;
+        public bool Data_ChosenAmbushPoint => chosenAmbushPoint;
+        [SerializeField, ReadOnly] private bool lockSteeringBehaviour;
+        public bool Data_LockSteeringBehaviour => lockSteeringBehaviour;
 
         private float slowMultiplier = 0f;
         public void SetSlowMultiplier(float mult)
@@ -428,7 +430,7 @@ namespace Hadal.AI
         /// Sets the handler's path to use the cached queue path that has been generated. If there is no cache queue path that has
         /// been generated beforehand, the function will return. See <see cref="ComputeCachedDestinationCavernPath"/>.
         /// </summary>
-        public void SetQueuedPathFromCache()
+        public void SetQueuedPathFromCache(bool setTunnelSteeringUntilQueuePathEnd = false)
         {
             if (cachedPointPath.IsNullOrEmpty())
             {
@@ -437,6 +439,11 @@ namespace Hadal.AI
             }
             if (enableDebug) "Running cached queue path...".Msg();
             SetQueuedPath(cachedPointPath);
+            if (setTunnelSteeringUntilQueuePathEnd)
+            {
+                lockSteeringBehaviour = true;
+                TunnelModeSteering();
+            }
         }
 
         /// <summary>
@@ -601,6 +608,9 @@ namespace Hadal.AI
 
         private void DecideCurrentSteeringMode()
         {
+            if (lockSteeringBehaviour)
+                return;
+
             if (currentSteer != null)
                 currentSteer.UnsubscribeAllEvents();
 
@@ -695,15 +705,16 @@ namespace Hadal.AI
             {
                 hasReachedPoint = true;
                 OnReachedPoint?.Invoke();
-                EvaluateQueuedPath();
+                EvaluateReachedPoint();
                 if (enableDebug) $"Point Reached: {currentPoint.gameObject.name}".Msg();
             }
 
             //! Local shorthands
             bool CloseEnoughToTargetNavPoint() => currentPoint.GetSqrDistanceTo(pilotTrans.position) < (closeNavPointDetectionRadius * closeNavPointDetectionRadius);
 
-            void EvaluateQueuedPath()
+            void EvaluateReachedPoint()
             {
+                //! Check if point path is not empty and return after evaluation if true
                 if (pointPath.IsNotEmpty())
                 {
                     currentPoint.Deselect();
@@ -716,12 +727,13 @@ namespace Hadal.AI
                     return;
                 }
 
+                //! As long as it is not an ambush point, canTimeout and Auto select nav points can be reset to true. 
                 if (!chosenAmbushPoint)
                 {
                     canTimeout = true;
                     canAutoSelectNavPoints = true;
                 }
-                else
+                else //! If it is an ambush point, make the pilot assume a static position and rotation in 
                 {
                     if (rBody != null)
                     {
@@ -732,9 +744,12 @@ namespace Hadal.AI
                     pilotTrans.rotation = Quaternion.Euler(currentPoint.transform.rotation.x, currentPoint.transform.rotation.y + 180, currentPoint.transform.rotation.z);
                 }
 
+                //! If the boolean is true, make it false & reset some variables (if this is called it means that the queue point path is empty)
                 if (isOnQueuePath)
                 {
                     isOnQueuePath = false;
+                    lockSteeringBehaviour = false;
+                    CavernModeSteering();
                     if (enableDebug) "Queued path is done.".Msg();
                 }
             }
@@ -809,11 +824,35 @@ namespace Hadal.AI
 
             switch (cavernManager.GetCavernTagOfAILocation())
             {
-                case CavernTag.Crystal: { crystalCavernLingerTimer -= deltaTime;  Debug.Log("crystal: " + crystalCavernLingerTimer); if (crystalCavernLingerTimer > 0f) {return;} break; }
-                case CavernTag.Bioluminescent: { biolumiCavernLingerTimer -= deltaTime; Debug.Log("biolumi: " + biolumiCavernLingerTimer); if(biolumiCavernLingerTimer > 0f) {return;} break; }
-                case CavernTag.Hydrothermal_Deep: { hydrothermalCavernLingerTimer -= deltaTime; Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer); if(hydrothermalCavernLingerTimer > 0f) {return;} break; }
-                case CavernTag.Lair: { lairCavernLingerTimer -= deltaTime; Debug.Log("lair: " + lairCavernLingerTimer); if (lairCavernLingerTimer > 0f) { return; } break; }
-                default: { break; }
+                case CavernTag.Crystal:
+                {
+                    crystalCavernLingerTimer -= deltaTime;
+                    Debug.Log("crystal: " + crystalCavernLingerTimer);
+                    if (crystalCavernLingerTimer > 0f) return;
+                    break;
+                }
+                case CavernTag.Bioluminescent:
+                {
+                    biolumiCavernLingerTimer -= deltaTime;
+                    Debug.Log("biolumi: " + biolumiCavernLingerTimer);
+                    if (biolumiCavernLingerTimer > 0f) return;
+                    break;
+                }
+                case CavernTag.Hydrothermal_Deep:
+                {
+                    hydrothermalCavernLingerTimer -= deltaTime;
+                    Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
+                    if (hydrothermalCavernLingerTimer > 0f) return;
+                    break;
+                }
+                case CavernTag.Lair:
+                {
+                    lairCavernLingerTimer -= deltaTime;
+                    Debug.Log("lair: " + lairCavernLingerTimer);
+                    if (lairCavernLingerTimer > 0f) return;
+                    break;
+                }
+                default: break;
             }
 
             _tickCavernLingerTimer = false;
