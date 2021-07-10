@@ -63,6 +63,7 @@ namespace Hadal.UI
         public bool IsActive => isActive;
 
         public Vector3 HitPoint => forwardHit.point;
+        public float HitDistance => forwardHit.distance;
     }
 
 }
