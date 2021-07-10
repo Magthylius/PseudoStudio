@@ -84,13 +84,16 @@ namespace Hadal.Player.Behaviours
                 {
                     Debug.LogWarning("Subscribed to Salvage");
                     tLauncher.SubscribeToSalvageEvent();
+                    controller.UI.Initialize(tLauncher.TotalAmmoCount);
                 }
             }
             else
             {
+               // need to only subscribe if local
                 Debug.LogWarning("Subscribed to Salvage");
                 tLauncher.SubscribeToSalvageEvent();
                 controller.UI.Initialize(tLauncher.TotalAmmoCount);
+                
             }
         }
         
