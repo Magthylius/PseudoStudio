@@ -46,7 +46,7 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
-            if (Brain.CheckForJudgementStateCondition()) return;
+            // if (Brain.CheckForJudgementStateCondition()) return; debug always try hunt, no judgement
             if (CheckForAutoActCondition()) return;
         }
 
@@ -191,6 +191,11 @@ namespace Hadal.AI.States
                 ResetAutoActTimer();
 
                 RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
+                
+                //! debug always hunt
+                RuntimeData.SetBrainState(BrainState.Hunt);
+                SetNewTargetCavern();
+                return true;
 
                 string debugMsg = string.Empty;
                 if (RuntimeData.GetEngagementObjective == EngagementObjective.Ambush)

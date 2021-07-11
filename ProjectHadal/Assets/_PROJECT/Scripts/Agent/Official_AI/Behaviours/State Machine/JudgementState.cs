@@ -25,6 +25,7 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             AllowStateTick = true;
             RuntimeData.ResetEngagementTicker();
+            RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
 
             if (RuntimeData.IsPreviousBrainStateEqualTo(BrainState.Ambush))
             {

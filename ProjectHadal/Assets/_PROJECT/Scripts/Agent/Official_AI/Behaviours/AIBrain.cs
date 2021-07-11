@@ -499,7 +499,7 @@ namespace Hadal.AI
 
         public bool CheckForJudgementStateCondition()
         {
-            if (CurrentTarget != null)
+            if (CurrentTarget != null && CavernManager.GetHandlerOfAILocation.GetPlayersInCavern.Contains(CurrentTarget))
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
                 if (DebugEnabled) "Spotted and entered engagement!".Msg();
