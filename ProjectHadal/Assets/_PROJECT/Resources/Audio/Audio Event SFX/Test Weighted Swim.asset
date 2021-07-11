@@ -9,14 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
-  m_Name: Test Roar SFX 2
+  m_Script: {fileID: 11500000, guid: 4ceb78b0d610b3b4bb9c4575734b4a69, type: 3}
+  m_Name: Test Weighted Roar SFX
   m_EditorClassIdentifier: 
-  Clips:
-  - {fileID: 8300000, guid: fb865146861710248a4da4b14c43e669, type: 3}
+  WeightedClips:
+  - Clip: {fileID: 8300000, guid: 3cc7904bcac25ce42b5ac5da38f70c1f, type: 3}
+    Weight: 3
+  - Clip: {fileID: 8300000, guid: 37da5fa898ff7fc458dff67313efa0eb, type: 3}
+    Weight: 1
   Settings:
-    Volume: {x: 0.4, y: 0.4}
-    Pitch: {x: 0.3, y: 0.3}
+    Volume: {x: 1, y: 1}
+    Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
     Priority: 128
     StereoPan: 0
@@ -32,5 +35,5 @@ MonoBehaviour:
     Spread: 0
     VolumeRolloff: 0
     MinDistance: 1
-    MaxDistance: 500
+    MaxDistance: 1000
     RolloffCurveTemplate: {fileID: 0}

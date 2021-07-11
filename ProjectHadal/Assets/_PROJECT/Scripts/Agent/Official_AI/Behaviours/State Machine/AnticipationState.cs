@@ -70,6 +70,7 @@ namespace Hadal.AI.States
         {
             if (Brain.StateSuspension) return;
 
+            Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
             if (cavern == Brain.TargetMoveCavern)
             {
                 if (cavern.GetPlayerCount <= 0)
