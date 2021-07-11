@@ -60,7 +60,7 @@ namespace Hadal.AI
                 if (Brain.CurrentTarget != null)
                 {
                     bool success = TrySetCustomNavPoint(Brain.CurrentTarget);
-                    
+                    Brain.AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform.position);
                     if (success) TryDebug("Set custom nav point onto target. Moving to chase target.");
                 }
 
