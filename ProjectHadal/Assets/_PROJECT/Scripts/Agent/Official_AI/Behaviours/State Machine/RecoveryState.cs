@@ -26,6 +26,7 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
+            RuntimeData.ResetCumulativeDamageCount();
             SetNewTargetCavern();
             AllowStateTick = true;
         }
