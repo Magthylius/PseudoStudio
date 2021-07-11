@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 using Hadal.Player;
 using Hadal.Networking;
 using Hadal.Usables;
-using UnityEngine.SceneManagement;
 
 
 namespace Hadal.Debugging
@@ -121,7 +120,7 @@ namespace Hadal.Debugging
                         FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Anticipation);
                         break;
                     case 2:
-                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Engagement);
+                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Hunt);
                         break;
                     case 3:
                         FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Recovery);

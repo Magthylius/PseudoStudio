@@ -342,9 +342,14 @@ namespace Hadal.AI
             JState.IsBehaviourRunning = false;
             JState.StopAnyRunningCoroutines();
             NavigationHandler.Enable();
+            NavigationHandler.ResetSpeedMultiplier();
             ResetStateValues();
-            RuntimeData.SetBrainState(BrainState.Judgement);
-            TryDebug("The Leviathan has been stunned. Stopping behaviour but not exiting Judgement state.");
+            var brainState = GetRandomBrainStateAfterStun();
+            RuntimeData.SetBrainState(brainState);
+            
+            string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
+            debugMsg += brainState == BrainState.Judgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
+            TryDebug(debugMsg);
         }
 
         public void ResetStateValues()
@@ -354,6 +359,12 @@ namespace Hadal.AI
             isAttacking = false;
             isDamaging = false;
             JState.ResetStateValues();
+        }
+
+        private BrainState GetRandomBrainStateAfterStun()
+        {
+            bool shouldStayJudgement = Settings.PostStunRemainJudgementChance.HasHitPercentChance();
+            return shouldStayJudgement ? BrainState.Judgement : BrainState.Recovery;
         }
 
         private void TryDebug(object msg)

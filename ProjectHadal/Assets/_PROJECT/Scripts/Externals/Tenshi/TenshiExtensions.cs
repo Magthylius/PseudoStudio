@@ -135,6 +135,8 @@ namespace Tenshi
         public static float Pow(this int number, float power) => Mathf.Pow(number, power);
         public static float Sqr(this float number) => number * number;
         public static int Sqr(this int number) => number * number;
+
+        public static bool HasHitPercentChance(this float percentChance) => UnityEngine.Random.value > (1f - percentChance.Clamp01());
         
         public static void LerpSpeed(this ref float speed, in float directionalSpeed, in float acceleration, in float deltaTime)
         {

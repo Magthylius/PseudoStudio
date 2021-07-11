@@ -20,6 +20,7 @@ namespace Hadal.AI
         public CavernManager CavernManager;
         public AIDamageManager DamageManager;
         public AIHealthManager HealthManager;
+        public AIAudioBank AudioBank;
 
         public bool AllowStateTick = true;
 
@@ -35,6 +36,7 @@ namespace Hadal.AI
             CavernManager = Brain.CavernManager;
             DamageManager = Brain.DamageManager;
             HealthManager = Brain.HealthManager;
+            AudioBank = Brain.AudioBank;
         }
 
         public virtual void FixedStateTick() { }

@@ -27,20 +27,24 @@ namespace Hadal.AI.States
         [Min(0f)] public float AM_CarryDelayTimer;
         public int AM_AdditionalThreshDamagePerSecond;
 
-        [Header("Aggressive Settings")]
-        [Range(0f, 1f)] public float AG_AccumulatedDamageThresholdPercentage = 0.4f;
-        public bool AllowTarget_HighestDMGPlayer = true;
-        public bool AllowTarget_HighestHPPlayer = true;
-        public bool AllowTarget_IsolatedPlayer = true;
+        [Header("Hunt Settings")]
+        [Min(0f)] public float HU_RoamingSpeedMultiplier = 1.5f;
 
         [Header("Judgement Settings")]
         [Min(0f)] public float JudgementTimer1 = 30f;
         [Min(0f)] public float JudgementTimer2 = 45f;
         [Min(0f)] public float JudgementTimer3 = 60f;
         [Min(0f)] public float JudgementTimer4 = 90f;
+        [Range(0f, 1f)] public float PostStunRemainJudgementChance = 0.8f;
         public int AGG_AdditionalThreshDamagePerSecond;
         public int DEF_AdditionalThreshDamagePerSecond;
         public int EGG_PermanentThreshDamagePerSecond;
+
+        [Header("Unused ATM: Aggressive Settings")]
+        [Range(0f, 1f)] public float AG_AccumulatedDamageThresholdPercentage = 0.4f;
+        public bool AllowTarget_HighestDMGPlayer = true;
+        public bool AllowTarget_HighestHPPlayer = true;
+        public bool AllowTarget_IsolatedPlayer = true;
 
         public PlayerController AM_GetRandomAmbushPoint()
         {

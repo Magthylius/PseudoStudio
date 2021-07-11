@@ -118,7 +118,7 @@ namespace Hadal.AI
             //! Objectives Reset
             SetPreviousBrainState(BrainState.None);
             SetBrainState(BrainState.None);
-            SetEngagementObjective(EngagementObjective.Judgement);
+            SetEngagementObjective(EngagementObjective.Hunt);
 
             //! Confidence
             if (machineData.RandomiseConfidenceOnAwake)

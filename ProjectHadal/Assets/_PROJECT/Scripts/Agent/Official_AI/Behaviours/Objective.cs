@@ -4,20 +4,18 @@ namespace Hadal.AI
     public enum BrainState
     {
         None,
-        Idle,
         Anticipation,
-        Engagement,
-        Judgement,
         Ambush,
+        Hunt,
+        Judgement,
         Recovery,
-        Cooldown,
-        Lure
+        Cooldown
     }
 
     public enum EngagementObjective
     {
 		None,
         Ambush,
-        Judgement
+        Hunt
     }
 }

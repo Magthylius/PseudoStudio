@@ -81,18 +81,15 @@ namespace Hadal.AI
         public StateMachineData MachineData => machineData;
         private Rigidbody rBody;
 
-        AIStateBase idleState;
         AIStateBase anticipationState;
-        AIStateBase engagementState;
+        AIStateBase ambushState;
+        AIStateBase huntState;
+        AIStateBase judgementState;
         AIStateBase recoveryState;
         AIStateBase cooldownState;
-        AIStateBase lureState;
-        AmbushState ambushState;
-        JudgementState judgementState;
-
         List<AIStateBase> allStates;
 
-        [Header("Stunned Settings (needs a relook)")]
+        [Header("Stunned Settings")]
         [SerializeField, ReadOnly] bool isStunned;
         public float stunDuration;
         public event Action<bool> OnStunnedEvent;
@@ -229,16 +226,13 @@ namespace Hadal.AI
             //! instantiate classes
             stateMachine = new StateMachine();
 
-            //! Idle
-            idleState = new IdleState(this);
-
             //! Anticipation
             anticipationState = new AnticipationState(this);
 
             //! Engagement
             ambushState = new AmbushState(this);
+            huntState = new HuntState(this);
             judgementState = new JudgementState(this);
-            engagementState = new EngagementState(this);
 
             //! Recovery
             recoveryState = new RecoveryState(this);
@@ -246,36 +240,29 @@ namespace Hadal.AI
             //! Cooldown
             cooldownState = new CooldownState(this);
 
-            //! Lure
-            lureState = new LureState(this);
-
             //! -setup custom transitions-
             stateMachine.AddEventTransition(to: anticipationState, withCondition: IsAnticipating());
             stateMachine.AddEventTransition(to: judgementState, withCondition: CanJudge());
             stateMachine.AddEventTransition(to: ambushState, withCondition: WantsToAmbush());
-            stateMachine.AddEventTransition(to: engagementState, withCondition: HasEngageObjective());
+            stateMachine.AddEventTransition(to: huntState, withCondition: WantsToHunt());
             stateMachine.AddEventTransition(to: recoveryState, withCondition: IsRecovering());
             stateMachine.AddEventTransition(to: cooldownState, withCondition: IsCooldown());
-            stateMachine.AddEventTransition(to: idleState, withCondition: IsIdle());
-            stateMachine.AddEventTransition(to: lureState, withCondition: IsLure());
 
             allStates = new List<AIStateBase>
             {
                 anticipationState,
-                judgementState,
                 ambushState,
-                engagementState,
+                huntState,
+                judgementState,
                 recoveryState,
-                cooldownState,
-                idleState,
-                lureState
+                cooldownState
             };
         }
 
         private void PlayersAreReadySignal()
         {
             PlayerManager.Instance.OnAllPlayersReadyEvent -= PlayersAreReadySignal;
-            "Players are ready, Happy hunting!".Msg();
+            if (DebugEnabled) "Players are ready, Happy hunting!".Msg();
             _playersAreReady = true;
         }
 
@@ -288,7 +275,7 @@ namespace Hadal.AI
 
         #region Event Handlers
 
-        /// <summary>Calls when AI enters a cavern</summary>
+        /// <summary> Calls when AI enters a cavern. </summary>
         void OnCavernEnter(CavernHandler cavern)
         {
             GetCurrentMachineState().OnCavernEnter(cavern);
@@ -321,42 +308,23 @@ namespace Hadal.AI
 
         #region Transition Conditions
 
-        Func<bool> IsAnticipating() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Anticipation && !isStunned;
-        };
-        Func<bool> IsRecovering() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Recovery && !isStunned;
-        };
-        Func<bool> CanJudge() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Judgement && !isStunned;
-        };
-        Func<bool> WantsToAmbush() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Ambush && !isStunned;
-        };
-        Func<bool> HasEngageObjective() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Engagement && !isStunned && cavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid;
-        };
-        Func<bool> IsCooldown() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Cooldown && !isStunned;
-        };
+        Func<bool> IsAnticipating() => ()
+            => RuntimeData.GetBrainState == BrainState.Anticipation && !isStunned;
 
-        Func<bool> IsIdle() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Idle && !isStunned;
-        };
+        Func<bool> WantsToAmbush() => ()
+            => RuntimeData.GetBrainState == BrainState.Ambush && !isStunned;
 
-        Func<bool> IsLure() => () =>
-        {
-            return RuntimeData.GetBrainState == BrainState.Lure && !isStunned && RuntimeData.GetBrainState != BrainState.Engagement;
-        };
+        Func<bool> WantsToHunt() => ()
+            => RuntimeData.GetBrainState == BrainState.Hunt && !isStunned;
 
-        public bool IsStunned => isStunned;
+        Func<bool> CanJudge() => ()
+            => RuntimeData.GetBrainState == BrainState.Judgement && !isStunned;
+        
+        Func<bool> IsRecovering() => ()
+            => RuntimeData.GetBrainState == BrainState.Recovery && !isStunned;
+        
+        Func<bool> IsCooldown() => ()
+            => RuntimeData.GetBrainState == BrainState.Cooldown && !isStunned;
 
         #endregion
 
@@ -526,7 +494,20 @@ namespace Hadal.AI
 
         #region Accesors
 
+        public bool IsStunned => isStunned;
         public BrainState GetState => runtimeData.GetBrainState;
+
+        public bool CheckForJudgementStateCondition()
+        {
+            if (CurrentTarget != null)
+            {
+                RuntimeData.SetBrainState(BrainState.Judgement);
+                if (DebugEnabled) "Spotted and entered engagement!".Msg();
+                return true;
+            }
+            return false;
+        }
+
         public AIStateBase GetCurrentMachineState()
         {
             foreach (AIStateBase state in allStates) if (state.IsCurrentState) return state;
@@ -538,7 +519,7 @@ namespace Hadal.AI
             => state switch
             {
                 BrainState.Anticipation => anticipationState,
-                BrainState.Engagement => engagementState,
+                BrainState.Hunt => huntState,
                 BrainState.Recovery => recoveryState,
                 BrainState.Cooldown => cooldownState,
                 _ => ReturnDefaultAIState()
