@@ -869,28 +869,28 @@ namespace Hadal.AI
                 case CavernTag.Crystal:
                     {
                         crystalCavernLingerTimer -= deltaTime;
-                        Debug.Log("crystal: " + crystalCavernLingerTimer);
+                        if(enableDebug) Debug.Log("crystal: " + crystalCavernLingerTimer);
                         if (crystalCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Bioluminescent:
                     {
                         biolumiCavernLingerTimer -= deltaTime;
-                        Debug.Log("biolumi: " + biolumiCavernLingerTimer);
+                        if(enableDebug) Debug.Log("biolumi: " + biolumiCavernLingerTimer);
                         if (biolumiCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Hydrothermal_Deep:
                     {
                         hydrothermalCavernLingerTimer -= deltaTime;
-                        Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
+                        if(enableDebug) Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
                         if (hydrothermalCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Lair:
                     {
                         lairCavernLingerTimer -= deltaTime;
-                        Debug.Log("lair: " + lairCavernLingerTimer);
+                        if(enableDebug) Debug.Log("lair: " + lairCavernLingerTimer);
                         if (lairCavernLingerTimer > 0f) return;
                         break;
                     }
