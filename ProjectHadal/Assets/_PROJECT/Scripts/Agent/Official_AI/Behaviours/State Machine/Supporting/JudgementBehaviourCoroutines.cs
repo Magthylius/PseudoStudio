@@ -87,6 +87,7 @@ namespace Hadal.AI
                     if (!CloseThresholdReached)
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
+                        JState.IsBehaviourRunning = false;
                         break;
                     }
 
@@ -103,12 +104,16 @@ namespace Hadal.AI
 
         private IEnumerator DoThreshAttack(int dps, System.Action successCallback, System.Action failureCallback)
         {
-            bool success = true;
+            bool success = false;
             int totalDamageSeconds = Settings.G_TotalThreshTimeInSeconds;
             isDamaging = true;
             NavigationHandler.DisableWithLerp(2f);
 
-            void StopAttack() => isDamaging = false;
+            void StopAttack()
+            {
+                isDamaging = false;
+                success = true;
+            }
 
             DamageManager.ApplyDoT(Brain.CarriedPlayer,
                 totalDamageSeconds,
