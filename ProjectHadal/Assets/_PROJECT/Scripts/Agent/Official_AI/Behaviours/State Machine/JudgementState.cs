@@ -8,6 +8,7 @@ namespace Hadal.AI.States
     public class JudgementState : AIStateBase
     {
         private EngagementStateSettings settings;
+        private AISenseDetection sensory;
         private JudgementBehaviourCoroutines behaviour;
         private Coroutine currentRoutine;
         public bool IsBehaviourRunning { get; set; }
@@ -16,6 +17,7 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = MachineData.Engagement;
+            sensory = brain.SenseDetection;
             behaviour = new JudgementBehaviourCoroutines(brain, this);
             ResetStateValues();
         }
@@ -44,7 +46,16 @@ namespace Hadal.AI.States
             if (IsBehaviourRunning || !AllowStateTick)
                 return;
 
-            int playerCount = CavernManager.GetHandlerOfAILocation.GetPlayerCount;
+            int playerCount;
+            var handler = CavernManager.GetHandlerOfAILocation;
+            if (handler != null)
+                playerCount = handler.GetPlayerCount;
+            else
+            {
+                sensory.RequestImmediateSensing();
+                playerCount = sensory.DetectedPlayersCount;
+            }
+
             RuntimeData.ResetCumulativeDamageCount();
 
             bool isDefensive = RuntimeData.NormalisedConfidence < 0.5f;

@@ -55,8 +55,21 @@ namespace Hadal.AI
         [SerializeField] private LeviathanRuntimeData runtimeData;
         [ReadOnly] public GameObject MouthObject;
         [ReadOnly] public List<PlayerController> Players;
-        [ReadOnly] public PlayerController CurrentTarget;
         [ReadOnly] public AIEgg Egg;
+        [SerializeField, ReadOnly] private PlayerController currentTarget;
+        public PlayerController CurrentTarget { get => currentTarget; private set => currentTarget = value; }
+        /// <summary> Allows safely setting the current target of the AI if it is not already in Judgement state. </summary>
+        public void TrySetCurrentTarget(PlayerController newTarget)
+        {
+            if (RuntimeData.GetBrainState == BrainState.Judgement)
+                return;
+            
+            CurrentTarget = newTarget;
+        }
+        /// <summary> Unsafely sets the current target. Can be intentionally used when switching targets midway is necessary. </summary>
+        public void ForceSetCurrentTarget(PlayerController newTarget) => CurrentTarget = newTarget;
+        /// <summary> Network callback only version of <see cref="TrySetCurrentTarget"/> that bypasses the safety check. </summary>
+        public void Net_SetCurrentTarget(PlayerController newTarget) => ForceSetCurrentTarget(newTarget);
 
         private PlayerController carriedPlayer;
 

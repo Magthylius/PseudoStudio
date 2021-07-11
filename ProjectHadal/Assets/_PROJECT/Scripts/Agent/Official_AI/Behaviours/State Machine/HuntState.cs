@@ -68,7 +68,7 @@ namespace Hadal.AI.States
                 return;
             }
 
-            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
+            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, false);
             CavernTag nextTag = nextCavern.cavernTag;
             
             //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
@@ -96,7 +96,7 @@ namespace Hadal.AI.States
 
         private void DoRoar()
         {
-            AudioBank.Play3D(soundType: AISound.Roar, Brain.transform.position);
+            AudioBank.Play3D(soundType: AISound.Roar, Brain.transform);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;

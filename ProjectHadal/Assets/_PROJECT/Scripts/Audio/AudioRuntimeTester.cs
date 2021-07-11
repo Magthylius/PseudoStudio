@@ -31,7 +31,7 @@ namespace Hadal.AudioSystem
         private void PlayAmbience()
         {
             if (testAmb == null) { "Test AMB is null.".Warn(); return; }
-            testAmb.Play(null);
+            testAmb.Play((AudioSource)null);
         }
         [Button(nameof(TogglePauseAmbience), EButtonEnableMode.Playmode)]
         private void TogglePauseAmbience()
