@@ -107,6 +107,8 @@ namespace Hadal.Player
             _rBody.maxDepenetrationVelocity = 1f; //! This is meant to make sure the collider does not penetrate too deeply into environmental collider (thus reducing bouncing)
             lureLauncherObject.OnLureActivate += InvokeLureActivatedEvent;
             TryInjectDependencies();
+            if (NetworkEventManager.Instance.isOfflineMode && !isDummy)
+                SetLocalPlayerLayer();
 
             if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
             {
@@ -271,7 +273,7 @@ namespace Hadal.Player
             //! This is online called in online mode, this function is called on PlayerManager for host
             print("Everyone ready. Begin !");
             
-            gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
+            SetLocalPlayerLayer();
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
             _manager.InstantiatePViewList();
@@ -480,6 +482,11 @@ namespace Hadal.Player
             rotator = GetComponentInChildren<PlayerRotation>();
             rotator.Initialise(pTrans);
             rotator.Enable();
+        }
+
+        private void SetLocalPlayerLayer()
+        {
+            gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
         }
         #endregion
 
