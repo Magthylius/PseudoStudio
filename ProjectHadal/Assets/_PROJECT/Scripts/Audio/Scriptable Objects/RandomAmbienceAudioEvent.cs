@@ -17,10 +17,8 @@ namespace Hadal.AudioSystem
 
         private int chosenIndex = -1;
 
-        public override bool Play(Vector3 position)
-        {
-            return false;
-        }
+        public override bool Play(Transform followPosTransform) => false;
+        public override bool Play(Vector3 position) => false;
 
         public override void Play(AudioSource source)
         {
@@ -41,7 +39,7 @@ namespace Hadal.AudioSystem
             if (Ambiences.IsNullOrEmpty()) return;
             chosenIndex = track;
             Stop();
-            Ambiences[chosenIndex].Play(null);
+            Ambiences[chosenIndex].Play((AudioSource)null);
         }
 
         public override void Pause(bool isPaused)

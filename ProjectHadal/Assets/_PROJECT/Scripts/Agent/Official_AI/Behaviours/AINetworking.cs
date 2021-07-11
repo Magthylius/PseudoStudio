@@ -73,7 +73,7 @@ namespace Hadal.AI
             PlayerController targetPlayer = NetworkData.GetPlayerController(targetViewID);
             if (targetPlayer != null)
             {
-                brain.CurrentTarget = targetPlayer;
+                brain.Net_SetCurrentTarget(targetPlayer);
                 brain.TryCarryTargetPlayer();
             }
         }
@@ -81,7 +81,7 @@ namespace Hadal.AI
         void RE_DetachAnyCarriedPlayer(EventData eventData)
         {
             brain.TryDropCarriedPlayer();
-            brain.CurrentTarget = null;
+            brain.Net_SetCurrentTarget(null);
         }
 
         void RE_DisableBrain(EventData eventData)

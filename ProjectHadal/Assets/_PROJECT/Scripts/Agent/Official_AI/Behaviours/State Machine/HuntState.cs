@@ -96,7 +96,7 @@ namespace Hadal.AI.States
 
         private void DoRoar()
         {
-            AudioBank.Play3D(soundType: AISound.Roar, Brain.transform.position);
+            AudioBank.Play3D(soundType: AISound.Roar, Brain.transform);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;

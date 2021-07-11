@@ -22,6 +22,7 @@ namespace Hadal.AudioSystem
 
         /// <summary> Sets position of this handler's game object. </summary>
         public void SetWorldPosition(Vector3 position) => transform.position = position;
+        public void SetParent(Transform parent) => transform.parent = parent;
 
         /// <summary> Called by any relevant scriptable object to configure the audio source attached to this monobehaviour. </summary>
         public void Setup(in AudioSourceSettings settings) => settings.AssignSettings(ref Source);
@@ -37,6 +38,7 @@ namespace Hadal.AudioSystem
             IEnumerator CheckAudioFinished()
             {
                 while (IsPlaying) yield return null;
+                transform.parent = null;
                 AudioFinishedEvent?.Invoke(this);
             }
         }

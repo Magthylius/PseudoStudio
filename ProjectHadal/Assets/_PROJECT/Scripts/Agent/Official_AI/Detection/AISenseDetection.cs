@@ -59,6 +59,8 @@ namespace Hadal.AI
             UpdateDetectionSettings();
         }
 
+        public void RequestImmediateSensing() => SenseSurroundings();
+
         private void UpdateDetectionSettings()
         {
             switch (_detectionMode)
@@ -94,13 +96,14 @@ namespace Hadal.AI
                     .Where(p => !p.GetInfo.HealthManager.IsDown || !p.GetInfo.HealthManager.IsUnalive)
                     .ToList();
 
+            DetectedPlayersCount = _detectedPlayers.Count;
 
-            if (DetectedPlayersCount <= 0) _brain.CurrentTarget = null;
-            else if (_brain.CurrentTarget == null) _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
+            if (DetectedPlayersCount <= 0) _brain.TrySetCurrentTarget(null);
+            else if (_brain.CurrentTarget == null) _brain.TrySetCurrentTarget(_detectedPlayers.FirstOrDefault());
 
             //! If already targetting, takes closest player
             if (_brain.CurrentTarget && allowSwitchTarget)
-                _brain.CurrentTarget = _detectedPlayers.FirstOrDefault();
+                _brain.ForceSetCurrentTarget(_detectedPlayers.FirstOrDefault());
 
         }
 

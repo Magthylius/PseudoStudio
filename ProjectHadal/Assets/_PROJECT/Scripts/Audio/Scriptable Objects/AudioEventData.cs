@@ -6,6 +6,7 @@ namespace Hadal.AudioSystem
     public abstract class AudioEventData : ScriptableObject
     {
         public virtual string Description { get; } = "An audio event.";
+        public abstract bool Play(Transform followPosTransform);
         public abstract bool Play(Vector3 position);
         public abstract void Play(AudioSource source);
         public virtual void Play(int track) { }
