@@ -9,7 +9,6 @@ namespace Hadal.AI.States
     {
         private EngagementStateSettings settings;
         private AISenseDetection sensory;
-        private CavernTag currentTag;
         private CavernTag targetTag;
         private bool hasReachedTargetCavern;
 
@@ -26,8 +25,6 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
             RuntimeData.ResetEngagementTicker();
-
-            currentTag = AICavern.cavernTag;
             targetTag = Brain.TargetMoveCavern.cavernTag;
             sensory.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);
@@ -37,7 +34,14 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             RuntimeData.TickEngagementTicker(Brain.DeltaTime);
-            if (Brain.CheckForJudgementStateCondition()) return;
+            if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime)
+                RuntimeData.SetBrainState(BrainState.Anticipation);
+            
+            if (Brain.CheckForJudgementStateCondition())
+            {
+                RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
+                return;
+            }
         }
         public override void LateStateTick()
         {
@@ -67,25 +71,31 @@ namespace Hadal.AI.States
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
             CavernTag nextTag = nextCavern.cavernTag;
             
-            if (nextTag != currentTag)
-            {
-                currentTag = nextTag;
-                if (nextTag == targetTag)
-                    hasReachedTargetCavern = true;
+            //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
+            NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
+            Brain.UpdateNextMoveCavern(AICavern);
+            
+            if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
 
-                //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
-                NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
-                Brain.UpdateTargetMoveCavern(AICavern);
+            if (nextTag == targetTag)
+            {
+                hasReachedTargetCavern = true;
+                DoRoar();
+                return;
             }
 
-            if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
+            DoRoar();
         }
 
         private void ResetCachedTags()
         {
-            currentTag = CavernTag.Invalid;
             targetTag = CavernTag.Invalid;
             hasReachedTargetCavern = false;
+        }
+
+        private void DoRoar()
+        {
+            AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform.position);
         }
 
         public override Func<bool> ShouldTerminate() => () => false;

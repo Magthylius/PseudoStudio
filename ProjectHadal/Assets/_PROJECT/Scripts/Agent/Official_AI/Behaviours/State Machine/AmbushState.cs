@@ -26,6 +26,8 @@ namespace Hadal.AI.States
         public override void OnStateStart()
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
+            
+            RuntimeData.ResetEngagementTicker();
             currentCavern = Brain.CavernManager.GetCavernTagOfAILocation();
             cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
             ambushTimer = settings.AM_MaxWaitTime;
