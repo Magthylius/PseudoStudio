@@ -74,17 +74,13 @@ namespace Hadal.AI.States
             //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
             NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
             Brain.UpdateNextMoveCavern(AICavern);
-            
-            if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
-
             if (nextTag == targetTag)
             {
                 hasReachedTargetCavern = true;
                 DoRoar();
-                return;
             }
-
-            DoRoar();
+            
+            if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
         }
 
         private void ResetCachedTags()
