@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Photon.Pun;
 using Tenshi;
 using UnityEngine;
 
@@ -13,13 +14,23 @@ namespace Hadal.AI
         private void OnValidate()
         {
             if (cCollider == null) cCollider = GetComponent<SphereCollider>();
-            cCollider.radius = navigator.ObstacleDetectionRadius;
+            if (navigator != null) cCollider.radius = navigator.ObstacleDetectionRadius;
         }
 
         private void Awake()
         {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
             cCollider = GetComponent<SphereCollider>();
             navigator.OnObstacleDetectRadiusChange += UpdateData;
+        }
+
+        private void OnDestroy()
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                return;
+            
+            navigator.OnObstacleDetectRadiusChange -= UpdateData;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -40,6 +51,8 @@ namespace Hadal.AI
         }
         
         private bool ShouldCollide(Collider other)
-            => navigator.ObstacleTimerReached && other.gameObject.layer.IsAMatchingMask(navigator.GetObstacleMask);
+            => navigator.ObstacleTimerReached
+            && PhotonNetwork.IsMasterClient
+            && other.gameObject.layer.IsAMatchingMask(navigator.GetObstacleMask);
     }
 }

@@ -91,10 +91,11 @@ MonoBehaviour:
   debugEnabled: 0
   allowSwitchTarget: 0
   useAmbushDetection: 0
-  overlapSphereDetectionRadius: 100
-  ambushSphereDetectionRadius: 0
+  overlapSphereDetectionRadius: 30
+  ambushSphereDetectionRadius: 50
+  huntSphereDetectionRadius: 70
   detectionOffset: {x: 0, y: 0, z: 0}
-  checkDelay: 0
+  checkDelay: 1
 --- !u!114 &9221971048963321059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +143,7 @@ Transform:
   m_LocalPosition: {x: 194.9, y: 0, z: 158.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2206939683509102031}
+  - {fileID: 4086058519835168118}
   - {fileID: 2206939684562575359}
   - {fileID: 1692377485682228084}
   - {fileID: 8001679023775102921}
@@ -167,7 +168,7 @@ MonoBehaviour:
   targetMoveCavern: {fileID: 0}
   nextMoveCavern: {fileID: 0}
   healthManager: {fileID: 2206939684562575358}
-  navigationHandler: {fileID: 2206939683509102030}
+  navigationHandler: {fileID: 4086058519835168119}
   senseDetection: {fileID: 6021279049498701051}
   sightDetection: {fileID: 9221971048963321059}
   damageManager: {fileID: 2206939684562575357}
@@ -395,7 +396,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd1b8662e9341c645be1860c9bf4daf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &606948024159991708
+  audioAssetList: []
+  source2D: {fileID: 0}
+--- !u!1001 &3348522405853159205
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -410,58 +413,6 @@ PrefabInstance:
       propertyPath: pilotTrans
       value: 
       objectReference: {fileID: 2206939684412345072}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: maxVelocity
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: thrustForce
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: attractionForce
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: lingerTimeRange.x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: lingerTimeRange.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: closeRepulsionForce
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: obstacleDetectRadius
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: cavernLingerTimeRange.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: cavernLingerTimeRange.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: stunnedSteeringSettings
-      value: 
-      objectReference: {fileID: 11400000, guid: aa946cb7318bb2e4d92525bd71fa7fc0, type: 2}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: navPointLingerTimeRange.x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: navPointLingerTimeRange.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: axisStalemateDeviationForce
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295891, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -510,21 +461,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: '#Leviathan Navigation Handler'
       objectReference: {fileID: 0}
-    - target: {fileID: 8450563343994111741, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-      propertyPath: m_Radius
-      value: 20
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
---- !u!4 &2206939683509102031 stripped
+--- !u!4 &4086058519835168118 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1642916594410295891, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-  m_PrefabInstance: {fileID: 606948024159991708}
+  m_PrefabInstance: {fileID: 3348522405853159205}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2206939683509102030 stripped
+--- !u!114 &4086058519835168119 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
-  m_PrefabInstance: {fileID: 606948024159991708}
+  m_PrefabInstance: {fileID: 3348522405853159205}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1

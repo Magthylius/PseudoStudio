@@ -47,7 +47,10 @@ MonoBehaviour:
   obstacleCheckTimer: 0
   timeoutTimer: 0
   navPointLingerTimer: 0
-  cavernLingerTimer: 0
+  lairCavernLingerTimer: 0
+  hydrothermalCavernLingerTimer: 0
+  crystalCavernLingerTimer: 0
+  biolumiCavernLingerTimer: 0
   speedMultiplier: 1
   navPoints: []
   repulsionPoints: []
@@ -59,12 +62,16 @@ MonoBehaviour:
   isChasingAPlayer: 0
   canPath: 0
   chosenAmbushPoint: 0
+  lockSteeringBehaviour: 0
   enableDebug: 0
   showObstacleInfo: 0
   enableMovement: 1
   disableOnStart: 0
-  navPointLingerTimeRange: {x: 0, y: 0}
-  cavernLingerTimeRange: {x: 0, y: 0}
+  navPointLingerTimeRange: {x: 1, y: 3}
+  crystalCavernLingerTimeRange: {x: 30, y: 60}
+  lairCavernLingerTimeRange: {x: 60, y: 100}
+  hydrothermalCavernLingerTimeRange: {x: 60, y: 120}
+  biolumiCavernLingerTimeRange: {x: 40, y: 60}
   timeoutNewPointTime: 12
   obstacleCheckTime: 0.1
   _steeringMode: 0
@@ -72,14 +79,14 @@ MonoBehaviour:
   tunnelSteeringSettings: {fileID: 11400000, guid: 5019088c4761ab84c9761c44cad629c9, type: 2}
   stunnedSteeringSettings: {fileID: 11400000, guid: aa946cb7318bb2e4d92525bd71fa7fc0, type: 2}
   engagementSteeringSettings: {fileID: 11400000, guid: 44a0c41d5529f0e488952b15e71d6c79, type: 2}
-  maxVelocity: 50
-  thrustForce: 12
+  maxVelocity: 25
+  thrustForce: 15
   additionalAttractionForce: 0
-  attractionForce: 20
+  attractionForce: 50
   avoidanceForce: 5
-  closeRepulsionForce: 5
-  axisStalemateDeviationForce: 2
-  obstacleDetectRadius: 30
+  closeRepulsionForce: 10
+  axisStalemateDeviationForce: 100
+  obstacleDetectRadius: 20
   closeNavPointDetectionRadius: 0
   smoothLookAtSpeed: 12
   obstacleMask:
@@ -87,7 +94,7 @@ MonoBehaviour:
     m_Bits: 4352
   isStunned: 0
   numberOfClosestPointsToConsider: 4
-  numberOfClosestPointsToConsiderAfterTunnelExit: 1
+  numberOfClosestPointsToConsiderAfterTunnelExit: 2
   shuffleTunnelExitPoint: 0
   pilotTrans: {fileID: 0}
   rBody: {fileID: 0}
@@ -135,7 +142,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 30
+  m_Radius: 20
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8977255334005848705
 Rigidbody:

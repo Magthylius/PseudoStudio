@@ -73,7 +73,7 @@ namespace Hadal.AI.States
                 if (nextTag == targetTag)
                     hasReachedTargetCavern = true;
 
-                //! do not go through cavern linger timer, immediate go to next cavern as fast as possible
+                //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
                 NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
                 Brain.UpdateTargetMoveCavern(AICavern);
             }

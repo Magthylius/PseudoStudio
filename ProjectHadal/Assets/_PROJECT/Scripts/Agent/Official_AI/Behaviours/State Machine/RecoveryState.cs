@@ -107,7 +107,6 @@ namespace Hadal.AI.States
         void DetermineNextCavern()
         {
             Brain.StartCoroutine(WaitForAICavern());
-            //print(AICavern);
             IEnumerator WaitForAICavern()
             {
                 while (AICavern == null)
@@ -116,8 +115,8 @@ namespace Hadal.AI.States
                 CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
 
                 //NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
-                NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
                 //NavigationHandler.EnableCachedQueuePathTimer();
+                NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
                 Brain.UpdateNextMoveCavern(nextCavern);
             }
         }
