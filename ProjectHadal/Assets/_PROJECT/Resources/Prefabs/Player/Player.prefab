@@ -193,7 +193,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1079494942034374361}
   m_LocalRotation: {x: -0, y: -0.38268322, z: -0, w: 0.9238797}
-  m_LocalPosition: {x: -0.5, y: -0.2, z: 1.34}
+  m_LocalPosition: {x: -0.5, y: 0.082, z: 1.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7182543085046098039}
@@ -870,7 +870,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8118280344335244417
 Transform:
   m_ObjectHideFlags: 0
@@ -972,7 +972,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4241533515781175821}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 1.34}
+  m_LocalPosition: {x: 0, y: 0, z: 1.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7182543085046098039}
@@ -990,10 +990,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.37584552, g: 0.58392626, b: 0.7735849, a: 1}
-  m_Intensity: 60
+  m_Intensity: 30
   m_Range: 1000
   m_SpotAngle: 120
-  m_InnerSpotAngle: 50
+  m_InnerSpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -1050,6 +1050,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3476336165869892575}
   - component: {fileID: 2139526116642413387}
+  - component: {fileID: 5074960409477614878}
   m_Layer: 0
   m_Name: DodgeBooster
   m_TagString: Untagged
@@ -1091,6 +1092,18 @@ MonoBehaviour:
   maxChamberCapacity: 1
   chamberReloadTime: 0
   maxOnLoadOut: 1
+--- !u!114 &5074960409477614878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4647617549225727427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4843741649145227763
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,6 +1402,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8875660430334310044}
   - component: {fileID: 374861846196033566}
+  - component: {fileID: 3026424081405990079}
   m_Layer: 0
   m_Name: Spot Light (1)
   m_TagString: Untagged
@@ -1404,7 +1418,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6129731109976881710}
   m_LocalRotation: {x: -0, y: 0.38268322, z: -0, w: 0.9238797}
-  m_LocalPosition: {x: 0.5, y: -0.2, z: 1.34}
+  m_LocalPosition: {x: 0.5, y: 0.082, z: 1.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7182543085046098039}
@@ -1472,6 +1486,18 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &3026424081405990079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6129731109976881710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6287583129589580556
 GameObject:
   m_ObjectHideFlags: 0
@@ -1729,9 +1755,9 @@ MonoBehaviour:
   startLightsOn: 1
   enableLightToggle: 0
   enableStartupOverride: 1
-  startingIntensity: 150
+  startingIntensity: 60
   startingRange: 2000
-  innerSpotAngle: 40
+  innerSpotAngle: 50
   outerSpotAngle: 120
 --- !u!1 &8113724812607363629
 GameObject:
@@ -2281,6 +2307,14 @@ PrefabInstance:
     - target: {fileID: 392752035660638855, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -604.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 681029287661132527, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: m_Range
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 681029287661132527, guid: b8622bac10001434d9cbd6760facb011, type: 3}
+      propertyPath: m_Intensity
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1139320133791175466, guid: b8622bac10001434d9cbd6760facb011, type: 3}
       propertyPath: m_RootOrder
@@ -3051,6 +3085,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
+--- !u!4 &4545749702208569251 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 628160377840392337, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
+  m_PrefabInstance: {fileID: 4008788385658070834}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6593565318549421644 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7792106367881664894, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
@@ -3062,11 +3101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c906820790d5f429caadba5d5b1c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &4545749702208569251 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 628160377840392337, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
-  m_PrefabInstance: {fileID: 4008788385658070834}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4548899806365147347
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3276,11 +3310,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
---- !u!4 &7137961955950599385 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 628160377840392337, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-  m_PrefabInstance: {fileID: 7762110215185941576}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8794171486015856055 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
@@ -3292,6 +3321,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc01e863fc1f0547acc3eb012415823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &7137961955950599385 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 628160377840392337, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
+  m_PrefabInstance: {fileID: 7762110215185941576}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8663925412407820621
 PrefabInstance:
   m_ObjectHideFlags: 0
