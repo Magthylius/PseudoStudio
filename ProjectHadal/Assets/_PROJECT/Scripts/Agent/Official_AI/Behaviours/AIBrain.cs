@@ -169,6 +169,7 @@ namespace Hadal.AI
             if (cavernManager != null)
             {
                 cavernManager.AIEnterCavernEvent -= OnCavernEnter;
+                cavernManager.AILeftCavernEvent -= OnCavernLeave;
                 cavernManager.PlayerEnterCavernEvent -= OnPlayerEnterAICavern;
                 cavernManager.AIEnterTunnelEvent -= OnTunnelEnter;
                 cavernManager.AILeftTunnelEvent -= OnTunnelLeave;
@@ -189,6 +190,7 @@ namespace Hadal.AI
             if (cavernManager != null)
             {
                 cavernManager.AIEnterCavernEvent += OnCavernEnter;
+                cavernManager.AILeftCavernEvent += OnCavernLeave;
                 cavernManager.PlayerEnterCavernEvent += OnPlayerEnterAICavern;
                 cavernManager.AIEnterTunnelEvent += OnTunnelEnter;
                 cavernManager.AILeftTunnelEvent += OnTunnelLeave;
@@ -279,6 +281,11 @@ namespace Hadal.AI
         void OnCavernEnter(CavernHandler cavern)
         {
             GetCurrentMachineState().OnCavernEnter(cavern);
+        }
+
+        void OnCavernLeave(CavernHandler cavern)
+        {
+            GetCurrentMachineState().OnCavernLeave(cavern);
         }
 
         /// <summary>Calls when a player enters the cavern AI is in</summary>

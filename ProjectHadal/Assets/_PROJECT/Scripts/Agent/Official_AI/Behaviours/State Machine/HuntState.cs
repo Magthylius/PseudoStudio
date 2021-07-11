@@ -75,12 +75,17 @@ namespace Hadal.AI.States
             NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
             Brain.UpdateNextMoveCavern(AICavern);
             if (nextTag == targetTag)
-            {
                 hasReachedTargetCavern = true;
-                DoRoar();
-            }
             
             if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
+        }
+
+        public override void OnCavernLeave(CavernHandler cavern)
+        {
+            if (hasReachedTargetCavern)
+            {
+                DoRoar();
+            }
         }
 
         private void ResetCachedTags()

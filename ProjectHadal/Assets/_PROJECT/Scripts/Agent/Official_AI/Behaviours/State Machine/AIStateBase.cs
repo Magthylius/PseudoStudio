@@ -50,6 +50,7 @@ namespace Hadal.AI
         public virtual void OnStateStart() { }
 
         public virtual void OnCavernEnter(CavernHandler cavern) { }
+        public virtual void OnCavernLeave(CavernHandler cavern) { }
 
         public virtual void OnPlayerEnterAICavern(CavernPlayerData data) { }
 
