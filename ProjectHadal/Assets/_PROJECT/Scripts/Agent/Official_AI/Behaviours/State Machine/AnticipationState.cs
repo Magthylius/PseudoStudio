@@ -193,6 +193,7 @@ namespace Hadal.AI.States
                 RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
                 
                 //! debug always hunt
+                RuntimeData.SetEngagementObjective(EngagementObjective.Hunt);
                 RuntimeData.SetBrainState(BrainState.Hunt);
                 SetNewTargetCavern();
                 return true;
