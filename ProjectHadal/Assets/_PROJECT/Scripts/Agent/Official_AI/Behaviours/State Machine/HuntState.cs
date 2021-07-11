@@ -68,7 +68,7 @@ namespace Hadal.AI.States
                 return;
             }
 
-            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
+            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, false);
             CavernTag nextTag = nextCavern.cavernTag;
             
             //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
