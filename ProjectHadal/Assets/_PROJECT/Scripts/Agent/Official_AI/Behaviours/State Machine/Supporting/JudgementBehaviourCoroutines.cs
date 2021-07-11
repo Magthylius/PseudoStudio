@@ -60,6 +60,7 @@ namespace Hadal.AI
                 if (Brain.CurrentTarget != null)
                 {
                     bool success = TrySetCustomNavPoint(Brain.CurrentTarget);
+                    
                     if (success) TryDebug("Set custom nav point onto target. Moving to chase target.");
                 }
 
