@@ -30,24 +30,24 @@ namespace Hadal.AI
         [SerializeField] private PointNavigationHandler navigationHandler;
         [SerializeField] private AISenseDetection senseDetection;
         [SerializeField] private AISightDetection sightDetection;
-        [SerializeField] private AITailManager tailManager;
         [SerializeField] private AIDamageManager damageManager;
         [SerializeField] private AIGameHandler gameHandler;
+        [SerializeField] private AIAudioBank audioBank;
         [SerializeField] private AIGraphicsHandler graphicsHandler;
         [SerializeField] private CavernManager cavernManager;
-        NetworkEventManager neManager;
+        private NetworkEventManager neManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
         public AISenseDetection SenseDetection => senseDetection;
         public AISightDetection SightDetection => sightDetection;
-        public AITailManager TailManager => tailManager;
         public AIDamageManager DamageManager => damageManager;
         public AIGameHandler GameHandler => gameHandler;
+        public AIAudioBank AudioBank => audioBank;
         public AIGraphicsHandler GraphicsHandler => graphicsHandler;
         public CavernManager CavernManager => cavernManager;
 
         private StateMachine stateMachine;
-        private List<ILeviathanComponent> allAIComponents;
+        private List<ILeviathanComponent> allAIUpdateComponents;
         private List<ILeviathanComponent> preUpdateComponents;
         private List<ILeviathanComponent> mainUpdateComponents;
 
@@ -108,9 +108,11 @@ namespace Hadal.AI
             graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
             isStunned = false;
 
-            allAIComponents = GetComponentsInChildren<ILeviathanComponent>().ToList();
-            preUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
-            mainUpdateComponents = allAIComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
+            allAIUpdateComponents = GetComponentsInChildren<ILeviathanComponent>()
+                .Where(c => c.LeviathanUpdateMode != UpdateMode.DoNotUpdate)
+                .ToList();
+            preUpdateComponents = allAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
+            mainUpdateComponents = allAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
 
             Players = new List<PlayerController>();
             CurrentTarget = null;
@@ -153,7 +155,7 @@ namespace Hadal.AI
             if (!onMasterClient) return;
             if (!CanUpdate || !isEnabled) return;
             stateMachine?.LateMachineTick();
-            allAIComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
+            allAIUpdateComponents.ForEach(c => c.DoLateUpdate(DeltaTime));
         }
         private void FixedUpdate()
         {
@@ -162,7 +164,7 @@ namespace Hadal.AI
             float fixedDeltaTime = FixedDeltaTime;
             navigationHandler.DoFixedUpdate(fixedDeltaTime);
             stateMachine?.FixedMachineTick();
-            allAIComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
+            allAIUpdateComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
         }
 
         private void OnDestroy()
@@ -182,7 +184,7 @@ namespace Hadal.AI
             if (DebugEnabled && isOffline)
                 "Leviathan brain initialising in Offline mode.".Msg();
 
-            allAIComponents.ForEach(i => i.Initialise(this));
+            allAIUpdateComponents.ForEach(i => i.Initialise(this));
             cavernManager = FindObjectOfType<CavernManager>();
             Egg = FindObjectOfType<AIEgg>();
 

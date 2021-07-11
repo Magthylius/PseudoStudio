@@ -12,6 +12,7 @@ namespace Hadal.AI
 
     public enum UpdateMode
     {
+        DoNotUpdate,
         PreUpdate,
         MainUpdate,
         FixedUpdate,

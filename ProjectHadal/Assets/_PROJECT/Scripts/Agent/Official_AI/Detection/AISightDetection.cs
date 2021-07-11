@@ -14,7 +14,7 @@ namespace Hadal.AI
         [SerializeField] float viewDistance; // depth of our line of sight (z-axis)
         public bool DetectedAPlayer => detectedPlayer;
 
-        public UpdateMode LeviathanUpdateMode => UpdateMode.PreUpdate;
+        public UpdateMode LeviathanUpdateMode => UpdateMode.DoNotUpdate;
 
         public void Initialise(AIBrain brain)
         {
@@ -81,25 +81,19 @@ namespace Hadal.AI
 
         }
 
-        //Touching
-        void OnTriggerEnter(Collider other)
-        {
-
-        }
-
         void OnDrawGizmos()
         {
-            if (detectedPlayer)
-            {
-                Gizmos.color = Color.red;
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-            }
+            // if (detectedPlayer)
+            // {
+            //     Gizmos.color = Color.red;
+            // }
+            // else
+            // {
+            //     Gizmos.color = Color.green;
+            // }
 
-            Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.DrawWireSphere(new Vector3(0f, 0f, viewDistance), raycastRadius / 2);
+            // Gizmos.matrix = transform.localToWorldMatrix;
+            // Gizmos.DrawWireSphere(new Vector3(0f, 0f, viewDistance), raycastRadius / 2);
         }
     }
 }

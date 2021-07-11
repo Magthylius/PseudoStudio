@@ -215,5 +215,18 @@ namespace Tenshi
 
         public static bool IsAMatchingMask(this int layer, LayerMask includeLayers) => ((1 << layer) & includeLayers) != 0;
         public static bool IsNotAnIgnoredMask(this int layer, LayerMask ignoreLayers) => ((1 << layer) & ignoreLayers) == 0;
+
+        public static TComponent GetOrAddComponent<TComponent>(this GameObject gObject) where TComponent : UnityEngine.Component
+        {
+            TComponent component = gObject.GetComponent<TComponent>();
+            if (component == null)
+                component = gObject.AddComponent<TComponent>();
+            
+            return component;
+        }
+        public static TComponent GetOrAddComponent<TComponent>(this UnityEngine.Component gComponent) where TComponent : UnityEngine.Component
+        {
+            return gComponent.gameObject.GetOrAddComponent<TComponent>();
+        }
     }
 }

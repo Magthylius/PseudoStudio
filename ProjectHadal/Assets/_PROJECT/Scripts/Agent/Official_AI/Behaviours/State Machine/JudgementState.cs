@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using Tenshi.UnitySoku;
 using Tenshi;
 using UnityEngine;
-using Hadal.Player;
-using Object = UnityEngine.Object;
 
 namespace Hadal.AI.States
 {

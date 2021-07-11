@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2206939684412345072}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5734814273914985085
 MonoBehaviour:
@@ -90,7 +90,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugEnabled: 0
   allowSwitchTarget: 0
+  useAmbushDetection: 0
   overlapSphereDetectionRadius: 100
+  ambushSphereDetectionRadius: 0
   detectionOffset: {x: 0, y: 0, z: 0}
   checkDelay: 0
 --- !u!114 &9221971048963321059
@@ -143,8 +145,8 @@ Transform:
   - {fileID: 2206939683509102031}
   - {fileID: 2206939684562575359}
   - {fileID: 1692377485682228084}
-  - {fileID: 1099430620692770243}
   - {fileID: 8001679023775102921}
+  - {fileID: 2051193414400263174}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -168,15 +170,16 @@ MonoBehaviour:
   navigationHandler: {fileID: 2206939683509102030}
   senseDetection: {fileID: 6021279049498701051}
   sightDetection: {fileID: 9221971048963321059}
-  tailManager: {fileID: 6414438567741730858}
   damageManager: {fileID: 2206939684562575357}
   gameHandler: {fileID: 5734814273914985085}
+  audioBank: {fileID: 1292777894468821637}
   graphicsHandler: {fileID: 0}
   cavernManager: {fileID: 0}
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   MouthObject: {fileID: 0}
   Players: []
   CurrentTarget: {fileID: 0}
+  Egg: {fileID: 0}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   followNetworkManagerOfflineStatus: 1
   isOffline: 0
@@ -349,7 +352,7 @@ MonoBehaviour:
   currentSlowStacks: 0
   randomHitPositions: []
   vfx_OnDamaged: {fileID: 11400000, guid: 801216130b69d5544a53c2a323082230, type: 2}
---- !u!1 &3345266927618080665
+--- !u!1 &3596619662574149774
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -357,55 +360,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1099430620692770243}
-  - component: {fileID: 6414438567741730858}
+  - component: {fileID: 2051193414400263174}
+  - component: {fileID: 1292777894468821637}
   m_Layer: 0
-  m_Name: Tail Object
+  m_Name: Audio Bank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1099430620692770243
+--- !u!4 &2051193414400263174
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3345266927618080665}
+  m_GameObject: {fileID: 3596619662574149774}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2206939684412345072}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6414438567741730858
+--- !u!114 &1292777894468821637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3345266927618080665}
+  m_GameObject: {fileID: 3596619662574149774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0aad6885644729f488b481484c972b18, type: 3}
+  m_Script: {fileID: 11500000, guid: cd1b8662e9341c645be1860c9bf4daf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reachDistances:
-  - 20
-  - 40
-  - 75
-  whipKnockbackAmount: 100
-  knockDuration: 1
-  falloffMode: 0
-  knockbackSettings:
-    Position: {x: 0, y: 0, z: 0}
-    Radius: 75
-    Force: 80
-    DetonateOnRemote: 0
-  exponentConst: 0
-  viewAngle: 60
 --- !u!1001 &606948024159991708
 PrefabInstance:
   m_ObjectHideFlags: 0
