@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Tenshi.UnitySoku;
+using UnityEngine;
 
 //Created by Jet
 namespace Hadal.Inputs
@@ -18,208 +22,101 @@ namespace Hadal.Inputs
         public bool BoostActive => BoostAxis >= float.Epsilon;
 
         //! Double tapping
-        bool forwardPressedPreviously = false;
-        bool forwardLetGoPreviously = true;
-        bool backwardPressedPreviously = false;
-        bool leftPressedPreviously = false;
-        bool rightPressedPreviously = false;
-        bool upPressedPreviously = false;
-        bool downPressedPreviously = false;
-        float firstPressTime = 0f;
-
         public float DoubleTapDetectionTime { get; set; } = 0.4f;
-        public bool DoubleVerticalForward
-        {
-            get
-            {
-                if (!forwardLetGoPreviously)
-                {
-                    if (VerticalAxis == 0f)
-                        forwardLetGoPreviously = true;
-                }
-
-                if (!VerticalForward)
-                    return false;
-
-                if (forwardPressedPreviously && forwardLetGoPreviously)
-                {
-                    forwardPressedPreviously = false;
-
-                    //double tap detected
-                    if (DoubleTapConditionMet)
-                    {
-                        firstPressTime = 0f;
-                        return true;
-                    }
-
-                    //too late
-                    return false;
-                }
-
-                //detect first press
-                ResetAllPreviousKeys();
-                forwardPressedPreviously = true;
-                forwardLetGoPreviously = false;
-                firstPressTime = Time.time;
-                return false;
-            }
-        }
-        public bool DoubleVerticalBackward
-        {
-            get
-            {
-                if (!VerticalBackward)
-                    return false;
-
-                if (backwardPressedPreviously)
-                {
-                    backwardPressedPreviously = false;
-
-                    //double tap detected
-                    if (DoubleTapConditionMet)
-                    {
-                        firstPressTime = 0f;
-                        return true;
-                    }
-
-                    //too late
-                    return false;
-                }
-
-                //detect first press
-                ResetAllPreviousKeys();
-                backwardPressedPreviously = true;
-                firstPressTime = Time.time;
-                return false;
-            }
-        }
-        public bool DoubleHorizontalLeft
-        {
-            get
-            {
-                if (!HorizontalLeft)
-                    return false;
-
-                if (leftPressedPreviously)
-                {
-                    leftPressedPreviously = false;
-
-                    //double tap detected
-                    if (DoubleTapConditionMet)
-                    {
-                        firstPressTime = 0f;
-                        return true;
-                    }
-
-                    //too late
-                    return false;
-                }
-
-                //detect first press
-                ResetAllPreviousKeys();
-                leftPressedPreviously = true;
-                firstPressTime = Time.time;
-                return false;
-            }
-        }
-        public bool DoubleHorizontalRight
-        {
-            get
-            {
-                if (!HorizontalRight)
-                    return false;
-
-                if (rightPressedPreviously)
-                {
-                    rightPressedPreviously = false;
-
-                    //double tap detected
-                    if (DoubleTapConditionMet)
-                    {
-                        firstPressTime = 0f;
-                        return true;
-                    }
-
-                    //too late
-                    return false;
-                }
-
-                //detect first press
-                ResetAllPreviousKeys();
-                rightPressedPreviously = true;
-                firstPressTime = Time.time;
-                return false;
-            }
-        }
-        public bool DoubleHoverUp
-        {
-            get
-            {
-                if (!HoverUp)
-                    return false;
-
-                if (upPressedPreviously)
-                {
-                    upPressedPreviously = false;
-
-                    //double tap detected
-                    if (DoubleTapConditionMet)
-                    {
-                        firstPressTime = 0f;
-                        return true;
-                    }
-
-                    //too late
-                    return false;
-                }
-
-                //detect first press
-                ResetAllPreviousKeys();
-                upPressedPreviously = true;
-                firstPressTime = Time.time;
-                return false;
-            }
-        }
-        public bool DoubleHoverDown
-        {
-            get
-            {
-                if (!HoverDown)
-                    return false;
-
-                if (downPressedPreviously)
-                {
-                    downPressedPreviously = false;
-
-                    //double tap detected
-                    if (DoubleTapConditionMet)
-                    {
-                        firstPressTime = 0f;
-                        return true;
-                    }
-
-                    //too late
-                    return false;
-                }
-
-                //detect first press
-                ResetAllPreviousKeys();
-                downPressedPreviously = true;
-                firstPressTime = Time.time;
-                return false;
-            }
-        }
-
+        public bool DoubleVerticalForward => ProcessDoubleInput(DirectionKey.Forward);
+        public bool DoubleVerticalBackward => ProcessDoubleInput(DirectionKey.Backward);
+        public bool DoubleHorizontalLeft => ProcessDoubleInput(DirectionKey.Left);
+        public bool DoubleHorizontalRight => ProcessDoubleInput(DirectionKey.Right);
+        public bool DoubleHoverUp => ProcessDoubleInput(DirectionKey.Up);
+        public bool DoubleHoverDown => ProcessDoubleInput(DirectionKey.Down);
         private bool DoubleTapConditionMet => Time.time - firstPressTime < DoubleTapDetectionTime;
+
         private void ResetAllPreviousKeys()
         {
-            forwardPressedPreviously = false;
-            forwardLetGoPreviously = true;
-            backwardPressedPreviously = false;
-            leftPressedPreviously = false;
-            rightPressedPreviously = false;
-            upPressedPreviously = false;
-            downPressedPreviously = false;
+            int i = -1;
+            var keys = AllDirectionKeys;
+            while (++i < keys.Length)
+            {
+                keyPressedPreviously[keys[i]] = false;
+                keyLetGoPreviously[keys[i]] = true;
+            }
+        }
+        private bool ProcessDoubleInput(DirectionKey key)
+        {
+            AxisPair axisPair = GetAxisFromKey(key);
+
+            if (!keyLetGoPreviously[key] && axisPair.DirectionalAxis == 0f)
+                keyLetGoPreviously[key] = true;
+
+            if (!axisPair.AxisDirectionPressed)
+                return false;
+
+            if (keyPressedPreviously[key] && keyLetGoPreviously[key])
+            {
+                keyPressedPreviously[key] = false;
+                if (DoubleTapConditionMet) // double tap detected
+                {
+                    firstPressTime = 0f;
+                    return true;
+                }
+                return false; // too late
+            }
+
+            // detect first press
+            ResetAllPreviousKeys();
+            keyPressedPreviously[key] = true;
+            keyLetGoPreviously[key] = false;
+            firstPressTime = Time.time;
+            return false;
+        }
+
+        private float firstPressTime = 0f;
+        private Dictionary<DirectionKey, bool> keyPressedPreviously;
+        private Dictionary<DirectionKey, bool> keyLetGoPreviously;
+        public RawMovementInput()
+        {
+            keyPressedPreviously = new Dictionary<DirectionKey, bool>();
+            keyLetGoPreviously = new Dictionary<DirectionKey, bool>();
+            int i = -1;
+            var keys = AllDirectionKeys;
+            while (++i < keys.Length)
+            {
+                keyPressedPreviously.Add(keys[i], false);
+                keyLetGoPreviously.Add(keys[i], true);
+            }
+        }
+        
+        private AxisPair GetAxisFromKey(DirectionKey key)
+        {
+            return key switch
+            {
+                DirectionKey.Forward => new AxisPair() { DirectionalAxis = VerticalAxis, AxisDirectionPressed = VerticalForward },
+                DirectionKey.Backward => new AxisPair() { DirectionalAxis = VerticalAxis, AxisDirectionPressed = VerticalBackward },
+                DirectionKey.Left => new AxisPair() { DirectionalAxis = HorizontalAxis, AxisDirectionPressed = HorizontalLeft },
+                DirectionKey.Right => new AxisPair() { DirectionalAxis = HorizontalAxis, AxisDirectionPressed = HorizontalRight },
+                DirectionKey.Up => new AxisPair() { DirectionalAxis = HoverAxis, AxisDirectionPressed = HoverUp },
+                DirectionKey.Down => new AxisPair() { DirectionalAxis = HoverAxis, AxisDirectionPressed = HoverDown },
+                _ => AxisPair.Empty
+            };
+        }
+
+        private static DirectionKey[] AllDirectionKeys => Enum.GetValues(typeof(DirectionKey)).Cast<DirectionKey>().ToArray();
+
+        private struct AxisPair
+        {
+            public float DirectionalAxis { get; set; }
+            public bool AxisDirectionPressed { get; set; }
+            public static AxisPair Empty => new AxisPair() { DirectionalAxis = 0f, AxisDirectionPressed = false };
+        }
+
+        private enum DirectionKey
+        {
+            Forward = 0,
+            Backward,
+            Left,
+            Right,
+            Up,
+            Down
         }
     }
 }
