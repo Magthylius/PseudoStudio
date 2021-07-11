@@ -862,7 +862,7 @@ namespace Hadal.AI
 
         private void ElapseCavernLingerTimer(in float deltaTime)
         {
-            if (!_tickCavernLingerTimer) return;
+            if (!_tickCavernLingerTimer || !cavernManager) return;
 
             switch (cavernManager.GetCavernTagOfAILocation())
             {

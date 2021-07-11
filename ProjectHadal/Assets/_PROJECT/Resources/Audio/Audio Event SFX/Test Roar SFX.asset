@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
-  m_Name: Test Roar SFX
+  m_Name: Test Thresh SFX 1
   m_EditorClassIdentifier: 
   Clips:
-  - {fileID: 8300000, guid: 3cc7904bcac25ce42b5ac5da38f70c1f, type: 3}
-  - {fileID: 8300000, guid: 37da5fa898ff7fc458dff67313efa0eb, type: 3}
+  - {fileID: 8300000, guid: 069287c4dfeef7e4db94a901490b769b, type: 3}
   Settings:
-    Volume: {x: 0.5414523, y: 0.6414522}
-    Pitch: {x: 1, y: 1}
+    Volume: {x: 0.4, y: 0.4}
+    Pitch: {x: 0.3, y: 0.3}
     SpatialBlend: 0.7
     Priority: 128
     StereoPan: 0
@@ -34,3 +33,4 @@ MonoBehaviour:
     VolumeRolloff: 0
     MinDistance: 1
     MaxDistance: 500
+    RolloffCurveTemplate: {fileID: 0}
