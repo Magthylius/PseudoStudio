@@ -15,6 +15,7 @@ namespace Hadal.AI.States
         AnticipationStateSettings settings;
         AISenseDetection sensory;
         private float autoActTimer = 0f;
+        private bool isFirstAct = false;
 
         //! Meant just for startup
         private bool gameStartupInitialization = false;
@@ -207,10 +208,19 @@ namespace Hadal.AI.States
                 else if (RuntimeData.GetEngagementObjective == EngagementObjective.Hunt)
                 {
                     RuntimeData.SetBrainState(BrainState.Hunt);
-                    SetNewTargetCavern();
+                    if (!isFirstAct)
+                    {
+                        CavernHandler target = CavernManager.GetCavern(CavernTag.Crystal);
+                        Brain.UpdateTargetMoveCavern(target);
+                        CavernManager.SeedCavernHeuristics(target);
+                    }
+                    else SetNewTargetCavern();
+
                     debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
                 }
                 if (Brain.DebugEnabled) Debug.Log(debugMsg);
+
+                isFirstAct = true;
                 return true;
             }
 
