@@ -68,17 +68,9 @@ namespace Hadal.AI.States
             if (cavern == Brain.TargetMoveCavern)
             {
                 if (cavern.GetPlayerCount > 1) SetNewTargetCavern();
-                else if (cavern.GetPlayerCount == 1 && Brain.CarriedPlayer != null)
-                {
-                    if (cavern.GetPlayersInCavern[0] == Brain.CarriedPlayer)
-                    {
-                        //! TODO: Thresh player
-                    }
-                }
                 else if (RuntimeData.GetRecoveryTicks >= settings.MinimumRecoveryTime && cavern.GetPlayerCount <= 0)
                 {
                     RuntimeData.SetBrainState(BrainState.Cooldown);
-                    //RuntimeData.SetEngagementSubState(EngagementSubState.Judgement);
                     RuntimeData.ResetRecoveryTicker();
                 }
             }

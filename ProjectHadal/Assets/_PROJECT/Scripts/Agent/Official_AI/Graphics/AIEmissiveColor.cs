@@ -28,6 +28,8 @@ namespace Hadal.AI.Graphics
         /// <summary> Having a cached reference can help save computation cost. </summary>
         private MaterialPropertyBlock materialProp;
 
+        private Coroutine colourRoutine;
+
         void Start()
         {
             brain = FindObjectOfType<AIBrain>();
@@ -41,6 +43,7 @@ namespace Hadal.AI.Graphics
             percent = 0f;
             sourceA = otherStateColor;
             targetB = otherStateColor;
+            colourRoutine = null;
             UpdateMaterialData();
             if (!PhotonNetwork.IsMasterClient)
                 NetworkEventManager.Instance.AddListener(ByteEvents.AI_COLOUR_CHANGE, Receive_ChangeColour);
@@ -51,16 +54,18 @@ namespace Hadal.AI.Graphics
             var content = (object[])eventData.CustomData;
             bool judgement = (bool)content[0];
             bool ambush = (bool)content[1];
-            StopAllCoroutines();
-            StartCoroutine(AIColorLerp(judgement, ambush));
+            if (colourRoutine != null)
+                StopCoroutine(colourRoutine);
+            colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush));
         }
 
         public void JudgementColor(BrainState state, EngagementObjective objective)
         {
             bool judgement = state == BrainState.Judgement;
             bool ambush = state == BrainState.Ambush;
-            StopAllCoroutines(); //! stopping any running coroutines so it will never run more than once per event call
-            StartCoroutine(AIColorLerp(judgement, ambush));
+            if (colourRoutine != null)
+                StopCoroutine(colourRoutine);
+            colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush));
 
             if (PhotonNetwork.IsMasterClient)
             {
@@ -91,6 +96,7 @@ namespace Hadal.AI.Graphics
             }
             percent = 1f;
             UpdateMaterialData();
+            colourRoutine = null;
         }
 
         private void UpdateMaterialData()
