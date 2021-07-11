@@ -47,9 +47,9 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
-            // if (Brain.CheckForJudgementStateCondition()) return; debug always try hunt, no judgement
-            if (CheckForAutoActCondition()) return;
-        }
+            if (Brain.CheckForJudgementStateCondition()) return; //debug always try hunt, no judgement
+               if (CheckForAutoActCondition()) return;
+            }
 
         public override void LateStateTick()
         {
@@ -70,7 +70,7 @@ namespace Hadal.AI.States
         {
             if (Brain.StateSuspension) return;
 
-            
+
             if (cavern == Brain.TargetMoveCavern)
             {
                 if (cavern.GetPlayerCount <= 0)
@@ -153,7 +153,7 @@ namespace Hadal.AI.States
                         }
                     }
                     break;
-                    
+
                 case EngagementObjective.Ambush:
                     if (Brain.DebugEnabled) "Anticipation: Ambush.".Msg();
                     var mostPopulatedCavern = CavernManager.GetMostPopulatedCavern();
@@ -193,12 +193,6 @@ namespace Hadal.AI.States
                 ResetAutoActTimer();
                 Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
                 RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
-                
-                //! debug always hunt
-                RuntimeData.SetEngagementObjective(EngagementObjective.Hunt);
-                RuntimeData.SetBrainState(BrainState.Hunt);
-                SetNewTargetCavern();
-                return true;
 
                 string debugMsg = string.Empty;
                 if (RuntimeData.GetEngagementObjective == EngagementObjective.Ambush)

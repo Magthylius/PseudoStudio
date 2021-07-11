@@ -26,14 +26,17 @@ MonoBehaviour:
   AM_PounceSpeedMultiplier: 1.5
   AM_CarryDelayTimer: 0.8
   AM_AdditionalThreshDamagePerSecond: 0
-  AG_AccumulatedDamageThresholdPercentage: 0.4
-  AllowTarget_HighestDMGPlayer: 1
-  AllowTarget_HighestHPPlayer: 1
-  AllowTarget_IsolatedPlayer: 1
+  HU_RoamingSpeedMultiplier: 3
+  HU_MaxHuntingTime: 120
   JudgementTimer1: 30
   JudgementTimer2: 30
   JudgementTimer3: 25
   JudgementTimer4: 20
+  PostStunRemainJudgementChance: 0.8
   AGG_AdditionalThreshDamagePerSecond: 1
   DEF_AdditionalThreshDamagePerSecond: -1
   EGG_PermanentThreshDamagePerSecond: 1
+  AG_AccumulatedDamageThresholdPercentage: 0.4
+  AllowTarget_HighestDMGPlayer: 1
+  AllowTarget_HighestHPPlayer: 1
+  AllowTarget_IsolatedPlayer: 1
