@@ -146,7 +146,7 @@ namespace Hadal.Player
             if (CanMove)
             {
                 mover.DoUpdate(DeltaTime);
-                dodgeBooster.DoUpdate(DeltaTime);
+                dodgeBooster?.DoUpdate(DeltaTime);
             }
         }
 
@@ -156,7 +156,7 @@ namespace Hadal.Player
             if (isDummy) return;
 
             if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
-            if (CanMove) dodgeBooster.DoFixedUpdate(FixedDeltaTime);
+            if (CanMove) dodgeBooster?.DoFixedUpdate(FixedDeltaTime);
             if (CanRotate) rotator.DoFixedUpdate(FixedDeltaTime);
         }
 
@@ -477,6 +477,14 @@ namespace Hadal.Player
         }
 
         public void ChangeRotatorToVector()
+        {
+            rotator.Disable();
+            rotator = GetComponentInChildren<PlayerRotationV>();
+            rotator.Initialise(pTrans);
+            rotator.Enable();
+        }
+
+        public void ChangeRotatorToHyrid()
         {
             rotator.Disable();
             rotator = GetComponentInChildren<PlayerRotation>();
