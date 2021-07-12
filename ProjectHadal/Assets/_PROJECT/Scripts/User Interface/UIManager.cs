@@ -35,6 +35,7 @@ namespace Hadal.UI
         [Header("External References")] 
         public UIShootTracer ShootTracer;
         public UIScreenDataHandler ScreenDataHandler;
+        public UIContextHandler ContextHandler;
         public Camera PlayerCamera;
 
         [Header("Reticle Settings")]
