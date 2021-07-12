@@ -38,7 +38,10 @@ public class UIScreenDataHandler : MonoBehaviour
     public void UpdateHealth()
     {
         displayHealth = (int) Mathf.Lerp(displayHealth, targetHealth, healthLerpSpeed * Time.deltaTime);
-        healthData.UpdateText(displayHealth);
+        if (targetHealth == 0)
+            healthData.UpdateTextNoSuffix("ERROR");
+        else
+            healthData.UpdateText(displayHealth);
     }
 
     public void UpdateTargetHealth(int target)

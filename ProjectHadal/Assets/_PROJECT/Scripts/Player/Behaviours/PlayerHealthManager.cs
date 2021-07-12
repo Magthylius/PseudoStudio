@@ -71,6 +71,14 @@ namespace Hadal.Player.Behaviours
             _isDead = false;
             _isKami = false;
         }
+
+        private void Start()
+        {
+            //! UI setup
+            OnDown += UpdateDownUI;
+            OnReviveAttempt += UpdateReviveUI;
+        }
+
         private void OnDestroy()
         {
             OnDown = null;
@@ -360,6 +368,20 @@ namespace Hadal.Player.Behaviours
 
         #endregion
 
+        #region UI Methods
+
+        void UpdateDownUI()
+        {
+            _controller.UI.ContextHandler.PlayerWentDown();
+        }
+
+        void UpdateReviveUI(bool attemptSucceeded)
+        {
+            if (attemptSucceeded) _controller.UI.ContextHandler.PlayerRevived();
+        }
+
+        #endregion
+        
         #region Network Event Methods
 
         /// <summary>
@@ -604,6 +626,7 @@ namespace Hadal.Player.Behaviours
             }
 
             TryRestoreControllerSystem();
+            OnReviveAttempt.Invoke(true);
 
             if (!IsDown && !IsUnalive)
                 "Player successfully revived.".Msg();
