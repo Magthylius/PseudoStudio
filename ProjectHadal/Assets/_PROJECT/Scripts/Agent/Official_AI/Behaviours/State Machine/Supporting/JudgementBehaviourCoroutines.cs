@@ -16,6 +16,7 @@ namespace Hadal.AI
         private LeviathanRuntimeData RuntimeData;
         private StateMachineData MachineData;
         private CavernManager CavernManager;
+        private AISenseDetection SenseDetection;
         private AIDamageManager DamageManager;
         private AIHealthManager HealthManager;
         private JudgementState JState;
@@ -28,6 +29,7 @@ namespace Hadal.AI
             MachineData = Brain.MachineData;
             Settings = MachineData.Engagement;
             CavernManager = Brain.CavernManager;
+            SenseDetection = Brain.SenseDetection;
             DamageManager = Brain.DamageManager;
             HealthManager = Brain.HealthManager;
             JState = judgementState;
@@ -54,14 +56,27 @@ namespace Hadal.AI
 
         private IEnumerator MoveToCurrentTarget(float carryDelayTime)
         {
+            bool HasTargetIsolatedPlayer() => JState.IsolatedPlayer != null;
+            bool HasCurrentTargetPlayer() => Brain.CurrentTarget != null;
+            bool targetMarked = false;
+
             while (JState.IsBehaviourRunning)
             {
-                //! Set custom nav point to destination: current target player if not already moving towards it.
-                if (Brain.CurrentTarget != null)
+                //! Set custom nav point to destination: current target/isolated player if not already moving towards it.
+                if ((HasCurrentTargetPlayer() || HasTargetIsolatedPlayer()) && !targetMarked)
                 {
-                    bool success = TrySetCustomNavPoint(Brain.CurrentTarget);
+                    bool success;
+                    if (JState.IsolatedPlayer != null)
+                        success = TrySetCustomNavPoint(JState.IsolatedPlayer);
+                    else
+                        success = TrySetCustomNavPoint(Brain.CurrentTarget);
+
                     Brain.AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
-                    if (success) TryDebug("Set custom nav point onto target. Moving to chase target.");
+                    if (success)
+                    {
+                        targetMarked = true;
+                        TryDebug("Set custom nav point onto target. Moving to chase target.");
+                    }
                 }
 
                 //! Start delay timer if close enough to player & is waiting to be allowed to carry
@@ -163,7 +178,7 @@ namespace Hadal.AI
                 //! Stop when there are no more players
                 if (PlayerCountDroppedTo0)
                 {
-                    TryDebug("No more players detected in cavern, stopping defensive behaviour.");
+                    TryDebug("No more players detected in cavern or nearby, stopping defensive behaviour.");
                     break;
                 }
 
@@ -176,7 +191,10 @@ namespace Hadal.AI
                     var threshRoutineData = new CoroutineData(Brain,
                         DoThreshAttack(
                             Settings.GetThreshDamagePerSecond(EngagementType.Defensive, RuntimeData.IsEggDestroyed),
-                            null, null));
+                            null,
+                            null
+                        )
+                    );
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
 
                     TryDebug("Thresh damage in outer routine is finished!");
@@ -221,7 +239,7 @@ namespace Hadal.AI
                 //! Stop when there are no more players
                 if (PlayerCountDroppedTo0)
                 {
-                    TryDebug("No more players detected in cavern, stopping aggressive behaviour.");
+                    TryDebug("No more players detected in cavern or nearby, stopping aggressive behaviour.");
                     break;
                 }
 
@@ -341,10 +359,8 @@ namespace Hadal.AI
             if (!isStunned)
                 return;
 
-            threshRoutineData?.Stop();
-            threshRoutineData = null;
-            approachRoutineData?.Stop();
-            approachRoutineData = null;
+            threshRoutineData?.Stop();      threshRoutineData = null;
+            approachRoutineData?.Stop();    approachRoutineData = null;
             JState.IsBehaviourRunning = false;
             JState.StopAnyRunningCoroutines();
             NavigationHandler.Enable();
@@ -382,9 +398,10 @@ namespace Hadal.AI
             }
         }
 
-        private bool PlayerCountDroppedTo0
-            => CavernManager.GetHandlerOfAILocation != null
-            && CavernManager.GetHandlerOfAILocation.GetPlayerCount == 0;
+        private bool NoMorePlayersInCavern => JState.AICavern != null && JState.AICavern.GetPlayerCount == 0;
+        private bool NoMorePlayersNearby => SenseDetection.DetectedPlayersCount == 0;
+
+        private bool PlayerCountDroppedTo0 => NoMorePlayersInCavern && NoMorePlayersNearby;
 
         private float SqrDistanceToTarget
             => (Brain.CurrentTarget.GetTarget.position - Brain.transform.position).sqrMagnitude;

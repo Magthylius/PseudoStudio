@@ -57,9 +57,15 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] int cumulativeDamageCount;
         [SerializeField, ReadOnly] int cumulativeDamageCountThreshold;
         public void ResetCumulativeDamageCount() => cumulativeDamageCount = 0;
-        public void AddDamageCount() => cumulativeDamageCount++;
+        public void AddDamageCount()
+        {
+            cumulativeDamageCount++;
+            if (IsCumulativeDamageCountReached)
+                OnCumulativeDamageCountReached?.Invoke();
+        }
         public void UpdateCumulativeDamageCountThreshold(int newThreshold) => cumulativeDamageCountThreshold = newThreshold;
         public bool IsCumulativeDamageCountReached => cumulativeDamageCount >= cumulativeDamageCountThreshold;
+        public event Action OnCumulativeDamageCountReached;
 
 
         [Header("State Tickers")]

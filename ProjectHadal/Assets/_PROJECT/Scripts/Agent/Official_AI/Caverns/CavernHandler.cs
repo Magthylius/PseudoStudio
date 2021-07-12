@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Tenshi.UnitySoku;
 using UnityEngine;
 using NaughtyAttributes;
+using System.Linq;
 
 //! C: Jon
 namespace Hadal.AI.Caverns
@@ -170,6 +171,22 @@ namespace Hadal.AI.Caverns
             }
 
             return null;
+        }
+
+        public PlayerController GetIsolatedPlayer()
+        {
+            if (playersInCavern.Count == 1)
+                return playersInCavern.Where(p => p != null).Single();
+            
+            return null;
+        }
+
+        public PlayerController GetClosestPlayerTo(Transform thisTrans)
+        {
+            if (playersInCavern.Count == 0)
+                return null;
+            
+            return playersInCavern.OrderBy(p => (p.GetTarget.position - thisTrans.position).sqrMagnitude).FirstOrDefault();
         }
 
         //! Player enquiry

@@ -501,6 +501,8 @@ namespace Hadal.AI
             RuntimeData.UpdateBonusConfidence(0);
         }
 
+        public void TryToTargetClosestPlayerInAICavern() => TrySetCurrentTarget(GetClosestPlayerInAICavern());
+
         #endregion
 
         #region Data
@@ -547,6 +549,15 @@ namespace Hadal.AI
                 return true;
             }
             return false;
+        }
+
+        public PlayerController GetClosestPlayerInAICavern()
+        {
+            var handler = CavernManager.GetHandlerOfAILocation;
+            if (handler != null)
+                return handler.GetClosestPlayerTo(transform);
+            
+            return null;
         }
 
         public AIStateBase GetCurrentMachineState()
