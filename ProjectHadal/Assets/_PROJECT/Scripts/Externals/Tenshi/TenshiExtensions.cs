@@ -137,6 +137,7 @@ namespace Tenshi
         public static int Sqr(this int number) => number * number;
 
         public static bool HasHitPercentChance(this float percentChance) => UnityEngine.Random.value > (1f - percentChance.Clamp01());
+        public static bool HeadsOrTails() => UnityEngine.Random.Range(0, 2) == 1;
         
         public static void LerpSpeed(this ref float speed, in float directionalSpeed, in float acceleration, in float deltaTime)
         {

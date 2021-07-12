@@ -28,6 +28,8 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             
             RuntimeData.ResetEngagementTicker();
+            RuntimeData.ResetCumulativeDamageCount();
+            RuntimeData.UpdateCumulativeDamageCountThreshold(settings.AM_DisruptionDamageCount);
             currentCavern = Brain.CavernManager.GetCavernTagOfAILocation();
             cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
             ambushTimer = settings.AM_MaxWaitTime;
@@ -37,6 +39,7 @@ namespace Hadal.AI.States
         {
 
             SelectNewAmbushPoint();
+            DetectIfCoverCompromised();
             CheckPouncingRange();
             CheckAmbushTimer();
 
@@ -63,6 +66,15 @@ namespace Hadal.AI.States
             if (!NavigationHandler.Data_ChosenAmbushPoint)
             {
                 NavigationHandler.SelectAmbushPoint();
+            }
+        }
+
+        void DetectIfCoverCompromised()
+        {
+            if (RuntimeData.IsCumulativeDamageCountReached)
+            {
+                RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
+                RuntimeData.SetBrainState(BrainState.Recovery);
             }
         }
 

@@ -83,6 +83,17 @@ namespace Hadal.AI
             }
         }
         public NavPoint Data_CurrentPoint => currentPoint;
+
+        private CavernTag cachedLatestCavernTag;
+        public CavernTag Data_CachedLatestCavernTag => cachedLatestCavernTag;
+        public void UpdateLatestCavernTag(CavernTag newCurrentTag, CavernTag nextCavernTagIfAny)
+        {
+            if (newCurrentTag == CavernTag.Invalid)
+                return;
+            
+            cachedLatestCavernTag = newCurrentTag;
+        }
+
         #endregion
 
         [Header("Debug")]
@@ -920,10 +931,14 @@ namespace Hadal.AI
             if (currentPoint == null)
                 currentPoint = GetClosestPointToSelf();
 
+            CavernTag aiTag = cavernManager.GetCavernTagOfAILocation();
+            if (aiTag == CavernTag.Invalid)
+                aiTag = Data_CachedLatestCavernTag;
+
             List<NavPoint> potentialPoints = navPoints
                                             .Where(o => o != null
                                                     && o != currentPoint
-                                                    && o.CavernTag == cavernManager.GetCavernTagOfAILocation()
+                                                    && o.CavernTag == aiTag
                                                     && !o.IsTunnelEntry
                                                     && !o.IsHidingPoint)
                                             .OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition))

@@ -208,10 +208,24 @@ namespace Hadal.AI.States
                         CavernHandler target = CavernManager.GetCavern(CavernTag.Crystal);
                         Brain.UpdateTargetMoveCavern(target);
                         CavernManager.SeedCavernHeuristics(target);
+                        debugMsg = "Took too long and VERY ANGRY, preparing to hunt (first action = targeting Crystal cavern)!!!";
                     }
-                    else SetNewTargetCavern();
+                    else
+                    {
+                        bool canHunt = CavernManager.AnyPlayersPresentInAnyCavern();
+                        if (canHunt)
+                        {
+                            SetNewTargetCavern();
+                            debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
+                        }
+                        else
+                        {
+                            RuntimeData.SetBrainState(BrainState.Ambush);
+                            debugMsg = "Took too long and VERY ANGRY, but no one detect to hunt... therefore, preparing to ambush!!!";
+                        }
+                    }
 
-                    debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
+                    
                 }
                 if (Brain.DebugEnabled) Debug.Log(debugMsg);
 

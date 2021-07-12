@@ -499,6 +499,17 @@ namespace Hadal.AI.Caverns
 
         #region Cavern | Player enquiry
 
+        public bool AnyPlayersPresentInAnyCavern()
+        {
+            int i = -1;
+            while (++i < handlerList.Count)
+            {
+                if (handlerList[i].GetPlayerCount > 0)
+                    return true;
+            }
+            return false;
+        }
+
         public CavernHandler GetCavernWithPlayerOfViewID(in int viewID)
         {
             for (int i = 0; i < handlerList.Count; i++)

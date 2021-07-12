@@ -24,6 +24,7 @@ namespace Hadal.AI
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
         [ReadOnly, SerializeField] private CavernHandler nextMoveCavern;
+        [ReadOnly, SerializeField] private CavernHandler cachedCurrentCavern;
 
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
@@ -294,6 +295,9 @@ namespace Hadal.AI
         void OnCavernEnter(CavernHandler cavern)
         {
             GetCurrentMachineState().OnCavernEnter(cavern);
+            UpdateCachedCurrentCavern(cavern);
+            if (NavigationHandler != null)
+                NavigationHandler.UpdateLatestCavernTag(CachedCurrentCavern.cavernTag, NextMoveCavern.cavernTag);
         }
 
         void OnCavernLeave(CavernHandler cavern)
@@ -508,8 +512,18 @@ namespace Hadal.AI
             if (DebugEnabled) print("Moving to next cavern: " + newCavern.cavernTag);
         }
 
+        public void UpdateCachedCurrentCavern(CavernHandler newCavern)
+        {
+            if (newCavern == null || newCavern.cavernTag == CavernTag.Invalid)
+                return;
+            
+            cachedCurrentCavern = newCavern;
+            if (DebugEnabled) print("Updated current cavern cache to: " + newCavern.cavernTag);
+        }
+
         public CavernHandler TargetMoveCavern => targetMoveCavern;
         public CavernHandler NextMoveCavern => nextMoveCavern;
+        public CavernHandler CachedCurrentCavern => cachedCurrentCavern;
         #endregion
 
         #region Accesors
