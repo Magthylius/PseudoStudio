@@ -26,7 +26,7 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private int currentSlowStacks;
 
         [Header("VFX")]
-        [SerializeField, ReadOnly, Tooltip("This will reference the graphics handler's hit positions.")] private Vector3[] randomHitPositions;
+        [SerializeField, ReadOnly, Tooltip("This will reference the graphics handler's hit positions.")] private Transform[] randomHitPoints;
         [SerializeField] private VFXData vfx_OnDamaged;
         [SerializeField] private int vfxCountPerHit = 4;
         [SerializeField] private int vfxCountPerDeath = 20;
@@ -54,7 +54,7 @@ namespace Hadal.AI
                                 .WithShouldPersist(true);
             stunTimer.Pause();
 
-            randomHitPositions = brain.GraphicsHandler.potentialHitPositions.Select(t => t.position).ToArray();
+            randomHitPoints = brain.GraphicsHandler.potentialHitPositions.ToArray();
         }
         public void DoUpdate(in float deltaTime) { }
         public void DoFixedUpdate(in float fixedDeltaTime) { }
@@ -109,7 +109,9 @@ namespace Hadal.AI
             brain.DetachAnyCarriedPlayer();
             brain.DisableBrain(); //! disable update loops of the brain
             brain.StartCoroutine(Bleed(0.5f));
-            brain.NavigationHandler.DisableWithLerp(2f, Sink);
+            if (PhotonNetwork.IsMasterClient)
+                brain.NavigationHandler.DisableWithLerp(2f, Sink);
+            
             void Sink()
             {
                 checkHitWallOnDeath = true;
@@ -126,13 +128,13 @@ namespace Hadal.AI
                 //! Burst bleed
                 int count = -1;
                 while (++count < vfxCountPerDeath)
-                    PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+                    PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
                 
                 //! Continuous bleed over time (until game exits to main menu)
                 WaitForSeconds waitTime = new WaitForSeconds(bleedDelay > 0f ? bleedDelay : 0.5f);
                 while (true)
                 {
-                    PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+                    PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
                     yield return waitTime;
                 }
             }
@@ -261,13 +263,15 @@ namespace Hadal.AI
         /// <summary> On hit effects should be stuffed into this function. VFX, audio, etc. </summary>
         private void DoOnHitEffects(int damageReceived)
         {
-            if (randomHitPositions.IsNotEmpty())
+            if (randomHitPoints.IsNotEmpty())
             {
                 int i = -1;
                 while (++i < vfxCountPerHit)
-                    PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+                    PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
             }
         }
+
+        private Vector3 GetRandomHitPosition() => randomHitPoints.RandomElement().position;
 
         /// <summary> A wrapper function that automatically handles null reference cases, just call this function with no worries. </summary>
         private void PlayVFXAt(VFXData vfx, Vector3 position)
