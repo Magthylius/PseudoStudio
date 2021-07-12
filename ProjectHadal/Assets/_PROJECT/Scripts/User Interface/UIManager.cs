@@ -210,7 +210,7 @@ namespace Hadal.UI
             else ShootTracer.ToRed();
         }
 
-        public void UpdateTubes(int torpedoCount, bool reloadedEvent = false)
+        public void UpdateTubes(int torpedoCount, bool chamberEmpty = false)
         {
             torpCount = torpedoCount;
 
@@ -218,11 +218,12 @@ namespace Hadal.UI
             int count = 0;
             foreach (UIFillerBehaviour filler in torpedoFillers)
             {
-                if (count < torpCount) filler.ToFilled();
+                if (count < torpCount - 1) filler.ToFilled();
                 else filler.ToHollow();
                 count++;
             }
 
+            //print(torpedoCount);
             torpIsEmpty = torpCount == 0;
             torpedoEmptyText.SetActive(torpIsEmpty);
 

@@ -30,7 +30,7 @@ namespace Hadal
 
         private void DetonateAndDestroy()
         {
-            print("Detonating");
+            //print("Detonating");
             List<Rigidbody> rigidbodies = Physics.OverlapSphere(GetPosition, RadiusOfEffect)
                                         .Where(x => x.GetComponent<Rigidbody>() != null)
                                         .Select(x => x.GetComponent<Rigidbody>())
