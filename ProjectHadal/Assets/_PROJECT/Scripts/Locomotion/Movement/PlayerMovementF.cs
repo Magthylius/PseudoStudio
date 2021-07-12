@@ -79,7 +79,8 @@ namespace Hadal.Locomotion
             Input = DefaultInputs;
 
             physicsHandler.Drag = Accel.MaxCummulation / Speed.Max;
-            if (rigidBody != null) rigidBody.drag = (physicsHandler.Drag / (physicsHandler.Drag * Time.fixedDeltaTime + 1));
+            rigidBody.drag = 0;
+            /*if (rigidBody != null) rigidBody.drag = (physicsHandler.Drag / (physicsHandler.Drag * Time.fixedDeltaTime + 1));*/
 
             // CalculateDrag();
             // if (rigidBody != null) rigidBody.drag = GetModifiedDrag();
@@ -113,10 +114,6 @@ namespace Hadal.Locomotion
             }
 
             rigidBody.AddForce(moveForce * rigidBody.mass, ForceMode.Force);
-            /*print(moveForce * rigidBody.mass);*/
-
-            //print("raw: " + UnityEngine.Input.GetAxis("Vertical"));
-            //print("ip: " + Input.VerticalAxis);
         }
 
         private void CalculateSpeed()
