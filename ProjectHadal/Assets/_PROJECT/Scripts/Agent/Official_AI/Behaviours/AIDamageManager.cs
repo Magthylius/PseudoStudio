@@ -39,11 +39,12 @@ namespace Hadal.AI
         /// <summary>
         /// The damage function that the AI's thresh attack uses.
         /// </summary>
-        public void ApplyDoT(PlayerController player, int durationSeconds, int damagePerSecond, Action dotFinishedEvent)
+        public Coroutine ApplyDoT(PlayerController player, int durationSeconds, int damagePerSecond, Action dotFinishedEvent)
         {
             if (doTRoutine != null) StopCoroutine(doTRoutine);
             doTRoutine = null;
-            doTRoutine = StartCoroutine(TickDamageInSeconds(player, durationSeconds, damagePerSecond, dotFinishedEvent));
+            doTRoutine = Brain.StartCoroutine(TickDamageInSeconds(player, durationSeconds, damagePerSecond, dotFinishedEvent));
+            return doTRoutine;
         }
 
         private IEnumerator TickDamageInSeconds(PlayerController player, int durationSeconds, int dps, Action dotFinishedEvent)

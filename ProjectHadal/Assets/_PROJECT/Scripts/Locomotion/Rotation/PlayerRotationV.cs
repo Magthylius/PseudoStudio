@@ -4,9 +4,8 @@ using UnityEngine;
 //Created by Jet, E: Jon
 namespace Hadal.Locomotion
 {
-    public class PlayerRotationF : Rotator
+    public class PlayerRotationV : Rotator
     {
-        [SerializeField] Rigidbody rb;
         [SerializeField, Min(0f)] float maxInputAxisClamp = 5f;
         [SerializeField, Range(0f, 1f)] float yawInfluenceOnRollFactor = 0.3f;
 
@@ -15,7 +14,6 @@ namespace Hadal.Locomotion
 
         Quaternion testCurrentQT;
         Quaternion testLastQT;
-
         int sl_MP;
 
         public override void Initialise(Transform target)
@@ -31,7 +29,6 @@ namespace Hadal.Locomotion
             testCurrentQT = currentQT;
             testLastQT = currentQT;
 
-            rb.angularDrag = 1;
             sl_MP = DebugManager.Instance.CreateScreenLogger();
         }
 
@@ -44,7 +41,8 @@ namespace Hadal.Locomotion
         public override void DoFixedUpdate(in float fixedDeltaTime)
         {
             //if (!allowUpdate) return;
-            RototateByForce();
+
+            RotateByQT();
             CalculateRotationSpeed();
         }
 
@@ -53,27 +51,36 @@ namespace Hadal.Locomotion
             
         }
 
-        void RototateByForce()
+        void RotateByQT()
         {
             Vector3 input = Vector3.zero;
 
             if (allowUpdate)
                 input = Input.AllInputClamped(-maxInputAxisClamp, maxInputAxisClamp);
 
+
             float pitch = -input.y * Rotary.GetPitchSensitivity;
             float yaw = input.x * Rotary.GetYawSensitivity;
             float roll = input.z * Rotary.GetRollSensivity;
 
             float yawInfluence = 0f;
-            if (input.x != 0)
-                yawInfluence = - input.x / 2 ;
+            if (yaw != 0)
+                yawInfluence = -90f * yawInfluenceOnRollFactor * yaw;
 
-            Vector3 torqueDirection = new Vector3(pitch, yaw, roll);
-            Vector3 torqueForce = Vector3.Scale(torqueDirection, rb.inertiaTensor);
-            rb.AddRelativeTorque(torqueForce * 0.89f, ForceMode.Force);
-            /*rb.AddRelativeTorque(torqueDirection, ForceMode.Acceleration);*/
-            /*print(Rotary.GetPitchSensitivity);*/
+            targetQT *= Quaternion.Euler(pitch, yaw, roll);
+
+            //enable this is realistic
+            /*Quaternion yawInfluencedQT = targetQT * Quaternion.Euler(0f, 0f, yawInfluence);
+            currentQT = Quaternion.Lerp(currentQT, yawInfluencedQT, 5f * Time.deltaTime);
+            currentQT = yawInfluencedQT;*/
+
+            //remove this if realistic
+            currentQT = targetQT;
+            target.localRotation = currentQT;
+
             DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);
+            //DebugManager.Instance.SLog(sl_MP, Mathf.Sign(yaw) + " | " + yawInfluence);
+            //DebugManager.Instance.SLog(sl_MP, "P: " + pitch + " | Y: " + yaw + " | CurZ: " + currentEA.z);
         }
 
         void CalculateRotationSpeed()

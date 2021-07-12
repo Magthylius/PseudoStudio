@@ -25,12 +25,12 @@ namespace Hadal.AI.States
             settings = MachineData.Anticipation;
 
             GameManager.Instance.GameStartedEvent += StartInitialization;
-            RuntimeData.OnCumulativeDamageCountReached += Brain.TryToTargetClosestPlayerInAICavern;
+            RuntimeData.OnCumulativeDamageCountReached += TryToTargetClosestPlayerInAICavern;
         }
 
         ~AnticipationState()
         {
-            RuntimeData.OnCumulativeDamageCountReached -= Brain.TryToTargetClosestPlayerInAICavern;
+            RuntimeData.OnCumulativeDamageCountReached -= TryToTargetClosestPlayerInAICavern;
         }
 
         public override void OnStateStart()
@@ -141,7 +141,7 @@ namespace Hadal.AI.States
             {
                 case EngagementObjective.Hunt:
                     if (Brain.DebugEnabled) "Anticipation: Hunt.".Msg();
-                    targetCavern = CavernManager.GetMostPopulatedCavern();
+                    targetCavern = CavernManager.GetMostPopulatedCavern(false);
 
                     if (targetCavern == null)
                     {
@@ -217,8 +217,9 @@ namespace Hadal.AI.States
                     }
                     else
                     {
-                        bool canHunt = CavernManager.AnyPlayersPresentInAnyCavern();
-                        if (canHunt)
+                        bool anyPlayersToHunt = CavernManager.AnyPlayersPresentInAnyCavern();
+                        bool currentCavernIsMostPopulated = AICavern != null && AICavern.cavernTag == CavernManager.GetMostPopulatedCavern(false).cavernTag;
+                        if (anyPlayersToHunt && !currentCavernIsMostPopulated)
                         {
                             SetNewTargetCavern();
                             debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
@@ -226,7 +227,7 @@ namespace Hadal.AI.States
                         else
                         {
                             RuntimeData.SetBrainState(BrainState.Ambush);
-                            debugMsg = "Took too long and VERY ANGRY, but no one detect to hunt... therefore, preparing to ambush!!!";
+                            debugMsg = "Took too long and VERY ANGRY, but hunting is not a suitable option... therefore, preparing to ambush!!!";
                         }
                     }
 
@@ -242,6 +243,13 @@ namespace Hadal.AI.States
 
             void ResetAutoActTimer() => autoActTimer = settings.AutoActTime;
             bool AutoActTimerReached() => autoActTimer <= 0f;
+        }
+
+        private void TryToTargetClosestPlayerInAICavern()
+        {
+            if (RuntimeData.GetBrainState != BrainState.Anticipation)
+                return;
+            Brain.TryToTargetClosestPlayerInAICavern();
         }
 
         void ForceEngagementObjective(EngagementObjective newObjective) => RuntimeData.SetEngagementObjective(newObjective);

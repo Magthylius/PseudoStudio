@@ -91,6 +91,12 @@ namespace Hadal.AI
             if (newCurrentTag == CavernTag.Invalid)
                 return;
 
+            bool pickNextCavern = TenshiMath.HeadsOrTails();
+            if (pickNextCavern && nextCavernTagIfAny != CavernTag.Invalid)
+            {
+                cachedLatestCavernTag = nextCavernTagIfAny;
+                return;
+            }
             cachedLatestCavernTag = newCurrentTag;
         }
 
@@ -983,9 +989,6 @@ namespace Hadal.AI
             if (enableDebug)
                 $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
-
-
-
 
         public Queue<NavPoint> GetPointPath => pointPath;
         public Queue<NavPoint> GetCachedPointPath => cachedPointPath;

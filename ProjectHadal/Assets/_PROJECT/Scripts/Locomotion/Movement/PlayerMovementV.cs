@@ -99,7 +99,7 @@ namespace Hadal.Locomotion
                 return;
             }
 
-            Velocity.Total += ForwardVelocity + StrafeVelocity + HoverVelocity;
+            Velocity.Total = ForwardVelocity + StrafeVelocity + HoverVelocity;
             Velocity.Total = Velocity.Total.normalized * Speed.Max;
             Velocity.Speed = Speed.Max;
         }

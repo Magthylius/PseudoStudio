@@ -12,7 +12,9 @@ namespace Hadal.Locomotion
         Quaternion currentQT;
         Quaternion targetQT;
 
-        //int sl_MP;
+        Quaternion testCurrentQT;
+        Quaternion testLastQT;
+        int sl_MP;
 
         public override void Initialise(Transform target)
         {
@@ -24,7 +26,10 @@ namespace Hadal.Locomotion
             currentQT = target.localRotation;
             targetQT = currentQT;
 
-            /*sl_MP = DebugManager.Instance.CreateScreenLogger();*/
+            testCurrentQT = currentQT;
+            testLastQT = currentQT;
+
+            sl_MP = DebugManager.Instance.CreateScreenLogger();
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -38,6 +43,7 @@ namespace Hadal.Locomotion
             //if (!allowUpdate) return;
 
             RotateByQT();
+            CalculateRotationSpeed();
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -67,22 +73,16 @@ namespace Hadal.Locomotion
             currentQT = Quaternion.Lerp(currentQT, yawInfluencedQT, 5f * Time.deltaTime);
             target.localRotation = currentQT;
 
+            DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);
             //DebugManager.Instance.SLog(sl_MP, Mathf.Sign(yaw) + " | " + yawInfluence);
             //DebugManager.Instance.SLog(sl_MP, "P: " + pitch + " | Y: " + yaw + " | CurZ: " + currentEA.z);
         }
 
-        void RototateByForce()
+        void CalculateRotationSpeed()
         {
-            Vector3 input = Vector3.zero;
-
-            if (allowUpdate)
-                input = Input.AllInputClamped(-maxInputAxisClamp, maxInputAxisClamp);
-
-            float pitch = -input.y * Rotary.GetPitchSensitivity;
-            float yaw = input.x * Rotary.GetYawSensitivity;
-            float roll = input.z * Rotary.GetRollSensivity;
-
-            //DebugManager.Instance.SLog(sl_MP, input.x + "|" + -input.y + "|" + input.z);
+            testLastQT = testCurrentQT;
+            testCurrentQT = target.localRotation;
+            float angle = Quaternion.Angle(testLastQT, testCurrentQT);
         }
     }
 }

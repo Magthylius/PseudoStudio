@@ -25,6 +25,7 @@ namespace Hadal.AI.States
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             
+            SelectNewAmbushPoint();
             RuntimeData.ResetEngagementTicker();
             RuntimeData.ResetCumulativeDamageCount();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.AM_DisruptionDamageCount);
@@ -36,7 +37,6 @@ namespace Hadal.AI.States
         public override void StateTick()
         {
 
-            SelectNewAmbushPoint();
             DetectIfCoverCompromised();
             CheckPouncingRange();
             CheckAmbushTimer();
@@ -83,20 +83,28 @@ namespace Hadal.AI.States
         {
             if (SenseDetection.DetectedPlayersCount > 0 && SenseDetection.DetectedPlayersCount < 4)
             {
-                float distance = Vector3.Distance(Brain.transform.position, Brain.CurrentTarget.transform.position);
-                if (distance < settings.AM_TargetPlayerRange && Brain.CurrentTarget != null)
+                //1 commenting this out because Brain.CurrentTarget.transform.position will give NullReferenceException if Brain.CurrentTarget == null
+                // float distance = Vector3.Distance(Brain.transform.position, Brain.CurrentTarget.transform.position);
+                // if (distance < settings.AM_TargetPlayerRange && Brain.CurrentTarget != null)
+                // {
+                //     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
+                //     RuntimeData.SetBrainState(BrainState.Judgement);
+                // }
+                // else
+                // {
+                //     //1 commenting this because it makes the AI go to recovery before it can ambush
+                //     // RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
+                //     // RuntimeData.SetBrainState(BrainState.Recovery);
+                // }
+
+                //! wait for sense detection to handle current target
+                if (Brain.CurrentTarget != null)
                 {
                     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
                 }
-                else
-                {
-                    RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-                    RuntimeData.SetBrainState(BrainState.Recovery);
-                }
-
             }
-            else if (SenseDetection.DetectedPlayersCount == 4 && Brain.CurrentTarget != null)
+            else if (SenseDetection.DetectedPlayersCount == 4)
             {
                 RuntimeData.UpdateConfidenceValue(settings.ConfidenceDecrementValue);
                 RuntimeData.SetBrainState(BrainState.Recovery);
