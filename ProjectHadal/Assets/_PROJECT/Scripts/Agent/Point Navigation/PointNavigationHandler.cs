@@ -275,7 +275,7 @@ namespace Hadal.AI
                 rBody.velocity = Vector3.zero;
             }
         }
-        public void DisableWithLerp(float time)
+        public void DisableWithLerp(float time, Action onCompleteCallback = null)
         {
             _isEnabled = false;
             if (rBody != null)
@@ -294,6 +294,7 @@ namespace Hadal.AI
                 }
                 rBody.isKinematic = true;
                 rBody.velocity = Vector3.zero;
+                onCompleteCallback?.Invoke();
             }
         }
         public void SetCavernManager(CavernManager manager) => cavernManager = manager;
@@ -539,7 +540,7 @@ namespace Hadal.AI
             CavernModeSteering();
             currentPoint.Deselect();
             SkipCurrentPoint(true);
-            
+
             if (enableDebug) "Stopping Queued path on request. Resuming normal movement.".Msg();
         }
 

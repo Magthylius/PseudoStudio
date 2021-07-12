@@ -495,6 +495,15 @@ namespace Hadal.AI.Caverns
             return isolatedPlayer;
         }
 
+        public CavernHandler GetHandlerOfIsolatedPlayer()
+        {
+            foreach (var handler in handlerList)
+                if (handler.GetPlayerCount == 1)
+                    return handler;
+
+            return null;
+        }
+
         #endregion
 
         #region Cavern | Player enquiry

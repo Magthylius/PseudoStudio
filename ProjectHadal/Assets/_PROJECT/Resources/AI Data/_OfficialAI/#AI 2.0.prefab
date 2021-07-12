@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8001679023775102921}
   - component: {fileID: 5734814273914985085}
+  - component: {fileID: 1521340218}
   m_Layer: 0
   m_Name: Game Handler
   m_TagString: Untagged
@@ -44,6 +45,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentKillCount: 0
+--- !u!114 &1521340218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312510409462500907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1793168799261823607
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +108,7 @@ MonoBehaviour:
   ambushSphereDetectionRadius: 60
   huntSphereDetectionRadius: 70
   detectionOffset: {x: 0, y: 0, z: 0}
-  checkDelay: 1
+  checkDelay: 2
 --- !u!114 &9221971048963321059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,9 +198,9 @@ MonoBehaviour:
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   followNetworkManagerOfflineStatus: 1
   isOffline: 0
-  DebugEnabled: 0
+  DebugEnabled: 1
   isStunned: 0
-  stunDuration: 999
+  stunDuration: 10
 --- !u!114 &8848565156750440696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,10 +359,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
-  slowPercentPerStack: 0.2
-  maxSlowStacks: 5
-  maxSlowPercent: 0.9
-  currentMaxSlowPercent: 1
+  slowPercentPerStack: 0.05
+  maxSlowStacks: 6
+  maxSlowPercent: 0.3
+  currentMaxSlowPercent: 0.3
   currentSlowPercent: 0
   currentSlowStacks: 0
   randomHitPositions: []
@@ -397,7 +410,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd1b8662e9341c645be1860c9bf4daf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioAssetList: []
+  audioAssetList:
+  - associatedEnum: 1
+    audioAsset: {fileID: 11400000, guid: 93d5707948f7ac149bc31b6bd538937f, type: 2}
+  - associatedEnum: 0
+    audioAsset: {fileID: 11400000, guid: 43aeb6b027a923346949211eb6934bd1, type: 2}
+  - associatedEnum: 2
+    audioAsset: {fileID: 11400000, guid: 88ebb8a6a63bfdd45b629033c119946c, type: 2}
   source2D: {fileID: 0}
 --- !u!1001 &3348522405853159205
 PrefabInstance:

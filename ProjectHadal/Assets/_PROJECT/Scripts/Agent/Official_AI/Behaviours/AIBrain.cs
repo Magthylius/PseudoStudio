@@ -64,7 +64,7 @@ namespace Hadal.AI
         {
             if (RuntimeData.GetBrainState == BrainState.Judgement)
                 return;
-            
+
             CurrentTarget = newTarget;
         }
         /// <summary> Unsafely sets the current target. Can be intentionally used when switching targets midway is necessary. </summary>
@@ -328,8 +328,8 @@ namespace Hadal.AI
 
         private void OnCollisionEnter(Collision other)
         {
-            if (NavigationHandler != null)
-                NavigationHandler.OnCollisionDetected().Invoke();
+            if (NavigationHandler != null) NavigationHandler.OnCollisionDetected().Invoke();
+            if (HealthManager != null) HealthManager.OnCollisionDetected().Invoke();
         }
 
         #endregion
@@ -347,10 +347,10 @@ namespace Hadal.AI
 
         Func<bool> CanJudge() => ()
             => RuntimeData.GetBrainState == BrainState.Judgement && !isStunned;
-        
+
         Func<bool> IsRecovering() => ()
             => RuntimeData.GetBrainState == BrainState.Recovery && !isStunned;
-        
+
         Func<bool> IsCooldown() => ()
             => RuntimeData.GetBrainState == BrainState.Cooldown && !isStunned;
 
@@ -520,7 +520,7 @@ namespace Hadal.AI
         {
             if (newCavern == null || newCavern.cavernTag == CavernTag.Invalid)
                 return;
-            
+
             cachedCurrentCavern = newCavern;
             if (DebugEnabled) print("Updated current cavern cache to: " + newCavern.cavernTag);
         }
@@ -540,6 +540,9 @@ namespace Hadal.AI
             if (CurrentTarget != null)
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
+                if (NavigationHandler.Data_IsOnQueuePath)
+                    NavigationHandler.StopQueuedPath();
+
                 if (DebugEnabled) "Spotted and entered engagement!".Msg();
                 return true;
             }
