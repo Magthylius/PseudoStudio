@@ -28,6 +28,8 @@ namespace Hadal.AI
         [Header("VFX")]
         [SerializeField, ReadOnly, Tooltip("This will reference the graphics handler's hit positions.")] private Vector3[] randomHitPositions;
         [SerializeField] private VFXData vfx_OnDamaged;
+        [SerializeField] private int vfxCountPerHit = 4;
+        [SerializeField] private int vfxCountPerDeath = 20;
 
         AIBrain brain;
         Timer stunTimer;
@@ -90,6 +92,7 @@ namespace Hadal.AI
             return true;
         }
 
+        private bool checkHitWallOnDeath = false;
         /// <summary> Local death method to handle the AI death sequence & end the game. </summary>
         public void Death()
         {
@@ -99,16 +102,56 @@ namespace Hadal.AI
             
             $"Leviathan is unalive. Congrats!!!{extraMsg}".Msg();
             
-            AIGraphicsHandler gHandler = brain.GraphicsHandler;
-            if (gHandler == null) gHandler = FindObjectOfType<AIGraphicsHandler>();
-            gHandler.gameObject.SetActive(false);
-            
+            // AIGraphicsHandler gHandler = brain.GraphicsHandler;
+            // if (gHandler == null) gHandler = FindObjectOfType<AIGraphicsHandler>();
+            // gHandler.gameObject.SetActive(false);
+
             brain.DetachAnyCarriedPlayer();
-            Obj.SetActive(false);
-            
+            brain.DisableBrain(); //! disable update loops of the brain
+            brain.StartCoroutine(Bleed(0.5f));
+            brain.NavigationHandler.DisableWithLerp(2f, Sink);
+            void Sink()
+            {
+                checkHitWallOnDeath = true;
+                Vector3 force = Vector3.down * 1000.0f;
+                brain.NavigationHandler.Rigidbody.isKinematic = false;
+                brain.NavigationHandler.Rigidbody.AddForce(force, ForceMode.Acceleration);
+            }
+
             //! Handle End the game
             brain.GameHandler.AILoseGame();
+
+            System.Collections.IEnumerator Bleed(float bleedDelay)
+            {
+                //! Burst bleed
+                int count = -1;
+                while (++count < vfxCountPerDeath)
+                    PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+                
+                //! Continuous bleed over time (until game exits to main menu)
+                WaitForSeconds waitTime = new WaitForSeconds(bleedDelay > 0f ? bleedDelay : 0.5f);
+                while (true)
+                {
+                    PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+                    yield return waitTime;
+                }
+            }
         }
+
+        public System.Func<bool> OnCollisionDetected() => () =>
+        {
+            if (!checkHitWallOnDeath || !IsUnalive)
+                return false;
+
+            Rigidbody rBody = brain.NavigationHandler.Rigidbody;
+            if (rBody != null)
+            {
+                rBody.isKinematic = true;
+                rBody.velocity = Vector3.zero;
+            }
+
+            return true;
+        };
         
         public GameObject Obj => transform.parent.gameObject;
         public bool IsUnalive => currentHealth <= 0;
@@ -219,7 +262,11 @@ namespace Hadal.AI
         private void DoOnHitEffects(int damageReceived)
         {
             if (randomHitPositions.IsNotEmpty())
-                PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+            {
+                int i = -1;
+                while (++i < vfxCountPerHit)
+                    PlayVFXAt(vfx_OnDamaged, randomHitPositions.RandomElement());
+            }
         }
 
         /// <summary> A wrapper function that automatically handles null reference cases, just call this function with no worries. </summary>
