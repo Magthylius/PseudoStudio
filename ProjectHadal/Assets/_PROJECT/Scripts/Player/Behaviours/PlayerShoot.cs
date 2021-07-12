@@ -284,6 +284,8 @@ namespace Hadal.Player.Behaviours
             //UpdateUITorpedoCount(isIncrement);
             if (!isIncrement) return;
             DebugLog("Torpedo Regenerated (Loaded)!");
+            
+            UpdateUITorpedoCount(false); 
         }
 
         void OnRestock(UsableLauncherObject usableObject)

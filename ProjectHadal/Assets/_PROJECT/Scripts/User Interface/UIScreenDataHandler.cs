@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using Hadal.UI;
+using Magthylius.LerpFunctions;
 using UnityEngine;
 
 public class UIScreenDataHandler : MonoBehaviour
@@ -15,7 +16,8 @@ public class UIScreenDataHandler : MonoBehaviour
     private void FixedUpdate()
     {
         if (!initialized) return;
-        
+
+        UpdateHealth();
         UpdateDepth(-playerTransform.position.z);
         UpdateDistance(playerUI.ShootTracer.HitDistance);
     }
@@ -30,11 +32,20 @@ public class UIScreenDataHandler : MonoBehaviour
 
     [Header("Health")] 
     public UIDataFormatBehaviour healthData;
+    public float healthLerpSpeed = 5f;
+    private int displayHealth = 100;
+    private int targetHealth = 100;
     public void UpdateHealth()
     {
-        
+        displayHealth = (int) Mathf.Lerp(displayHealth, targetHealth, healthLerpSpeed * Time.deltaTime);
+        healthData.UpdateText(displayHealth);
     }
-    
+
+    public void UpdateTargetHealth(int target)
+    {
+        targetHealth = target;
+    }
+
     [Header("Energy")]
     public UIDataFormatBehaviour energyData;
     public void UpdateEnergy()
