@@ -198,14 +198,23 @@ namespace Hadal.UI
         #endregion
 
         #region Health
-        public static void InvokeOnHealthChange() => OnHealthChange?.Invoke();
+
+        public void InvokeOnHealthChange()
+        {
+            OnHealthChange?.Invoke();
+        }
+        public void UpdateHealthUI(int currentHealth)
+        {
+            ScreenDataHandler.UpdateTargetHealth(currentHealth);
+            //print($"P hp: {currentHealth}");
+        }
         #endregion
 
         #region Torpedoes
         public void UpdateFlooding(float progress, bool showFlooding)
         {
             torpLoader.fillAmount = progress;
-            floodText.SetActive(showFlooding);
+            //floodText.SetActive(showFlooding);
             if (showFlooding) ShootTracer.ToBlue();
             else ShootTracer.ToRed();
         }
@@ -229,7 +238,7 @@ namespace Hadal.UI
 
             if (torpIsEmpty)
             {
-                ShootTracer.ToBlue();
+                ShootTracer.ToOrange();
             }
         }
 

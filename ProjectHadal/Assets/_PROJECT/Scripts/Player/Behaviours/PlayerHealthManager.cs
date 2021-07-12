@@ -128,7 +128,8 @@ namespace Hadal.Player.Behaviours
         public void ResetManager()
         {
             ResetHealth();
-            UIManager.InvokeOnHealthChange();
+            _controller.UI.InvokeOnHealthChange();
+            _controller.UI.UpdateHealthUI(_currentHealth);
             _controller.SetIsDown(false);
         }
 
@@ -241,7 +242,8 @@ namespace Hadal.Player.Behaviours
         {
             _cameraController.ShakeCameraDefault();
             OnHit?.Invoke(damage);
-            UIManager.InvokeOnHealthChange();
+            _controller.UI.InvokeOnHealthChange();
+            _controller.UI.UpdateHealthUI(_currentHealth);
         }
 
         #endregion
