@@ -90,7 +90,7 @@ namespace Hadal.AI
         {
             if (newCurrentTag == CavernTag.Invalid)
                 return;
-            
+
             cachedLatestCavernTag = newCurrentTag;
         }
 
@@ -361,9 +361,9 @@ namespace Hadal.AI
             }
 
             CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
-			if (currentCavern.cavernTag == destination.cavernTag)
-				return;
-			
+            if (currentCavern.cavernTag == destination.cavernTag)
+                return;
+
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
             cachedPointPath.Clear();
@@ -447,11 +447,11 @@ namespace Hadal.AI
         }
 
         public void EnableCachedQueuePathTimer()
-		{
-			if (cachedPointPath.IsNullOrEmpty())
-				return;
-			_tickCavernLingerTimer = true;
-		}
+        {
+            if (cachedPointPath.IsNullOrEmpty())
+                return;
+            _tickCavernLingerTimer = true;
+        }
 
         /// <summary>
         /// Computes a plan for the path to a destination cavern and immediately follows it. It will return if the handler is
@@ -519,6 +519,28 @@ namespace Hadal.AI
 
                 $"Queued path set: {debugPath}".Msg();
             }
+        }
+
+        public void StopQueuedPath()
+        {
+            if (pointPath.IsNullOrEmpty() || !isOnQueuePath)
+                return;
+
+            pointPath.Clear();
+
+            if (!chosenAmbushPoint)
+            {
+                canTimeout = true;
+                canAutoSelectNavPoints = true;
+            }
+
+            isOnQueuePath = false;
+            lockSteeringBehaviour = false;
+            CavernModeSteering();
+            currentPoint.Deselect();
+            SkipCurrentPoint(true);
+            
+            if (enableDebug) "Stopping Queued path on request. Resuming normal movement.".Msg();
         }
 
         /// <summary>
@@ -888,28 +910,28 @@ namespace Hadal.AI
                 case CavernTag.Crystal:
                     {
                         crystalCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("crystal: " + crystalCavernLingerTimer);
+                        if (enableDebug) Debug.Log("crystal: " + crystalCavernLingerTimer);
                         if (crystalCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Bioluminescent:
                     {
                         biolumiCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("biolumi: " + biolumiCavernLingerTimer);
+                        if (enableDebug) Debug.Log("biolumi: " + biolumiCavernLingerTimer);
                         if (biolumiCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Hydrothermal_Deep:
                     {
                         hydrothermalCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
+                        if (enableDebug) Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
                         if (hydrothermalCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Lair:
                     {
                         lairCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("lair: " + lairCavernLingerTimer);
+                        if (enableDebug) Debug.Log("lair: " + lairCavernLingerTimer);
                         if (lairCavernLingerTimer > 0f) return;
                         break;
                     }
