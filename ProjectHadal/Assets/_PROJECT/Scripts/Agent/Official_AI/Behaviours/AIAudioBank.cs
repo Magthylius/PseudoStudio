@@ -14,13 +14,13 @@ namespace Hadal.AI
         private void Awake() => source2D = gameObject.GetOrAddComponent<AudioSource>();
 
         /// <summary> Plays the sound delegated by the enum as 3D SFX at the given world space position. </summary>
-        public bool Play3D(AISound soundType, Vector3 atPosition)
+        public bool Play3D(AISound soundType, Transform followTransform)
         {
             AudioEventData asset = GetAudioAssetOfType(soundType);
             if (asset == null)
                 return false;
 
-            return asset.Play(atPosition);
+            return asset.Play(followTransform);
         }
 
         /// <summary> Plays the sound delegated by the enum as 2D SFX. </summary>

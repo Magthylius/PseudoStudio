@@ -18,9 +18,10 @@ namespace Hadal.UI
         private RaycastHit forwardHit;
         private LayerMask rayIgnoreMask;
 
-        [Header("Color settings")] 
+        [Header("Color settings")]
         public Material redMat;
         public Material blueMat;
+        public Material orangeMat;
 
         private void Start()
         {
@@ -48,8 +49,14 @@ namespace Hadal.UI
 
         public void InjectDependencies(Camera pCamera) => playerCamera = pCamera.transform;
 
-        public void ToBlue() => line.material = blueMat;
-        public void ToRed() => line.material = redMat;
+        void ChangeColors(Material newMat)
+        {
+            line.material = newMat;
+            hitLight.color = newMat.color;
+        }
+        public void ToBlue() => ChangeColors(blueMat);
+        public void ToRed() => ChangeColors(redMat);
+        public void ToOrange() => ChangeColors(orangeMat);
         
         public void Activate()
         {

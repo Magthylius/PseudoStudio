@@ -14,10 +14,8 @@ namespace Hadal.AudioSystem
         private bool usingSimulatedHandler = false;
 
         /// <summary> Does nothing because ambience does not need position(?) </summary>
-        public override bool Play(Vector3 position)
-        {
-            return false;
-        }
+        public override bool Play(Transform followPosTransform) => false;
+        public override bool Play(Vector3 position) => false;
 
         /// <summary> 2D Ambience playing, passed in source can be null. </summary>
         public override void Play(AudioSource source)

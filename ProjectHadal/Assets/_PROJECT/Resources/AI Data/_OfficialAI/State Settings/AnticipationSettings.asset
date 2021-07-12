@@ -15,6 +15,7 @@ MonoBehaviour:
   PlayerDetectRange: 1
   ConfidenceIncrementValue: 10
   ConfidenceDecrementValue: 10
-  AutoActTime: 60
+  AutoActTime: 50
   ConfidenceObjectiveGate: 0.5
-  RandomConfidenceInfluence: {x: 0, y: 0}
+  RandomConfidenceInfluence: {x: 0, y: 0.15}
+  DisruptionDamageCount: 2

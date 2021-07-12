@@ -12,6 +12,20 @@ namespace Hadal.AudioSystem
                                             + "\n\nSupports 3D Soundboard Playing, and 2D Soundboard Playing functions."
                                             + "\n\nNote: Preview Button will only play 2D audio for now.";
 
+        public override bool Play(Transform followPosTransform)
+        {
+            if (Composites.IsNullOrEmpty()) return false;
+            
+            bool anySuccess = false;
+            int i = -1;
+            while (++i < Composites.Length)
+            {
+                if (Composites[i].Play(followPosTransform))
+                    anySuccess = true;
+            }
+            return anySuccess;
+        }
+
         public override bool Play(Vector3 position)
         {
             if (Composites.IsNullOrEmpty()) return false;

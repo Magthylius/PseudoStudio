@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Test Thresh SFX
   m_EditorClassIdentifier: 
   Clips:
-  - {fileID: 8300000, guid: 069287c4dfeef7e4db94a901490b769b, type: 3}
+  - {fileID: 8300000, guid: a555ca54c4dde7142ab435717a5522dd, type: 3}
   Settings:
-    Volume: {x: 0.4, y: 0.4}
+    Volume: {x: 0.5, y: 0.5}
     Pitch: {x: 0.3, y: 0.3}
-    SpatialBlend: 0.7
+    SpatialBlend: 0
     Priority: 128
     StereoPan: 0
-    ReverbZoneMix: 1
+    ReverbZoneMix: 0
     OutputMixerGroup: {fileID: 24300002, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
@@ -29,8 +29,8 @@ MonoBehaviour:
     PlayOnAwake: 0
     Loop: 0
     DopplerLevel: 1
-    Spread: 0
+    Spread: 360
     VolumeRolloff: 0
-    MinDistance: 1
-    MaxDistance: 500
+    MinDistance: 100
+    MaxDistance: 1000
     RolloffCurveTemplate: {fileID: 0}

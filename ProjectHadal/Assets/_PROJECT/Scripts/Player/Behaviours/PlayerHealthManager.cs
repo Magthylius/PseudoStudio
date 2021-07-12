@@ -71,6 +71,14 @@ namespace Hadal.Player.Behaviours
             _isDead = false;
             _isKami = false;
         }
+
+        private void Start()
+        {
+            //! UI setup
+            OnDown += UpdateDownUI;
+            OnReviveAttempt += UpdateReviveUI;
+        }
+
         private void OnDestroy()
         {
             OnDown = null;
@@ -128,7 +136,8 @@ namespace Hadal.Player.Behaviours
         public void ResetManager()
         {
             ResetHealth();
-            UIManager.InvokeOnHealthChange();
+            _controller.UI.InvokeOnHealthChange();
+            _controller.UI.UpdateHealthUI(_currentHealth);
             _controller.SetIsDown(false);
         }
 
@@ -241,7 +250,8 @@ namespace Hadal.Player.Behaviours
         {
             _cameraController.ShakeCameraDefault();
             OnHit?.Invoke(damage);
-            UIManager.InvokeOnHealthChange();
+            _controller.UI.InvokeOnHealthChange();
+            _controller.UI.UpdateHealthUI(_currentHealth);
         }
 
         #endregion
@@ -312,8 +322,8 @@ namespace Hadal.Player.Behaviours
             _controller.SetPhysicHighFriction(); //! Update physics settings
             _controller.GetInfo.Shooter.SetCanFire(false);
 
-            Vector3 downwardForce = -200.0f * transform.up;
-            _controller.GetInfo.Rigidbody.AddForce(downwardForce, ForceMode.Impulse);
+            Vector3 downwardForce = Vector3.down * 200.0f;
+            _controller.GetInfo.Rigidbody.AddForce(downwardForce, ForceMode.Acceleration);
 
             if (enableDeathTimerWhenDown)
                 StartCoroutine(StartDeathTimer());
@@ -358,6 +368,20 @@ namespace Hadal.Player.Behaviours
 
         #endregion
 
+        #region UI Methods
+
+        void UpdateDownUI()
+        {
+            _controller.UI.ContextHandler.PlayerWentDown();
+        }
+
+        void UpdateReviveUI(bool attemptSucceeded)
+        {
+            if (attemptSucceeded) _controller.UI.ContextHandler.PlayerRevived();
+        }
+
+        #endregion
+        
         #region Network Event Methods
 
         /// <summary>
@@ -602,6 +626,7 @@ namespace Hadal.Player.Behaviours
             }
 
             TryRestoreControllerSystem();
+            OnReviveAttempt.Invoke(true);
 
             if (!IsDown && !IsUnalive)
                 "Player successfully revived.".Msg();

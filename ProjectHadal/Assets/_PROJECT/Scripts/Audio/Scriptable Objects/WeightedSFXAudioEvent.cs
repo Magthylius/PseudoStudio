@@ -16,6 +16,12 @@ namespace Hadal.AudioSystem
 
         #region Locational based Play
 
+        public override bool Play(Transform followPosTransform)
+        {
+            if (WeightedClips.IsNullOrEmpty()) return false;
+            return RuntimePlay(followPosTransform.position, followPosTransform);
+        }
+
         /// <summary> Plays weighted audio at a world position. </summary>
         public override bool Play(Vector3 position)
         {
@@ -24,7 +30,7 @@ namespace Hadal.AudioSystem
         }
 
         /// <summary> Plays a weighted audio clip sfx through the audio manager & related runtime audio source handlers. </summary>
-        private bool RuntimePlay(Vector3 position)
+        private bool RuntimePlay(Vector3 position, Transform parent = null)
         {
             var manager = AudioManager.Instance;
             if (manager != null)
@@ -32,24 +38,26 @@ namespace Hadal.AudioSystem
                 var handler = manager.GetAvailableAudioSourceHandler();
                 handler.Setup(in Settings);
                 handler.SetWorldPosition(position);
+                handler.SetParent(parent);
                 handler.Source.clip = GetWeightedClip();
                 handler.PlaySource();
                 return true;
             }
 
-            return EditorPlay(GetFallbackAudioSource(), position, true);
+            return EditorPlay(GetFallbackAudioSource(), position, parent, true);
         }
 
         /// <summary> Plays a weighted audio clip that is safe to use in the editor (or when unplayed). </summary>
         /// <param name="position">Optional: Null is there is no position required.</param>
         /// <param name="destroyOnComplete">Optional: Destroy game object of the audiosource when it is done playing its clip.</param>
-        private bool EditorPlay(AudioSource source, Vector3? position = null, bool destroyOnComplete = false)
+        private bool EditorPlay(AudioSource source, Vector3? position = null, Transform parent = null, bool destroyOnComplete = false)
         {
             if (source == null)
                 source = GetFallbackAudioSource();
 
             var clip = ArrangeSourceWithClip(ref source);
             if (position.HasValue) source.transform.position = position.Value;
+            source.transform.parent = parent;
             source.Play();
             
             if (destroyOnComplete) Destroy(source.gameObject, clip.length);

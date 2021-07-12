@@ -24,6 +24,7 @@ namespace Hadal.AI
         [Header("Read-only data")]
         [ReadOnly, SerializeField] private CavernHandler targetMoveCavern;
         [ReadOnly, SerializeField] private CavernHandler nextMoveCavern;
+        [ReadOnly, SerializeField] private CavernHandler cachedCurrentCavern;
 
         [Header("Module Components")]
         [SerializeField] private AIHealthManager healthManager;
@@ -55,8 +56,21 @@ namespace Hadal.AI
         [SerializeField] private LeviathanRuntimeData runtimeData;
         [ReadOnly] public GameObject MouthObject;
         [ReadOnly] public List<PlayerController> Players;
-        [ReadOnly] public PlayerController CurrentTarget;
         [ReadOnly] public AIEgg Egg;
+        [SerializeField, ReadOnly] private PlayerController currentTarget;
+        public PlayerController CurrentTarget { get => currentTarget; private set => currentTarget = value; }
+        /// <summary> Allows safely setting the current target of the AI if it is not already in Judgement state. </summary>
+        public void TrySetCurrentTarget(PlayerController newTarget)
+        {
+            if (RuntimeData.GetBrainState == BrainState.Judgement)
+                return;
+
+            CurrentTarget = newTarget;
+        }
+        /// <summary> Unsafely sets the current target. Can be intentionally used when switching targets midway is necessary. </summary>
+        public void ForceSetCurrentTarget(PlayerController newTarget) => CurrentTarget = newTarget;
+        /// <summary> Network callback only version of <see cref="TrySetCurrentTarget"/> that bypasses the safety check. </summary>
+        public void Net_SetCurrentTarget(PlayerController newTarget) => ForceSetCurrentTarget(newTarget);
 
         private PlayerController carriedPlayer;
 
@@ -281,6 +295,13 @@ namespace Hadal.AI
         void OnCavernEnter(CavernHandler cavern)
         {
             GetCurrentMachineState().OnCavernEnter(cavern);
+            UpdateCachedCurrentCavern(cavern);
+            if (NavigationHandler != null)
+            {
+                var newTag = CachedCurrentCavern != null ? CachedCurrentCavern.cavernTag : CavernTag.Invalid;
+                var nextTag = NextMoveCavern != null ? NextMoveCavern.cavernTag : CavernTag.Invalid;
+                NavigationHandler.UpdateLatestCavernTag(newTag, nextTag);
+            }
         }
 
         void OnCavernLeave(CavernHandler cavern)
@@ -307,8 +328,8 @@ namespace Hadal.AI
 
         private void OnCollisionEnter(Collision other)
         {
-            if (NavigationHandler != null)
-                NavigationHandler.OnCollisionDetected().Invoke();
+            if (NavigationHandler != null) NavigationHandler.OnCollisionDetected().Invoke();
+            if (HealthManager != null) HealthManager.OnCollisionDetected().Invoke();
         }
 
         #endregion
@@ -326,10 +347,10 @@ namespace Hadal.AI
 
         Func<bool> CanJudge() => ()
             => RuntimeData.GetBrainState == BrainState.Judgement && !isStunned;
-        
+
         Func<bool> IsRecovering() => ()
             => RuntimeData.GetBrainState == BrainState.Recovery && !isStunned;
-        
+
         Func<bool> IsCooldown() => ()
             => RuntimeData.GetBrainState == BrainState.Cooldown && !isStunned;
 
@@ -480,6 +501,8 @@ namespace Hadal.AI
             RuntimeData.UpdateBonusConfidence(0);
         }
 
+        public void TryToTargetClosestPlayerInAICavern() => TrySetCurrentTarget(GetClosestPlayerInAICavern());
+
         #endregion
 
         #region Data
@@ -495,8 +518,18 @@ namespace Hadal.AI
             if (DebugEnabled) print("Moving to next cavern: " + newCavern.cavernTag);
         }
 
+        public void UpdateCachedCurrentCavern(CavernHandler newCavern)
+        {
+            if (newCavern == null || newCavern.cavernTag == CavernTag.Invalid)
+                return;
+
+            cachedCurrentCavern = newCavern;
+            if (DebugEnabled) print("Updated current cavern cache to: " + newCavern.cavernTag);
+        }
+
         public CavernHandler TargetMoveCavern => targetMoveCavern;
         public CavernHandler NextMoveCavern => nextMoveCavern;
+        public CavernHandler CachedCurrentCavern => cachedCurrentCavern;
         #endregion
 
         #region Accesors
@@ -506,13 +539,25 @@ namespace Hadal.AI
 
         public bool CheckForJudgementStateCondition()
         {
-            if (CurrentTarget != null && CavernManager.GetHandlerOfAILocation.GetPlayersInCavern.Contains(CurrentTarget))
+            if (CurrentTarget != null)
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
+                if (NavigationHandler.Data_IsOnQueuePath)
+                    NavigationHandler.StopQueuedPath();
+
                 if (DebugEnabled) "Spotted and entered engagement!".Msg();
                 return true;
             }
             return false;
+        }
+
+        public PlayerController GetClosestPlayerInAICavern()
+        {
+            var handler = CavernManager.GetHandlerOfAILocation;
+            if (handler != null)
+                return handler.GetClosestPlayerTo(transform);
+            
+            return null;
         }
 
         public AIStateBase GetCurrentMachineState()

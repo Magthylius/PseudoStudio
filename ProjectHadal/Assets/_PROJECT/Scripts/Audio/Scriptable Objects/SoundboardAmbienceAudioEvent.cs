@@ -11,10 +11,8 @@ namespace Hadal.AudioSystem
         public override string Description => "Audio event meant to play other audio events for Ambience. Audio events put in the composite will be called all at once by the respective functions [listed below] (refer to examples or ask the Tech for help). "
                                             + "\n\nSupports 2D Composite Playing, Soundboard [Un]Pausing, and Soundboard Stopping functions.";
 
-        public override bool Play(Vector3 position)
-        {
-            return false;
-        }
+        public override bool Play(Transform followPosTransform) => false;
+        public override bool Play(Vector3 position) => false;
 
         public override void Play(AudioSource source)
         {

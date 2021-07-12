@@ -67,6 +67,7 @@ namespace Hadal.Player.Behaviours
             BuildTimers();
             tLauncher.OnChamberChanged += OnChamberChangedMethod;
             tLauncher.OnReservesChanged += OnReserveChangedMethod;
+            tLauncher.OnRestock += OnRestock;
         }
 
         private void Start()
@@ -93,7 +94,6 @@ namespace Hadal.Player.Behaviours
                 Debug.LogWarning("Subscribed to Salvage");
                 tLauncher.SubscribeToSalvageEvent();
                 controller.UI.Initialize(tLauncher.TotalAmmoCount);
-                
             }
         }
         
@@ -101,6 +101,7 @@ namespace Hadal.Player.Behaviours
         {
             tLauncher.OnChamberChanged -= OnChamberChangedMethod;
             tLauncher.OnReservesChanged -= OnReserveChangedMethod;
+            tLauncher.OnRestock -= OnRestock;
         }
         
 
@@ -275,12 +276,21 @@ namespace Hadal.Player.Behaviours
                 UpdateUIFloodRatio(0f);
             }
             DebugLog("Torpedo Fired!");
+            
+            UpdateUITorpedoCount(false); 
         }
         private void OnReserveChangedMethod(bool isIncrement)
         {
-            UpdateUITorpedoCount(isIncrement);
+            //UpdateUITorpedoCount(isIncrement);
             if (!isIncrement) return;
             DebugLog("Torpedo Regenerated (Loaded)!");
+            
+            UpdateUITorpedoCount(false); 
+        }
+
+        void OnRestock(UsableLauncherObject usableObject)
+        {
+           
         }
         private void OnUnityUpdateUI()
         {
@@ -295,8 +305,9 @@ namespace Hadal.Player.Behaviours
         private void UpdateUITorpedoCount(bool isReloadEvent)
         {
             //if (UIManager.IsNull) return;
-
-            controller.UI.UpdateTubes(tLauncher.TotalAmmoCount, isReloadEvent);
+            
+            //print($"{tLauncher.TotalAmmoCount}: {tLauncher.ReserveCount} + {tLauncher.ChamberCount}");
+            controller.UI.UpdateTubes(tLauncher.TotalAmmoCount);
         }
         private void UpdateUIRegenRatio(in float ratio)
         {

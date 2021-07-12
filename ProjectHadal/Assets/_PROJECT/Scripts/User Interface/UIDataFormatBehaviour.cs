@@ -14,5 +14,10 @@ namespace Hadal.UI
         {
             TMP.text = text + Suffix;
         }
+
+        public void UpdateTextNoSuffix(object text)
+        {
+            TMP.text = text.ToString();
+        }
     }
 }

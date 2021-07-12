@@ -35,6 +35,7 @@ namespace Hadal.UI
         [Header("External References")] 
         public UIShootTracer ShootTracer;
         public UIScreenDataHandler ScreenDataHandler;
+        public UIContextHandler ContextHandler;
         public Camera PlayerCamera;
 
         [Header("Reticle Settings")]
@@ -198,19 +199,28 @@ namespace Hadal.UI
         #endregion
 
         #region Health
-        public static void InvokeOnHealthChange() => OnHealthChange?.Invoke();
+
+        public void InvokeOnHealthChange()
+        {
+            OnHealthChange?.Invoke();
+        }
+        public void UpdateHealthUI(int currentHealth)
+        {
+            ScreenDataHandler.UpdateTargetHealth(currentHealth);
+            //print($"P hp: {currentHealth}");
+        }
         #endregion
 
         #region Torpedoes
         public void UpdateFlooding(float progress, bool showFlooding)
         {
             torpLoader.fillAmount = progress;
-            floodText.SetActive(showFlooding);
+            //floodText.SetActive(showFlooding);
             if (showFlooding) ShootTracer.ToBlue();
             else ShootTracer.ToRed();
         }
 
-        public void UpdateTubes(int torpedoCount, bool reloadedEvent = false)
+        public void UpdateTubes(int torpedoCount, bool chamberEmpty = false)
         {
             torpCount = torpedoCount;
 
@@ -218,17 +228,18 @@ namespace Hadal.UI
             int count = 0;
             foreach (UIFillerBehaviour filler in torpedoFillers)
             {
-                if (count < torpCount) filler.ToFilled();
+                if (count < torpCount - 1) filler.ToFilled();
                 else filler.ToHollow();
                 count++;
             }
 
+            //print(torpedoCount);
             torpIsEmpty = torpCount == 0;
             torpedoEmptyText.SetActive(torpIsEmpty);
 
             if (torpIsEmpty)
             {
-                ShootTracer.ToBlue();
+                ShootTracer.ToOrange();
             }
         }
 

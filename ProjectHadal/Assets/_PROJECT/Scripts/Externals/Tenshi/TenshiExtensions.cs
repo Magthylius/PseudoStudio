@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Tenshi
 {
-    public static class StringExtensions
+    public static class TenshiString
     {
         public static string NameOfClass<T>(this T type) where T : class => TypeDescriptor.GetClassName(type.GetType());
 
@@ -59,7 +59,7 @@ namespace Tenshi
         }
     }
 
-    public static class ConversionExtensions
+    public static class TenshiConvert
     {
         public static byte AsByte(this object obj) => (byte) obj;
         public static bool AsBool(this object obj) => (bool) obj;
@@ -93,7 +93,7 @@ namespace Tenshi
         public static GameObject AsGObject(this UnityEngine.Object obj) => (GameObject) obj;
     }
 
-    public static class FluentBool
+    public static class TenshiFluentBool
     {
         public static bool Not(bool statement) => !statement;
 
@@ -115,7 +115,7 @@ namespace Tenshi
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> e) => (e is null) ? e is null : e.IsEmpty();
     }
 
-    public static class ClampExtensions
+    public static class TenshiClamp
     {
         public static int Clamp(this int number, int min, int max) => Mathf.Clamp(number, min, max);
         public static float Clamp(this float number, float min, float max) => Mathf.Clamp(number, min, max);
@@ -125,7 +125,7 @@ namespace Tenshi
         public static float DiffBetween(this float thisNum, float otherNum) => (thisNum - otherNum).Abs();
     }
 
-    public static class MathExtensions
+    public static class TenshiMath
     {
         public static float ToDegrees(this float radian) => radian * Mathf.Rad2Deg;
         public static float ToRadians(this float degree) => degree * Mathf.Deg2Rad;
@@ -137,6 +137,7 @@ namespace Tenshi
         public static int Sqr(this int number) => number * number;
 
         public static bool HasHitPercentChance(this float percentChance) => UnityEngine.Random.value > (1f - percentChance.Clamp01());
+        public static bool HeadsOrTails() => UnityEngine.Random.Range(0, 2) == 1;
         
         public static void LerpSpeed(this ref float speed, in float directionalSpeed, in float acceleration, in float deltaTime)
         {
@@ -183,7 +184,7 @@ namespace Tenshi
         }
     }
 
-    public static class CollectionExtensions
+    public static class TenshiCollection
     {
         public static T RandomElement<T>(this IEnumerable<T> e) => e.ElementAt(UnityEngine.Random.Range(0, e.Count()));
         public static T Requeue<T>(this Queue<T> q)
@@ -194,7 +195,7 @@ namespace Tenshi
         }
     }
 
-    public static class UnityExtensions
+    public static class TenshiInUnity
     {
         public static float DeltaTime(this float number) => number * Time.deltaTime;
         public static float UnscaledDeltaTime(this float number) => number * Time.unscaledDeltaTime;

@@ -83,6 +83,23 @@ namespace Hadal.AI
             }
         }
         public NavPoint Data_CurrentPoint => currentPoint;
+
+        private CavernTag cachedLatestCavernTag;
+        public CavernTag Data_CachedLatestCavernTag => cachedLatestCavernTag;
+        public void UpdateLatestCavernTag(CavernTag newCurrentTag, CavernTag nextCavernTagIfAny)
+        {
+            if (newCurrentTag == CavernTag.Invalid)
+                return;
+
+            bool pickNextCavern = TenshiMath.HeadsOrTails();
+            if (pickNextCavern && nextCavernTagIfAny != CavernTag.Invalid)
+            {
+                cachedLatestCavernTag = nextCavernTagIfAny;
+                return;
+            }
+            cachedLatestCavernTag = newCurrentTag;
+        }
+
         #endregion
 
         [Header("Debug")]
@@ -264,7 +281,7 @@ namespace Hadal.AI
                 rBody.velocity = Vector3.zero;
             }
         }
-        public void DisableWithLerp(float time)
+        public void DisableWithLerp(float time, Action onCompleteCallback = null)
         {
             _isEnabled = false;
             if (rBody != null)
@@ -283,6 +300,7 @@ namespace Hadal.AI
                 }
                 rBody.isKinematic = true;
                 rBody.velocity = Vector3.zero;
+                onCompleteCallback?.Invoke();
             }
         }
         public void SetCavernManager(CavernManager manager) => cavernManager = manager;
@@ -350,6 +368,9 @@ namespace Hadal.AI
             }
 
             CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
+            if (currentCavern.cavernTag == destination.cavernTag)
+                return;
+
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
             cachedPointPath.Clear();
@@ -432,7 +453,12 @@ namespace Hadal.AI
             bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point && point != other;
         }
 
-        public void EnableCachedQueuePathTimer() => _tickCavernLingerTimer = true;
+        public void EnableCachedQueuePathTimer()
+        {
+            if (cachedPointPath.IsNullOrEmpty())
+                return;
+            _tickCavernLingerTimer = true;
+        }
 
         /// <summary>
         /// Computes a plan for the path to a destination cavern and immediately follows it. It will return if the handler is
@@ -500,6 +526,28 @@ namespace Hadal.AI
 
                 $"Queued path set: {debugPath}".Msg();
             }
+        }
+
+        public void StopQueuedPath()
+        {
+            if (pointPath.IsNullOrEmpty() || !isOnQueuePath)
+                return;
+
+            pointPath.Clear();
+
+            if (!chosenAmbushPoint)
+            {
+                canTimeout = true;
+                canAutoSelectNavPoints = true;
+            }
+
+            isOnQueuePath = false;
+            lockSteeringBehaviour = false;
+            CavernModeSteering();
+            currentPoint.Deselect();
+            SkipCurrentPoint(true);
+
+            if (enableDebug) "Stopping Queued path on request. Resuming normal movement.".Msg();
         }
 
         /// <summary>
@@ -683,7 +731,7 @@ namespace Hadal.AI
         /// </summary>
         private void MoveForwards(in float deltaTime)
         {
-            if (MaxVelocity < float.Epsilon) return;
+            if (TotalMaxVelocity < float.Epsilon) return;
             float thrust = TotalThrustForce;
             float modifiedSpeed = thrust - (thrust * slowMultiplier);
             Vector3 force = pilotTrans.forward * (modifiedSpeed * deltaTime);
@@ -692,7 +740,7 @@ namespace Hadal.AI
 
         private void HandleSpeedAndDirection(in float deltaTime)
         {
-            if (currentPoint == null || MaxVelocity < float.Epsilon || isStunned) return;
+            if (currentPoint == null || TotalMaxVelocity < float.Epsilon || isStunned) return;
 
             //! Chasing player direction
             if (isChasingAPlayer)
@@ -707,19 +755,19 @@ namespace Hadal.AI
 
         private void ClampMaxVelocity()
         {
-            if (MaxVelocity < float.Epsilon)
+            if (TotalMaxVelocity < float.Epsilon)
             {
                 rBody.velocity = Vector3.zero;
                 return;
             }
 
-            if (rBody.velocity.magnitude > MaxVelocity * (1f - slowMultiplier))
-                rBody.velocity = rBody.velocity.normalized * MaxVelocity;
+            if (rBody.velocity.magnitude > TotalMaxVelocity * (1f - slowMultiplier))
+                rBody.velocity = rBody.velocity.normalized * TotalMaxVelocity;
         }
 
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
         {
-            if (currentPoint == null || MaxVelocity < float.Epsilon) return;
+            if (currentPoint == null || TotalMaxVelocity < float.Epsilon) return;
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
 
             float attraction = TotalAttractionForce;
@@ -800,7 +848,7 @@ namespace Hadal.AI
         private void HandleObstacleAvoidance(in float deltaTime)
         {
             obstacleCheckTimer -= deltaTime;
-            if (!ObstacleTimerReached || MaxVelocity < float.Epsilon) return;
+            if (!ObstacleTimerReached || TotalMaxVelocity < float.Epsilon) return;
             if (enableDebug && showObstacleInfo) $"Obstacle count: {repulsionPoints.Count}".Msg();
 
             float deltaOfTime = deltaTime;
@@ -869,28 +917,28 @@ namespace Hadal.AI
                 case CavernTag.Crystal:
                     {
                         crystalCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("crystal: " + crystalCavernLingerTimer);
+                        if (enableDebug) Debug.Log("crystal: " + crystalCavernLingerTimer);
                         if (crystalCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Bioluminescent:
                     {
                         biolumiCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("biolumi: " + biolumiCavernLingerTimer);
+                        if (enableDebug) Debug.Log("biolumi: " + biolumiCavernLingerTimer);
                         if (biolumiCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Hydrothermal_Deep:
                     {
                         hydrothermalCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
+                        if (enableDebug) Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
                         if (hydrothermalCavernLingerTimer > 0f) return;
                         break;
                     }
                 case CavernTag.Lair:
                     {
                         lairCavernLingerTimer -= deltaTime;
-                        if(enableDebug) Debug.Log("lair: " + lairCavernLingerTimer);
+                        if (enableDebug) Debug.Log("lair: " + lairCavernLingerTimer);
                         if (lairCavernLingerTimer > 0f) return;
                         break;
                     }
@@ -912,10 +960,14 @@ namespace Hadal.AI
             if (currentPoint == null)
                 currentPoint = GetClosestPointToSelf();
 
+            CavernTag aiTag = cavernManager.GetCavernTagOfAILocation();
+            if (aiTag == CavernTag.Invalid)
+                aiTag = Data_CachedLatestCavernTag;
+
             List<NavPoint> potentialPoints = navPoints
                                             .Where(o => o != null
                                                     && o != currentPoint
-                                                    && o.CavernTag == cavernManager.GetCavernTagOfAILocation()
+                                                    && o.CavernTag == aiTag
                                                     && !o.IsTunnelEntry
                                                     && !o.IsHidingPoint)
                                             .OrderBy(n => n.GetSqrDistanceTo(currentPoint.GetPosition))
@@ -937,9 +989,6 @@ namespace Hadal.AI
             if (enableDebug)
                 $"Selected new point: {currentPoint.gameObject.name}; Brain current cavern: {cavernManager.GetCavernTagOfAILocation()}".Msg();
         }
-
-
-
 
         public Queue<NavPoint> GetPointPath => pointPath;
         public Queue<NavPoint> GetCachedPointPath => cachedPointPath;
@@ -968,10 +1017,13 @@ namespace Hadal.AI
 
         #region Shorthands
 
-        public Rigidbody Rigidbody => rBody;
-        public float MaxVelocity => (maxVelocity * debugVelocityMultiplier) - (maxVelocity * debugVelocityMultiplier * slowMultiplier);
+        private float BaseVelocityMultiplier => maxVelocity * debugVelocityMultiplier;
+        private float SlowedVelocityModifier => BaseVelocityMultiplier * slowMultiplier;
+        private float SpedUpVelocityModifier => BaseVelocityMultiplier * speedMultiplier;
+        public float TotalMaxVelocity => BaseVelocityMultiplier - SlowedVelocityModifier + SpedUpVelocityModifier;
         public bool CanMove => _isEnabled && pilotTrans != null && rBody != null && PhotonNetwork.IsMasterClient;
         public bool HasPlayerTarget => isChasingAPlayer && isOnCustomPath;
+        public Rigidbody Rigidbody => rBody;
 
         #endregion
     }

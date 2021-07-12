@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acc624ea2a3d53149ba46e9fd87ff1ed, type: 3}
   m_Name: EngageSteering
   m_EditorClassIdentifier: 
-  MaxVelocity: 60
-  ThrustForce: 15
-  AdditionalAttractionForce: 50
-  AttractionForce: 100
-  AvoidanceForce: 12
-  CloseRepulsionForce: 30
-  AxisStalemateDeviationForce: 80
+  MaxVelocity: 50
+  ThrustForce: 20
+  AdditionalAttractionForce: 80
+  AttractionForce: 60
+  AvoidanceForce: 15
+  CloseRepulsionForce: 2
+  AxisStalemateDeviationForce: 0
   ObstacleDetectRadius: 20
-  CloseNavPointDetectionRadius: 15
-  SmoothLookAtSpeed: 20
+  CloseNavPointDetectionRadius: 10
+  SmoothLookAtSpeed: 12
   ObstacleMask:
     serializedVersion: 2
     m_Bits: 524278

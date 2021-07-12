@@ -20,20 +20,25 @@ MonoBehaviour:
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 10
   G_BaseThreshDamagePerSecond: 4
-  G_DisruptionDamageCount: 2
+  G_DisruptionDamageCount: 5
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 35
   AM_PounceSpeedMultiplier: 1.5
   AM_CarryDelayTimer: 0.8
-  AM_AdditionalThreshDamagePerSecond: 0
-  AG_AccumulatedDamageThresholdPercentage: 0.4
-  AllowTarget_HighestDMGPlayer: 1
-  AllowTarget_HighestHPPlayer: 1
-  AllowTarget_IsolatedPlayer: 1
+  AM_DisruptionDamageCount: 1
+  AM_AdditionalThreshDamagePerSecond: 2
+  HU_RoamingSpeedMultiplier: 2
+  HU_MaxHuntingTime: 120
+  HU_DisruptionDamageCount: 1
   JudgementTimer1: 30
   JudgementTimer2: 30
   JudgementTimer3: 25
   JudgementTimer4: 20
+  PostStunRemainJudgementChance: 0.8
   AGG_AdditionalThreshDamagePerSecond: 1
   DEF_AdditionalThreshDamagePerSecond: -1
   EGG_PermanentThreshDamagePerSecond: 1
+  AG_AccumulatedDamageThresholdPercentage: 0.4
+  AllowTarget_HighestDMGPlayer: 1
+  AllowTarget_HighestHPPlayer: 1
+  AllowTarget_IsolatedPlayer: 1

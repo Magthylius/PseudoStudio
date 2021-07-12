@@ -2,6 +2,8 @@ using System;
 using Tenshi.UnitySoku;
 using Tenshi;
 using UnityEngine;
+using Hadal.Player;
+using System.Linq;
 
 namespace Hadal.AI.States
 {
@@ -11,6 +13,7 @@ namespace Hadal.AI.States
         private JudgementBehaviourCoroutines behaviour;
         private Coroutine currentRoutine;
         public bool IsBehaviourRunning { get; set; }
+        public PlayerController IsolatedPlayer { get; private set; }
         
         public JudgementState(AIBrain brain)
         {
@@ -44,7 +47,20 @@ namespace Hadal.AI.States
             if (IsBehaviourRunning || !AllowStateTick)
                 return;
 
-            int playerCount = CavernManager.GetHandlerOfAILocation.GetPlayerCount;
+            int playerCount;
+            var handler = CavernManager.GetHandlerOfAILocation;
+            if (handler != null)
+            {
+                playerCount = handler.GetPlayerCount;
+                IsolatedPlayer = handler.GetIsolatedPlayer();
+            }
+            else
+            {
+                SenseDetection.RequestImmediateSensing();
+                playerCount = SenseDetection.DetectedPlayersCount;
+                IsolatedPlayer = SenseDetection.GetIsolatedPlayerIfAny();
+            }
+
             RuntimeData.ResetCumulativeDamageCount();
 
             bool isDefensive = RuntimeData.NormalisedConfidence < 0.5f;
@@ -56,6 +72,7 @@ namespace Hadal.AI.States
         {
             StopAnyRunningCoroutines();
             if (behaviour != null) behaviour.ResetStateValues();
+            Brain.DetachAnyCarriedPlayer();
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
         }
@@ -79,6 +96,7 @@ namespace Hadal.AI.States
         public void ResetStateValues()
         {
             IsBehaviourRunning = false;
+            IsolatedPlayer = null;
         }
 
         public void StopAnyRunningCoroutines()

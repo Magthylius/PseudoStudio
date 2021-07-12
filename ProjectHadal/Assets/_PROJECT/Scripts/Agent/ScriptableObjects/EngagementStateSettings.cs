@@ -25,11 +25,13 @@ namespace Hadal.AI.States
         [Min(0f)] public float AM_MaxWaitTime = 120f;
         [Min(0f)] public float AM_PounceSpeedMultiplier = 1.5f;
         [Min(0f)] public float AM_CarryDelayTimer;
+        [Min(0)] public int AM_DisruptionDamageCount = 1;
         public int AM_AdditionalThreshDamagePerSecond;
 
         [Header("Hunt Settings")]
         [Min(0f)] public float HU_RoamingSpeedMultiplier = 1.5f;
         [Min(0f)] public float HU_MaxHuntingTime = 120f;
+        [Min(0)] public int HU_DisruptionDamageCount = 1;
 
         [Header("Judgement Settings")]
         [Min(0f)] public float JudgementTimer1 = 30f;

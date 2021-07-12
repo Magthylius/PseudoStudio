@@ -38,16 +38,24 @@ namespace Hadal.AI.States
             if(!Brain.IsStunned)
                 RuntimeData.TickRecoveryTicker(Time.deltaTime);
 
-            //! When hit too much or time too long, force back into Engagement State
+            //! When hit too much or time too long, force back into Judgement State
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.IsCumulativeDamageCountReached)
             {
-                //! If not travelling and has players in same cavern
-                if (AICavern != null && AICavern.GetPlayerCount > 0)
+                SenseDetection.RequestImmediateSensing();
+                bool anyPlayersInAICavern = AICavern != null && AICavern.GetPlayerCount > 0;
+                bool anyPlayersInDetection = SenseDetection.DetectedPlayersCount > 0;
+
+                if (anyPlayersInAICavern || anyPlayersInDetection)
                 {
                     RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-                    RuntimeData.SetBrainState(BrainState.Judgement);
                     RuntimeData.ResetRecoveryTicker();
                     AllowStateTick = false;
+
+                    if (!Brain.CheckForJudgementStateCondition())
+                    {
+                        //! if did not detect any target players yet, go to anticipation state instead
+                        RuntimeData.SetBrainState(BrainState.Anticipation);
+                    }
                 }
             }
         }
