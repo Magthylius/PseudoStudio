@@ -350,6 +350,9 @@ namespace Hadal.AI
             }
 
             CavernHandler currentCavern = cavernManager.GetHandlerOfAILocation;
+			if (currentCavern.cavernTag == destination.cavernTag)
+				return;
+			
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
             cachedPointPath.Clear();
@@ -432,7 +435,12 @@ namespace Hadal.AI
             bool IsNotTheSamePoint(NavPoint point, NavPoint other) => point && point != other;
         }
 
-        public void EnableCachedQueuePathTimer() => _tickCavernLingerTimer = true;
+        public void EnableCachedQueuePathTimer()
+		{
+			if (cachedPointPath.IsNullOrEmpty())
+				return;
+			_tickCavernLingerTimer = true;
+		}
 
         /// <summary>
         /// Computes a plan for the path to a destination cavern and immediately follows it. It will return if the handler is
