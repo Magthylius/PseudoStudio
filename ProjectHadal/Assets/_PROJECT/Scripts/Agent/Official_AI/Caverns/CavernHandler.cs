@@ -181,6 +181,14 @@ namespace Hadal.AI.Caverns
             return null;
         }
 
+        public PlayerController GetClosestPlayerTo(Transform thisTrans)
+        {
+            if (playersInCavern.Count == 0)
+                return null;
+            
+            return playersInCavern.OrderBy(p => (p.GetTarget.position - thisTrans.position).sqrMagnitude).FirstOrDefault();
+        }
+
         //! Player enquiry
         /// <summary>
         /// Checks if there is a player in this handler with a specified view id.

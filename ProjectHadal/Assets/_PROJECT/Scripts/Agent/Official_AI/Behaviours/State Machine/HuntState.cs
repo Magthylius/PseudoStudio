@@ -16,6 +16,13 @@ namespace Hadal.AI.States
             Initialize(brain);
             settings = brain.MachineData.Engagement;
             ResetCachedTags();
+
+            RuntimeData.OnCumulativeDamageCountReached += Brain.TryToTargetClosestPlayerInAICavern;
+        }
+
+        ~HuntState()
+        {
+            RuntimeData.OnCumulativeDamageCountReached -= Brain.TryToTargetClosestPlayerInAICavern;
         }
 
         public override void OnStateStart()
@@ -23,6 +30,8 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
             RuntimeData.ResetEngagementTicker();
+            RuntimeData.ResetCumulativeDamageCount();
+            RuntimeData.UpdateCumulativeDamageCountThreshold(settings.HU_DisruptionDamageCount);
             targetTag = Brain.TargetMoveCavern.cavernTag;
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);

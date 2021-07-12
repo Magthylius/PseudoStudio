@@ -13,7 +13,6 @@ namespace Hadal.AI.States
     public class AnticipationState : AIStateBase
     {
         AnticipationStateSettings settings;
-        AISenseDetection sensory;
         private float autoActTimer = 0f;
         private bool isFirstAct = false;
 
@@ -24,20 +23,25 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = MachineData.Anticipation;
-            sensory = brain.SenseDetection;
 
-            //Debug.LogWarning("heyheyinit");
             GameManager.Instance.GameStartedEvent += StartInitialization;
+            RuntimeData.OnCumulativeDamageCountReached += Brain.TryToTargetClosestPlayerInAICavern;
+        }
+
+        ~AnticipationState()
+        {
+            RuntimeData.OnCumulativeDamageCountReached -= Brain.TryToTargetClosestPlayerInAICavern;
         }
 
         public override void OnStateStart()
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
-            sensory.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
+            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
             RuntimeData.ResetAnticipationTicker();
+            RuntimeData.ResetCumulativeDamageCount();
+            RuntimeData.UpdateCumulativeDamageCountThreshold(settings.DisruptionDamageCount);
             RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
-            NavigationHandler.SetCanPath(true);
 
             autoActTimer = settings.AutoActTime;
         }
@@ -47,6 +51,7 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
+            
             if (Brain.CheckForJudgementStateCondition()) return;
             if (CheckForAutoActCondition()) return;
         }
@@ -63,7 +68,7 @@ namespace Hadal.AI.States
 
         public override void OnStateEnd()
         {
-            sensory.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
+            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
         }
 
         public override void OnCavernEnter(CavernHandler cavern)
