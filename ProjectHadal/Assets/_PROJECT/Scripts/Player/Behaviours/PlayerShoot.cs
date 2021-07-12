@@ -304,7 +304,7 @@ namespace Hadal.Player.Behaviours
         {
             //if (UIManager.IsNull) return;
             
-            print($"{tLauncher.TotalAmmoCount}: {tLauncher.ReserveCount} + {tLauncher.ChamberCount}");
+            //print($"{tLauncher.TotalAmmoCount}: {tLauncher.ReserveCount} + {tLauncher.ChamberCount}");
             controller.UI.UpdateTubes(tLauncher.TotalAmmoCount);
         }
         private void UpdateUIRegenRatio(in float ratio)
