@@ -725,7 +725,7 @@ namespace Hadal.AI
         /// </summary>
         private void MoveForwards(in float deltaTime)
         {
-            if (MaxVelocity < float.Epsilon) return;
+            if (TotalMaxVelocity < float.Epsilon) return;
             float thrust = TotalThrustForce;
             float modifiedSpeed = thrust - (thrust * slowMultiplier);
             Vector3 force = pilotTrans.forward * (modifiedSpeed * deltaTime);
@@ -734,7 +734,7 @@ namespace Hadal.AI
 
         private void HandleSpeedAndDirection(in float deltaTime)
         {
-            if (currentPoint == null || MaxVelocity < float.Epsilon || isStunned) return;
+            if (currentPoint == null || TotalMaxVelocity < float.Epsilon || isStunned) return;
 
             //! Chasing player direction
             if (isChasingAPlayer)
@@ -749,19 +749,19 @@ namespace Hadal.AI
 
         private void ClampMaxVelocity()
         {
-            if (MaxVelocity < float.Epsilon)
+            if (TotalMaxVelocity < float.Epsilon)
             {
                 rBody.velocity = Vector3.zero;
                 return;
             }
 
-            if (rBody.velocity.magnitude > MaxVelocity * (1f - slowMultiplier))
-                rBody.velocity = rBody.velocity.normalized * MaxVelocity;
+            if (rBody.velocity.magnitude > TotalMaxVelocity * (1f - slowMultiplier))
+                rBody.velocity = rBody.velocity.normalized * TotalMaxVelocity;
         }
 
         private void MoveTowardsCurrentNavPoint(in float deltaTime)
         {
-            if (currentPoint == null || MaxVelocity < float.Epsilon) return;
+            if (currentPoint == null || TotalMaxVelocity < float.Epsilon) return;
             Vector3 direction = currentPoint.GetDirectionTo(pilotTrans.position);
 
             float attraction = TotalAttractionForce;
@@ -842,7 +842,7 @@ namespace Hadal.AI
         private void HandleObstacleAvoidance(in float deltaTime)
         {
             obstacleCheckTimer -= deltaTime;
-            if (!ObstacleTimerReached || MaxVelocity < float.Epsilon) return;
+            if (!ObstacleTimerReached || TotalMaxVelocity < float.Epsilon) return;
             if (enableDebug && showObstacleInfo) $"Obstacle count: {repulsionPoints.Count}".Msg();
 
             float deltaOfTime = deltaTime;
@@ -1014,10 +1014,13 @@ namespace Hadal.AI
 
         #region Shorthands
 
-        public Rigidbody Rigidbody => rBody;
-        public float MaxVelocity => (maxVelocity * debugVelocityMultiplier) - (maxVelocity * debugVelocityMultiplier * slowMultiplier);
+        private float BaseVelocityMultiplier => maxVelocity * debugVelocityMultiplier;
+        private float SlowedVelocityModifier => BaseVelocityMultiplier * slowMultiplier;
+        private float SpedUpVelocityModifier => BaseVelocityMultiplier * speedMultiplier;
+        public float TotalMaxVelocity => BaseVelocityMultiplier - SlowedVelocityModifier + SpedUpVelocityModifier;
         public bool CanMove => _isEnabled && pilotTrans != null && rBody != null && PhotonNetwork.IsMasterClient;
         public bool HasPlayerTarget => isChasingAPlayer && isOnCustomPath;
+        public Rigidbody Rigidbody => rBody;
 
         #endregion
     }
