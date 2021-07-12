@@ -206,7 +206,7 @@ namespace Hadal.UI
         public void UpdateHealthUI(int currentHealth)
         {
             ScreenDataHandler.UpdateTargetHealth(currentHealth);
-            print($"P hp: {currentHealth}");
+            //print($"P hp: {currentHealth}");
         }
         #endregion
 
@@ -238,7 +238,7 @@ namespace Hadal.UI
 
             if (torpIsEmpty)
             {
-                ShootTracer.ToBlue();
+                ShootTracer.ToOrange();
             }
         }
 
