@@ -36,6 +36,7 @@ namespace Hadal.UI
         public UIShootTracer ShootTracer;
         public UIScreenDataHandler ScreenDataHandler;
         public UIContextHandler ContextHandler;
+        public UIEffectsHandler EffectsHandler;
         public Camera PlayerCamera;
 
         [Header("Reticle Settings")]
@@ -200,14 +201,14 @@ namespace Hadal.UI
 
         #region Health
 
-        public void InvokeOnHealthChange()
+        public void InvokeOnHealthChange(int currentHealth)
         {
             OnHealthChange?.Invoke();
+            UpdateHealthUI(currentHealth);
         }
-        public void UpdateHealthUI(int currentHealth)
+        void UpdateHealthUI(int currentHealth)
         {
             ScreenDataHandler.UpdateTargetHealth(currentHealth);
-            //print($"P hp: {currentHealth}");
         }
         #endregion
 
@@ -269,6 +270,7 @@ namespace Hadal.UI
             
             ShootTracer.InjectDependencies(PlayerCamera);
             ScreenDataHandler.InjectDependencies(this, playerTransform);
+            EffectsHandler.InjectDependencies(playerRigidbody);
         }
 
         void UpdateUIDisplacement()

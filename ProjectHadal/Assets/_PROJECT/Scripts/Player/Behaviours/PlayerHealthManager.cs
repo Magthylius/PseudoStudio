@@ -136,8 +136,7 @@ namespace Hadal.Player.Behaviours
         public void ResetManager()
         {
             ResetHealth();
-            _controller.UI.InvokeOnHealthChange();
-            _controller.UI.UpdateHealthUI(_currentHealth);
+            //_controller.UI.InvokeOnHealthChange(_currentHealth);
             _controller.SetIsDown(false);
         }
 
@@ -174,6 +173,7 @@ namespace Hadal.Player.Behaviours
         public void ResetHealth()
         {
             _currentHealth = maxHealth;
+            _controller.UI.InvokeOnHealthChange(_currentHealth);
             ResetDeathTimer();
             ResetReviveTimer();
             if (IsLocalPlayer)
@@ -250,8 +250,7 @@ namespace Hadal.Player.Behaviours
         {
             _cameraController.ShakeCameraDefault();
             OnHit?.Invoke(damage);
-            _controller.UI.InvokeOnHealthChange();
-            _controller.UI.UpdateHealthUI(_currentHealth);
+            _controller.UI.InvokeOnHealthChange(_currentHealth);
         }
 
         #endregion
@@ -303,6 +302,7 @@ namespace Hadal.Player.Behaviours
         private void SetRevivalCustomisations()
         {
             Safe_SetHealthToPercent(0.5f); //! Revive at x% hp?
+            _controller.UI.InvokeOnHealthChange(_currentHealth);
         }
 
         /// <summary>
@@ -626,7 +626,7 @@ namespace Hadal.Player.Behaviours
             }
 
             TryRestoreControllerSystem();
-            OnReviveAttempt.Invoke(true);
+            OnReviveAttempt?.Invoke(true);
 
             if (!IsDown && !IsUnalive)
                 "Player successfully revived.".Msg();

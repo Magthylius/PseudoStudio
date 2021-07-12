@@ -33,15 +33,15 @@ public class UIScreenDataHandler : MonoBehaviour
     [Header("Health")] 
     public UIDataFormatBehaviour healthData;
     public float healthLerpSpeed = 5f;
-    private int displayHealth = 100;
+    private float displayHealth = 100;
     private int targetHealth = 100;
     public void UpdateHealth()
     {
-        displayHealth = (int) Mathf.Lerp(displayHealth, targetHealth, healthLerpSpeed * Time.deltaTime);
+        displayHealth = Mathf.Lerp(displayHealth, targetHealth, healthLerpSpeed * Time.deltaTime);
         if (targetHealth == 0)
             healthData.UpdateTextNoSuffix("ERROR");
         else
-            healthData.UpdateText(displayHealth);
+            healthData.UpdateText(Mathf.RoundToInt(displayHealth));
     }
 
     public void UpdateTargetHealth(int target)
