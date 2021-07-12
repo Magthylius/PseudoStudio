@@ -91,8 +91,8 @@ MonoBehaviour:
   debugEnabled: 0
   allowSwitchTarget: 0
   useAmbushDetection: 0
-  overlapSphereDetectionRadius: 30
-  ambushSphereDetectionRadius: 50
+  overlapSphereDetectionRadius: 50
+  ambushSphereDetectionRadius: 60
   huntSphereDetectionRadius: 70
   detectionOffset: {x: 0, y: 0, z: 0}
   checkDelay: 1
@@ -167,6 +167,7 @@ MonoBehaviour:
   onMasterClient: 0
   targetMoveCavern: {fileID: 0}
   nextMoveCavern: {fileID: 0}
+  cachedCurrentCavern: {fileID: 0}
   healthManager: {fileID: 2206939684562575358}
   navigationHandler: {fileID: 4086058519835168119}
   senseDetection: {fileID: 6021279049498701051}
@@ -179,8 +180,8 @@ MonoBehaviour:
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   MouthObject: {fileID: 0}
   Players: []
-  CurrentTarget: {fileID: 0}
   Egg: {fileID: 0}
+  currentTarget: {fileID: 0}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   followNetworkManagerOfflineStatus: 1
   isOffline: 0

@@ -297,7 +297,11 @@ namespace Hadal.AI
             GetCurrentMachineState().OnCavernEnter(cavern);
             UpdateCachedCurrentCavern(cavern);
             if (NavigationHandler != null)
-                NavigationHandler.UpdateLatestCavernTag(CachedCurrentCavern.cavernTag, NextMoveCavern.cavernTag);
+            {
+                var newTag = CachedCurrentCavern != null ? CachedCurrentCavern.cavernTag : CavernTag.Invalid;
+                var nextTag = NextMoveCavern != null ? NextMoveCavern.cavernTag : CavernTag.Invalid;
+                NavigationHandler.UpdateLatestCavernTag(newTag, nextTag);
+            }
         }
 
         void OnCavernLeave(CavernHandler cavern)
