@@ -17,12 +17,12 @@ namespace Hadal.AI.States
             settings = brain.MachineData.Engagement;
             ResetCachedTags();
 
-            RuntimeData.OnCumulativeDamageCountReached += Brain.TryToTargetClosestPlayerInAICavern;
+            RuntimeData.OnCumulativeDamageCountReached += TryToTargetClosestPlayerInAICavern;
         }
 
         ~HuntState()
         {
-            RuntimeData.OnCumulativeDamageCountReached -= Brain.TryToTargetClosestPlayerInAICavern;
+            RuntimeData.OnCumulativeDamageCountReached -= TryToTargetClosestPlayerInAICavern;
         }
 
         public override void OnStateStart()
@@ -93,6 +93,13 @@ namespace Hadal.AI.States
             {
                 DoRoar();
             }
+        }
+
+        private void TryToTargetClosestPlayerInAICavern()
+        {
+            if (RuntimeData.GetBrainState != BrainState.Hunt)
+                return;
+            Brain.TryToTargetClosestPlayerInAICavern();
         }
 
         private void ResetCachedTags()

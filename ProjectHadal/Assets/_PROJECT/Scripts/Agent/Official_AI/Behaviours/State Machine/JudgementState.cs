@@ -72,6 +72,7 @@ namespace Hadal.AI.States
         {
             StopAnyRunningCoroutines();
             if (behaviour != null) behaviour.ResetStateValues();
+            Brain.DetachAnyCarriedPlayer();
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
         }

@@ -54,6 +54,12 @@ namespace Hadal.AI
 
         #region Coroutines
 
+        /// <summary>
+        /// Will attempt to place a custom nav point onto the target player and will detect whether it fulfills the close and far
+        /// distance to proceed into threshing or stopping behaviour respectively.
+        /// </summary>
+        /// <param name="carryDelayTime">A custom time used to make the AI wait for a while before actually carrying the target. It
+        /// is usually made less than 1 second. </param>
         private IEnumerator MoveToCurrentTarget(float carryDelayTime)
         {
             bool HasTargetIsolatedPlayer() => JState.IsolatedPlayer != null;
@@ -118,6 +124,15 @@ namespace Hadal.AI
             }
         }
 
+        /// <summary>
+        /// Threshing attack that will apply damage every second to the player as long as the coroutine is running. Will succeed if
+        /// it threshing all the way to the end; will fail if there is any interuption (e.g. cumulated damage threshold reached / stunned).
+        /// It will call the respective success or failure callbacks when the coroutine exits.
+        /// </summary>
+        /// <param name="dps">The amount of damage to do to the carried player PER SECOND. </param>
+        /// <param name="successCallback">A callback that will call if the threshing succeeds all the way through. Will not call on a failure case. </param>
+        /// <param name="failureCallback">A callback that will call if the threshing is interupted by the cumulated damage threshold. It will NOT 
+        /// call if the AI is stunned. </param>
         private IEnumerator DoThreshAttack(int dps, System.Action successCallback, System.Action failureCallback)
         {
             bool success = false;
@@ -157,6 +172,11 @@ namespace Hadal.AI
                 failureCallback?.Invoke();
         }
 
+        /// <summary>
+        /// Defensive Judgement behaviour that will manage the <see cref="MoveToCurrentTarget"/> and <see cref="DoThreshAttack"/> coroutines
+        /// in the execution. It will personally handle the transition between both of these coroutines up until the end of the behaviour.
+        /// </summary>
+        /// <param name="stanceIndex">Index passed in should be the number of players detected in the same cavern OR in close vicinity. </param>
         public IEnumerator DefensiveStance(int stanceIndex)
         {
             TryDebug($"Starting Defensive Behaviour for player count: {stanceIndex}.");
@@ -212,12 +232,19 @@ namespace Hadal.AI
                 yield return null;
 
             //! Handle Behaviour ending
+            approachRoutineData.Stop();
+            approachRoutineData = null;
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
             
-            yield return approachRoutineData.Coroutine;
+            yield return null;
         }
 
+        /// <summary>
+        /// Aggressive Judgement behaviour that will manage the <see cref="MoveToCurrentTarget"/> and <see cref="DoThreshAttack"/> coroutines
+        /// in the execution. It will personally handle the transition between both of these coroutines up until the end of the behaviour.
+        /// </summary>
+        /// <param name="stanceIndex">Index passed in should be the number of players detected in the same cavern OR in close vicinity. </param>
         public IEnumerator AggressiveStance(int stanceIndex)
         {
             TryDebug($"Starting Aggressive Behaviour for player count: {stanceIndex}.");
@@ -272,12 +299,18 @@ namespace Hadal.AI
                 yield return null;
 
             //! Handle Behaviour ending
+            approachRoutineData.Stop();
+            approachRoutineData = null;
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
-            yield return approachRoutineData.Coroutine;
+            yield return null;
         }
 
+        /// <summary>
+        /// Ambushing behaviour facilitated through Judgement that will manage the <see cref="MoveToCurrentTarget"/> and <see cref="DoThreshAttack"/>
+        /// coroutines in the execution. It will personally handle the transition between both of these coroutines up until the end of the behaviour.
+        /// </summary>
         public IEnumerator AmbushStance()
         {
             TryDebug($"Starting Ambush Behaviour in Judgement behaviour.");
@@ -340,6 +373,11 @@ namespace Hadal.AI
 
         #region Utility & Verbose Shorthands
 
+        /// <summary>
+        /// Tries to tag a custom nav point onto the passed in player in which the AI should chase. It will return True if the tagging is done
+        /// (spawned a custom nav point and informed the navigation handler to chase); it will return False if the player has already been tagged.
+        /// </summary>
+        /// <param name="player">Player to tag.</param>
         private bool TrySetCustomNavPoint(PlayerController player)
         {
             if (player.GetIsTaggedByLeviathan)
@@ -354,6 +392,10 @@ namespace Hadal.AI
             return true;
         }
 
+        /// <summary>
+        /// Handles the immediate case in which the AI is stunned and stops its current behaviour. It will also decide whether it should
+        /// remain in Judgement state or proceed to Recovery state, after the stun ends, with a random chance.
+        /// </summary>
         private void HandleStunEvent(bool isStunned)
         {
             if (!isStunned)
@@ -374,6 +416,7 @@ namespace Hadal.AI
             TryDebug(debugMsg);
         }
 
+        /// <summary> Resets values used in the behaviour coroutines so it can be reused another time. </summary>
         public void ResetStateValues()
         {
             carryDelayTimer = 0f;
@@ -383,6 +426,10 @@ namespace Hadal.AI
             JState.ResetStateValues();
         }
 
+        /// <summary>
+        /// Facilitates the random chance event to choose between Judgement state or Recovery state. Returns the result of this random
+        /// chance.
+        /// </summary>
         private BrainState GetRandomBrainStateAfterStun()
         {
             bool shouldStayJudgement = Settings.PostStunRemainJudgementChance.HasHitPercentChance();

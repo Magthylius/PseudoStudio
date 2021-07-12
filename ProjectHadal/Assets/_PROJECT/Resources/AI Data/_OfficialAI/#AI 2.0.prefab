@@ -108,7 +108,7 @@ MonoBehaviour:
   ambushSphereDetectionRadius: 60
   huntSphereDetectionRadius: 70
   detectionOffset: {x: 0, y: 0, z: 0}
-  checkDelay: 2
+  checkDelay: 1
 --- !u!114 &9221971048963321059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,8 +365,10 @@ MonoBehaviour:
   currentMaxSlowPercent: 0.3
   currentSlowPercent: 0
   currentSlowStacks: 0
-  randomHitPositions: []
+  randomHitPoints: []
   vfx_OnDamaged: {fileID: 11400000, guid: 801216130b69d5544a53c2a323082230, type: 2}
+  vfxCountPerHit: 4
+  vfxCountPerDeath: 20
 --- !u!1 &3596619662574149774
 GameObject:
   m_ObjectHideFlags: 0

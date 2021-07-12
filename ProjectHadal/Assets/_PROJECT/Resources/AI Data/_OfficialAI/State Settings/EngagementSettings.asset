@@ -20,7 +20,7 @@ MonoBehaviour:
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 10
   G_BaseThreshDamagePerSecond: 4
-  G_DisruptionDamageCount: 2
+  G_DisruptionDamageCount: 5
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 35
   AM_PounceSpeedMultiplier: 1.5
@@ -29,6 +29,7 @@ MonoBehaviour:
   AM_AdditionalThreshDamagePerSecond: 2
   HU_RoamingSpeedMultiplier: 2
   HU_MaxHuntingTime: 120
+  HU_DisruptionDamageCount: 1
   JudgementTimer1: 30
   JudgementTimer2: 30
   JudgementTimer3: 25
