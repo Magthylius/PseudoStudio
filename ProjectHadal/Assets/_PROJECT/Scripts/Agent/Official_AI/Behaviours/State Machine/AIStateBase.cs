@@ -18,6 +18,7 @@ namespace Hadal.AI
         public LeviathanRuntimeData RuntimeData;
         public StateMachineData MachineData;
         public CavernManager CavernManager;
+        public AISenseDetection SenseDetection;
         public AIDamageManager DamageManager;
         public AIHealthManager HealthManager;
         public AIAudioBank AudioBank;
@@ -34,6 +35,7 @@ namespace Hadal.AI
             RuntimeData = Brain.RuntimeData;
             MachineData = Brain.MachineData;
             CavernManager = Brain.CavernManager;
+            SenseDetection = Brain.SenseDetection;
             DamageManager = Brain.DamageManager;
             HealthManager = Brain.HealthManager;
             AudioBank = Brain.AudioBank;

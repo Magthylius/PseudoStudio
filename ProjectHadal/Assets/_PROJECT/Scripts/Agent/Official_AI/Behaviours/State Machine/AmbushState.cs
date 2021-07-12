@@ -10,7 +10,6 @@ namespace Hadal.AI.States
     public class AmbushState : AIStateBase
     {
         EngagementStateSettings settings;
-        AISenseDetection sensory;
         CavernHandler cavernHandler;
         CavernTag currentCavern;
         float ambushTimer;
@@ -20,7 +19,6 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = MachineData.Engagement;
-            sensory = brain.SenseDetection;
         }
 
         public override void OnStateStart()
@@ -33,7 +31,7 @@ namespace Hadal.AI.States
             currentCavern = Brain.CavernManager.GetCavernTagOfAILocation();
             cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
             ambushTimer = settings.AM_MaxWaitTime;
-            sensory.SetDetectionMode(AISenseDetection.DetectionMode.Ambush);
+            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Ambush);
         }
         public override void StateTick()
         {
@@ -51,7 +49,7 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             NavigationHandler.ResetAmbushPoint();
-            sensory.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
+            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
         }
         public override Func<bool> ShouldTerminate() => () => false;
 
@@ -83,7 +81,7 @@ namespace Hadal.AI.States
         /// </summary>
         void CheckPouncingRange()
         {
-            if (sensory.DetectedPlayersCount > 0 && sensory.DetectedPlayersCount < 4)
+            if (SenseDetection.DetectedPlayersCount > 0 && SenseDetection.DetectedPlayersCount < 4)
             {
                 float distance = Vector3.Distance(Brain.transform.position, Brain.CurrentTarget.transform.position);
                 if (distance < settings.AM_TargetPlayerRange && Brain.CurrentTarget != null)
@@ -98,7 +96,7 @@ namespace Hadal.AI.States
                 }
 
             }
-            else if (sensory.DetectedPlayersCount == 4 && Brain.CurrentTarget != null)
+            else if (SenseDetection.DetectedPlayersCount == 4 && Brain.CurrentTarget != null)
             {
                 RuntimeData.UpdateConfidenceValue(settings.ConfidenceDecrementValue);
                 RuntimeData.SetBrainState(BrainState.Recovery);

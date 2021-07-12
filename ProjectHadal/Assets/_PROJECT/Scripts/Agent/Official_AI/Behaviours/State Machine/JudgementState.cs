@@ -2,22 +2,23 @@ using System;
 using Tenshi.UnitySoku;
 using Tenshi;
 using UnityEngine;
+using Hadal.Player;
+using System.Linq;
 
 namespace Hadal.AI.States
 {
     public class JudgementState : AIStateBase
     {
         private EngagementStateSettings settings;
-        private AISenseDetection sensory;
         private JudgementBehaviourCoroutines behaviour;
         private Coroutine currentRoutine;
         public bool IsBehaviourRunning { get; set; }
+        public PlayerController IsolatedPlayer { get; private set; }
         
         public JudgementState(AIBrain brain)
         {
             Initialize(brain);
             settings = MachineData.Engagement;
-            sensory = brain.SenseDetection;
             behaviour = new JudgementBehaviourCoroutines(brain, this);
             ResetStateValues();
         }
@@ -49,11 +50,15 @@ namespace Hadal.AI.States
             int playerCount;
             var handler = CavernManager.GetHandlerOfAILocation;
             if (handler != null)
+            {
                 playerCount = handler.GetPlayerCount;
+                IsolatedPlayer = handler.GetIsolatedPlayer();
+            }
             else
             {
-                sensory.RequestImmediateSensing();
-                playerCount = sensory.DetectedPlayersCount;
+                SenseDetection.RequestImmediateSensing();
+                playerCount = SenseDetection.DetectedPlayersCount;
+                IsolatedPlayer = SenseDetection.GetIsolatedPlayerIfAny();
             }
 
             RuntimeData.ResetCumulativeDamageCount();
@@ -90,6 +95,7 @@ namespace Hadal.AI.States
         public void ResetStateValues()
         {
             IsBehaviourRunning = false;
+            IsolatedPlayer = null;
         }
 
         public void StopAnyRunningCoroutines()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Tenshi.UnitySoku;
 using UnityEngine;
 using NaughtyAttributes;
+using System.Linq;
 
 //! C: Jon
 namespace Hadal.AI.Caverns
@@ -169,6 +170,14 @@ namespace Hadal.AI.Caverns
                 
             }
 
+            return null;
+        }
+
+        public PlayerController GetIsolatedPlayer()
+        {
+            if (playersInCavern.Count == 1)
+                return playersInCavern.Where(p => p != null).Single();
+            
             return null;
         }
 

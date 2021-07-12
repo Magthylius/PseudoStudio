@@ -47,9 +47,9 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
-            if (Brain.CheckForJudgementStateCondition()) return; //debug always try hunt, no judgement
-               if (CheckForAutoActCondition()) return;
-            }
+            if (Brain.CheckForJudgementStateCondition()) return;
+            if (CheckForAutoActCondition()) return;
+        }
 
         public override void LateStateTick()
         {
@@ -225,7 +225,7 @@ namespace Hadal.AI.States
                         }
                     }
 
-                    
+
                 }
                 if (Brain.DebugEnabled) Debug.Log(debugMsg);
 

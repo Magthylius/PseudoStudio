@@ -61,6 +61,14 @@ namespace Hadal.AI
 
         public void RequestImmediateSensing() => SenseSurroundings();
 
+        public PlayerController GetIsolatedPlayerIfAny()
+        {
+            if (_detectedPlayers.Count == 1)
+                return _detectedPlayers.FirstOrDefault();
+            
+            return null;
+        }
+
         private void UpdateDetectionSettings()
         {
             switch (_detectionMode)

@@ -8,7 +8,6 @@ namespace Hadal.AI.States
     public class HuntState : AIStateBase
     {
         private EngagementStateSettings settings;
-        private AISenseDetection sensory;
         private CavernTag targetTag;
         private bool hasReachedTargetCavern;
 
@@ -16,7 +15,6 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = brain.MachineData.Engagement;
-            sensory = brain.SenseDetection;
             ResetCachedTags();
         }
 
@@ -26,7 +24,7 @@ namespace Hadal.AI.States
 
             RuntimeData.ResetEngagementTicker();
             targetTag = Brain.TargetMoveCavern.cavernTag;
-            sensory.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
+            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);
         }
         public override void StateTick()
@@ -56,7 +54,7 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             ResetCachedTags();
-            sensory.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
+            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
             NavigationHandler.ResetSpeedMultiplier();
         }
 
