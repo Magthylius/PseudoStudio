@@ -49,6 +49,7 @@ namespace Hadal.AI
         private bool isAttacking;
         private bool isDamaging;
         private bool waitForJtimer;
+        private Coroutine damageManagerRoutine;
         private CoroutineData threshRoutineData;
         private CoroutineData approachRoutineData;
 
@@ -146,10 +147,10 @@ namespace Hadal.AI
                 success = true;
             }
 
-            DamageManager.ApplyDoT(Brain.CarriedPlayer,
-                totalDamageSeconds,
-                dps.Abs(),
-                StopAttack);
+            damageManagerRoutine = DamageManager.ApplyDoT(Brain.CarriedPlayer,
+                                                            totalDamageSeconds,
+                                                            dps.Abs(),
+                                                            StopAttack);
 
             while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
             {
@@ -401,6 +402,8 @@ namespace Hadal.AI
             if (!isStunned)
                 return;
 
+            if (damageManagerRoutine != null) Brain.StopCoroutine(damageManagerRoutine);
+            damageManagerRoutine = null;
             threshRoutineData?.Stop();      threshRoutineData = null;
             approachRoutineData?.Stop();    approachRoutineData = null;
             JState.IsBehaviourRunning = false;
