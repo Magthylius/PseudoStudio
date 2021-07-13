@@ -134,7 +134,15 @@ namespace Hadal.Player.Behaviours
             {
                 info.AimedPoint = aimHit.point;
             }*/
-            info.AimedPoint = controller.UI.ShootTracer.HitPoint;
+            UIShootTracer tracer = controller.UI.ShootTracer;
+            if (tracer == null)
+            {
+                info.AimedPoint = torpedoFirePoint.position + torpedoFirePoint.forward;
+            }
+            else
+            {
+                info.AimedPoint = tracer.HitPoint;
+            }
             return info;
         }
 

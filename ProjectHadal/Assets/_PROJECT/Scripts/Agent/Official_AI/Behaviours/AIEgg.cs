@@ -30,17 +30,35 @@ namespace Hadal.AI
 
         void CheckEggDestroyed()
         {
-            if(curHealth <= 0)
+            if (curHealth <= 0)
             {
+                if (randomHitPoints.IsNotEmpty())
+                {
+                    int i = -1;
+                    while (++i < vfxCountPerDeath)
+                        PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
+                }
                 eggDestroyedEvent?.Invoke(true);
+            }
+        }
+
+        void DoOnHitEffects(int damage)
+        {
+            if (randomHitPoints.IsNotEmpty() && curHealth > 0)
+            {
+                int i = -1;
+                while (++i < vfxCountPerHit)
+                    PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
             }
         }
 
         public bool TakeDamage(int damage)
         {
             if (curHealth <= 0) return false;
-            curHealth -= damage.Abs();
+            damage = damage.Abs();
+            curHealth -= damage;
             CheckEggDestroyed();
+            DoOnHitEffects(damage);
             return true;
         }
 
