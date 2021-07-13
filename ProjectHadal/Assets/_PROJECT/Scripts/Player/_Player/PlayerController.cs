@@ -58,6 +58,7 @@ namespace Hadal.Player
                 $"Invoking lure event, isActive: {statement}.".Msg();
             OnLureHasActivated?.Invoke(statement, this);
         }
+        public Action<PlayerController> LocalGameStartEvent;
 
         //! Ready checks
         bool playerReady = false;
@@ -117,7 +118,7 @@ namespace Hadal.Player
                 if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
                 {
                     cameraReady = true;
-                    Debug.LogWarning("Added Listener For Loading!");
+                    // Debug.LogWarning("Added Listener For Loading!");
                     LoadingManager.Instance.LoadingCompletedEvent.AddListener(SetLoadingReady);
                     LoadingManager.Instance.AllowLoadingCompletion();
                     NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_SPAWNED_CONFIRMED, PlayerReadyConfirmed);
@@ -127,13 +128,12 @@ namespace Hadal.Player
             }
 
             NetworkEventManager.Instance.AddPlayer(gameObject);
-            StartCoroutine(InitialiseData());
-            OnInitialiseComplete?.Invoke(this);
+            StartCoroutine(InitialiseData(() => OnInitialiseComplete?.Invoke(this)));
         }
 
         protected override void Update()
         {
-            if (!_pView.IsMine || isDummy) return;
+            if (!_pView.IsMine || isDummy || !playerReady) return;
 
             cameraController.CameraTransition(DeltaTime, IsBoosted);
             interact.DoUpdate(DeltaTime);
@@ -152,8 +152,7 @@ namespace Hadal.Player
 
         protected override void FixedUpdate()
         {
-            if (!_pView.IsMine) return;
-            if (isDummy) return;
+            if (!_pView.IsMine || isDummy || !playerReady) return;
 
             if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
             if (CanMove) dodgeBooster?.DoFixedUpdate(FixedDeltaTime);
@@ -162,7 +161,7 @@ namespace Hadal.Player
 
         protected override void LateUpdate()
         {
-            if (!_pView.IsMine) return;
+            if (!_pView.IsMine || isDummy || !playerReady) return;
         }
 
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
@@ -187,7 +186,7 @@ namespace Hadal.Player
             attachedPlayer = photonPlayer;
         }
 
-        IEnumerator InitialiseData()
+        IEnumerator InitialiseData(Action onInitialiseComplete)
         {
             while (_pView.ViewID == 0)
                 yield return null;
@@ -210,6 +209,7 @@ namespace Hadal.Player
             }
 
             NetworkData.AddPlayer(this);
+            onInitialiseComplete?.Invoke();
         }
 
         public void SetPhysicDefault()
@@ -278,6 +278,7 @@ namespace Hadal.Player
             LoadingManager.Instance.StartEndLoad();
             _manager.InstantiatePViewList();
             TrackNamesOnline();
+            LocalGameStartEvent?.Invoke(this);
         }
 
         public void TrackNamesOnline()
