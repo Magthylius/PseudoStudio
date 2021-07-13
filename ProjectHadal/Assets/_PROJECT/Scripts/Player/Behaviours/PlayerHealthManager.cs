@@ -312,7 +312,7 @@ namespace Hadal.Player.Behaviours
         /// <summary> Method to manage settings for revival player stats if a "full revive" is not necessary. </summary>
         private void SetRevivalCustomisations()
         {
-            Safe_SetHealthToPercent(0.5f); //! Revive at x% hp?
+            Safe_SetHealthToPercent(0.2f); //! Revive at x% hp?
             _controller.UI.InvokeOnHealthChange(_currentHealth);
         }
 
