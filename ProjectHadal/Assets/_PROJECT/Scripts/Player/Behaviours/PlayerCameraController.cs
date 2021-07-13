@@ -64,7 +64,7 @@ namespace Hadal.Player.Behaviours
         public void ShakeCameraDefault()
         {
             if (_isDisabled || !enableCameraShake) return;
-            this.ShakeCamera(selfCamera, shakeProperties, true);
+            this.ShakeCamera(selfCamera, shakeProperties);
         }
         public void ShakeCamera(float normSpeed)
         {
@@ -82,7 +82,8 @@ namespace Hadal.Player.Behaviours
                 shakeProperties.Duration + (speed * 3),
                 shakeProperties.NoisePercent + (speed * 0.25f),
                 shakeProperties.DampingPercent - (speed * 0.25f),
-                shakeProperties.RotationPercent
+                shakeProperties.RotationPercent,
+                shakeProperties.MaintainZ
             );
             return newShakeProperties;
         }

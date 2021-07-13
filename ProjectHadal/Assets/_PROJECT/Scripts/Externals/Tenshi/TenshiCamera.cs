@@ -58,7 +58,7 @@ namespace Tenshi.UnitySoku
                         float noiseAngle = (UnityEngine.Random.value - 0.5f) * Mathf.PI;
                         angleRadians += Mathf.PI + noiseAngle * properties.NoisePercent;
 
-                        currentWaypoint = cRotation * new Vector3(cPosition.x + Mathf.Cos(angleRadians), cPosition.y + Mathf.Sin(angleRadians)) * properties.Strength * dampingFactor;
+                        currentWaypoint = cRotation * new Vector3(cPosition.x + Mathf.Cos(angleRadians), cPosition.y + Mathf.Sin(angleRadians), cPosition.z) * properties.Strength * dampingFactor;
                         previousWaypoint = cRotation * camera.transform.localPosition;
                         moveDistance = Vector3.Distance(currentWaypoint, previousWaypoint);
 
@@ -74,6 +74,7 @@ namespace Tenshi.UnitySoku
                     movePercent += Time.deltaTime / moveDistance * speed;
 
                     camera.transform.localPosition = Vector3.Lerp(previousWaypoint, currentWaypoint, movePercent);
+                    camera.transform.localPosition = new Vector3(camera.transform.localPosition.x, camera.transform.localPosition.y, properties.MaintainZ);
                     camera.transform.localRotation = Quaternion.Slerp(previousRotation, targetRotation, movePercent);
 
                     yield return null;
@@ -103,8 +104,9 @@ namespace Tenshi.UnitySoku
         [Range(0f, 1f)] public float NoisePercent;
         [Range(0f, 1f)] public float DampingPercent;
         [Range(0f, 1f)] public float RotationPercent;
+        public float MaintainZ;
 
-        public CameraShakeProperties(float angle, float strength, float maxSpeed, float minSpeed, float duration, float noisePercent, float dampingPercent, float rotationPercent)
+        public CameraShakeProperties(float angle, float strength, float maxSpeed, float minSpeed, float duration, float noisePercent, float dampingPercent, float rotationPercent, float maintainZ)
         {
             Angle = angle;
             Strength = strength;
@@ -114,6 +116,7 @@ namespace Tenshi.UnitySoku
             NoisePercent = Mathf.Clamp01(noisePercent);
             DampingPercent = Mathf.Clamp01(dampingPercent);
             RotationPercent = Mathf.Clamp01(rotationPercent);
+            MaintainZ = maintainZ;
         }
     }
 }
