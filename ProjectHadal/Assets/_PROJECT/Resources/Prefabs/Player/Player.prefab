@@ -789,12 +789,12 @@ MonoBehaviour:
   fovRecoverTransitionSpeed: 8
   enableCameraShake: 0
   shakeProperties:
-    Angle: 0
-    Strength: 4
-    MaxSpeed: 30
-    MinSpeed: 10
-    Duration: 1.5
-    NoisePercent: 0.5
+    Angle: 50
+    Strength: 0.2
+    MaxSpeed: 1
+    MinSpeed: 0.1
+    Duration: 0.75
+    NoisePercent: 0.1
     DampingPercent: 0.7
     RotationPercent: 0
   cameraShakeTarget: {fileID: 2720187582479781533}
