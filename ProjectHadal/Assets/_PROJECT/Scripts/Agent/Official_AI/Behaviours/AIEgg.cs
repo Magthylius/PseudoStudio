@@ -8,22 +8,24 @@ namespace Hadal.AI
 {
     public class AIEgg : MonoBehaviour, IDamageable
     {
+        [Header("Health")]
         [SerializeField] int maxHealth = 40;
-        int curHealth;
+        [SerializeField, ReadOnly] int curHealth;
 
-        public GameObject Obj => throw new System.NotImplementedException();
+        [Header("VFX")]
+        [SerializeField, ReadOnly] private Transform[] randomHitPoints;
+        [SerializeField] private VFXData vfx_OnDamaged;
+        [SerializeField] private int vfxCountPerHit = 2;
+        [SerializeField] private int vfxCountPerDeath = 8;
+
+        public GameObject Obj => gameObject;
 
         public delegate void MaxConfidenceOnEggDestroyed(bool isEggDestroyed);
         public event MaxConfidenceOnEggDestroyed eggDestroyedEvent;
 
-        void Start()
+        void Awake()
         {
             curHealth = maxHealth;
-        }
-
-        void Update()
-        {
-            CheckEggDestroyed();
         }
 
         void CheckEggDestroyed()
@@ -38,7 +40,16 @@ namespace Hadal.AI
         {
             if (curHealth <= 0) return false;
             curHealth -= damage.Abs();
+            CheckEggDestroyed();
             return true;
         }
+
+        private void PlayVFXAt(VFXData vfx, Vector3 position)
+        {
+            if (vfx == null) return;
+            vfx.SpawnAt(position);
+        }
+
+        private Vector3 GetRandomHitPosition() => randomHitPoints.RandomElement().position;
     }
 }
