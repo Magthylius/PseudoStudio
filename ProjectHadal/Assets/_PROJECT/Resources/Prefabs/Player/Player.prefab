@@ -791,13 +791,13 @@ MonoBehaviour:
   shakeProperties:
     Angle: 0
     Strength: 4
-    MaxSpeed: 60
-    MinSpeed: 40
+    MaxSpeed: 30
+    MinSpeed: 10
     Duration: 1.5
     NoisePercent: 0.5
     DampingPercent: 0.7
     RotationPercent: 0
-    MaintainZ: 0
+  cameraShakeTarget: {fileID: 2720187582479781533}
 --- !u!1 &3309683987410669343
 GameObject:
   m_ObjectHideFlags: 0

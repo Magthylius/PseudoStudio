@@ -18,6 +18,7 @@ namespace Hadal.Player.Behaviours
         [Header("Special Effects")]
         [SerializeField] private bool enableCameraShake = true;
         [SerializeField] private CameraShakeProperties shakeProperties;
+        [SerializeField] private GameObject cameraShakeTarget = null;
 
         private float _originalCameraFOV;
         private bool _isDisabled = false;
@@ -64,13 +65,13 @@ namespace Hadal.Player.Behaviours
         public void ShakeCameraDefault()
         {
             if (_isDisabled || !enableCameraShake) return;
-            this.ShakeCamera(selfCamera, shakeProperties);
+            this.ShakeCamera(cameraShakeTarget, shakeProperties);
         }
         public void ShakeCamera(float normSpeed)
         {
             if (_isDisabled || !enableCameraShake) return;
             var sProp = ShakePropertiesWithSpeed(normSpeed);
-            this.ShakeCamera(selfCamera, sProp, true);
+            this.ShakeCamera(cameraShakeTarget, sProp, true);
         }
         private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
         {
@@ -82,8 +83,7 @@ namespace Hadal.Player.Behaviours
                 shakeProperties.Duration + (speed * 3),
                 shakeProperties.NoisePercent + (speed * 0.25f),
                 shakeProperties.DampingPercent - (speed * 0.25f),
-                shakeProperties.RotationPercent,
-                shakeProperties.MaintainZ
+                shakeProperties.RotationPercent
             );
             return newShakeProperties;
         }
