@@ -94,6 +94,7 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
+            ResetHealth();
 
             if (!_initialiseOnce)
             {
@@ -121,7 +122,13 @@ namespace Hadal.Player.Behaviours
             yield return new WaitForSeconds(0.1f);
             ResetHealth();
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
-            if (IsLocalPlayer) NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_RECEIVE_DAMAGE, Receive_TakeDamage);
+            if (IsLocalPlayer)
+            {
+                NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_RECEIVE_DAMAGE, Receive_TakeDamage);
+
+                yield return new WaitForSeconds(0.5f);
+                Send_HealthUpdateStatus(false);
+            }
         }
 
         public void DoUpdate(in float deltaTime)
@@ -291,6 +298,9 @@ namespace Hadal.Player.Behaviours
                 if (actorPlayer == null) //! There are duplicate view IDs or missing player reference from network
                     return;
 
+                if (actorPlayer.GetInfo.HealthManager.IsDownOrUnalive) //! down people cannot revive
+                    return;
+                
                 reviveTimerRoutine = StartCoroutine(StartReviveTimer(actorPlayer));
             }
         }

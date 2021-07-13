@@ -58,6 +58,7 @@ namespace Hadal.Player
                 $"Invoking lure event, isActive: {statement}.".Msg();
             OnLureHasActivated?.Invoke(statement, this);
         }
+        public Action<PlayerController> LocalGameStartEvent;
 
         //! Ready checks
         bool playerReady = false;
@@ -278,6 +279,7 @@ namespace Hadal.Player
             LoadingManager.Instance.StartEndLoad();
             _manager.InstantiatePViewList();
             TrackNamesOnline();
+            LocalGameStartEvent?.Invoke(this);
         }
 
         public void TrackNamesOnline()
