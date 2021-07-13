@@ -522,7 +522,7 @@ namespace Hadal.Player
         
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
-        public bool PlayerReadyForUpdateLoop => playerReady || (NetworkEventManager.Instance != null && !NetworkEventManager.Instance.isOfflineMode);
+        public bool PlayerReadyForUpdateLoop => playerReady || (NetworkEventManager.Instance != null && NetworkEventManager.Instance.isOfflineMode);
         #endregion
     }
 }
