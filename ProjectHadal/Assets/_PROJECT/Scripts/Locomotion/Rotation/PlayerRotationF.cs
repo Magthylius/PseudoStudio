@@ -32,7 +32,7 @@ namespace Hadal.Locomotion
             testLastQT = currentQT;
 
             rb.angularDrag = 1;
-            sl_MP = DebugManager.Instance.CreateScreenLogger();
+            /*sl_MP = DebugManager.Instance.CreateScreenLogger();*/
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -73,7 +73,7 @@ namespace Hadal.Locomotion
             rb.AddRelativeTorque(torqueForce * 0.89f, ForceMode.Force);
             /*rb.AddRelativeTorque(torqueDirection, ForceMode.Acceleration);*/
             /*print(Rotary.GetPitchSensitivity);*/
-            DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);
+            /*DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);*/
         }
 
         void CalculateRotationSpeed()

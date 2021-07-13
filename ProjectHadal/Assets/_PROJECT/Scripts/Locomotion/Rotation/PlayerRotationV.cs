@@ -29,7 +29,7 @@ namespace Hadal.Locomotion
             testCurrentQT = currentQT;
             testLastQT = currentQT;
 
-            sl_MP = DebugManager.Instance.CreateScreenLogger();
+            /*sl_MP = DebugManager.Instance.CreateScreenLogger();*/
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -78,7 +78,7 @@ namespace Hadal.Locomotion
             currentQT = targetQT;
             target.localRotation = currentQT;
 
-            DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);
+            /*DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);*/
             //DebugManager.Instance.SLog(sl_MP, Mathf.Sign(yaw) + " | " + yawInfluence);
             //DebugManager.Instance.SLog(sl_MP, "P: " + pitch + " | Y: " + yaw + " | CurZ: " + currentEA.z);
         }
