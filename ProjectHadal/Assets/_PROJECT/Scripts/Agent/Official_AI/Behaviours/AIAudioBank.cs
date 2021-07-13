@@ -9,6 +9,7 @@ namespace Hadal.AI
     {
         [Header("Bank")]
         [SerializeField] private List<AudioEventType> audioAssetList = new List<AudioEventType>();
+        [SerializeField] private AIBrain brain;
         [SerializeField, ReadOnly] private AudioSource source2D;
 
         private void Awake() => source2D = gameObject.GetOrAddComponent<AudioSource>();
@@ -20,6 +21,7 @@ namespace Hadal.AI
             if (asset == null)
                 return false;
 
+            brain.Send_PlayAudio(is3D: true, soundType);
             return asset.Play(followTransform);
         }
 
@@ -30,6 +32,7 @@ namespace Hadal.AI
             if (asset == null)
                 return;
             
+            brain.Send_PlayAudio(is3D: false, soundType);
             asset.Play(source2D);
         }
 

@@ -11,6 +11,7 @@ using Tenshi.UnitySoku;
 using Hadal.Player;
 using Hadal.AI.Graphics;
 using Hadal.Networking;
+using ExitGames.Client.Photon;
 
 namespace Hadal.AI
 {
@@ -143,6 +144,7 @@ namespace Hadal.AI
             if (!onMasterClient)
             {
                 healthManager.Initialise(this);
+                neManager.AddListener(ByteEvents.AI_PLAY_AUDIO, Receive_PlayAudio);
                 return;
             }
             if (!isEnabled) return;
@@ -189,6 +191,13 @@ namespace Hadal.AI
                 cavernManager.AILeftTunnelEvent -= OnTunnelLeave;
             }
             if (Egg != null) Egg.eggDestroyedEvent -= HandleEggDestroyedEvent;
+            if (!onMasterClient)
+            {
+                if (neManager != null)
+                {
+                    neManager.RemoveListener(ByteEvents.AI_PLAY_AUDIO, Receive_PlayAudio);
+                }
+            }
         }
 
         void Setup()
@@ -330,6 +339,28 @@ namespace Hadal.AI
         {
             if (NavigationHandler != null) NavigationHandler.OnCollisionDetected().Invoke();
             if (HealthManager != null) HealthManager.OnCollisionDetected().Invoke();
+        }
+
+        //! Network events
+        internal void Send_PlayAudio(bool is3D, AISound soundType)
+        {
+            if (neManager == null || !neManager.IsMasterClient) //! only master client can send this
+                return;
+            
+            object[] content = new object[] { is3D, (int)soundType };
+            neManager.RaiseEvent(ByteEvents.AI_PLAY_AUDIO, content, SendOptions.SendReliable);
+        }
+
+        private void Receive_PlayAudio(EventData eventData)
+        {
+            object[] content = (object[])eventData.CustomData;
+            bool is3D = (bool)content[0];
+            AISound soundType = (AISound)(int)content[1];
+
+            if (is3D)
+                AudioBank.Play3D(soundType, transform);
+            else
+                AudioBank.Play2D(soundType);
         }
 
         #endregion
