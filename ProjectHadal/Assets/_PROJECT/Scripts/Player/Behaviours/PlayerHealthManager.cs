@@ -94,6 +94,7 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
+            ResetHealth();
 
             if (!_initialiseOnce)
             {
@@ -121,7 +122,13 @@ namespace Hadal.Player.Behaviours
             yield return new WaitForSeconds(0.1f);
             ResetHealth();
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
-            if (IsLocalPlayer) NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_RECEIVE_DAMAGE, Receive_TakeDamage);
+            if (IsLocalPlayer)
+            {
+                NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_RECEIVE_DAMAGE, Receive_TakeDamage);
+
+                yield return new WaitForSeconds(0.5f);
+                Send_HealthUpdateStatus(false);
+            }
         }
 
         public void DoUpdate(in float deltaTime)
@@ -268,6 +275,7 @@ namespace Hadal.Player.Behaviours
             return true;
         }
 
+        private Coroutine reviveTimerRoutine = null;
         public void Interact(int viewID)
         {
             //! Only players on other machine should be able to send the event to the true networked player of this pView
@@ -275,22 +283,25 @@ namespace Hadal.Player.Behaviours
                 return;
             
             if (debugEnabled)
-                $"Player of {PlayerViewID} is being interacted by player of {viewID}. This action will attempt to revive {PlayerViewID}. Please check the screen logger for revival information.".Msg();
+                $"Player of {PlayerViewID} is being interacted by player of {viewID}. This action will attempt to revive {PlayerViewID}.".Msg();
 
             //! Can only attempt revival if status is down and not dead
             if (IsDown && !IsUnalive)
             {
-                if (ReviveTimerIsRunning()) //! cannot run two timers simultaneously
+                if (reviveTimerRoutine != null) //! cannot run two timers simultaneously
                     return;
 
                 PlayerController actorPlayer = NetworkEventManager.Instance.PlayerObjects
                                                 .Select(p => p.GetComponent<PlayerController>())
-                                                .Where(p => p.GetInfo.PhotonInfo.PView.ViewID == viewID)
+                                                .Where(p => p.ViewID == viewID)
                                                 .SingleOrDefault();
                 if (actorPlayer == null) //! There are duplicate view IDs or missing player reference from network
                     return;
 
-                StartCoroutine(StartReviveTimer(actorPlayer));
+                if (actorPlayer.GetInfo.HealthManager.IsDownOrUnalive) //! down people cannot revive
+                    return;
+                
+                reviveTimerRoutine = StartCoroutine(StartReviveTimer(actorPlayer));
             }
         }
 
@@ -329,9 +340,7 @@ namespace Hadal.Player.Behaviours
                 StartCoroutine(StartDeathTimer());
         }
 
-        /// <summary>
-        /// Activates movement & rotation system for revival. Will only be called on the local player.
-        /// </summary>
+        /// <summary> Activates movement & rotation system for revival. Will only be called on the local player. </summary>
         private bool TryRestoreControllerSystem()
         {
             if (IsUnalive || !IsDown || !IsLocalPlayer)
@@ -528,6 +537,8 @@ namespace Hadal.Player.Behaviours
 
                     if (debugEnabled)
                         $"Criteria for revival complete.".Msg();
+                    
+                    reviveTimerRoutine = null;
                     yield break;
                 }
                 yield return null;
@@ -539,6 +550,8 @@ namespace Hadal.Player.Behaviours
 
             if (debugEnabled)
                 $"Revival attempt failed.".Msg();
+            
+            reviveTimerRoutine = null;
         }
 
         // private int screenLogReviveTimerIndex;
@@ -559,7 +572,6 @@ namespace Hadal.Player.Behaviours
         private void ResetKnockTimer(in float time) => _knockTimer = time;
         private void ResetDeathTimer() => _deathTimer = deathTime;
         private float ElapseDeathTimer(in float deltaTime) => _deathTimer -= deltaTime;
-        private bool ReviveTimerIsRunning() => _reviveTimer < reviveTime && _reviveTimer > 0f;
         private void ResetReviveTimer() => _reviveTimer = reviveTime;
         private float ElapseReviveTimer(in float deltaTime) => _reviveTimer -= deltaTime;
 
@@ -636,13 +648,13 @@ namespace Hadal.Player.Behaviours
         [Button(nameof(Debug_LocalReviveWithTimer))]
         private void Debug_LocalReviveWithTimer()
         {
-            if (!IsDown && !IsUnalive || ReviveTimerIsRunning())
+            if (!IsDown && !IsUnalive || reviveTimerRoutine != null)
             {
                 "Try to make alive someone who is not unalive sounds like a plot to obtain godhood. Please no".Msg();
                 return;
             }
 
-            StartCoroutine(StartReviveTimer(_controller, true));
+            reviveTimerRoutine = StartCoroutine(StartReviveTimer(_controller, true));
         }
 
         #endregion
