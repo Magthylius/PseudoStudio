@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Player;
 using Tenshi;
+using NaughtyAttributes;
 
 namespace Hadal.AI.States
 {
@@ -17,7 +18,8 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_ApproachFarDistanceThreshold;
         [Min(0f)] public float G_CarryDelayTimer;
         [Min(0)] public int G_TotalThreshTimeInSeconds;
-        [Min(0)] public int G_BaseThreshDamagePerSecond;
+        [Min(5)] public int G_BaseMinThreshDamagePerSecond;
+        [Min(8)] public int G_BaseMaxThreshDamagePerSecond;
         [Min(0)] public int G_DisruptionDamageCount;
 
         [Header("Ambush Settings")]
@@ -139,7 +141,10 @@ namespace Hadal.AI.States
             };
             int permanentDPS = eggDestroyed ? EGG_PermanentThreshDamagePerSecond : 0;
 
-            return G_BaseThreshDamagePerSecond + additionalDPS + permanentDPS;
+            int G_ThreshDamagePerSecond = Random.Range(G_BaseMinThreshDamagePerSecond, G_BaseMaxThreshDamagePerSecond);
+            Debug.LogWarning(G_ThreshDamagePerSecond);
+
+            return  G_ThreshDamagePerSecond + additionalDPS + permanentDPS;
         }
     }
 
