@@ -32,7 +32,7 @@ namespace Hadal.Usables
         {
             if(interactionType == InteractionType.Salvage_Torpedo)
             {
-                Debug.LogError("Torpedo Added");
+                // Debug.LogError("Torpedo Added");
                 IncrementReserve();
             }
         }
