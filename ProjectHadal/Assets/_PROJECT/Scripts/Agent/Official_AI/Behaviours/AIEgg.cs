@@ -58,7 +58,7 @@ namespace Hadal.AI
                 while (++i < mRenderers.Length)
                     mRenderers[i].enabled = false;
                 
-                GetComponent<MeshCollider>().enabled = false;
+                GetComponent<Collider>().enabled = false;
                 eggDestroyedEvent?.Invoke(true);
             }
         }
