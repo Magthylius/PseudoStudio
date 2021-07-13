@@ -475,7 +475,7 @@ namespace Hadal.AI
             }
 
             ComputeCachedDestinationCavernPath(destination);
-            SetQueuedPathFromCache();
+            SetQueuedPathFromCache(true);
         }
 
         /// <summary>
