@@ -700,7 +700,7 @@ MonoBehaviour:
   interact: {fileID: 5353082528437765301}
   collisions: {fileID: 3306862700224671012}
   playerUI: {fileID: 2041580312169042142}
-  dodgeBooster: {fileID: 2139526116642413387}
+  dodgeBooster: {fileID: 0}
   photonInfo: {fileID: 155871750561701772}
   localPlayerLayer: LocalPlayer
   physicNormal: {fileID: 11400000, guid: b1d01ccf9a2b25240914457911e9d96b, type: 2}
@@ -791,13 +791,13 @@ MonoBehaviour:
   shakeProperties:
     Angle: 0
     Strength: 4
-    MaxSpeed: 60
-    MinSpeed: 40
+    MaxSpeed: 30
+    MinSpeed: 10
     Duration: 1.5
     NoisePercent: 0.5
     DampingPercent: 0.7
     RotationPercent: 0
-    MaintainZ: 0
+  cameraShakeTarget: {fileID: 2720187582479781533}
 --- !u!1 &3309683987410669343
 GameObject:
   m_ObjectHideFlags: 0

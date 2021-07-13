@@ -133,7 +133,7 @@ namespace Hadal.Player
 
         protected override void Update()
         {
-            if (!_pView.IsMine || isDummy || !playerReady) return;
+            if (!_pView.IsMine || isDummy || !PlayerReadyForUpdateLoop) return;
 
             cameraController.CameraTransition(DeltaTime, IsBoosted);
             interact.DoUpdate(DeltaTime);
@@ -152,7 +152,7 @@ namespace Hadal.Player
 
         protected override void FixedUpdate()
         {
-            if (!_pView.IsMine || isDummy || !playerReady) return;
+            if (!_pView.IsMine || isDummy || !PlayerReadyForUpdateLoop) return;
 
             if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
             if (CanMove) dodgeBooster?.DoFixedUpdate(FixedDeltaTime);
@@ -161,7 +161,7 @@ namespace Hadal.Player
 
         protected override void LateUpdate()
         {
-            if (!_pView.IsMine || isDummy || !playerReady) return;
+            if (!_pView.IsMine || isDummy || !PlayerReadyForUpdateLoop) return;
         }
 
         private void OnCollisionEnter(Collision collision) => collisions.CollisionEnter(collision);
@@ -522,6 +522,7 @@ namespace Hadal.Player
         
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
+        public bool PlayerReadyForUpdateLoop => playerReady || (NetworkEventManager.Instance != null && !NetworkEventManager.Instance.isOfflineMode);
         #endregion
     }
 }
