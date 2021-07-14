@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Networking;
 using Kit;
+using UnityEngine.SceneManagement;
 
 namespace Hadal.AI
 {
@@ -23,34 +24,22 @@ namespace Hadal.AI
             if (Instance != null) Destroy(this);
             else Instance = this;
 
-            if (enableAIRandomSpawn)
-            {
-                Transform spawnPoints = spawnPositions[(int)Random.Range(0, spawnPositions.Count)];
-                Instantiate(aiPrefab, spawnPoints.position, spawnPoints.rotation);
-            }
-
-
+            SpawnInCorrectScene();
         }
 
-        // IEnumerator Start()
-        // {
-        //     if (brain == null)
-        //         brain = FindObjectOfType<AIBrain>();
-
-        //     neManager = NetworkEventManager.Instance;
-
-        //     if (enableAIRandomSpawn)
-        //     {
-
-
-        //     }
-
-        //     //! The null is to make sure the AI does not go to the NavPoint of where its spawned.
-        //     yield return new WaitForSeconds(0.1f);
-
-        //     brain.NavigationHandler.SkipCurrentPoint(true);
-
-        // }
+        void SpawnInCorrectScene()
+        {
+            Scene currentScene = SceneManager.GetActiveScene();
+            string sceneName = currentScene.name;
+            if (sceneName == "Post Vertical Slice")
+            {
+                if (enableAIRandomSpawn)
+                {
+                    Transform spawnPoints = spawnPositions[(int)Random.Range(0, spawnPositions.Count)];
+                    Instantiate(aiPrefab, spawnPoints.position, spawnPoints.rotation);
+                }
+            }
+        }
 
     }
 }
