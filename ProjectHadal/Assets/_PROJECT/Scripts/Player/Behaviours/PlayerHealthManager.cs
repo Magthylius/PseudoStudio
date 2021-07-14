@@ -543,7 +543,8 @@ namespace Hadal.Player.Behaviours
                     _shouldRevive = true;
 					ReviveTimeRatio = 1f;
 					player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
-                    OnReviveAttempt?.Invoke(true);
+                    player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(true);
+					OnReviveAttempt?.Invoke(true);
 					Send_HealthUpdateStatus(true); //! send message of revival to Local player
 					
                     if (reviveLocallyOnTimerReached)
@@ -562,6 +563,7 @@ namespace Hadal.Player.Behaviours
 			ReviveTimeRatio = 0f;
 			ResetReviveTimer();
 			player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
+			player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(false);
             OnReviveAttempt?.Invoke(false);
 
             if (debugEnabled)
