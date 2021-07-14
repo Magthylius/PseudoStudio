@@ -397,7 +397,7 @@ namespace Hadal.Player.Behaviours
         {
             if (attemptSucceeded)
             {
-                Debug.LogWarning("Triggered revive attempt");
+                Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
                 _controller.UI.ContextHandler.PlayerRevived();
             }
         }
@@ -406,14 +406,14 @@ namespace Hadal.Player.Behaviours
         {
             if (startedRevive)
             {
-                Debug.LogWarning("Triggered jumpstart");
+                Debug.LogWarning(_controller.ViewID + " Triggered jumpstart");
                 _controller.UI.ContextHandler.StartJumpstart();
             }
         }
         
         void JumpstartAttempt(bool success)
         {
-            Debug.LogWarning("Triggered jumpstart attempt");
+            Debug.LogWarning(_controller.ViewID + " Triggered jumpstart attempt: " + success);
             if (success) _controller.UI.ContextHandler.SuccessJumpstart();
             else _controller.UI.ContextHandler.FailJumpstart();
         }
