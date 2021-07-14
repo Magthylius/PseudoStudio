@@ -608,7 +608,7 @@ namespace Hadal.Player.Behaviours
 			
 			while (_reviveDelayTimer > 0f)
 			{
-				_reviveDelayTimer -= _controller.deltaTime;
+				_reviveDelayTimer -= _controller.DeltaTime;
 				yield return null;
 			}
 			
