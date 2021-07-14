@@ -76,7 +76,6 @@ namespace Hadal.Player.Behaviours
         {
             _isDead = false;
             _isKami = false;
-			_isRevivingAnotherPlayer = false;
         }
 
         private void Start()
