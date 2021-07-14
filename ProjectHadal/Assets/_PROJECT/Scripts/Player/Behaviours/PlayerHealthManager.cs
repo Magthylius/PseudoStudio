@@ -380,7 +380,7 @@ namespace Hadal.Player.Behaviours
             _shouldRevive = false;
             TryRestoreControllerSystem();
             CheckHealthStatus();
-			OnReviveAttempt?.Invoke(true);
+			//OnReviveAttempt?.Invoke(true);
             Send_HealthUpdateStatus(false); //! send revive message to non-local players
         }
 
