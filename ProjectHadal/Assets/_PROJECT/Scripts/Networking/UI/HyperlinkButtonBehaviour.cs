@@ -12,14 +12,14 @@ namespace Hadal.Networking.Hyperlinks
 
         void OnValidate()
         {
-            if (button == null) button = GetComponent<Button>();
+            /*if (button == null) button = GetComponent<Button>();
             if (button != null)
             {
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(URLOpen);
-            }
+            }*/
         }
 
-        void URLOpen() => Application.OpenURL(urlLink);
+        public void URLOpen() => Application.OpenURL(urlLink);
     }
 }
