@@ -92,12 +92,17 @@ namespace Hadal.AI.States
         void StartInitialization(bool booleanData)
         {
             //.LogWarning("heyheyxd");
-            Brain.StartCoroutine(InitializeAfterCaverns());
+            GameManager.Instance.StartCoroutine(InitializeAfterCaverns());
         }
 
         IEnumerator InitializeAfterCaverns()
         {
             //Debug.LogWarning("heyhey0");
+			
+			while (Brain == null)
+			{
+				yield return null;
+			}
 
             //! Wait for caverns to init
             while (!CavernManager.CavernsInitialized)
