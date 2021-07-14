@@ -38,6 +38,7 @@ namespace Hadal.Player.Behaviours
         private bool _isDead;
         private bool _isKnocked;
         private float _knockTimer;
+		private bool _isRevivingAnotherPlayer;
         private PhotonView _pView;
         private PlayerController _controller;
         private PlayerCameraController _cameraController;
@@ -70,6 +71,7 @@ namespace Hadal.Player.Behaviours
         {
             _isDead = false;
             _isKami = false;
+			_isRevivingAnotherPlayer = false;
         }
 
         private void Start()
@@ -374,6 +376,8 @@ namespace Hadal.Player.Behaviours
             CheckHealthStatus();
             Send_HealthUpdateStatus(false); //! send revive message to non-local players
         }
+		
+		public void SetIsRevivingPlayer(bool statement) => _isRevivingAnotherPlayer = statement;
 
         #endregion
 
@@ -523,6 +527,7 @@ namespace Hadal.Player.Behaviours
             float SqrDistanceBetweenPlayers() => (thisPTrans.position - otherPTrans.position).sqrMagnitude;
             bool OtherPlayerIsCloseEnoughToRevive() => SqrDistanceBetweenPlayers() < sqrMinPlayerRevivalDistance;
 
+			player.GetInfo.HealthManager.SetIsRevivingPlayer(true);
             while (OtherPlayerIsCloseEnoughToRevive())
             {
                 Debug_RevivalTimerStatus();
@@ -530,6 +535,7 @@ namespace Hadal.Player.Behaviours
                 {
                     //! Revivalllllllllll
                     _shouldRevive = true;
+					player.GetInfo.HealthManager.SetIsRevivingPlayer(false);
                     Send_HealthUpdateStatus(true); //! send message of revival to Local player
                     OnReviveAttempt?.Invoke(true);
                     if (reviveLocallyOnTimerReached)
@@ -546,6 +552,7 @@ namespace Hadal.Player.Behaviours
 
             //! This will run when the timer does not end & the other player goes too far from this player
             ResetReviveTimer();
+			player.GetInfo.HealthManager.SetIsRevivingPlayer(false);
             OnReviveAttempt?.Invoke(false);
 
             if (debugEnabled)
