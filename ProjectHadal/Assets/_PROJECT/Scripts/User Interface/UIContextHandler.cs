@@ -30,8 +30,6 @@ namespace Hadal.UI
         public void PlayerWentDown()
         {
             reviveAnimator.SetTrigger(PlayerDownHash);
-            //reviveDown.SetActive(true);
-            //reviveUp.SetActive(false);
         }
         
         public void PlayerRevived()

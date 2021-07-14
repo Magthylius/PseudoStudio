@@ -83,6 +83,8 @@ namespace Hadal.Player.Behaviours
             //! UI setup
             OnDown += UpdateDownUI;
             OnReviveAttempt += UpdateReviveUI;
+            OnReviveAttempt += JumpstartAttempt;
+            OnLocalRevivingAPlayer += TriggerStartJumpstart;
         }
 
         private void OnDestroy()
@@ -392,7 +394,27 @@ namespace Hadal.Player.Behaviours
 
         void UpdateReviveUI(bool attemptSucceeded)
         {
-            if (attemptSucceeded) _controller.UI.ContextHandler.PlayerRevived();
+            if (attemptSucceeded)
+            {
+                Debug.LogWarning("Triggered revive attempt");
+                _controller.UI.ContextHandler.PlayerRevived();
+            }
+        }
+
+        void TriggerStartJumpstart(bool startedRevive)
+        {
+            if (startedRevive)
+            {
+                Debug.LogWarning("Triggered jumpstart");
+                _controller.UI.ContextHandler.StartJumpstart();
+            }
+        }
+        
+        void JumpstartAttempt(bool success)
+        {
+            Debug.LogWarning("Triggered jumpstart attempt");
+            if (success) _controller.UI.ContextHandler.SuccessJumpstart();
+            else _controller.UI.ContextHandler.FailJumpstart();
         }
 
         #endregion
