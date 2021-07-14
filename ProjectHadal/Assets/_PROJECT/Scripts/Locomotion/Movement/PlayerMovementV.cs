@@ -9,6 +9,8 @@ namespace Hadal.Locomotion
     [System.Serializable]
     public class PlayerMovementV : Mover
     {
+        [SerializeField] private Rigidbody rigidBody;
+        [SerializeField] private LayerMask rayCastLayerMask;
         [Header("Debug"), SerializeField] private string debugKey;
         private Vector3 _lastPosition;
         private Vector3 _currentPosition;
@@ -138,7 +140,21 @@ namespace Hadal.Locomotion
             DebugLog(log);
         }
 
-        private void Move(in float deltaTime) => target.position += Velocity.Total * deltaTime;
+        private void Move(in float deltaTime)
+        {
+            /*target.position += Velocity.Total * deltaTime;*/
+            /*rigidBody.MovePosition(target.position + Velocity.Total * deltaTime);*/
+
+
+            Vector3 desiredPosition = target.position + Velocity.Total * deltaTime;
+            Vector3 direction = desiredPosition - target.position;
+            Ray ray = new Ray(target.position, direction);
+            RaycastHit hit;
+            if (!Physics.Raycast(ray, out hit, direction.magnitude, rayCastLayerMask, QueryTriggerInteraction.Ignore))
+                rigidBody.MovePosition(desiredPosition);
+            else
+                rigidBody.MovePosition(hit.point);
+        }
 
         private void LerpCummulatedAcceleration(in float deltaTime)
         {

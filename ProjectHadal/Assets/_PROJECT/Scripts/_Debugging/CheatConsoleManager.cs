@@ -182,13 +182,13 @@ namespace Hadal.Debugging
                 var player = PlayerManager.Instance.LocalPlayerController;
                 player.GetInfo.HealthManager.Debug_ToggleGodMode();
             });
-            C_ChangeMovesetToF = new DebugCommand("movesetF", "Switching player movement to ForceMode", "movesetF", () =>
+            C_ChangeMovesetToF = new DebugCommand("movesetA", "Switching player movement to ForceMode", "movesetA", () =>
             {
                 var player = PlayerManager.Instance.LocalPlayerController;
                 player.ChangeMoverToForce();
                 player.ChangeRotatorToForce();
             });
-            C_ChangeMovesetToV = new DebugCommand("movesetV", "Switching player movement to ForceMode", "movesetV", () =>
+            C_ChangeMovesetToV = new DebugCommand("movesetB", "Switching player movement to ForceMode", "movesetB", () =>
             {
                 var player = PlayerManager.Instance.LocalPlayerController;
                 player.ChangeMoverToVector();
