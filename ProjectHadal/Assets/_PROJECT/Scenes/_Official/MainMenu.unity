@@ -4754,7 +4754,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 859631234}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 859631232}
+        m_TargetAssemblyTypeName: Hadal.Networking.Hyperlinks.HyperlinkButtonBehaviour,
+          Hadal.Networking
+        m_MethodName: URLOpen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &859631234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7273,6 +7286,10 @@ PrefabInstance:
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
       value: PersistentEssentials
+      objectReference: {fileID: 0}
+    - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
