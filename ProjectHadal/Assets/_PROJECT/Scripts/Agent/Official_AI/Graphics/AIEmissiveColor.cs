@@ -15,7 +15,8 @@ namespace Hadal.AI.Graphics
 
         [SerializeField] private float transitionSpeed;
         private float percent;
-        private AIBrain brain;
+        private AIBrain _brain;
+		private bool _onMasterClient;
 
         [Header("Color")]
         [ColorUsageAttribute(true, true)]
@@ -30,11 +31,12 @@ namespace Hadal.AI.Graphics
 
         private Coroutine colourRoutine;
 
-        void Start()
+        public void Initialise(AIBrain brain, bool onMasterClient)
         {
-            brain = FindObjectOfType<AIBrain>();
-            if (PhotonNetwork.IsMasterClient)
-                brain.RuntimeData.OnAIStateChange += JudgementColor;
+            _brain = brain;
+			_onMasterClient = onMasterClient;
+            if (_onMasterClient)
+                _brain.RuntimeData.OnAIStateChange += JudgementColor;
 
             //! initialise property block (needs to use a renderer, since it has the functions to set up)
             materialProp = new MaterialPropertyBlock();
@@ -45,7 +47,7 @@ namespace Hadal.AI.Graphics
             targetB = otherStateColor;
             colourRoutine = null;
             UpdateMaterialData();
-            if (!PhotonNetwork.IsMasterClient)
+            if (!_onMasterClient)
                 NetworkEventManager.Instance.AddListener(ByteEvents.AI_COLOUR_CHANGE, Receive_ChangeColour);
         }
 
@@ -67,7 +69,7 @@ namespace Hadal.AI.Graphics
                 StopCoroutine(colourRoutine);
             colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush));
 
-            if (PhotonNetwork.IsMasterClient)
+            if (_onMasterClient)
             {
                 object[] content = new object[] { judgement, ambush };
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_COLOUR_CHANGE, content, SendOptions.SendReliable);
@@ -90,7 +92,7 @@ namespace Hadal.AI.Graphics
             percent = 0f;
             while (percent < 1f)
             {
-                percent += brain.DeltaTime * transitionSpeed;
+                percent += _brain.DeltaTime * transitionSpeed;
                 UpdateMaterialData();
                 yield return null;
             }
@@ -116,8 +118,8 @@ namespace Hadal.AI.Graphics
 
         void OnDestroy()
         {
-            if (PhotonNetwork.IsMasterClient)
-                brain.RuntimeData.OnAIStateChange -= JudgementColor;
+            if (_onMasterClient)
+                _brain.RuntimeData.OnAIStateChange -= JudgementColor;
         }
     }
 }

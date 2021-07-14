@@ -78,7 +78,7 @@ namespace Hadal.AI
                     else
                         success = TrySetCustomNavPoint(Brain.CurrentTarget);
 
-                    Brain.AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                    //Brain.AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
                     if (success)
                     {
                         targetMarked = true;

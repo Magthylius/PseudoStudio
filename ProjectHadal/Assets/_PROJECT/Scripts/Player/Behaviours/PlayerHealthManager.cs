@@ -44,6 +44,8 @@ namespace Hadal.Player.Behaviours
         private bool _isKami;
         private bool _initialiseOnce;
         private bool _shouldRevive;
+		
+		public float ReviveTimeRatio { get; private set; } = 0f;
 
         #endregion
 
@@ -57,6 +59,10 @@ namespace Hadal.Player.Behaviours
 
         /// <summary> Event will trigger when the player becomes down but not out. </summary>
         public event Action OnDown;
+		
+		/// <summary> Event will trigger everytime the revive timer is updated.
+        /// Returns true when starting to revive another player ; returns false when no longer reviving another player. </summary>
+		public event Action<bool> OnLocalRevivingAPlayer;
 
         /// <summary> Event will trigger everytime it reports the result of a revival attempt on this player.
         /// Returns true if a revival attempt was successful; returns false if unsuccessful. </summary>
@@ -77,6 +83,8 @@ namespace Hadal.Player.Behaviours
             //! UI setup
             OnDown += UpdateDownUI;
             OnReviveAttempt += UpdateReviveUI;
+            OnReviveAttempt += JumpstartAttempt;
+            OnLocalRevivingAPlayer += TriggerStartJumpstart;
         }
 
         private void OnDestroy()
@@ -312,7 +320,7 @@ namespace Hadal.Player.Behaviours
         /// <summary> Method to manage settings for revival player stats if a "full revive" is not necessary. </summary>
         private void SetRevivalCustomisations()
         {
-            Safe_SetHealthToPercent(0.5f); //! Revive at x% hp?
+            Safe_SetHealthToPercent(0.2f); //! Revive at x% hp?
             _controller.UI.InvokeOnHealthChange(_currentHealth);
         }
 
@@ -372,6 +380,7 @@ namespace Hadal.Player.Behaviours
             _shouldRevive = false;
             TryRestoreControllerSystem();
             CheckHealthStatus();
+			//OnReviveAttempt?.Invoke(true);
             Send_HealthUpdateStatus(false); //! send revive message to non-local players
         }
 
@@ -386,7 +395,27 @@ namespace Hadal.Player.Behaviours
 
         void UpdateReviveUI(bool attemptSucceeded)
         {
-            if (attemptSucceeded) _controller.UI.ContextHandler.PlayerRevived();
+            if (attemptSucceeded)
+            {
+                Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
+                _controller.UI.ContextHandler.PlayerRevived();
+            }
+        }
+
+        void TriggerStartJumpstart(bool startedRevive)
+        {
+            if (startedRevive)
+            {
+                Debug.LogWarning(_controller.ViewID + " Triggered jumpstart");
+                _controller.UI.ContextHandler.StartJumpstart();
+            }
+        }
+        
+        void JumpstartAttempt(bool success)
+        {
+            Debug.LogWarning(_controller.ViewID + " Triggered jumpstart attempt: " + success);
+            if (success) _controller.UI.ContextHandler.SuccessJumpstart();
+            else _controller.UI.ContextHandler.FailJumpstart();
         }
 
         #endregion
@@ -523,15 +552,24 @@ namespace Hadal.Player.Behaviours
             float SqrDistanceBetweenPlayers() => (thisPTrans.position - otherPTrans.position).sqrMagnitude;
             bool OtherPlayerIsCloseEnoughToRevive() => SqrDistanceBetweenPlayers() < sqrMinPlayerRevivalDistance;
 
+			ReviveTimeRatio = 0f;
+			player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(true);
             while (OtherPlayerIsCloseEnoughToRevive())
             {
                 Debug_RevivalTimerStatus();
-                if (ElapseReviveTimer(_controller.DeltaTime) < 0f)
+                bool timerReached = ElapseReviveTimer(_controller.DeltaTime) < 0f;
+				ReviveTimeRatio = (1f - (_reviveTimer / reviveTime)).Clamp01();
+				
+				if (timerReached)
                 {
                     //! Revivalllllllllll
                     _shouldRevive = true;
-                    Send_HealthUpdateStatus(true); //! send message of revival to Local player
-                    OnReviveAttempt?.Invoke(true);
+					ReviveTimeRatio = 1f;
+					player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
+                    player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(true);
+					OnReviveAttempt?.Invoke(true);
+					Send_HealthUpdateStatus(true); //! send message of revival to Local player
+					
                     if (reviveLocallyOnTimerReached)
                         TryRestoreControllerSystem();
 
@@ -545,7 +583,10 @@ namespace Hadal.Player.Behaviours
             }
 
             //! This will run when the timer does not end & the other player goes too far from this player
-            ResetReviveTimer();
+			ReviveTimeRatio = 0f;
+			ResetReviveTimer();
+			player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
+			player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(false);
             OnReviveAttempt?.Invoke(false);
 
             if (debugEnabled)
