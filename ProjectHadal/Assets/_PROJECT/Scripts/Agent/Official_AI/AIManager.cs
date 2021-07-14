@@ -10,6 +10,7 @@ namespace Hadal.AI
     {
         public static AIManager Instance;
         public AIBrain brain;
+        public GameObject aiPrefab;
 
         NetworkEventManager neManager;
 
@@ -21,26 +22,35 @@ namespace Hadal.AI
         {
             if (Instance != null) Destroy(this);
             else Instance = this;
-        }
-
-        IEnumerator Start()
-        {
-			if (brain == null)
-				brain = FindObjectOfType<AIBrain>();
-			
-            neManager = NetworkEventManager.Instance;
 
             if (enableAIRandomSpawn)
             {
-                FindObjectOfType<AITransformHandler>().MoveAndRotate(spawnPositions[(int)Random.Range(0, spawnPositions.Count)]);
+                Transform spawnPoints = spawnPositions[(int)Random.Range(0, spawnPositions.Count)];
+                Instantiate(aiPrefab, spawnPoints.position, spawnPoints.rotation);
             }
 
-            //! The null is to make sure the AI does not go to the NavPoint of where its spawned.
-            yield return new WaitForSeconds(0.1f);
-
-            brain.NavigationHandler.SkipCurrentPoint(true);
 
         }
+
+        // IEnumerator Start()
+        // {
+        //     if (brain == null)
+        //         brain = FindObjectOfType<AIBrain>();
+
+        //     neManager = NetworkEventManager.Instance;
+
+        //     if (enableAIRandomSpawn)
+        //     {
+
+
+        //     }
+
+        //     //! The null is to make sure the AI does not go to the NavPoint of where its spawned.
+        //     yield return new WaitForSeconds(0.1f);
+
+        //     brain.NavigationHandler.SkipCurrentPoint(true);
+
+        // }
 
     }
 }
