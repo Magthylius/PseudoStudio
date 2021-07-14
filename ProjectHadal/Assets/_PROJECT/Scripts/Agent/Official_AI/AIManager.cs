@@ -4,19 +4,15 @@ using UnityEngine;
 using Hadal.Networking;
 using Kit;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 namespace Hadal.AI
 {
     public class AIManager : MonoBehaviour
     {
         public static AIManager Instance;
-        public AIBrain brain;
-        public GameObject aiPrefab;
-
-        NetworkEventManager neManager;
 
         [Header("Spawn Settings")]
-        [SerializeField] private bool enableAIRandomSpawn = false;
         [SerializeField] private List<Transform> spawnPositions;
 
         void Awake()
@@ -33,10 +29,10 @@ namespace Hadal.AI
             string sceneName = currentScene.name;
             if (sceneName == "Post Vertical Slice")
             {
-                if (enableAIRandomSpawn)
+                if (PhotonNetwork.IsMasterClient)
                 {
                     Transform spawnPoints = spawnPositions[(int)Random.Range(0, spawnPositions.Count)];
-                    Instantiate(aiPrefab, spawnPoints.position, spawnPoints.rotation);
+                    PhotonNetwork.Instantiate("AI Data/_OfficialAI/@AI Package", spawnPoints.position, spawnPoints.rotation);
                 }
             }
         }
