@@ -37,6 +37,7 @@ namespace Hadal.AI
         [SerializeField] private AIAudioBank audioBank;
         [SerializeField] private AIGraphicsHandler graphicsHandler;
         [SerializeField] private CavernManager cavernManager;
+		[SerializeField] private AIEmissiveColor emissiveColor;
         private NetworkEventManager neManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
@@ -47,6 +48,7 @@ namespace Hadal.AI
         public AIAudioBank AudioBank => audioBank;
         public AIGraphicsHandler GraphicsHandler => graphicsHandler;
         public CavernManager CavernManager => cavernManager;
+		public AIEmissiveColor EmissiveColor => emissiveColor;
 
         private StateMachine stateMachine;
         private List<ILeviathanComponent> allAIUpdateComponents;
@@ -144,6 +146,7 @@ namespace Hadal.AI
             if (!onMasterClient)
             {
                 healthManager.Initialise(this);
+				emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
                 neManager.AddListener(ByteEvents.AI_PLAY_AUDIO, Receive_PlayAudio);
                 return;
             }
@@ -206,6 +209,7 @@ namespace Hadal.AI
                 "Leviathan brain initialising in Offline mode.".Msg();
 
             allAIUpdateComponents.ForEach(i => i.Initialise(this));
+			emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
             cavernManager = FindObjectOfType<CavernManager>();
             Egg = FindObjectOfType<AIEgg>();
 
