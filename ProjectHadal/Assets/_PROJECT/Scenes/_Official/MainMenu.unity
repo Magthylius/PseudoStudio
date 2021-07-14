@@ -7283,6 +7283,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5091592539402455663, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5091592539402455663, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5091592539402455663, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
       value: PersistentEssentials
@@ -7295,6 +7307,10 @@ PrefabInstance:
       propertyPath: isOfflineMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8894452886367714009, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: neManager
+      value: 
+      objectReference: {fileID: 1415220367}
     m_RemovedComponents:
     - {fileID: 1174961633, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
     - {fileID: 404346035, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
@@ -7474,6 +7490,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409513998}
   m_CullTransparentMesh: 1
+--- !u!114 &1415220367 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+  m_PrefabInstance: {fileID: 1384593975}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a196a3c96192f0740b1cb8eedd736536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1415615429
 GameObject:
   m_ObjectHideFlags: 0
