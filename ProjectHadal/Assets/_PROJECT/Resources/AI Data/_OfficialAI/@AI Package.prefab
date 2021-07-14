@@ -528,12 +528,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1292777894468821637, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: audioAssetList.Array.size
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1292777894468821637, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: audioAssetList.Array.data[0].audioAsset
       value: 
-      objectReference: {fileID: 11400000, guid: 93d5707948f7ac149bc31b6bd538937f, type: 2}
+      objectReference: {fileID: 11400000, guid: 0d5c13bc8d7ce514f80934f8d6aab3c5, type: 2}
     - target: {fileID: 1292777894468821637, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: audioAssetList.Array.data[1].audioAsset
       value: 
@@ -542,6 +542,10 @@ PrefabInstance:
       propertyPath: audioAssetList.Array.data[3].audioAsset
       value: 
       objectReference: {fileID: 11400000, guid: 0d5c13bc8d7ce514f80934f8d6aab3c5, type: 2}
+    - target: {fileID: 1292777894468821637, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: audioAssetList.Array.data[0].associatedEnum
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1292777894468821637, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: audioAssetList.Array.data[3].associatedEnum
       value: 3
@@ -603,8 +607,16 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2206939684562575358, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: maxSlowPercent
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939684562575358, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: slowPercentPerStack
+      value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206939684562575358, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: currentMaxSlowPercent
-      value: 0.3
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 4086058519835168119, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
       propertyPath: timeoutNewPointTime
