@@ -168,9 +168,20 @@ namespace Hadal.UI
         public void Initialize(int totalTorpedoCount)
         {
             torpedoFillers = new List<UIFillerBehaviour>();
-            StartCoroutine(SpawnFillers(totalTorpedoCount - 1, true));
+            //StartCoroutine(SpawnFillers(totalTorpedoCount - 1, true));
             
             torpedoEmptyText.SetActive(false);
+            
+            for (int i = 0; i < totalTorpedoCount - 1; i++)
+            {
+                GameObject go = Instantiate(torpedoFillerPrefab, torpedoFillerParent);
+                UIFillerBehaviour filler = go.GetComponent<UIFillerBehaviour>();
+                torpedoFillers.Add(filler);
+
+                filler.ToFilled();
+            }
+            
+            torpedoFillers.Reverse();
         }
         
         IEnumerator SpawnFillers(int totalTorpedoCount, bool startFilled)
