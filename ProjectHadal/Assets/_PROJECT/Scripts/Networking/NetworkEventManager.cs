@@ -538,6 +538,11 @@ namespace Hadal.Networking
             }
         }
 
+        public GameObject Instantiate(string prefabPath, Vector3 position, Quaternion rotation)
+        {
+            return PhotonNetwork.Instantiate(prefabPath, position, rotation);
+        }
+
         public void AddPlayer(GameObject playerObject)
         {
             //print("player added");

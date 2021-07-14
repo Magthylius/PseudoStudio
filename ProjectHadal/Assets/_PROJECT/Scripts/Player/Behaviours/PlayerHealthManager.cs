@@ -380,7 +380,7 @@ namespace Hadal.Player.Behaviours
             _shouldRevive = false;
             TryRestoreControllerSystem();
             CheckHealthStatus();
-			//OnReviveAttempt?.Invoke(true);
+			OnReviveAttempt?.Invoke(true);
             Send_HealthUpdateStatus(false); //! send revive message to non-local players
         }
 
@@ -395,6 +395,7 @@ namespace Hadal.Player.Behaviours
 
         void UpdateReviveUI(bool attemptSucceeded)
         {
+            Debug.LogWarning("update revive ui called: " + attemptSucceeded);
             if (attemptSucceeded)
             {
                 Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
