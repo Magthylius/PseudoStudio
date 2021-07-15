@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Tenshi.AIDolls;
@@ -153,6 +154,17 @@ namespace Hadal.AI
             if (!isEnabled) return;
 
             Setup();
+            StartCoroutine(InjectAIDependencies());
+
+            IEnumerator InjectAIDependencies()
+            {
+                while (LocalPlayerData.PlayerController == null)
+                {
+                    //Debug.LogWarning("waiting for player to init");
+                    yield return null;
+                }
+                LocalPlayerData.PlayerController.InjectAIDependencies(transform);
+            }
         }
 
         private void Update()
