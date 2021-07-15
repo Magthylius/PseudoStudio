@@ -10263,6 +10263,7 @@ MonoBehaviour:
   ContextHandler: {fileID: 5816071362547381020}
   EffectsHandler: {fileID: 6718207138289626131}
   HydrophoneBehaviour: {fileID: 480951458581685063}
+  CockpitCamera: {fileID: 290209521882792158}
   PlayerCamera: {fileID: 0}
   reticleGroup: {fileID: 8880871908551590936}
   reticleDirectors: {fileID: 2300109098044399632}
@@ -12171,6 +12172,7 @@ GameObject:
   - component: {fileID: 3416487044120898845}
   - component: {fileID: 2731583080201395543}
   - component: {fileID: 8681932978137201501}
+  - component: {fileID: 290209521882792158}
   m_Layer: 5
   m_Name: Cockpit UI Camera
   m_TagString: Untagged
@@ -12267,6 +12269,24 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &290209521882792158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3621563610129539694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2000e363259675548848ddb3cffd3c6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cockpitCamera: {fileID: 2731583080201395543}
+  maxAngles: 2
+  inputSensitivity: 0.5
+  maxInputAxisClamp: 1
+  lerpSpeed: 2
+  localtarget: {x: 0, y: 0, z: 0}
 --- !u!1 &3645319113133197996
 GameObject:
   m_ObjectHideFlags: 0

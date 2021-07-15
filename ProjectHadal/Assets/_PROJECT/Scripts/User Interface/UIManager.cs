@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Hadal.Inputs;
 using Magthylius.LerpFunctions;
-using Magthylius.Utilities;
 using Hadal.Networking;
-using Hadal.Networking.UI.Loading;
-using Hadal.PostProcess;
 using Hadal.Locomotion;
-using UnityEngine.Serialization;
 
 //Created by Jet, Edited by Jon 
 namespace Hadal.UI
@@ -38,6 +33,7 @@ namespace Hadal.UI
         public UIContextHandler ContextHandler;
         public UIEffectsHandler EffectsHandler;
         public UIHydrophoneBehaviour HydrophoneBehaviour;
+        public UICockpitCamera CockpitCamera;
         public Camera PlayerCamera;
 
         [Header("Reticle Settings")]
@@ -286,6 +282,7 @@ namespace Hadal.UI
             ScreenDataHandler.InjectDependencies(this, playerTransform);
             EffectsHandler.InjectDependencies(playerRigidbody, ShootTracer);
             HydrophoneBehaviour.InjectPlayerDependencies(playerTransform);
+            CockpitCamera.InjectDependencies(playerRotationInput);
         }
 
         public void InjectAIDependencies(Transform AITransform)
