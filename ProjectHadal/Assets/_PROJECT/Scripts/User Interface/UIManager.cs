@@ -281,7 +281,7 @@ namespace Hadal.UI
             
             ShootTracer.InjectDependencies(PlayerCamera);
             ScreenDataHandler.InjectDependencies(this, playerTransform);
-            EffectsHandler.InjectDependencies(playerRigidbody);
+            EffectsHandler.InjectDependencies(playerRigidbody, ShootTracer);
         }
 
         void UpdateUIDisplacement()

@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-// Version 1.5.1
+// Version 1.6.0
 namespace Magthylius
 {
     namespace Utilities
@@ -1233,6 +1233,9 @@ namespace Magthylius
     {
         public class Timer
         {
+            public delegate void TimerTickedEvent();
+
+            public event TimerTickedEvent TargetReachedEvent;
             UnityEvent targetTickedEvent;
             int passedCount;
 
@@ -1242,8 +1245,11 @@ namespace Magthylius
             bool refreshes;
             bool skipOneFrame;
             bool skipFrame;
+            bool pausesOnFinish;
+            
+            bool isPaused;
 
-            public Timer(float _tickTarget, bool _refreshesOnTargetReached = true, bool _skipOneFrameWhenTargetTicked = false)
+            public Timer(float _tickTarget, bool _refreshesOnTargetReached = true, bool _skipOneFrameWhenTargetTicked = false, bool _pausesOnFinish = false)
             {
                 tickTarget = _tickTarget;
                 refreshes = _refreshesOnTargetReached;
@@ -1253,10 +1259,19 @@ namespace Magthylius
 
                 targetTickedEvent = new UnityEvent();
                 skipOneFrame = _skipOneFrameWhenTargetTicked;
+                pausesOnFinish = _pausesOnFinish;
             }
 
+            ~Timer()
+            {
+                targetTickedEvent.RemoveAllListeners();
+                TargetReachedEvent = null;
+            }
+           
             public void Tick(float deltaTime)
             {
+                if (isPaused) return;
+                
                 if (skipFrame)
                 {
                     skipFrame = false;
@@ -1267,15 +1282,26 @@ namespace Magthylius
                 if (tick >= tickTarget)
                 {
                     if (refreshes) tick = 0f;
-                    else tick -= tickTarget;
+                    
+                    //! TODO: Compensations
+                    //else tick -= tickTarget;
 
                     passedCount++;
                     targetTickedEvent.Invoke();
+                    TargetReachedEvent?.Invoke();
 
                     if (skipOneFrame) skipFrame = true;
+                    if (pausesOnFinish) Pause();
                 }    
             }
 
+            public void Stop()
+            {
+                Pause();
+                Reset();
+            }
+            public void Pause() => isPaused = true;
+            public void Continue() => isPaused = false;
             public void Reset() => tick = 0f;
             public float CurrentTick => tick;
             public void SetTickTarget(float target) => tickTarget = target;

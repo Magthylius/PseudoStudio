@@ -30,7 +30,9 @@ namespace Hadal.Player.Behaviours
         [Space(10)]
         [SerializeField, Tooltip("In seconds. Only applicable when IsDown is true.")] private float reviveTime;
         [SerializeField, ReadOnly] private float _reviveTimer;
+		[SerializeField, ReadOnly] private float _reviveDelayTimer;
         [SerializeField] private float minPlayerRevivalDistance;
+		[SerializeField] private float reviveDelayTime = 2f;
 
         [Header("Health Settings")]
         [SerializeField] private int maxHealth;
@@ -44,6 +46,7 @@ namespace Hadal.Player.Behaviours
         private bool _isKami;
         private bool _initialiseOnce;
         private bool _shouldRevive;
+		private bool _canBeRevivedByOthers;
 		
 		public float ReviveTimeRatio { get; private set; } = 0f;
 
@@ -76,6 +79,7 @@ namespace Hadal.Player.Behaviours
         {
             _isDead = false;
             _isKami = false;
+			_canBeRevivedByOthers = true;
         }
 
         private void Start()
@@ -296,7 +300,7 @@ namespace Hadal.Player.Behaviours
             //! Can only attempt revival if status is down and not dead
             if (IsDown && !IsUnalive)
             {
-                if (reviveTimerRoutine != null) //! cannot run two timers simultaneously
+                if (reviveTimerRoutine != null || !_canBeRevivedByOthers) //! cannot run two timers simultaneously
                     return;
 
                 PlayerController actorPlayer = NetworkEventManager.Instance.PlayerObjects
@@ -564,11 +568,12 @@ namespace Hadal.Player.Behaviours
 				if (timerReached)
                 {
                     //! Revivalllllllllll
+					StartCoroutine(StartReviveDelayTimer());
                     _shouldRevive = true;
 					ReviveTimeRatio = 1f;
 					player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
                     player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(true);
-					//OnReviveAttempt?.Invoke(true);
+					OnReviveAttempt?.Invoke(true);
 					Send_HealthUpdateStatus(true); //! send message of revival to Local player
 					
                     if (reviveLocallyOnTimerReached)
@@ -588,13 +593,27 @@ namespace Hadal.Player.Behaviours
 			ResetReviveTimer();
 			player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
 			player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(false);
-            //OnReviveAttempt?.Invoke(false);
+            OnReviveAttempt?.Invoke(false);
 
             if (debugEnabled)
                 $"Revival attempt failed.".Msg();
             
             reviveTimerRoutine = null;
         }
+		
+		private IEnumerator StartReviveDelayTimer()
+		{
+			_canBeRevivedByOthers = false;
+			_reviveDelayTimer = reviveDelayTime;
+			
+			while (_reviveDelayTimer > 0f)
+			{
+				_reviveDelayTimer -= _controller.DeltaTime;
+				yield return null;
+			}
+			
+			_canBeRevivedByOthers = true;
+		}
 
         // private int screenLogReviveTimerIndex;
         // private DebugManager dManager;
