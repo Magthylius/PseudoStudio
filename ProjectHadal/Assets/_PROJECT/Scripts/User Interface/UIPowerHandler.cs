@@ -15,6 +15,7 @@ namespace Hadal.UI
         [SerializeField] private float powerChargeTime;
         [SerializeField] private Color powerActivatedColor;
         [SerializeField] private Color powerDeactivatedColor;
+        [SerializeField] private ParticleSystem powerReadyVFX;
         
         private Timer powerTimer;
 
@@ -35,6 +36,7 @@ namespace Hadal.UI
             powerTimer.Pause();
 
             mainPowerImage.color = powerActivatedColor;
+            powerReadyVFX.Emit(1);
         }
 
         void DeactivatePower()

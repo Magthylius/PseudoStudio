@@ -395,6 +395,12 @@ namespace Hadal.Player
             if (_manager == null)
                 _manager = PhotonView.Find((int)_pView.InstantiationData[0]).GetComponent<PlayerManager>();
         }
+        
+        public void InjectAIDependencies(Transform aiTransform)
+        {
+            //Debug.LogWarning("Player ai init called");
+            playerUI.InjectAIDependencies(aiTransform);
+        }
 
         #endregion
 
