@@ -1089,7 +1089,7 @@ MonoBehaviour:
   dodgeForce: 70
   boostTimerMax: 0.5
   maxReserveCapacity: 2
-  reserveRegenerationTime: 10
+  reserveRegenerationTime: 3
   maxChamberCapacity: 1
   chamberReloadTime: 0
   maxOnLoadOut: 1
@@ -1698,7 +1698,9 @@ MonoBehaviour:
   _deathTimer: 0
   reviveTime: 5
   _reviveTimer: 0
+  _reviveDelayTimer: 0
   minPlayerRevivalDistance: 50
+  reviveDelayTime: 2
   maxHealth: 100
   _currentHealth: 0
 --- !u!114 &4790383674308879192
