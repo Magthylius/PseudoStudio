@@ -324,8 +324,13 @@ namespace Hadal.Networking.UI.MainMenu
             Application.Quit();
         }
 
+        private bool hasStartedLevel = false;
         public void BTN_StartActualLevel()
         {
+            //! Safety check from spams
+            if (hasStartedLevel) return;
+            hasStartedLevel = true;
+            
             NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
             NetworkEventManager.Instance.CurrentRoom.IsOpen = false;
