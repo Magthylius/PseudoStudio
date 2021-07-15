@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Tenshi;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Hadal.UI
 {
@@ -12,7 +13,14 @@ namespace Hadal.UI
         [SerializeField] private RectTransform volumeBarParent;
         [SerializeField] private float intensityPerUnit = 0.01f;
         [SerializeField] private float minimumDistance = 500f;
+        
+        [Space(10f)]
         [SerializeField] private float maxIntensity = 200f;
+        [SerializeField] private bool allowRandomIntensity = true;
+        [SerializeField] private float randomIntensityRange = 20f;
+        [SerializeField] private float randomIntensityChangeTime = 0.5f;
+
+        private float randomIntensity = 0f;
 
         [Space(10f)] 
         [SerializeField, NaughtyAttributes.ReadOnly] private float currentIntensity = 0f;
@@ -36,6 +44,17 @@ namespace Hadal.UI
             {
                 child.enabled = false;
             }
+
+            StartCoroutine(GenerateRandomIntensity());
+
+            IEnumerator GenerateRandomIntensity()
+            {
+                while (allowRandomIntensity)
+                {
+                    randomIntensity = Random.Range(-randomIntensityRange, randomIntensityRange);
+                    yield return new WaitForSeconds(randomIntensityChangeTime);
+                }
+            }
         }
 
         void FixedUpdate()
@@ -43,8 +62,8 @@ namespace Hadal.UI
             if (!isAIInitialized || !isPlayerInitialized) return;
 
             aiDistance = minimumDistance - (aiTransform.position - playerTransform.position).magnitude;
-            currentIntensity = Mathf.Clamp(aiDistance * intensityPerUnit, 0f, maxIntensity);
-            barsNeeded = Mathf.FloorToInt(currentIntensity * barsPerIntensity);
+            currentIntensity = Mathf.Clamp((aiDistance + randomIntensity) * intensityPerUnit, 0f, maxIntensity);
+            barsNeeded = Mathf.FloorToInt((currentIntensity ) * barsPerIntensity);
             barsNeeded = Mathf.Clamp(barsNeeded, 0, volumeBars.Count);
 
             for (int i = 0; i < volumeBars.Count; i++)
