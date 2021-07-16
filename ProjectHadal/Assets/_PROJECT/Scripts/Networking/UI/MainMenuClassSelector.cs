@@ -12,14 +12,14 @@ namespace Hadal.Networking.UI
     public delegate void ClassEvent(PlayerClassType classType);
     public class MainMenuClassSelector : MonoBehaviour
     {
-        public event ClassEvent ClassChosenEvent;
-
+        public event ClassEvent ClassChangedEvent;
+        
         public List<MainMenuHighlightBehaviour> ChosenHighlighters;
         
         //! Networked other player chosen classes, effectively NOT eligible player choices
         [SerializeField, ReadOnly] private List<PlayerClassType> chosenClassTypes = new List<PlayerClassType>();
 
-        private PlayerClassType chosenClassType = PlayerClassType.Invalid;
+        private PlayerClassType currentClassType = PlayerClassType.Invalid;
 
         private void Start()
         {
@@ -31,6 +31,8 @@ namespace Hadal.Networking.UI
         {
             NetworkEventManager.Instance.RemoveListener(ByteEvents.GAME_MENU_CLASS_CHOOSE, RE_PlayerChosenClass);
             NetworkEventManager.Instance.RemoveListener(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, RE_PlayerUnchosenClass);
+
+            ClassChangedEvent = null;
         }
 
         /// <summary> Update class selectors based on already joined players </summary>
@@ -41,7 +43,7 @@ namespace Hadal.Networking.UI
 
         public void ChooseClass(PlayerClassType type)
         {
-            if (chosenClassTypes.Contains(type) || chosenClassType != PlayerClassType.Invalid) return;
+            if (chosenClassTypes.Contains(type) || currentClassType != PlayerClassType.Invalid) return;
             
             NetworkEventManager neManager = NetworkEventManager.Instance;
 
@@ -49,26 +51,29 @@ namespace Hadal.Networking.UI
             object[] data = {type, pIndex};
             neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_CHOOSE, data);
 
-            chosenClassType = type;
+            currentClassType = type;
             
             Color pColor = neManager.GetCurrentPlayerColor();
             GetHighlighter(type).Select(pColor, false);
             
             //! Update room properties so that other players have the information
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), type);
+            
+            ClassChangedEvent?.Invoke(currentClassType);
         }
 
         public void UnchooseClass(PlayerClassType type)
         {
-            if (type != chosenClassType) return;
+            if (type != currentClassType) return;
             
             NetworkEventManager neManager = NetworkEventManager.Instance;
             
             neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, type);
-            chosenClassType = PlayerClassType.Invalid;
+            currentClassType = PlayerClassType.Invalid;
             GetHighlighter(type).Deselect();
             
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), PlayerClassType.Invalid);
+            ClassChangedEvent?.Invoke(currentClassType);
         }
 
         void RE_PlayerChosenClass(EventData data)
@@ -104,11 +109,7 @@ namespace Hadal.Networking.UI
             return null;
         }
 
-        public PlayerClassType CurrentChosenClass => chosenClassType;
+        public PlayerClassType CurrentCurrentClass => currentClassType;
         public bool PlayerClassAvailable(PlayerClassType type) => !chosenClassTypes.Contains(type);
-        public void SelectHarpooner() => ClassChosenEvent?.Invoke(PlayerClassType.Harpooner);
-        public void SelectSaviour() => ClassChosenEvent?.Invoke(PlayerClassType.Saviour);
-        public void SelectTrapper() => ClassChosenEvent?.Invoke(PlayerClassType.Trapper);
-        public void SelectInformer() => ClassChosenEvent?.Invoke(PlayerClassType.Informer);
     }
 }
