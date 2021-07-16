@@ -4588,7 +4588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &715049120
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9518,105 +9518,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5091592539402455663, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5091592539402455663, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5091592539402455663, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
       value: PersistentEssentials
       objectReference: {fileID: 0}
-    - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: isOfflineMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FirstPlayerColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FirstPlayerColor.b
-      value: 0.8301887
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FirstPlayerColor.g
-      value: 0.2994638
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FirstPlayerColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: ThirdPlayerColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: ThirdPlayerColor.b
-      value: 0.30027282
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: ThirdPlayerColor.g
-      value: 0.2216981
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: ThirdPlayerColor.r
-      value: 0.8867924
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FourthPlayerColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FourthPlayerColor.b
-      value: 0.11307406
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FourthPlayerColor.g
-      value: 0.7264151
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: FourthPlayerColor.r
-      value: 0.23722918
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: SecondPlayerColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: SecondPlayerColor.b
-      value: 0.7058824
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: SecondPlayerColor.g
-      value: 0.1960784
-      objectReference: {fileID: 0}
-    - target: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: SecondPlayerColor.r
-      value: 0.51382273
-      objectReference: {fileID: 0}
-    - target: {fileID: 8894452886367714009, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-      propertyPath: neManager
-      value: 
-      objectReference: {fileID: 1415220367}
-    m_RemovedComponents:
-    - {fileID: 1174961633, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-    - {fileID: 404346035, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-    - {fileID: 1818939094, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-    - {fileID: 143749586, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-    - {fileID: 724113565, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-    - {fileID: 428902822, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
 --- !u!1 &1389212474
 GameObject:
@@ -9789,17 +9695,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409513998}
   m_CullTransparentMesh: 1
---- !u!114 &1415220367 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6576420978336463560, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
-  m_PrefabInstance: {fileID: 1384593975}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a196a3c96192f0740b1cb8eedd736536, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1415615429
 GameObject:
   m_ObjectHideFlags: 0

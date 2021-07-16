@@ -10,7 +10,7 @@ namespace Hadal.Player
 
         public void SelectPlayerClass()
         {
-            PlayerClassHandler.Instance.SetPlayerClass(PlayerClass);
+            //PlayerClassManager.Instance.SetPlayerClass(PlayerClass);
         }
     }
 }

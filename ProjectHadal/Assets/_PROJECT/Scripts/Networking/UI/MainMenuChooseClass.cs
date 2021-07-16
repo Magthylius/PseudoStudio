@@ -16,7 +16,7 @@ namespace Hadal.Networking.UI
         {
             if (CorrespondingHighlight.IsSelectedByOthers) return;
             
-            PlayerClassType c = Selector.CurrentChosenClass;
+            PlayerClassType c = Selector.CurrentCurrentClass;
             if (c == PlayerClassType.Invalid && Selector.PlayerClassAvailable(type))
             {
                 Selector.ChooseClass(type);
@@ -26,7 +26,7 @@ namespace Hadal.Networking.UI
 
         public void UnchooseClass()
         {
-            if (Selector.CurrentChosenClass == type)
+            if (Selector.CurrentCurrentClass == type)
             {
                 Selector.UnchooseClass(type);
                 selected = false;
