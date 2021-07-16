@@ -1,3 +1,4 @@
+using System;
 using Hadal.Networking;
 using Hadal.Networking.UI.MainMenu;
 using NaughtyAttributes;
@@ -24,6 +25,11 @@ namespace Hadal.Player
             else Instance = this;
 
             SceneManager.sceneLoaded += OnSceneLoad;
+        }
+
+        private void Start()
+        {
+            MainMenuManager.Instance.ClassSelector.ClassChangedEvent += UpdateCurrentPlayerClass;
         }
 
         void OnSceneLoad(Scene scene, LoadSceneMode mode)
