@@ -44,6 +44,7 @@ namespace Hadal.AI.States
         [Min(0f)] public float JudgementTimer3 = 60f;
         [Min(0f)] public float JudgementTimer4 = 90f;
         [Range(0f, 1f)] public float PostStunRemainJudgementChance = 0.8f;
+		[Min(0)] public int JudgementPersistCountLimitPerEntry = 2;
         public int AGG_AdditionalThreshDamagePerSecond;
         public int DEF_AdditionalThreshDamagePerSecond;
         public int EGG_PermanentThreshDamagePerSecond;

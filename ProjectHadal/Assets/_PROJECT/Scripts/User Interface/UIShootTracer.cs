@@ -11,7 +11,7 @@ namespace Hadal.UI
         public LineRenderer line;
         public Light hitLight;
         public Transform lineStartTransform;
-
+        [SerializeField] private float maxDistance = 100;
         private Transform playerCamera;
  
         private bool isActive = false;
@@ -39,11 +39,17 @@ namespace Hadal.UI
                 return;
             }
 
-            Physics.Raycast(playerCamera.position, playerCamera.forward, out forwardHit,
+            bool isHit = Physics.Raycast(playerCamera.position, playerCamera.forward, out forwardHit,
                 Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
 
             if (!isActive) return;
-            line.SetPositions(new [] {lineStartTransform.position, forwardHit.point});
+            
+            if(!isHit)
+            {
+                forwardHit.point = playerCamera.forward * maxDistance;
+            }
+
+            line.SetPositions(new[] { lineStartTransform.position, forwardHit.point });
             hitLight.transform.position = forwardHit.point;
         }
 
