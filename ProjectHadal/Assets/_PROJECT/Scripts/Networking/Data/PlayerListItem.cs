@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEditor.Graphs;
 
 namespace Hadal.Networking
 {
@@ -12,10 +13,11 @@ namespace Hadal.Networking
         [SerializeField] TMP_Text text;
         Player player;
         
-        public void SetUp(Player _player)
+        public void SetUp(Player _player, Color playerColor)
         {
             player = _player;
             text.text = _player.NickName;
+            text.color = playerColor;
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)

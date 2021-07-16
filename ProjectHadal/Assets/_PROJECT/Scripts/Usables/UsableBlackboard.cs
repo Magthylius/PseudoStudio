@@ -9,6 +9,7 @@ namespace Hadal.Usables
         public static string[] PlayerLayers = {"Player", "PlayerGrabbed"};
         public static string[] AILayers = {"Monster", "MonsterEgg"};
         public static string[] CollidableLayers = {"Default", "Obstacle"};
+        public static string[] UtilityLayers = { "Utilities" };
 
         static string _AIHitboxLayer = "Monster";
         public static string AIHitboxLayerName => _AIHitboxLayer;
@@ -19,6 +20,17 @@ namespace Hadal.Usables
         public static bool InPlayerLayers(string layer)
         {
             foreach (var pLayer in PlayerLayers)
+            {
+                if (pLayer == layer) return true;
+            }
+
+            return false;
+        }
+
+        public static bool InUtilityLayers(int layer) => InUtilityLayers(LayerMask.LayerToName(layer));
+        public static bool InUtilityLayers(string layer)
+        {
+            foreach (var pLayer in UtilityLayers)
             {
                 if (pLayer == layer) return true;
             }

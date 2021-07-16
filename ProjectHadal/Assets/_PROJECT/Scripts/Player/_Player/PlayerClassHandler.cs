@@ -3,31 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerClassHandler : MonoBehaviour
+namespace Hadal.Player
 {
-    public static PlayerClassHandler Instance;
-    [SerializeField] private PlayerClassData PlayerClass;
-
-    private void Awake()
+    public class PlayerClassHandler : MonoBehaviour
     {
-        if(Instance != null)
+        public static PlayerClassHandler Instance;
+        [SerializeField] private PlayerClassData PlayerClass;
+
+        private void Awake()
         {
-            Destroy(gameObject);
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
-        else
+
+        [ContextMenu("Apply Class")]
+        public void ApplyClass()
         {
-            Instance = this;
+            PlayerClass.SetUpUtility();
         }
-    }
 
-    [ContextMenu("Apply Class")]
-    public void ApplyClass()
-    {
-        PlayerClass.SetUpUtility();
-    }
-
-    public void SetPlayerClass(PlayerClassData newPlayerClass)
-    {
-        PlayerClass = newPlayerClass;
+        public void SetPlayerClass(PlayerClassData newPlayerClass)
+        {
+            PlayerClass = newPlayerClass;
+        }
     }
 }

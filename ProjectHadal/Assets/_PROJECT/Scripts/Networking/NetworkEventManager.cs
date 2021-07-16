@@ -13,6 +13,16 @@ using Hadal.Networking.UI.MainMenu;
 //! C: Jon
 namespace Hadal.Networking
 {
+    [Serializable]
+    public enum PlayerClassType
+    {
+        Invalid,
+        Harpooner,
+        Saviour,
+        Trapper,
+        Informer
+    }
+    
     public enum ByteEvents
     {
         PLAYER_SPAWNED = 0,
@@ -21,6 +31,8 @@ namespace Hadal.Networking
         PLAYER_ALL_UNALIVE,
         PLAYER_RECEIVE_DAMAGE,
         PLAYER_INTERACT,
+        GAME_MENU_CLASS_CHOOSE,
+        GAME_MENU_CLASS_UNCHOOSE,
         GAME_START_LOAD,
         GAME_ACTUAL_START,
         GAME_HOST_FORCEDKICK,
@@ -428,13 +440,13 @@ namespace Hadal.Networking
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            mainMenuManager.AddIntoPlayerList(newPlayer);
-            if (PlayerLeftEvent != null) PlayerEnteredEvent.Invoke(newPlayer);
+            mainMenuManager.AddIntoPlayerList(newPlayer, GetPlayerColor(PlayerList.Length - 1));
+            PlayerEnteredEvent?.Invoke(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            if (PlayerLeftEvent != null) PlayerLeftEvent.Invoke(otherPlayer);
+           PlayerLeftEvent?.Invoke(otherPlayer);
         }
 
         public override void OnLeftRoom()
@@ -569,21 +581,47 @@ namespace Hadal.Networking
         {
             GameObject o = PhotonNetwork.Instantiate(PathManager.PlayerManagerPrefabPath, Vector3.zero, Quaternion.identity);
         }
-
         public void SpawnAIEssentials(Vector3 pos = new Vector3(), Quaternion rot = new Quaternion())
         {
             PhotonNetwork.Instantiate(PathManager.AIEssentialsPrefabPath, pos, rot);
         }
-
         public void SpawnAI(Vector3 pos = new Vector3(), Quaternion rot = new Quaternion())
         {
             PhotonNetwork.Instantiate(PathManager.AIPrefabPath, pos, rot);
+        }
+
+        private string playerClassHash = "PlayerClasses";
+        public bool TryAddPlayerClass(PlayerClassType type)
+        {
+            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                List<PlayerClassType> classTypes = (List<PlayerClassType>)CurrentRoom.CustomProperties[playerClassHash];
+
+                if (classTypes.Contains(type))
+                {
+                    return false;
+                }
+                else
+                {
+                    classTypes.Add(type);
+                    SetCurrentRoomCustomProperty(playerClassHash, classTypes);
+                    return true;
+                }
+            }
+            else
+            {
+                List<PlayerClassType> classTypes = new List<PlayerClassType> { type };
+
+                SetCurrentRoomCustomProperty(playerClassHash, classTypes);
+                return true;
+            }
         }
         #endregion
 
         #region Accessors
         public Transform LocalSpawn => localPlayerSpawnTrans;
         public Room CurrentRoom => PhotonNetwork.CurrentRoom;
+        public Player[] PlayerList => PhotonNetwork.PlayerList;
         
         //! Scenes
         public bool IsInMainMenu => CurrentSceneName == MainMenuScene;
@@ -628,6 +666,50 @@ namespace Hadal.Networking
                 Cursor.lockState = CursorLockMode.Confined;
             }
         }
+        #endregion
+
+        #region Player Effects
+
+        [Header("Player effects")] 
+        public Color FirstPlayerColor;
+        public Color SecondPlayerColor;
+        public Color ThirdPlayerColor;
+        public Color FourthPlayerColor;
+
+        public Color GetPlayerColor(int index)
+        {
+            switch (index)
+            {
+                case 0: return FirstPlayerColor;
+                case 1: return SecondPlayerColor;
+                case 2: return ThirdPlayerColor;
+                default: return FourthPlayerColor;
+            }
+        }
+
+        public Color GetCurrentPlayerColor()
+        {
+            for (int i = 0; i < PlayerList.Length; i++)
+            {
+                if (PlayerList[i] == LocalPlayer) return GetPlayerColor(i);
+            }
+
+            return GetPlayerColor(999);
+        }
+
+        public int GetCurrentPlayerIndex()
+        {
+            for (int i = 0; i < PlayerList.Length; i++)
+            {
+                if (PlayerList[i] == LocalPlayer)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+        
         #endregion
     }
 }
