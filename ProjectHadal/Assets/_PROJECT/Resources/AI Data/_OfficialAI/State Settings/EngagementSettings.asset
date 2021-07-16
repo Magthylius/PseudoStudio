@@ -16,12 +16,12 @@ MonoBehaviour:
   ConfidenceDecrementValue: 20
   G_ApproachCloseDistanceThreshold: 30
   G_ApproachFarDistanceThreshold: 500
-  G_CarryDelayTimer: 1
+  G_CarryDelayTimer: 0.7
   G_TotalThreshTimeInSeconds: 4
   G_BaseMinThreshDamagePerSecond: 6
   G_BaseMaxThreshDamagePerSecond: 8
   G_PrepareHaltBeforeCarryDistance: 20
-  G_HaltingTime: 2
+  G_HaltingTime: 1
   G_GlareAtTargetBeforeJudgementApproachTime: 3
   G_DisruptionDamageCount: 5
   AM_TargetPlayerRange: 100
@@ -38,6 +38,7 @@ MonoBehaviour:
   JudgementTimer3: 25
   JudgementTimer4: 20
   PostStunRemainJudgementChance: 0.8
+  JudgementPersistCountLimitPerEntry: 2
   AGG_AdditionalThreshDamagePerSecond: 1
   DEF_AdditionalThreshDamagePerSecond: -1
   EGG_PermanentThreshDamagePerSecond: 1

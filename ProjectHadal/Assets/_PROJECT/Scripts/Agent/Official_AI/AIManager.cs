@@ -14,6 +14,7 @@ namespace Hadal.AI
 
         [Header("Spawn Settings")]
         [SerializeField] private List<Transform> spawnPositions;
+        [SerializeField] string nameOfScene;
 
         void Awake()
         {
@@ -27,7 +28,7 @@ namespace Hadal.AI
         {
             Scene currentScene = SceneManager.GetActiveScene();
             string sceneName = currentScene.name;
-            if (sceneName == "Post Vertical Slice")
+            if (sceneName == "Post Vertical Slice Backup")
             {
                 if (PhotonNetwork.IsMasterClient)
                 {
