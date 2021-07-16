@@ -150,7 +150,7 @@ MonoBehaviour:
   mode: 1
   endTime: 999
   armsProjectile: 0
-  skipsOnContact: 0
+  skipsOnContact: 1
   direction: {x: 0, y: 0, z: 3}
   force: 0.25
   linearDrag: 0
@@ -279,7 +279,8 @@ MonoBehaviour:
   - Monster
   - Obstacle
   defaultAttachDuration: 10
-  poweredAttachDuration: 50
+  poweredAttachDuration: 30
+  projPhysics: {fileID: 5627941608468223027}
   impulseMode: {fileID: 0}
   attachMode: {fileID: 0}
   selfDeactivation: {fileID: 0}

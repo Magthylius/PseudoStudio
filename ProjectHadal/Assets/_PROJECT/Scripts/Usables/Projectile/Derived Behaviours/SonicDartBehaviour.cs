@@ -7,7 +7,8 @@ namespace Hadal.Usables.Projectiles
     public class SonicDartBehaviour : ProjectileBehaviour
     {
         [SerializeField] private string[] validLayer;
-        
+        public ProjectilePhysics projPhysics;
+
         public void OnDisable()
         {
             IsAttached = false;
@@ -26,6 +27,11 @@ namespace Hadal.Usables.Projectiles
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
+
+                    if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
+                    {
+                        projPhysics.SwapModes();
+                    }
                 }
             }
         }
