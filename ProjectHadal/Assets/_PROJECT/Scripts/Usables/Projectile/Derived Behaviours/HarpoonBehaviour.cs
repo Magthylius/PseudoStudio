@@ -97,7 +97,7 @@ namespace Hadal.Usables.Projectiles
                 }
             }
 
-            if (!UsableBlackboard.InPlayerLayers(layer))
+            if (!UsableBlackboard.InPlayerLayers(layer) && !UsableBlackboard.InUtilityLayers(layer))
             {
                 if(IsLocal)
                 {
