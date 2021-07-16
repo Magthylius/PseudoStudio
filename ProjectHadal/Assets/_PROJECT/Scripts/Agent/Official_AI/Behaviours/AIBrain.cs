@@ -39,6 +39,7 @@ namespace Hadal.AI
         [SerializeField] private AIGraphicsHandler graphicsHandler;
         [SerializeField] private CavernManager cavernManager;
 		[SerializeField] private AIEmissiveColor emissiveColor;
+		[SerializeField] private AIAnimationManager animationManager;
         private NetworkEventManager neManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
@@ -50,6 +51,7 @@ namespace Hadal.AI
         public AIGraphicsHandler GraphicsHandler => graphicsHandler;
         public CavernManager CavernManager => cavernManager;
 		public AIEmissiveColor EmissiveColor => emissiveColor;
+		public AIAnimationManager AnimationManager => animationManager;
 
         private StateMachine stateMachine;
         private List<ILeviathanComponent> allAIUpdateComponents;
@@ -148,9 +150,11 @@ namespace Hadal.AI
             {
                 healthManager.Initialise(this);
 				emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
+				animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
                 neManager.AddListener(ByteEvents.AI_PLAY_AUDIO, Receive_PlayAudio);
                 return;
             }
+			
             if (!isEnabled) return;
 
             Setup();
@@ -223,6 +227,7 @@ namespace Hadal.AI
             allAIUpdateComponents.ForEach(i => i.Initialise(this));
 			emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
             cavernManager = FindObjectOfType<CavernManager>();
+			animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
             Egg = FindObjectOfType<AIEgg>();
 
             //! Event handling
@@ -378,6 +383,24 @@ namespace Hadal.AI
             else
                 AudioBank.Play2D(soundType);
         }
+		
+		internal void Send_SetAnimation(AIAnim animType, float customLerpTime)
+		{
+			if (neManager == null || !neManager.IsMasterClient) //! only master client can send this
+                return;
+            
+            object[] content = new object[] { (int)animType, customLerpTime };
+            neManager.RaiseEvent(ByteEvents.AI_PLAY_ANIMATION, content, SendOptions.SendReliable);
+		}
+		
+		private void Receive_SetAnimation(EventData eventData)
+		{
+			object[] content = (object[])eventData.CustomData;
+			AIAnim animType = (AIAnim)(int)content[0];
+			float customLerpTime = (float)content[1];
+			
+			AnimationManager.SetAnimation(animType, customLerpTime);
+		}
 
         #endregion
 

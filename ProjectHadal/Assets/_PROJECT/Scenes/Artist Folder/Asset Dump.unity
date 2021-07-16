@@ -1175,6 +1175,43 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 36861203909624248, guid: 489060b15d3f7ee44a80c295cd314604, type: 3}
   m_PrefabInstance: {fileID: 2000691882}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1218619341 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 65702495048144492, guid: 3fbad1c19eb72a749991146765c75adb, type: 3}
+  m_PrefabInstance: {fileID: 814557981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1218619343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218619341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!4 &1265512270 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6334034107879771640, guid: 489060b15d3f7ee44a80c295cd314604, type: 3}
@@ -2560,7 +2597,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 489060b15d3f7ee44a80c295cd314604, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 489060b15d3f7ee44a80c295cd314604, type: 3}
       propertyPath: m_LocalPosition.x
