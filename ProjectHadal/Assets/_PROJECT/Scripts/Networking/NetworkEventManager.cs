@@ -594,21 +594,22 @@ namespace Hadal.Networking
         public string PlayerClassHash => playerClassHash;
         public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
         {
+            //! Have to convert enum to type because they cant handle it
             if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
             {
-                Dictionary<int, PlayerClassType> playerClassInfo = (Dictionary<int, PlayerClassType>)CurrentRoom.CustomProperties[playerClassHash];
+                Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
 
                 if (playerClassInfo.ContainsKey(playerIndex))
-                    playerClassInfo[playerIndex] = type;
+                    playerClassInfo[playerIndex] = (int)type;
                 else
-                    playerClassInfo.Add(playerIndex, type);
+                    playerClassInfo.Add(playerIndex, (int)type);
             }
             else
             {
                 //! No properties found, create hashtable as init
-                Dictionary<int, PlayerClassType> playerClassInfo = new Dictionary<int, PlayerClassType>
+                Dictionary<int, int> playerClassInfo = new Dictionary<int, int>
                 {
-                    {playerIndex, type}
+                    {playerIndex, (int)type}
                 };
                 
                 SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);

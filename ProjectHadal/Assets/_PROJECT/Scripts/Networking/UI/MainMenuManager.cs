@@ -398,12 +398,12 @@ namespace Hadal.Networking.UI.MainMenu
                 AddIntoPlayerList(playerList[i], playerColor);
             }
 
-            if (neManager.CurrentRoom.CustomProperties.TryGetValue(neManager.PlayerClassHash, out var value))
+            if (neManager.CurrentRoom.CustomProperties.TryGetValue(neManager.PlayerClassHash, out object value))
             {
-                Dictionary<int, PlayerClassType> roomProps = (Dictionary<int, PlayerClassType>)value;
+                Dictionary<int, int> roomProps = (Dictionary<int, int>)value;
                 foreach (int playerIndex in roomProps.Keys)
                 {
-                    ClassSelector.UpdateNetworkSelector(roomProps[playerIndex], playerIndex);
+                    ClassSelector.UpdateNetworkSelector((PlayerClassType)roomProps[playerIndex], playerIndex);
                 }
             }
             
