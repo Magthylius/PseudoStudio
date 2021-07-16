@@ -197,6 +197,7 @@ namespace Hadal.Player
                 if (LocalPlayerData.PlayerController == null)
                 {
                     LocalPlayerData.PlayerController = this;
+                    PlayerClassHandler.Instance.ApplyClass();
                     gameObject.AddComponent<AudioListener>();
                     Debug.LogWarning("Audio listener added");
                 }
@@ -204,6 +205,7 @@ namespace Hadal.Player
             else if (_pView.IsMine)
             {
                 LocalPlayerData.PlayerController = this;
+                PlayerClassHandler.Instance.ApplyClass();
                 gameObject.AddComponent<AudioListener>();
                 Debug.LogWarning("Audio listener added");
             }

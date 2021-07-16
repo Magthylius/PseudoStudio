@@ -21,7 +21,10 @@ namespace Hadal.Interactables
 
         private void Start()
         {
-            neManager?.AddListener(ByteEvents.PLAYER_INTERACT, REInteract);
+            if(neManager)
+                neManager.AddListener(ByteEvents.PLAYER_INTERACT, REInteract);
+
+            InteractableEventManager.Instance.OnInteractConfirmation += ConfirmedInteract;
         }
 
         private void Update()
@@ -39,17 +42,40 @@ namespace Hadal.Interactables
             }
         }
 
+        private void OnDestroy()
+        {
+            InteractableEventManager.Instance.OnInteractConfirmation -= ConfirmedInteract;
+        }
+
         public void Interact(int viewID)
         {
             if (!ableToInteract)
                 return;
 
-            InteractableEventManager.Instance.InvokeInteraction(interactionType);
+            GameObject actorPlayer;
+
+            foreach(GameObject gO in NetworkEventManager.Instance.PlayerObjects)
+            {
+                if(gO.GetComponentInChildren<PhotonView>().ViewID == viewID)
+                {
+                    actorPlayer = gO;
+                }
+            }
+
+            //This is where we send the event to interact
+            InteractableEventManager.Instance.InvokeInteraction(interactionType, interactableID);
+        }
+
+        public void ConfirmedInteract(int interactID)
+        {
+            if (interactID != interactableID)
+                return;
+
             flareIndicator.SetActive(false);
             ableToInteract = false;
 
-            //send event 
-            neManager?.RaiseEvent(ByteEvents.PLAYER_INTERACT, interactableID);
+            if(neManager)
+                neManager.RaiseEvent(ByteEvents.PLAYER_INTERACT, interactableID);
         }
 
         public void REInteract(EventData obj)

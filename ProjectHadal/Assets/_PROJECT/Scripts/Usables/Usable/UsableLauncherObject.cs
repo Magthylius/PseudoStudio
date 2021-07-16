@@ -35,7 +35,7 @@ namespace Hadal.Usables
         protected bool IsActive { get; set; } = false;
 
         #region Utility Reloading Logic Variables
-        [SerializeField] private int maxReserveCapacity;
+        [SerializeField] protected int maxReserveCapacity;
         [SerializeField] private float reserveRegenerationTime;
 
         public int ReserveCount { get; private set; }
@@ -88,7 +88,7 @@ namespace Hadal.Usables
             Data.ToggleProjectile(HasToggleAmmo);
         }
 
-        public virtual void ReceiveInteractEvent(InteractionType interactionType)
+        public virtual void ReceiveInteractEvent(InteractionType interactionType, int interactableID)
         {
             return;
         }

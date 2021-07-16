@@ -14,9 +14,13 @@ namespace Hadal.InteractableEvents
     {
         public static InteractableEventManager Instance;
 
-        public delegate void InteractEvent(InteractionType interactionType);
+        public delegate void InteractEvent(InteractionType interactionType, int interactID);
 
         public event InteractEvent OnInteraction;
+
+        public delegate void InteractConfirmation(int interactID);
+
+        public event InteractConfirmation OnInteractConfirmation;
 
         private void Awake()
         {
@@ -30,11 +34,15 @@ namespace Hadal.InteractableEvents
             }
         }
 
-        public void InvokeInteraction(InteractionType interactionType)
+        public void InvokeInteraction(InteractionType interactionType, int interactID)
         {
-            OnInteraction?.Invoke(interactionType);
+            OnInteraction?.Invoke(interactionType, interactID);
         }
 
+        public void InvokeInteractConfirmation(int interactID)
+        {
+            OnInteractConfirmation?.Invoke(interactID);
+        }
     }
 }
 
