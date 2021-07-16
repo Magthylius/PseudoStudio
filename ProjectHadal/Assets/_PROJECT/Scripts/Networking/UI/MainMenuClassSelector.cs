@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using NaughtyAttributes;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,33 +33,41 @@ namespace Hadal.Networking.UI
             NetworkEventManager.Instance.RemoveListener(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, RE_PlayerUnchosenClass);
         }
 
-        public void UpdateNetworkSelector(int selectorIndex, int playerIndex)
+        public void UpdateNetworkSelector(PlayerClassType type, int playerIndex)
         {
-            //ChosenHighlighters[selectorIndex].color = NetworkEventManager.Instance.GetPlayerColor(playerIndex);
+            GetHighlighter(type).Select(NetworkEventManager.Instance.GetPlayerColor(playerIndex));
         }
 
         public void ChooseClass(PlayerClassType type)
         {
             if (chosenClassTypes.Contains(type) || chosenClassType != PlayerClassType.Invalid) return;
             
-            
-            int pIndex = NetworkEventManager.Instance.GetCurrentPlayerIndex();
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+
+            int pIndex = neManager.GetCurrentPlayerIndex();
             object[] data = {type, pIndex};
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_MENU_CLASS_CHOOSE, data);
+            neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_CHOOSE, data);
 
             chosenClassType = type;
             
-            Color pColor = NetworkEventManager.Instance.GetCurrentPlayerColor();
+            Color pColor = neManager.GetCurrentPlayerColor();
             GetHighlighter(type).Select(pColor);
+            
+            //! Update room properties so that other players have the information
+            neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), type);
         }
 
         public void UnchooseClass(PlayerClassType type)
         {
             if (type != chosenClassType) return;
             
-            NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, type);
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+            
+            neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, type);
             chosenClassType = PlayerClassType.Invalid;
             GetHighlighter(type).Deselect();
+            
+            neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), PlayerClassType.Invalid);
         }
 
         void RE_PlayerChosenClass(EventData data)

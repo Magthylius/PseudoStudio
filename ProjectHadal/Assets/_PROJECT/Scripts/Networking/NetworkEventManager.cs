@@ -591,29 +591,27 @@ namespace Hadal.Networking
         }
 
         private string playerClassHash = "PlayerClasses";
-        public bool TryAddPlayerClass(PlayerClassType type)
+        public string PlayerClassHash => playerClassHash;
+        public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
         {
             if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
             {
-                List<PlayerClassType> classTypes = (List<PlayerClassType>)CurrentRoom.CustomProperties[playerClassHash];
+                Dictionary<int, PlayerClassType> playerClassInfo = (Dictionary<int, PlayerClassType>)CurrentRoom.CustomProperties[playerClassHash];
 
-                if (classTypes.Contains(type))
-                {
-                    return false;
-                }
+                if (playerClassInfo.ContainsKey(playerIndex))
+                    playerClassInfo[playerIndex] = type;
                 else
-                {
-                    classTypes.Add(type);
-                    SetCurrentRoomCustomProperty(playerClassHash, classTypes);
-                    return true;
-                }
+                    playerClassInfo.Add(playerIndex, type);
             }
             else
             {
-                List<PlayerClassType> classTypes = new List<PlayerClassType> { type };
-
-                SetCurrentRoomCustomProperty(playerClassHash, classTypes);
-                return true;
+                //! No properties found, create hashtable as init
+                Dictionary<int, PlayerClassType> playerClassInfo = new Dictionary<int, PlayerClassType>
+                {
+                    {playerIndex, type}
+                };
+                
+                SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
             }
         }
         #endregion
