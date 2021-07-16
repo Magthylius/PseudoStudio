@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbea61f01ca1d4b4e965d2ecde50c4f0, type: 3}
   m_Name: EngagementSettings
   m_EditorClassIdentifier: 
-  PlayerDetectRange: 100
   ConfidenceIncrementValue: 10
   ConfidenceDecrementValue: 20
-  G_ApproachCloseDistanceThreshold: 10
+  G_ApproachCloseDistanceThreshold: 15
   G_ApproachFarDistanceThreshold: 500
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 4
   G_BaseMinThreshDamagePerSecond: 6
   G_BaseMaxThreshDamagePerSecond: 8
+  G_PrepareHaltBeforeCarryDistance: 15
+  G_GlareAtTargetBeforeJudgementApproachTime: 1
   G_DisruptionDamageCount: 5
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 35
