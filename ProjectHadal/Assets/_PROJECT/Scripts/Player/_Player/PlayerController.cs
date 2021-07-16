@@ -514,7 +514,7 @@ namespace Hadal.Player
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
-            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, interact, photonInfo, mover, rotator, _rBody, _collider);
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, interact, photonInfo, mover, rotator, dodgeBooster, _rBody, _collider);
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => _pView.ViewID;
         public bool CanMove => !_isKnocked && !_isCarried && !_isDown;
