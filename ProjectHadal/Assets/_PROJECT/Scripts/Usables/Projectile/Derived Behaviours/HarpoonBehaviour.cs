@@ -21,6 +21,7 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] float poweredAttachDuration;
 
         [Header("Misc")]
+        public ProjectilePhysics projPhysics;
         public ImpulseMode impulseMode;
         public AttachMode attachMode;
         public SelfDeactivationMode selfDeactivation;
@@ -104,6 +105,11 @@ namespace Hadal.Usables.Projectiles
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
+
+                    if(projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
+                    {
+                        projPhysics.SwapModes();
+                    }
 
                     Vector3 collisionSpot = gameObject.transform.position;
 

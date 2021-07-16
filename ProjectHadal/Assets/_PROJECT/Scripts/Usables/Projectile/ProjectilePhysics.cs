@@ -82,7 +82,7 @@ namespace Hadal.Usables.Projectiles
         }
 
         //! Swap modes when one stage is complete
-        void SwapModes()
+        public void SwapModes()
         {
             modeIndex++;
             if (modeIndex >= projectileModeList.Count)
@@ -107,6 +107,11 @@ namespace Hadal.Usables.Projectiles
                 }
                 projectileTimer.SetTickTarget(projectileModeList[modeIndex].endTime);
             }
+        }
+
+        public ProjectileMode.ProjectileModeEnum GetCurrentMode()
+        {
+            return projectileModeList[modeIndex].mode;
         }
 
         //! Initialization
