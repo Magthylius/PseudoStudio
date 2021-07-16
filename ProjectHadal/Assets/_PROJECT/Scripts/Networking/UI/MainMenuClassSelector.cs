@@ -33,9 +33,10 @@ namespace Hadal.Networking.UI
             NetworkEventManager.Instance.RemoveListener(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, RE_PlayerUnchosenClass);
         }
 
+        /// <summary> Update class selectors based on already joined players </summary>
         public void UpdateNetworkSelector(PlayerClassType type, int playerIndex)
         {
-            GetHighlighter(type).Select(NetworkEventManager.Instance.GetPlayerColor(playerIndex));
+            GetHighlighter(type).Select(NetworkEventManager.Instance.GetPlayerColor(playerIndex), true);
         }
 
         public void ChooseClass(PlayerClassType type)
@@ -51,7 +52,7 @@ namespace Hadal.Networking.UI
             chosenClassType = type;
             
             Color pColor = neManager.GetCurrentPlayerColor();
-            GetHighlighter(type).Select(pColor);
+            GetHighlighter(type).Select(pColor, false);
             
             //! Update room properties so that other players have the information
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), type);
@@ -79,7 +80,7 @@ namespace Hadal.Networking.UI
             if (!chosenClassTypes.Contains(chosen))
             {
                 chosenClassTypes.Add(chosen);
-                GetHighlighter(chosen).Select(pColor);
+                GetHighlighter(chosen).Select(pColor, false);
             }
         }
         
