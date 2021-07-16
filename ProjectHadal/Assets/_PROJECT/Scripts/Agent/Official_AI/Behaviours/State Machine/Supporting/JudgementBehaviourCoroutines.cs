@@ -122,7 +122,7 @@ namespace Hadal.AI
                 {
                     canCarry = true;
                     SetCarryDelayTimer(carryDelayTime);
-                    NavigationHandler.DisableWithLerp(1f, null, 0.1f);
+                    NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
 
                     //! plays sound cue that should inform the player that they should start dodging
                     AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
