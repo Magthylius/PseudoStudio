@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8001679023775102921}
   - component: {fileID: 5734814273914985085}
-  - component: {fileID: 1521340218}
   m_Layer: 0
   m_Name: Game Handler
   m_TagString: Untagged
@@ -45,18 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentKillCount: 0
---- !u!114 &1521340218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312510409462500907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1793168799261823607
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,7 +55,7 @@ GameObject:
   - component: {fileID: 1692377485682228084}
   - component: {fileID: 6021279049498701051}
   - component: {fileID: 9221971048963321059}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Radar Handlers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,8 +121,8 @@ GameObject:
   - component: {fileID: 2206939684412345072}
   - component: {fileID: 2206939684412345039}
   - component: {fileID: 8848565156750440696}
-  - component: {fileID: 638281922364176427}
   - component: {fileID: 2206939684412345074}
+  - component: {fileID: 1426898462492377322}
   - component: {fileID: 2007591999211397865}
   - component: {fileID: 2007591999211397866}
   m_Layer: 14
@@ -161,6 +148,7 @@ Transform:
   - {fileID: 1692377485682228084}
   - {fileID: 8001679023775102921}
   - {fileID: 2051193414400263174}
+  - {fileID: 6611737787032109846}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -190,6 +178,7 @@ MonoBehaviour:
   audioBank: {fileID: 1292777894468821637}
   graphicsHandler: {fileID: 0}
   cavernManager: {fileID: 0}
+  emissiveColor: {fileID: 0}
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   MouthObject: {fileID: 0}
   Players: []
@@ -200,7 +189,8 @@ MonoBehaviour:
   isOffline: 0
   DebugEnabled: 1
   isStunned: 0
-  stunDuration: 10
+  stunDuration: 8
+  leviathanCollider: {fileID: 2776788264762976261}
 --- !u!114 &8848565156750440696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,19 +204,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   brain: {fileID: 2206939684412345039}
---- !u!135 &638281922364176427
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2206939684412345075}
-  m_Material: {fileID: 13400000, guid: 60f53cdeacc472147ad0dcb791e4fabf, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2206939684412345074
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -243,6 +220,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!135 &1426898462492377322
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206939684412345075}
+  m_Material: {fileID: 13400000, guid: 60f53cdeacc472147ad0dcb791e4fabf, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2007591999211397865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,10 +349,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
-  slowPercentPerStack: 0.05
-  maxSlowStacks: 6
-  maxSlowPercent: 0.3
-  currentMaxSlowPercent: 0.3
+  slowPercentPerStack: 0.025
+  maxSlowStacks: 4
+  maxSlowPercent: 0.1
+  currentMaxSlowPercent: 0.1
   currentSlowPercent: 0
   currentSlowStacks: 0
   randomHitPoints: []
@@ -394,7 +384,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3596619662574149774}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -7.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2206939684412345072}
@@ -413,14 +403,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioAssetList:
-  - associatedEnum: 1
-    audioAsset: {fileID: 11400000, guid: 93d5707948f7ac149bc31b6bd538937f, type: 2}
+  - associatedEnum: 3
+    audioAsset: {fileID: 11400000, guid: a06d46ea43def364c87b525d0d7b10c1, type: 2}
   - associatedEnum: 0
-    audioAsset: {fileID: 11400000, guid: 43aeb6b027a923346949211eb6934bd1, type: 2}
+    audioAsset: {fileID: 11400000, guid: a32ab13194c3f744f8ff3328aaa2ac19, type: 2}
   - associatedEnum: 2
     audioAsset: {fileID: 11400000, guid: 88ebb8a6a63bfdd45b629033c119946c, type: 2}
+  - associatedEnum: 1
+    audioAsset: {fileID: 11400000, guid: 0d5c13bc8d7ce514f80934f8d6aab3c5, type: 2}
   brain: {fileID: 2206939684412345039}
   source2D: {fileID: 0}
+--- !u!1 &3778157195922931001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6611737787032109846}
+  - component: {fileID: 2776788264762976261}
+  m_Layer: 11
+  m_Name: Leviathan Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6611737787032109846
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3778157195922931001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2206939684412345072}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &2776788264762976261
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3778157195922931001}
+  m_Material: {fileID: 13400000, guid: 60f53cdeacc472147ad0dcb791e4fabf, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3348522405853159205
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -436,6 +472,10 @@ PrefabInstance:
       propertyPath: pilotTrans
       value: 
       objectReference: {fileID: 2206939684412345072}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: timeoutNewPointTime
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295891, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: m_RootOrder
       value: 0
