@@ -10,17 +10,30 @@ namespace Hadal.Player
     [CreateAssetMenu(menuName = "Player/Class Data")]
     public class PlayerClassData : ScriptableObject
     {
+        [Header("Utility Power Ups")]
         public bool GiveFlareHarpoon;
         public bool PowerUpFlare;
         public bool PowerUpHarpoon;
-        public bool GiveFourDodgeBoost;
+
+        [Header("Passive Power Ups")]
+        public bool PowerUpDodgeBoost;
+        public int DodgeBoostCount = 4;
+        //
+        public float ReviveTime = 1;
+
+        //
+        public bool PowerUpTorpFireRate;
+        public float TorpFireRate = 0.1f;
         public string ClassName;
+
+        [Header("Specialized Utility")]
         public List <UsableLauncherObject> ClassLauncher;
 
         public void SetUpUtility()
         {
             var playerInv = LocalPlayerData.PlayerController.GetInfo.Inventory;
             var playerBoost = LocalPlayerData.PlayerController.GetInfo.DodgeBooster;
+            var playerTorpedo = LocalPlayerData.PlayerController.GetInfo.Shooter.GetTorpedoLauncher;
             playerInv.ResetEquipIndex();
             playerInv.DeactivateAllUtilities();
             playerInv.GetEquippedUsableObjects.Clear();
@@ -31,9 +44,14 @@ namespace Hadal.Player
                 playerInv.AddEquipmentOfType<HarpoonLauncherObject>(true);
             }
 
-            if(GiveFourDodgeBoost)
+            if(PowerUpDodgeBoost)
             {
-                playerBoost.ChangeMaxReserveCount(4);
+                playerBoost.ChangeMaxReserveCount(DodgeBoostCount);
+            }
+
+            if(PowerUpTorpFireRate)
+            {
+                playerTorpedo.ChangeChamberReloadTime(TorpFireRate);
             }
 
             foreach(UsableLauncherObject obj in ClassLauncher)
