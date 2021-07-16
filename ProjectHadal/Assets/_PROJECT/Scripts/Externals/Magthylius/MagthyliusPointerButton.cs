@@ -92,7 +92,7 @@ public class MagthyliusPointerButton : MonoBehaviour
     {
         if (allowColorLerp && image != null)
         {
-            image.color = Color.Lerp(image.color, targetColor, colorFadeSpeed);
+            image.color = Color.Lerp(image.color, targetColor, colorFadeSpeed * Time.deltaTime);
             float colorCheck = color.r + color.g + color.b + color.a;
     
             if (colorCheck < 0.4)
