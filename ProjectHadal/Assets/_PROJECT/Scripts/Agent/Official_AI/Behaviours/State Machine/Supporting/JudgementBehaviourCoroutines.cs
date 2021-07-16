@@ -85,10 +85,13 @@ namespace Hadal.AI
             {
                 NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
 
+                //! plays sound cue that should inform the player that they should start dodging
+                AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
                 float glareTimer = Settings.G_GlareAtTargetBeforeJudgementApproachTime;
                 while (glareTimer > 0f)
                 {
                     glareTimer -= Brain.DeltaTime;
+
                     yield return null;
                 }
 
@@ -120,12 +123,11 @@ namespace Hadal.AI
                 //! Start delay timer if close enough (in advance) to player & is waiting to be allowed to carry
                 if (HaltBeforeCarryThresholdReached && !canCarry)
                 {
+
+
                     canCarry = true;
                     SetCarryDelayTimer(carryDelayTime);
                     NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
-
-                    //! plays sound cue that should inform the player that they should start dodging
-                    AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
 
                     TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
                     continue;

@@ -507,6 +507,8 @@ namespace Hadal.AI
                 lockSteeringBehaviour = true;
                 TunnelModeSteering();
             }
+
+
         }
 
         /// <summary>
@@ -525,8 +527,8 @@ namespace Hadal.AI
             currentPoint = pointPath.Dequeue();
             isOnQueuePath = true;
             isChasingAPlayer = false;
-            canTimeout = false;
-            canAutoSelectNavPoints = false;
+            canTimeout = true;
+            canAutoSelectNavPoints = true;
             ResetNavPointLingerTimer();
             ResetTimeoutTimer();
             if (enableDebug)
@@ -757,7 +759,7 @@ namespace Hadal.AI
                 Vector3 moveTo = (currentPoint.GetPosition - pilotTrans.position).normalized * TotalAttractionForce;
                 rBody.velocity = Vector3.Lerp(rBody.velocity, rBody.velocity + moveTo, deltaTime * attractionForce);
             }
-            
+
             //! Look at
             Vector3 lerpResult;
             float totalLerpSpeed = deltaTime * smoothLookAtSpeed;
