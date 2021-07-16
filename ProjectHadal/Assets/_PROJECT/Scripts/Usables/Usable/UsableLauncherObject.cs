@@ -138,6 +138,10 @@ namespace Hadal.Usables
             UpdateReserveCount(ReserveCount + 1);
             OnReservesChanged?.Invoke(true);
         }
+        public void ChangeChamberReloadTime(float newReloadTime)
+        {
+            chamberReloadTime = newReloadTime;
+        }
 
         private void UpdateReserveCount(in int count) => ReserveCount = Mathf.Clamp(count, 0, maxReserveCapacity);
         private void UpdateChamberCount(in int count) => ChamberCount = Mathf.Clamp(count, 0, maxChamberCapacity);
