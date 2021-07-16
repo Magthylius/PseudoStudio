@@ -17,12 +17,13 @@ namespace Hadal.Player
         public PlayerPhotonInfo PhotonInfo { get; private set; }
         public Mover Mover { get; private set; }
         public Rotator Rotator { get; private set; }
+        public DodgeBooster DodgeBooster { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public Collider Collider { get; private set; }
 
         public PlayerControllerInfo(PlayerCameraController camControl, PlayerHealthManager healthM,
             PlayerInventory inventory, PlayerLamp lamp, PlayerShoot shooter, PlayerInteract interact,
-            PlayerPhotonInfo pInfo, Mover mover, Rotator rotator, Rigidbody rigidbody, Collider collider)
+            PlayerPhotonInfo pInfo, Mover mover, Rotator rotator, DodgeBooster dodgeBooster, Rigidbody rigidbody, Collider collider)
         {
             CameraController = camControl;
             HealthManager = healthM;
@@ -33,6 +34,7 @@ namespace Hadal.Player
             PhotonInfo = pInfo;
             Mover = mover;
             Rotator = rotator;
+            DodgeBooster = dodgeBooster;
             Rigidbody = rigidbody;
             Collider = collider;
         }

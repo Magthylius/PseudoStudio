@@ -13,12 +13,14 @@ namespace Hadal.Player
         public bool GiveFlareHarpoon;
         public bool PowerUpFlare;
         public bool PowerUpHarpoon;
+        public bool GiveFourDodgeBoost;
         public string ClassName;
         public List <UsableLauncherObject> ClassLauncher;
 
         public void SetUpUtility()
         {
             var playerInv = LocalPlayerData.PlayerController.GetInfo.Inventory;
+            var playerBoost = LocalPlayerData.PlayerController.GetInfo.DodgeBooster;
             playerInv.ResetEquipIndex();
             playerInv.DeactivateAllUtilities();
             playerInv.GetEquippedUsableObjects.Clear();
@@ -27,6 +29,11 @@ namespace Hadal.Player
             {
                 playerInv.AddEquipmentOfType<FlareLauncherObject>(true);
                 playerInv.AddEquipmentOfType<HarpoonLauncherObject>(true);
+            }
+
+            if(GiveFourDodgeBoost)
+            {
+                playerBoost.ChangeMaxReserveCount(4);
             }
 
             foreach(UsableLauncherObject obj in ClassLauncher)
