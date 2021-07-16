@@ -49,7 +49,7 @@ MonoBehaviour:
   debugKey: Projectile Physics
   rootTransform: {fileID: 5118692649966226049}
   projectileRigidbody: {fileID: 5112791235449951143}
-  projectileBehavior: {fileID: 0}
+  projectileBehavior: {fileID: -1520314024333295563}
   projectileModeList:
   - {fileID: 6971419611592527743}
   - {fileID: 880114878162419551}
@@ -196,6 +196,8 @@ MonoBehaviour:
   - Obstacle
   - Monster
   projPhysics: {fileID: 5627941608468223027}
+  attachMode: {fileID: 880114878162419551}
+  selfDeactivation: {fileID: 4943504598434740513}
 --- !u!1 &7553957830394924370
 GameObject:
   m_ObjectHideFlags: 0
