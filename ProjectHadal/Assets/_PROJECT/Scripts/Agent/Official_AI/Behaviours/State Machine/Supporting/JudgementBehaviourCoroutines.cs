@@ -47,6 +47,7 @@ namespace Hadal.AI
         }
 
         private float carryDelayTimer;
+		private int judgementPersistCount;
         private bool canCarry;
         private bool isAttacking;
         private bool isDamaging;
@@ -271,6 +272,7 @@ namespace Hadal.AI
             //! Handle Behaviour ending
             StopAllRunningCoroutines();
             ResetStateValues();
+			ResetJudgementPersistCount();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
             yield return null;
@@ -337,6 +339,7 @@ namespace Hadal.AI
             //! Handle Behaviour ending
             StopAllRunningCoroutines();
             ResetStateValues();
+			ResetJudgementPersistCount();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
             yield return null;
@@ -396,6 +399,7 @@ namespace Hadal.AI
             //! Handle Behaviour ending
             StopAllRunningCoroutines();
             ResetStateValues();
+			ResetJudgementPersistCount();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
             yield return null;
@@ -446,8 +450,18 @@ namespace Hadal.AI
             NavigationHandler.ResetSpeedMultiplier();
 
             //! Randomise judgement persist chance
-            var brainState = GetRandomBrainStateAfterStun();
+            BrainState brainState;
+			if (judgementPersistCount < JState.settings.JudgementPersistCountLimitPerEntry)
+				brainState = GetRandomBrainStateAfterStun();
+			else
+				brainState = BrainState.Recovery;
+			
             RuntimeData.SetBrainState(brainState);
+
+			if (brainState == BrainState.Judgement)
+				judgementPersistCount++;
+			else
+				ResetJudgementPersistCount();
 
             string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
             debugMsg += brainState == BrainState.Judgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
@@ -478,6 +492,11 @@ namespace Hadal.AI
 
             NavigationHandler.Enable(); //always enable when it exits the behaviour
         }
+		
+		private void ResetJudgementPersistCount()
+		{
+			judgementPersistCount = 0;
+		}
 
         /// <summary>
         /// Facilitates the random chance event to choose between Judgement state or Recovery state. Returns the result of this random

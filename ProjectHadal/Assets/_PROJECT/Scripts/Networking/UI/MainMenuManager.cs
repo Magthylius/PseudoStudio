@@ -340,12 +340,6 @@ namespace Hadal.Networking.UI.MainMenu
 
         public void BTN_LeaveRoom()
         {
-            /*CloseMenu(roomMenu);
-            OpenMenu(lobbyMenu);
-            CloseMenu(roomOptions);
-            OpenMenu(gameOptions);*/
-            //InitMainMenu();
-            //EnsureSetup(false);
             CloseMenu(roomMenu);
             CloseMenu(roomOptions);
 
@@ -383,16 +377,25 @@ namespace Hadal.Networking.UI.MainMenu
             {
                 Destroy(child.gameObject);
             }
-
+            
             for (int i = 0; i < playerList.Length; i++)
             {
-                AddIntoPlayerList(playerList[i]);
+                Color playerColor;
+                switch (i)
+                {
+                    case 0: playerColor = NetworkEventManager.Instance.FirstPlayerColor; break;
+                    case 1: playerColor = NetworkEventManager.Instance.SecondPlayerColor; break;
+                    case 2: playerColor = NetworkEventManager.Instance.ThirdPlayerColor; break;
+                    default: playerColor = NetworkEventManager.Instance.FourthPlayerColor; break;
+                }
+                
+                AddIntoPlayerList(playerList[i], playerColor);
             }
         }
 
-        public void AddIntoPlayerList(Player player)
+        public void AddIntoPlayerList(Player player, Color color)
         {
-            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(player);
+            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(player, color);
         }
 
         public void UpdateRoomList(List<RoomInfo> roomList)
