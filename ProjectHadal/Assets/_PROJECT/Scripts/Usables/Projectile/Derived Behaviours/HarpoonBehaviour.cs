@@ -76,21 +76,27 @@ namespace Hadal.Usables.Projectiles
             if (IsAttached)
                 return;
 
+            // If it's AI layer, return;
+            if (collision.gameObject.layer == 11)
+            {
+                return;
+            }
+
             projectileTriggered = true;
 
             int layer = collision.gameObject.layer;
             if (UsableBlackboard.InAILayers(layer))
             {
                 //Debug.LogWarning("hit ai!");
-                if(IsLocal)
+                if (IsLocal)
                 {
-					ISlowable slowable = collision.gameObject.GetComponentInChildren<ISlowable>();
-					if (slowable != null)
+                    ISlowable slowable = collision.gameObject.GetComponentInChildren<ISlowable>();
+                    if (slowable != null)
                     {
-						slowable.AttachProjectile();
-						PPhysics.PhysicsFinished += slowable.DetachProjectile;
-					}
-					else { $"AI was hit but it does not have an ISlowable interface implemented. Is the collider on the wrong layer ({collision.gameObject.name})?".Msg(); }
+                        slowable.AttachProjectile();
+                        PPhysics.PhysicsFinished += slowable.DetachProjectile;
+                    }
+                    else { $"AI was hit but it does not have an ISlowable interface implemented. Is the collider on the wrong layer ({collision.gameObject.name})?".Msg(); }
                 }
                 else //if non local, hide art asset upon impact.
                 {
@@ -98,15 +104,17 @@ namespace Hadal.Usables.Projectiles
                 }
             }
 
+
+
             if (!UsableBlackboard.InPlayerLayers(layer) && !UsableBlackboard.InUtilityLayers(layer))
             {
-                if(IsLocal)
+                if (IsLocal)
                 {
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
 
-                    if(projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
+                    if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
                     {
                         projPhysics.SwapModes();
                     }
@@ -121,11 +129,11 @@ namespace Hadal.Usables.Projectiles
                 {
                     projectileAsset.SetActive(false);
                 }
-               
+
             }
-            
-            
-            
+
+
+
             /*foreach (string layerName in validLayer)
             {
                 LayerMask layer = LayerMask.NameToLayer(layerName);
@@ -180,7 +188,7 @@ namespace Hadal.Usables.Projectiles
             if (!isPowerForm)
             {
                 attachMode.endTime = defaultAttachDuration;
-            } 
+            }
             else
             {
                 attachMode.endTime = poweredAttachDuration;

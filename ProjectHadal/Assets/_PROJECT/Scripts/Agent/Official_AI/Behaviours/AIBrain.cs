@@ -460,9 +460,10 @@ namespace Hadal.AI
             OnStunnedEvent?.Invoke(false);
         }
 
+        [SerializeField] Collider leviathanCollider;
         public void ChangeColliderMaterial(PhysicMaterial physicMaterial)
         {
-            gameObject.GetComponent<Collider>().material = physicMaterial;
+            leviathanCollider.material = physicMaterial;
         }
 
         public void RefreshPlayerReferences()
