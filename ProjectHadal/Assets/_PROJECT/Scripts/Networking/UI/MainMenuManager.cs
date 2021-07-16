@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Magthylius.LerpFunctions;
 using Photon.Realtime;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using Hadal.Networking.UI.Loading;
 
 //! C: Jon
@@ -24,6 +25,9 @@ namespace Hadal.Networking.UI.MainMenu
 
         bool mainMenuInitiated = false;
 
+        [Header("References")] 
+        public MainMenuClassSelector ClassSelector;
+        
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
         [SerializeField] Menu nicknameMenu;
@@ -373,6 +377,8 @@ namespace Hadal.Networking.UI.MainMenu
 
         public void UpdatePlayerList(Player[] playerList)
         {
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+
             foreach (Transform child in playerListContent)
             {
                 Destroy(child.gameObject);
@@ -383,14 +389,24 @@ namespace Hadal.Networking.UI.MainMenu
                 Color playerColor;
                 switch (i)
                 {
-                    case 0: playerColor = NetworkEventManager.Instance.FirstPlayerColor; break;
-                    case 1: playerColor = NetworkEventManager.Instance.SecondPlayerColor; break;
-                    case 2: playerColor = NetworkEventManager.Instance.ThirdPlayerColor; break;
-                    default: playerColor = NetworkEventManager.Instance.FourthPlayerColor; break;
+                    case 0: playerColor = neManager.FirstPlayerColor; break;
+                    case 1: playerColor = neManager.SecondPlayerColor; break;
+                    case 2: playerColor = neManager.ThirdPlayerColor; break;
+                    default: playerColor = neManager.FourthPlayerColor; break;
                 }
                 
                 AddIntoPlayerList(playerList[i], playerColor);
             }
+
+            if (neManager.CurrentRoom.CustomProperties.TryGetValue(neManager.PlayerClassHash, out object value))
+            {
+                Dictionary<int, int> roomProps = (Dictionary<int, int>)value;
+                foreach (int playerIndex in roomProps.Keys)
+                {
+                    ClassSelector.UpdateNetworkSelector((PlayerClassType)roomProps[playerIndex], playerIndex);
+                }
+            }
+            
         }
 
         public void AddIntoPlayerList(Player player, Color color)

@@ -317,6 +317,11 @@ namespace Hadal.Player.Behaviours
             }
         }
 
+        //maybe not needed.
+        public void SetReviveTime(int newReviveTime)
+        {
+            reviveTime = newReviveTime;
+        }
         #endregion
 
         #region Is Down / Revive Control Methods

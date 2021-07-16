@@ -54,6 +54,7 @@ namespace Hadal.Networking
         AI_UPDATE_SLOW,
         AI_COLOUR_CHANGE,
         AI_PLAY_AUDIO,
+		AI_PLAY_ANIMATION,
         AI_EGG_DAMAGED,
         TOTAL_EVENTS
     }
@@ -591,29 +592,28 @@ namespace Hadal.Networking
         }
 
         private string playerClassHash = "PlayerClasses";
-        public bool TryAddPlayerClass(PlayerClassType type)
+        public string PlayerClassHash => playerClassHash;
+        public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
         {
+            //! Have to convert enum to type because they cant handle it
             if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
             {
-                List<PlayerClassType> classTypes = (List<PlayerClassType>)CurrentRoom.CustomProperties[playerClassHash];
+                Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
 
-                if (classTypes.Contains(type))
-                {
-                    return false;
-                }
+                if (playerClassInfo.ContainsKey(playerIndex))
+                    playerClassInfo[playerIndex] = (int)type;
                 else
-                {
-                    classTypes.Add(type);
-                    SetCurrentRoomCustomProperty(playerClassHash, classTypes);
-                    return true;
-                }
+                    playerClassInfo.Add(playerIndex, (int)type);
             }
             else
             {
-                List<PlayerClassType> classTypes = new List<PlayerClassType> { type };
-
-                SetCurrentRoomCustomProperty(playerClassHash, classTypes);
-                return true;
+                //! No properties found, create hashtable as init
+                Dictionary<int, int> playerClassInfo = new Dictionary<int, int>
+                {
+                    {playerIndex, (int)type}
+                };
+                
+                SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
             }
         }
         #endregion

@@ -7,13 +7,16 @@ namespace Hadal.Networking.UI
     public class MainMenuChooseClass : MonoBehaviour
     {
         public MainMenuClassSelector Selector;
+        public MainMenuHighlightBehaviour CorrespondingHighlight;
         public PlayerClassType type;
         
         private bool selected = false;
-        
+
         public void ChooseClass()
         {
-            PlayerClassType c = Selector.CurrentChosenClass;
+            if (CorrespondingHighlight.IsSelectedByOthers) return;
+            
+            PlayerClassType c = Selector.CurrentCurrentClass;
             if (c == PlayerClassType.Invalid && Selector.PlayerClassAvailable(type))
             {
                 Selector.ChooseClass(type);
@@ -23,7 +26,7 @@ namespace Hadal.Networking.UI
 
         public void UnchooseClass()
         {
-            if (Selector.CurrentChosenClass == type)
+            if (Selector.CurrentCurrentClass == type)
             {
                 Selector.UnchooseClass(type);
                 selected = false;
@@ -34,7 +37,6 @@ namespace Hadal.Networking.UI
         {
             if (!selected) ChooseClass();
             else UnchooseClass();
-            
         }
     }
 }

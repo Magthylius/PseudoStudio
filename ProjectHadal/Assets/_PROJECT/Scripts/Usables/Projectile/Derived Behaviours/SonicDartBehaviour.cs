@@ -7,7 +7,20 @@ namespace Hadal.Usables.Projectiles
     public class SonicDartBehaviour : ProjectileBehaviour
     {
         [SerializeField] private string[] validLayer;
-        public ProjectilePhysics projPhysics;
+        [SerializeField] private ProjectilePhysics projPhysics;
+        [SerializeField] private AttachMode attachMode;
+        [SerializeField] private SelfDeactivationMode selfDeactivation;
+        public void SubscribeModeEvent()
+        {
+            attachMode.SwitchedToAttachEvent += enableSonicDartUI;
+            selfDeactivation.selfDeactivated += ModeOff;
+        }
+
+        public void UnsubscribeModeEvent()
+        {
+            attachMode.SwitchedToAttachEvent -= enableSonicDartUI;
+            selfDeactivation.selfDeactivated -= ModeOff;
+        }
 
         public void OnDisable()
         {
@@ -34,6 +47,16 @@ namespace Hadal.Usables.Projectiles
                     }
                 }
             }
+        }
+
+        private void enableSonicDartUI()
+        {
+            //enable UI here.
+        }
+
+        private void ModeOff()
+        {
+            UnsubscribeModeEvent();
         }
     }
 }
