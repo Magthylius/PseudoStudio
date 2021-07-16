@@ -59,7 +59,7 @@ namespace Hadal.Interactables
             if (!ableToInteract)
                 return;
 
-            GameObject actorPlayer;
+            /*GameObject actorPlayer;
 
             foreach(GameObject gO in NetworkEventManager.Instance.PlayerObjects)
             {
@@ -67,7 +67,7 @@ namespace Hadal.Interactables
                 {
                     actorPlayer = gO;
                 }
-            }
+            }*/
 
             //This is where we send the event to interact
             InteractableEventManager.Instance.InvokeInteraction(interactionType, interactableID);
