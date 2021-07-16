@@ -153,6 +153,7 @@ namespace Hadal.AI
         private bool _isEnabled;
         private bool _tickCavernLingerTimer;
         private Coroutine disableRoutine;
+        private Transform _lookAtTarget = null;
         public event Action<float> OnObstacleDetectRadiusChange;
         public event Action OnReachedPoint;
 
@@ -281,8 +282,11 @@ namespace Hadal.AI
                 rBody.velocity = Vector3.zero;
             }
         }
-        public void DisableWithLerp(float time, Action onCompleteCallback = null)
+        public void DisableWithLerp(float time, Action onCompleteCallback = null, float minVelocityCut = 0f)
         {
+            if (!_isEnabled)
+                return;
+
             _isEnabled = false;
             if (rBody != null)
                 disableRoutine = StartCoroutine(LerpVelocity());
@@ -290,16 +294,21 @@ namespace Hadal.AI
             IEnumerator LerpVelocity()
             {
                 float percent = 0f;
-                var zero = Vector3.zero;
+                Vector3 target;
+                if (minVelocityCut <= 0f)
+                    target = Vector3.zero;
+                else
+                    target = rBody.velocity * minVelocityCut;
+
                 while (percent < 1f)
                 {
                     float delta = DeltaTime * time;
                     percent += delta;
-                    rBody.velocity = Vector3.Lerp(rBody.velocity, zero, percent);
+                    rBody.velocity = Vector3.Lerp(rBody.velocity, target, percent);
                     yield return null;
                 }
-                rBody.isKinematic = true;
-                rBody.velocity = Vector3.zero;
+                rBody.isKinematic = minVelocityCut <= 0f;
+                rBody.velocity = target;
                 onCompleteCallback?.Invoke();
             }
         }
@@ -313,6 +322,8 @@ namespace Hadal.AI
             if (ObstacleTimerReached && !repulsionPoints.Contains(point))
                 repulsionPoints.Add(point);
         }
+
+        public void SetLookAtTarget(Transform targetTrans) => _lookAtTarget = targetTrans;
 
         /// <summary>
         /// Sets whether the handler will allow pathing for the pilot.
@@ -740,17 +751,23 @@ namespace Hadal.AI
 
         private void HandleSpeedAndDirection(in float deltaTime)
         {
-            if (currentPoint == null || TotalMaxVelocity < float.Epsilon || isStunned) return;
-
-            //! Chasing player direction
-            if (isChasingAPlayer)
+            if (currentPoint != null && TotalMaxVelocity > float.Epsilon && !isStunned && isChasingAPlayer)
             {
+                //! Chasing player direction
                 Vector3 moveTo = (currentPoint.GetPosition - pilotTrans.position).normalized * TotalAttractionForce;
                 rBody.velocity = Vector3.Lerp(rBody.velocity, rBody.velocity + moveTo, deltaTime * attractionForce);
             }
-
+            
             //! Look at
-            pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, deltaTime * smoothLookAtSpeed);
+            Vector3 lerpResult;
+            float totalLerpSpeed = deltaTime * smoothLookAtSpeed;
+
+            if (_lookAtTarget == null)
+                lerpResult = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, totalLerpSpeed);
+            else
+                lerpResult = Vector3.Lerp(pilotTrans.forward, (_lookAtTarget.position - pilotTrans.position).normalized, totalLerpSpeed);
+
+            pilotTrans.forward = lerpResult;
         }
 
         private void ClampMaxVelocity()

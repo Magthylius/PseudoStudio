@@ -20,6 +20,8 @@ namespace Hadal.AI.States
         [Min(0)] public int G_TotalThreshTimeInSeconds;
         [Min(5)] public int G_BaseMinThreshDamagePerSecond;
         [Min(8)] public int G_BaseMaxThreshDamagePerSecond;
+        [Min(0f)] public float G_PrepareHaltBeforeCarryDistance = 10f;
+        [Min(0f)] public float G_GlareAtTargetBeforeJudgementApproachTime = 2f;
         [Min(0)] public int G_DisruptionDamageCount;
 
         [Header("Ambush Settings")]
