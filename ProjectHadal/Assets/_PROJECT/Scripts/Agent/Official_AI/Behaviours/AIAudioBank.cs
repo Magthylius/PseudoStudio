@@ -62,6 +62,7 @@ namespace Hadal.AI
     public enum AISound
     {
         Roar = 0,
+        CarryWarning,
         Thresh,
         Swim,
         AmbushPounce
