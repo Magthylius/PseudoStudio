@@ -28,7 +28,7 @@ namespace Hadal.AI
         {
             Scene currentScene = SceneManager.GetActiveScene();
             string sceneName = currentScene.name;
-            if (sceneName == "Post Vertical Slice Backup")
+            if (sceneName == "Post Vertical Slice")
             {
                 if (PhotonNetwork.IsMasterClient)
                 {

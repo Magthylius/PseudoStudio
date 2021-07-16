@@ -59,7 +59,7 @@ namespace Hadal.Interactables
             if (!ableToInteract)
                 return;
 
-            GameObject actorPlayer;
+            /*GameObject actorPlayer;
 
             foreach(GameObject gO in NetworkEventManager.Instance.PlayerObjects)
             {
@@ -67,7 +67,7 @@ namespace Hadal.Interactables
                 {
                     actorPlayer = gO;
                 }
-            }
+            }*/
 
             //This is where we send the event to interact
             InteractableEventManager.Instance.InvokeInteraction(interactionType, interactableID);
@@ -103,16 +103,16 @@ namespace Hadal.Interactables
         {
             ableToInteract = true;
             flareIndicator.SetActive(true);
-            materialProp.SetFloat("_EmissionIntensity", 10);
-            Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
+            materialProp.SetFloat("_EmissionIntensity", 20);
+            //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
             submarineRenderer.SetPropertyBlock(materialProp);
         }
         private void DisableFlare()
         {
             ableToInteract = false;
             flareIndicator.SetActive(false);
-            materialProp.SetFloat("_EmissionIntensity", 0);
-            Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
+            materialProp.SetFloat("_EmissionIntensity", -5);
+            //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
             submarineRenderer.SetPropertyBlock(materialProp);
         }
         public void setID(int newID)
