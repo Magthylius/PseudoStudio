@@ -18,6 +18,7 @@ namespace Hadal.AI
         private CavernManager CavernManager;
         private AISenseDetection SenseDetection;
         private AIDamageManager DamageManager;
+        private AIAudioBank AudioBank;
         private AIHealthManager HealthManager;
         private JudgementState JState;
 
@@ -31,6 +32,7 @@ namespace Hadal.AI
             CavernManager = Brain.CavernManager;
             SenseDetection = Brain.SenseDetection;
             DamageManager = Brain.DamageManager;
+            AudioBank = Brain.AudioBank;
             HealthManager = Brain.HealthManager;
             JState = judgementState;
 
@@ -65,10 +67,39 @@ namespace Hadal.AI
         {
             bool HasTargetIsolatedPlayer() => JState.IsolatedPlayer != null;
             bool HasCurrentTargetPlayer() => Brain.CurrentTarget != null;
+            bool ShouldHandleNullTargetTerminationCase()
+            {
+                if (Brain.CurrentTarget == null)
+                {
+                    JState.IsBehaviourRunning = false;
+                    return true;
+                }
+                return false;
+            }
             bool targetMarked = false;
+
+            if (ShouldHandleNullTargetTerminationCase())
+                yield break;
+
+            //! Look at the target for a set amount of time (while doing nothing), before chasing after them
+            {
+                NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
+
+                float glareTimer = Settings.G_GlareAtTargetBeforeJudgementApproachTime;
+                while (glareTimer > 0f)
+                {
+                    glareTimer -= Brain.DeltaTime;
+                    yield return null;
+                }
+
+                NavigationHandler.SetLookAtTarget(null);
+            }
 
             while (JState.IsBehaviourRunning)
             {
+                if (ShouldHandleNullTargetTerminationCase())
+                    yield break;
+
                 //! Set custom nav point to destination: current target/isolated player if not already moving towards it.
                 if ((HasCurrentTargetPlayer() || HasTargetIsolatedPlayer()) && !targetMarked)
                 {
@@ -78,7 +109,7 @@ namespace Hadal.AI
                     else
                         success = TrySetCustomNavPoint(Brain.CurrentTarget);
 
-                    //Brain.AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                    //AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
                     if (success)
                     {
                         targetMarked = true;
@@ -86,11 +117,16 @@ namespace Hadal.AI
                     }
                 }
 
-                //! Start delay timer if close enough to player & is waiting to be allowed to carry
-                if (CloseThresholdReached && !canCarry)
+                //! Start delay timer if close enough (in advance) to player & is waiting to be allowed to carry
+                if (HaltBeforeCarryThresholdReached && !canCarry)
                 {
                     canCarry = true;
                     SetCarryDelayTimer(carryDelayTime);
+                    NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
+
+                    //! plays sound cue that should inform the player that they should start dodging
+                    AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
+
                     TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
                     continue;
                 }
@@ -139,7 +175,7 @@ namespace Hadal.AI
             bool success = false;
             int totalDamageSeconds = Settings.G_TotalThreshTimeInSeconds;
             isDamaging = true;
-            NavigationHandler.DisableWithLerp(2f);
+            NavigationHandler.DisableWithLerp(2f); //try to disable if not already disabled
 
             void StopAttack()
             {
@@ -156,7 +192,6 @@ namespace Hadal.AI
             {
                 if (RuntimeData.IsCumulativeDamageCountReached)
                 {
-                    RuntimeData.ResetCumulativeDamageCount();
                     success = false;
                     TryDebug("Cumulative damage count threshold reached. Ending thresh damage early.");
                     break;
@@ -164,7 +199,6 @@ namespace Hadal.AI
                 yield return null;
             }
 
-            NavigationHandler.Enable();
             TryDebug("Thresh damage in inner routine is finished!");
 
             if (success)
@@ -185,7 +219,7 @@ namespace Hadal.AI
             waitForJtimer = false;
             int jTimerIndex = 5 - stanceIndex;
 
-            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
+            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
 
             while (JState.IsBehaviourRunning)
             {
@@ -209,7 +243,7 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain,
+                    threshRoutineData = new CoroutineData(Brain,
                         DoThreshAttack(
                             Settings.GetThreshDamagePerSecond(EngagementType.Defensive, RuntimeData.IsEggDestroyed),
                             null,
@@ -233,11 +267,10 @@ namespace Hadal.AI
                 yield return null;
 
             //! Handle Behaviour ending
-            approachRoutineData.Stop();
-            approachRoutineData = null;
+            StopAllRunningCoroutines();
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
-            
+
             yield return null;
         }
 
@@ -253,7 +286,7 @@ namespace Hadal.AI
             bool waitForJtimer = false;
             int jTimerIndex = 5 - stanceIndex;
 
-            var approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
+            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
 
             while (JState.IsBehaviourRunning)
             {
@@ -277,7 +310,7 @@ namespace Hadal.AI
                     isAttacking = true;
 
                     TryDebug("Starting threshing routine.");
-                    var threshRoutineData = new CoroutineData(Brain,
+                    threshRoutineData = new CoroutineData(Brain,
                         DoThreshAttack(
                             Settings.GetThreshDamagePerSecond(EngagementType.Aggressive, RuntimeData.IsEggDestroyed),
                             () => RuntimeData.UpdateConfidenceValue(Settings.ConfidenceIncrementValue),
@@ -300,8 +333,7 @@ namespace Hadal.AI
                 yield return null;
 
             //! Handle Behaviour ending
-            approachRoutineData.Stop();
-            approachRoutineData = null;
+            StopAllRunningCoroutines();
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
@@ -344,8 +376,6 @@ namespace Hadal.AI
                         )
                     );
                     yield return threshRoutineData.Coroutine; //this will wait for the DoThreshAttack() coroutine to finish
-                    threshRoutineData.Stop();
-                    threshRoutineData = null;
 
                     TryDebug("Thresh damage in outer routine is finished!");
 
@@ -362,11 +392,10 @@ namespace Hadal.AI
                 yield return null;
 
             //! Handle Behaviour ending
-            approachRoutineData.Stop();
-            approachRoutineData = null;
+            StopAllRunningCoroutines();
             ResetStateValues();
             RuntimeData.SetBrainState(BrainState.Recovery);
-            
+
             yield return null;
         }
 
@@ -402,21 +431,38 @@ namespace Hadal.AI
             if (!isStunned)
                 return;
 
-            if (damageManagerRoutine != null) Brain.StopCoroutine(damageManagerRoutine);
-            damageManagerRoutine = null;
-            threshRoutineData?.Stop();      threshRoutineData = null;
-            approachRoutineData?.Stop();    approachRoutineData = null;
+            //! Settle all local states
+            StopAllRunningCoroutines();
+            ResetStateValues();
+
+            //! Double affirm JState state is terminated
             JState.IsBehaviourRunning = false;
             JState.StopAnyRunningCoroutines();
+
+            //! Reset third party states
             NavigationHandler.Enable();
             NavigationHandler.ResetSpeedMultiplier();
-            ResetStateValues();
+
+            //! Randomise judgement persist chance
             var brainState = GetRandomBrainStateAfterStun();
             RuntimeData.SetBrainState(brainState);
-            
+
             string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
             debugMsg += brainState == BrainState.Judgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
             TryDebug(debugMsg);
+        }
+
+        /// <summary> Safely stops all coroutines facilitated by this class </summary>
+        private void StopAllRunningCoroutines()
+        {
+            approachRoutineData?.Stop();
+            approachRoutineData = null;
+            threshRoutineData?.Stop();
+            threshRoutineData = null;
+
+            if (damageManagerRoutine != null)
+                Brain.StopCoroutine(damageManagerRoutine);
+            damageManagerRoutine = null;
         }
 
         /// <summary> Resets values used in the behaviour coroutines so it can be reused another time. </summary>
@@ -427,6 +473,8 @@ namespace Hadal.AI
             isAttacking = false;
             isDamaging = false;
             JState.ResetStateValues();
+
+            NavigationHandler.Enable(); //always enable when it exits the behaviour
         }
 
         /// <summary>
@@ -463,6 +511,10 @@ namespace Hadal.AI
         private bool FarThresholdReached
             => Brain.CurrentTarget != null
             && SqrDistanceToTarget > Settings.G_ApproachFarDistanceThreshold.Sqr();
+
+        private bool HaltBeforeCarryThresholdReached
+            => Brain.CurrentTarget != null
+            && SqrDistanceToTarget < (Settings.G_ApproachCloseDistanceThreshold + Settings.G_PrepareHaltBeforeCarryDistance).Sqr();
 
         private bool IsJudgementThresholdReached(int i)
             => RuntimeData.HasJudgementTimerOfIndexExceeded(i);
