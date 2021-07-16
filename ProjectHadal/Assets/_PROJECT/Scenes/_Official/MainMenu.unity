@@ -309,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 16554795}
   ClassType: 1
+  selectedByOthers: 0
 --- !u!114 &16554795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2290,6 +2291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 346284131}
   ClassType: 4
+  selectedByOthers: 0
 --- !u!114 &346284131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4586,7 +4588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &715049120
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5220,6 +5222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
+  CorrespondingHighlight: {fileID: 2040076333}
   type: 3
 --- !u!1 &775190246
 GameObject:
@@ -8495,6 +8498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
+  CorrespondingHighlight: {fileID: 16554794}
   type: 1
 --- !u!1 &1214839389
 GameObject:
@@ -11800,6 +11804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
+  CorrespondingHighlight: {fileID: 346284130}
   type: 4
 --- !u!1 &1729505913
 GameObject:
@@ -12050,6 +12055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
+  CorrespondingHighlight: {fileID: 2035271528}
   type: 2
 --- !u!1 &1779058081
 GameObject:
@@ -14105,6 +14111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 2035271529}
   ClassType: 2
+  selectedByOthers: 0
 --- !u!114 &2035271529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14195,6 +14202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 2040076334}
   ClassType: 3
+  selectedByOthers: 0
 --- !u!114 &2040076334
 MonoBehaviour:
   m_ObjectHideFlags: 0
