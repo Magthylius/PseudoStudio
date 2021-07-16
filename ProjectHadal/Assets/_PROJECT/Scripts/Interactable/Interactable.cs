@@ -104,7 +104,7 @@ namespace Hadal.Interactables
             ableToInteract = true;
             flareIndicator.SetActive(true);
             materialProp.SetFloat("_EmissionIntensity", 10);
-            //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
+            Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
             submarineRenderer.SetPropertyBlock(materialProp);
         }
         private void DisableFlare()
@@ -112,7 +112,7 @@ namespace Hadal.Interactables
             ableToInteract = false;
             flareIndicator.SetActive(false);
             materialProp.SetFloat("_EmissionIntensity", 0);
-            //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
+            Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
             submarineRenderer.SetPropertyBlock(materialProp);
         }
         public void setID(int newID)
