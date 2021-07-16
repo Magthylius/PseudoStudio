@@ -401,8 +401,10 @@ namespace Hadal.Networking.UI.MainMenu
             if (neManager.CurrentRoom.CustomProperties.TryGetValue(neManager.PlayerClassHash, out object value))
             {
                 Dictionary<int, int> roomProps = (Dictionary<int, int>)value;
+                print(roomProps.Count);
                 foreach (int playerIndex in roomProps.Keys)
                 {
+                    print($"PI: {playerIndex} , PCT: {(PlayerClassType)roomProps[playerIndex]}");
                     ClassSelector.UpdateNetworkSelector((PlayerClassType)roomProps[playerIndex], playerIndex);
                 }
             }

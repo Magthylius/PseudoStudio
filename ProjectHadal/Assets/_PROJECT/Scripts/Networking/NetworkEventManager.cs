@@ -604,9 +604,13 @@ namespace Hadal.Networking
                     playerClassInfo[playerIndex] = (int)type;
                 else
                     playerClassInfo.Add(playerIndex, (int)type);
+                
+                SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
             }
             else
             {
+                Debug.LogWarning("No properties found, CustomProperties rebuilt");
+                
                 //! No properties found, create hashtable as init
                 Dictionary<int, int> playerClassInfo = new Dictionary<int, int>
                 {
