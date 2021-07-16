@@ -19,12 +19,20 @@ namespace Hadal.Interactables
         [SerializeField] private float regenerateTimerMax;
         NetworkEventManager neManager = NetworkEventManager.Instance;
 
+        // emissive change properties
+        [SerializeField] private MeshRenderer submarineRenderer;
+        private MaterialPropertyBlock materialProp;
+
         private void Start()
         {
             if(neManager)
                 neManager.AddListener(ByteEvents.PLAYER_INTERACT, REInteract);
 
             InteractableEventManager.Instance.OnInteractConfirmation += ConfirmedInteract;
+
+            //! initialise property block (needs to use a renderer, since it has the functions to set up)
+            materialProp = new MaterialPropertyBlock();
+            if (materialProp != null) submarineRenderer.GetPropertyBlock(materialProp);
         }
 
         private void Update()
@@ -36,8 +44,7 @@ namespace Hadal.Interactables
                 if(regenerateTimer > regenerateTimerMax)
                 {
                     regenerateTimer = 0;
-                    ableToInteract = true;
-                    flareIndicator.SetActive(true);
+                    EnableFlare();
                 }
             }
         }
@@ -71,8 +78,7 @@ namespace Hadal.Interactables
             if (interactID != interactableID)
                 return;
 
-            flareIndicator.SetActive(false);
-            ableToInteract = false;
+            DisableFlare();
 
             if(neManager)
                 neManager.RaiseEvent(ByteEvents.PLAYER_INTERACT, interactableID);
@@ -87,12 +93,28 @@ namespace Hadal.Interactables
                 if (data == interactableID)
                 {
                     regenerateTimer = 0;
-                    ableToInteract = false;
-                    flareIndicator.SetActive(false);
+                    
+                    DisableFlare();
                 }
             }
         }
 
+        private void EnableFlare()
+        {
+            ableToInteract = true;
+            flareIndicator.SetActive(true);
+            materialProp.SetFloat("_EmissionIntensity", 10);
+            //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
+            submarineRenderer.SetPropertyBlock(materialProp);
+        }
+        private void DisableFlare()
+        {
+            ableToInteract = false;
+            flareIndicator.SetActive(false);
+            materialProp.SetFloat("_EmissionIntensity", 0);
+            //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
+            submarineRenderer.SetPropertyBlock(materialProp);
+        }
         public void setID(int newID)
         {
             interactableID = newID;
