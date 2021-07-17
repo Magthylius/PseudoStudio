@@ -21,6 +21,7 @@ namespace Hadal.AI.States
             //! Change speed
             NavigationHandler.SetSpeedMultiplier(settings.ElusiveSpeedModifier);
             RuntimeData.ResetCooldownTicker();
+            HealthManager.SetIgnoreSlowDebuffs(true);
             SetNewTargetCavern();
             AllowStateTick = true;
         }
@@ -44,6 +45,7 @@ namespace Hadal.AI.States
         {
             //! Reset speed
             NavigationHandler.ResetSpeedMultiplier();
+            HealthManager.SetIgnoreSlowDebuffs(false);
         }
 
         public override void OnCavernEnter(CavernHandler cavern)
