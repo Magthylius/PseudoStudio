@@ -43,23 +43,17 @@ namespace Hadal
             {
                 //! determine direction of resultant force
                 Vector3 forceDirection = r.transform.position - GetPosition;
-                print("1. Force direction: " + forceDirection);
                 
                 //! Calculate distance between positions & get the ratio of distance relative to the total radius of effect
                 float distance = Mathf.Clamp(Vector3.Distance(r.transform.position, GetPosition), 0f, RadiusOfEffect);
-                print("2. Clamped distance: " + distance.ToString("F4"));
 
                 float distanceRatio = distance / RadiusOfEffect;
-                print("3. Distance ratio pre-check: " + distanceRatio.ToString("F4"));
                 if (float.IsNaN(distanceRatio) || float.IsInfinity(distanceRatio)) //! make sure the value is not NaN or Infinity
                     distanceRatio = float.Epsilon;
-                print("4. Distance ratio post-check: " + (distanceRatio == float.Epsilon ? "Epsilon" : distanceRatio.ToString("F4")));
                 
                 float inverseDistanceRatio = 1 - distanceRatio;
-                print("5. Inverse distance ratio: " + inverseDistanceRatio.ToString("F4"));
 
                 Vector3 force = forceDirection.normalized * ForceAmount * inverseDistanceRatio;
-                print("6. Resultant force: " + force);
 
                 r.AddForce(force, ForceMode.Impulse);
                /* r.AddTorque(force.magnitude * transform.up, ForceMode.Impulse);*/

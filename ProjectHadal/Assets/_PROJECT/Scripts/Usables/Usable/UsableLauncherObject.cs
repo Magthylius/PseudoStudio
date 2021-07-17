@@ -141,7 +141,8 @@ namespace Hadal.Usables
         public void ChangeChamberReloadTime(float newReloadTime)
         {
             chamberReloadTime = newReloadTime;
-            //!! Jet put your stuff here !!//
+            _chamberReloadTimer.RestartWithDuration(chamberReloadTime);
+            _chamberReloadTimer.CompletedOnStart();
         }
 
         private void UpdateReserveCount(in int count) => ReserveCount = Mathf.Clamp(count, 0, maxReserveCapacity);

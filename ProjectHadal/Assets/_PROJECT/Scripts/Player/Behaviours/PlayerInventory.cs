@@ -9,6 +9,7 @@ using Hadal.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tenshi.UnitySoku;
 
 //Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
@@ -18,12 +19,11 @@ namespace Hadal.Player.Behaviours
         [Header("Utility Lists")]
         [SerializeField] private List<UsableLauncherObject> allUtilities;
         [SerializeField] private List<UsableLauncherObject> equippedUtilities;
-        
+
         [Header("Settings")]
         [SerializeField] private bool enableQuickFlare;
         [SerializeField] private bool enableQuickHarpoon;
-        private UsableLauncherObject flareUtility;
-        private UsableLauncherObject harpoonUtility;
+        private Dictionary<Type, UsableLauncherObject> quickFireUtilities;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
         private int _selectedItem;
@@ -40,9 +40,14 @@ namespace Hadal.Player.Behaviours
         {
             _eInput = new StandardEquipmentInput();
             _uInput = new StandardUseableInput();
+            quickFireUtilities = new Dictionary<Type, UsableLauncherObject>();
             allUtilities = GetComponentsInChildren<UsableLauncherObject>().ToList();
-            flareUtility = allUtilities.Where(u => u is FlareLauncherObject).Single();
-            harpoonUtility = allUtilities.Where(u => u is HarpoonLauncherObject).Single();
+
+            var flareUtility = allUtilities.Where(u => u is FlareLauncherObject).Single();
+            var harpoonUtility = allUtilities.Where(u => u is HarpoonLauncherObject).Single();
+
+            quickFireUtilities.Add(typeof(FlareLauncherObject), flareUtility);
+            quickFireUtilities.Add(typeof(HarpoonLauncherObject), harpoonUtility);
         }
 
         void Start()
@@ -104,7 +109,7 @@ namespace Hadal.Player.Behaviours
             if (_uInput.FireKeyQuickHarpoon && enableQuickHarpoon)
                 FireHarpoonWithShooter(pViewForProj + _projectileCount);
 
-            if (EquippedUsable.Data.isChargable)
+            if (EquippedUsable != null && EquippedUsable.Data.isChargable)
             {
                 if (_uInput.FireKeyUtilityHeld)
                 {
@@ -122,14 +127,14 @@ namespace Hadal.Player.Behaviours
                 FireUtilityWithShooter(pViewForProj + _projectileCount);
             }
         }
-        
+
         //Fire when received Event
         void REFireUtility(EventData eventData)
         {
             object[] data = (object[])eventData.CustomData;
             if ((int)data[0] == _pView.ViewID)
             {
-                if(FindUtilityWithProjID((int)data[1]))
+                if (FindUtilityWithProjID((int)data[1]))
                 {
 
                     //print(FindUtilityWithProjID((int)data[1]).UtilityName);
@@ -145,26 +150,45 @@ namespace Hadal.Player.Behaviours
 
         void FireFlareWithShooter(int projectileID)
         {
-            flareUtility.Activate();
-            _controllerInfo.Shooter.FireUtility(projectileID, flareUtility, -1, -1, flareUtility.IsPowered, false);
+            if (quickFireUtilities.TryGetValue(typeof(FlareLauncherObject), out var flareUtility))
+            {
+                flareUtility.Activate();
+                _controllerInfo.Shooter.FireUtility(projectileID, flareUtility, -1, -1, flareUtility.IsPowered, false);
+                return;
+            }
+
+            LogWarnMissingUsableLauncherInKeyValuePair("Flare");
         }
 
         void FireHarpoonWithShooter(int projectileID)
         {
-            harpoonUtility.Activate();
-            _controllerInfo.Shooter.FireUtility(projectileID, harpoonUtility, -1, -1, harpoonUtility.IsPowered, false);
+            if (quickFireUtilities.TryGetValue(typeof(HarpoonLauncherObject), out var harpoonUtility))
+            {
+                harpoonUtility.Activate();
+                _controllerInfo.Shooter.FireUtility(projectileID, harpoonUtility, -1, -1, harpoonUtility.IsPowered, false);
+                return;
+            }
+
+            LogWarnMissingUsableLauncherInKeyValuePair("Harpoon");
         }
 
         //Fire when pressed locally, send event
         void FireUtilityWithShooter(int projectileID)
         {
+            if (EquippedUsable == null) return;
             _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, EquippedUsable.IsPowered, false);
         }
 
+        private void LogWarnMissingUsableLauncherInKeyValuePair(string utilName)
+            => $"Missing UsableLauncherObject for the {utilName.Bold()} in dictionary keyvaluepair.".Warn();
+
         private void UpdateUsables(in float deltaTime)
         {
+            foreach (KeyValuePair<Type, UsableLauncherObject> pair in quickFireUtilities)
+                pair.Value.DoUpdate(deltaTime);
+
             int i = -1;
-            while(++i < equippedUtilities.Count)
+            while (++i < equippedUtilities.Count)
                 equippedUtilities[i].DoUpdate(deltaTime);
         }
 
@@ -196,7 +220,7 @@ namespace Hadal.Player.Behaviours
         {
             string projTypeID = projID.ToString();
             //print("searching for" + projID);
-            
+
             // return if projectile ID's length is less then 3, I.e., when its not shot by anyone.
             if (projTypeID.Length < 3)
                 return null;
@@ -208,7 +232,7 @@ namespace Hadal.Player.Behaviours
             //print("searching for" + projID);
             for (int i = 0; i < allUtilities.Count; i++)
             {
-                if(allUtilities[i].Data.ProjectileData.ProjTypeInt == projID)
+                if (allUtilities[i].Data.ProjectileData.ProjTypeInt == projID)
                 {
                     DeactivateAllUtilities();
                     allUtilities[i].Activate();
@@ -269,26 +293,26 @@ namespace Hadal.Player.Behaviours
 
         #region Shorthand
         public int GetProjectileCount => _projectileCount;
-        public void IncreaseProjectileCount() 
+        public void IncreaseProjectileCount()
         {
             if (_projectileCount > 20)
                 _projectileCount = 0;
             else
-                _projectileCount++; 
+                _projectileCount++;
         }
         public List<UsableLauncherObject> GetEquippedUsableObjects => equippedUtilities;
         public List<UsableLauncherObject> GetAllUsableObjects => allUtilities;
-        
+
         /// <summary> Checks whether the inventory capacity for equipped utilities is reached.
         /// This is to prevent large inventory sizes. </summary>
         public bool MaxUtilityCapacityReached => equippedUtilities.Count >= allUtilities.Count;
-        
+
         /// <summary> Sets the player's currently equipped item index to the very first slot. </summary>
         public void ResetEquipIndex() => EquipItem(0);
 
         /// <summary> Deactivates all utilities that are available in the list, <see cref="allUtilities"/>. </summary>
         public void DeactivateAllUtilities() => GetAllUsableObjects.ForEach(u => u.Deactivate());
-        
+
         /// <summary> Adds a usable launcher object to the inventory's equipped list. </summary>
         /// <returns>Returns true if equipment is successfully added.</returns>
         public bool AddEquipment(UsableLauncherObject usable)
@@ -324,7 +348,53 @@ namespace Hadal.Player.Behaviours
             }
             return false;
         }
-        private UsableLauncherObject EquippedUsable => equippedUtilities[_selectedItem];
+
+        /// <summary>
+        /// Another variant of the AddEquipmentOfType function. It is the same except it returns the object it is adding if successful, otherwise null.
+        /// </summary>
+        public UsableLauncherObject AddEquipmentOfType<TLauncher>() where TLauncher : UsableLauncherObject
+        {
+            for (int i = 0; i < allUtilities.Count; i++)
+            {
+                if (allUtilities[i] is TLauncher)
+                {
+                    bool status = AddEquipment(allUtilities[i]);
+                    ToggleItemActiveState();
+                    if (status)
+                        return allUtilities[i];
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a usable launcher object from the inventory's equipped list. Will return null if the type of launcher object is not found.
+        /// </summary>
+        public UsableLauncherObject GetEquipmentOfType<TLauncher>() where TLauncher : UsableLauncherObject
+        {
+            int i = -1;
+            while (++i < equippedUtilities.Count)
+            {
+                if (equippedUtilities[i] is TLauncher)
+                    return equippedUtilities[i];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Set the is powered status for any utility from the all utilities list.
+        /// </summary>
+        public void SetEquipmentIsPoweredStatus<TLauncher>(bool isPowered) where TLauncher : UsableLauncherObject
+        {
+            int i = -1;
+            while (++i < allUtilities.Count)
+            {
+                if (allUtilities[i] is TLauncher)
+                    allUtilities[i].IsPowered = isPowered;
+            }
+        }
+
+        private UsableLauncherObject EquippedUsable => equippedUtilities.Count > 0 ? equippedUtilities[_selectedItem] : null;
         private int pViewForProj => _pView.ViewID * 1000;
         #endregion
     }

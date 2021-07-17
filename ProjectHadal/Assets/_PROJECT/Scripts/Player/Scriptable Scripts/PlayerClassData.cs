@@ -37,6 +37,8 @@ namespace Hadal.Player
             playerInv.ResetEquipIndex();
             playerInv.DeactivateAllUtilities();
             playerInv.GetEquippedUsableObjects.Clear();
+            playerInv.SetEquipmentIsPoweredStatus<FlareLauncherObject>(PowerUpFlare);
+            playerInv.SetEquipmentIsPoweredStatus<HarpoonLauncherObject>(PowerUpHarpoon);
 
             if(GiveFlareHarpoon)
             {
@@ -59,24 +61,6 @@ namespace Hadal.Player
                 Type t = obj.GetType();
                 AddUtility(t, playerInv);
             }
-
-            if(PowerUpFlare)
-            {
-                foreach (UsableLauncherObject objLauncher in playerInv.GetEquippedUsableObjects)
-                {
-                    if (objLauncher is FlareLauncherObject)
-                        objLauncher.IsPowered = true;
-                }
-            }
-
-            if(PowerUpHarpoon)
-            {
-                foreach (UsableLauncherObject objLauncher in playerInv.GetEquippedUsableObjects)
-                {
-                    if (objLauncher is HarpoonLauncherObject)
-                        objLauncher.IsPowered = true;
-                }
-            }
         }
 
         private void AddUtility(Type t, PlayerInventory playerInv)
@@ -92,6 +76,16 @@ namespace Hadal.Player
             else if (t.Equals(typeof(SonicGrenadeLauncherObject)))
             {
                 playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>(true);
+            }
+            else if (t.Equals(typeof(HarpoonLauncherObject)))
+            {
+                var harpoon = playerInv.AddEquipmentOfType<HarpoonLauncherObject>();
+                harpoon.IsPowered = PowerUpHarpoon;
+            }
+            else if (t.Equals(typeof(FlareLauncherObject)))
+            {
+                var flare = playerInv.AddEquipmentOfType<FlareLauncherObject>();
+                flare.IsPowered = PowerUpFlare;
             }
         }
     }
