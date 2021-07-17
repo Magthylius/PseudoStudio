@@ -450,6 +450,12 @@ namespace Hadal.Networking
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
+            if (!CurrentRoom.Players.ContainsValue(otherPlayer))
+            {
+                Debug.LogWarning($"{otherPlayer.NickName} already left!");
+                return;
+            }
+                
             Debug.LogWarning($"{otherPlayer.NickName} left");
             
             mainMenuManager.PlayerExitedRoom(otherPlayer);

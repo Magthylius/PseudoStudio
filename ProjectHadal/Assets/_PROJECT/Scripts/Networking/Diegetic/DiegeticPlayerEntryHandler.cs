@@ -65,15 +65,15 @@ namespace Hadal.Networking.Diegetics
         {
             totalPlayerCount--;
             Debug.LogWarning($"exitone tpc: {totalPlayerCount}");
-            if (totalPlayerCount <= 0)
+            if (totalPlayerCount < 0)
             {
-                Debug.LogWarning($"Player count called less than animator count!");
+                Debug.LogWarning($"Player count called less than 0!");
                 totalPlayerCount = 0;
                 return;
             }
             
-            otherPlayerAnimators[totalPlayerCount - 1].SetTrigger(exitTrigger);
-            otherPlayerAnimators[totalPlayerCount - 1].SetBool(boolState, false);
+            otherPlayerAnimators[totalPlayerCount].SetTrigger(exitTrigger);
+            otherPlayerAnimators[totalPlayerCount].SetBool(boolState, false);
         }
 
         [Button("Test entry")]

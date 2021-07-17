@@ -431,7 +431,7 @@ namespace Hadal.Networking.UI.MainMenu
 
         public void PlayerExitedRoom(Player player)
         {
-            Debug.LogWarning($"{player.NickName} left");
+            //Debug.LogWarning($"{player.NickName} left");
             DiegeticHandler.ExitOne();
         }
 
