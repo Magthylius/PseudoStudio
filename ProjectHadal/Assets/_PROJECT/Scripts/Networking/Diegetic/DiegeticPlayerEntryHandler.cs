@@ -13,19 +13,20 @@ namespace Hadal.Networking.Diegetics
         [SerializeField] private string boolState;
 
         //! Used as index, so first player enter -> 0
-        private int currentEnteredCount = -1;
+        private int totalPlayerCount = 0;
 
         /// <summary> Sets entry of already existing players.  </summary>
-        /// <param name="count">Player count EXCLUDING the client!</param>
-        public void UpdateCurrentEntered(int count)
+        /// <param name="playerCount">Player count of the room</param>
+        public void UpdateCurrentEntered(int playerCount)
         {
-            currentEnteredCount = count;
-            for (int i = 0; i < count; i++)
+            totalPlayerCount = playerCount;
+
+            for (int i = 0; i < totalPlayerCount; i++)
             {
                 if (i >= otherPlayerAnimators.Count)
                 {
                     Debug.LogWarning($"Player count called more than animator count!");
-                    currentEnteredCount = otherPlayerAnimators.Count - 1;
+                    totalPlayerCount = otherPlayerAnimators.Count - 1;
                     return;
                 }
                 
@@ -36,7 +37,7 @@ namespace Hadal.Networking.Diegetics
 
         public void ExitAll()
         {
-            currentEnteredCount = 0;
+            totalPlayerCount = 0;
             foreach (var players in otherPlayerAnimators)
             {
                 if (players.GetBool(boolState))
@@ -46,16 +47,32 @@ namespace Hadal.Networking.Diegetics
 
         public void EnterOne()
         {
-            currentEnteredCount++;
-            otherPlayerAnimators[currentEnteredCount].SetTrigger(entryTrigger);
-            otherPlayerAnimators[currentEnteredCount].SetBool(boolState, true);
+            totalPlayerCount++;
+            
+            if (totalPlayerCount >= otherPlayerAnimators.Count)
+            {
+                Debug.LogWarning($"Player count called more than animator count!");
+                totalPlayerCount = otherPlayerAnimators.Count - 1;
+                return;
+            }
+            
+            otherPlayerAnimators[totalPlayerCount - 1].SetTrigger(entryTrigger);
+            otherPlayerAnimators[totalPlayerCount - 1].SetBool(boolState, true);
         }
 
         public void ExitOne()
         {
-            currentEnteredCount--;
-            otherPlayerAnimators[currentEnteredCount].SetTrigger(exitTrigger);
-            otherPlayerAnimators[currentEnteredCount].SetBool(boolState, false);
+            totalPlayerCount--;
+            
+            if (totalPlayerCount <= 0)
+            {
+                Debug.LogWarning($"Player count called less than animator count!");
+                totalPlayerCount = 0;
+                return;
+            }
+            
+            otherPlayerAnimators[totalPlayerCount - 1].SetTrigger(exitTrigger);
+            otherPlayerAnimators[totalPlayerCount - 1].SetBool(boolState, false);
         }
 
         [Button("Test entry")]

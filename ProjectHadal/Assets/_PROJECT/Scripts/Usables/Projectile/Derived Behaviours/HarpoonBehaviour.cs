@@ -93,6 +93,7 @@ namespace Hadal.Usables.Projectiles
                     ISlowable slowable = collision.gameObject.GetComponentInChildren<ISlowable>();
                     if (slowable != null)
                     {
+                        attachedToMonster = true;
                         slowable.AttachProjectile();
                         PPhysics.PhysicsFinished += slowable.DetachProjectile;
                     }
@@ -102,6 +103,10 @@ namespace Hadal.Usables.Projectiles
                 {
                     projectileAsset.SetActive(false);
                 }
+            }
+            else
+            {
+                attachedToMonster = false;
             }
 
 
