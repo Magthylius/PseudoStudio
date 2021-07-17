@@ -24,6 +24,12 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] private float currentSlowPercent;
         [SerializeField, ReadOnly] private int currentSlowStacks;
 
+        [Header("Damage Resistance")]
+        [SerializeField, Range(0f, 1f)] private float lowHealthPercent;
+        [SerializeField, Range(0f, 1f)] private float resistenceOnLowHealth;
+        [SerializeField, ReadOnly] private float _baseDamageResistance = 0f;
+        [SerializeField, ReadOnly] private float _additionalDamageResistance = 0f;
+
         [Header("VFX")]
         [SerializeField, ReadOnly, Tooltip("This will reference the graphics handler's hit positions.")] private Transform[] randomHitPoints;
         [SerializeField] private VFXData vfx_OnDamaged;
@@ -32,7 +38,6 @@ namespace Hadal.AI
 
         AIBrain brain;
         Timer stunTimer;
-        private float _damageResistance = 0f;
         private bool _ignoreSlowDebuffs = false;
         private bool _killedWithCheat = false;
 
@@ -82,16 +87,28 @@ namespace Hadal.AI
         public bool TakeDamage(int damage)
         {
             _killedWithCheat = damage == int.MaxValue;
+            int totalDamage = damage;
 
             if (!PhotonNetwork.IsMasterClient)
-                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_DAMAGE, damage.Abs(), SendOptions.SendReliable);
+                //! Send raw damage to the master client
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_DAMAGE, totalDamage.Abs(), SendOptions.SendReliable);
             else
             {
-                int totalDamage = damage - (damage * _damageResistance).Round();
+                //! Only calculate damage resistance on Master client
+                float totalDamageResistance = (_baseDamageResistance
+                                            + _additionalDamageResistance
+                                            + brain.MachineData.Engagement.EGG_PermanentDamageResistance)
+                                            .Clamp01();
+
+                //! damage calculation will be rounded down in favour of the AI
+                totalDamage = damage - (damage * totalDamageResistance).Floor();
+                
                 currentHealth = (currentHealth - totalDamage).Clamp0();
+                _additionalDamageResistance = GetHealthRatio <= lowHealthPercent ? resistenceOnLowHealth : 0f;
+                
+                brain.RuntimeData.AddDamageCount();
             }
 
-            brain.RuntimeData.AddDamageCount();
             DoOnHitEffects(damage);
 
             return true;
@@ -175,7 +192,7 @@ namespace Hadal.AI
 
         public void UpdateDamageResistance(float resistancePercent)
         {
-            _damageResistance = resistancePercent.Clamp01();
+            _baseDamageResistance = resistancePercent.Clamp01();
         }
 
         public GameObject Obj => transform.parent.gameObject;
