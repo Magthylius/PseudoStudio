@@ -13,15 +13,17 @@ namespace Hadal.Interactables
         [SerializeField] private bool ableToInteract;
         [SerializeField] private InteractionType interactionType;
         [SerializeField] private int interactableID;
-        [SerializeField] private GameObject flareIndicator;
+        
 
         [SerializeField] private float regenerateTimer;
         [SerializeField] private float regenerateTimerMax;
         NetworkEventManager neManager = NetworkEventManager.Instance;
 
         // emissive change properties
+        [SerializeField] private GameObject flareIndicator;
         [SerializeField] private MeshRenderer submarineRenderer;
         private MaterialPropertyBlock materialProp;
+        private Color defaultColor;
 
         private void Start()
         {
@@ -33,6 +35,7 @@ namespace Hadal.Interactables
             //! initialise property block (needs to use a renderer, since it has the functions to set up)
             materialProp = new MaterialPropertyBlock();
             if (materialProp != null) submarineRenderer.GetPropertyBlock(materialProp);
+            defaultColor = materialProp.GetColor("_EmissiveColor");
         }
 
         private void Update()
@@ -103,7 +106,7 @@ namespace Hadal.Interactables
         {
             ableToInteract = true;
             flareIndicator.SetActive(true);
-            materialProp.SetFloat("_EmissionIntensity", 20);
+            materialProp.SetColor("_EmissionColor", defaultColor);
             //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
             submarineRenderer.SetPropertyBlock(materialProp);
         }
@@ -111,7 +114,7 @@ namespace Hadal.Interactables
         {
             ableToInteract = false;
             flareIndicator.SetActive(false);
-            materialProp.SetFloat("_EmissionIntensity", -5);
+            materialProp.SetColor("_EmissionColor", Color.black);
             //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
             submarineRenderer.SetPropertyBlock(materialProp);
         }
