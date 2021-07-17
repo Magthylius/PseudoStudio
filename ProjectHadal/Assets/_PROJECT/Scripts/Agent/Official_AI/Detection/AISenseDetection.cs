@@ -65,7 +65,7 @@
 //         {
 //             if (_detectedPlayers.Count == 1)
 //                 return _detectedPlayers.FirstOrDefault();
-            
+
 //             return null;
 //         }
 

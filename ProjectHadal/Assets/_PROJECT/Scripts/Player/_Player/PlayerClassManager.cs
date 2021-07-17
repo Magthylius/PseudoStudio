@@ -18,6 +18,13 @@ namespace Hadal.Player
         
         [Space(10f)]
         [SerializeField, ReadOnly] private PlayerClassData currentPlayerClass;
+        [SerializeField] private PlayerClassType defaultType;
+
+        private void OnValidate()
+        {
+            if (defaultType == PlayerClassType.Invalid)
+                Debug.LogAssertion($"Default cannot be invalid!");
+        }
 
         private void Awake()
         {
@@ -29,7 +36,10 @@ namespace Hadal.Player
 
         private void Start()
         {
-            MainMenuManager.Instance.ClassSelector.ClassChangedEvent += UpdateCurrentPlayerClass;
+            if (NetworkEventManager.Instance.IsInMainMenu)
+            {
+                MainMenuManager.Instance.ClassSelector.ClassChangedEvent += UpdateCurrentPlayerClass;
+            }
         }
 
         void OnSceneLoad(Scene scene, LoadSceneMode mode)
@@ -43,6 +53,12 @@ namespace Hadal.Player
         [ContextMenu("Apply Class")]
         public void ApplyClass()
         {
+            if (currentPlayerClass == null)
+            {
+                UpdateCurrentPlayerClass(defaultType);
+                Debug.LogWarning($"Current player class null, defaulted to {defaultType}");
+            }
+            
             currentPlayerClass.SetUpUtility();
         }
 
