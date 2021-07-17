@@ -423,7 +423,7 @@ namespace Hadal.Networking
             if (roomState == RoomState.WAITING)
             {
                 mainMenuManager.StartRoomPhase(PhotonNetwork.CurrentRoom.Name);
-
+                
                 Player[] players = PhotonNetwork.PlayerList;
                 mainMenuManager.UpdatePlayerList(players);
 
