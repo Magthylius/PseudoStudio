@@ -559,6 +559,17 @@ namespace Hadal.AI
             return true;
         }
 
+        public void SpawnExplosivePointAt(Vector3 position)
+        {
+            ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
+            expSettings.Position = position;
+            expSettings.Radius = SenseDetection.GetCurrentSenseDetectionRadius();
+            expSettings.Force = -10.0f;
+            expSettings.IgnoreLayers = MachineData.Engagement.JG_KnockbackIgnoreMasks;
+
+            ExplosivePoint.Create(expSettings);
+        }
+
         private void HandleEggDestroyedEvent(bool isDestroyed)
         {
             if (isDestroyed)
