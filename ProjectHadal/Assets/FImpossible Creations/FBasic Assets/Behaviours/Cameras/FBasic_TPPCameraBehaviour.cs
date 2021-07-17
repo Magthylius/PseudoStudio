@@ -7,6 +7,8 @@ namespace FIMSpace.Basics
     /// </summary>
     public class FBasic_TPPCameraBehaviour : MonoBehaviour
     {
+        public Vector3 DebugVelocity;
+
         [Header("Transform to be followed by camera")]
         public Transform ToFollow;
 
@@ -19,11 +21,13 @@ namespace FIMSpace.Basics
         /// <summary> Variables to controll distance of camera to following object </summary>
         [Header("Clamp values for zoom of camera")]
         public Vector2 DistanceRanges = new Vector2(5f, 10f);
+
         private float targetDistance;
         private float animatedDistance;
 
         /// <summary> Variables to controll rotation of camera around followed object </summary>
         public Vector2 RotationRanges = new Vector2(-60f, 60f);
+
         private Vector2 targetSphericRotation = new Vector2(0f, 0f);
         private Vector2 animatedSphericRotation = new Vector2(0f, 0f);
 
@@ -37,12 +41,12 @@ namespace FIMSpace.Basics
         public float RotationSpeed = 1f;
 
         [Header("If you want camera to follow target with some smoothness")]
-        [Range(0f,1f)]
+        [Range(0f, 1f)]
         // V1.1
         public float HardFollowValue = 1f;
 
         [Header("If you want to hold cursor (cursor switch on TAB)")]
-        public bool LockCursor = true;
+        public bool LockCursor = false;
 
         /// <summary> Just to make turning off lock cursor less annoying </summary>
         private bool rotateCamera = true;
@@ -61,10 +65,12 @@ namespace FIMSpace.Basics
 
         public EFUpdateClock UpdateClock = EFUpdateClock.Update;
 
+        Vector3 movVelo = Vector3.zero;
+
         /// <summary>
         /// Setting some basic variables for initialization
         /// </summary>
-        void Start()
+        private void Start()
         {
             targetDistance = (DistanceRanges.x + DistanceRanges.y) / 2;
             animatedDistance = DistanceRanges.y;
@@ -72,61 +78,75 @@ namespace FIMSpace.Basics
             targetSphericRotation = new Vector2(0f, 23f);
             animatedSphericRotation = targetSphericRotation;
 
-            if ( LockCursor )
-            {
-                HelperSwitchCursor();
-            }
+            //if ( LockCursor )
+            //{
+            //    HelperSwitchCursor();
+            //}
         }
 
-        void UpdateMethods()
+        private Vector3 prePos = Vector3.zero;
+
+        private void UpdateMethods()
         {
             InputCalculations();
             ZoomCalculations();
             FollowCalculations();
             RaycastCalculations();
             SwitchCalculations();
+
+            DebugVelocity = transform.position - prePos;
+            prePos = transform.position;
         }
 
         /// <summary>
         /// Execute methods responsible for component's behaviour
         /// </summary>
-        void LateUpdate()
+        private void LateUpdate()
         {
             if (UpdateClock != EFUpdateClock.LateUpdate) return;
             UpdateMethods();
         }
 
-        void Update()
+        private void Update()
         {
+            if (Input.GetMouseButtonDown(1))
+                if (Cursor.lockState != CursorLockMode.Locked) HelperSwitchCursor();
+
+            if (Input.GetKey(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))
+                if (Cursor.lockState == CursorLockMode.Locked) HelperSwitchCursor();
+
             if (UpdateClock != EFUpdateClock.Update) return;
             UpdateMethods();
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
             if (UpdateClock != EFUpdateClock.FixedUpdate) return;
             UpdateMethods();
         }
 
-        /// <summary> 
-        /// Calculations for input mouse controll 
+        /// <summary>
+        /// Calculations for input mouse controll
         /// </summary>
-        void InputCalculations()
+        private void InputCalculations()
         {
             targetDistance -= (Input.GetAxis("Mouse ScrollWheel") * 5f);
 
             if (!rotateCamera) return;
 
-            targetSphericRotation.x += Input.GetAxis("Mouse X") * RotationSensitivity;
-            targetSphericRotation.y -= Input.GetAxis("Mouse Y") * RotationSensitivity;
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                targetSphericRotation.x += Input.GetAxis("Mouse X") * RotationSensitivity;
+                targetSphericRotation.y -= Input.GetAxis("Mouse Y") * RotationSensitivity;
+            }
         }
 
-        /// <summary> 
-        /// Calculations for zoom / distance value of camera 
+        /// <summary>
+        /// Calculations for zoom / distance value of camera
         /// </summary>
         private void ZoomCalculations()
         {
-            if ( !sightObstacleHit.transform ) targetDistance = Mathf.Clamp(targetDistance, DistanceRanges.x, DistanceRanges.y);
+            if (!sightObstacleHit.transform) targetDistance = Mathf.Clamp(targetDistance, DistanceRanges.x, DistanceRanges.y);
             animatedDistance = Mathf.Lerp(animatedDistance, targetDistance, Time.deltaTime * 8f);
         }
 
@@ -144,17 +164,16 @@ namespace FIMSpace.Basics
 
             Vector3 targetPosition = ToFollow.transform.position + FollowingOffset;
 
-            if ( HardFollowValue < 1f)
+            if (HardFollowValue < 1f)
             {
-                float lerpValue = Mathf.Lerp(0.5f, 40f, HardFollowValue);
-                targetPosition = Vector3.Lerp(this.targetPosition, targetPosition, Time.deltaTime * lerpValue);
+                targetPosition = Vector3.SmoothDamp(this.targetPosition, targetPosition, ref movVelo, Mathf.Lerp(.5f, 0f, HardFollowValue), Mathf.Infinity, Time.deltaTime);
             }
 
             this.targetPosition = targetPosition;
         }
 
-        /// <summary> 
-        /// Basic collision check to prevent camera from going through objects 
+        /// <summary>
+        /// Basic collision check to prevent camera from going through objects
         /// </summary>
         private void RaycastCalculations()
         {
@@ -163,7 +182,7 @@ namespace FIMSpace.Basics
             Ray directionRay = new Ray(followPoint, cameraDir * -Vector3.forward);
 
             // If there is something in sight ray way
-            if ( Physics.Raycast(directionRay, out sightObstacleHit, targetDistance + CollisionOffset, SightLayerMask, QueryTriggerInteraction.Ignore) )
+            if (Physics.Raycast(directionRay, out sightObstacleHit, targetDistance + CollisionOffset, SightLayerMask, QueryTriggerInteraction.Ignore))
             {
                 transform.position = sightObstacleHit.point - directionRay.direction * CollisionOffset;
             }
@@ -174,12 +193,12 @@ namespace FIMSpace.Basics
             }
         }
 
-        /// <summary> 
-        /// Calculations for switching cursor state etc. 
+        /// <summary>
+        /// Calculations for switching cursor state etc.
         /// </summary>
         private void SwitchCalculations()
         {
-            if ( LockCursor )
+            if (LockCursor)
             {
                 if (Input.GetKeyDown(KeyCode.Tab))
                 {
@@ -225,6 +244,6 @@ namespace FIMSpace.Basics
             }
         }
 
-        #endregion
+        #endregion Helpers
     }
 }

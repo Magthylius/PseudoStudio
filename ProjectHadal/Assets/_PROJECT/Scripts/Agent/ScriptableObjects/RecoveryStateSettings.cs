@@ -13,7 +13,6 @@ namespace Hadal.AI.States
         [Header("Recovery Settings")] 
         [Min(0f)] public float MinimumRecoveryTime;
         [Min(0)] public int G_DisruptionDamageCount = 2;
-        [Min(0)] public int G_JudgementLapseCountLimit = 2;
         
         [Header("Escape Settings")]
         [Min(0f)] public float MaxEscapeTime = 100f;

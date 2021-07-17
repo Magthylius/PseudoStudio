@@ -33,14 +33,16 @@ namespace Hadal
         {
             //print("Detonating");
             List<Rigidbody> rigidbodies = Physics.OverlapSphere(GetPosition, RadiusOfEffect, ~IgnoreLayerMasks)
-                                        .Where(x => x.GetComponent<Rigidbody>() != null)
                                         .Select(x => x.GetComponent<Rigidbody>())
                                         .ToList();
+            rigidbodies.RemoveAll(r => r == null);
+
             rigidbodies.ForEach(r =>
             {
-                Vector3 forceDistance = GetPosition - r.transform.position;
-                float forceDistanceRatio = 1 - (forceDistance.magnitude / RadiusOfEffect);
-                Vector3 force = (forceDistance).normalized * ForceAmount * forceDistanceRatio;
+                Vector3 forceDistance = r.transform.position - GetPosition;
+                float magnitude = Mathf.Clamp(forceDistance.magnitude, 0f, RadiusOfEffect);
+                float forceDistanceRatio = 1 - (magnitude / RadiusOfEffect);
+                Vector3 force = forceDistance.normalized * ForceAmount * forceDistanceRatio;
                 r.AddForce(force, ForceMode.Impulse);
                /* r.AddTorque(force.magnitude * transform.up, ForceMode.Impulse);*/
             });
@@ -90,7 +92,7 @@ namespace Hadal
         {
             public Vector3 Position = Vector3.zero;
             public float Radius = 30f;
-            public float Force = -50f;
+            public float Force = 50f;
             public bool DetonateOnRemote = false;
             public LayerMask IgnoreLayers;
         }

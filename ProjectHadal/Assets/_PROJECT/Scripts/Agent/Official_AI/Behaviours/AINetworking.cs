@@ -75,7 +75,6 @@ namespace Hadal.AI
             {
                 brain.Net_SetCurrentTarget(targetPlayer);
                 brain.TryCarryTargetPlayer();
-                brain.SpawnExplosivePointAt(targetPlayer.GetTarget.position);
             }
         }
     

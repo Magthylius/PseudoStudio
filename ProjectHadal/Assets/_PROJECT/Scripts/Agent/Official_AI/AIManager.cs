@@ -1,5 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hadal.Networking;
+using Kit;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 
@@ -13,47 +16,24 @@ namespace Hadal.AI
         [SerializeField] private List<Transform> spawnPositions;
         [SerializeField] string nameOfScene;
 
-        private const string AIPackagePrefabPath = "AI Data/_OfficialAI/@AI Package";
-
         void Awake()
         {
             if (Instance != null) Destroy(this);
             else Instance = this;
 
-            if (PhotonNetwork.IsConnected && !PhotonNetwork.OfflineMode)
-            {
-                NetworkSpawnInCorrectScene();
-            }
-            else
-            {
-                LocalSpawnInCorrectScene();
-            }
+            SpawnInCorrectScene();
         }
 
-        private string targetSceneName = "Post Vertical Slice";
-
-        void LocalSpawnInCorrectScene()
+        void SpawnInCorrectScene()
         {
             Scene currentScene = SceneManager.GetActiveScene();
             string sceneName = currentScene.name;
-            if (sceneName == targetSceneName)
-            {
-                Transform spawnPoints = spawnPositions[(int)Random.Range(0, spawnPositions.Count)];
-                GameObject prefab = (GameObject)Resources.Load(AIPackagePrefabPath);
-                Instantiate(prefab, spawnPoints.position, spawnPoints.rotation);
-            }
-        }
-
-        void NetworkSpawnInCorrectScene()
-        {
-            Scene currentScene = SceneManager.GetActiveScene();
-            string sceneName = currentScene.name;
-            if (sceneName == targetSceneName)
+            if (sceneName == "Post Vertical Slice")
             {
                 if (PhotonNetwork.IsMasterClient)
                 {
                     Transform spawnPoints = spawnPositions[(int)Random.Range(0, spawnPositions.Count)];
-                    PhotonNetwork.Instantiate(AIPackagePrefabPath, spawnPoints.position, spawnPoints.rotation);
+                    PhotonNetwork.Instantiate("AI Data/_OfficialAI/@AI Package", spawnPoints.position, spawnPoints.rotation);
                 }
             }
         }

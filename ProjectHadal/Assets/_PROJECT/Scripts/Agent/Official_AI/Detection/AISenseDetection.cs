@@ -69,11 +69,6 @@ namespace Hadal.AI
             return null;
         }
 
-        public float GetCurrentSenseDetectionRadius()
-        {
-            return _currentSphereDetectionRadius;
-        }
-
         private void UpdateDetectionSettings()
         {
             switch (_detectionMode)
