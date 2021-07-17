@@ -14,11 +14,13 @@ namespace Hadal.AI.States
     public class RecoveryState : AIStateBase
     {
         RecoveryStateSettings settings;
+        private int judgementLapseCount;
 
         public RecoveryState(AIBrain brain)
         {
             Initialize(brain);
             settings = MachineData.Recovery;
+            judgementLapseCount = 0;
         }
 
         public override void OnStateStart()
@@ -55,6 +57,20 @@ namespace Hadal.AI.States
                     {
                         //! if did not detect any target players yet, go to anticipation state instead
                         RuntimeData.SetBrainState(BrainState.Anticipation);
+                        judgementLapseCount = 0;
+                    }
+                    else
+                    {
+                        if (RuntimeData.GetPreviousBrainState == BrainState.Judgement)
+                            judgementLapseCount++;
+                        else
+                            judgementLapseCount = 0;
+
+                        if (judgementLapseCount > settings.G_JudgementLapseCountLimit)
+                        {
+                            RuntimeData.SetBrainState(BrainState.Cooldown);
+                            judgementLapseCount = 0;
+                        }
                     }
                 }
             }
