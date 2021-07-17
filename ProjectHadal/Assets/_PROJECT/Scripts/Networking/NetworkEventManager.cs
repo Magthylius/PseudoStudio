@@ -463,6 +463,8 @@ namespace Hadal.Networking
             {
                 mainMenuManager.ResetMainMenu();
             }
+            
+            playerObjects.Clear();
         }
         #endregion
 
