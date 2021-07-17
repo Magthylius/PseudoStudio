@@ -423,7 +423,7 @@ namespace Hadal.Networking
             if (roomState == RoomState.WAITING)
             {
                 mainMenuManager.StartRoomPhase(PhotonNetwork.CurrentRoom.Name);
-
+                
                 Player[] players = PhotonNetwork.PlayerList;
                 mainMenuManager.UpdatePlayerList(players);
 
@@ -441,13 +441,25 @@ namespace Hadal.Networking
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            mainMenuManager.AddIntoPlayerList(newPlayer, GetPlayerColor(PlayerList.Length - 1));
+            Debug.LogWarning($"{newPlayer.NickName} joined");
+            
+            mainMenuManager.AddPlayerList(newPlayer, GetPlayerColor(PlayerList.Length - 1));
+            mainMenuManager.PlayerEnteredRoom(newPlayer);
             PlayerEnteredEvent?.Invoke(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-           PlayerLeftEvent?.Invoke(otherPlayer);
+            if (!CurrentRoom.Players.ContainsValue(otherPlayer))
+            {
+                Debug.LogWarning($"{otherPlayer.NickName} already left!");
+                return;
+            }
+                
+            Debug.LogWarning($"{otherPlayer.NickName} left");
+            
+            mainMenuManager.PlayerExitedRoom(otherPlayer);
+            PlayerLeftEvent?.Invoke(otherPlayer);
         }
 
         public override void OnLeftRoom()
@@ -462,6 +474,8 @@ namespace Hadal.Networking
             {
                 mainMenuManager.ResetMainMenu();
             }
+            
+            playerObjects.Clear();
         }
         #endregion
 

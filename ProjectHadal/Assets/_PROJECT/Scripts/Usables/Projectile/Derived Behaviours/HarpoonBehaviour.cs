@@ -93,6 +93,7 @@ namespace Hadal.Usables.Projectiles
                     ISlowable slowable = collision.gameObject.GetComponentInChildren<ISlowable>();
                     if (slowable != null)
                     {
+                        attachedToMonster = true;
                         slowable.AttachProjectile();
                         PPhysics.PhysicsFinished += slowable.DetachProjectile;
                     }
@@ -102,6 +103,10 @@ namespace Hadal.Usables.Projectiles
                 {
                     projectileAsset.SetActive(false);
                 }
+            }
+            else
+            {
+                attachedToMonster = false;
             }
 
 
@@ -113,11 +118,6 @@ namespace Hadal.Usables.Projectiles
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
-
-                    if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
-                    {
-                        projPhysics.SwapModes();
-                    }
 
                     Vector3 collisionSpot = gameObject.transform.position;
 
@@ -169,6 +169,11 @@ namespace Hadal.Usables.Projectiles
 
         protected override void ImpactBehaviour()
         {
+            if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
+            {
+                projPhysics.SwapModes();
+            }
+
             Rigidbody.isKinematic = true;
             projectileAsset.SetActive(true);
             particleEffect.SetActive(true);
