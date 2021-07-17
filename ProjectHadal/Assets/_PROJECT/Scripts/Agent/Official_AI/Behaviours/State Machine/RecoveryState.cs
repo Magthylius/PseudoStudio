@@ -14,11 +14,13 @@ namespace Hadal.AI.States
     public class RecoveryState : AIStateBase
     {
         RecoveryStateSettings settings;
+        private int judgementLapseCount;
 
         public RecoveryState(AIBrain brain)
         {
             Initialize(brain);
             settings = MachineData.Recovery;
+            judgementLapseCount = 0;
         }
 
         public override void OnStateStart()
@@ -27,6 +29,7 @@ namespace Hadal.AI.States
 
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
             RuntimeData.ResetCumulativeDamageCount();
+            HealthManager.SetIgnoreSlowDebuffs(true);
             SetNewTargetCavern();
             AllowStateTick = true;
         }
@@ -36,7 +39,7 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             if(!Brain.IsStunned)
-                RuntimeData.TickRecoveryTicker(Time.deltaTime);
+                RuntimeData.TickRecoveryTicker(Brain.DeltaTime);
 
             //! When hit too much or time too long, force back into Judgement State
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.IsCumulativeDamageCountReached)
@@ -55,6 +58,20 @@ namespace Hadal.AI.States
                     {
                         //! if did not detect any target players yet, go to anticipation state instead
                         RuntimeData.SetBrainState(BrainState.Anticipation);
+                        judgementLapseCount = 0;
+                    }
+                    else
+                    {
+                        if (RuntimeData.GetPreviousBrainState == BrainState.Judgement)
+                            judgementLapseCount++;
+                        else
+                            judgementLapseCount = 0;
+
+                        if (judgementLapseCount > settings.G_JudgementLapseCountLimit)
+                        {
+                            RuntimeData.SetBrainState(BrainState.Cooldown);
+                            judgementLapseCount = 0;
+                        }
                     }
                 }
             }
@@ -69,6 +86,7 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             RuntimeData.ResetRecoveryTicker();
+            HealthManager.SetIgnoreSlowDebuffs(false);
             AllowStateTick = false;
             Debug.LogWarning("StateTickFalse:" + AllowStateTick);
         }

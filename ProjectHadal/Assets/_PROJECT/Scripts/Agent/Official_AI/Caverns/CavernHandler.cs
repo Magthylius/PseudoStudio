@@ -1,11 +1,10 @@
-using System;
 using Hadal.Player;
-using System.Collections;
 using System.Collections.Generic;
-using Tenshi.UnitySoku;
 using UnityEngine;
 using NaughtyAttributes;
 using System.Linq;
+using Tenshi;
+using ReadOnly = Tenshi.ReadOnlyAttribute;
 
 //! C: Jon
 namespace Hadal.AI.Caverns
@@ -18,18 +17,18 @@ namespace Hadal.AI.Caverns
         CavernManager manager;
         //! used to communicate with manager if it needs a first frame recheck
         private bool cavernInitialized = false;
-        
+
         [Header("Data")]
         [SerializeField, ReadOnly] int cavernHeuristic = -1;
         [ReadOnly] public List<TunnelBehaviour> connectedTunnels;
         [ReadOnly] public List<CavernHandler> connectedCaverns;
         [SerializeField, ReadOnly] private int playerCountInCavern;
 
-        [Header("Settings")] 
+        [Header("Settings")]
         public CavernColliderBehaviour cavernCollider;
         public CavernTag cavernTag;
         public bool forceFirstFrameRecheck = false;
-		[SerializeField] private bool autoAssignNavPoints;
+        [SerializeField] private bool autoAssignNavPoints;
         [SerializeField] LayerMask playerMask;
         [SerializeField] LayerMask aiMask;
         [SerializeField] List<AmbushPointBehaviour> ambushPoints;
@@ -39,7 +38,7 @@ namespace Hadal.AI.Caverns
         public event CavernHandlerPlayerReturn PlayerLeftCavernEvent;
         public event CavernHandlerAIReturn AIEnteredCavernEvent;
         public event CavernHandlerAIReturn AILeftCavernEvent;
-        
+
         //! Data
         List<PlayerController> playersInCavern = new List<PlayerController>();
 
@@ -59,7 +58,7 @@ namespace Hadal.AI.Caverns
         {
             if (forceFirstFrameRecheck) cavernCollider.StartColliderRecheck(this);
             else cavernInitialized = true;
-            
+
             PlayerEnteredCavernEvent += manager.OnPlayerEnterCavern;
             PlayerLeftCavernEvent += manager.OnPlayerLeftCavern;
             AIEnteredCavernEvent += manager.OnAIEnterCavern;
@@ -97,9 +96,9 @@ namespace Hadal.AI.Caverns
             }
             if (other.gameObject.CompareTag("NavigationPoint"))
             {
-				if (!autoAssignNavPoints)
-					return;
-                
+                if (!autoAssignNavPoints)
+                    return;
+
                 if (nPoint.CavernTag != CavernTag.Custom_Point)
                     nPoint.SetCavernTag(cavernTag);
             }
@@ -115,7 +114,7 @@ namespace Hadal.AI.Caverns
                 PlayerController player = other.GetComponent<PlayerController>();
                 playersInCavern.Remove(player);
                 CavernPlayerData data = new CavernPlayerData(this, player);
-                
+
                 playerCountInCavern = GetPlayerCount;
                 PlayerLeftCavernEvent.Invoke(data);
             }
@@ -130,7 +129,7 @@ namespace Hadal.AI.Caverns
         void UpdateConnectedCaverns()
         {
             connectedCaverns = new List<CavernHandler>();
-            foreach(TunnelBehaviour tunnelBehav in connectedTunnels)
+            foreach (TunnelBehaviour tunnelBehav in connectedTunnels)
             {
                 foreach (CavernTunnel tunnel in tunnelBehav.ConnectedTunnels)
                 {
@@ -139,12 +138,12 @@ namespace Hadal.AI.Caverns
                 }
             }
         }
-        
+
         public bool ConnectedCavernContains(CavernHandler targetCavern)
         {
             return connectedCaverns.Contains(targetCavern);
         }
-        
+
         /// <summary>
         /// Gets both end of NavPoint of the tunnel connecting this cavern to targetCavern.
         /// </summary>
@@ -153,23 +152,16 @@ namespace Hadal.AI.Caverns
         public NavPoint[] GetEntryNavPoints(CavernHandler targetCavern)
         {
             NavPoint[] navPoints = new NavPoint[2];
+            List<TunnelBehaviour> eligibleTunnels = connectedTunnels.Where(t => t.ContainsCaverns(this, targetCavern)).ToList();
 
-            foreach (var cavernTunnel in connectedTunnels)
-            {
-                if (cavernTunnel.ContainsCaverns(this, targetCavern))
-                {
-                    navPoints[0] = cavernTunnel.GetCavernTunnel(this).EntryNavPoint;
-                    navPoints[1] = cavernTunnel.GetCavernTunnel(targetCavern).EntryNavPoint;
+            TunnelBehaviour chosenTunnel = eligibleTunnels.RandomElement();
 
-                    if (navPoints[0] != null && navPoints[1] != null)
-                        return navPoints;
-                    
-                    Debug.LogError("Tunnel NavPoints is null!");
-                    break;
-                }
-                
-            }
+            navPoints[0] = chosenTunnel.GetCavernTunnel(this).EntryNavPoint;
+            navPoints[1] = chosenTunnel.GetCavernTunnel(targetCavern).EntryNavPoint;
+            if (navPoints[0] != null && navPoints[1] != null)
+                return navPoints;
 
+            Debug.LogError("Tunnel NavPoints is null!");
             return null;
         }
 
@@ -177,7 +169,7 @@ namespace Hadal.AI.Caverns
         {
             if (playersInCavern.Count == 1)
                 return playersInCavern.Where(p => p != null).Single();
-            
+
             return null;
         }
 
@@ -185,7 +177,7 @@ namespace Hadal.AI.Caverns
         {
             if (playersInCavern.Count == 0)
                 return null;
-            
+
             return playersInCavern.OrderBy(p => (p.GetTarget.position - thisTrans.position).sqrMagnitude).FirstOrDefault();
         }
 
@@ -211,7 +203,7 @@ namespace Hadal.AI.Caverns
         public int GetPlayerCount => playersInCavern.Count;
         public List<PlayerController> GetPlayersInCavern => playersInCavern;
         public List<CavernHandler> ConnectedCaverns => connectedCaverns;
-        
+
         //! Heuristics
         public void SetHeuristic(int newHeuristic) => cavernHeuristic = newHeuristic;
         public void ResetHeuristic() => cavernHeuristic = -1;

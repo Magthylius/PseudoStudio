@@ -65,8 +65,13 @@ namespace Hadal.AI
         {
             if (_detectedPlayers.Count == 1)
                 return _detectedPlayers.FirstOrDefault();
-            
+
             return null;
+        }
+
+        public float GetCurrentSenseDetectionRadius()
+        {
+            return _currentSphereDetectionRadius;
         }
 
         private void UpdateDetectionSettings()

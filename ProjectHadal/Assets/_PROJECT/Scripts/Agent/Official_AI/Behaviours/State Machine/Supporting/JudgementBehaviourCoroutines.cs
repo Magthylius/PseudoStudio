@@ -124,8 +124,6 @@ namespace Hadal.AI
                 //! Start delay timer if close enough (in advance) to player & is waiting to be allowed to carry
                 if (HaltBeforeCarryThresholdReached && !canCarry)
                 {
-
-
                     canCarry = true;
                     SetCarryDelayTimer(carryDelayTime);
                     NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
@@ -154,6 +152,8 @@ namespace Hadal.AI
                     }
 
                     bool success = Brain.TryCarryTargetPlayer();
+                    Brain.SpawnExplosivePointAt(Brain.CarriedPlayer.GetTarget.position);
+
                     TryDebug(success ? "Succeeded in carrying target player." : "Failed to carry target player, stopping behaviour.");
                     if (!success) waitForJtimer = true;
 
@@ -451,7 +451,7 @@ namespace Hadal.AI
 
             //! Randomise judgement persist chance
             BrainState brainState;
-			if (judgementPersistCount < JState.settings.JudgementPersistCountLimitPerEntry)
+			if (judgementPersistCount < Settings.JudgementPersistCountLimitPerEntry)
 				brainState = GetRandomBrainStateAfterStun();
 			else
 				brainState = BrainState.Recovery;

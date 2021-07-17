@@ -10,8 +10,7 @@ namespace Hadal.AI.Graphics
     public class AIEmissiveColor : MonoBehaviour
     {
         [Header("Settings")]
-        [SerializeField] private Material leviathanBody;
-        [SerializeField] private MeshRenderer leviathanRenderer;
+        [SerializeField] private Renderer leviathanRenderer;
 
         [SerializeField] private float transitionSpeed;
         private float percent;

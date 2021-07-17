@@ -7,7 +7,6 @@ using Hadal.Utility;
 using Button = NaughtyAttributes.ButtonAttribute;
 using Photon.Pun;
 using System.Linq;
-using Hadal.AI.Graphics;
 
 namespace Hadal.AI
 {
@@ -16,7 +15,7 @@ namespace Hadal.AI
         [Header("Health")]
         [SerializeField] int maxHealth;
         [SerializeField, ReadOnly] int currentHealth;
-        
+
         [Header("Slow Stacking Status")]
         [SerializeField, Range(0f, 1f)] private float slowPercentPerStack;
         [SerializeField, Min(0)] private int maxSlowStacks;
@@ -33,6 +32,8 @@ namespace Hadal.AI
 
         AIBrain brain;
         Timer stunTimer;
+        private float _damageResistance = 0f;
+        private bool _ignoreSlowDebuffs = false;
         private bool _killedWithCheat = false;
 
         private void OnValidate()
@@ -46,6 +47,7 @@ namespace Hadal.AI
             if (maxHealth <= 0) maxHealth = 1; //! max health must be at least 1 if we do not want the AI to die immediately on spawn
             ResetHealth();
             ResetAllSlowStacks();
+            UpdateDamageResistance(0f);
 
             //! Stun Timer
             stunTimer = brain.Create_A_Timer()
@@ -84,8 +86,11 @@ namespace Hadal.AI
             if (!PhotonNetwork.IsMasterClient)
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_RECEIVE_DAMAGE, damage.Abs(), SendOptions.SendReliable);
             else
-                currentHealth = (currentHealth - damage).Clamp0();
-            
+            {
+                int totalDamage = damage - (damage * _damageResistance).Round();
+                currentHealth = (currentHealth - totalDamage).Clamp0();
+            }
+
             brain.RuntimeData.AddDamageCount();
             DoOnHitEffects(damage);
 
@@ -99,9 +104,9 @@ namespace Hadal.AI
             string extraMsg = string.Empty;
             if (_killedWithCheat)
                 extraMsg = " ..., you sure you did not cheat???".Bold();
-            
+
             $"Leviathan is unalive. Congrats!!!{extraMsg}".Msg();
-            
+
             // AIGraphicsHandler gHandler = brain.GraphicsHandler;
             // if (gHandler == null) gHandler = FindObjectOfType<AIGraphicsHandler>();
             // gHandler.gameObject.SetActive(false);
@@ -111,7 +116,7 @@ namespace Hadal.AI
             brain.StartCoroutine(Bleed(0.5f));
             if (PhotonNetwork.IsMasterClient)
                 brain.NavigationHandler.DisableWithLerp(2f, Sink);
-            
+
             void Sink()
             {
                 checkHitWallOnDeath = true;
@@ -129,7 +134,7 @@ namespace Hadal.AI
                 int count = -1;
                 while (++count < vfxCountPerDeath)
                     PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
-                
+
                 //! Continuous bleed over time (until game exits to main menu)
                 WaitForSeconds waitTime = new WaitForSeconds(bleedDelay > 0f ? bleedDelay : 0.5f);
                 while (true)
@@ -154,7 +159,25 @@ namespace Hadal.AI
 
             return true;
         };
-        
+
+        public void SetIgnoreSlowDebuffs(bool shouldIgnore)
+        {
+            if (shouldIgnore)
+            {
+                _ignoreSlowDebuffs = true;
+                brain.NavigationHandler.SetSlowMultiplier(0f);
+                return;
+            }
+
+            _ignoreSlowDebuffs = false;
+            brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
+        }
+
+        public void UpdateDamageResistance(float resistancePercent)
+        {
+            _damageResistance = resistancePercent.Clamp01();
+        }
+
         public GameObject Obj => transform.parent.gameObject;
         public bool IsUnalive => currentHealth <= 0;
         public float GetHealthRatio => currentHealth / maxHealth.AsFloat();
@@ -179,7 +202,7 @@ namespace Hadal.AI
         {
             if (!brain || brain.IsStunned)
                 return false;
-            
+
             stunTimer.RestartWithDuration(duration);
             SendStunEvent();
             return brain.TryToStun(duration);
@@ -193,20 +216,20 @@ namespace Hadal.AI
         {
             if (!brain || brain.IsStunned)
                 return;
-            
+
             stunTimer.RestartWithDuration(duration);
             brain.TryToStun(duration);
         }
-        
+
         /// <summary> Stops the stun effect and returns control to the AI. </summary>
         private void CancelStun()
         {
             stunTimer.Pause();
             brain.StopStun();
         }
-		
+
         /// <summary> Meant for registering a projectile that can stack for a slow effect on the AI. </summary>
-		public void AttachProjectile()
+        public void AttachProjectile()
         {
             if (NetworkEventManager.Instance.IsMasterClient)
                 UpdateSlowStacks(1);
@@ -226,6 +249,8 @@ namespace Hadal.AI
         public void SetSlowStacks(int value)
         {
             currentSlowStacks = value;
+
+            if (_ignoreSlowDebuffs) return;
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
         }
         /// <summary> Updates the current slow stacks on the AI and computes the slow percentage before sending it to the navigation handler. </summary>
@@ -234,9 +259,11 @@ namespace Hadal.AI
         public void UpdateSlowStacks(int change, bool isLocal = true)
         {
             currentSlowStacks = (currentSlowStacks + change).Clamp0();
+
+            if (_ignoreSlowDebuffs) return;
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
-			
-			// if (isLocal)
+
+            // if (isLocal)
             //     $"Updated Slow locally. Current stacks are {CurrentClampedSlowStacks} (exccess: {ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
         }
         public void ResetAllSlowStacks()
@@ -250,7 +277,7 @@ namespace Hadal.AI
         {
             currentSlowPercent = currentSlowStacks * slowPercentPerStack.AsFloat();
             currentSlowPercent = currentSlowPercent.Clamp(0f, maxSlowPercent);
-			return currentSlowPercent;
+            return currentSlowPercent;
         }
 
         /// <summary> Current Total slow stacks on the AI. </summary>
