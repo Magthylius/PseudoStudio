@@ -19,19 +19,16 @@ namespace Hadal.Player
         [Space(10f)]
         [SerializeField, ReadOnly] private PlayerClassData currentPlayerClass;
         [SerializeField] private PlayerClassType defaultType;
-
-        private void OnValidate()
-        {
-            if (defaultType == PlayerClassType.Invalid)
-                Debug.LogAssertion($"Default cannot be invalid!");
-        }
-
+        
         private void Awake()
         {
             if (Instance != null) Destroy(this);
             else Instance = this;
 
             SceneManager.sceneLoaded += OnSceneLoad;
+            
+            if (defaultType == PlayerClassType.Invalid)
+                Debug.LogError($"Default cannot be invalid!");
         }
 
         private void Start()
