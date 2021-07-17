@@ -401,7 +401,7 @@ namespace Hadal.Networking.UI.MainMenu
                     default: playerColor = neManager.FourthPlayerColor; break;
                 }
                 
-                PlayerEnteredRoom(playerList[i], playerColor);
+                AddPlayerList(playerList[i], playerColor);
             }
 
             if (neManager.CurrentRoom.CustomProperties.TryGetValue(neManager.PlayerClassHash, out object value))
@@ -417,14 +417,21 @@ namespace Hadal.Networking.UI.MainMenu
             
         }
 
-        public void PlayerEnteredRoom(Player player, Color color)
+        public void AddPlayerList(Player player, Color color)
         {
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(player, color);
+            
+            //DiegeticHandler.EnterOne();
+        }
+
+        public void PlayerEnteredRoom(Player player)
+        {
             DiegeticHandler.EnterOne();
         }
 
-        public void PlayerExitedRoom()
+        public void PlayerExitedRoom(Player player)
         {
+            Debug.LogWarning($"{player.NickName} left");
             DiegeticHandler.ExitOne();
         }
 

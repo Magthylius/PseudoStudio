@@ -38,6 +38,7 @@ namespace Hadal.Networking.Diegetics
         public void ExitAll()
         {
             totalPlayerCount = 0;
+            Debug.LogWarning($"exitall tpc: {totalPlayerCount}");
             foreach (var players in otherPlayerAnimators)
             {
                 if (players.GetBool(boolState))
@@ -48,7 +49,7 @@ namespace Hadal.Networking.Diegetics
         public void EnterOne()
         {
             totalPlayerCount++;
-            
+            Debug.LogWarning($"enterone tpc: {totalPlayerCount}");
             if (totalPlayerCount >= otherPlayerAnimators.Count)
             {
                 Debug.LogWarning($"Player count called more than animator count!");
@@ -63,7 +64,7 @@ namespace Hadal.Networking.Diegetics
         public void ExitOne()
         {
             totalPlayerCount--;
-            
+            Debug.LogWarning($"exitone tpc: {totalPlayerCount}");
             if (totalPlayerCount <= 0)
             {
                 Debug.LogWarning($"Player count called less than animator count!");
