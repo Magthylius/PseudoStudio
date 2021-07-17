@@ -119,11 +119,6 @@ namespace Hadal.Usables.Projectiles
                     Rigidbody.isKinematic = true;
                     IsAttached = true;
 
-                    if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
-                    {
-                        projPhysics.SwapModes();
-                    }
-
                     Vector3 collisionSpot = gameObject.transform.position;
 
                     object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
@@ -174,6 +169,11 @@ namespace Hadal.Usables.Projectiles
 
         protected override void ImpactBehaviour()
         {
+            if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
+            {
+                projPhysics.SwapModes();
+            }
+
             Rigidbody.isKinematic = true;
             projectileAsset.SetActive(true);
             particleEffect.SetActive(true);

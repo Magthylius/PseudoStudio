@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e83072208375b45a16fc5cdd137efa, type: 3}
   m_Name: InformerClass
   m_EditorClassIdentifier: 
-  GiveFlareHarpoon: 1
+  GiveFlareHarpoon: 0
   PowerUpFlare: 1
   PowerUpHarpoon: 0
+  PowerUpDodgeBoost: 0
+  DodgeBoostCount: 4
+  ReviveTime: 1
+  PowerUpTorpFireRate: 0
+  TorpFireRate: 0.1
   ClassName: Informer
   ClassLauncher:
   - {fileID: 1275541528094104063, guid: 9e033e0a224229c42b1a476ff0ec6e56, type: 3}
