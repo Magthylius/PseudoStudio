@@ -12,7 +12,8 @@ namespace Hadal.Networking.Diegetics
         [SerializeField] private string exitTrigger;
         [SerializeField] private string boolState;
 
-        private int currentEnteredCount = 0;
+        //! Used as index, so first player enter -> 0
+        private int currentEnteredCount = -1;
 
         /// <summary> Sets entry of already existing players.  </summary>
         /// <param name="count">Player count EXCLUDING the client!</param>
