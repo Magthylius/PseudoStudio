@@ -68,7 +68,6 @@ namespace Hadal.Interactables
             {
                 if(!gO)
                 {
-                    Debug.LogWarning("No playerObject found.");
                     return;
                 }
 
