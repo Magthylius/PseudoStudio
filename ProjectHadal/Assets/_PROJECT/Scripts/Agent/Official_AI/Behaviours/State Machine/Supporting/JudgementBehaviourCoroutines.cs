@@ -451,7 +451,7 @@ namespace Hadal.AI
 
             //! Randomise judgement persist chance
             BrainState brainState;
-			if (judgementPersistCount < JState.settings.JudgementPersistCountLimitPerEntry)
+			if (judgementPersistCount < Settings.JudgementPersistCountLimitPerEntry)
 				brainState = GetRandomBrainStateAfterStun();
 			else
 				brainState = BrainState.Recovery;
@@ -506,6 +506,11 @@ namespace Hadal.AI
         {
             bool shouldStayJudgement = Settings.PostStunRemainJudgementChance.HasHitPercentChance();
             return shouldStayJudgement ? BrainState.Judgement : BrainState.Recovery;
+        }
+
+        private void SpawnExplosivePointAt(Vector3 position)
+        {
+            // ExplosivePoint.Create(Settings.)
         }
 
         private void TryDebug(object msg)

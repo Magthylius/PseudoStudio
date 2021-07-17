@@ -9,7 +9,7 @@ namespace Hadal.AI.States
 {
     public class JudgementState : AIStateBase
     {
-        public EngagementStateSettings settings;
+        private EngagementStateSettings settings;
         private JudgementBehaviourCoroutines behaviour;
         private Coroutine currentRoutine;
         public bool IsBehaviourRunning { get; set; }

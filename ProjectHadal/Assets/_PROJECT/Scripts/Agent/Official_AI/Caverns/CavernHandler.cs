@@ -1,12 +1,10 @@
-using System;
 using Hadal.Player;
-using System.Collections;
 using System.Collections.Generic;
-using Tenshi.UnitySoku;
 using UnityEngine;
 using NaughtyAttributes;
 using System.Linq;
 using Tenshi;
+using ReadOnly = Tenshi.ReadOnlyAttribute;
 
 //! C: Jon
 namespace Hadal.AI.Caverns

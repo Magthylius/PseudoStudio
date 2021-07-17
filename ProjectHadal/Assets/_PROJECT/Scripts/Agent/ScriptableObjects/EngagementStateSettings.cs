@@ -48,6 +48,7 @@ namespace Hadal.AI.States
         public int AGG_AdditionalThreshDamagePerSecond;
         public int DEF_AdditionalThreshDamagePerSecond;
         public int EGG_PermanentThreshDamagePerSecond;
+        public LayerMask JG_KnockbackIgnoreMasks;
 
         [Header("Unused ATM: Aggressive Settings")]
         [Range(0f, 1f)] public float AG_AccumulatedDamageThresholdPercentage = 0.4f;
