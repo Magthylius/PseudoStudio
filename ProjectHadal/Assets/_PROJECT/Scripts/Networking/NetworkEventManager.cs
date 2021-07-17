@@ -441,12 +441,13 @@ namespace Hadal.Networking
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            mainMenuManager.AddIntoPlayerList(newPlayer, GetPlayerColor(PlayerList.Length - 1));
+            mainMenuManager.PlayerEnteredRoom(newPlayer, GetPlayerColor(PlayerList.Length - 1));
             PlayerEnteredEvent?.Invoke(newPlayer);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
+            mainMenuManager.PlayerExitedRoom();
            PlayerLeftEvent?.Invoke(otherPlayer);
         }
 

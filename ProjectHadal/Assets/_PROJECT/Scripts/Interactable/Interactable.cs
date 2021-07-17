@@ -62,15 +62,21 @@ namespace Hadal.Interactables
             if (!ableToInteract)
                 return;
 
-            /*GameObject actorPlayer;
+            GameObject actorPlayer;     
 
             foreach(GameObject gO in NetworkEventManager.Instance.PlayerObjects)
             {
+                if(!gO)
+                {
+                    Debug.LogWarning("No playerObject found.");
+                    return;
+                }
+
                 if(gO.GetComponentInChildren<PhotonView>().ViewID == viewID)
                 {
                     actorPlayer = gO;
                 }
-            }*/
+            }
 
             //This is where we send the event to interact
             InteractableEventManager.Instance.InvokeInteraction(interactionType, interactableID);

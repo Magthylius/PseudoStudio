@@ -5,6 +5,7 @@ using Magthylius.LerpFunctions;
 using Photon.Realtime;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using Hadal.Networking.Diegetics;
 using Hadal.Networking.UI.Loading;
 
 //! C: Jon
@@ -27,6 +28,7 @@ namespace Hadal.Networking.UI.MainMenu
 
         [Header("References")] 
         public MainMenuClassSelector ClassSelector;
+        public DiegeticPlayerEntryHandler DiegeticHandler;
         
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
@@ -212,6 +214,8 @@ namespace Hadal.Networking.UI.MainMenu
             createRoomFR.MoveToEnd();
             findRoomFR.MoveToEnd();
             confirmQuitFR.MoveToEnd();
+            
+            DiegeticHandler.ExitAll();
         }
 
         void ChangePhase(MenuPhase phase) => menuPhase = phase;
@@ -384,6 +388,8 @@ namespace Hadal.Networking.UI.MainMenu
                 Destroy(child.gameObject);
             }
             
+            DiegeticHandler.UpdateCurrentEntered(playerList.Length - 1);
+            
             for (int i = 0; i < playerList.Length; i++)
             {
                 Color playerColor;
@@ -395,7 +401,7 @@ namespace Hadal.Networking.UI.MainMenu
                     default: playerColor = neManager.FourthPlayerColor; break;
                 }
                 
-                AddIntoPlayerList(playerList[i], playerColor);
+                PlayerEnteredRoom(playerList[i], playerColor);
             }
 
             if (neManager.CurrentRoom.CustomProperties.TryGetValue(neManager.PlayerClassHash, out object value))
@@ -411,9 +417,15 @@ namespace Hadal.Networking.UI.MainMenu
             
         }
 
-        public void AddIntoPlayerList(Player player, Color color)
+        public void PlayerEnteredRoom(Player player, Color color)
         {
             Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(player, color);
+            DiegeticHandler.EnterOne();
+        }
+
+        public void PlayerExitedRoom()
+        {
+            DiegeticHandler.ExitOne();
         }
 
         public void UpdateRoomList(List<RoomInfo> roomList)
