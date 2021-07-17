@@ -417,7 +417,7 @@ namespace Hadal.Networking.UI.MainMenu
                 print(roomProps.Count);
                 foreach (int playerIndex in roomProps.Keys)
                 {
-                    print($"PI: {playerIndex} , PCT: {(PlayerClassType)roomProps[playerIndex]}");
+                    //print($"PI: {playerIndex} , PCT: {(PlayerClassType)roomProps[playerIndex]}");
                     ClassSelector.UpdateNetworkSelector((PlayerClassType)roomProps[playerIndex], playerIndex);
                 }
             }
