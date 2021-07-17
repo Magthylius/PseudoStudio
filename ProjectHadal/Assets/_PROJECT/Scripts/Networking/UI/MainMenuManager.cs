@@ -388,8 +388,7 @@ namespace Hadal.Networking.UI.MainMenu
                 Destroy(child.gameObject);
             }
             
-            //! Exclude the client
-            DiegeticHandler.UpdateCurrentEntered(playerList.Length - 1);
+            DiegeticHandler.UpdateCurrentEntered(playerList.Length);
             
             for (int i = 0; i < playerList.Length; i++)
             {
