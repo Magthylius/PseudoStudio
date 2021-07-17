@@ -19,7 +19,7 @@ namespace Hadal.Networking.UI
         //! Networked other player chosen classes, effectively NOT eligible player choices
         [SerializeField, ReadOnly] private List<PlayerClassType> chosenClassTypes = new List<PlayerClassType>();
 
-        private PlayerClassType currentClassType = PlayerClassType.Invalid;
+        private PlayerClassType _currentClassTypeType = PlayerClassType.Invalid;
 
         private void Start()
         {
@@ -38,12 +38,14 @@ namespace Hadal.Networking.UI
         /// <summary> Update class selectors based on already joined players </summary>
         public void UpdateNetworkSelector(PlayerClassType type, int playerIndex)
         {
+            if (type == PlayerClassType.Invalid) return;
+
             GetHighlighter(type).Select(NetworkEventManager.Instance.GetPlayerColor(playerIndex), true);
         }
 
         public void ChooseClass(PlayerClassType type)
         {
-            if (chosenClassTypes.Contains(type) || currentClassType != PlayerClassType.Invalid) return;
+            if (chosenClassTypes.Contains(type) || _currentClassTypeType != PlayerClassType.Invalid) return;
             
             NetworkEventManager neManager = NetworkEventManager.Instance;
 
@@ -51,7 +53,7 @@ namespace Hadal.Networking.UI
             object[] data = {type, pIndex};
             neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_CHOOSE, data);
 
-            currentClassType = type;
+            _currentClassTypeType = type;
             
             Color pColor = neManager.GetCurrentPlayerColor();
             GetHighlighter(type).Select(pColor, false);
@@ -59,21 +61,21 @@ namespace Hadal.Networking.UI
             //! Update room properties so that other players have the information
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), type);
             
-            ClassChangedEvent?.Invoke(currentClassType);
+            ClassChangedEvent?.Invoke(_currentClassTypeType);
         }
 
         public void UnchooseClass(PlayerClassType type)
         {
-            if (type != currentClassType) return;
+            if (type != _currentClassTypeType || type == PlayerClassType.Invalid) return;
             
             NetworkEventManager neManager = NetworkEventManager.Instance;
             
             neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, type);
-            currentClassType = PlayerClassType.Invalid;
+            _currentClassTypeType = PlayerClassType.Invalid;
             GetHighlighter(type).Deselect();
             
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), PlayerClassType.Invalid);
-            ClassChangedEvent?.Invoke(currentClassType);
+            ClassChangedEvent?.Invoke(_currentClassTypeType);
         }
 
         void RE_PlayerChosenClass(EventData data)
@@ -109,7 +111,7 @@ namespace Hadal.Networking.UI
             return null;
         }
 
-        public PlayerClassType CurrentCurrentClass => currentClassType;
+        public PlayerClassType CurrentClassType => _currentClassTypeType;
         public bool PlayerClassAvailable(PlayerClassType type) => !chosenClassTypes.Contains(type);
     }
 }

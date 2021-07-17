@@ -326,7 +326,7 @@ namespace Hadal.Networking
             
             if (returnsToMainMenu)
             {
-                if (LeftRoomEvent != null) LeftRoomEvent.Invoke();
+                LeftRoomEvent?.Invoke();
                 loadsToMainMenu = true;
             }
 
@@ -441,7 +441,7 @@ namespace Hadal.Networking
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            Debug.LogWarning($"{newPlayer.NickName} joined");
+            //Debug.LogWarning($"{newPlayer.NickName} joined");
             
             mainMenuManager.AddPlayerList(newPlayer, GetPlayerColor(PlayerList.Length - 1));
             mainMenuManager.PlayerEnteredRoom(newPlayer);
@@ -450,13 +450,13 @@ namespace Hadal.Networking
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            if (!CurrentRoom.Players.ContainsValue(otherPlayer))
+            if (CurrentRoom.Players.ContainsValue(otherPlayer))
             {
-                Debug.LogWarning($"{otherPlayer.NickName} already left!");
+                Debug.LogWarning($"{otherPlayer.NickName} has not left!");
                 return;
             }
                 
-            Debug.LogWarning($"{otherPlayer.NickName} left");
+            //Debug.LogWarning($"{otherPlayer.NickName} left");
             
             mainMenuManager.PlayerExitedRoom(otherPlayer);
             PlayerLeftEvent?.Invoke(otherPlayer);
@@ -715,6 +715,16 @@ namespace Hadal.Networking
             return GetPlayerColor(999);
         }
 
+        public Dictionary<Player, int> GetSortedPlayerIndices()
+        {
+            Dictionary<Player, int> sortedDict = new Dictionary<Player, int>();
+            
+            for (int i = 0; i < PlayerList.Length; i++)
+                sortedDict.Add(PlayerList[i], i);
+            
+            return sortedDict;
+        }
+        
         public int GetCurrentPlayerIndex()
         {
             for (int i = 0; i < PlayerList.Length; i++)

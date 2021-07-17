@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Hadal.Networking.Diegetics;
 using Hadal.Networking.UI.Loading;
+using NaughtyAttributes;
 
 //! C: Jon
 namespace Hadal.Networking.UI.MainMenu
@@ -66,7 +67,8 @@ namespace Hadal.Networking.UI.MainMenu
         [SerializeField] GameObject roomListItemPrefab;
         [SerializeField] RectTransform createRoomPanel;
         [SerializeField] RectTransform findRoomPanel;
-       
+
+        [SerializeField, ReadOnly] private List<PlayerListItem> _playerListItems = new List<PlayerListItem>();
         FlexibleRect createRoomFR;
         FlexibleRect findRoomFR;
 
@@ -98,6 +100,7 @@ namespace Hadal.Networking.UI.MainMenu
         void Start()
         {
             NetworkEventManager.Instance.JoinedLobbyEvent += EndStartPhase;
+            NetworkEventManager.Instance.LeftRoomEvent += LeftRoom;
 
             DetermineMenuToOpen();
             //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
@@ -131,6 +134,7 @@ namespace Hadal.Networking.UI.MainMenu
         void OnDestroy()
         {
             NetworkEventManager.Instance.JoinedLobbyEvent -= EndStartPhase;
+            NetworkEventManager.Instance.LeftRoomEvent -= LeftRoom;
         }
 
         #region Main Menu 
@@ -354,6 +358,7 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(lobbyMenu);
             OpenMenu(gameOptions);
 
+            ClassSelector.UnchooseClass(ClassSelector.CurrentClassType);
             NetworkEventManager.Instance.LeaveRoom(true, true);
         }
 
@@ -381,8 +386,10 @@ namespace Hadal.Networking.UI.MainMenu
 
         public void UpdatePlayerList(Player[] playerList)
         {
+            //Debug.LogWarning($"this is called");
             NetworkEventManager neManager = NetworkEventManager.Instance;
 
+            _playerListItems.Clear();
             foreach (Transform child in playerListContent)
             {
                 Destroy(child.gameObject);
@@ -417,21 +424,58 @@ namespace Hadal.Networking.UI.MainMenu
             
         }
 
+        public void UpdateAllListedPlayers()
+        {
+            Dictionary<Player, int> dict = NetworkEventManager.Instance.GetSortedPlayerIndices();
+            
+            foreach (PlayerListItem item in _playerListItems)
+            {
+                //Debug.LogWarning($"{dict[item.Player]}");
+                item.ChangeColor(NetworkEventManager.Instance.GetPlayerColor(dict[item.Player]));
+            }
+        }
+
         public void AddPlayerList(Player player, Color color)
         {
-            Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(player, color);
-            
+            PlayerListItem item = Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>();
+            _playerListItems.Add(item);
+            item.SetUp(player, color);
+
             //DiegeticHandler.EnterOne();
         }
 
+        public void RemovePlayerList(PlayerListItem listItem)
+        {
+            _playerListItems.Remove(listItem);
+            Destroy(listItem.gameObject);
+            //UpdateAllListedPlayers();
+        }
+        
+        public void LeftRoom()
+        {
+            while (_playerListItems.Count > 0)
+            {
+                PlayerListItem item = _playerListItems[0];
+                _playerListItems.RemoveAt(0);
+                Destroy(item);
+            }
+        }
+        
         public void PlayerEnteredRoom(Player player)
         {
             DiegeticHandler.EnterOne();
+
+            /*Dictionary<int, Player> alp = NetworkEventManager.Instance.AllPlayers;
+            foreach (var s in alp)
+            {
+                Debug.LogWarning($"{s.Value.NickName} is number {s.Key}");
+            }*/
         }
 
         public void PlayerExitedRoom(Player player)
         {
             //Debug.LogWarning($"{player.NickName} left");
+            UpdateAllListedPlayers();
             DiegeticHandler.ExitOne();
         }
 

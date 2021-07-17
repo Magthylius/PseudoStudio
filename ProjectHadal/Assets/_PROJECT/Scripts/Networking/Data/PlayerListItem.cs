@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Hadal.Networking.UI.MainMenu;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -20,11 +21,17 @@ namespace Hadal.Networking
             text.color = playerColor;
         }
 
+        public void ChangeColor(Color playerColor)
+        {
+            text.color = playerColor;
+        }
+
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             if(player == otherPlayer)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                MainMenuManager.Instance.RemovePlayerList(this);
             }
         }
 
@@ -32,5 +39,7 @@ namespace Hadal.Networking
         {
             Destroy(gameObject);
         }
+
+        public Player Player => player;
     }
 }
