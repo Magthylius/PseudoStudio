@@ -595,7 +595,7 @@ namespace Hadal.Networking
         public string PlayerClassHash => playerClassHash;
         public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
         {
-            //! Have to convert enum to type because they cant handle it
+            //! Have to convert enum type to int because they cant handle it
             if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
             {
                 Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
