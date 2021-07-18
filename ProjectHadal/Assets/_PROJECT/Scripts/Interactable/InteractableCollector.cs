@@ -15,7 +15,7 @@ namespace Hadal.Interactables
 
             foreach(Interactable interactable in interactables)
             {
-                interactable.setID(idCounter);
+                interactable.SetID(idCounter);
                 idCounter++;
             }
         }
