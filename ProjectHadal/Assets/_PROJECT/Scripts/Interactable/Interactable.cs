@@ -88,7 +88,6 @@ namespace Hadal.Interactables
 
             if (isInteracting)
             {
-                Debug.LogWarning("Someone is already interacting !");
                 return;
             }
 
