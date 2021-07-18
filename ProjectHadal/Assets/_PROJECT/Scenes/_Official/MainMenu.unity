@@ -7463,7 +7463,7 @@ Transform:
   - {fileID: 153899884}
   - {fileID: 1212245363}
   m_Father: {fileID: 1294528372}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &929899186
 GameObject:
@@ -12454,8 +12454,8 @@ Transform:
   - {fileID: 1994935671}
   - {fileID: 562093714}
   - {fileID: 8087017454193762916}
-  - {fileID: 5534900096791739762}
   - {fileID: 903829175}
+  - {fileID: 5534900096791739762}
   - {fileID: 1353763307}
   - {fileID: 1690289489}
   - {fileID: 188768106}
@@ -20050,7 +20050,7 @@ Transform:
   m_Children:
   - {fileID: 528630691}
   m_Father: {fileID: 1294528372}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &5835596879996239353
 Light:
@@ -20288,7 +20288,7 @@ GameObject:
   - component: {fileID: 5534900096791739762}
   - component: {fileID: 8406551578423183823}
   m_Layer: 0
-  m_Name: Submarine Main
+  m_Name: Submarine 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20304,7 +20304,7 @@ Animator:
   m_GameObject: {fileID: 8406551578423183822}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: add5b01ebcf69c9428104c455e410ae7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
