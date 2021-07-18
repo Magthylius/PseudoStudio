@@ -179,6 +179,7 @@ MonoBehaviour:
   graphicsHandler: {fileID: 0}
   cavernManager: {fileID: 0}
   emissiveColor: {fileID: 0}
+  animationManager: {fileID: 0}
   runtimeData: {fileID: 11400000, guid: 344fdf70e2db63441811ea336befc6de, type: 2}
   MouthObject: {fileID: 0}
   Players: []
@@ -355,6 +356,10 @@ MonoBehaviour:
   currentMaxSlowPercent: 0.1
   currentSlowPercent: 0
   currentSlowStacks: 0
+  lowHealthPercent: 0
+  resistenceOnLowHealth: 0
+  _baseDamageResistance: 0
+  _additionalDamageResistance: 0
   randomHitPoints: []
   vfx_OnDamaged: {fileID: 11400000, guid: 801216130b69d5544a53c2a323082230, type: 2}
   vfxCountPerHit: 4
@@ -403,14 +408,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioAssetList:
-  - associatedEnum: 3
-    audioAsset: {fileID: 11400000, guid: a06d46ea43def364c87b525d0d7b10c1, type: 2}
   - associatedEnum: 0
     audioAsset: {fileID: 11400000, guid: a32ab13194c3f744f8ff3328aaa2ac19, type: 2}
-  - associatedEnum: 2
-    audioAsset: {fileID: 11400000, guid: 88ebb8a6a63bfdd45b629033c119946c, type: 2}
   - associatedEnum: 1
     audioAsset: {fileID: 11400000, guid: 0d5c13bc8d7ce514f80934f8d6aab3c5, type: 2}
+  - associatedEnum: 2
+    audioAsset: {fileID: 11400000, guid: 93d5707948f7ac149bc31b6bd538937f, type: 2}
+  - associatedEnum: 3
+    audioAsset: {fileID: 11400000, guid: a06d46ea43def364c87b525d0d7b10c1, type: 2}
+  - associatedEnum: 4
+    audioAsset: {fileID: 0}
   brain: {fileID: 2206939684412345039}
   source2D: {fileID: 0}
 --- !u!1 &3778157195922931001

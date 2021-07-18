@@ -9,19 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ceb78b0d610b3b4bb9c4575734b4a69, type: 3}
-  m_Name: Test Weighted Roar SFX 1
+  m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
+  m_Name: Periodic Leviathan Movement SFX
   m_EditorClassIdentifier: 
-  WeightedClips:
-  - Clip: {fileID: 8300000, guid: 616bac1516360c84b9e23e585a1a64cb, type: 3}
-    Weight: 3
-  - Clip: {fileID: 8300000, guid: 37da5fa898ff7fc458dff67313efa0eb, type: 3}
-    Weight: 1
+  Clips:
+  - {fileID: 8300000, guid: a555ca54c4dde7142ab435717a5522dd, type: 3}
   Settings:
-    Volume: {x: 0.8, y: 0.8}
-    Pitch: {x: 1, y: 1}
+    Volume: {x: 0.5, y: 0.5}
+    Pitch: {x: 0.8, y: 0.8}
     SpatialBlend: 0.7
-    Priority: 128
+    Priority: 200
     StereoPan: 0
     ReverbZoneMix: 1
     OutputMixerGroup: {fileID: 24300002, guid: 29349254421fc3742874fe18b3785b50, type: 2}
@@ -35,5 +32,5 @@ MonoBehaviour:
     Spread: 0
     VolumeRolloff: 0
     MinDistance: 1
-    MaxDistance: 1000
+    MaxDistance: 500
     RolloffCurveTemplate: {fileID: 0}

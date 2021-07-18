@@ -206,6 +206,7 @@ namespace Hadal.Player
         public void ChangeMaxReserveCount(int newMaxReserve)
         {
             maxReserveCapacity = newMaxReserve;
+            UpdateReserveCount(maxReserveCapacity);
         }
 
         private void UpdateReserveCount(in int count) => ReserveCount = Mathf.Clamp(count, 0, maxReserveCapacity);

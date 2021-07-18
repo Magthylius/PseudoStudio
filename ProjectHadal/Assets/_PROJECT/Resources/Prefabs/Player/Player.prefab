@@ -1105,7 +1105,7 @@ MonoBehaviour:
   tapDetectionTime: 0.11
   dodgeForce: 70
   boostTimerMax: 0.5
-  maxReserveCapacity: 2
+  maxReserveCapacity: 1
   reserveRegenerationTime: 8
   maxChamberCapacity: 1
   chamberReloadTime: 0.7
@@ -1713,11 +1713,11 @@ MonoBehaviour:
   enableDeathTimerWhenDown: 0
   deathTime: 120
   _deathTimer: 0
-  reviveTime: 5
-  _reviveTimer: 0
-  _reviveDelayTimer: 0
-  minPlayerRevivalDistance: 50
-  reviveDelayTime: 2
+  reviveOtherTime: 5
+  _localReviveTimer: 0
+  _localReviveDelayTimer: 0
+  minOtherPlayerRevivalDistance: 50
+  localReviveDelayTime: 2
   maxHealth: 100
   _currentHealth: 0
 --- !u!114 &4790383674308879192

@@ -139,6 +139,8 @@ namespace Hadal.Player.Behaviours
             yield return new WaitForSeconds(0.1f);
             ResetHealth();
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
+            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_UPDATED_REVIVE_TIME, Receive_ReviveTimeUpdate);
+
             if (IsLocalPlayer)
             {
                 NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_RECEIVE_DAMAGE, Receive_TakeDamage);
@@ -551,6 +553,17 @@ namespace Hadal.Player.Behaviours
             }
         }
 
+
+        private void Receive_ReviveTimeUpdate(EventData data)
+        {
+            object[] content = data.CustomData.AsObjArray();
+
+            int receivedViewID = content[0].AsInt();
+            if (_pView.ViewID != receivedViewID)
+                return;
+
+            SetReviveOtherTime(content[1].AsFloat());
+        }
         #endregion
 
         #region Timer Control Methods
