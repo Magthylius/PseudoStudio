@@ -197,7 +197,7 @@ namespace Hadal.Player
                 if (LocalPlayerData.PlayerController == null)
                 {
                     LocalPlayerData.PlayerController = this;
-                    PlayerClassManager.Instance.ApplyClass();
+                    
                     gameObject.AddComponent<AudioListener>();
                     Debug.LogWarning("Audio listener added");
                 }
@@ -205,13 +205,14 @@ namespace Hadal.Player
             else if (_pView.IsMine)
             {
                 LocalPlayerData.PlayerController = this;
-                PlayerClassManager.Instance.ApplyClass();
+                
                 gameObject.AddComponent<AudioListener>();
                 Debug.LogWarning("Audio listener added");
             }
 
             NetworkData.AddPlayer(this);
             onInitialiseComplete?.Invoke();
+            PlayerClassManager.Instance.ApplyClass();
         }
 
         public void SetPhysicDefault()
