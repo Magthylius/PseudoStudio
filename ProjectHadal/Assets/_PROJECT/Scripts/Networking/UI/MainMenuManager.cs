@@ -359,7 +359,10 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(gameOptions);
 
             ClassSelector.UnchooseClass(ClassSelector.CurrentClassType);
-            NetworkEventManager.Instance.LeaveRoom(true, true);
+
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+            neManager.UpdateAllPlayerIndices(neManager.GetCurrentPlayerIndex());
+            neManager.LeaveRoom(true, true);
         }
 
         public void TMP_CheckRoomNameEligibility()
