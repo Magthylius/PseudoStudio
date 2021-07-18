@@ -46,11 +46,15 @@ namespace Hadal.Networking.UI
         /// <summary> Update when someone leaves and needs colors to be updated </summary>
         public void UpdateSlotColor(Color newColor)
         {
-            NetworkEventManager neManager = NetworkEventManager.Instance;
+            //NetworkEventManager neManager = NetworkEventManager.Instance;
             //GetHighlighter(_currentClassType).Select(neManager.GetCurrentPlayerColor(), false);
             //ChooseClass(_currentClassType);
-            
-            GetHighlighter(_currentClassType).Select(newColor, false);
+
+            if (_currentClassType != PlayerClassType.Invalid)
+            {
+                Debug.LogWarning($"Updating slot color. New color: {newColor}");
+                GetHighlighter(_currentClassType).Select(newColor, false);
+            }
         }
 
         public void ChooseClass(PlayerClassType type)
@@ -92,6 +96,13 @@ namespace Hadal.Networking.UI
         {
             object[] newData = (object[])data.CustomData;
             PlayerClassType chosen = (PlayerClassType)newData[0];
+
+            if (chosen == PlayerClassType.Invalid)
+            {
+                Debug.LogWarning($"Received player chosen class invalid! This should not happen");
+                return;
+            }
+            
             Color pColor = NetworkEventManager.Instance.GetPlayerColor((int) newData[1]);
             
             if (!chosenClassTypes.Contains(chosen))
@@ -104,6 +115,13 @@ namespace Hadal.Networking.UI
         void RE_PlayerUnchosenClass(EventData data)
         {
             PlayerClassType unchosen = (PlayerClassType) data.CustomData;
+            
+            if (unchosen == PlayerClassType.Invalid)
+            {
+                Debug.LogWarning($"Received player chosen class invalid! This should not happen");
+                return;
+            }
+            
             if (chosenClassTypes.Contains(unchosen))
             {
                 chosenClassTypes.Remove(unchosen);
