@@ -14,6 +14,7 @@ namespace Hadal.AI.States
     {
         AnticipationStateSettings settings;
         private float autoActTimer = 0f;
+        private float isolatedPlayerCheckTimer = 0f;
         private bool isFirstAct = false;
 
         //! Meant just for startup
@@ -44,6 +45,7 @@ namespace Hadal.AI.States
             RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
             autoActTimer = settings.AutoActTime;
+            isolatedPlayerCheckTimer = settings.IsolatedPlayerCheckTime;
         }
 
         public override void StateTick()
@@ -193,6 +195,11 @@ namespace Hadal.AI.States
             Brain.UpdateNextMoveCavern(nextCavern);
 
             if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
+        }
+
+        private bool CheckForIsolatedPlayer()
+        {
+            return false;
         }
 
         private bool CheckForAutoActCondition()
