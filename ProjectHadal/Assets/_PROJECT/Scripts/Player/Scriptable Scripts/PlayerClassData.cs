@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using Hadal.Player.Behaviours;
 using Hadal.Usables;
 using UnityEngine;
+using Hadal.Networking;
 
 namespace Hadal.Player
 {
     [CreateAssetMenu(menuName = "Player/Class Data")]
     public class PlayerClassData : ScriptableObject
     {
+        public string ClassName;
         [Header("Utility Power Ups")]
         public bool GiveFlareHarpoon;
         public bool PowerUpFlare;
@@ -17,23 +19,27 @@ namespace Hadal.Player
 
         [Header("Passive Power Ups")]
         public bool PowerUpDodgeBoost;
-        public int DodgeBoostCount = 4;
-        //
+        public int DodgeBoostCount = 3;
+        public bool PowerUpReviveTime;
         public float ReviveTime = 1;
 
         //
         public bool PowerUpTorpFireRate;
         public float TorpFireRate = 0.1f;
-        public string ClassName;
 
         [Header("Specialized Utility")]
         public List <UsableLauncherObject> ClassLauncher;
+
+        NetworkEventManager neManager = NetworkEventManager.Instance;
 
         public void SetUpUtility()
         {
             var playerInv = LocalPlayerData.PlayerController.GetInfo.Inventory;
             var playerBoost = LocalPlayerData.PlayerController.GetInfo.DodgeBooster;
             var playerTorpedo = LocalPlayerData.PlayerController.GetInfo.Shooter.GetTorpedoLauncher;
+            var playerHealth = LocalPlayerData.PlayerController.GetInfo.HealthManager;
+            var playerPView = LocalPlayerData.PlayerController.GetInfo.PhotonInfo.PView;
+
             playerInv.ResetEquipIndex();
             playerInv.DeactivateAllUtilities();
             playerInv.GetEquippedUsableObjects.Clear();
@@ -54,6 +60,13 @@ namespace Hadal.Player
             if(PowerUpTorpFireRate)
             {
                 playerTorpedo.ChangeChamberReloadTime(TorpFireRate);
+            }
+
+            if(PowerUpReviveTime)
+            {
+                playerHealth.SetReviveOtherTime(ReviveTime);
+                object[] content = new object[] { playerPView.ViewID, ReviveTime};
+                neManager.RaiseEvent(ByteEvents.PLAYER_UPDATED_REVIVE_TIME, content);
             }
 
             foreach(UsableLauncherObject obj in ClassLauncher)

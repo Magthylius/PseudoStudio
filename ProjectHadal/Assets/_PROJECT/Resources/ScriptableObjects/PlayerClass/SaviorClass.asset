@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1e83072208375b45a16fc5cdd137efa, type: 3}
   m_Name: SaviorClass
   m_EditorClassIdentifier: 
+  ClassName: Savior
   GiveFlareHarpoon: 0
   PowerUpFlare: 0
   PowerUpHarpoon: 0
   PowerUpDodgeBoost: 0
-  DodgeBoostCount: 4
+  DodgeBoostCount: 3
+  PowerUpReviveTime: 1
   ReviveTime: 1
   PowerUpTorpFireRate: 0
   TorpFireRate: 0.1
-  ClassName: Savior
   ClassLauncher:
   - {fileID: 1275541528094104063, guid: 362300cd82a960b4a9f754c4cf613f5f, type: 3}
