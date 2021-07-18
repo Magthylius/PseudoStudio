@@ -1,6 +1,5 @@
 ﻿using Photon.Pun;
 using UnityEngine;
-using Hadal.UI;
 using Tenshi;
 using System;
 using System.Collections;
@@ -10,6 +9,7 @@ using System.Linq;
 using Tenshi.UnitySoku;
 using NaughtyAttributes;
 using ReadOnly = Tenshi.ReadOnlyAttribute;
+using System.Collections.Generic;
 
 //Created by Jet
 namespace Hadal.Player.Behaviours
@@ -28,11 +28,11 @@ namespace Hadal.Player.Behaviours
         [SerializeField, ReadOnly] private float _deathTimer;
 
         [Space(10)]
-        [SerializeField, Tooltip("In seconds. Only applicable when IsDown is true.")] private float reviveTime;
-        [SerializeField, ReadOnly] private float _reviveTimer;
-		[SerializeField, ReadOnly] private float _reviveDelayTimer;
-        [SerializeField] private float minPlayerRevivalDistance;
-		[SerializeField] private float reviveDelayTime = 2f;
+        [SerializeField, Tooltip("In seconds. This timer is used to revive other players.")] private float reviveOtherTime;
+        [SerializeField, ReadOnly] private float _localReviveTimer;
+		[SerializeField, ReadOnly] private float _localReviveDelayTimer;
+        [SerializeField] private float minOtherPlayerRevivalDistance;
+		[SerializeField] private float localReviveDelayTime = 2f;
 
         [Header("Health Settings")]
         [SerializeField] private int maxHealth;
@@ -63,13 +63,17 @@ namespace Hadal.Player.Behaviours
         /// <summary> Event will trigger when the player becomes down but not out. </summary>
         public event Action OnDown;
 		
-		/// <summary> Event will trigger everytime the revive timer is updated.
+		/// <summary> Event will trigger everytime the revive timer is initiated, cancelled or finished.
         /// Returns true when starting to revive another player ; returns false when no longer reviving another player. </summary>
 		public event Action<bool> OnLocalRevivingAPlayer;
 
-        /// <summary> Event will trigger everytime it reports the result of a revival attempt on this player.
-        /// Returns true if a revival attempt was successful; returns false if unsuccessful. </summary>
-        public event Action<bool> OnReviveAttempt;
+        /// <summary> Event will trigger everytime it reports the result of a revival attempt from this player
+        /// towards another player. Returns true if this player successfully revives the other player; returns
+        /// false if unsuccessful. </summary>
+        public event Action<bool> OnLocalReviveAttempt;
+
+        /// <summary> Event will trigger when this local player is revived over the network. </summary>
+        public event Action<bool> OnNetworkReviveAttempt;
 
         #endregion
 
@@ -86,9 +90,10 @@ namespace Hadal.Player.Behaviours
         {
             //! UI setup
             OnDown += UpdateDownUI;
-            OnReviveAttempt += UpdateReviveUI;
-            OnReviveAttempt += JumpstartAttempt;
+
             OnLocalRevivingAPlayer += TriggerStartJumpstart;
+            OnLocalReviveAttempt += JumpstartAttempt;
+            OnNetworkReviveAttempt += UpdateReviveUI;
         }
 
         private void OnDestroy()
@@ -194,7 +199,7 @@ namespace Hadal.Player.Behaviours
             _currentHealth = maxHealth;
             _controller.UI.InvokeOnHealthChange(_currentHealth);
             ResetDeathTimer();
-            ResetReviveTimer();
+            ResetLocalReviveTimer();
             if (IsLocalPlayer)
             {
                 if (debugEnabled) "For local player: Subscribing deactivate function in the case of IsDown = true.".Msg();
@@ -288,39 +293,52 @@ namespace Hadal.Player.Behaviours
         }
 
         private Coroutine reviveTimerRoutine = null;
+        private List<PlayerController> allPlayersCache = new List<PlayerController>();
+        private void UpdatePlayerCache(bool forceRefresh = false)
+        {
+            if (allPlayersCache.IsEmpty() || forceRefresh)
+                allPlayersCache = FindObjectsOfType<PlayerController>().ToList();
+            
+            allPlayersCache.RemoveAll(p => p == null);
+        }
+
         public void Interact(int viewID)
         {
             //! Only players on other machine should be able to send the event to the true networked player of this pView
             if (IsLocalPlayer)
                 return;
             
-            if (debugEnabled)
-                $"Player of {PlayerViewID} is being interacted by player of {viewID}. This action will attempt to revive {PlayerViewID}.".Msg();
-
             //! Can only attempt revival if status is down and not dead
             if (IsDown && !IsUnalive)
             {
                 if (reviveTimerRoutine != null || !_canBeRevivedByOthers) //! cannot run two timers simultaneously
                     return;
 
-                PlayerController actorPlayer = NetworkEventManager.Instance.PlayerObjects
-                                                .Select(p => p.GetComponent<PlayerController>())
-                                                .Where(p => p.ViewID == viewID)
-                                                .SingleOrDefault();
-                if (actorPlayer == null) //! There are duplicate view IDs or missing player reference from network
+                UpdatePlayerCache();
+                PlayerController actorPlayer = allPlayersCache.Where(p => p.ViewID == viewID).SingleOrDefault();
+
+                //! There are duplicate view IDs or missing player reference from network
+                if (actorPlayer == null)
+                {
+                    UpdatePlayerCache(true);
+                    return;
+                }
+
+                //! down people cannot revive
+                if (actorPlayer.GetInfo.HealthManager.IsDownOrUnalive)
                     return;
 
-                if (actorPlayer.GetInfo.HealthManager.IsDownOrUnalive) //! down people cannot revive
-                    return;
+                if (debugEnabled)
+                    $"Player of {PlayerViewID} is being interacted by player of {viewID}. This action will attempt to revive {PlayerViewID}.".Msg();
                 
-                reviveTimerRoutine = StartCoroutine(StartReviveTimer(actorPlayer));
+                reviveTimerRoutine = StartCoroutine(StartLocalReviveTimer(actorPlayer));
             }
         }
 
-        //maybe not needed.
-        public void SetReviveTime(int newReviveTime)
+        /// <summary> Sets the reviving time for this local player to revive other players. </summary>
+        public void SetReviveOtherTime(float newReviveOtherTime)
         {
-            reviveTime = newReviveTime;
+            reviveOtherTime = newReviveOtherTime;
         }
         #endregion
 
@@ -389,7 +407,7 @@ namespace Hadal.Player.Behaviours
             _shouldRevive = false;
             TryRestoreControllerSystem();
             CheckHealthStatus();
-			OnReviveAttempt?.Invoke(true);
+            OnNetworkReviveAttempt?.Invoke(true);
             Send_HealthUpdateStatus(false); //! send revive message to non-local players
         }
 
@@ -402,6 +420,7 @@ namespace Hadal.Player.Behaviours
             _controller.UI.ContextHandler.PlayerWentDown();
         }
 
+        /// <summary> Meant for the networked other player that is being revived. </summary>
         void UpdateReviveUI(bool attemptSucceeded)
         {
             Debug.LogWarning("update revive ui called: " + attemptSucceeded);
@@ -412,6 +431,7 @@ namespace Hadal.Player.Behaviours
             }
         }
 
+        /// <summary> Meant for the local player that is doing the reviving action. </summary>
         void TriggerStartJumpstart(bool startedRevive)
         {
             if (startedRevive)
@@ -421,6 +441,7 @@ namespace Hadal.Player.Behaviours
             }
         }
         
+        /// <summary> Meant for the local player that is doing the reviving action. </summary>
         void JumpstartAttempt(bool success)
         {
             Debug.LogWarning(_controller.ViewID + " Triggered jumpstart attempt: " + success);
@@ -552,35 +573,55 @@ namespace Hadal.Player.Behaviours
         }
 
         /// <summary> Coroutine for assessing player revival. </summary>
-        private IEnumerator StartReviveTimer(PlayerController player, bool reviveLocallyOnTimerReached = false)
+        private IEnumerator StartLocalReviveTimer(PlayerController player, bool reviveLocallyOnTimerReached = false)
         {
-            ResetReviveTimer();
+            //! Reference player controller information of both players
+            PlayerControllerInfo thisPlayerInfo = _controller.GetInfo;
+            PlayerControllerInfo otherPlayerInfo = player.GetInfo;
             Transform thisPTrans = _controller.GetTarget;
             Transform otherPTrans = player.GetTarget;
-            float sqrMinPlayerRevivalDistance = minPlayerRevivalDistance.Sqr();
 
+            //! Use the revival distance & time of the other player that is reviving this player
+            float sqrMinPlayerRevivalDistance = otherPlayerInfo.HealthManager.MinOtherPlayerRevivalDistance.Sqr();
+            float startingReviveTime = otherPlayerInfo.HealthManager.OtherPlayerReviveTime;
+
+            //! Reset local revive timer for this player
+            ResetLocalReviveTimer();
+
+            //! Local function definitions
             float SqrDistanceBetweenPlayers() => (thisPTrans.position - otherPTrans.position).sqrMagnitude;
             bool OtherPlayerIsCloseEnoughToRevive() => SqrDistanceBetweenPlayers() < sqrMinPlayerRevivalDistance;
+            void ResetLocalReviveTimer() => _localReviveTimer = startingReviveTime;
 
+            //! Start revive start event for the other player
 			ReviveTimeRatio = 0f;
-			player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(true);
+			otherPlayerInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(true);
+            
             while (OtherPlayerIsCloseEnoughToRevive())
             {
                 Debug_RevivalTimerStatus();
+                
+                //! Elapse timer & update revival completion ratio
                 bool timerReached = ElapseReviveTimer(_controller.DeltaTime) < 0f;
-				ReviveTimeRatio = (1f - (_reviveTimer / reviveTime)).Clamp01();
+				ReviveTimeRatio = (1f - (_localReviveTimer / startingReviveTime)).Clamp01();
 				
+                //! Check if revival criteria is reached, then send revive event over network
 				if (timerReached)
                 {
-                    //! Revivalllllllllll
-					StartCoroutine(StartReviveDelayTimer());
+                    //! Start local revive delay timer to make sure all other players if the same view ID on other computers
+                    //  receive the revive event for this player
+					StartCoroutine(StartLocalReviveDelayTimer());
+
+                    //! Invoke revive attempt success for the other player
                     _shouldRevive = true;
 					ReviveTimeRatio = 1f;
-					player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
-                    player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(true);
-					OnReviveAttempt?.Invoke(true);
-					Send_HealthUpdateStatus(true); //! send message of revival to Local player
+					otherPlayerInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
+                    otherPlayerInfo.HealthManager.OnLocalReviveAttempt?.Invoke(true);
 					
+                    //! Send message of revival to Local player of this photon view ID
+					Send_HealthUpdateStatus(true);
+					
+                    //! This will be true only for debugging local reviving
                     if (reviveLocallyOnTimerReached)
                         TryRestoreControllerSystem();
 
@@ -595,10 +636,11 @@ namespace Hadal.Player.Behaviours
 
             //! This will run when the timer does not end & the other player goes too far from this player
 			ReviveTimeRatio = 0f;
-			ResetReviveTimer();
-			player.GetInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
-			player.GetInfo.HealthManager.OnReviveAttempt?.Invoke(false);
-            OnReviveAttempt?.Invoke(false);
+			ResetLocalReviveTimer();
+			
+            //! Invoke revive attempt failure for the other player
+            otherPlayerInfo.HealthManager.OnLocalRevivingAPlayer?.Invoke(false);
+			otherPlayerInfo.HealthManager.OnLocalReviveAttempt?.Invoke(false);
 
             if (debugEnabled)
                 $"Revival attempt failed.".Msg();
@@ -606,14 +648,14 @@ namespace Hadal.Player.Behaviours
             reviveTimerRoutine = null;
         }
 		
-		private IEnumerator StartReviveDelayTimer()
+		private IEnumerator StartLocalReviveDelayTimer()
 		{
 			_canBeRevivedByOthers = false;
-			_reviveDelayTimer = reviveDelayTime;
+			_localReviveDelayTimer = localReviveDelayTime;
 			
-			while (_reviveDelayTimer > 0f)
+			while (_localReviveDelayTimer > 0f)
 			{
-				_reviveDelayTimer -= _controller.DeltaTime;
+				_localReviveDelayTimer -= _controller.DeltaTime;
 				yield return null;
 			}
 			
@@ -638,8 +680,7 @@ namespace Hadal.Player.Behaviours
         private void ResetKnockTimer(in float time) => _knockTimer = time;
         private void ResetDeathTimer() => _deathTimer = deathTime;
         private float ElapseDeathTimer(in float deltaTime) => _deathTimer -= deltaTime;
-        private void ResetReviveTimer() => _reviveTimer = reviveTime;
-        private float ElapseReviveTimer(in float deltaTime) => _reviveTimer -= deltaTime;
+        private float ElapseReviveTimer(in float deltaTime) => _localReviveTimer -= deltaTime;
 
         #endregion
 
@@ -704,7 +745,7 @@ namespace Hadal.Player.Behaviours
             }
 
             TryRestoreControllerSystem();
-            OnReviveAttempt?.Invoke(true);
+            OnNetworkReviveAttempt?.Invoke(true);
 
             if (!IsDown && !IsUnalive)
                 "Player successfully revived.".Msg();
@@ -720,7 +761,7 @@ namespace Hadal.Player.Behaviours
                 return;
             }
 
-            reviveTimerRoutine = StartCoroutine(StartReviveTimer(_controller, true));
+            reviveTimerRoutine = StartCoroutine(StartLocalReviveTimer(_controller, true));
         }
 
         #endregion
@@ -729,6 +770,8 @@ namespace Hadal.Player.Behaviours
 
         private int PlayerViewID => _pView.ViewID;
         private bool IsLocalPlayer => _pView.IsMine;
+        public float MinOtherPlayerRevivalDistance => minOtherPlayerRevivalDistance;
+        public float OtherPlayerReviveTime => reviveOtherTime;
         public GameObject Obj => gameObject;
         public float GetHealthRatio => _currentHealth / (float)maxHealth;
         public int GetCurrentHealth => _currentHealth;
