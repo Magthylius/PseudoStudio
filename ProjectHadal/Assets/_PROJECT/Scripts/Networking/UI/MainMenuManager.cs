@@ -358,8 +358,12 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(lobbyMenu);
             OpenMenu(gameOptions);
 
-            ClassSelector.UnchooseClass(ClassSelector.CurrentClassType);
-            NetworkEventManager.Instance.LeaveRoom(true, true);
+            ClassSelector.UnchooseClass();
+
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+            //neManager.UpdateAllPlayerIndices(neManager.GetCurrentPlayerIndex());
+            neManager.FlushClassProperties();
+            neManager.LeaveRoom(true, true);
         }
 
         public void TMP_CheckRoomNameEligibility()
@@ -414,10 +418,10 @@ namespace Hadal.Networking.UI.MainMenu
             if (neManager.CurrentRoom.CustomProperties.TryGetValue(neManager.PlayerClassHash, out object value))
             {
                 Dictionary<int, int> roomProps = (Dictionary<int, int>)value;
-                print(roomProps.Count);
+                //print(roomProps.Count);
                 foreach (int playerIndex in roomProps.Keys)
                 {
-                    //print($"PI: {playerIndex} , PCT: {(PlayerClassType)roomProps[playerIndex]}");
+                    Debug.LogWarning($"PI: {playerIndex} , PCT: {(PlayerClassType)roomProps[playerIndex]}");
                     ClassSelector.UpdateNetworkSelector((PlayerClassType)roomProps[playerIndex], playerIndex);
                 }
             }
@@ -434,7 +438,11 @@ namespace Hadal.Networking.UI.MainMenu
                 item.ChangeColor(neManager.GetPlayerColor(dict[item.Player]));
             }
 
-            ClassSelector.UpdateSlotColor(neManager.GetPlayerColor(dict[neManager.LocalPlayer]));
+            //Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)neManager.CurrentRoom.CustomProperties[neManager.PlayerClassHash];
+            //ClassSelector.ForceUpdateSlotColor(playerClassInfo);
+            //! Force everyone to unselect
+            ClassSelector.UnchooseClass();
+            ClassSelector.FreeAllSelectors();
         }
 
         public void AddPlayerList(Player player, Color color)

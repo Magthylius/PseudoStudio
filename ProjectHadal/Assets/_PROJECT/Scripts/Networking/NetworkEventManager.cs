@@ -31,7 +31,8 @@ namespace Hadal.Networking
         PLAYER_HEALTH_UPDATE,
         PLAYER_ALL_UNALIVE,
         PLAYER_RECEIVE_DAMAGE,
-        PLAYER_INTERACT,
+        PLAYER_INTERACTING,
+        PLAYER_INTERACTED,
         GAME_MENU_CLASS_CHOOSE,
         GAME_MENU_CLASS_UNCHOOSE,
         GAME_START_LOAD,
@@ -311,9 +312,14 @@ namespace Hadal.Networking
         }
         public void SetCurrentRoomCustomProperty(object key, object value)
         {
-            print(PhotonNetwork.CurrentRoom);
-            Hashtable hashTable = new Hashtable();
-            hashTable.Add(key, value);
+            //print(PhotonNetwork.CurrentRoom);
+            /*if (CurrentRoom.CustomProperties.ContainsKey(key))
+                CurrentRoom.CustomProperties[key] = value;
+            else
+                CurrentRoom.CustomProperties.Add(key, value);*/
+            Hashtable hashTable = new Hashtable {{key, value}};
+            
+            
             SetCurrentRoomCustomProperty(hashTable);
         }
 
@@ -608,6 +614,81 @@ namespace Hadal.Networking
 
         private string playerClassHash = "PlayerClasses";
         public string PlayerClassHash => playerClassHash;
+
+        public void UpdateAllPlayerIndices(int leavingPlayerIndex)
+        {
+            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
+
+                if (playerClassInfo.ContainsKey(leavingPlayerIndex))
+                {
+                    playerClassInfo.Remove(leavingPlayerIndex);
+
+                    List<int> playerTypeInt = new List<int>();
+                    foreach (var pair in playerClassInfo)
+                        playerTypeInt.Add(pair.Value);
+
+                    Dictionary<int, int> newPlayerClassInfo = new Dictionary<int, int>();
+                    for (int i = 0; i < playerTypeInt.Count; i++)
+                        newPlayerClassInfo.Add(i, playerTypeInt[0]);
+                    
+                    SetCurrentRoomCustomProperty(playerClassHash, newPlayerClassInfo);
+                }
+
+            }
+        }
+        
+        /// <summary> Restructure custom properties when player leaves </summary>
+        public void UpdatePlayerIndices(PlayerClassType type, int newPlayerIndex)
+        {
+            Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
+            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                
+
+                /*foreach (var pClass in playerClassInfo)
+                {
+                    if (pClass.Value == (int)type)
+                    {
+                        playerClassInfo.Remove(pClass.Key);
+                        playerClassInfo.Add(newPlayerIndex, (int)type);
+                        break;
+                    }
+                }*/
+
+                if (playerClassInfo.ContainsKey(newPlayerIndex))
+                    playerClassInfo[newPlayerIndex] = (int) type;
+                else
+                    playerClassInfo.Add(newPlayerIndex, (int)type);
+            }
+
+            List<int> keysToRemove = new List<int>();
+            foreach (var pair in playerClassInfo)
+            {
+                if (pair.Key >= PlayerList.Length) keysToRemove.Add(pair.Key);
+            }
+
+            foreach (int key in keysToRemove)
+            {
+                Debug.LogWarning($"Removed key: {key} which is {(PlayerClassType)playerClassInfo[key]} class!");
+                playerClassInfo.Remove(key);
+            }
+            
+            SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
+        }
+
+        public void FlushClassProperties()
+        {
+            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                Debug.LogWarning("Custom properties flushed!");
+                //CurrentRoom.CustomProperties[playerClassHash] = null;
+                SetCurrentRoomCustomProperty(playerClassHash, new Dictionary<int, int>());
+            }
+        }
+        
+        /// <summary> Update properties when player chooses something </summary>
         public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
         {
             //! Have to convert enum type to int because they cant handle it
@@ -619,7 +700,7 @@ namespace Hadal.Networking
                     playerClassInfo[playerIndex] = (int)type;
                 else
                     playerClassInfo.Add(playerIndex, (int)type);
-                
+
                 SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
             }
             else

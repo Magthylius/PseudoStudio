@@ -20,6 +20,7 @@ namespace Hadal.Networking.UI
             if (c == PlayerClassType.Invalid && Selector.PlayerClassAvailable(type))
             {
                 Selector.ChooseClass(type);
+                Selector.SetClassChooser(this);
                 selected = true;
             }
         }
@@ -28,7 +29,8 @@ namespace Hadal.Networking.UI
         {
             if (Selector.CurrentClassType == type)
             {
-                Selector.UnchooseClass(type);
+                Selector.UnchooseClass();
+                Selector.SetClassChooser(null);
                 selected = false;
             }
         }
@@ -38,5 +40,7 @@ namespace Hadal.Networking.UI
             if (!selected) ChooseClass();
             else UnchooseClass();
         }
+
+        public bool SetSelectState(bool selectState) => selected = selectState;
     }
 }
