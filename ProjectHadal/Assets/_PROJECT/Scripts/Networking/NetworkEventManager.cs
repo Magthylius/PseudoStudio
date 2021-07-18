@@ -411,6 +411,7 @@ namespace Hadal.Networking
 
         #region Connection Events
         public event ConnectionEvent JoinedLobbyEvent;
+        public event ConnectionEvent JoinRoomFailedEvent;
         #endregion
 
         #region Room Functions
@@ -444,6 +445,7 @@ namespace Hadal.Networking
 
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
+            JoinRoomFailedEvent?.Invoke();
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)

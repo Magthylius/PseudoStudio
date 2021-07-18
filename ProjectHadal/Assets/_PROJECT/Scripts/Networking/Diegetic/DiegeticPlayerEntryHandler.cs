@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
@@ -49,7 +50,7 @@ namespace Hadal.Networking.Diegetics
         public void EnterOne()
         {
             totalPlayerCount++;
-            //Debug.LogWarning($"enterone tpc: {totalPlayerCount}");
+            Debug.LogWarning($"enterone tpc: {totalPlayerCount}");
             if (totalPlayerCount >= otherPlayerAnimators.Count)
             {
                 Debug.LogWarning($"Player count called more than animator count!");
@@ -75,6 +76,8 @@ namespace Hadal.Networking.Diegetics
             otherPlayerAnimators[totalPlayerCount].SetTrigger(exitTrigger);
             otherPlayerAnimators[totalPlayerCount].SetBool(boolState, false);
         }
+
+        public void Reset() => totalPlayerCount = 0;
 
         [Button("Test entry")]
         void TestEntry() => UpdateCurrentEntered(1);

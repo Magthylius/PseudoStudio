@@ -362,7 +362,8 @@ namespace Hadal.Networking.UI.MainMenu
 
             NetworkEventManager neManager = NetworkEventManager.Instance;
             //neManager.UpdateAllPlayerIndices(neManager.GetCurrentPlayerIndex());
-            
+            DiegeticHandler.ExitAll();
+            //DiegeticHandler.Reset();
             neManager.LeaveRoom(true, true);
         }
 
@@ -421,7 +422,7 @@ namespace Hadal.Networking.UI.MainMenu
                 //print(roomProps.Count);
                 foreach (int playerIndex in roomProps.Keys)
                 {
-                    Debug.LogWarning($"PI: {playerIndex} , PCT: {(PlayerClassType)roomProps[playerIndex]}");
+                    //Debug.LogWarning($"PI: {playerIndex} , PCT: {(PlayerClassType)roomProps[playerIndex]}");
                     ClassSelector.UpdateNetworkSelector((PlayerClassType)roomProps[playerIndex], playerIndex);
                 }
             }
@@ -473,6 +474,7 @@ namespace Hadal.Networking.UI.MainMenu
         
         public void PlayerEnteredRoom(Player player)
         {
+            Debug.LogWarning($"Player {player.NickName} has joined");
             DiegeticHandler.EnterOne();
         }
 
