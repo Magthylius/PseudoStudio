@@ -424,15 +424,17 @@ namespace Hadal.Networking.UI.MainMenu
             
         }
 
+        /// <summary> Update when someone leaves </summary>
         public void UpdateAllListedPlayers()
         {
             Dictionary<Player, int> dict = NetworkEventManager.Instance.GetSortedPlayerIndices();
             
             foreach (PlayerListItem item in _playerListItems)
             {
-                //Debug.LogWarning($"{dict[item.Player]}");
                 item.ChangeColor(NetworkEventManager.Instance.GetPlayerColor(dict[item.Player]));
             }
+            
+            ClassSelector.UpdateSlotColor();
         }
 
         public void AddPlayerList(Player player, Color color)
@@ -464,17 +466,10 @@ namespace Hadal.Networking.UI.MainMenu
         public void PlayerEnteredRoom(Player player)
         {
             DiegeticHandler.EnterOne();
-
-            /*Dictionary<int, Player> alp = NetworkEventManager.Instance.AllPlayers;
-            foreach (var s in alp)
-            {
-                Debug.LogWarning($"{s.Value.NickName} is number {s.Key}");
-            }*/
         }
 
         public void PlayerExitedRoom(Player player)
         {
-            //Debug.LogWarning($"{player.NickName} left");
             UpdateAllListedPlayers();
             DiegeticHandler.ExitOne();
         }
