@@ -30,8 +30,6 @@ namespace Hadal.Player
         [Header("Specialized Utility")]
         public List <UsableLauncherObject> ClassLauncher;
 
-        NetworkEventManager neManager = NetworkEventManager.Instance;
-
         public void SetUpUtility()
         {
             var playerInv = LocalPlayerData.PlayerController.GetInfo.Inventory;
@@ -66,7 +64,7 @@ namespace Hadal.Player
             {
                 playerHealth.SetReviveOtherTime(ReviveTime);
                 object[] content = new object[] { playerPView.ViewID, ReviveTime};
-                neManager.RaiseEvent(ByteEvents.PLAYER_UPDATED_REVIVE_TIME, content);
+                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_UPDATED_REVIVE_TIME, content);
             }
 
             foreach(UsableLauncherObject obj in ClassLauncher)

@@ -196,22 +196,21 @@ namespace Hadal.Player
                 //! Host treats everything as isMine. This is bad, it relies on host first instantiate. Too bad!
                 if (LocalPlayerData.PlayerController == null)
                 {
-                    LocalPlayerData.PlayerController = this;
-                    PlayerClassManager.Instance.ApplyClass();
+                    LocalPlayerData.PlayerController = this;                
                     gameObject.AddComponent<AudioListener>();
                     Debug.LogWarning("Audio listener added");
                 }
             }
             else if (_pView.IsMine)
             {
-                LocalPlayerData.PlayerController = this;
-                PlayerClassManager.Instance.ApplyClass();
+                LocalPlayerData.PlayerController = this;            
                 gameObject.AddComponent<AudioListener>();
                 Debug.LogWarning("Audio listener added");
             }
 
             NetworkData.AddPlayer(this);
             onInitialiseComplete?.Invoke();
+            /*PlayerClassManager.Instance.ApplyClass();*/
         }
 
         public void SetPhysicDefault()
@@ -276,6 +275,7 @@ namespace Hadal.Player
             print("Everyone ready. Begin !");
             
             SetLocalPlayerLayer();
+            PlayerClassManager.Instance.ApplyClass();
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
             _manager.InstantiatePViewList();
