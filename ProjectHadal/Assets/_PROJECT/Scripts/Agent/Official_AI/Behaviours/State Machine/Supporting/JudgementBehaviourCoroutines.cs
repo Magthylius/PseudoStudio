@@ -113,7 +113,7 @@ namespace Hadal.AI
                     else
                         success = TrySetCustomNavPoint(Brain.CurrentTarget);
 
-                    //AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                    AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
                     if (success)
                     {
                         targetMarked = true;
@@ -127,6 +127,8 @@ namespace Hadal.AI
                     canCarry = true;
                     SetCarryDelayTimer(carryDelayTime);
                     NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
+
+                    AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
 
                     TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
                     continue;
