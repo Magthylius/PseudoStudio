@@ -27,6 +27,7 @@ namespace Hadal.Networking
     {
         PLAYER_SPAWNED = 0,
         PLAYER_SPAWNED_CONFIRMED,
+        PLAYER_UPDATED_REVIVE_TIME,
         PLAYER_HEALTH_UPDATE,
         PLAYER_ALL_UNALIVE,
         PLAYER_RECEIVE_DAMAGE,
