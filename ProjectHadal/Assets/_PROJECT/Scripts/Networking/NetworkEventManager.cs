@@ -313,14 +313,14 @@ namespace Hadal.Networking
         public void SetCurrentRoomCustomProperty(object key, object value)
         {
             //print(PhotonNetwork.CurrentRoom);
-            if (CurrentRoom.CustomProperties.ContainsKey(key))
+            /*if (CurrentRoom.CustomProperties.ContainsKey(key))
                 CurrentRoom.CustomProperties[key] = value;
             else
-                CurrentRoom.CustomProperties.Add(key, value);
-            //Hashtable hashTable = new Hashtable {{key, value}};
+                CurrentRoom.CustomProperties.Add(key, value);*/
+            Hashtable hashTable = new Hashtable {{key, value}};
             
             
-            //SetCurrentRoomCustomProperty(hashTable);
+            SetCurrentRoomCustomProperty(hashTable);
         }
 
         [Button("Force disconnect")]

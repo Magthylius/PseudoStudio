@@ -97,7 +97,7 @@ namespace Hadal.Networking.UI
 
         public void FreeChosenClassButton()
         {
-            if (_currentClassChooser != null) _currentClassChooser.UnchooseClass();
+            if (_currentClassChooser != null) _currentClassChooser.SetSelectState(false);
         }
 
         void RE_PlayerChosenClass(EventData data)

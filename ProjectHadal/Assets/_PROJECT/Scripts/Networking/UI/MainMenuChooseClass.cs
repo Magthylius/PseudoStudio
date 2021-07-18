@@ -40,5 +40,7 @@ namespace Hadal.Networking.UI
             if (!selected) ChooseClass();
             else UnchooseClass();
         }
+
+        public bool SetSelectState(bool selectState) => selected = selectState;
     }
 }
