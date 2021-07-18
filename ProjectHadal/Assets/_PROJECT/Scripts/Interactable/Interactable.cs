@@ -5,19 +5,32 @@ using Hadal.Usables;
 using Hadal.InteractableEvents;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using System.Collections;
+using Tenshi.UnitySoku;
+using System.Linq;
+using Tenshi;
 
 namespace Hadal.Interactables
 {
     public class Interactable : MonoBehaviour, IInteractable
     {
+        [Header("Debug")]
+        [SerializeField] private bool enableDebug = true;
+
+        [Header("General")]
         [SerializeField] private bool ableToInteract;
         [SerializeField] private InteractionType interactionType;
         [SerializeField] private int interactableID;
+        [SerializeField] private float interactionMaintainDistance = 12f;
+        [SerializeField] private float interactionWindupTime = 3f;
+        private float _windupTimer = 0f;
+        private Coroutine _activeTimerRoutine = null;
         
 
         [SerializeField] private float regenerateTimer;
         [SerializeField] private float regenerateTimerMax;
-        NetworkEventManager neManager = NetworkEventManager.Instance;
+        NetworkEventManager neManager = null;
+        InteractableEventManager interManager = null;
 
         // emissive change properties
         [SerializeField] private GameObject flareIndicator;
@@ -27,10 +40,16 @@ namespace Hadal.Interactables
 
         private void Start()
         {
+            neManager = NetworkEventManager.Instance;
+            interManager = InteractableEventManager.Instance;
+
             if(neManager)
                 neManager.AddListener(ByteEvents.PLAYER_INTERACT, REInteract);
 
-            InteractableEventManager.Instance.OnInteractConfirmation += ConfirmedInteract;
+            if (interManager)
+                interManager.OnInteractConfirmation += Receive_ConfirmedInteract;
+
+            _activeTimerRoutine = null;
 
             //! initialise property block (needs to use a renderer, since it has the functions to set up)
             materialProp = new MaterialPropertyBlock();
@@ -54,7 +73,8 @@ namespace Hadal.Interactables
 
         private void OnDestroy()
         {
-            InteractableEventManager.Instance.OnInteractConfirmation -= ConfirmedInteract;
+            if (interManager)
+                interManager.OnInteractConfirmation -= Receive_ConfirmedInteract;
         }
 
         public void Interact(int viewID)
@@ -62,7 +82,7 @@ namespace Hadal.Interactables
             if (!ableToInteract)
                 return;
 
-            GameObject actorPlayer;     
+            GameObject actorPlayer = null;     
 
             foreach(GameObject gO in NetworkEventManager.Instance.PlayerObjects)
             {
@@ -77,11 +97,68 @@ namespace Hadal.Interactables
                 }
             }
 
-            //This is where we send the event to interact
-            InteractableEventManager.Instance.InvokeInteraction(interactionType, interactableID);
+            if (_activeTimerRoutine != null)
+            {
+                if (enableDebug)
+                    "Already interacting with this interactable, please wait warmly.".Msg();
+                return;
+            }
+            
+            _activeTimerRoutine = StartCoroutine(StartInteractionWindupTimer(actorPlayer));
         }
 
-        public void ConfirmedInteract(int interactID)
+        private IEnumerator StartInteractionWindupTimer(GameObject pObject)
+        {
+            if (pObject == null)
+            {
+                "Interacting player is not found, unable to start interaction wind-up timer.".Warn();
+                yield break;
+            }
+
+            //! Save transform info of the player that has interacted with this script
+            Transform otherTrans = pObject.transform;
+
+            //! Setup timer values
+            float sqrMaintainDist = interactionMaintainDistance.Sqr();
+            ResetWindupTimer();
+
+            while (InteractorIsWithinInteractionDistance())
+            {
+                bool timerFinished = ElapseWindupTimer(DeltaTime) <= 0f;
+                if (timerFinished)
+                {
+                    HandleExitSequence(true);
+                    yield break;
+                }
+                yield return null;
+            }
+
+            //! Interaction fail case (went out of distance)
+            HandleExitSequence(false);
+            yield break;
+
+            //! Local function definitions
+            float SqrDistanceBetweenInteractorAndInteractee() => (transform.position - otherTrans.position).sqrMagnitude;
+            bool InteractorIsWithinInteractionDistance() => SqrDistanceBetweenInteractorAndInteractee() < sqrMaintainDist;
+            void ResetWindupTimer() => _windupTimer = interactionWindupTime;
+            float ElapseWindupTimer(in float deltaTime) => _windupTimer -= deltaTime;
+            void HandleExitSequence(bool isSuccess)
+            {
+                if (isSuccess)
+                    Send_InteractionDetected();
+
+                _activeTimerRoutine = null;
+            }
+        }
+
+        /// <summary> This is where we send the event to interact </summary>
+        private void Send_InteractionDetected()
+        {
+            if (interManager != null)
+                interManager.InvokeInteraction(interactionType, interactableID);
+        }
+
+        private void Receive_ConfirmedInteract(int interactID)
         {
             if (interactID != interactableID)
                 return;
@@ -123,9 +200,11 @@ namespace Hadal.Interactables
             //Debug.Log(materialProp.GetFloat("_EmissionIntensity"));
             submarineRenderer.SetPropertyBlock(materialProp);
         }
-        public void setID(int newID)
+        public void SetID(int newID)
         {
             interactableID = newID;
         }
+
+        private float DeltaTime => Time.deltaTime;
     }
 }
