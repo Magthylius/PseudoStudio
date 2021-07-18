@@ -335,7 +335,7 @@ namespace Hadal.Player.Behaviours
             }
         }
 
-        /// <summary> Sets the reviving time for this local player to revive other players. </summary>
+        /// <summary> Sets the reviving time for this local player to revive other players. </summary> 
         public void SetReviveOtherTime(float newReviveOtherTime)
         {
             reviveOtherTime = newReviveOtherTime;
