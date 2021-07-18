@@ -44,17 +44,27 @@ namespace Hadal.Networking.UI
         }
 
         /// <summary> Update when someone leaves and needs colors to be updated </summary>
-        public void UpdateSlotColor(Color newColor)
+        public void ForceUpdateSlotColor(Dictionary<int, int> newIndices)
         {
             NetworkEventManager neManager = NetworkEventManager.Instance;
             //GetHighlighter(_currentClassType).Select(neManager.GetCurrentPlayerColor(), false);
             //ChooseClass(_currentClassType);
 
+            /*
             if (_currentClassType != PlayerClassType.Invalid)
             {
                 Debug.LogWarning($"Updating slot color. New color: {newColor}");
                 GetHighlighter(_currentClassType).Select(newColor, false);
                 //neManager.UpdatePlayerIndices(_currentClassType, neManager.GetCurrentPlayerIndex());
+            }*/
+
+            foreach (var pair in newIndices)
+            {
+                PlayerClassType type = (PlayerClassType) pair.Value;
+                if (type != PlayerClassType.Invalid)
+                {
+                    GetHighlighter(type).Select(neManager.GetPlayerColor(pair.Key), type != _currentClassType);
+                }
             }
         }
 

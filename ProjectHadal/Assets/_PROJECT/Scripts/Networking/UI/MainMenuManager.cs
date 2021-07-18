@@ -437,7 +437,8 @@ namespace Hadal.Networking.UI.MainMenu
                 item.ChangeColor(neManager.GetPlayerColor(dict[item.Player]));
             }
 
-            ClassSelector.UpdateSlotColor(neManager.GetPlayerColor(dict[neManager.LocalPlayer]));
+            Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)neManager.CurrentRoom.CustomProperties[neManager.PlayerClassHash];
+            ClassSelector.ForceUpdateSlotColor(playerClassInfo);
         }
 
         public void AddPlayerList(Player player, Color color)
