@@ -358,7 +358,7 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(lobbyMenu);
             OpenMenu(gameOptions);
 
-            ClassSelector.UnchooseClass(ClassSelector.CurrentClassType);
+            ClassSelector.UnchooseClass();
 
             NetworkEventManager neManager = NetworkEventManager.Instance;
             //neManager.UpdateAllPlayerIndices(neManager.GetCurrentPlayerIndex());
@@ -440,7 +440,9 @@ namespace Hadal.Networking.UI.MainMenu
 
             //Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)neManager.CurrentRoom.CustomProperties[neManager.PlayerClassHash];
             //ClassSelector.ForceUpdateSlotColor(playerClassInfo);
-            ClassSelector.UnchooseClass(ClassSelector.CurrentClassType);
+            //! Force everyone to unselect
+            ClassSelector.UnchooseClass();
+            ClassSelector.FreeChosenClassButton();
         }
 
         public void AddPlayerList(Player player, Color color)

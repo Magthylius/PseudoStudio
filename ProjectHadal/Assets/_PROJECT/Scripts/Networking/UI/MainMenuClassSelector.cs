@@ -20,6 +20,7 @@ namespace Hadal.Networking.UI
         [SerializeField, ReadOnly] private List<PlayerClassType> chosenClassTypes = new List<PlayerClassType>();
 
         private PlayerClassType _currentClassType = PlayerClassType.Invalid;
+        private MainMenuChooseClass _currentClassChooser = null;
 
         private void Start()
         {
@@ -47,16 +48,6 @@ namespace Hadal.Networking.UI
         public void ForceUpdateSlotColor(Dictionary<int, int> newIndices)
         {
             NetworkEventManager neManager = NetworkEventManager.Instance;
-            //GetHighlighter(_currentClassType).Select(neManager.GetCurrentPlayerColor(), false);
-            //ChooseClass(_currentClassType);
-
-            /*
-            if (_currentClassType != PlayerClassType.Invalid)
-            {
-                Debug.LogWarning($"Updating slot color. New color: {newColor}");
-                GetHighlighter(_currentClassType).Select(newColor, false);
-                //neManager.UpdatePlayerIndices(_currentClassType, neManager.GetCurrentPlayerIndex());
-            }*/
 
             Debug.LogWarning("Force slot color called");
             foreach (var pair in newIndices)
@@ -90,18 +81,23 @@ namespace Hadal.Networking.UI
             ClassChangedEvent?.Invoke(_currentClassType);
         }
 
-        public void UnchooseClass(PlayerClassType type)
+        public void UnchooseClass()
         {
-            if (type != _currentClassType || type == PlayerClassType.Invalid) return;
+            if (_currentClassType != PlayerClassType.Invalid) return;
             
             NetworkEventManager neManager = NetworkEventManager.Instance;
             
-            neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, type);
+            neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, _currentClassType);
+            GetHighlighter(_currentClassType).Deselect();
             _currentClassType = PlayerClassType.Invalid;
-            GetHighlighter(type).Deselect();
             
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), PlayerClassType.Invalid);
             ClassChangedEvent?.Invoke(_currentClassType);
+        }
+
+        public void FreeChosenClassButton()
+        {
+            if (_currentClassChooser != null) _currentClassChooser.UnchooseClass();
         }
 
         void RE_PlayerChosenClass(EventData data)
@@ -153,5 +149,6 @@ namespace Hadal.Networking.UI
 
         public PlayerClassType CurrentClassType => _currentClassType;
         public bool PlayerClassAvailable(PlayerClassType type) => !chosenClassTypes.Contains(type);
+        public void SetClassChooser(MainMenuChooseClass classChooser) => _currentClassChooser = classChooser;
     }
 }
