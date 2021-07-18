@@ -45,7 +45,10 @@ namespace Hadal.Interactables
             interManager = InteractableEventManager.Instance;
 
             if(neManager)
-                neManager.AddListener(ByteEvents.PLAYER_INTERACT, REInteract);
+            {
+                neManager.AddListener(ByteEvents.PLAYER_INTERACTED, REInteract);
+                neManager.AddListener(ByteEvents.PLAYER_INTERACTING, REInteracting);
+            }    
 
             if (interManager)
                 interManager.OnInteractConfirmation += Receive_ConfirmedInteract;
@@ -83,6 +86,12 @@ namespace Hadal.Interactables
             if (!ableToInteract)
                 return;
 
+            if (isInteracting)
+            {
+                Debug.LogWarning("Someone is already interacting !");
+                return;
+            }
+
             GameObject actorPlayer = null;     
 
             foreach(GameObject gO in NetworkEventManager.Instance.PlayerObjects)
@@ -116,8 +125,11 @@ namespace Hadal.Interactables
                 yield break;
             }
 
-            //unable to be interacted when someone else is interacting
+            //unable to be interacted when someone else is interacting. Send event to notify others.
             isInteracting = true;
+            object[] content = new object[] { interactableID, isInteracting };
+            neManager.RaiseEvent(ByteEvents.PLAYER_INTERACTING, content);
+            //
 
             //! Save transform info of the player that has interacted with this script
             Transform otherTrans = pObject.transform;
@@ -148,8 +160,11 @@ namespace Hadal.Interactables
             float ElapseWindupTimer(in float deltaTime) => _windupTimer -= deltaTime;
             void HandleExitSequence(bool isSuccess)
             {
-                //its no more being interacted.
+                //its no more being interacted. Send event to notify others.
                 isInteracting = false;
+                content = new object[] { interactableID, isInteracting };
+                neManager.RaiseEvent(ByteEvents.PLAYER_INTERACTING, content);
+                //
 
                 if (isSuccess)              
                     Send_InteractionDetected();
@@ -173,12 +188,12 @@ namespace Hadal.Interactables
             DisableFlare();
 
             if(neManager)
-                neManager.RaiseEvent(ByteEvents.PLAYER_INTERACT, interactableID);
+                neManager.RaiseEvent(ByteEvents.PLAYER_INTERACTED, interactableID);
         }
 
         public void REInteract(EventData obj)
         {
-            if (obj.Code == (byte)ByteEvents.PLAYER_INTERACT)
+            if (obj.Code == (byte)ByteEvents.PLAYER_INTERACTED)
             {  
                 int data = (int)obj.CustomData;
 
@@ -187,6 +202,18 @@ namespace Hadal.Interactables
                     regenerateTimer = 0;
                     
                     DisableFlare();
+                }
+            }
+        }
+
+        public void REInteracting(EventData obj)
+        {
+            object[] data = (object[])obj.CustomData;
+            if (obj.Code == (byte)ByteEvents.PLAYER_INTERACTING)
+            {
+                if ((int)data[0] == interactableID)
+                {
+                    isInteracting = (bool)data[1];
                 }
             }
         }
