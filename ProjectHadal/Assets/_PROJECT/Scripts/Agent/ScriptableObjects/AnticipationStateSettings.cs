@@ -17,6 +17,7 @@ namespace Hadal.AI.States
         [Range(0f, 1f)] public float ConfidenceObjectiveGate = 0.5f;
         [MinMaxSlider(0f, 0.5f)] public Vector2 RandomConfidenceInfluence = Vector2.zero;
         [Min(0)] public int DisruptionDamageCount = 2;
+        [Min(0)] public float IsolatedPlayerCheckTime = 5f;
 
         public EngagementObjective GetRandomInfluencedObjective(float currentConfidence)
         {
