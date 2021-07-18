@@ -19,6 +19,7 @@ namespace Hadal.Interactables
 
         [Header("General")]
         [SerializeField] private bool ableToInteract;
+        [SerializeField] private bool isInteracting;
         [SerializeField] private InteractionType interactionType;
         [SerializeField] private int interactableID;
         [SerializeField] private float interactionMaintainDistance = 12f;
@@ -115,6 +116,9 @@ namespace Hadal.Interactables
                 yield break;
             }
 
+            //unable to be interacted when someone else is interacting
+            isInteracting = true;
+
             //! Save transform info of the player that has interacted with this script
             Transform otherTrans = pObject.transform;
 
@@ -144,9 +148,12 @@ namespace Hadal.Interactables
             float ElapseWindupTimer(in float deltaTime) => _windupTimer -= deltaTime;
             void HandleExitSequence(bool isSuccess)
             {
-                if (isSuccess)
-                    Send_InteractionDetected();
+                //its no more being interacted.
+                isInteracting = false;
 
+                if (isSuccess)              
+                    Send_InteractionDetected();
+           
                 _activeTimerRoutine = null;
             }
         }
