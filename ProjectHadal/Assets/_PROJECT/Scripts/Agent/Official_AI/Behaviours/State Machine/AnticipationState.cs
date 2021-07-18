@@ -6,6 +6,7 @@ using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.AI.Caverns;
+using Hadal.Player;
 
 //! C: jet, E: jon
 namespace Hadal.AI.States
@@ -54,8 +55,9 @@ namespace Hadal.AI.States
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
             
+            if (CheckForIsolatedPlayerCondition(Brain.DeltaTime)) return;
             if (Brain.CheckForJudgementStateCondition()) return;
-            if (CheckForAutoActCondition()) return;
+            if (CheckForAutoActCondition(Brain.DeltaTime)) return;
         }
 
         public override void LateStateTick()
@@ -197,14 +199,39 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
         }
 
-        private bool CheckForIsolatedPlayer()
+        private bool CheckForIsolatedPlayerCondition(in float deltaTime)
         {
+            isolatedPlayerCheckTimer -= deltaTime;
+            if (IsolatedPlayerCheckTimerReached())
+            {
+                //! Reset timer
+                ResetIsolatedPlayerCheckTimer();
+
+                //! Get any available isolated player, if none is found exit immediately with false
+                PlayerController isolatedPlayer = GetAnyIsolatedPlayer();
+                if (isolatedPlayer == null)
+                    return false;
+                
+                //! Try to set current target of the brain & return the result of the judgement check
+                Brain.TrySetCurrentTarget(isolatedPlayer);
+                return Brain.CheckForJudgementStateCondition();
+            }
+
             return false;
+
+            void ResetIsolatedPlayerCheckTimer() => isolatedPlayerCheckTimer = settings.IsolatedPlayerCheckTime;
+            bool IsolatedPlayerCheckTimerReached() => isolatedPlayerCheckTimer <= 0f;
+            PlayerController GetAnyIsolatedPlayer()
+            {
+                var player = CavernManager.GetIsolatedPlayer();
+                if (player == null) player = SenseDetection.GetIsolatedPlayerIfAny();
+                return player;
+            }
         }
 
-        private bool CheckForAutoActCondition()
+        private bool CheckForAutoActCondition(in float deltaTime)
         {
-            autoActTimer -= Brain.DeltaTime;
+            autoActTimer -= deltaTime;
             if (AutoActTimerReached())
             {
                 ResetAutoActTimer();
