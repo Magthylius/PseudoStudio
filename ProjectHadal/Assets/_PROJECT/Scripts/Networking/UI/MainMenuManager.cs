@@ -361,7 +361,7 @@ namespace Hadal.Networking.UI.MainMenu
             ClassSelector.UnchooseClass(ClassSelector.CurrentClassType);
 
             NetworkEventManager neManager = NetworkEventManager.Instance;
-            neManager.UpdateAllPlayerIndices(neManager.GetCurrentPlayerIndex());
+            //neManager.UpdateAllPlayerIndices(neManager.GetCurrentPlayerIndex());
             neManager.LeaveRoom(true, true);
         }
 
@@ -437,8 +437,9 @@ namespace Hadal.Networking.UI.MainMenu
                 item.ChangeColor(neManager.GetPlayerColor(dict[item.Player]));
             }
 
-            Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)neManager.CurrentRoom.CustomProperties[neManager.PlayerClassHash];
-            ClassSelector.ForceUpdateSlotColor(playerClassInfo);
+            //Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)neManager.CurrentRoom.CustomProperties[neManager.PlayerClassHash];
+            //ClassSelector.ForceUpdateSlotColor(playerClassInfo);
+            ClassSelector.UnchooseClass(ClassSelector.CurrentClassType);
         }
 
         public void AddPlayerList(Player player, Color color)

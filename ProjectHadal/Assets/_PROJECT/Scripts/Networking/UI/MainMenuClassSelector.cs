@@ -58,6 +58,7 @@ namespace Hadal.Networking.UI
                 //neManager.UpdatePlayerIndices(_currentClassType, neManager.GetCurrentPlayerIndex());
             }*/
 
+            Debug.LogWarning("Force slot color called");
             foreach (var pair in newIndices)
             {
                 PlayerClassType type = (PlayerClassType) pair.Value;

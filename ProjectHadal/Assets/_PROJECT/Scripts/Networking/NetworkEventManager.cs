@@ -677,6 +677,14 @@ namespace Hadal.Networking
             
             SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
         }
+
+        public void FlushClassProperties()
+        {
+            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                CurrentRoom.CustomProperties.Remove(playerClassHash);
+            }
+        }
         
         /// <summary> Update properties when player chooses something </summary>
         public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
