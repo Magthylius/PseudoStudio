@@ -442,7 +442,7 @@ namespace Hadal.Networking.UI.MainMenu
             //ClassSelector.ForceUpdateSlotColor(playerClassInfo);
             //! Force everyone to unselect
             ClassSelector.UnchooseClass();
-            ClassSelector.FreeChosenClassButton();
+            ClassSelector.FreeAllSelectors();
         }
 
         public void AddPlayerList(Player player, Color color)

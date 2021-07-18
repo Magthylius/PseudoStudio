@@ -76,6 +76,7 @@ namespace Hadal.Networking.UI
             GetHighlighter(type).Select(pColor, false);
             
             //! Update room properties so that other players have the information
+            Debug.LogWarning($"Chose PlayerIndex: {neManager.GetCurrentPlayerIndex()}");
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), type);
             
             ClassChangedEvent?.Invoke(_currentClassType);
@@ -91,13 +92,19 @@ namespace Hadal.Networking.UI
             GetHighlighter(_currentClassType).Deselect();
             _currentClassType = PlayerClassType.Invalid;
             
+            Debug.LogWarning($"Unchose PlayerIndex: {neManager.GetCurrentPlayerIndex()}");
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), PlayerClassType.Invalid);
             ClassChangedEvent?.Invoke(_currentClassType);
         }
 
-        public void FreeChosenClassButton()
+        public void FreeAllSelectors()
         {
-            if (_currentClassChooser != null) _currentClassChooser.SetSelectState(false);
+            if (_currentClassChooser != null) 
+                _currentClassChooser.SetSelectState(false);
+
+            foreach (var highlight in ChosenHighlighters)
+                highlight.Deselect();
+            
         }
 
         void RE_PlayerChosenClass(EventData data)
