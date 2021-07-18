@@ -683,7 +683,8 @@ namespace Hadal.Networking
             if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
             {
                 Debug.LogWarning("Custom properties flushed!");
-                CurrentRoom.CustomProperties.Remove(playerClassHash);
+                //CurrentRoom.CustomProperties[playerClassHash] = null;
+                SetCurrentRoomCustomProperty(playerClassHash, new Dictionary<int, int>());
             }
         }
         
