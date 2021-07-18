@@ -44,11 +44,13 @@ namespace Hadal.Networking.UI
         }
 
         /// <summary> Update when someone leaves and needs colors to be updated </summary>
-        public void UpdateSlotColor()
+        public void UpdateSlotColor(Color newColor)
         {
             NetworkEventManager neManager = NetworkEventManager.Instance;
             //GetHighlighter(_currentClassType).Select(neManager.GetCurrentPlayerColor(), false);
-            ChooseClass(_currentClassType);
+            //ChooseClass(_currentClassType);
+            
+            GetHighlighter(_currentClassType).Select(newColor, false);
         }
 
         public void ChooseClass(PlayerClassType type)

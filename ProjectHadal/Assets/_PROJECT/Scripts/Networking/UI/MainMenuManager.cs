@@ -428,13 +428,13 @@ namespace Hadal.Networking.UI.MainMenu
         public void UpdateAllListedPlayers()
         {
             Dictionary<Player, int> dict = NetworkEventManager.Instance.GetSortedPlayerIndices();
-            
+            NetworkEventManager neManager = NetworkEventManager.Instance;
             foreach (PlayerListItem item in _playerListItems)
             {
-                item.ChangeColor(NetworkEventManager.Instance.GetPlayerColor(dict[item.Player]));
+                item.ChangeColor(neManager.GetPlayerColor(dict[item.Player]));
             }
-            
-            ClassSelector.UpdateSlotColor();
+
+            ClassSelector.UpdateSlotColor(neManager.GetPlayerColor(dict[neManager.LocalPlayer]));
         }
 
         public void AddPlayerList(Player player, Color color)
