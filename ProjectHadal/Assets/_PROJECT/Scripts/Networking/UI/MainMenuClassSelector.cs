@@ -83,7 +83,7 @@ namespace Hadal.Networking.UI
 
         public void UnchooseClass()
         {
-            if (_currentClassType != PlayerClassType.Invalid) return;
+            if (_currentClassType == PlayerClassType.Invalid) return;
             
             NetworkEventManager neManager = NetworkEventManager.Instance;
             
