@@ -462,6 +462,9 @@ namespace Hadal.Networking
                 Debug.LogWarning($"{otherPlayer.NickName} has not left!");
                 return;
             }
+            
+            if (IsInMainMenu && IsMasterClient)
+                FlushClassProperties();
                 
             //Debug.LogWarning($"{otherPlayer.NickName} left");
             

@@ -362,7 +362,7 @@ namespace Hadal.Networking.UI.MainMenu
 
             NetworkEventManager neManager = NetworkEventManager.Instance;
             //neManager.UpdateAllPlayerIndices(neManager.GetCurrentPlayerIndex());
-            neManager.FlushClassProperties();
+            
             neManager.LeaveRoom(true, true);
         }
 
