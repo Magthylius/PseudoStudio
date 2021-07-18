@@ -199,12 +199,15 @@ namespace Hadal.Player.Behaviours
             _currentHealth = maxHealth;
             _controller.UI.InvokeOnHealthChange(_currentHealth);
             ResetDeathTimer();
-            ResetLocalReviveTimer();
+            StopCoroutine(StartLocalReviveTimer(null));
+            //ResetLocalReviveTimer();
             if (IsLocalPlayer)
             {
                 if (debugEnabled) "For local player: Subscribing deactivate function in the case of IsDown = true.".Msg();
                 OnDown += DeactivateControllerSystem;
             }
+            
+            //void ResetLocalReviveTimer() => _localReviveTimer = startingReviveTime;
         }
 
         /// <summary>
