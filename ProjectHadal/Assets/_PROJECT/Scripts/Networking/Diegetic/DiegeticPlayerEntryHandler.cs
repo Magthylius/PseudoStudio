@@ -80,7 +80,7 @@ namespace Hadal.Networking.Diegetics
         public void Reset() => totalPlayerCount = 0;
 
         [Button("Test entry")]
-        void TestEntry() => UpdateCurrentEntered(1);
+        void TestEntry() => UpdateCurrentEntered(4);
         
         [Button("Test exit")]
         void TestExit() => ExitAll();
