@@ -411,6 +411,7 @@ namespace Hadal.Networking
 
         #region Connection Events
         public event ConnectionEvent JoinedLobbyEvent;
+        public event ConnectionEvent JoinRoomFailedEvent;
         #endregion
 
         #region Room Functions
@@ -444,6 +445,7 @@ namespace Hadal.Networking
 
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
+            JoinRoomFailedEvent?.Invoke();
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -779,6 +781,19 @@ namespace Hadal.Networking
         public Color ThirdPlayerColor;
         public Color FourthPlayerColor;
 
+        public Color GetPlayerColor(Player player)
+        {
+            int index = GetPlayerIndex(player);
+            
+            switch (index)
+            {
+                case 0: return FirstPlayerColor;
+                case 1: return SecondPlayerColor;
+                case 2: return ThirdPlayerColor;
+                default: return FourthPlayerColor;
+            }
+        }
+        
         public Color GetPlayerColor(int index)
         {
             switch (index)
@@ -800,6 +815,12 @@ namespace Hadal.Networking
             return GetPlayerColor(999);
         }
 
+        public int GetPlayerIndex(Player player)
+        {
+            Dictionary<Player, int> sortedDict = GetSortedPlayerIndices();
+            return sortedDict[player];
+        }
+        
         public Dictionary<Player, int> GetSortedPlayerIndices()
         {
             Dictionary<Player, int> sortedDict = new Dictionary<Player, int>();

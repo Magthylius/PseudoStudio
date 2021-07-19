@@ -195,7 +195,7 @@ namespace Hadal.Player
                 controller.HandlePhotonView(true);
                 controller.SetPlayerReady(true);
             }
-            // Host finish assignming ownerships and cameras
+            // Host finish assigning ownerships and cameras
             
             AddPlayerEvent?.Invoke();
         }

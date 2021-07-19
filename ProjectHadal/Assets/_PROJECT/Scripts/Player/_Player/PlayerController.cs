@@ -33,6 +33,7 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] PlayerCollisions collisions;
         [Foldout("Components"), SerializeField] UIManager playerUI;
         [Foldout("Components"), SerializeField] DodgeBooster dodgeBooster;
+        [Foldout("Components"), SerializeField] PlayerGraphicsHandler graphicsHandler;
 
         [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] string localPlayerLayer;
@@ -338,7 +339,9 @@ namespace Hadal.Player
 
         public void HandlePhotonView(bool isMine)
         {
-            if(!NetworkEventManager.Instance.isOfflineMode)
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+            
+            if(!neManager.isOfflineMode)
             {
                 gameObject.name = "Player " + photonInfo.PView.ViewID.ToString();
             }
@@ -347,6 +350,8 @@ namespace Hadal.Player
                 gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
                 mover.ToggleEnablility(true);
             }
+            
+            graphicsHandler.ChangeEmissiveColor(neManager.GetPlayerColor(_pView.Owner));
             
             if (UITrackerBridge.LocalPlayerUIManager == null && isMine)
             {
