@@ -100,7 +100,7 @@ namespace Hadal.Networking.UI.MainMenu
         void Start()
         {
             NetworkEventManager.Instance.JoinedLobbyEvent += EndStartPhase;
-            NetworkEventManager.Instance.LeftRoomEvent += LeftRoom;
+            NetworkEventManager.Instance.LeftRoomAction += LeftRoom;
 
             DetermineMenuToOpen();
             //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
@@ -134,7 +134,7 @@ namespace Hadal.Networking.UI.MainMenu
         void OnDestroy()
         {
             NetworkEventManager.Instance.JoinedLobbyEvent -= EndStartPhase;
-            NetworkEventManager.Instance.LeftRoomEvent -= LeftRoom;
+            NetworkEventManager.Instance.LeftRoomAction -= LeftRoom;
         }
 
         #region Main Menu 

@@ -267,11 +267,11 @@ namespace Hadal.Networking
 
         #region Photon Networking Overrides
         public delegate void NetworkEventPlayer(Player player);
-        public delegate void NetworkEvent();
+        public delegate void NetworkAction();
         public event NetworkEventPlayer PlayerEnteredEvent;
         public event NetworkEventPlayer PlayerLeftEvent;
         public event NetworkEventPlayer MasterClientSwitchedEvent;
-        public event NetworkEvent LeftRoomEvent;
+        public event NetworkAction LeftRoomAction;
 
         [Header("Room Options")]
         [Tooltip("Max number of players in room")]
@@ -333,7 +333,7 @@ namespace Hadal.Networking
             
             if (returnsToMainMenu)
             {
-                LeftRoomEvent?.Invoke();
+                LeftRoomAction?.Invoke();
                 loadsToMainMenu = true;
             }
 
@@ -411,7 +411,9 @@ namespace Hadal.Networking
 
         #region Connection Events
         public event ConnectionEvent JoinedLobbyEvent;
+        public event ConnectionEvent JoinedRoomEvent;
         public event ConnectionEvent JoinRoomFailedEvent;
+        public event ConnectionEvent LeftRoomEvent;
         #endregion
 
         #region Room Functions
@@ -441,6 +443,8 @@ namespace Hadal.Networking
             {
                 gameManager.ChangeGameState(GameManager.GameState.ONGOING);
             }
+            
+            JoinedRoomEvent?.Invoke();
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
@@ -488,6 +492,8 @@ namespace Hadal.Networking
             }
             
             playerObjects.Clear();
+            
+            LeftRoomEvent?.Invoke();
         }
         #endregion
 
@@ -829,6 +835,27 @@ namespace Hadal.Networking
                 sortedDict.Add(PlayerList[i], i);
             
             return sortedDict;
+        }
+
+        public int GetReadyPlayerCount()
+        {
+            if (CurrentRoom.CustomProperties.TryGetValue(playerClassHash, out var keyValue))
+            {
+                Dictionary<int, int> classDict = (Dictionary<int, int>)keyValue;
+
+                int count = 0;
+                foreach (var pair in classDict)
+                {
+                    if ((PlayerClassType) pair.Value != PlayerClassType.Invalid)
+                    {
+                        count++;
+                    }
+                }
+
+                return count;
+            }
+
+            return 0;
         }
         
         public int GetCurrentPlayerIndex()
