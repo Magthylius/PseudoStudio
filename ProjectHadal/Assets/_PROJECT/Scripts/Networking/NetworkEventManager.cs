@@ -781,6 +781,19 @@ namespace Hadal.Networking
         public Color ThirdPlayerColor;
         public Color FourthPlayerColor;
 
+        public Color GetPlayerColor(Player player)
+        {
+            int index = GetPlayerIndex(player);
+            
+            switch (index)
+            {
+                case 0: return FirstPlayerColor;
+                case 1: return SecondPlayerColor;
+                case 2: return ThirdPlayerColor;
+                default: return FourthPlayerColor;
+            }
+        }
+        
         public Color GetPlayerColor(int index)
         {
             switch (index)
@@ -802,6 +815,12 @@ namespace Hadal.Networking
             return GetPlayerColor(999);
         }
 
+        public int GetPlayerIndex(Player player)
+        {
+            Dictionary<Player, int> sortedDict = GetSortedPlayerIndices();
+            return sortedDict[player];
+        }
+        
         public Dictionary<Player, int> GetSortedPlayerIndices()
         {
             Dictionary<Player, int> sortedDict = new Dictionary<Player, int>();

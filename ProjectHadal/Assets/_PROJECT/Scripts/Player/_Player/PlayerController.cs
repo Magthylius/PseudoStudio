@@ -33,6 +33,7 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] PlayerCollisions collisions;
         [Foldout("Components"), SerializeField] UIManager playerUI;
         [Foldout("Components"), SerializeField] DodgeBooster dodgeBooster;
+        [Foldout("Components"), SerializeField] PlayerGraphicsHandler graphicsHandler;
 
         [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] string localPlayerLayer;
@@ -281,6 +282,9 @@ namespace Hadal.Player
             _manager.InstantiatePViewList();
             TrackNamesOnline();
             LocalGameStartEvent?.Invoke(this);
+
+            UpdateDiegetics();
+            //Debug.LogWarning($"pView owner:  {_pView.Owner.NickName}");
         }
 
         public void TrackNamesOnline()
@@ -319,6 +323,16 @@ namespace Hadal.Player
             }
         }
 
+        public void UpdateDiegetics()
+        {
+            PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
+            foreach (PlayerController player in allPlayerControllers)
+            {
+                player.GraphicsHandler.ChangeEmissiveColor(NetworkEventManager.Instance.GetPlayerColor(player._pView.Owner));
+            }
+        }
+        
+
         private void PlayerReadyConfirmed(EventData obj)
         {
             if (!_pView)
@@ -338,7 +352,9 @@ namespace Hadal.Player
 
         public void HandlePhotonView(bool isMine)
         {
-            if(!NetworkEventManager.Instance.isOfflineMode)
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+            
+            if(!neManager.isOfflineMode)
             {
                 gameObject.name = "Player " + photonInfo.PView.ViewID.ToString();
             }
@@ -530,6 +546,7 @@ namespace Hadal.Player
         
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
+        public PlayerGraphicsHandler GraphicsHandler => graphicsHandler;
         public bool PlayerReadyForUpdateLoop => playerReady || (NetworkEventManager.Instance != null && NetworkEventManager.Instance.isOfflineMode);
         #endregion
     }

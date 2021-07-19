@@ -150,7 +150,7 @@ namespace Hadal.AI
             {
                 healthManager.Initialise(this);
 				emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
-				animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
+				animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this);
                 neManager.AddListener(ByteEvents.AI_PLAY_AUDIO, Receive_PlayAudio);
                 return;
             }
@@ -227,7 +227,7 @@ namespace Hadal.AI
             allAIUpdateComponents.ForEach(i => i.Initialise(this));
 			emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
             cavernManager = FindObjectOfType<CavernManager>();
-			animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
+			animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this);
             Egg = FindObjectOfType<AIEgg>();
 
             //! Event handling
