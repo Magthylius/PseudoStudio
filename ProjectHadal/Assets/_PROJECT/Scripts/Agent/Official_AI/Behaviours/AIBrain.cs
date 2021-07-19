@@ -158,17 +158,22 @@ namespace Hadal.AI
             if (!isEnabled) return;
 
             Setup();
-            StartCoroutine(InjectAIDependencies());
+            //StartCoroutine(InjectAIDependencies());
+        }
 
-            IEnumerator InjectAIDependencies()
+        private void OnEnable()
+        {
+            StartCoroutine(InjectAIDependencies());
+        }
+
+        public IEnumerator InjectAIDependencies()
+        {
+            while (LocalPlayerData.PlayerController == null)
             {
-                while (LocalPlayerData.PlayerController == null)
-                {
-                    //Debug.LogWarning("waiting for player to init");
-                    yield return null;
-                }
-                LocalPlayerData.PlayerController.InjectAIDependencies(transform);
+                //Debug.LogWarning("waiting for player to init");
+                yield return null;
             }
+            LocalPlayerData.PlayerController.InjectAIDependencies(transform);
         }
 
         private void Update()

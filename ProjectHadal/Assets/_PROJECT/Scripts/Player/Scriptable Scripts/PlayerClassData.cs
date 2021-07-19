@@ -22,8 +22,8 @@ namespace Hadal.Player
         public int DodgeBoostCount = 3;
         public bool PowerUpReviveTime;
         public float ReviveTime = 1;
-
-        //
+        public bool ActivateHydrophone = false;
+        
         public bool PowerUpTorpFireRate;
         public float TorpFireRate = 0.1f;
 
@@ -37,6 +37,7 @@ namespace Hadal.Player
             var playerTorpedo = LocalPlayerData.PlayerController.GetInfo.Shooter.GetTorpedoLauncher;
             var playerHealth = LocalPlayerData.PlayerController.GetInfo.HealthManager;
             var playerPView = LocalPlayerData.PlayerController.GetInfo.PhotonInfo.PView;
+            var playerUI = LocalPlayerData.PlayerController.UI;
 
             playerInv.ResetEquipIndex();
             playerInv.DeactivateAllUtilities();
@@ -49,6 +50,8 @@ namespace Hadal.Player
                 playerInv.AddEquipmentOfType<FlareLauncherObject>(true);
                 playerInv.AddEquipmentOfType<HarpoonLauncherObject>(true);
             }
+            
+            if (ActivateHydrophone) playerUI.HydrophoneBehaviour.Activate();
 
             if(PowerUpDodgeBoost)
             {

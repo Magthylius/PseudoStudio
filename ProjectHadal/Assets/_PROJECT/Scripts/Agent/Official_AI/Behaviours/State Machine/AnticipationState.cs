@@ -7,6 +7,7 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.AI.Caverns;
 using Hadal.Player;
+using Hadal.AI;
 
 //! C: jet, E: jon
 namespace Hadal.AI.States
@@ -91,6 +92,13 @@ namespace Hadal.AI.States
                 }
             }
             else if (gameStartupInitialization) DetermineNextCavern();
+
+            Brain.NavigationHandler.CavernModeSteering(); 
+        }
+
+        public override void OnCavernLeave(CavernHandler cavern)
+        {
+            Brain.NavigationHandler.TunnelModeSteering(); 
         }
 
         void StartInitialization(bool booleanData)
@@ -188,7 +196,6 @@ namespace Hadal.AI.States
             Brain.UpdateTargetMoveCavern(targetCavern);
             CavernManager.SeedCavernHeuristics(targetCavern);
         }
-
         void DetermineNextCavern()
         {
             CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, RuntimeData.GetEngagementObjective != EngagementObjective.Hunt);
