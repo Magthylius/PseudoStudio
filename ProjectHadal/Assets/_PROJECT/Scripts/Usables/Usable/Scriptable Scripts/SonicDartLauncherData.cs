@@ -27,7 +27,8 @@ namespace Hadal.Usables
 
             //! pass in transform data to uimanager
 
-            if (info.LocallyFired) UITrackerBridge.LocalPlayerUIManager.TrackProjectile(projectileObj.transform, TrackerType.SONIC_DART);
+            //if (info.LocallyFired) UITrackerBridge.LocalPlayerUIManager.TrackProjectile(projectileObj.transform, TrackerType.SONIC_DART);
+            UITrackerBridge.LocalPlayerUIManager.TrackProjectile(projectileObj.transform, TrackerType.SONIC_DART);
         }
 
         protected override void DumpProjectileMethod(ProjectileBehaviour obj)

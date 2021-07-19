@@ -34,7 +34,6 @@ namespace Hadal.AI
 
         void LocalSpawnInCorrectScene()
         {
-            
             if (NetworkEventManager.Instance.IsInGame)
             {
                 Transform spawnPoints = spawnPositions[(int)Random.Range(0, spawnPositions.Count)];
