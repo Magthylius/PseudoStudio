@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ExitGames.Client.Photon;
+using NaughtyAttributes;
+using System.Linq;
 
 namespace Hadal.AI
 {
@@ -9,19 +11,17 @@ namespace Hadal.AI
     {
 		[SerializeField] private Animator animator;
 		[SerializeField] private float defaultAnimLerpTime;
-		[SerializeField] private List<AnimationData> data;
-		[SerializeField] private string animXString;
-		[SerializeField] private string animYString;
+		[SerializeField] private List<AnimationFloat> floatData;
 		
-		private bool _onMasterClient;
 		private AIBrain _brain;
-		private Coroutine lerpRoutine;
+		private Coroutine mainLerpRoutine;
+		private Coroutine stopDelaySubroutine;
 		
-		public void Initialise(AIBrain brain, bool onMasterClient)
+		public void Initialise(AIBrain brain)
 		{
 			_brain = brain;
-			_onMasterClient = onMasterClient;
 			if (animator == null) animator = GetComponent<Animator>();
+			floatData.ForEach(f => f.Initialise(animator));
 			
 			//! Default animation state
 			SetAnimation(AIAnim.Swim);
@@ -30,58 +30,124 @@ namespace Hadal.AI
 		public void SetAnimation(AIAnim animType, float customAnimLerpTime = -1f)
 		{
 			StopAllRunningCoroutines();
-			lerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
+			mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
 			_brain.Send_SetAnimation(animType, customAnimLerpTime);
 		}
 		
 		private IEnumerator LerpAnimation(AIAnim animType, float customAnimLerpTime)
 		{
-			Vector2 currentVec = new Vector2(animator.GetFloat(animXString), animator.GetFloat(animYString));
-			Vector2 target = GetVectorFromAnimType(animType);
-			float lerpTime = customAnimLerpTime > 0f ? customAnimLerpTime : defaultAnimLerpTime;
+			AnimationFloat currentFloat = GetAnimationFloatFromAnimType(animType);
+			List<AnimationFloat> otherFloats = GetAnimationFloatsExcluding(animType);
+
+			float lerpTime = 1f / (customAnimLerpTime > 0f ? customAnimLerpTime : defaultAnimLerpTime);
 			float percent = 0f;
 			
+			ResetSpeed();
+			if (currentFloat.ShouldPauseOnClipFinished())
+			{
+				stopDelaySubroutine = StartCoroutine(StopSpeedAfterDelay(currentFloat.GetClipLength()));
+				RefreshBlendTree();
+			}
+
 			while (percent < 1f)
 			{
 				percent += Time.deltaTime * lerpTime;
-				currentVec = Vector2.Lerp(currentVec, target, percent);
-				UpdateAnimationValues(currentVec.x, currentVec.y);
+				currentFloat.LerpToFocusedValue(percent);
+				otherFloats.ForEach(f => f.LerpToUnfocusedValue(percent));
 				yield return null;
 			}
 			
-			lerpRoutine = null;
+			mainLerpRoutine = null;
 		}
-		
-		private void UpdateAnimationValues(float x, float y)
-		{
-			animator.SetFloat(animXString, x);
-			animator.SetFloat(animYString, y);
-		}
-		
-		private Vector2 GetVectorFromAnimType(AIAnim animType)
+
+		private IEnumerator StopSpeedAfterDelay(float delayInSeconds)
+        {
+            yield return new WaitForSeconds(delayInSeconds);
+            StopSpeed();
+			stopDelaySubroutine = null;
+        }
+
+		private void RefreshBlendTree()
+        {
+            if (animator == null) return;
+            animator.Play("Tree", 0, 0f);
+        }
+
+		private void StopSpeed() => animator.SetFloat("SpeedMultiplier", 0f);
+        private void ResetSpeed() => animator.SetFloat("SpeedMultiplier", 1f);
+
+		private AnimationFloat GetAnimationFloatFromAnimType(AIAnim animType)
 		{
 			int i = -1;
-			while (++i < data.Count)
+			while (++i < floatData.Count)
 			{
-				if (data[i].associatedAnim == animType)
-					return data[i].animTreeOffset;
+				if (floatData[i].GetEnum() == animType)
+					return floatData[i];
 			}
-			
-			return Vector2.zero;
+			return null;
+		}
+
+		private List<AnimationFloat> GetAnimationFloatsExcluding(AIAnim excludeType)
+		{
+			return floatData.Where(f => f.GetEnum() != excludeType).DefaultIfEmpty().ToList();
 		}
 		
 		private void StopAllRunningCoroutines()
 		{
-			if (lerpRoutine != null)
-				StopCoroutine(lerpRoutine);
-			lerpRoutine = null;
+			if (mainLerpRoutine != null)
+				StopCoroutine(mainLerpRoutine);
+			mainLerpRoutine = null;
+
+			if (stopDelaySubroutine != null)
+				StopCoroutine(stopDelaySubroutine);
+			stopDelaySubroutine = null;
 		}
-		
+
 		[System.Serializable]
-        private class AnimationData
+        private class AnimationFloat
         {
-            public AIAnim associatedAnim;
-            public Vector2 animTreeOffset;
+            [SerializeField] private AIAnim animationEnum;
+            [Range(0f, 1f), SerializeField] private float defaultValue;
+            [Range(0f, 1f), SerializeField] private float focusedValue = 1f;
+            [Range(0f, 1f), SerializeField] private float unfocusedValue = 0f;
+            [SerializeField] private bool pauseOnClipFinished;
+            [SerializeField] private AnimationClip associatedClip;
+
+			private string cachedName = string.Empty;
+            private Animator anim = null;
+
+            public AnimationFloat LerpToFocusedValue(float percent)
+            {
+                float result = Mathf.Lerp(GetValue(), GetFocusedValue(), percent);
+                SetValue(result);
+                return this;
+            }
+
+            public AnimationFloat LerpToUnfocusedValue(float percent)
+            {
+                float result = Mathf.Lerp(GetValue(), GetUnfocusedValue(), percent);
+                SetValue(result);
+                return this;
+            }
+            
+            public float GetValue() => anim.GetFloat(GetName());
+            public void SetValue(float value) => anim.SetFloat(GetName(), value);
+            public string GetName() => cachedName;
+			public AIAnim GetEnum() => animationEnum;
+            public float GetDefaultValue() => defaultValue;
+            public float GetFocusedValue() => focusedValue;
+            public float GetUnfocusedValue() => unfocusedValue;
+            public bool ShouldPauseOnClipFinished() => pauseOnClipFinished;
+            public float GetClipLength() => associatedClip.length;
+
+			[Button("Refresh Cached Name", EButtonEnableMode.Always)]
+			public void RefreshCachedName() => cachedName = System.Enum.GetName(typeof(AIAnim), animationEnum);
+            public void Initialise(Animator animator)
+            {
+                anim = animator;
+				RefreshCachedName();
+                SetValue(GetDefaultValue());
+            }
         }
     }
 	
