@@ -24,7 +24,7 @@ namespace Hadal.AI.States
         public override void OnStateStart()
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
-            
+
             SelectNewAmbushPoint();
             RuntimeData.ResetEngagementTicker();
             RuntimeData.ResetCumulativeDamageCount();
@@ -51,11 +51,21 @@ namespace Hadal.AI.States
             NavigationHandler.ResetAmbushPoint();
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
         }
+        public override void OnCavernEnter(CavernHandler cavern)
+        {
+            Brain.NavigationHandler.CavernModeSteering();
+        }
+        public override void OnCavernLeave(CavernHandler cavern)
+        {
+            Brain.NavigationHandler.TunnelModeSteering();
+        }
+
+
         public override Func<bool> ShouldTerminate() => () => false;
 
         void CheckPlayerCountAtNeighbourCaverns()
         {
-            
+
         }
 
 

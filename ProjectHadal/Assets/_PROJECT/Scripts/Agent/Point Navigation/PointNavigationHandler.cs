@@ -505,7 +505,9 @@ namespace Hadal.AI
             if (setTunnelSteeringUntilQueuePathEnd)
             {
                 lockSteeringBehaviour = true;
-                TunnelModeSteering();
+                //TunnelModeSteering();
+                if(enableDebug) Debug.LogWarning("STEERINGTUNNEL");
+
             }
 
 
@@ -673,6 +675,7 @@ namespace Hadal.AI
         {
             _steeringMode = SteeringMode.Tunnel;
             DecideCurrentSteeringMode();
+
         }
 
         public void CavernModeSteering()
