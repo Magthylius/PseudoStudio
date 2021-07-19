@@ -1450,27 +1450,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 489060b15d3f7ee44a80c295cd314604, type: 3}
   m_PrefabInstance: {fileID: 2000691882}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1698035102
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698035100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5985e3bfcc895de4b808ac5b10d6154b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 1698035104}
-  controller: {fileID: 9100000, guid: 08eaeb79c4ab44b4e9fc5b40f888928b, type: 2}
-  target: {x: 0, y: -1}
-  lerpTime: 2
-  carryClip: {fileID: 1827226128182048838, guid: d966f2fc9fd00be408a3fd633a10a9d3, type: 3}
-  animXString: AnimX
-  animYString: AnimY
-  animationTree: {fileID: 0}
-  xYOnStart: {x: 0, y: 1}
 --- !u!114 &1698035103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2031,11 +2010,6 @@ MonoBehaviour:
   Axis2D: 0
   Tangle: 0
   AnimateRoll: 0
---- !u!95 &1698035104 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 489060b15d3f7ee44a80c295cd314604, type: 3}
-  m_PrefabInstance: {fileID: 2000691882}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1729880029
 PrefabInstance:
   m_ObjectHideFlags: 0

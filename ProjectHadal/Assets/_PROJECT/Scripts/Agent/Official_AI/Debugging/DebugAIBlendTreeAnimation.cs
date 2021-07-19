@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using Tenshi.UnitySoku;
 using UnityEditor.Animations;
@@ -9,15 +11,15 @@ namespace Hadal.AI
     public class DebugAIBlendTreeAnimation : MonoBehaviour
     {
         [SerializeField] private Animator animator;
-        [SerializeField] private AnimatorController controller;
-        [SerializeField] private Vector2 target;
         [SerializeField] private float lerpTime;
-        [SerializeField] private AnimationClip carryClip;
-        [SerializeField] private string animXString;
-        [SerializeField] private string animYString;
-        [SerializeField] private BlendTree animationTree;
+        [SerializeField] private List<AnimationFloat> floats;
+        [SerializeField] private string target;
 
-        [SerializeField] private Vector2 xYOnStart;
+        private enum Typo
+        {
+            Swim = 0,
+            Carry
+        }
 
         private void Awake()
         {
@@ -26,26 +28,31 @@ namespace Hadal.AI
                 "No animator has been assigned yet.".Warn();
                 return;
             }
-            animator.SetFloat("Blend", 1f);
-            animator.SetFloat(animXString, xYOnStart.x);
-            animator.SetFloat(animYString, xYOnStart.y);
+
+            System.Enum.GetName(typeof(Typo), Typo.Carry).Msg();
+
+            ResetSpeed();
+            floats.ForEach(f => f.Initialise(animator));
         }
 
-        [Button("Go Swim", EButtonEnableMode.Playmode)]
+        [Button("Go to Target Float", EButtonEnableMode.Playmode)]
+        private void SetAnimationTarget()
+        {
+            StartAnimationLerp(target);
+        }
+
+        [Button("Go to Swim", EButtonEnableMode.Playmode)]
         private void SetAnimationSwim()
         {
-            animator.SetTrigger("Swim");
-            animator.SetFloat("Blend", 1f);
-            animator.SetFloat("SpeedMultiplier", 1f);
+            StartAnimationLerp("Swim");
         }
-        [Button("Go Carry", EButtonEnableMode.Playmode)]
+        [Button("Go to Carry", EButtonEnableMode.Playmode)]
         private void SetAnimationCarry()
         {
-            animator.SetTrigger("Carry");
+            StartAnimationLerp("Carry");
         }
 
-        [Button("Start Animation Lerp", EButtonEnableMode.Playmode)]
-        private void StartAnimationLerp()
+        private void StartAnimationLerp(string targetName)
         {
             if (animator == null)
             {
@@ -53,48 +60,95 @@ namespace Hadal.AI
                 return;
             }
             StopAllCoroutines();
-            StartCoroutine(LerpAnimation());
+            StartCoroutine(LerpAnimation(targetName));
         }
 
-        private IEnumerator LerpAnimation()
+        private IEnumerator LerpAnimation(AnimationFloat animationFloat)
         {
-            Vector2 currentVec = new Vector2(animator.GetFloat(animXString), animator.GetFloat(animYString));
-            Vector2 target = this.target;
+            yield return StartCoroutine(LerpAnimation(animationFloat.GetName()));
+        }
+
+        private IEnumerator LerpAnimation(string targetName)
+        {
+            AnimationFloat currentAnimFloat = floats.Where(f => f.GetName() == targetName).Single();
+            List<AnimationFloat> otherFloats = floats.Where(f => f != currentAnimFloat).ToList();
+            
             float lerpTime = this.lerpTime;
             float percent = 0f;
 
-            StartCoroutine(StopSpeedAfterDelay());
-            animator.Play("Tree", 0, 0f);
+            ResetSpeed();
+            if (currentAnimFloat.ShouldPauseOnClipFinished())
+            {
+                StartCoroutine(StopSpeedAfterDelay(currentAnimFloat.GetClipLength()));
+                RefreshBlendTree();
+            }
 
             while (percent < 1f)
             {
                 percent += Time.deltaTime * lerpTime;
 
-                currentVec = Vector2.Lerp(currentVec, target, percent);
-                animator.SetFloat("Blend", Mathf.Lerp(animator.GetFloat("Blend"), 0f, percent));
-                animator.SetFloat(animXString, currentVec.x);
-                animator.SetFloat(animYString, currentVec.y);
+                currentAnimFloat.LerpToFocusedValue(percent);
+                otherFloats.ForEach(f => f.LerpToUnfocusedValue(percent));
                 yield return null;
             }
-
-            var root = controller.layers[0].stateMachine;
-            var stateWithBlendTree = root.states[0].state;
-            var blendTree = (BlendTree)stateWithBlendTree.motion;
-
-            var pos = blendTree.children[0].position;
-
-            // info[1].clip
-            // const int BaseLayerIndex = 0;
-            // var stateInfo = animator.GetCurrentAnimatorStateInfo(BaseLayerIndex);
-            // animator.Play("Swimming Blend Tree", -1, 0);
+            
+            yield break;
         }
 
-        private IEnumerator StopSpeedAfterDelay()
+        private void RefreshBlendTree()
         {
-            float time = carryClip.length;
-            yield return new WaitForSeconds(time);
+            if (animator == null) return;
+            animator.Play("Tree", 0, 0f);
+        }
 
-            // animator.SetFloat("SpeedMultiplier", 0f);
+        private IEnumerator StopSpeedAfterDelay(float delayInSeconds)
+        {
+            yield return new WaitForSeconds(delayInSeconds);
+            StopSpeed();
+        }
+
+        private void StopSpeed() => animator.SetFloat("SpeedMultiplier", 0f);
+        private void ResetSpeed() => animator.SetFloat("SpeedMultiplier", 1f);
+
+        [System.Serializable]
+        public class AnimationFloat
+        {
+            [SerializeField] private string name;
+            [Range(0f, 1f), SerializeField] private float defaultValue;
+            [Range(0f, 1f), SerializeField] private float focusedValue = 1f;
+            [Range(0f, 1f), SerializeField] private float unfocusedValue = 0f;
+            [SerializeField] private bool pauseOnClipFinished;
+            [SerializeField] private AnimationClip associatedClip;
+
+            private Animator anim = null;
+
+            public AnimationFloat LerpToFocusedValue(float percent)
+            {
+                float result = Mathf.Lerp(GetValue(), GetFocusedValue(), percent);
+                SetValue(result);
+                return this;
+            }
+
+            public AnimationFloat LerpToUnfocusedValue(float percent)
+            {
+                float result = Mathf.Lerp(GetValue(), GetUnfocusedValue(), percent);
+                SetValue(result);
+                return this;
+            }
+            
+            public string GetName() => name;
+            public float GetValue() => anim.GetFloat(name);
+            public void SetValue(float value) => anim.SetFloat(name, value);
+            public float GetDefaultValue() => defaultValue;
+            public float GetFocusedValue() => focusedValue;
+            public float GetUnfocusedValue() => unfocusedValue;
+            public bool ShouldPauseOnClipFinished() => pauseOnClipFinished;
+            public float GetClipLength() => associatedClip.length;
+            public void Initialise(Animator animator)
+            {
+                anim = animator;
+                SetValue(GetDefaultValue());
+            }
         }
     }
 }
