@@ -478,7 +478,7 @@ namespace Hadal.AI.Caverns
         
         #region Player Handling
         /// <summary>
-        ///     Attempts to get an isolated player.
+        ///     Attempts to get an isolated player from any cavern.
         /// </summary>
         /// <returns>An isolated player, or null if no one is isolated.</returns>
         public PlayerController GetIsolatedPlayer()

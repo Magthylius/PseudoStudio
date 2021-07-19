@@ -230,7 +230,7 @@ namespace Hadal.AI.States
             bool IsolatedPlayerCheckTimerReached() => isolatedPlayerCheckTimer <= 0f;
             PlayerController GetAnyIsolatedPlayer()
             {
-                var player = CavernManager.GetIsolatedPlayer();
+                var player = AICavern != null ? AICavern.GetIsolatedPlayer() : null;
                 if (player == null) player = SenseDetection.GetIsolatedPlayerIfAny();
                 return player;
             }

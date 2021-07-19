@@ -63,6 +63,10 @@ namespace Hadal.AI
         public bool Data_ChosenAmbushPoint => chosenAmbushPoint;
         [SerializeField, ReadOnly] private bool lockSteeringBehaviour;
         public bool Data_LockSteeringBehaviour => lockSteeringBehaviour;
+		
+		[SerializeField, ReadOnly] private bool ignoreCavernLingerTimer = false;
+		public bool Data_IgnoreCavernLingerTimer => ignoreCavernLingerTimer;
+		public void SetIgnoreCavernLingerTimer(bool statement) => ignoreCavernLingerTimer = statement;
 
         private float slowMultiplier = 0f;
         public void SetSlowMultiplier(float mult)
@@ -947,38 +951,41 @@ namespace Hadal.AI
         {
             if (!_tickCavernLingerTimer || !cavernManager) return;
 
-            switch (cavernManager.GetCavernTagOfAILocation())
-            {
-                case CavernTag.Crystal:
-                    {
-                        crystalCavernLingerTimer -= deltaTime;
-                        if (enableDebug) Debug.Log("crystal: " + crystalCavernLingerTimer);
-                        if (crystalCavernLingerTimer > 0f) return;
-                        break;
-                    }
-                case CavernTag.Bioluminescent:
-                    {
-                        biolumiCavernLingerTimer -= deltaTime;
-                        if (enableDebug) Debug.Log("biolumi: " + biolumiCavernLingerTimer);
-                        if (biolumiCavernLingerTimer > 0f) return;
-                        break;
-                    }
-                case CavernTag.Hydrothermal_Deep:
-                    {
-                        hydrothermalCavernLingerTimer -= deltaTime;
-                        if (enableDebug) Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
-                        if (hydrothermalCavernLingerTimer > 0f) return;
-                        break;
-                    }
-                case CavernTag.Lair:
-                    {
-                        lairCavernLingerTimer -= deltaTime;
-                        if (enableDebug) Debug.Log("lair: " + lairCavernLingerTimer);
-                        if (lairCavernLingerTimer > 0f) return;
-                        break;
-                    }
-                default: return;
-            }
+			if (!ignoreCavernLingerTimer)
+			{
+				switch (cavernManager.GetCavernTagOfAILocation())
+				{
+					case CavernTag.Crystal:
+						{
+							crystalCavernLingerTimer -= deltaTime;
+							if (enableDebug) Debug.Log("crystal: " + crystalCavernLingerTimer);
+							if (crystalCavernLingerTimer > 0f) return;
+							break;
+						}
+					case CavernTag.Bioluminescent:
+						{
+							biolumiCavernLingerTimer -= deltaTime;
+							if (enableDebug) Debug.Log("biolumi: " + biolumiCavernLingerTimer);
+							if (biolumiCavernLingerTimer > 0f) return;
+							break;
+						}
+					case CavernTag.Hydrothermal_Deep:
+						{
+							hydrothermalCavernLingerTimer -= deltaTime;
+							if (enableDebug) Debug.Log("hydrothermal: " + hydrothermalCavernLingerTimer);
+							if (hydrothermalCavernLingerTimer > 0f) return;
+							break;
+						}
+					case CavernTag.Lair:
+						{
+							lairCavernLingerTimer -= deltaTime;
+							if (enableDebug) Debug.Log("lair: " + lairCavernLingerTimer);
+							if (lairCavernLingerTimer > 0f) return;
+							break;
+						}
+					default: return;
+				}
+			}
 
             _tickCavernLingerTimer = false;
             ResetCavernLingerTimer();
