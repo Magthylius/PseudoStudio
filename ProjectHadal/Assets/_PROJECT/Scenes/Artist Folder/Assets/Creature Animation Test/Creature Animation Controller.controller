@@ -63,19 +63,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Carry
+  - m_Name: Bite
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: Swim
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: Test
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -116,7 +110,7 @@ BlendTree:
     m_Position: {x: 0, y: -1}
     m_TimeScale: 1
     m_CycleOffset: 0
-    m_DirectBlendParameter: Carry
+    m_DirectBlendParameter: Bite
     m_Mirror: 0
   m_BlendParameter: AnimX
   m_BlendParameterY: AnimY

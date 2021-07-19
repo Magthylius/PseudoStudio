@@ -38,6 +38,7 @@ namespace Hadal.AI.States
         [Min(0f)] public float HU_RoamingSpeedMultiplier = 1.5f;
         [Min(0f)] public float HU_MaxHuntingTime = 120f;
         [Min(0)] public int HU_DisruptionDamageCount = 1;
+		[Min(0f)] public float HU_PeriodicCavernUpdateTime = 5f;
 
         [Header("Judgement Settings")]
         [Min(0f)] public float JudgementTimer1 = 30f;

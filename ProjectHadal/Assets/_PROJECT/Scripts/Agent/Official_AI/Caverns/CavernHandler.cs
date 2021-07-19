@@ -168,7 +168,7 @@ namespace Hadal.AI.Caverns
         public PlayerController GetIsolatedPlayer()
         {
             if (playersInCavern.Count == 1)
-                return playersInCavern.Where(p => p != null).Single();
+                return playersInCavern[0];
 
             return null;
         }

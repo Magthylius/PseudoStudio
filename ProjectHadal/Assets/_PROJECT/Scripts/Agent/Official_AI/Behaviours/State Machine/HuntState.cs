@@ -10,6 +10,7 @@ namespace Hadal.AI.States
         private EngagementStateSettings settings;
         private CavernTag targetTag;
         private bool hasReachedTargetCavern;
+		private float checkTimer;
 
         public HuntState(AIBrain brain)
         {
@@ -32,9 +33,18 @@ namespace Hadal.AI.States
             RuntimeData.ResetEngagementTicker();
             RuntimeData.ResetCumulativeDamageCount();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.HU_DisruptionDamageCount);
-            targetTag = Brain.TargetMoveCavern.cavernTag;
-            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
+            
+			if (AICavern != null && AICavern.cavernTag == Brain.TargetMoveCavern.cavernTag)
+			{
+				hasReachedTargetCavern = true;
+			}
+			else targetTag = Brain.TargetMoveCavern.cavernTag;
+            
+			SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);
+			NavigationHandler.SetIgnoreCavernLingerTimer(true);
+			
+			checkTimer = settings.HU_PeriodicCavernUpdateTime;
         }
         public override void StateTick()
         {
@@ -44,6 +54,13 @@ namespace Hadal.AI.States
             if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime)
                 RuntimeData.SetBrainState(BrainState.Anticipation);
             
+			checkTimer -= Brain.DeltaTime;
+			if (checkTimer <= 0f)
+			{
+				checkTimer = settings.HU_PeriodicCavernUpdateTime;
+				OnCavernEnter(AICavern);
+			}
+			
             if (Brain.CheckForJudgementStateCondition())
             {
                 RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
@@ -65,6 +82,7 @@ namespace Hadal.AI.States
             ResetCachedTags();
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
             NavigationHandler.ResetSpeedMultiplier();
+			NavigationHandler.SetIgnoreCavernLingerTimer(false);
         }
 
         public override void OnCavernEnter(CavernHandler cavern)
@@ -75,12 +93,12 @@ namespace Hadal.AI.States
                 return;
             }
 
-            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, false);
+            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
             CavernTag nextTag = nextCavern.cavernTag;
             
             //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
             NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
-            Brain.UpdateNextMoveCavern(AICavern);
+            Brain.UpdateNextMoveCavern(nextCavern);
             if (nextTag == targetTag)
                 hasReachedTargetCavern = true;
             
