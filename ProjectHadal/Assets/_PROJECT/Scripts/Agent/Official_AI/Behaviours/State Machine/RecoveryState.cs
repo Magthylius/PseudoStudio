@@ -106,6 +106,13 @@ namespace Hadal.AI.States
             {
                 DetermineNextCavern();
             }
+
+            Brain.NavigationHandler.CavernModeSteering();
+        }
+
+        public override void OnCavernLeave(CavernHandler cavern)
+        {
+            Brain.NavigationHandler.TunnelModeSteering();
         }
 
         public override void OnPlayerEnterAICavern(CavernPlayerData data)

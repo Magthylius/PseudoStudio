@@ -52,6 +52,15 @@ namespace Hadal.AI.States
         {
             if (cavern.GetPlayerCount > 0)
                 SetNewTargetCavern();
+
+            Brain.NavigationHandler.CavernModeSteering();
+        }
+
+        public override void OnCavernLeave(CavernHandler cavern)
+        {
+
+            Brain.NavigationHandler.TunnelModeSteering();
+
         }
 
         public override void OnPlayerEnterAICavern(CavernPlayerData data)

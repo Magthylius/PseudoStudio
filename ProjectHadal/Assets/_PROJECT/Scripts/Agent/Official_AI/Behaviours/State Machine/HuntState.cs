@@ -85,6 +85,8 @@ namespace Hadal.AI.States
                 hasReachedTargetCavern = true;
             
             if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
+
+             Brain.NavigationHandler.CavernModeSteering(); 
         }
 
         public override void OnCavernLeave(CavernHandler cavern)
@@ -93,6 +95,9 @@ namespace Hadal.AI.States
             {
                 DoRoar();
             }
+        
+            Brain.NavigationHandler.TunnelModeSteering(); 
+        
         }
 
         private void TryToTargetClosestPlayerInAICavern()
