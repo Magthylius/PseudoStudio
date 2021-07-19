@@ -127,5 +127,7 @@ namespace Hadal.AI.Information
 
             yield return null;
         }
+
+        public AIBrain Brain => brain;
     }
 }

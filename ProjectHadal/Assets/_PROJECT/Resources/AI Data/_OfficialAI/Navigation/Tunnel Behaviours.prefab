@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 209829772153858816}
   - component: {fileID: 209829772153858817}
   - component: {fileID: 209829772153858878}
-  - component: {fileID: 209829772153858872}
   m_Layer: 0
   m_Name: Approach Point
   m_TagString: NavigationPoint
@@ -66,18 +65,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &209829772153858872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 209829772153858879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &897175039783150408
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +76,6 @@ GameObject:
   - component: {fileID: 5564189320905467974}
   - component: {fileID: 7247779681485675127}
   - component: {fileID: 3703828812314449642}
-  - component: {fileID: 897175039783150409}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -160,18 +146,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &897175039783150409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897175039783150408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3691975306190891388
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +373,6 @@ GameObject:
   - component: {fileID: 3827971030887942919}
   - component: {fileID: 3827971030887942913}
   - component: {fileID: 3827971030887942912}
-  - component: {fileID: 3827971030887942914}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -470,18 +443,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971030887942914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971030887942918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971030921857238
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,7 +522,6 @@ GameObject:
   - component: {fileID: 3827971030923304046}
   - component: {fileID: 3827971030923304040}
   - component: {fileID: 3827971030923304047}
-  - component: {fileID: 3827971030923304041}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -632,18 +592,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971030923304041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971030923304045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971030927460075
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,7 +733,6 @@ GameObject:
   - component: {fileID: 3827971031012386883}
   - component: {fileID: 3827971031012386941}
   - component: {fileID: 3827971031012386940}
-  - component: {fileID: 3827971031012386942}
   m_Layer: 0
   m_Name: Approach Point
   m_TagString: NavigationPoint
@@ -840,18 +787,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031012386942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031012386882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031039909029
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,7 +797,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3827971031039909031}
   - component: {fileID: 3827971031039909030}
-  - component: {fileID: 3827971031039909024}
   m_Layer: 0
   m_Name: Hydro/Deep <-> Egg/Lair
   m_TagString: Untagged
@@ -906,18 +840,6 @@ MonoBehaviour:
     EntryNavPoint: {fileID: 3827971032431163831}
   - ConnectedCavern: {fileID: 0}
     EntryNavPoint: {fileID: 3827971030921857233}
---- !u!114 &3827971031039909024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031039909029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031112076634
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,7 +850,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3827971031112076628}
   - component: {fileID: 3827971031112076635}
-  - component: {fileID: 3827971031112076629}
   m_Layer: 0
   m_Name: Crystal <-> Hydro/Deep A
   m_TagString: Untagged
@@ -972,18 +893,6 @@ MonoBehaviour:
     EntryNavPoint: {fileID: 3691975306190891330}
   - ConnectedCavern: {fileID: 0}
     EntryNavPoint: {fileID: 3827971031860595558}
---- !u!114 &3827971031112076629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031112076634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031156908107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1060,7 +969,6 @@ GameObject:
   - component: {fileID: 3827971031177261712}
   - component: {fileID: 3827971031177261714}
   - component: {fileID: 3827971031177261713}
-  - component: {fileID: 3827971031177261715}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1131,18 +1039,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031177261715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031177261719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031214884332
 GameObject:
   m_ObjectHideFlags: 0
@@ -1154,7 +1050,6 @@ GameObject:
   - component: {fileID: 3827971031214884333}
   - component: {fileID: 3827971031214884335}
   - component: {fileID: 3827971031214884334}
-  - component: {fileID: 3827971031214884328}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1225,18 +1120,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031214884328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031214884332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031256848656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1248,7 +1131,6 @@ GameObject:
   - component: {fileID: 3827971031256848657}
   - component: {fileID: 3827971031256848659}
   - component: {fileID: 3827971031256848658}
-  - component: {fileID: 3827971031256848652}
   m_Layer: 0
   m_Name: Approach Point
   m_TagString: NavigationPoint
@@ -1303,18 +1185,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031256848652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031256848656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031265742233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1326,7 +1196,6 @@ GameObject:
   - component: {fileID: 3827971031265742234}
   - component: {fileID: 3827971031265742228}
   - component: {fileID: 3827971031265742235}
-  - component: {fileID: 3827971031265742229}
   m_Layer: 0
   m_Name: Approach Point (1)
   m_TagString: NavigationPoint
@@ -1381,18 +1250,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031265742229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031265742233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031279997360
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,7 +1261,6 @@ GameObject:
   - component: {fileID: 3827971031279997361}
   - component: {fileID: 3827971031279997363}
   - component: {fileID: 3827971031279997362}
-  - component: {fileID: 3827971031279997356}
   m_Layer: 0
   m_Name: Approach Point
   m_TagString: NavigationPoint
@@ -1459,18 +1315,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031279997356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031279997360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031301077678
 GameObject:
   m_ObjectHideFlags: 0
@@ -1482,7 +1326,6 @@ GameObject:
   - component: {fileID: 3827971031301077679}
   - component: {fileID: 3827971031301077673}
   - component: {fileID: 3827971031301077672}
-  - component: {fileID: 3827971031301077674}
   m_Layer: 0
   m_Name: Approach Point
   m_TagString: NavigationPoint
@@ -1537,18 +1380,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031301077674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031301077678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031338048176
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,7 +1391,6 @@ GameObject:
   - component: {fileID: 3827971031338048177}
   - component: {fileID: 3827971031338048179}
   - component: {fileID: 3827971031338048178}
-  - component: {fileID: 3827971031338048172}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1631,18 +1461,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031338048172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031338048176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031344333700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1654,7 +1472,6 @@ GameObject:
   - component: {fileID: 3827971031344333701}
   - component: {fileID: 3827971031344333703}
   - component: {fileID: 3827971031344333702}
-  - component: {fileID: 3827971031344333696}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1725,18 +1542,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031344333696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031344333700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031366197450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,7 +1553,6 @@ GameObject:
   - component: {fileID: 3827971031366197451}
   - component: {fileID: 3827971031366197445}
   - component: {fileID: 3827971031366197444}
-  - component: {fileID: 3827971031366197446}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1819,18 +1623,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031366197446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031366197450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031392409876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1842,7 +1634,6 @@ GameObject:
   - component: {fileID: 3827971031392409877}
   - component: {fileID: 3827971031392409879}
   - component: {fileID: 3827971031392409878}
-  - component: {fileID: 3827971031392409872}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -1913,18 +1704,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031392409872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031392409876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031468324641
 GameObject:
   m_ObjectHideFlags: 0
@@ -1971,7 +1750,6 @@ GameObject:
   - component: {fileID: 3827971031518151456}
   - component: {fileID: 3827971031518151462}
   - component: {fileID: 3827971031518151463}
-  - component: {fileID: 3827971031518151457}
   m_Layer: 0
   m_Name: Approach Point (1)
   m_TagString: NavigationPoint
@@ -2026,18 +1804,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031518151457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031518151461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031570877921
 GameObject:
   m_ObjectHideFlags: 0
@@ -2049,7 +1815,6 @@ GameObject:
   - component: {fileID: 3827971031570877922}
   - component: {fileID: 3827971031570877980}
   - component: {fileID: 3827971031570877923}
-  - component: {fileID: 3827971031570877981}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2120,18 +1885,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031570877981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031570877921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031594330488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2143,7 +1896,6 @@ GameObject:
   - component: {fileID: 3827971031594330489}
   - component: {fileID: 3827971031594330491}
   - component: {fileID: 3827971031594330490}
-  - component: {fileID: 3827971031594330484}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2214,18 +1966,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031594330484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031594330488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031647240457
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,7 +2043,6 @@ GameObject:
   - component: {fileID: 3827971031677526898}
   - component: {fileID: 3827971031677526892}
   - component: {fileID: 3827971031677526899}
-  - component: {fileID: 3827971031677526893}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2374,18 +2113,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031677526893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031677526897}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031719554039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2397,7 +2124,6 @@ GameObject:
   - component: {fileID: 3827971031719554032}
   - component: {fileID: 3827971031719554034}
   - component: {fileID: 3827971031719554033}
-  - component: {fileID: 3827971031719554035}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2468,18 +2194,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031719554035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031719554039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031728314821
 GameObject:
   m_ObjectHideFlags: 0
@@ -2491,7 +2205,6 @@ GameObject:
   - component: {fileID: 3827971031728314822}
   - component: {fileID: 3827971031728314816}
   - component: {fileID: 3827971031728314823}
-  - component: {fileID: 3827971031728314817}
   m_Layer: 0
   m_Name: Seaweed To Egg/Lair Entry
   m_TagString: NavigationPoint
@@ -2547,18 +2260,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031728314817
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031728314821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031822453676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2569,7 +2270,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3827971031822453678}
   - component: {fileID: 3827971031822453677}
-  - component: {fileID: 3827971031822453679}
   m_Layer: 0
   m_Name: Crystal <-> Hydro/Deep B
   m_TagString: Untagged
@@ -2613,18 +2313,6 @@ MonoBehaviour:
     EntryNavPoint: {fileID: 3827971031647240452}
   - ConnectedCavern: {fileID: 0}
     EntryNavPoint: {fileID: 3827971032217376293}
---- !u!114 &3827971031822453679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031822453676}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031860595563
 GameObject:
   m_ObjectHideFlags: 0
@@ -2704,7 +2392,6 @@ GameObject:
   - component: {fileID: 3827971031888853600}
   - component: {fileID: 3827971031888853602}
   - component: {fileID: 3827971031888853601}
-  - component: {fileID: 3827971031888853603}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2775,18 +2462,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031888853603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031888853607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031905129598
 GameObject:
   m_ObjectHideFlags: 0
@@ -2798,7 +2473,6 @@ GameObject:
   - component: {fileID: 3827971031905129599}
   - component: {fileID: 3827971031905129593}
   - component: {fileID: 3827971031905129592}
-  - component: {fileID: 3827971031905129594}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -2869,18 +2543,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031905129594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031905129598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031912456815
 GameObject:
   m_ObjectHideFlags: 0
@@ -2973,7 +2635,6 @@ GameObject:
   - component: {fileID: 3827971031913202462}
   - component: {fileID: 3827971031913202456}
   - component: {fileID: 3827971031913202463}
-  - component: {fileID: 3827971031913202457}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -3044,18 +2705,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971031913202457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031913202461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031916019503
 GameObject:
   m_ObjectHideFlags: 0
@@ -3067,7 +2716,6 @@ GameObject:
   - component: {fileID: 3827971031916019498}
   - component: {fileID: 3827971031916019496}
   - component: {fileID: 3827971031916019497}
-  - component: {fileID: 3827971031916019499}
   m_Layer: 0
   m_Name: Approach Point (2)
   m_TagString: NavigationPoint
@@ -3122,18 +2770,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971031916019499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031916019503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971031979537862
 GameObject:
   m_ObjectHideFlags: 0
@@ -3211,7 +2847,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3827971031996647790}
   - component: {fileID: 3827971031996647791}
-  - component: {fileID: 3827971031996647784}
   m_Layer: 0
   m_Name: Seaweed <-> Egg/Lair
   m_TagString: Untagged
@@ -3255,18 +2890,6 @@ MonoBehaviour:
     EntryNavPoint: {fileID: 3827971031728314816}
   - ConnectedCavern: {fileID: 0}
     EntryNavPoint: {fileID: 3827971032766473421}
---- !u!114 &3827971031996647784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971031996647789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032104619147
 GameObject:
   m_ObjectHideFlags: 0
@@ -3359,7 +2982,6 @@ GameObject:
   - component: {fileID: 3827971032151710738}
   - component: {fileID: 3827971032151710736}
   - component: {fileID: 3827971032151710737}
-  - component: {fileID: 3827971032151710739}
   m_Layer: 0
   m_Name: Approach Point (2)
   m_TagString: NavigationPoint
@@ -3414,18 +3036,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032151710739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032151710743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032217376298
 GameObject:
   m_ObjectHideFlags: 0
@@ -3568,7 +3178,6 @@ GameObject:
   - component: {fileID: 3827971032248101829}
   - component: {fileID: 3827971032248101831}
   - component: {fileID: 3827971032248101830}
-  - component: {fileID: 3827971032248101824}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -3639,18 +3248,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032248101824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032248101828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032275586348
 GameObject:
   m_ObjectHideFlags: 0
@@ -3662,7 +3259,6 @@ GameObject:
   - component: {fileID: 3827971032275586349}
   - component: {fileID: 3827971032275586351}
   - component: {fileID: 3827971032275586350}
-  - component: {fileID: 3827971032275586344}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -3733,18 +3329,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032275586344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032275586348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032283197611
 GameObject:
   m_ObjectHideFlags: 0
@@ -3999,7 +3583,6 @@ GameObject:
   - component: {fileID: 3827971032385398265}
   - component: {fileID: 3827971032385398267}
   - component: {fileID: 3827971032385398266}
-  - component: {fileID: 3827971032385398260}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -4070,18 +3653,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032385398260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032385398264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032394149020
 GameObject:
   m_ObjectHideFlags: 0
@@ -4093,7 +3664,6 @@ GameObject:
   - component: {fileID: 3827971032394149021}
   - component: {fileID: 3827971032394149023}
   - component: {fileID: 3827971032394149022}
-  - component: {fileID: 3827971032394149016}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -4164,18 +3734,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032394149016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032394149020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032411247907
 GameObject:
   m_ObjectHideFlags: 0
@@ -4240,7 +3798,6 @@ GameObject:
   - component: {fileID: 3827971032419044852}
   - component: {fileID: 3827971032419044854}
   - component: {fileID: 3827971032419044853}
-  - component: {fileID: 3827971032419044855}
   m_Layer: 0
   m_Name: Approach Point
   m_TagString: NavigationPoint
@@ -4295,18 +3852,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032419044855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032419044859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032431163828
 GameObject:
   m_ObjectHideFlags: 0
@@ -4318,7 +3863,6 @@ GameObject:
   - component: {fileID: 3827971032431163829}
   - component: {fileID: 3827971032431163831}
   - component: {fileID: 3827971032431163830}
-  - component: {fileID: 3827971032431163824}
   m_Layer: 0
   m_Name: Hydrothermal To Egg/Lair Entry
   m_TagString: NavigationPoint
@@ -4376,18 +3920,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032431163824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032431163828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032447983001
 GameObject:
   m_ObjectHideFlags: 0
@@ -4399,7 +3931,6 @@ GameObject:
   - component: {fileID: 3827971032447983002}
   - component: {fileID: 3827971032447982996}
   - component: {fileID: 3827971032447983003}
-  - component: {fileID: 3827971032447982997}
   m_Layer: 0
   m_Name: Approach Point (2)
   m_TagString: NavigationPoint
@@ -4454,18 +3985,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032447982997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032447983001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032457551232
 GameObject:
   m_ObjectHideFlags: 0
@@ -4477,7 +3996,6 @@ GameObject:
   - component: {fileID: 3827971032457551233}
   - component: {fileID: 3827971032457551235}
   - component: {fileID: 3827971032457551234}
-  - component: {fileID: 3827971032457551292}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -4548,18 +4066,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032457551292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032457551232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032566846703
 GameObject:
   m_ObjectHideFlags: 0
@@ -4585,7 +4091,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3827971032566846703}
-  m_LocalRotation: {x: 0.007393187, y: 0.8837717, z: -0.013971713, w: 0.46765128}
+  m_LocalRotation: {x: 0.023853807, y: 0.8619129, z: -0.040724367, w: 0.5048551}
   m_LocalPosition: {x: -38.68, y: 4.2, z: 21.69}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4636,7 +4142,6 @@ GameObject:
   - component: {fileID: 3827971032611049143}
   - component: {fileID: 3827971032611049137}
   - component: {fileID: 3827971032611049136}
-  - component: {fileID: 3827971032611049138}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -4707,18 +4212,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032611049138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032611049142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032620638560
 GameObject:
   m_ObjectHideFlags: 0
@@ -4795,7 +4288,6 @@ GameObject:
   - component: {fileID: 3827971032649211980}
   - component: {fileID: 3827971032649211982}
   - component: {fileID: 3827971032649211981}
-  - component: {fileID: 3827971032649211983}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -4866,18 +4358,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032649211983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032649211987}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032664590927
 GameObject:
   m_ObjectHideFlags: 0
@@ -4889,7 +4369,6 @@ GameObject:
   - component: {fileID: 3827971032664590922}
   - component: {fileID: 3827971032664590920}
   - component: {fileID: 3827971032664590921}
-  - component: {fileID: 3827971032664590923}
   m_Layer: 0
   m_Name: Approach Point (1)
   m_TagString: NavigationPoint
@@ -4944,18 +4423,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032664590923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032664590927}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032766473426
 GameObject:
   m_ObjectHideFlags: 0
@@ -4967,7 +4434,6 @@ GameObject:
   - component: {fileID: 3827971032766473427}
   - component: {fileID: 3827971032766473421}
   - component: {fileID: 3827971032766473420}
-  - component: {fileID: 3827971032766473422}
   m_Layer: 0
   m_Name: Egg/Lair To Seaweed Entry
   m_TagString: NavigationPoint
@@ -5024,18 +4490,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032766473422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032766473426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032791678732
 GameObject:
   m_ObjectHideFlags: 0
@@ -5047,7 +4501,6 @@ GameObject:
   - component: {fileID: 3827971032791678733}
   - component: {fileID: 3827971032791678735}
   - component: {fileID: 3827971032791678734}
-  - component: {fileID: 3827971032791678728}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -5118,18 +4571,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3827971032791678728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032791678732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032882190564
 GameObject:
   m_ObjectHideFlags: 0
@@ -5141,7 +4582,6 @@ GameObject:
   - component: {fileID: 3827971032882190565}
   - component: {fileID: 3827971032882190567}
   - component: {fileID: 3827971032882190566}
-  - component: {fileID: 3827971032882190560}
   m_Layer: 0
   m_Name: Approach Point (1)
   m_TagString: NavigationPoint
@@ -5196,18 +4636,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032882190560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032882190564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032899627378
 GameObject:
   m_ObjectHideFlags: 0
@@ -5219,7 +4647,6 @@ GameObject:
   - component: {fileID: 3827971032899627379}
   - component: {fileID: 3827971032899627373}
   - component: {fileID: 3827971032899627372}
-  - component: {fileID: 3827971032899627374}
   m_Layer: 0
   m_Name: Approach Point
   m_TagString: NavigationPoint
@@ -5274,18 +4701,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032899627374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032899627378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3827971032958089439
 GameObject:
   m_ObjectHideFlags: 0
@@ -5297,7 +4712,6 @@ GameObject:
   - component: {fileID: 3827971032958089434}
   - component: {fileID: 3827971032958089432}
   - component: {fileID: 3827971032958089433}
-  - component: {fileID: 3827971032958089435}
   m_Layer: 0
   m_Name: Approach Point (1)
   m_TagString: NavigationPoint
@@ -5352,18 +4766,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3827971032958089435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3827971032958089439}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a054274092705d47b8cc27f27aab3bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4442404228795900171
 GameObject:
   m_ObjectHideFlags: 0

@@ -74,7 +74,7 @@ namespace Hadal.UI
 
         public void InjectAIDependencies(Transform AItransform)
         {
-            //Debug.LogWarning("Hydrophone init!");
+            Debug.LogWarning("Hydrophone AI init!");
             
             aiTransform = AItransform;
             isAIInitialized = true;
@@ -82,11 +82,14 @@ namespace Hadal.UI
         
         public void InjectPlayerDependencies(Transform pTransform)
         {
-            //Debug.LogWarning("Hydrophone init!");
+            Debug.LogWarning("Hydrophone Player init!");
             
             playerTransform = pTransform;
             isPlayerInitialized = true;
         }
+
+        public void Activate() => gameObject.SetActive(true);
+        public void Deactivate() => gameObject.SetActive(false);
     }
 
 }
