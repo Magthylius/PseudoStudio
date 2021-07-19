@@ -313,9 +313,11 @@ namespace Hadal.AI
         }
 
         private readonly Vector3 vZero = Vector3.zero;
+        private bool doNotHandleCarriedPlayer = false;
+        public void SetDoNotHandleCarriedPlayer(bool statement) => doNotHandleCarriedPlayer = statement;
         private void HandleCarriedPlayer()
         {
-            if (CarriedPlayer == null) return;
+            if (CarriedPlayer == null || doNotHandleCarriedPlayer) return;
             CarriedPlayer.GetTarget.localPosition = vZero;
         }
 

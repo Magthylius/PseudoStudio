@@ -75,6 +75,7 @@ namespace Hadal.AI.States
             Brain.DetachAnyCarriedPlayer();
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
+            AnimationManager.SetAnimation(AIAnim.Swim);
         }
 
         /// <summary> Performs a behaviour based on the boolean. If not defensive, it will be aggressive. </summary>
