@@ -282,6 +282,9 @@ namespace Hadal.Player
             _manager.InstantiatePViewList();
             TrackNamesOnline();
             LocalGameStartEvent?.Invoke(this);
+
+            UpdateDiegetics();
+            //Debug.LogWarning($"pView owner:  {_pView.Owner.NickName}");
         }
 
         public void TrackNamesOnline()
@@ -320,6 +323,16 @@ namespace Hadal.Player
             }
         }
 
+        public void UpdateDiegetics()
+        {
+            PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
+            foreach (PlayerController player in allPlayerControllers)
+            {
+                player.GraphicsHandler.ChangeEmissiveColor(NetworkEventManager.Instance.GetPlayerColor(player._pView.Owner));
+            }
+        }
+        
+
         private void PlayerReadyConfirmed(EventData obj)
         {
             if (!_pView)
@@ -350,8 +363,6 @@ namespace Hadal.Player
                 gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
                 mover.ToggleEnablility(true);
             }
-            
-            graphicsHandler.ChangeEmissiveColor(neManager.GetPlayerColor(_pView.Owner));
             
             if (UITrackerBridge.LocalPlayerUIManager == null && isMine)
             {
@@ -535,6 +546,7 @@ namespace Hadal.Player
         
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
+        public PlayerGraphicsHandler GraphicsHandler => graphicsHandler;
         public bool PlayerReadyForUpdateLoop => playerReady || (NetworkEventManager.Instance != null && NetworkEventManager.Instance.isOfflineMode);
         #endregion
     }
