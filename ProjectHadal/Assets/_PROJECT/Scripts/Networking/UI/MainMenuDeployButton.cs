@@ -105,14 +105,17 @@ namespace Hadal.Networking.UI.MainMenu
                             obj.SetActive(false);
                         }
                     }
-                    
+
                     if (NetworkEventManager.Instance.IsMasterClient)
+                    {
                         readyText.SetActive(true);
+                        highlightButton.AllowDetection();
+                    }
                     else
                         waitingText.SetActive(true);
 
                     diveText.color = diveReadyColor;
-                    highlightButton.AllowDetection();
+                    
                     
                     highlightParticleSystem.Emit(1);
                 }

@@ -437,7 +437,7 @@ namespace Hadal.Networking
                 Player[] players = PhotonNetwork.PlayerList;
                 mainMenuManager.UpdatePlayerList(players);
 
-                mainMenuManager.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+                //mainMenuManager.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
             }  
             else
             {

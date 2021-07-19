@@ -74,16 +74,12 @@ namespace Hadal.UI
 
         public void InjectAIDependencies(Transform AItransform)
         {
-            Debug.LogWarning("Hydrophone AI init!");
-            
             aiTransform = AItransform;
             isAIInitialized = true;
         }
         
         public void InjectPlayerDependencies(Transform pTransform)
         {
-            Debug.LogWarning("Hydrophone Player init!");
-            
             playerTransform = pTransform;
             isPlayerInitialized = true;
         }
