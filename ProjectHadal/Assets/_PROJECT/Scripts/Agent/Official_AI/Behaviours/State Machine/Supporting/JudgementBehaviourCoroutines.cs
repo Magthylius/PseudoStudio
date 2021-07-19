@@ -20,6 +20,7 @@ namespace Hadal.AI
         private AIDamageManager DamageManager;
         private AIAudioBank AudioBank;
         private AIHealthManager HealthManager;
+        private AIAnimationManager AnimationManager;
         private JudgementState JState;
 
         public JudgementBehaviourCoroutines(AIBrain brain, JudgementState judgementState)
@@ -34,6 +35,7 @@ namespace Hadal.AI
             DamageManager = Brain.DamageManager;
             AudioBank = Brain.AudioBank;
             HealthManager = Brain.HealthManager;
+            AnimationManager = Brain.AnimationManager;
             JState = judgementState;
 
             ResetStateValues();
@@ -49,6 +51,7 @@ namespace Hadal.AI
         private float carryDelayTimer;
 		private int judgementPersistCount;
         private bool canCarry;
+        private bool blockThresh;
         private bool isAttacking;
         private bool isDamaging;
         private bool waitForJtimer;
@@ -85,17 +88,7 @@ namespace Hadal.AI
             //! Look at the target for a set amount of time (while doing nothing), before chasing after them
             {
                 NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
-
-                //! plays sound cue that should inform the player that they should start dodging
-                AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
-                float glareTimer = Settings.G_GlareAtTargetBeforeJudgementApproachTime;
-                while (glareTimer > 0f)
-                {
-                    glareTimer -= Brain.DeltaTime;
-
-                    yield return null;
-                }
-
+                yield return new WaitForSeconds(Settings.G_GlareAtTargetBeforeJudgementApproachTime);
                 NavigationHandler.SetLookAtTarget(null);
             }
 
@@ -113,10 +106,10 @@ namespace Hadal.AI
                     else
                         success = TrySetCustomNavPoint(Brain.CurrentTarget);
 
-                    AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
                     if (success)
                     {
                         targetMarked = true;
+                        AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
                         TryDebug("Set custom nav point onto target. Moving to chase target.");
                     }
                 }
@@ -128,6 +121,7 @@ namespace Hadal.AI
                     SetCarryDelayTimer(carryDelayTime);
                     NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
 
+                    //! plays sound cue that should inform the player that they should start dodging
                     AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
 
                     TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
@@ -138,6 +132,7 @@ namespace Hadal.AI
                 if (FarThresholdReached)
                 {
                     waitForJtimer = true;
+                    JState.IsBehaviourRunning = false;
                     TryDebug("Target got too far from the Leviathan, stopping behaviour.");
                     break;
                 }
@@ -153,11 +148,36 @@ namespace Hadal.AI
                         break;
                     }
 
+                    //! Call this to block threshing the target until it is disabled
+                    blockThresh = true;
+                    
+                    //! Carry the target player without triggering thresh
                     bool success = Brain.TryCarryTargetPlayer();
+                    TryDebug(success ? "Succeeded in carrying target player." : "Failed to carry target player, stopping behaviour.");
+                    if (!success)
+                    {
+                        waitForJtimer = true;
+                        blockThresh = false;
+                        break;
+                    }
+
+                    //! Disable handling the carried player (which will usually lock it firmly to the mouth area)
+                    Brain.SetDoNotHandleCarriedPlayer(true);
+                    
+                    //! Teleport player to the correct location in front of the AI & disable navigation
+                    NavigationHandler.ForceDisable();
+                    Brain.CarriedPlayer.GetTarget.position = Brain.transform.position + (Brain.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
+
+                    //! Spawn explosive point to blast away unwanted attention
                     Brain.SpawnExplosivePointAt(Brain.CarriedPlayer.GetTarget.position);
 
-                    TryDebug(success ? "Succeeded in carrying target player." : "Failed to carry target player, stopping behaviour.");
-                    if (!success) waitForJtimer = true;
+                    //! Perform animation and wait until it is finished
+                    AnimationManager.SetAnimation(AIAnim.Bite);
+                    yield return new WaitForSeconds(AnimationManager.GetAnimationClipLengthFor(AIAnim.Bite));
+                    
+                    //! Reenable handling the carried player & allow thresh to work
+                    Brain.SetDoNotHandleCarriedPlayer(false);
+                    blockThresh = false;
 
                     break;
                 }
@@ -243,7 +263,7 @@ namespace Hadal.AI
                 }
 
                 //! Thresh if is carrying a player & is not yet threshing
-                if (Brain.IsCarryingAPlayer() && !isAttacking)
+                if (Brain.IsCarryingAPlayer() && !isAttacking && !blockThresh)
                 {
                     isAttacking = true;
 
@@ -311,7 +331,7 @@ namespace Hadal.AI
                 }
 
                 //! Thresh if is carrying a player & is not yet threshing
-                if (Brain.IsCarryingAPlayer() && !isAttacking)
+                if (Brain.IsCarryingAPlayer() && !isAttacking && !blockThresh)
                 {
                     isAttacking = true;
 
@@ -370,7 +390,7 @@ namespace Hadal.AI
                 }
 
                 //! Thresh if is carrying a player & is not yet threshing
-                if (Brain.IsCarryingAPlayer() && !isAttacking)
+                if (Brain.IsCarryingAPlayer() && !isAttacking && !blockThresh)
                 {
                     isAttacking = true;
 
@@ -488,6 +508,7 @@ namespace Hadal.AI
         {
             carryDelayTimer = 0f;
             canCarry = false;
+            blockThresh = false;
             isAttacking = false;
             isDamaging = false;
             JState.ResetStateValues();

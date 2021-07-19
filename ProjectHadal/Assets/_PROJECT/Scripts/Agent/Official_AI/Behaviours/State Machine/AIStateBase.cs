@@ -22,6 +22,7 @@ namespace Hadal.AI
         public AIDamageManager DamageManager;
         public AIHealthManager HealthManager;
         public AIAudioBank AudioBank;
+        public AIAnimationManager AnimationManager;
 
         public bool AllowStateTick = true;
 
@@ -39,6 +40,7 @@ namespace Hadal.AI
             DamageManager = Brain.DamageManager;
             HealthManager = Brain.HealthManager;
             AudioBank = Brain.AudioBank;
+            AnimationManager = Brain.AnimationManager;
         }
 
         public virtual void FixedStateTick() { }

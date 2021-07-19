@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ExitGames.Client.Photon;
+using Tenshi;
 using NaughtyAttributes;
 using System.Linq;
+using ReadOnly = Tenshi.ReadOnlyAttribute;
+using Tenshi.UnitySoku;
 
 namespace Hadal.AI
 {
@@ -11,20 +13,33 @@ namespace Hadal.AI
     {
 		[SerializeField] private Animator animator;
 		[SerializeField] private float defaultAnimLerpTime;
+		[SerializeField] private float stunnedAnimSpeedMultiplier = 0.2f;
 		[SerializeField] private List<AnimationFloat> floatData;
 		
+		private bool isSpeedStopped;
+		private bool shouldUseStunMultiplier;
 		private AIBrain _brain;
 		private Coroutine mainLerpRoutine;
 		private Coroutine stopDelaySubroutine;
 		
 		public void Initialise(AIBrain brain)
 		{
+			//! Class initialisations
 			_brain = brain;
 			if (animator == null) animator = GetComponent<Animator>();
 			floatData.ForEach(f => f.Initialise(animator));
 			
+			//! Events
+			_brain.OnStunnedEvent += HandleStunEvent;
+
 			//! Default animation state
 			SetAnimation(AIAnim.Swim);
+		}
+
+		private void OnDestroy()
+		{
+			if (_brain != null)
+				_brain.OnStunnedEvent -= HandleStunEvent;
 		}
 		
 		public void SetAnimation(AIAnim animType, float customAnimLerpTime = -1f)
@@ -33,11 +48,20 @@ namespace Hadal.AI
 			mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
 			_brain.Send_SetAnimation(animType, customAnimLerpTime);
 		}
+
+		public float GetAnimationClipLengthFor(AIAnim animType) => GetAnimationFloatFromAnimType(animType).GetClipLength();
 		
 		private IEnumerator LerpAnimation(AIAnim animType, float customAnimLerpTime)
 		{
 			AnimationFloat currentFloat = GetAnimationFloatFromAnimType(animType);
 			List<AnimationFloat> otherFloats = GetAnimationFloatsExcluding(animType);
+
+			if (currentFloat == null)
+			{
+				string theName = System.Enum.GetName(typeof(AIAnim), animType);
+				$"Unable to find animation float of enum value: {theName}, is it not properly assigned?".Warn();
+				yield break;
+			}
 
 			float lerpTime = 1f / (customAnimLerpTime > 0f ? customAnimLerpTime : defaultAnimLerpTime);
 			float percent = 0f;
@@ -45,6 +69,7 @@ namespace Hadal.AI
 			ResetSpeed();
 			if (currentFloat.ShouldPauseOnClipFinished())
 			{
+				isSpeedStopped = false;
 				stopDelaySubroutine = StartCoroutine(StopSpeedAfterDelay(currentFloat.GetClipLength()));
 				RefreshBlendTree();
 			}
@@ -63,9 +88,22 @@ namespace Hadal.AI
 		private IEnumerator StopSpeedAfterDelay(float delayInSeconds)
         {
             yield return new WaitForSeconds(delayInSeconds);
-            StopSpeed();
+            isSpeedStopped = true;
+			StopSpeed();
 			stopDelaySubroutine = null;
         }
+
+		private bool waitForUnstun = false;
+		private void HandleStunEvent(bool isStunned)
+		{
+			shouldUseStunMultiplier = isStunned;
+			UpdateStunnedSpeed();
+
+			if (!isStunned && waitForUnstun)
+				SetAnimation(GetDefaultAnimationFloat().GetEnum());
+
+			waitForUnstun = isStunned;
+		}
 
 		private void RefreshBlendTree()
         {
@@ -74,7 +112,16 @@ namespace Hadal.AI
         }
 
 		private void StopSpeed() => animator.SetFloat("SpeedMultiplier", 0f);
-        private void ResetSpeed() => animator.SetFloat("SpeedMultiplier", 1f);
+        private void ResetSpeed() => animator.SetFloat("SpeedMultiplier", 1f * GetStunnedMultiplier());
+		private void UpdateStunnedSpeed() => animator.SetFloat("SpeedMultiplier", animator.GetFloat("SpeedMultiplier") * GetStunnedMultiplier());
+		private float GetStunnedMultiplier()
+		{
+			bool IsStunnedAndSpeedIsNotStopped = shouldUseStunMultiplier && !isSpeedStopped;
+			if (IsStunnedAndSpeedIsNotStopped)
+				return stunnedAnimSpeedMultiplier;
+
+			return 1f;
+		}
 
 		private AnimationFloat GetAnimationFloatFromAnimType(AIAnim animType)
 		{
@@ -91,6 +138,8 @@ namespace Hadal.AI
 		{
 			return floatData.Where(f => f.GetEnum() != excludeType).DefaultIfEmpty().ToList();
 		}
+
+		private AnimationFloat GetDefaultAnimationFloat() => floatData.Where(f => f.IsDefault()).Single();
 		
 		private void StopAllRunningCoroutines()
 		{
@@ -103,17 +152,22 @@ namespace Hadal.AI
 			stopDelaySubroutine = null;
 		}
 
+		private void OnValidate()
+		{
+			floatData.ForEach(f => f.RefreshCachedName());
+		}
+
 		[System.Serializable]
         private class AnimationFloat
         {
+			[SerializeField, ReadOnly] private string name = string.Empty;
             [SerializeField] private AIAnim animationEnum;
             [Range(0f, 1f), SerializeField] private float defaultValue;
             [Range(0f, 1f), SerializeField] private float focusedValue = 1f;
             [Range(0f, 1f), SerializeField] private float unfocusedValue = 0f;
+			[SerializeField] private bool isDefaultAnimationClip;
             [SerializeField] private bool pauseOnClipFinished;
             [SerializeField] private AnimationClip associatedClip;
-
-			private string cachedName = string.Empty;
             private Animator anim = null;
 
             public AnimationFloat LerpToFocusedValue(float percent)
@@ -132,16 +186,17 @@ namespace Hadal.AI
             
             public float GetValue() => anim.GetFloat(GetName());
             public void SetValue(float value) => anim.SetFloat(GetName(), value);
-            public string GetName() => cachedName;
+            public string GetName() => name;
 			public AIAnim GetEnum() => animationEnum;
             public float GetDefaultValue() => defaultValue;
             public float GetFocusedValue() => focusedValue;
             public float GetUnfocusedValue() => unfocusedValue;
+			public bool IsDefault() => isDefaultAnimationClip;
             public bool ShouldPauseOnClipFinished() => pauseOnClipFinished;
             public float GetClipLength() => associatedClip.length;
 
 			[Button("Refresh Cached Name", EButtonEnableMode.Always)]
-			public void RefreshCachedName() => cachedName = System.Enum.GetName(typeof(AIAnim), animationEnum);
+			public void RefreshCachedName() => name = System.Enum.GetName(typeof(AIAnim), animationEnum);
             public void Initialise(Animator animator)
             {
                 anim = animator;

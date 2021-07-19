@@ -24,6 +24,7 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_HaltingTime = 2.5f;
         [Min(0f)] public float G_GlareAtTargetBeforeJudgementApproachTime = 2f;
         [Min(0)] public int G_DisruptionDamageCount;
+        [Min(0f)] public float G_DistanceFromFrontForBiteAnimation = 15f;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;

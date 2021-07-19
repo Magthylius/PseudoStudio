@@ -282,6 +282,19 @@ namespace Hadal.AI
                 rBody.velocity = Vector3.zero;
             }
         }
+        public void ForceDisable(bool makeKinematic = true)
+        {
+            _isEnabled = false;
+            if (disableRoutine != null)
+                StopCoroutine(disableRoutine);
+            disableRoutine = null;
+
+            if (rBody != null)
+            {
+                if (makeKinematic) rBody.isKinematic = true;
+                rBody.velocity = Vector3.zero;
+            }
+        }
         public void DisableWithLerp(float time, Action onCompleteCallback = null, float minVelocityCut = 0f)
         {
             if (!_isEnabled)
