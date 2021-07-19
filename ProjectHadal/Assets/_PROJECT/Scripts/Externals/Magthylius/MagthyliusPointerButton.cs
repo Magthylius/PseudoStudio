@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using TMPro;
 
-//! Version 1.1.0
+//! Version 1.2.0
 [RequireComponent(typeof(EventTrigger), typeof(Image))]
 public class MagthyliusPointerButton : MonoBehaviour
 {
@@ -56,6 +56,7 @@ public class MagthyliusPointerButton : MonoBehaviour
 
     //! External data
     bool isHovered = false;
+    private bool allowDetection = true;
 
     void OnValidate()
     {
@@ -127,6 +128,8 @@ public class MagthyliusPointerButton : MonoBehaviour
         UIEventContainer e = GetEvents(type);
         if (e != null)
         {
+            if (!allowDetection) return;
+            
             e.eventDelegates.Invoke();
             targetColor = e.color;
 
@@ -142,6 +145,9 @@ public class MagthyliusPointerButton : MonoBehaviour
     #endregion
 
     #region Data Handling
+
+    public void AllowDetection() => allowDetection = true;
+    public void DisallowDetection() => allowDetection = false;
     void PointerEnteredHandling() => isHovered = true;
     void PointerExitHandling() => isHovered = false;
     #endregion
@@ -149,5 +155,7 @@ public class MagthyliusPointerButton : MonoBehaviour
     #region Accessors
     public Color color => image.color;
     public bool IsHovered => isHovered;
+    public bool IsDetecting => allowDetection;
+
     #endregion
 }

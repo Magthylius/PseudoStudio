@@ -9,11 +9,18 @@ namespace Hadal.Networking.UI.MainMenu
 {
     public class MainMenuDeployButton : MonoBehaviour
     {
-        [Header("References")]
+        [Header("References")] 
+        [SerializeField] private ParticleSystem highlightParticleSystem;
+        [SerializeField] private MagthyliusPointerButton highlightButton;
         [SerializeField] private Image centerImage;
         [SerializeField] private TextMeshProUGUI playerCounter;
+        [SerializeField] private TextMeshProUGUI diveText;
+        [SerializeField] private GameObject readyText;
+        [SerializeField] private GameObject waitingText;
         
         [Header("Settings")]
+        [SerializeField] private Color diveUnreadyColor;
+        [SerializeField] private Color diveReadyColor;
         [SerializeField] private Color unreadyColor;
         [SerializeField] private Color readyColor;
         [SerializeField] private string allPlayerReadyString;
@@ -40,6 +47,11 @@ namespace Hadal.Networking.UI.MainMenu
                     obj.SetActive(false);
                 }
             }
+            
+            readyText.SetActive(false);
+            waitingText.SetActive(false);
+            diveText.color = diveUnreadyColor;
+            highlightButton.DisallowDetection();
         }
 
         private void OnDisable()
@@ -93,6 +105,16 @@ namespace Hadal.Networking.UI.MainMenu
                             obj.SetActive(false);
                         }
                     }
+                    
+                    if (NetworkEventManager.Instance.IsMasterClient)
+                        readyText.SetActive(true);
+                    else
+                        waitingText.SetActive(true);
+
+                    diveText.color = diveReadyColor;
+                    highlightButton.AllowDetection();
+                    
+                    highlightParticleSystem.Emit(1);
                 }
                 else if (!AllPlayersReady && previousReadyState)
                 {
@@ -114,6 +136,12 @@ namespace Hadal.Networking.UI.MainMenu
                             obj.SetActive(true);
                         }
                     }
+                    
+                    readyText.SetActive(false);
+                    waitingText.SetActive(false);
+                    
+                    diveText.color = diveUnreadyColor;
+                    highlightButton.DisallowDetection();
                 }
                 
                 yield return new WaitForSeconds(0.1f);
