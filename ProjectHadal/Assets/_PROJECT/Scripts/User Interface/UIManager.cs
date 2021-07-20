@@ -334,14 +334,12 @@ namespace Hadal.UI
         {
             foreach (PlayerNameTrackerBehaviour tracker in otherPlayerTrackers)
             {
+                //Debug.LogWarning($"{tracker.TrackingTransform.gameObject.name}");
+                //Debug.LogWarning($"{downedPlayer.gameObject.name}");
                 if (tracker.TrackingTransform == downedPlayer)
                 {
-                    Debug.LogWarning($"Downed player!");
+                    //Debug.LogWarning($"Downed player!");
                     tracker.SetDownSettings();
-                }
-                else
-                {
-                    Debug.LogWarning($"{tracker.transform.gameObject.name}");
                 }
             }
         }
@@ -352,7 +350,7 @@ namespace Hadal.UI
             {
                 if (tracker.TrackingTransform == revivedPlayer)
                 {
-                    Debug.LogWarning($"Revived player!");
+                    //Debug.LogWarning($"Revived player!");
                     tracker.SetDefaultSettings();
                 }
             }

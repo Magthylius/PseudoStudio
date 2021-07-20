@@ -421,25 +421,25 @@ namespace Hadal.Player.Behaviours
         {
             _controller.UI.ContextHandler.PlayerWentDown();
             
-            Debug.LogWarning($"update down ui");
-            if (transform != LocalPlayerData.PlayerController.transform)
+            //Debug.LogWarning($"update down ui");
+            if (_controller.transform != LocalPlayerData.PlayerController.transform)
             {
-                Debug.LogWarning($"track player down");
-                LocalPlayerData.PlayerController.UI.TrackPlayerDown(transform);
+                //Debug.LogWarning($"track player down");
+                LocalPlayerData.PlayerController.UI.TrackPlayerDown(_controller.transform);
             }
         }
 
         /// <summary> Meant for the networked other player that is being revived. </summary>
         void UpdateReviveUI(bool attemptSucceeded)
         {
-            Debug.LogWarning("update revive ui called: " + attemptSucceeded);
+            //Debug.LogWarning("update revive ui called: " + attemptSucceeded);
             if (attemptSucceeded)
             {
-                Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
+                //Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
                 _controller.UI.ContextHandler.PlayerRevived();
                 
-                if (transform != LocalPlayerData.PlayerController.transform)
-                    LocalPlayerData.PlayerController.UI.TrackPlayerRevived(transform);
+                if (_controller.transform != LocalPlayerData.PlayerController.transform)
+                    LocalPlayerData.PlayerController.UI.TrackPlayerRevived(_controller.transform);
             }
         }
 
