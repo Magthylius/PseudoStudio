@@ -421,6 +421,7 @@ namespace Hadal.Player.Behaviours
         {
             _controller.UI.ContextHandler.PlayerWentDown();
             
+            Debug.LogWarning($"update down ui");
             if (transform != LocalPlayerData.PlayerController.transform)
                 LocalPlayerData.PlayerController.UI.TrackPlayerDown(transform);
         }
