@@ -423,7 +423,10 @@ namespace Hadal.Player.Behaviours
             
             Debug.LogWarning($"update down ui");
             if (transform != LocalPlayerData.PlayerController.transform)
+            {
+                Debug.LogWarning($"track player down");
                 LocalPlayerData.PlayerController.UI.TrackPlayerDown(transform);
+            }
         }
 
         /// <summary> Meant for the networked other player that is being revived. </summary>

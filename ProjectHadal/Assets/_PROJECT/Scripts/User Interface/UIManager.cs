@@ -339,6 +339,10 @@ namespace Hadal.UI
                     Debug.LogWarning($"Downed player!");
                     tracker.SetDownSettings();
                 }
+                else
+                {
+                    Debug.LogWarning($"{tracker.transform.gameObject.name}");
+                }
             }
         }
 
