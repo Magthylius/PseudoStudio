@@ -1,13 +1,10 @@
-using Tenshi.AIDolls;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.AI.Caverns;
 using Hadal.Player;
-using Hadal.AI;
 
 //! C: jet, E: jon
 namespace Hadal.AI.States
@@ -103,14 +100,11 @@ namespace Hadal.AI.States
 
         void StartInitialization(bool booleanData)
         {
-            //.LogWarning("heyheyxd");
             GameManager.Instance.StartCoroutine(InitializeAfterCaverns());
         }
 
         IEnumerator InitializeAfterCaverns()
         {
-            //Debug.LogWarning("heyhey0");
-			
 			while (Brain == null)
 			{
 				yield return null;
@@ -122,14 +116,11 @@ namespace Hadal.AI.States
                 yield return null;
             }
 
-            //Debug.LogWarning("heyhey1");
-
             SetNewTargetCavern();
             if (Brain.TargetMoveCavern == null)
             {
                 //! Check if game ended
                 AllowStateTick = false;
-                //return;
                 yield return null;
             }
 
@@ -138,18 +129,14 @@ namespace Hadal.AI.States
                 yield return null;
             }
 
-            //Debug.LogWarning("heyhey2");
-
             AllowStateTick = true;
             RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
             gameStartupInitialization = true;
             DetermineNextCavern();
-            //Debug.LogWarning("heyhey3");
-
         }
 
-        void SetNewTargetCavern()
+        CavernHandler SetNewTargetCavern()
         {
             EngagementObjective currentObj = RuntimeData.GetEngagementObjective;
             CavernHandler targetCavern = null;
@@ -195,6 +182,7 @@ namespace Hadal.AI.States
 
             Brain.UpdateTargetMoveCavern(targetCavern);
             CavernManager.SeedCavernHeuristics(targetCavern);
+            return targetCavern;
         }
         void DetermineNextCavern()
         {
@@ -264,13 +252,15 @@ namespace Hadal.AI.States
                     else
                     {
                         bool anyPlayersToHunt = CavernManager.AnyPlayersPresentInAnyCavern();
-                        bool currentCavernIsMostPopulated = AICavern != null && AICavern.cavernTag == CavernManager.GetMostPopulatedCavern(false).cavernTag;
-                        if (anyPlayersToHunt && !currentCavernIsMostPopulated)
+                        CavernHandler targetCavern = null;
+                        CavernTag aiCavernTag = AICavern != null ? AICavern.cavernTag : CavernTag.Invalid;
+                        if (anyPlayersToHunt)
                         {
-                            SetNewTargetCavern();
+                            targetCavern = SetNewTargetCavern();
                             debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
                         }
-                        else
+                        
+                        if (!anyPlayersToHunt || targetCavern.cavernTag == aiCavernTag)
                         {
                             RuntimeData.SetBrainState(BrainState.Ambush);
                             debugMsg = "Took too long and VERY ANGRY, but hunting is not a suitable option... therefore, preparing to ambush!!!";

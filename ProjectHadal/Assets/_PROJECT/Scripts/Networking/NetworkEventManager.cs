@@ -57,6 +57,7 @@ namespace Hadal.Networking
         AI_COLOUR_CHANGE,
         AI_PLAY_AUDIO,
 		AI_PLAY_ANIMATION,
+        AI_SET_ANIMATION_SPEED,
         AI_EGG_DAMAGED,
         TOTAL_EVENTS
     }

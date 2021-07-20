@@ -33,6 +33,7 @@ namespace Hadal.AI.States
             cavernHandler = Brain.CavernManager.GetCavern(currentCavern);
             ambushTimer = settings.AM_MaxWaitTime;
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Ambush);
+            NavigationHandler.StopQueuedPath();
         }
         public override void StateTick()
         {
