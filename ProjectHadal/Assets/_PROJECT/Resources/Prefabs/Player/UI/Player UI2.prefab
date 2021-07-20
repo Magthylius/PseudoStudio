@@ -27572,6 +27572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   classInfoText: {fileID: 7469903351346789550}
+  panelRenderer: {fileID: 1855009124508867896}
 --- !u!1 &7599220820801591633
 GameObject:
   m_ObjectHideFlags: 0
@@ -36110,6 +36111,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 382e43275798c9b4586c1be9b45739eb, type: 3}
+--- !u!23 &1855009124508867896 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 382e43275798c9b4586c1be9b45739eb, type: 3}
+  m_PrefabInstance: {fileID: 1044770627364782524}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &717616213410866775 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 382e43275798c9b4586c1be9b45739eb, type: 3}

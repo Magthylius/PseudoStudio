@@ -9,6 +9,7 @@ namespace Hadal.UI
     public class UIClassInfoHandler : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI classInfoText;
+        [SerializeField] private MeshRenderer panelRenderer;
 
         public void SetClass(PlayerClassType classType)
         {
@@ -31,6 +32,10 @@ namespace Hadal.UI
                     break;
             }
         }
-        
+
+        public void SetPanelColor(Color newColor)
+        {
+            panelRenderer.material.color = newColor;
+        }
     }
 }
