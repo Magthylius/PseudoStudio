@@ -154,6 +154,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: '#AI 2.0'
       objectReference: {fileID: 0}
+    - target: {fileID: 6021279049498701051, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: huntSphereDetectionRadius
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6021279049498701051, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
+      propertyPath: overlapSphereDetectionRadius
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38d461fc1e36cf34c9fb0f5caaa78b0f, type: 3}
 --- !u!4 &395465446244265274 stripped
