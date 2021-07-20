@@ -229,7 +229,7 @@ namespace Hadal.AI
         {
             if (!CanMove || !canPath || !enableMovement) return;
 
-            if (!isStunned && (!hasReachedPoint || !chosenAmbushPoint))
+            if (!isStunned && (!hasReachedPoint || !chosenAmbushPoint) && _lookAtTarget == null)
             {
                 TrySelectNewNavPoint(fixedDeltaTime);
                 ElapseCavernLingerTimer(fixedDeltaTime);
@@ -773,7 +773,7 @@ namespace Hadal.AI
 
         private void HandleSpeedAndDirection(in float deltaTime)
         {
-            if (currentPoint != null && TotalMaxVelocity > float.Epsilon && !isStunned && isChasingAPlayer)
+            if (currentPoint != null && TotalMaxVelocity > float.Epsilon && !isStunned && isChasingAPlayer && _lookAtTarget == null)
             {
                 //! Chasing player direction
                 Vector3 moveTo = (currentPoint.GetPosition - pilotTrans.position).normalized * TotalAttractionForce;
