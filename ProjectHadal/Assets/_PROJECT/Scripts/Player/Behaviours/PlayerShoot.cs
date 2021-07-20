@@ -159,21 +159,21 @@ namespace Hadal.Player.Behaviours
 
                 if ((int)data[0] == _pView.ViewID)
                 {
-                    FireTorpedo((int)data[1], true);
+                    FireTorpedo((int)data[1], true, (Vector3)data[2]);
                 }
             }
         }
 
         //! Event Firing
-        public void SendTorpedoEvent(int projectileID)
+        public void SendTorpedoEvent(int projectileID, Vector3 lookAtPoint)
         {
             if (!AllowUpdate) return;
             //PhotonNetwork.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
-            object[] content = new object[] { _pView.ViewID, projectileID};
+            object[] content = new object[] { _pView.ViewID, projectileID, lookAtPoint};
             neManager.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, content);
         }
 
-        public void FireTorpedo(int projectileID, bool eventFire)
+        public void FireTorpedo(int projectileID, bool eventFire, Vector3 RELookatPoint)
         {
             if (!AllowUpdate) return;
             if (!eventFire && !tLauncher.IsChamberLoaded)
@@ -188,19 +188,25 @@ namespace Hadal.Player.Behaviours
                 projectileID += tLauncher.Data.ProjectileData.ProjTypeInt;
             }
 
-            //send event to torpedo ONLY when fire locally. local = (!eventFire)
-            if (!eventFire) SendTorpedoEvent(projectileID);
-
-            HandleTorpedoObject(projectileID, !eventFire);
+            HandleTorpedoObject(projectileID, !eventFire, RELookatPoint);
         }
-        private void HandleTorpedoObject(int projectileID, bool isLocal)
+        private void HandleTorpedoObject(int projectileID, bool isLocal, Vector3 RELookatPoint)
         {
             //actual firing
             tLauncher.DecrementChamber();
             UsableHandlerInfo info = CreateInfoForTorpedo(projectileID, tLauncher.IsPowered, isLocal);
-            info = CalculateTorpedoAngle(info);
+
+            if (isLocal)
+                info = CalculateTorpedoAngle(info);
+            else
+                info.AimedPoint = RELookatPoint;
+            
             tLauncher.Use(info);
             controller.GetInfo.Inventory.IncreaseProjectileCount();
+
+
+            //send event to torpedo ONLY when fire locally. local = (!eventFire)
+            if (isLocal) SendTorpedoEvent(projectileID, info.AimedPoint);
         }
 
         public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool isPowered ,bool eventFire)

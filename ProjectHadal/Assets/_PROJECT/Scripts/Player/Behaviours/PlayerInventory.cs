@@ -99,7 +99,7 @@ namespace Hadal.Player.Behaviours
             if (_uInput.FireKeyTorpedoRelease)
             {
                 _controllerInfo.Shooter.StopShootTracer();
-                _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false);
+                _controllerInfo.Shooter.FireTorpedo(pViewForProj + _projectileCount, false, Vector3.zero);
                 return;
             }
 
