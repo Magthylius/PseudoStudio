@@ -420,6 +420,9 @@ namespace Hadal.Player.Behaviours
         void UpdateDownUI()
         {
             _controller.UI.ContextHandler.PlayerWentDown();
+            
+            if (transform != LocalPlayerData.PlayerController.transform)
+                LocalPlayerData.PlayerController.UI.TrackPlayerDown(transform);
         }
 
         /// <summary> Meant for the networked other player that is being revived. </summary>
@@ -430,6 +433,9 @@ namespace Hadal.Player.Behaviours
             {
                 Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
                 _controller.UI.ContextHandler.PlayerRevived();
+                
+                if (transform != LocalPlayerData.PlayerController.transform)
+                    LocalPlayerData.PlayerController.UI.TrackPlayerRevived(transform);
             }
         }
 

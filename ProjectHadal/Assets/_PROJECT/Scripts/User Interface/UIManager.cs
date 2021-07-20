@@ -6,6 +6,7 @@ using Hadal.Inputs;
 using Magthylius.LerpFunctions;
 using Hadal.Networking;
 using Hadal.Locomotion;
+using NaughtyAttributes;
 
 //Created by Jet, Edited by Jon 
 namespace Hadal.UI
@@ -34,6 +35,7 @@ namespace Hadal.UI
         public UIEffectsHandler EffectsHandler;
         public UIHydrophoneBehaviour HydrophoneBehaviour;
         public UICockpitCamera CockpitCamera;
+        public UIClassInfoHandler ClassInfoHandler;
         public Camera PlayerCamera;
 
         [Header("Reticle Settings")]
@@ -52,17 +54,6 @@ namespace Hadal.UI
         [Header("Reticle Rotation Settings")]
         [SerializeField, Min(0f)] float maxReticleRotation = 20f;
 
-        [Header("Reticle Mover Settings")]
-        [SerializeField] RectTransform upperMoverGroup;
-        [SerializeField] RectTransform lowerMoverGroup;
-
-        [Header("Loader Filler Settings")]
-        /*[SerializeField] Image leftLoaderFiller;
-        [SerializeField] Image rightLoaderFiller;
-        [SerializeField, Range(0f, 1f)] float fillerMinFillClamp = 0.1f;
-        [SerializeField, Range(0f, 1f)] float fillerMaxFillClamp = 0.5f;
-        [SerializeField] float loaderFillLerpSpeed = 5f;*/
-
         FlexibleRect reticleDirectorsFR;
 
         [Header("Player Settings")]
@@ -71,6 +62,9 @@ namespace Hadal.UI
         [SerializeField, Min(0.1f)] float maxMovementInfluence;
         [SerializeField, Min(0.1f)] float uiLerpReactionSpeed;
 
+        [SerializeField, ReadOnly]
+        private List<PlayerNameTrackerBehaviour> otherPlayerTrackers = new List<PlayerNameTrackerBehaviour>();
+        
         public static event OnHealthChange OnHealthChange;
 
         FlexibleRect allUIParentFR;
@@ -96,6 +90,13 @@ namespace Hadal.UI
         List<UIFillerBehaviour> torpedoFillers;
         private bool torpIsEmpty = false;
 
+        [Header("Harpoon Settings")]
+        public GameObject harpoonFillerPrefab;
+        public Transform harpoonFillerParent;
+        public Image harpLoader;
+
+        private List<UIFillerBehaviour> harpoonFillers;
+        
         [Header("VFX Settings")]
         public ParticleSystem torpedoReloadedVFX;
         public ParticleSystem torpedoEmptyVFX;
@@ -113,7 +114,6 @@ namespace Hadal.UI
         public event OnPauseMenuAction PauseMenuClosed;
 
         bool pauseMenuOpen = false;
-        //! blur out the screen
 
         //! Debug
         int sl_UI;
@@ -164,13 +164,15 @@ namespace Hadal.UI
 
         #region External calls
 
-        public void Initialize(int totalTorpedoCount)
+        public void Initialize(int totalTorpedoCount, int totalHarpoonCount)
         {
             torpedoFillers = new List<UIFillerBehaviour>();
+            harpoonFillers = new List<UIFillerBehaviour>();
             //StartCoroutine(SpawnFillers(totalTorpedoCount - 1, true));
             
             torpedoEmptyText.SetActive(false);
             
+            //! -1 because 1 is represented through the filler
             for (int i = 0; i < totalTorpedoCount - 1; i++)
             {
                 GameObject go = Instantiate(torpedoFillerPrefab, torpedoFillerParent);
@@ -181,6 +183,15 @@ namespace Hadal.UI
             }
             
             torpedoFillers.Reverse();
+
+            for (int i = 0; i < totalHarpoonCount - 1; i++)
+            {
+                GameObject go = Instantiate(harpoonFillerPrefab, harpoonFillerParent);
+                UIFillerBehaviour filler = go.GetComponent<UIFillerBehaviour>();
+                harpoonFillers.Add(filler);
+                
+                filler.ToFilled();
+            }
         }
         
         IEnumerator SpawnFillers(int totalTorpedoCount, bool startFilled)
@@ -223,7 +234,7 @@ namespace Hadal.UI
         #endregion
 
         #region Torpedoes
-        public void UpdateFlooding(float progress, bool showFlooding)
+        public void UpdateTorpedoChamber(float progress, bool showFlooding)
         {
             torpLoader.fillAmount = progress;
             //floodText.SetActive(showFlooding);
@@ -231,7 +242,7 @@ namespace Hadal.UI
             else ShootTracer.ToRed();
         }
 
-        public void UpdateTubes(int torpedoCount, bool chamberEmpty = false)
+        public void UpdateTorpedoReserve(int torpedoCount)
         {
             torpCount = torpedoCount;
 
@@ -269,6 +280,26 @@ namespace Hadal.UI
         }
         #endregion
 
+        #region Harpoons
+
+        public void UpdateHarpoonChamber(float progress)
+        {
+            harpLoader.fillAmount = progress;
+        }
+
+        public void UpdateHarpoonReserve(int harpoonCount)
+        {
+            int count = 0;
+            foreach (UIFillerBehaviour filler in harpoonFillers)
+            {
+                if (count < harpoonCount - 1) filler.ToFilled();
+                else filler.ToHollow();
+                count++;
+            }
+        }
+
+        #endregion
+
         #region Modules
         public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput)
         {
@@ -298,10 +329,29 @@ namespace Hadal.UI
             allUIParentFR.StartLerp(velocity);
             allUIParentFR.Step(uiLerpReactionSpeed * Time.deltaTime);
         }
+
+        public void TrackPlayerDown(Transform downedPlayer)
+        {
+            foreach (PlayerNameTrackerBehaviour tracker in otherPlayerTrackers)
+            {
+                if (tracker.TrackingTransform == downedPlayer)
+                    tracker.SetDownSettings();
+            }
+        }
+
+        public void TrackPlayerRevived(Transform revivedPlayer)
+        {
+            foreach (PlayerNameTrackerBehaviour tracker in otherPlayerTrackers)
+            {
+                if (tracker.TrackingTransform == revivedPlayer)
+                    tracker.SetDefaultSettings();
+            }
+        }
         
         public void TrackPlayerName(Transform otherPlayer, string playerName)
         {
-            print("tracking: " + playerName);
+            //print("tracking: " + playerName);
+            PlayerNameTrackerBehaviour nameTracker;
             StartCoroutine(TryTracking());
 
             IEnumerator TryTracking()
@@ -314,7 +364,12 @@ namespace Hadal.UI
                 UITrackerBehaviour nameTracker = trackerHandler.Scoop(TrackerType.PLAYER_NAME);
                 nameTracker.TrackTransform(otherPlayer);
                 PlayerNameTrackerBehaviour pNameTracker = nameTracker as PlayerNameTrackerBehaviour;
-                if (pNameTracker) pNameTracker.UpdateText(playerName);
+                
+                if (pNameTracker)
+                {
+                    pNameTracker.UpdateText(playerName);
+                    otherPlayerTrackers.Add(pNameTracker);  
+                }
             }
         }
         

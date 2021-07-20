@@ -45,7 +45,7 @@ namespace Hadal.Player
         PlayerManager _manager;
         Rigidbody _rBody;
         Collider _collider;
-
+        
         private bool _isKnocked;
         private bool _isCarried;
         private bool _isTaggedByLeviathan;

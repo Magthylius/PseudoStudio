@@ -42,6 +42,9 @@ namespace Hadal.Player.Behaviours
         [SerializeField] Transform torpedoFirePoint;
         public TorpedoLauncherObject GetTorpedoLauncher => tLauncher;
 
+        [Header("Harpoon")] 
+        [SerializeField] private HarpoonLauncherObject hLauncher;
+
         [Header("Utility")]
         [SerializeField] Transform utilityFirePoint;
         [SerializeField] float utilityFireDelay;
@@ -85,7 +88,8 @@ namespace Hadal.Player.Behaviours
                 {
                     Debug.LogWarning("Subscribed to Salvage");
                     tLauncher.SubscribeToSalvageEvent();
-                    controller.UI.Initialize(tLauncher.TotalAmmoCount);
+                    controller.UI.Initialize(tLauncher.TotalAmmoCount, hLauncher.TotalAmmoCount);
+                    
                 }
             }
             else
@@ -93,7 +97,7 @@ namespace Hadal.Player.Behaviours
                // need to only subscribe if local
                 Debug.LogWarning("Subscribed to Salvage");
                 tLauncher.SubscribeToSalvageEvent();
-                controller.UI.Initialize(tLauncher.TotalAmmoCount);
+                controller.UI.Initialize(tLauncher.TotalAmmoCount, hLauncher.TotalAmmoCount);
             }
         }
         
@@ -318,7 +322,7 @@ namespace Hadal.Player.Behaviours
             //if (UIManager.IsNull) return;
             
             //print($"{tLauncher.TotalAmmoCount}: {tLauncher.ReserveCount} + {tLauncher.ChamberCount}");
-            controller.UI.UpdateTubes(tLauncher.TotalAmmoCount);
+            controller.UI.UpdateTorpedoReserve(tLauncher.TotalAmmoCount);
         }
         private void UpdateUIRegenRatio(in float ratio)
         {
@@ -330,7 +334,7 @@ namespace Hadal.Player.Behaviours
         {
             //if (UIManager.IsNull) return;
 
-            controller.UI.UpdateFlooding(ratio, !tLauncher.IsChamberLoaded);
+            controller.UI.UpdateTorpedoChamber(ratio, !tLauncher.IsChamberLoaded);
         }
 
         #endregion

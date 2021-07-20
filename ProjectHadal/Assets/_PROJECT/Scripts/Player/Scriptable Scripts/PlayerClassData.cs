@@ -12,6 +12,8 @@ namespace Hadal.Player
     public class PlayerClassData : ScriptableObject
     {
         public string ClassName;
+        public PlayerClassType ClassType;
+        
         [Header("Utility Power Ups")]
         public bool GiveFlareHarpoon;
         public bool PowerUpFlare;
@@ -75,6 +77,8 @@ namespace Hadal.Player
                 Type t = obj.GetType();
                 AddUtility(t, playerInv);
             }
+            
+            playerUI.ClassInfoHandler.SetClass(ClassType);
         }
 
         private void AddUtility(Type t, PlayerInventory playerInv)
