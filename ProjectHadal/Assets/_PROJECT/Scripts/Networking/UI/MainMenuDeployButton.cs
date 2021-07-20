@@ -108,11 +108,15 @@ namespace Hadal.Networking.UI.MainMenu
 
                     if (NetworkEventManager.Instance.IsMasterClient)
                     {
+                        Debug.LogWarning("Master clienmt");
                         readyText.SetActive(true);
                         highlightButton.AllowDetection();
                     }
                     else
+                    {
+                        Debug.LogWarning(" not Master clienmt");
                         waitingText.SetActive(true);
+                    }
 
                     diveText.color = diveReadyColor;
                     

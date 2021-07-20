@@ -7,26 +7,12 @@ namespace Hadal.UI
 {
     public class UIContextHandler : MonoBehaviour
     {
-        private void Start()
-        {
-            InitReviveUI();
-        }
-
-        
         [Header("Revive UI")] 
         [SerializeField] private Animator reviveAnimator;
-        [SerializeField] private GameObject reviveDown;
-        [SerializeField] private GameObject reviveUp;
 
         private static readonly int PlayerDownHash = Animator.StringToHash("PlayerDown");
         private static readonly int PlayerRevivedHash = Animator.StringToHash("PlayerRevived");
-
-        void InitReviveUI()
-        {
-            reviveDown.SetActive(false);
-            reviveUp.SetActive(false);
-        }
-
+        
         public void PlayerWentDown()
         {
             reviveAnimator.SetTrigger(PlayerDownHash);
@@ -34,7 +20,6 @@ namespace Hadal.UI
         
         public void PlayerRevived()
         {
-            //print("revived!");
             reviveAnimator.SetTrigger(PlayerRevivedHash);
         }
         
