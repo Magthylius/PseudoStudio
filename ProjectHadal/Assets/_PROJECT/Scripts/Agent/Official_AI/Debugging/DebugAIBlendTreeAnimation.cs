@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
 using Tenshi.UnitySoku;
-using UnityEditor.Animations;
 using UnityEngine;
 
 namespace Hadal.AI

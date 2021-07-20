@@ -1357,18 +1357,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed:
     Max: 14
-    InputForward: 2
-    InputStrafe: 2
-    InputHover: 2
+    InputForward: 8
+    InputStrafe: 5
+    InputHover: 5
     Normalised: 0
     Forward: 0
     Strafe: 0
     Hover: 0
   Accel:
-    Forward: 1.5
+    Forward: 2
     Strafe: 1
     Hover: 1
-    Boost: 1.5
+    Boost: 2
     CummulationSpeed: 2
     MaxCummulation: 6
     CummulatedAcceleration: 0
@@ -2132,18 +2132,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed:
     Max: 14
-    InputForward: 2
-    InputStrafe: 2
-    InputHover: 2
+    InputForward: 8
+    InputStrafe: 8
+    InputHover: 8
     Normalised: 0
     Forward: 0
     Strafe: 0
     Hover: 0
   Accel:
-    Forward: 1.5
+    Forward: 8
     Strafe: 1
     Hover: 1
-    Boost: 1.5
+    Boost: 2
     CummulationSpeed: 2
     MaxCummulation: 6
     CummulatedAcceleration: 0
