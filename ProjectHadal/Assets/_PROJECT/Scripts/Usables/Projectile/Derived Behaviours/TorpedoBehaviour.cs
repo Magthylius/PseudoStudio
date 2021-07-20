@@ -66,6 +66,10 @@ namespace Hadal.Usables.Projectiles
                 //! hits collidables   
                 ExplodeAndDespawn();
             }
+            else if(UsableBlackboard.InUtilityLayers(layer))
+            {
+                ExplodeAndDespawn();
+            }
             
 
             void ExplodeAndDespawn()
