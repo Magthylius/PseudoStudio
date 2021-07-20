@@ -23,7 +23,7 @@ public class ImpulseMode : ProjectileMode
         frameSetupCompleted = true;
         rigidbody.drag = linearDrag;
 
-        rigidbody.AddRelativeForce(direction.normalized * force, ForceMode.Impulse);
+        rigidbody.AddForce(transform.parent.forward * force, ForceMode.Impulse);
     }
 
     public override void DoUpdate()
