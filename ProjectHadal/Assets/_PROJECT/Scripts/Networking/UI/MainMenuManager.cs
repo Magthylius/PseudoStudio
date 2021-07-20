@@ -378,7 +378,6 @@ namespace Hadal.Networking.UI.MainMenu
 
             if (loadToTutorial)
             {
-                print($"what");
                 loadingManager.LoadLevel(NetworkEventManager.Instance.TutorialScene);
             }
             else
@@ -415,6 +414,7 @@ namespace Hadal.Networking.UI.MainMenu
         #region Room Phase
         public void StartRoomPhase(string roomName)
         {
+            //Debug.LogWarning("Room phase");
             roomNameText.text = roomName;
 
             OpenMenu(roomMenu);
