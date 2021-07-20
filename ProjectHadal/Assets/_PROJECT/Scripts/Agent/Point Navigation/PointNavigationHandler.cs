@@ -329,6 +329,27 @@ namespace Hadal.AI
                 onCompleteCallback?.Invoke();
             }
         }
+        private Coroutine stopRoutine = null;
+        public void StopMovement()
+        {
+            if (rBody != null)
+            {
+                if (stopRoutine != null)
+                    StopCoroutine(stopRoutine);
+                
+                stopRoutine = null;
+                stopRoutine = StartCoroutine(StopVelocity());
+            }
+
+            IEnumerator StopVelocity()
+            {
+                bool stayKinematic = rBody.isKinematic;
+                rBody.isKinematic = true;
+                rBody.velocity = Vector3.zero;
+                yield return null;
+                rBody.isKinematic = stayKinematic;
+            } 
+        }
         public void SetCavernManager(CavernManager manager) => cavernManager = manager;
         public void SetSpeedMultiplier(in float multiplier) => speedMultiplier = multiplier.Clamp(0.1f, float.MaxValue);
         /// <summary> Resets speed multiplier value back to 1f. </summary>
