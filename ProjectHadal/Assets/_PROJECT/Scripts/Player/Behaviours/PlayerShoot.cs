@@ -214,7 +214,9 @@ namespace Hadal.Player.Behaviours
             }
 
             //! Use utility here. If utility is used, decrement chamber! //
-            if(usable.Use(CreateInfoForUtility(projectileID, isPowered, chargeTime, !eventFire)))
+            UsableHandlerInfo info = CreateInfoForUtility(projectileID, isPowered, chargeTime, !eventFire);
+            info = CalculateTorpedoAngle(info);
+            if (usable.Use(info))
             {
                 if(!eventFire)
                     usable.DecrementChamber();
@@ -247,7 +249,7 @@ namespace Hadal.Player.Behaviours
             if(aimParentRb)
             {
                 //Debug.LogWarning("Rigidbody utility found");
-                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, utilityFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
+                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
             }
             else
             {
