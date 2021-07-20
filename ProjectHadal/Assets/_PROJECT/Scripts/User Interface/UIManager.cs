@@ -6,6 +6,7 @@ using Hadal.Inputs;
 using Magthylius.LerpFunctions;
 using Hadal.Networking;
 using Hadal.Locomotion;
+using NaughtyAttributes;
 
 //Created by Jet, Edited by Jon 
 namespace Hadal.UI
@@ -61,6 +62,9 @@ namespace Hadal.UI
         [SerializeField, Min(0.1f)] float maxMovementInfluence;
         [SerializeField, Min(0.1f)] float uiLerpReactionSpeed;
 
+        [SerializeField, ReadOnly]
+        private List<PlayerNameTrackerBehaviour> otherPlayerTrackers = new List<PlayerNameTrackerBehaviour>();
+        
         public static event OnHealthChange OnHealthChange;
 
         FlexibleRect allUIParentFR;
@@ -93,7 +97,6 @@ namespace Hadal.UI
 
         private List<UIFillerBehaviour> harpoonFillers;
         
-        
         [Header("VFX Settings")]
         public ParticleSystem torpedoReloadedVFX;
         public ParticleSystem torpedoEmptyVFX;
@@ -111,7 +114,6 @@ namespace Hadal.UI
         public event OnPauseMenuAction PauseMenuClosed;
 
         bool pauseMenuOpen = false;
-        //! blur out the screen
 
         //! Debug
         int sl_UI;
@@ -327,10 +329,29 @@ namespace Hadal.UI
             allUIParentFR.StartLerp(velocity);
             allUIParentFR.Step(uiLerpReactionSpeed * Time.deltaTime);
         }
+
+        public void TrackPlayerDown(Transform downedPlayer)
+        {
+            foreach (PlayerNameTrackerBehaviour tracker in otherPlayerTrackers)
+            {
+                if (tracker.TrackingTransform == downedPlayer)
+                    tracker.SetDownSettings();
+            }
+        }
+
+        public void TrackPlayerRevived(Transform revivedPlayer)
+        {
+            foreach (PlayerNameTrackerBehaviour tracker in otherPlayerTrackers)
+            {
+                if (tracker.TrackingTransform == revivedPlayer)
+                    tracker.SetDefaultSettings();
+            }
+        }
         
         public void TrackPlayerName(Transform otherPlayer, string playerName)
         {
-            print("tracking: " + playerName);
+            //print("tracking: " + playerName);
+            PlayerNameTrackerBehaviour nameTracker;
             StartCoroutine(TryTracking());
 
             IEnumerator TryTracking()
@@ -343,7 +364,12 @@ namespace Hadal.UI
                 UITrackerBehaviour nameTracker = trackerHandler.Scoop(TrackerType.PLAYER_NAME);
                 nameTracker.TrackTransform(otherPlayer);
                 PlayerNameTrackerBehaviour pNameTracker = nameTracker as PlayerNameTrackerBehaviour;
-                if (pNameTracker) pNameTracker.UpdateText(playerName);
+                
+                if (pNameTracker)
+                {
+                    pNameTracker.UpdateText(playerName);
+                    otherPlayerTrackers.Add(pNameTracker);  
+                }
             }
         }
         
