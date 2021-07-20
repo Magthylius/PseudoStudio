@@ -129,7 +129,7 @@ PlayerSettings:
     16:10: 0
     16:9: 1
     Others: 0
-  bundleVersion: 0.2.6 VS
+  bundleVersion: 0.3.0 Beta
   preloadedAssets:
   - {fileID: 11400000, guid: b9b59789a93dae54ea21705931e307f1, type: 2}
   metroInputSource: 0
@@ -623,7 +623,7 @@ PlayerSettings:
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 1
+    Standalone: 0
   il2cppCompilerConfiguration:
     Metro: 0
     Standalone: 0
@@ -648,11 +648,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: TemplateLightweight
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: PseudoStudio
+  metroCertificateIssuer: PseudoStudio
+  metroCertificateNotAfter: 804fa056909cd801
   metroApplicationDescription: Template_Lightweight
   wsaImages: {}
   metroTileShortName: Hadal
