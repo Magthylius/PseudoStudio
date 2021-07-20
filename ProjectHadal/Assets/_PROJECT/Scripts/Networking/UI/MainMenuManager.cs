@@ -300,6 +300,7 @@ namespace Hadal.Networking.UI.MainMenu
             //NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
             //NetworkEventManager.Instance.CurrentRoom.IsOpen = false;
             //NetworkEventManager.Instance.CurrentRoom.IsVisible = false;
+            NetworkEventManager.Instance.ToOfflineMode();
             loadingManager.LoadLevel(NetworkEventManager.Instance.TutorialScene);
         }
         

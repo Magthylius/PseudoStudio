@@ -759,6 +759,26 @@ namespace Hadal.Networking
         #region Connection Listeners
         private int connectedNumToKick = 0;
         private int connectedNumCounter = 0;
+
+        public void ToOfflineMode()
+        {
+            if (InRoom && !isOfflineMode)
+            {
+                Debug.LogWarning($"Cannot go to offline mode, in room");
+                return;
+            }
+
+            Disconnect();
+            PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, true);
+            isOfflineMode = true;
+        }
+
+        public void ToOnlineMode()
+        {
+            Disconnect();
+            PhotonNetwork.ConnectUsingSettings();
+            isOfflineMode = false;
+        }
         
         public void ClientForcedLeaveRoom(EventData data)
         {
@@ -782,7 +802,7 @@ namespace Hadal.Networking
         }
         #endregion
 
-        #region Player Effects
+        #region Player Classes
 
         [Header("Player effects")] 
         public Color FirstPlayerColor;
