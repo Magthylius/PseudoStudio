@@ -197,6 +197,22 @@ namespace Hadal.AI.Caverns
 
                 yield return null;
             }
+
+            bool tunnelsReady = false;
+            while (!tunnelsReady)
+            {
+                tunnelsReady = true;
+                int i = -1;
+                while (++i < tunnelList.Count)
+                {
+                    if (!tunnelList[i].IsInitialised)
+                    {
+                        tunnelsReady = false;
+                        break;
+                    }
+                }
+                yield return null;
+            }
             
             while (GetHandlerOfAILocation == null)
             {
