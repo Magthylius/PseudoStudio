@@ -119,8 +119,9 @@ namespace Hadal.AI
 			{
 				isSpeedStopped = false;
 				stopDelaySubroutine = StartCoroutine(StopSpeedAfterDelay(currentFloat.GetClipLength()));
-				RefreshBlendTree();
 			}
+			if (currentFloat.ShouldRefreshTree())
+				RefreshBlendTree();
 
 			while (percent < 1f)
 			{
@@ -238,6 +239,7 @@ namespace Hadal.AI
             [Range(0f, 1f), SerializeField] private float unfocusedValue = 0f;
 			[SerializeField] private bool isDefaultAnimationClip;
             [SerializeField] private bool pauseOnClipFinished;
+			[SerializeField] private bool refreshTreeOnClipStart = true;
             [SerializeField] private AnimationClip associatedClip;
             private Animator anim = null;
 
@@ -264,6 +266,7 @@ namespace Hadal.AI
             public float GetUnfocusedValue() => unfocusedValue;
 			public bool IsDefault() => isDefaultAnimationClip;
             public bool ShouldPauseOnClipFinished() => pauseOnClipFinished;
+			public bool ShouldRefreshTree() => refreshTreeOnClipStart;
             public float GetClipLength() => associatedClip.length;
 
 			[Button("Refresh Cached Name", EButtonEnableMode.Always)]
