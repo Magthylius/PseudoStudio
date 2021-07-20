@@ -329,6 +329,7 @@ namespace Hadal.Networking
         public void Disconnect() => PhotonNetwork.Disconnect();
         public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
         public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName, roomOptionsDefault);
+        public void CreateRoom(string roomName, RoomOptions roomOptions) => PhotonNetwork.CreateRoom(roomName, roomOptions);
         public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
         public void LeaveRoom(bool voluntary, bool returnsToMainMenu)
         {
@@ -571,7 +572,7 @@ namespace Hadal.Networking
 
             if (isOfflineMode) return;
 
-            if (scene.name == InGameScene)
+            if (scene.name == InGameScene || scene.name == TutorialScene)
             {
                 //! Create player manager
                 if (PhotonNetwork.IsMasterClient)
@@ -769,8 +770,17 @@ namespace Hadal.Networking
             }
 
             Disconnect();
-            PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, true);
-            isOfflineMode = true;
+            StartCoroutine(WaitUntilOffline());
+
+            IEnumerator WaitUntilOffline()
+            {
+                while (IsConnected)
+                {
+                    yield return null;
+                }
+                PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, true);
+                isOfflineMode = true;
+            }
         }
 
         public void ToOnlineMode()
