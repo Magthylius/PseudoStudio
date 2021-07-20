@@ -19,7 +19,7 @@ namespace Hadal.AudioSystem
         void Awake()
         {
             if (Instance == null) Instance = this;
-            else Destroy(Instance);
+            else Destroy(this);
         }
 
         private void Start()
@@ -33,9 +33,8 @@ namespace Hadal.AudioSystem
         public AudioSourceHandler GetAvailableAudioSourceHandler()
         {
             AudioSourceHandler handler = Scoop();
-            if (handler.DumpOnFinish) handler.AudioFinishedEvent += Dump;
             handler.SetActive(true);
-            
+            if (handler.DumpOnFinish) handler.AudioFinishedEvent += Dump;
             return handler;
         }
 
@@ -45,7 +44,7 @@ namespace Hadal.AudioSystem
             for (int i = 0; i < poolingCount; i++)
             {
                 InstantiateAudioSource();
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
             
             LoadingManager.Instance.CheckInAudioPool();
@@ -57,6 +56,7 @@ namespace Hadal.AudioSystem
             GameObject audioSource = Instantiate(AudioObjectPrefab, transform);
             audioSource.SetActive(false);
             AudioSourceHandler handler = audioSource.GetComponent<AudioSourceHandler>();
+            handler.OriginalParent = transform;
             audioSourceHandlers.Add(handler);
             return handler;
         }
@@ -66,7 +66,8 @@ namespace Hadal.AudioSystem
         {
             foreach (AudioSourceHandler handler in audioSourceHandlers)
             {
-                if (!handler.IsActive) return handler;
+                if (!handler.IsActive)
+                    return handler;
             }
 
             //! Cannot find any inactive sources
