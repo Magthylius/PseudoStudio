@@ -12,6 +12,10 @@ namespace Hadal.UI
         public TextMeshProUGUI NameText;
         public TextMeshProUGUI DistanceText;
 
+        [Header("Player Status Settings")]
+        public Color playerDefaultColor = Color.white;
+        public Color playerDownColor = Color.red;
+
         public float DistanceUpdateDelay = 1f;
 
         private void Start()
@@ -33,6 +37,18 @@ namespace Hadal.UI
         public void UpdateDistance(float distance)
         {
             DistanceText.text = $"{(int)distance + " m"}";
+        }
+
+        public void SetDownSettings()
+        {
+            NameText.color = playerDownColor;
+            DistanceText.color = playerDownColor;
+        }
+        
+        public void SetDefaultSettings()
+        {
+            NameText.color = playerDefaultColor;
+            DistanceText.color = playerDefaultColor;
         }
     }
 }

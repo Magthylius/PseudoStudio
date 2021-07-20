@@ -145,12 +145,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 1
-  endTime: 2
+  endTime: 200
   armsProjectile: 0
   skipsOnContact: 0
   direction: {x: 0, y: 0, z: 3}
   force: 0.25
-  linearDrag: 10
+  linearDrag: 0
 --- !u!114 &1637671488171667810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +223,7 @@ MonoBehaviour:
   DebugKey: 
   projectileID: 0
   IsLocal: 0
+  aimedPoint: {x: 0, y: 0, z: 0}
   IsAttached: 0
   particleEffect: {fileID: 4603006734267967293}
   projectileAsset: {fileID: 6491809912568808441}

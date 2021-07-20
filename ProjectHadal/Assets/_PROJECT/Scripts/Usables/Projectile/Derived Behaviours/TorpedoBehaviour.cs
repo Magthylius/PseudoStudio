@@ -7,15 +7,12 @@ using Hadal.AudioSystem;
 namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
-    {
-        private Vector3 aimedPoint = Vector3.zero;
-        
+    {     
         #region Unity Lifecycle
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            transform.LookAt(aimedPoint);
         }
         
         protected override void Start()
@@ -69,6 +66,10 @@ namespace Hadal.Usables.Projectiles
                 //! hits collidables   
                 ExplodeAndDespawn();
             }
+            else if(UsableBlackboard.InUtilityLayers(layer))
+            {
+                ExplodeAndDespawn();
+            }
             
 
             void ExplodeAndDespawn()
@@ -116,7 +117,7 @@ namespace Hadal.Usables.Projectiles
             return explodeInfo;
         }
 
-        public void SetAimedPoint(Vector3 aimedPoint)
+        public override void SetAimedPoint(Vector3 aimedPoint)
         {
             this.aimedPoint = aimedPoint;
         }

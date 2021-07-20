@@ -291,6 +291,18 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(roomOptions);
         }
 
+        public void BTN_LaunchTutorial()
+        {
+            if (hasStartedLevel) return;
+            hasStartedLevel = true;
+            
+            //NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
+            //NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
+            //NetworkEventManager.Instance.CurrentRoom.IsOpen = false;
+            //NetworkEventManager.Instance.CurrentRoom.IsVisible = false;
+            loadingManager.LoadLevel(NetworkEventManager.Instance.TutorialScene);
+        }
+        
         public void BTN_BackToLobby()
         {
             CloseMenu(roomOptions);

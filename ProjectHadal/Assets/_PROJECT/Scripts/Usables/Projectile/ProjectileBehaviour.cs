@@ -16,6 +16,7 @@ namespace Hadal.Usables.Projectiles
         public string DebugKey;
         public int projectileID = 0;
         public bool IsLocal = false;
+        public Vector3 aimedPoint = Vector3.zero;
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
@@ -43,6 +44,7 @@ namespace Hadal.Usables.Projectiles
             neManager = NetworkEventManager.Instance;
             projectileTriggered = false;
             SetIsLocal();
+            transform.LookAt(aimedPoint);
         }
         protected virtual void Start()
         {
@@ -178,6 +180,11 @@ namespace Hadal.Usables.Projectiles
             transform.rotation = rotation;
         }
 
+        public virtual void SetAimedPoint(Vector3 aimedPoint)
+        {
+            this.aimedPoint = aimedPoint;
+        }
+
         #endregion
 
         #region Event Methods
@@ -257,5 +264,6 @@ namespace Hadal.Usables.Projectiles
         }
 
         #endregion
+
     }
 }

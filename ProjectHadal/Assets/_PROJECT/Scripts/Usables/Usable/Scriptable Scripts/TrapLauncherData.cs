@@ -15,6 +15,7 @@ namespace Hadal.Usables
             projectileObj.projectileID = info.ProjectileID;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
+            projectileObj.SetAimedPoint(info.AimedPoint);
             projectileObj.WithGObjectSetActive(true);
             projectileObj.SubscribeModeEvent();
 

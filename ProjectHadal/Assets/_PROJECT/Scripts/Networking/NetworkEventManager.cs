@@ -76,6 +76,7 @@ namespace Hadal.Networking
         [Header("Scene References")]
         [Scene] public string MainMenuScene;
         [Scene] public string InGameScene;
+        [Scene] public string TutorialScene;
 
         List<GameObject> playerObjects;
 
@@ -738,6 +739,7 @@ namespace Hadal.Networking
         //! Scenes
         public bool IsInMainMenu => CurrentSceneName == MainMenuScene;
         public bool IsInGame => CurrentSceneName == InGameScene;
+        public bool IsInTutorial => CurrentSceneName == TutorialScene;
         public string CurrentSceneName => SceneManager.GetActiveScene().name;
         
         //! Players

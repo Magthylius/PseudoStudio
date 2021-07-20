@@ -317,7 +317,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538790924821076008}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.786, z: 1.147}
+  m_LocalPosition: {x: 0, y: -0.786, z: 1.63}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9029537497506802271}
@@ -2316,6 +2316,7 @@ MonoBehaviour:
     m_Bits: 2080375
   tLauncher: {fileID: 6593565318549421644}
   torpedoFirePoint: {fileID: 3869409784348184770}
+  hLauncher: {fileID: 8794171486015856055}
   utilityFirePoint: {fileID: 2911960973859190668}
   utilityFireDelay: 1
 --- !u!1001 &348020866082981194
@@ -3788,6 +3789,14 @@ PrefabInstance:
     - target: {fileID: 628160377840392337, guid: 07a6a977877e9224d9bb967cf4c52566, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275541528094104063, guid: 07a6a977877e9224d9bb967cf4c52566, type: 3}
+      propertyPath: maxReserveCapacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275541528094104063, guid: 07a6a977877e9224d9bb967cf4c52566, type: 3}
+      propertyPath: reserveRegenerationTime
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4014725249324593813, guid: 07a6a977877e9224d9bb967cf4c52566, type: 3}
       propertyPath: m_Name
