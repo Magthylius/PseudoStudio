@@ -51,7 +51,7 @@ namespace Hadal.Networking.Diegetics
         {
             totalPlayerCount++;
             Debug.LogWarning($"enterone tpc: {totalPlayerCount}");
-            if (totalPlayerCount >= otherPlayerAnimators.Count)
+            if (totalPlayerCount - 1 >= otherPlayerAnimators.Count)
             {
                 Debug.LogWarning($"Player count called more than animator count!");
                 totalPlayerCount = otherPlayerAnimators.Count - 1;
