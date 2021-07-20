@@ -329,6 +329,7 @@ namespace Hadal.Networking
         public void Disconnect() => PhotonNetwork.Disconnect();
         public void ChangeNickname(string nickname) => PhotonNetwork.NickName = nickname;
         public void CreateRoom(string roomName) => PhotonNetwork.CreateRoom(roomName, roomOptionsDefault);
+        public void CreateRoom(string roomName, RoomOptions roomOptions) => PhotonNetwork.CreateRoom(roomName, roomOptions);
         public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
         public void LeaveRoom(bool voluntary, bool returnsToMainMenu)
         {
@@ -571,7 +572,7 @@ namespace Hadal.Networking
 
             if (isOfflineMode) return;
 
-            if (scene.name == InGameScene)
+            if (scene.name == InGameScene || scene.name == TutorialScene)
             {
                 //! Create player manager
                 if (PhotonNetwork.IsMasterClient)
@@ -759,6 +760,35 @@ namespace Hadal.Networking
         #region Connection Listeners
         private int connectedNumToKick = 0;
         private int connectedNumCounter = 0;
+
+        public void ToOfflineMode()
+        {
+            if (InRoom && !isOfflineMode)
+            {
+                Debug.LogWarning($"Cannot go to offline mode, in room");
+                return;
+            }
+
+            Disconnect();
+            StartCoroutine(WaitUntilOffline());
+
+            IEnumerator WaitUntilOffline()
+            {
+                while (IsConnected)
+                {
+                    yield return null;
+                }
+                PhotonNetwork.ConnectUsingSettings(PhotonNetwork.PhotonServerSettings.AppSettings, true);
+                isOfflineMode = true;
+            }
+        }
+
+        public void ToOnlineMode()
+        {
+            Disconnect();
+            PhotonNetwork.ConnectUsingSettings();
+            isOfflineMode = false;
+        }
         
         public void ClientForcedLeaveRoom(EventData data)
         {
@@ -782,7 +812,7 @@ namespace Hadal.Networking
         }
         #endregion
 
-        #region Player Effects
+        #region Player Classes
 
         [Header("Player effects")] 
         public Color FirstPlayerColor;

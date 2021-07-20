@@ -78,6 +78,7 @@ namespace Hadal.Networking.UI.MainMenu
         [SerializeField] GameObject warningRoomNameTooLong;
 
         bool allowRoomCreation;
+        private bool loadToTutorial = false;
 
         [Header("Room Ready settings")]
         [SerializeField] TextMeshProUGUI roomNameText;
@@ -213,6 +214,8 @@ namespace Hadal.Networking.UI.MainMenu
 
             //InitMainMenu();
             //EnsureSetup(false);
+            loadToTutorial = false;
+            
             OpenMenu(lobbyMenu);
 
             createRoomFR.MoveToEnd();
@@ -293,14 +296,27 @@ namespace Hadal.Networking.UI.MainMenu
 
         public void BTN_LaunchTutorial()
         {
-            if (hasStartedLevel) return;
-            hasStartedLevel = true;
+            /*if (hasStartedLevel) return;
+            hasStartedLevel = true;*/
             
             //NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
             //NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
             //NetworkEventManager.Instance.CurrentRoom.IsOpen = false;
             //NetworkEventManager.Instance.CurrentRoom.IsVisible = false;
-            loadingManager.LoadLevel(NetworkEventManager.Instance.TutorialScene);
+            //NetworkEventManager.Instance.ToOfflineMode();
+            RoomOptions ro = new RoomOptions();
+            ro.IsOpen = false;
+            ro.IsVisible = false;
+            ro.MaxPlayers = 1;
+            ro.CleanupCacheOnLeave = true;
+            ro.DeleteNullProperties = true;
+            ro.CustomRoomProperties = new Hashtable {{"s", (int) NetworkEventManager.RoomState.WAITING}};
+
+            NetworkEventManager.Instance.CreateRoom("Tutorial Room", ro);
+
+            onMaster = false;
+            connectingMenu.Open();
+            loadToTutorial = true;
         }
         
         public void BTN_BackToLobby()
@@ -359,7 +375,15 @@ namespace Hadal.Networking.UI.MainMenu
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
             NetworkEventManager.Instance.CurrentRoom.IsOpen = false;
             NetworkEventManager.Instance.CurrentRoom.IsVisible = false;
-            loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
+
+            if (loadToTutorial)
+            {
+                print($"what");
+                loadingManager.LoadLevel(NetworkEventManager.Instance.TutorialScene);
+            }
+            else
+                loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
+            
         }
 
         public void BTN_LeaveRoom()
