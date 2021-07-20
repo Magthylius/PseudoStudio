@@ -787,7 +787,7 @@ namespace Hadal.AI
             if (_lookAtTarget == null)
                 lerpResult = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, totalLerpSpeed);
             else
-                lerpResult = Vector3.Lerp(pilotTrans.forward, (_lookAtTarget.position - pilotTrans.position).normalized, totalLerpSpeed);
+                lerpResult = Vector3.RotateTowards(pilotTrans.forward, _lookAtTarget.position, totalLerpSpeed, 0f); //Vector3.Lerp(pilotTrans.forward, (_lookAtTarget.position - pilotTrans.position).normalized, totalLerpSpeed);
 
             pilotTrans.forward = lerpResult;
         }

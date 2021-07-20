@@ -109,7 +109,7 @@ namespace Hadal.AI
                     if (success)
                     {
                         targetMarked = true;
-                        AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                        //AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
                         TryDebug("Set custom nav point onto target. Moving to chase target.");
                     }
                 }
