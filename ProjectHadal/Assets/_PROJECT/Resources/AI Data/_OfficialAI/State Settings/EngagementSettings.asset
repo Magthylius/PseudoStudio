@@ -24,6 +24,7 @@ MonoBehaviour:
   G_HaltingTime: 1
   G_GlareAtTargetBeforeJudgementApproachTime: 3
   G_DisruptionDamageCount: 5
+  G_DistanceFromFrontForBiteAnimation: 20
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 35
   AM_PounceSpeedMultiplier: 1.2
@@ -33,6 +34,7 @@ MonoBehaviour:
   HU_RoamingSpeedMultiplier: 1.8
   HU_MaxHuntingTime: 120
   HU_DisruptionDamageCount: 1
+  HU_PeriodicCavernUpdateTime: 5
   JudgementTimer1: 30
   JudgementTimer2: 30
   JudgementTimer3: 25
@@ -42,6 +44,7 @@ MonoBehaviour:
   AGG_AdditionalThreshDamagePerSecond: 1
   DEF_AdditionalThreshDamagePerSecond: -1
   EGG_PermanentThreshDamagePerSecond: 1
+  EGG_PermanentDamageResistance: 0
   JG_KnockbackIgnoreMasks:
     serializedVersion: 2
     m_Bits: 7359488

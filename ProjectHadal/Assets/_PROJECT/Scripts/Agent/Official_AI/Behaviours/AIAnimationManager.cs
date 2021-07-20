@@ -6,6 +6,8 @@ using NaughtyAttributes;
 using System.Linq;
 using ReadOnly = Tenshi.ReadOnlyAttribute;
 using Tenshi.UnitySoku;
+using Hadal.Networking;
+using ExitGames.Client.Photon;
 
 namespace Hadal.AI
 {
@@ -16,24 +18,70 @@ namespace Hadal.AI
 		[SerializeField] private float stunnedAnimSpeedMultiplier = 0.2f;
 		[SerializeField] private List<AnimationFloat> floatData;
 		
+		private bool onMasterClient;
 		private bool isSpeedStopped;
 		private bool shouldUseStunMultiplier;
 		private AIBrain _brain;
 		private Coroutine mainLerpRoutine;
 		private Coroutine stopDelaySubroutine;
+		private const string SpeedMultiplierString = "SpeedMultiplier";
 		
-		public void Initialise(AIBrain brain)
+		public void Initialise(AIBrain brain, bool isMasterClient)
 		{
 			//! Class initialisations
 			_brain = brain;
+			onMasterClient = isMasterClient;
 			if (animator == null) animator = GetComponent<Animator>();
 			floatData.ForEach(f => f.Initialise(animator));
+			Net_SetSpeed(1f);
 			
 			//! Events
-			_brain.OnStunnedEvent += HandleStunEvent;
+			if (onMasterClient)
+			{
+				_brain.OnStunnedEvent += HandleStunEvent;
+			}
+			else
+			{
+				NetworkEventManager.Instance.AddListener(ByteEvents.AI_PLAY_ANIMATION, Receive_SetAnimation);
+				NetworkEventManager.Instance.AddListener(ByteEvents.AI_SET_ANIMATION_SPEED, Receive_UpdateAnimationSpeed);
+			}
 
 			//! Default animation state
 			SetAnimation(AIAnim.Swim);
+		}
+
+		private void Send_SetAnimation(AIAnim animType, float customLerpTime)
+		{
+			if (NetworkEventManager.Instance == null || !onMasterClient) //! only master client can send this
+                return;
+            
+            object[] content = new object[] { (int)animType, customLerpTime };
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_PLAY_ANIMATION, content, SendOptions.SendReliable);
+		}
+		
+		private void Receive_SetAnimation(EventData eventData)
+		{
+			object[] content = (object[])eventData.CustomData;
+			AIAnim animType = (AIAnim)(int)content[0];
+			float customLerpTime = (float)content[1];
+			
+			SetAnimation(animType, customLerpTime);
+		}
+
+		private void Send_UpdateAnimationSpeed()
+		{
+			if (NetworkEventManager.Instance == null || !onMasterClient) //! only master client can send this
+                return;
+			
+			object[] content = new object[] { GetSpeed() };
+			NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_SET_ANIMATION_SPEED, content, SendOptions.SendReliable);
+		}
+
+		private void Receive_UpdateAnimationSpeed(EventData eventData)
+		{
+			object[] content = (object[])eventData.CustomData;
+			float speed = (float)content[0];
+			Net_SetSpeed(speed);
 		}
 
 		private void OnDestroy()
@@ -46,7 +94,7 @@ namespace Hadal.AI
 		{
 			StopAllRunningCoroutines();
 			mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
-			_brain.Send_SetAnimation(animType, customAnimLerpTime);
+			Send_SetAnimation(animType, customAnimLerpTime);
 		}
 
 		public float GetAnimationClipLengthFor(AIAnim animType) => GetAnimationFloatFromAnimType(animType).GetClipLength();
@@ -111,9 +159,32 @@ namespace Hadal.AI
             animator.Play("Tree", 0, 0f);
         }
 
-		private void StopSpeed() => animator.SetFloat("SpeedMultiplier", 0f);
-        private void ResetSpeed() => animator.SetFloat("SpeedMultiplier", 1f * GetStunnedMultiplier());
-		private void UpdateStunnedSpeed() => animator.SetFloat("SpeedMultiplier", animator.GetFloat("SpeedMultiplier") * GetStunnedMultiplier());
+		private void StopSpeed()
+		{
+			if (!onMasterClient)
+				return;
+			
+			animator.SetFloat(SpeedMultiplierString, 0f);
+			Send_UpdateAnimationSpeed();
+		}
+        private void ResetSpeed()
+		{
+			if (!onMasterClient)
+				return;
+			
+			animator.SetFloat(SpeedMultiplierString, 1f * GetStunnedMultiplier());
+			Send_UpdateAnimationSpeed();
+		}
+		private void UpdateStunnedSpeed()
+		{
+			if (!onMasterClient)
+				return;
+			
+			animator.SetFloat(SpeedMultiplierString, GetSpeed() * GetStunnedMultiplier());
+			Send_UpdateAnimationSpeed();
+		}
+		private float GetSpeed() => animator.GetFloat(SpeedMultiplierString);
+		private void Net_SetSpeed(float speed) => animator.SetFloat(SpeedMultiplierString, speed);
 		private float GetStunnedMultiplier()
 		{
 			bool IsStunnedAndSpeedIsNotStopped = shouldUseStunMultiplier && !isSpeedStopped;
