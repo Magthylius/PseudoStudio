@@ -109,7 +109,7 @@ namespace Hadal.AI
                     if (success)
                     {
                         targetMarked = true;
-                        //AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                        AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
                         TryDebug("Set custom nav point onto target. Moving to chase target.");
                     }
                 }
@@ -122,7 +122,7 @@ namespace Hadal.AI
                     NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
 
                     //! plays sound cue that should inform the player that they should start dodging
-                    AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
+                    //AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
 
                     TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
                     continue;
