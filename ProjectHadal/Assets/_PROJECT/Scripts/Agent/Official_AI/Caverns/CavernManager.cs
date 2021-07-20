@@ -202,10 +202,15 @@ namespace Hadal.AI.Caverns
             while (!tunnelsReady)
             {
                 tunnelsReady = true;
-                int i = -1;
-                while (++i < tunnelList.Count)
+                foreach (var tunnel in tunnelList)
                 {
-                    if (!tunnelList[i].IsInitialised)
+                    if (tunnel == null)
+                    {
+                        Debug.LogWarning("CavernManager: Detected null tunnel in the tunnel list.");
+                        continue;
+                    }
+                    
+                    if (!tunnel.IsInitialised)
                     {
                         tunnelsReady = false;
                         break;

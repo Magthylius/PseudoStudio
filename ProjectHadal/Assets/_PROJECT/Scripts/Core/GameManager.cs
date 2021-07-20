@@ -21,9 +21,10 @@ namespace Hadal
 
         public static GameManager Instance;
 
-        [Header("Settings")] 
+        [Header("Settings")]
         [Scene] public string MainMenuScene;
         [Scene] public string InGameScene;
+        [SerializeField, Range(1, 60)] private int targetFrameRate = 60;
         
         [Header("Data")]
         [ReadOnly] GameState currentGameState;
@@ -37,8 +38,14 @@ namespace Hadal
 
         void Awake()
         {
-            if (Instance != null) Destroy(this);
-            else Instance = this;
+            if (Instance != null)
+            {
+                Destroy(this);
+                return;
+            }
+            
+            Instance = this;
+            Application.targetFrameRate = targetFrameRate;
         }
 
         private void OnEnable()
