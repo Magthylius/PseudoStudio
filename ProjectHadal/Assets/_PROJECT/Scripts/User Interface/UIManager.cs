@@ -335,7 +335,10 @@ namespace Hadal.UI
             foreach (PlayerNameTrackerBehaviour tracker in otherPlayerTrackers)
             {
                 if (tracker.TrackingTransform == downedPlayer)
+                {
+                    Debug.LogWarning($"Downed player!");
                     tracker.SetDownSettings();
+                }
             }
         }
 
@@ -344,7 +347,10 @@ namespace Hadal.UI
             foreach (PlayerNameTrackerBehaviour tracker in otherPlayerTrackers)
             {
                 if (tracker.TrackingTransform == revivedPlayer)
+                {
+                    Debug.LogWarning($"Revived player!");
                     tracker.SetDefaultSettings();
+                }
             }
         }
         
