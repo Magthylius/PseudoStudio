@@ -86,7 +86,7 @@ namespace Hadal.Usables.Projectiles
                 return false;
 
             if (!IsLocal)
-                return true;
+                return false;
 
             //! Explode locally, check for AI
             //Debug.LogWarning("triggered");
