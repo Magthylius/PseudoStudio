@@ -203,10 +203,8 @@ namespace Hadal.Player.Behaviours
             else
             {
                 info.AimedPoint = RELookatPoint;
-                Debug.LogWarning("Event looking.");
             }
 
-            Debug.LogWarning("Looking at :" + info.AimedPoint);
             tLauncher.Use(info);
             controller.GetInfo.Inventory.IncreaseProjectileCount();
 
@@ -239,13 +237,10 @@ namespace Hadal.Player.Behaviours
             else
             {
                 info.AimedPoint = RELookatPoint;
-                Debug.LogWarning("Event looking.");
             }
 
             if (usable.Use(info))
             {
-                Debug.LogWarning("Looking at :" + info.AimedPoint);
-
                 if (!eventFire)
                     usable.DecrementChamber();
             }
