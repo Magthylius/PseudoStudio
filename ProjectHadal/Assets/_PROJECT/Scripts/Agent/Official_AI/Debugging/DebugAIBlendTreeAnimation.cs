@@ -29,8 +29,6 @@ namespace Hadal.AI
                 return;
             }
 
-            System.Enum.GetName(typeof(Typo), Typo.Carry).Msg();
-
             ResetSpeed();
             floats.ForEach(f => f.Initialise(animator));
         }
@@ -39,17 +37,6 @@ namespace Hadal.AI
         private void SetAnimationTarget()
         {
             StartAnimationLerp(target);
-        }
-
-        [Button("Go to Swim", EButtonEnableMode.Playmode)]
-        private void SetAnimationSwim()
-        {
-            StartAnimationLerp("Swim");
-        }
-        [Button("Go to Carry", EButtonEnableMode.Playmode)]
-        private void SetAnimationCarry()
-        {
-            StartAnimationLerp("Carry");
         }
 
         private void StartAnimationLerp(string targetName)
@@ -78,10 +65,13 @@ namespace Hadal.AI
 
             ResetSpeed();
             if (currentAnimFloat.ShouldPauseOnClipFinished())
-            {
                 StartCoroutine(StopSpeedAfterDelay(currentAnimFloat.GetClipLength()));
+
+            if (currentAnimFloat.ShouldRefreshTree())
                 RefreshBlendTree();
-            }
+            
+            if (currentAnimFloat.GetExitName() != string.Empty)
+                StartCoroutine(PlayAfterDelay(currentAnimFloat.GetClipLength() + currentAnimFloat.GetExitTime(), currentAnimFloat.GetExitName()));
 
             while (percent < 1f)
             {
@@ -101,6 +91,12 @@ namespace Hadal.AI
             animator.Play("Tree", 0, 0f);
         }
 
+        private IEnumerator PlayAfterDelay(float delayInSeconds, string targetName)
+        {
+            yield return new WaitForSeconds(delayInSeconds);
+            StartCoroutine(LerpAnimation(targetName));
+        }
+
         private IEnumerator StopSpeedAfterDelay(float delayInSeconds)
         {
             yield return new WaitForSeconds(delayInSeconds);
@@ -118,7 +114,10 @@ namespace Hadal.AI
             [Range(0f, 1f), SerializeField] private float focusedValue = 1f;
             [Range(0f, 1f), SerializeField] private float unfocusedValue = 0f;
             [SerializeField] private bool pauseOnClipFinished;
+            [SerializeField] private bool refreshTreeOnClipStart;
             [SerializeField] private AnimationClip associatedClip;
+            [SerializeField] private string exitToName = string.Empty;
+            [SerializeField] private float exitAfterXSeconds = 2f;
 
             private Animator anim = null;
 
@@ -143,7 +142,10 @@ namespace Hadal.AI
             public float GetFocusedValue() => focusedValue;
             public float GetUnfocusedValue() => unfocusedValue;
             public bool ShouldPauseOnClipFinished() => pauseOnClipFinished;
+            public bool ShouldRefreshTree() => refreshTreeOnClipStart;
             public float GetClipLength() => associatedClip.length;
+            public string GetExitName() => exitToName;
+            public float GetExitTime() => exitAfterXSeconds;
             public void Initialise(Animator animator)
             {
                 anim = animator;
