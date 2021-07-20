@@ -209,7 +209,7 @@ namespace Hadal.Player.Behaviours
             if (isLocal) SendTorpedoEvent(projectileID, info.AimedPoint);
         }
 
-        public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool isPowered ,bool eventFire)
+        public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool isPowered ,bool eventFire, Vector3 RELookatPoint)
         {
             if (!eventFire && (!usable.IsChamberLoaded || !AllowUpdate))
                 return;
@@ -225,7 +225,12 @@ namespace Hadal.Player.Behaviours
 
             //! Use utility here. If utility is used, decrement chamber! //
             UsableHandlerInfo info = CreateInfoForUtility(projectileID, isPowered, chargeTime, !eventFire);
-            info = CalculateTorpedoAngle(info);
+
+            if (!eventFire)
+                info = CalculateTorpedoAngle(info);
+            else
+                info.AimedPoint = RELookatPoint;
+
             if (usable.Use(info))
             {
                 if(!eventFire)
@@ -235,7 +240,7 @@ namespace Hadal.Player.Behaviours
             //send event to utility ONLY when fire locally. local = (!eventFire)
             if (!eventFire)
             {
-                object[] content = new object[] { _pView.ViewID, projectileID, selectedItem, chargeTime, isPowered };
+                object[] content = new object[] { _pView.ViewID, projectileID, selectedItem, chargeTime, isPowered, info.AimedPoint};
                 neManager.RaiseEvent(ByteEvents.PLAYER_UTILITIES_LAUNCH, content);
             }
 
