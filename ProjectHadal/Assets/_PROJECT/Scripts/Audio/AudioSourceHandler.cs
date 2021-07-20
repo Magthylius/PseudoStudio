@@ -11,6 +11,7 @@ namespace Hadal.AudioSystem
     {
         public AudioSource Source;
         public bool DumpOnFinish = true;
+        public Transform OriginalParent;
 
         public event AudioEvent AudioFinishedEvent;
         public event AudioEvent AudioStoppedEvent;
@@ -22,7 +23,15 @@ namespace Hadal.AudioSystem
 
         /// <summary> Sets position of this handler's game object. </summary>
         public void SetWorldPosition(Vector3 position) => transform.position = position;
-        public void SetParent(Transform parent) => transform.parent = parent;
+        public void SetParent(Transform parent)
+        {
+            if (parent == null)
+            {
+                transform.parent = OriginalParent;
+                return;
+            }
+            transform.parent = parent;
+        }
 
         /// <summary> Called by any relevant scriptable object to configure the audio source attached to this monobehaviour. </summary>
         public void Setup(in AudioSourceSettings settings) => settings.AssignSettings(ref Source);
@@ -37,12 +46,15 @@ namespace Hadal.AudioSystem
 
             IEnumerator CheckAudioFinished()
             {
-                while (IsPlaying) yield return null;
-                transform.parent = null;
+                yield return null; //! skip frame to make sure audio source is registered as playing
+                
+                while (IsPlaying)
+                    yield return null;
+                
+                transform.parent = OriginalParent != null ? OriginalParent : null;
                 AudioFinishedEvent?.Invoke(this);
             }
         }
-        public void PlayOneShot(AudioClip clip) => Source.PlayOneShot(clip);
         public void Pause() => Source.Pause();
         public void UnPause() => Source.UnPause();
         public void Stop()

@@ -166,7 +166,7 @@ namespace Hadal.AI
                     
                     //! Teleport player to the correct location in front of the AI & disable navigation
                     NavigationHandler.ForceDisable();
-                    Brain.CarriedPlayer.GetTarget.position = Brain.MouthObject.transform.position + (Brain.MouthObject.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
+                    Brain.CarriedPlayer.GetTarget.position = Brain.transform.position + (Brain.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
 
                     //! Spawn explosive point to blast away unwanted attention
                     Brain.SpawnExplosivePointAt(Brain.CarriedPlayer.GetTarget.position);
@@ -514,6 +514,7 @@ namespace Hadal.AI
             JState.ResetStateValues();
 
             NavigationHandler.Enable(); //always enable when it exits the behaviour
+            Brain.SetDoNotHandleCarriedPlayer(false);
         }
 		
 		private void ResetJudgementPersistCount()

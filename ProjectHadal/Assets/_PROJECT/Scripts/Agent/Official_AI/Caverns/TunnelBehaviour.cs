@@ -4,6 +4,7 @@ using UnityEngine;
 using Hadal.Player;
 using NaughtyAttributes;
 using UnityEngine.PlayerLoop;
+using Tenshi;
 
 //! Created: Jon
 namespace Hadal.AI.Caverns
@@ -26,10 +27,17 @@ namespace Hadal.AI.Caverns
         [Header("References")]
         [SerializeField] List<CavernTunnel> connectedTunnels;
         public List<CavernTunnel> ConnectedTunnels => connectedTunnels;
+        public bool IsInitialised { get; private set; } = false;
 
         //! Internal
         List<PlayerController> playersInTunnel = new List<PlayerController>();
         private bool aiInsideTunnel = false;
+
+        private void Awake()
+        {
+            playersInTunnel = new List<PlayerController>();
+            IsInitialised = true;
+        }
 
         void OnValidate()
         {
