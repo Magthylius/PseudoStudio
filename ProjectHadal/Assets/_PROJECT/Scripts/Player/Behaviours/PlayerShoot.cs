@@ -197,10 +197,16 @@ namespace Hadal.Player.Behaviours
             UsableHandlerInfo info = CreateInfoForTorpedo(projectileID, tLauncher.IsPowered, isLocal);
 
             if (isLocal)
+            {
                 info = CalculateTorpedoAngle(info);
+            }
             else
+            {
                 info.AimedPoint = RELookatPoint;
-            
+                Debug.LogWarning("Event looking.");
+            }
+
+            Debug.LogWarning("Looking at :" + info.AimedPoint);
             tLauncher.Use(info);
             controller.GetInfo.Inventory.IncreaseProjectileCount();
 
@@ -227,13 +233,20 @@ namespace Hadal.Player.Behaviours
             UsableHandlerInfo info = CreateInfoForUtility(projectileID, isPowered, chargeTime, !eventFire);
 
             if (!eventFire)
+            {
                 info = CalculateTorpedoAngle(info);
+            }             
             else
+            {
                 info.AimedPoint = RELookatPoint;
+                Debug.LogWarning("Event looking.");
+            }
 
             if (usable.Use(info))
             {
-                if(!eventFire)
+                Debug.LogWarning("Looking at :" + info.AimedPoint);
+
+                if (!eventFire)
                     usable.DecrementChamber();
             }
             controller.GetInfo.Inventory.IncreaseProjectileCount();
