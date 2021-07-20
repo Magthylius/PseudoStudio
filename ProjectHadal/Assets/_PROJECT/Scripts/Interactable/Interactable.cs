@@ -100,7 +100,12 @@ namespace Hadal.Interactables
                     return;
                 }
 
-                if(gO.GetComponentInChildren<PhotonView>().ViewID == viewID)
+                if (neManager.isOfflineMode)
+                {
+                    if(LayerMask.LayerToName(gO.layer) == "LocalPlayer")
+                        actorPlayer = gO;
+                }
+                else if (gO.GetComponentInChildren<PhotonView>().ViewID == viewID)
                 {
                     actorPlayer = gO;
                 }
