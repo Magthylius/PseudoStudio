@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6491a7d1743f0e41bceb1173beda619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 120
   currentHealth: 0
   slowPercentPerStack: 0.025
   maxSlowStacks: 4
@@ -482,6 +482,34 @@ PrefabInstance:
     - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: timeoutNewPointTime
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: navPointLingerTimeRange.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: navPointLingerTimeRange.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: lairCavernLingerTimeRange.x
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: lairCavernLingerTimeRange.y
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: biolumiCavernLingerTimeRange.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: biolumiCavernLingerTimeRange.y
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1642916594410295890, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
+      propertyPath: crystalCavernLingerTimeRange.y
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1642916594410295891, guid: fd243a371d7298c4eb36bdad30621ea4, type: 3}
       propertyPath: m_RootOrder

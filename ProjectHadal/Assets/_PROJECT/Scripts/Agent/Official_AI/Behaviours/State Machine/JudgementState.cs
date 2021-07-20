@@ -61,6 +61,10 @@ namespace Hadal.AI.States
                 IsolatedPlayer = SenseDetection.GetIsolatedPlayerIfAny();
             }
 
+            //! Cannot target down or unalive players again
+            if (IsolatedPlayer != null && IsolatedPlayer.GetInfo.HealthManager.IsDownOrUnalive)
+                IsolatedPlayer = null;
+
             RuntimeData.ResetCumulativeDamageCount();
 
             bool isDefensive = RuntimeData.NormalisedConfidence < 0.5f;

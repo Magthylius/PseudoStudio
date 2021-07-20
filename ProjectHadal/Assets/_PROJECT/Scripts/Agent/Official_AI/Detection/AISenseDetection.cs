@@ -106,7 +106,7 @@ namespace Hadal.AI
             _detectedPlayers = playerSphere
                     .Where(c => c != null)
                     .Select(c => c.GetComponent<PlayerController>())
-                    .Where(p => !p.GetInfo.HealthManager.IsDown || !p.GetInfo.HealthManager.IsUnalive)
+                    .Where(p => !p.GetInfo.HealthManager.IsDownOrUnalive)
                     .ToList();
 
             DetectedPlayersCount = _detectedPlayers.Count;
