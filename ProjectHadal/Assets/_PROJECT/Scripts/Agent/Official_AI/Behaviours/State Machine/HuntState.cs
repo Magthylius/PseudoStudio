@@ -8,6 +8,7 @@ namespace Hadal.AI.States
     public class HuntState : AIStateBase
     {
         private EngagementStateSettings settings;
+        private CavernHandler cachedCavern;
         private CavernTag targetTag;
         private bool hasReachedTargetCavern;
 		private float checkTimer;
@@ -16,6 +17,7 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = brain.MachineData.Engagement;
+            cachedCavern = null;
             ResetCachedTags();
 
             RuntimeData.OnCumulativeDamageCountReached += TryToTargetClosestPlayerInAICavern;
@@ -43,6 +45,7 @@ namespace Hadal.AI.States
 			SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);
 			NavigationHandler.SetIgnoreCavernLingerTimer(true);
+            TryUpdateCachedCavern();
 			
 			checkTimer = settings.HU_PeriodicCavernUpdateTime;
         }
@@ -87,13 +90,14 @@ namespace Hadal.AI.States
 
         public override void OnCavernEnter(CavernHandler cavern)
         {
+            TryUpdateCachedCavern();
             if (hasReachedTargetCavern)
             {
                 RuntimeData.SetBrainState(BrainState.Anticipation);
                 return;
             }
 
-            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
+            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern != null ? AICavern : cachedCavern, true);
             CavernTag nextTag = nextCavern.cavernTag;
             
             //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
@@ -134,6 +138,12 @@ namespace Hadal.AI.States
         private void DoRoar()
         {
             AudioBank.Play3D(soundType: AISound.Roar, Brain.transform);
+        }
+
+        private void TryUpdateCachedCavern()
+        {
+            if (AICavern != null)
+                cachedCavern = AICavern;
         }
 
         public override Func<bool> ShouldTerminate() => () => false;
