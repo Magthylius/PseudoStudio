@@ -802,15 +802,17 @@ namespace Hadal.AI
             }
 
             //! Look at
-            Vector3 lerpResult;
+            // Vector3 lerpResult;
             float totalLerpSpeed = deltaTime * smoothLookAtSpeed;
 
             if (_lookAtTarget == null)
-                lerpResult = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, totalLerpSpeed);
+                pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, totalLerpSpeed);
             else
-                lerpResult = Vector3.RotateTowards(pilotTrans.forward, _lookAtTarget.position, totalLerpSpeed, 0f); //Vector3.Lerp(pilotTrans.forward, (_lookAtTarget.position - pilotTrans.position).normalized, totalLerpSpeed);
+                pilotTrans.LookAt(_lookAtTarget);
+                // lerpResult = Vector3.RotateTowards(pilotTrans.forward, _lookAtTarget.position, totalLerpSpeed, 0f);
+                // Vector3.Lerp(pilotTrans.forward, (_lookAtTarget.position - pilotTrans.position).normalized, totalLerpSpeed);
 
-            pilotTrans.forward = lerpResult;
+            //  = lerpResult;
         }
 
         private void ClampMaxVelocity()
