@@ -21,11 +21,10 @@ public class ReplaceGameObjects : ScriptableWizard
         {
             GameObject newObject;
             newObject = (GameObject)PrefabUtility.InstantiatePrefab(NewType);
+            newObject.transform.parent = go.transform.parent;
             newObject.transform.position = go.transform.position;
             newObject.transform.rotation = go.transform.rotation;
             newObject.transform.localScale = go.transform.localScale;
-            newObject.transform.parent = go.transform.parent;
- 
             DestroyImmediate(go);
         }
     }
