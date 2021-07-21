@@ -312,7 +312,7 @@ namespace Hadal.Networking.UI.MainMenu
             ro.DeleteNullProperties = true;
             ro.CustomRoomProperties = new Hashtable {{"s", (int) NetworkEventManager.RoomState.WAITING}};
 
-            NetworkEventManager.Instance.CreateRoom("Tutorial Room", ro);
+            NetworkEventManager.Instance.CreateRoom($"Tutorial {(int)Random.Range(0, int.MaxValue)}", ro);
 
             onMaster = false;
             connectingMenu.Open();
