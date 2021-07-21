@@ -8,7 +8,7 @@ public class MeshCombineWizard : ScriptableWizard
 	public GameObject combineParent;
 	public bool is32bit = true;
 
-	[MenuItem("E.S. Tools/Mesh Combine Wizard")]
+	[MenuItem("Harry/Mesh Combine Wizard")]
 	static void CreateWizard()
 	{
 		var wizard = DisplayWizard<MeshCombineWizard>("Mesh Combine Wizard");
