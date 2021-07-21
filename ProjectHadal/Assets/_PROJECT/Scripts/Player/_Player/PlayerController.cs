@@ -45,6 +45,8 @@ namespace Hadal.Player
         PlayerManager _manager;
         Rigidbody _rBody;
         Collider _collider;
+
+        private Color playerColor;
         
         private bool _isKnocked;
         private bool _isCarried;
@@ -297,13 +299,22 @@ namespace Hadal.Player
                 foreach (PlayerController controller in allPlayerControllers)
                 {
                     //! ignore self
-                    if (controller == this) continue;
+                    //if (controller == this) continue;
                 
-                    foreach (var dict in NetworkEventManager.Instance.AllPlayers)
+                    /*foreach (var dict in NetworkEventManager.Instance.AllPlayers)
                     {
                         if (controller._pView.Owner == dict.Value)
                         {
                             playerUI.TrackPlayerName(controller.transform, dict.Value.NickName);
+                        }
+                    }*/
+                    
+                    foreach (var dict in NetworkEventManager.Instance.GetSortedPlayerIndices())
+                    {
+                        if (controller._pView.Owner == dict.Key)
+                        {
+                            if (controller != this) playerUI.TrackPlayerName(controller.transform, dict.Key.NickName);
+                            controller.SetPlayerColor(NetworkEventManager.Instance.GetPlayerColor(dict.Key));
                         }
                     }
                 }
@@ -543,6 +554,8 @@ namespace Hadal.Player
         public bool GetPlayerReady() => playerReady;
         public void SetLoadingReady() => loadingReady = true;
         public void SetDummyState(bool isTrue) => isDummy = isTrue;
+        public void SetPlayerColor(Color newPlayerColor) => playerColor = newPlayerColor;
+        public Color PlayerColor => playerColor;
         
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
