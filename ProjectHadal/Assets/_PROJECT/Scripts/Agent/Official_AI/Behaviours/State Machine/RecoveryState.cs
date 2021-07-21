@@ -131,18 +131,21 @@ namespace Hadal.AI.States
             DetermineNextCavern();
         }
 
+        private Coroutine cavernRoutine = null;
         void DetermineNextCavern()
         {
-            Brain.StartCoroutine(WaitForAICavern());
+            if (cavernRoutine != null)
+                Brain.StopCoroutine(cavernRoutine);
+            
+            cavernRoutine = null;
+            cavernRoutine = Brain.StartCoroutine(WaitForAICavern());
+
             IEnumerator WaitForAICavern()
             {
                 while (AICavern == null)
                     yield return null;
 
                 CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, true);
-
-                //NavigationHandler.ComputeCachedDestinationCavernPath(nextCavern);
-                //NavigationHandler.EnableCachedQueuePathTimer();
                 NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
                 Brain.UpdateNextMoveCavern(nextCavern);
             }
