@@ -1118,8 +1118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 915651f0c80d3274abe74dfcd17d91c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tapDetectionTime: 0.11
-  dodgeForce: 75
+  tapDetectionTime: 0.1
+  dodgeForce: 100
   boostTimerMax: 0.5
   maxReserveCapacity: 1
   reserveRegenerationTime: 8
@@ -1356,7 +1356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed:
-    Max: 12
+    Max: 15
     InputForward: 8
     InputStrafe: 5
     InputHover: 5
