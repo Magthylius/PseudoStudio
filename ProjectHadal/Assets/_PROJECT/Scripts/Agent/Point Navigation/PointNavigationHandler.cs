@@ -319,7 +319,7 @@ namespace Hadal.AI
 
                 while (percent < 1f)
                 {
-                    float delta = DeltaTime * time;
+                    float delta = DeltaTime * (1f / time);
                     percent += delta;
                     rBody.velocity = Vector3.Lerp(rBody.velocity, target, percent);
                     yield return null;
