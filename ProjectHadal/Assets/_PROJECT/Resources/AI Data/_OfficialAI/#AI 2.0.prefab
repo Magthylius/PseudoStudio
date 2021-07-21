@@ -91,9 +91,9 @@ MonoBehaviour:
   debugEnabled: 0
   allowSwitchTarget: 0
   useAmbushDetection: 0
-  overlapSphereDetectionRadius: 30
-  ambushSphereDetectionRadius: 60
-  huntSphereDetectionRadius: 50
+  overlapSphereDetectionRadius: 50
+  ambushSphereDetectionRadius: 70
+  huntSphereDetectionRadius: 60
   detectionOffset: {x: 0, y: 0, z: 0}
   checkDelay: 1
 --- !u!114 &9221971048963321059
@@ -348,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6491a7d1743f0e41bceb1173beda619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 120
+  maxHealth: 150
   currentHealth: 0
   slowPercentPerStack: 0.025
   maxSlowStacks: 4

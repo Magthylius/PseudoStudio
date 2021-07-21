@@ -86,12 +86,12 @@ namespace Hadal.AI
                 yield break;
 
             //! Look at the target for a set amount of time (while doing nothing), before chasing after them
-            // {
-            //     NavigationHandler.StopMovement();
-            //     NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
-            //     yield return new WaitForSeconds(Settings.G_GlareAtTargetBeforeJudgementApproachTime);
-            //     NavigationHandler.SetLookAtTarget(null);
-            // }
+            {
+                NavigationHandler.StopMovement();
+                NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
+                yield return new WaitForSeconds(Settings.G_GlareAtTargetBeforeJudgementApproachTime);
+                NavigationHandler.SetLookAtTarget(null);
+            }
 
             while (JState.IsBehaviourRunning)
             {
