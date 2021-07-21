@@ -45,6 +45,7 @@ namespace Hadal.Player.Behaviours
 
             var flareUtility = allUtilities.Where(u => u is FlareLauncherObject).Single();
             var harpoonUtility = allUtilities.Where(u => u is HarpoonLauncherObject).Single();
+            harpoonUtility.OnReservesChanged += HandleHarpoonReserveChanged;
 
             quickFireUtilities.Add(typeof(FlareLauncherObject), flareUtility);
             quickFireUtilities.Add(typeof(HarpoonLauncherObject), harpoonUtility);
@@ -72,6 +73,7 @@ namespace Hadal.Player.Behaviours
             SelectItem();
             HandleItemInput();
             UpdateUsables(deltaTime);
+            UpdateHarpoonChamberRatio();
         }
 
         /// <summary> Checks for keyboard input on the top row numbers, and switching the equip index to such. </summary>
@@ -177,6 +179,18 @@ namespace Hadal.Player.Behaviours
         {
             if (EquippedUsable == null) return;
             _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, EquippedUsable.IsPowered, false, Vector3.zero);
+        }
+
+        void UpdateHarpoonChamberRatio()
+        {
+            var harpoonUtility = quickFireUtilities[typeof(HarpoonLauncherObject)];
+            _controller.UI.UpdateHarpoonChamber(harpoonUtility.ChamberReloadRatio);
+        }
+
+        void HandleHarpoonReserveChanged(bool isIncrement)
+        {
+            var harpoonUtility = quickFireUtilities[typeof(HarpoonLauncherObject)];
+            _controller.UI.UpdateHarpoonReserve(harpoonUtility.ReserveCount);
         }
 
         private void LogWarnMissingUsableLauncherInKeyValuePair(string utilName)
