@@ -2,6 +2,8 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using System;
 using Hadal.AI.Caverns;
+using System.Collections;
+using UnityEngine;
 
 namespace Hadal.AI.States
 {
@@ -11,7 +13,7 @@ namespace Hadal.AI.States
         private CavernHandler cachedCavern;
         private CavernTag targetTag;
         private bool hasReachedTargetCavern;
-		private float checkTimer;
+        private float checkTimer;
 
         public HuntState(AIBrain brain)
         {
@@ -35,19 +37,19 @@ namespace Hadal.AI.States
             RuntimeData.ResetEngagementTicker();
             RuntimeData.ResetCumulativeDamageCount();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.HU_DisruptionDamageCount);
-            
-			if (AICavern != null && AICavern.cavernTag == Brain.TargetMoveCavern.cavernTag)
-			{
-				hasReachedTargetCavern = true;
-			}
-			else targetTag = Brain.TargetMoveCavern.cavernTag;
-            
-			SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
+
+            if (AICavern != null && AICavern.cavernTag == Brain.TargetMoveCavern.cavernTag)
+            {
+                hasReachedTargetCavern = true;
+            }
+            else targetTag = Brain.TargetMoveCavern.cavernTag;
+
+            SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);
-			NavigationHandler.SetIgnoreCavernLingerTimer(true);
+            NavigationHandler.SetIgnoreCavernLingerTimer(true);
             TryUpdateCachedCavern();
-			
-			checkTimer = settings.HU_PeriodicCavernUpdateTime;
+
+            checkTimer = settings.HU_PeriodicCavernUpdateTime;
         }
         public override void StateTick()
         {
@@ -56,14 +58,14 @@ namespace Hadal.AI.States
             RuntimeData.TickEngagementTicker(Brain.DeltaTime);
             if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime)
                 RuntimeData.SetBrainState(BrainState.Anticipation);
-            
-			checkTimer -= Brain.DeltaTime;
-			if (checkTimer <= 0f)
-			{
-				checkTimer = settings.HU_PeriodicCavernUpdateTime;
-				OnCavernEnter(AICavern);
-			}
-			
+
+            checkTimer -= Brain.DeltaTime;
+            if (checkTimer <= 0f)
+            {
+                checkTimer = settings.HU_PeriodicCavernUpdateTime;
+                OnCavernEnter(AICavern);
+            }
+
             if (Brain.CheckForJudgementStateCondition())
             {
                 RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
@@ -85,9 +87,10 @@ namespace Hadal.AI.States
             ResetCachedTags();
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
             NavigationHandler.ResetSpeedMultiplier();
-			NavigationHandler.SetIgnoreCavernLingerTimer(false);
+            NavigationHandler.SetIgnoreCavernLingerTimer(false);
         }
 
+        private Coroutine cavernRoutine = null;
         public override void OnCavernEnter(CavernHandler cavern)
         {
             TryUpdateCachedCavern();
@@ -97,18 +100,31 @@ namespace Hadal.AI.States
                 return;
             }
 
-            CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern != null ? AICavern : cachedCavern, true);
-            CavernTag nextTag = nextCavern.cavernTag;
-            
-            //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
-            NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
-            Brain.UpdateNextMoveCavern(nextCavern);
-            if (nextTag == targetTag)
-                hasReachedTargetCavern = true;
-            
-            if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
+            if (cavernRoutine != null)
+                Brain.StopCoroutine(cavernRoutine);
 
-             Brain.NavigationHandler.CavernModeSteering(); 
+            cavernRoutine = null;
+            cavernRoutine = Brain.StartCoroutine(WaitForAICavern());
+
+            IEnumerator WaitForAICavern()
+            {
+                while (AICavern == null)
+                    yield return null;
+
+                CavernHandler nextCavern = CavernManager.GetNextBestCavern(AICavern, false);
+                CavernTag nextTag = nextCavern.cavernTag;
+
+                //! do not go through cavern linger timer, immediately go to next cavern as fast as possible
+                NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
+                Brain.UpdateNextMoveCavern(nextCavern);
+
+                if (nextTag == targetTag)
+                    hasReachedTargetCavern = true;
+
+                if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
+
+                Brain.NavigationHandler.CavernModeSteering();
+            }
         }
 
         public override void OnCavernLeave(CavernHandler cavern)
@@ -117,9 +133,9 @@ namespace Hadal.AI.States
             {
                 DoRoar();
             }
-        
-            Brain.NavigationHandler.TunnelModeSteering(); 
-        
+
+            Brain.NavigationHandler.TunnelModeSteering();
+
         }
 
         private void TryToTargetClosestPlayerInAICavern()
