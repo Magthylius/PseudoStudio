@@ -500,6 +500,7 @@ namespace Hadal.AI
             //! Reset third party states
             Brain.TryDropCarriedPlayer();
             NavigationHandler.Enable();
+            NavigationHandler.StopCustomPath(true);
             NavigationHandler.ResetSpeedMultiplier();
         }
 
