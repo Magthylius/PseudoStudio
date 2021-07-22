@@ -87,6 +87,7 @@ namespace Hadal.AI.States
             }
         }
 
+
         /// <summary>
         /// Detect players and if in range, pounce, else go to recovery. 
         /// </summary>
@@ -111,8 +112,12 @@ namespace Hadal.AI.States
                 //! wait for sense detection to handle current target
                 if (Brain.CurrentTarget != null)
                 {
+
+                    //AudioBank.Play3D(soundType: AISound.AmbushPounce, Brain.transform);
                     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
+
+
                 }
             }
             else if (SenseDetection.DetectedPlayersCount == 4)
