@@ -798,7 +798,7 @@ namespace Hadal.AI
             {
                 //! Chasing player direction
                 Vector3 moveTo = (currentPoint.GetPosition - pilotTrans.position).normalized * TotalAttractionForce;
-                rBody.velocity = Vector3.Lerp(rBody.velocity, rBody.velocity + moveTo, deltaTime * attractionForce);
+                if (rBody != null) rBody.AddForce(moveTo, ForceMode.VelocityChange);
             }
 
             //! Look at
