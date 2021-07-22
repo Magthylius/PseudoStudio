@@ -547,7 +547,7 @@ namespace Hadal.AI
         {
             ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
             expSettings.Position = position;
-            expSettings.Radius = SenseDetection.GetCurrentSenseDetectionRadius();
+            expSettings.Radius = SenseDetection.GetCurrentSenseDetectionRadius() + 100f;
             expSettings.Force = 20.0f;
             expSettings.IgnoreLayers = MachineData.Engagement.JG_KnockbackIgnoreMasks;
 
