@@ -150,6 +150,7 @@ namespace Hadal.AI
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
                         JState.IsBehaviourRunning = false;
+                        RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
                         break;
                     }
 
