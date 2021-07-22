@@ -327,6 +327,7 @@ namespace Hadal.AI
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
                     TryDebug("Aggressive behaviour took too long, ending immediately.");
+                    HandleAnyBehaviourEnd();
                     break;
                 }
 
@@ -334,6 +335,7 @@ namespace Hadal.AI
                 if (PlayerCountDroppedTo0)
                 {
                     TryDebug("No more players detected in cavern or nearby, stopping aggressive behaviour.");
+                    HandleAnyBehaviourEnd();
                     break;
                 }
 
@@ -385,6 +387,7 @@ namespace Hadal.AI
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
                     TryDebug("Ambush behaviour took too long, ending immediately.");
+                    HandleAnyBehaviourEnd();
                     break;
                 }
 
