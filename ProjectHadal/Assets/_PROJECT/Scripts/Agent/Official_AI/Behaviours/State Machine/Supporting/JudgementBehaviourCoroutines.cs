@@ -54,7 +54,6 @@ namespace Hadal.AI
         private bool blockThresh;
         private bool isAttacking;
         private bool isDamaging;
-        private bool waitForJtimer;
         private Coroutine damageManagerRoutine;
         private CoroutineData threshRoutineData;
         private CoroutineData approachRoutineData;
@@ -88,7 +87,10 @@ namespace Hadal.AI
             //! Look at the target for a set amount of time (while doing nothing), before chasing after them
             {
                 NavigationHandler.StopMovement();
-                NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
+                if (JState.IsolatedPlayer != null)
+                    NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
+                else
+                    NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
                 yield return new WaitForSeconds(Settings.G_GlareAtTargetBeforeJudgementApproachTime);
                 NavigationHandler.SetLookAtTarget(null);
             }
@@ -107,7 +109,7 @@ namespace Hadal.AI
                     else
                         success = TrySetCustomNavPoint(Brain.CurrentTarget);
 
-                    if (success)
+                    if (success && !targetMarked)
                     {
                         targetMarked = true;
                         AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
@@ -118,13 +120,17 @@ namespace Hadal.AI
                 //! Start delay timer if close enough (in advance) to player & is waiting to be allowed to carry
                 if (HaltBeforeCarryThresholdReached && !canCarry)
                 {
+                    if (!canCarry)
+                    {
+                        //! set delay timer & start lerp to stop
+                        SetCarryDelayTimer(carryDelayTime);
+                        NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
+
+                        //! plays sound cue that should inform the player that they should start dodging
+                        AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
+                    }
+
                     canCarry = true;
-                    SetCarryDelayTimer(carryDelayTime);
-                    NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
-
-                    //! plays sound cue that should inform the player that they should start dodging
-                    //AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
-
                     TryDebug("Target is close enough to be Grabbed, starting delay timer before player is grabbed.");
                     continue;
                 }
@@ -132,7 +138,6 @@ namespace Hadal.AI
                 //! Stop behaviour and wait for Jtimer if too far away from current target player
                 if (FarThresholdReached)
                 {
-                    waitForJtimer = true;
                     JState.IsBehaviourRunning = false;
                     TryDebug("Target got too far from the Leviathan, stopping behaviour.");
                     break;
@@ -157,7 +162,6 @@ namespace Hadal.AI
                     TryDebug(success ? "Succeeded in carrying target player." : "Failed to carry target player, stopping behaviour.");
                     if (!success)
                     {
-                        waitForJtimer = true;
                         blockThresh = false;
                         break;
                     }
@@ -242,7 +246,6 @@ namespace Hadal.AI
         {
             TryDebug($"Starting Defensive Behaviour for player count: {stanceIndex}.");
             JState.IsBehaviourRunning = true;
-            waitForJtimer = false;
             int jTimerIndex = 5 - stanceIndex;
 
             approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
@@ -287,15 +290,12 @@ namespace Hadal.AI
 
                 yield return null;
             }
-
-            //! If the wait boolean is true, will wait until the judgement timer is exceeded before handling behaviour end
-            while (!IsJudgementThresholdReached(jTimerIndex) && waitForJtimer)
-                yield return null;
-
+            
             //! Handle Behaviour ending
             StopAllRunningCoroutines();
             ResetStateValues();
 			ResetJudgementPersistCount();
+            Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
             yield return null;
@@ -310,7 +310,6 @@ namespace Hadal.AI
         {
             TryDebug($"Starting Aggressive Behaviour for player count: {stanceIndex}.");
             JState.IsBehaviourRunning = true;
-            bool waitForJtimer = false;
             int jTimerIndex = 5 - stanceIndex;
 
             approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
@@ -354,15 +353,12 @@ namespace Hadal.AI
                 }
                 yield return null;
             }
-
-            //! If the wait boolean is true, will wait until the judgement timer is exceeded before handling behaviour end
-            while (!IsJudgementThresholdReached(jTimerIndex) && waitForJtimer)
-                yield return null;
-
+            
             //! Handle Behaviour ending
             StopAllRunningCoroutines();
             ResetStateValues();
 			ResetJudgementPersistCount();
+            Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
             yield return null;
@@ -376,7 +372,6 @@ namespace Hadal.AI
         {
             TryDebug($"Starting Ambush Behaviour in Judgement behaviour.");
             JState.IsBehaviourRunning = true;
-            waitForJtimer = false;
             int jTimerIndex = 1;
 
             approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer));
@@ -414,15 +409,12 @@ namespace Hadal.AI
 
                 yield return null;
             }
-
-            //! If the wait boolean is true, will wait until the judgement timer is exceeded before handling behaviour end
-            while (!IsJudgementThresholdReached(jTimerIndex) && waitForJtimer)
-                yield return null;
-
+            
             //! Handle Behaviour ending
             StopAllRunningCoroutines();
             ResetStateValues();
 			ResetJudgementPersistCount();
+            Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
 
             yield return null;
@@ -469,6 +461,7 @@ namespace Hadal.AI
             JState.StopAnyRunningCoroutines();
 
             //! Reset third party states
+            Brain.TryDropCarriedPlayer();
             NavigationHandler.Enable();
             NavigationHandler.ResetSpeedMultiplier();
 
