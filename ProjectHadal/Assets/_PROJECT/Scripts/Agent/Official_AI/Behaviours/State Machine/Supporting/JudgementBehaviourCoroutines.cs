@@ -137,7 +137,7 @@ namespace Hadal.AI
                 //! Stop behaviour and wait for Jtimer if too far away from current target player
                 if (FarThresholdReached)
                 {
-                    JState.IsBehaviourRunning = false;
+                    HandleAnyBehaviourEnd();
                     TryDebug("Target got too far from the Leviathan, stopping behaviour.");
                     break;
                 }
@@ -149,8 +149,8 @@ namespace Hadal.AI
                     if (!CloseThresholdReached)
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
-                        JState.IsBehaviourRunning = false;
                         RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
+                        HandleAnyBehaviourEnd();
                         break;
                     }
 
@@ -163,6 +163,7 @@ namespace Hadal.AI
                     if (!success)
                     {
                         blockThresh = false;
+                        HandleAnyBehaviourEnd();
                         break;
                     }
 
@@ -292,12 +293,7 @@ namespace Hadal.AI
             }
             
             //! Handle Behaviour ending
-            StopAllRunningCoroutines();
-            ResetStateValues();
-			ResetJudgementPersistCount();
-            Brain.TryDropCarriedPlayer();
-            RuntimeData.SetBrainState(BrainState.Recovery);
-            JState.StopAnyRunningCoroutines();
+            HandleAnyBehaviourEnd();
 
             yield return null;
         }
@@ -356,12 +352,7 @@ namespace Hadal.AI
             }
             
             //! Handle Behaviour ending
-            StopAllRunningCoroutines();
-            ResetStateValues();
-			ResetJudgementPersistCount();
-            Brain.TryDropCarriedPlayer();
-            RuntimeData.SetBrainState(BrainState.Recovery);
-            JState.StopAnyRunningCoroutines();
+            HandleAnyBehaviourEnd();
 
             yield return null;
         }
@@ -413,12 +404,7 @@ namespace Hadal.AI
             }
             
             //! Handle Behaviour ending
-            StopAllRunningCoroutines();
-            ResetStateValues();
-			ResetJudgementPersistCount();
-            Brain.TryDropCarriedPlayer();
-            RuntimeData.SetBrainState(BrainState.Recovery);
-            JState.StopAnyRunningCoroutines();
+            HandleAnyBehaviourEnd();
 
             yield return null;
         }
@@ -456,18 +442,7 @@ namespace Hadal.AI
             if (!isStunned)
                 return;
 
-            //! Settle all local states
-            StopAllRunningCoroutines();
-            ResetStateValues();
-
-            //! Double affirm JState state is terminated
-            JState.IsBehaviourRunning = false;
-            JState.StopAnyRunningCoroutines();
-
-            //! Reset third party states
-            Brain.TryDropCarriedPlayer();
-            NavigationHandler.Enable();
-            NavigationHandler.ResetSpeedMultiplier();
+            ResetJudgementBehaviour();
 
             //! Randomise judgement persist chance
             BrainState brainState;
@@ -486,6 +461,29 @@ namespace Hadal.AI
             string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
             debugMsg += brainState == BrainState.Judgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
             TryDebug(debugMsg);
+        }
+
+        private void HandleAnyBehaviourEnd()
+        {
+            ResetJudgementPersistCount();
+            RuntimeData.SetBrainState(BrainState.Recovery);
+			ResetJudgementBehaviour();
+        }
+
+        private void ResetJudgementBehaviour()
+        {
+            //! Settle all local states
+            StopAllRunningCoroutines();
+            ResetStateValues();
+
+            //! Double affirm JState state is terminated
+            JState.IsBehaviourRunning = false;
+            JState.StopAnyRunningCoroutines();
+
+            //! Reset third party states
+            Brain.TryDropCarriedPlayer();
+            NavigationHandler.Enable();
+            NavigationHandler.ResetSpeedMultiplier();
         }
 
         /// <summary> Safely stops all coroutines facilitated by this class </summary>
