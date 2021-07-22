@@ -36,7 +36,6 @@ namespace Hadal.Interactables
                 yield return null;
             }
             percent = 1f;
-            //RenderSettings.fogColor = targetColor;
             RenderSettings.fogDensity = targetFogDensity;
         }
 
