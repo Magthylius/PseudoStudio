@@ -17,6 +17,8 @@ namespace Hadal.Interactables
 
         [SerializeField] private LayerMask reactiveMask;
 
+        float percent = 0f;
+
         private void OnTriggerEnter(Collider other)
         {
             if(CanCollide(other))
@@ -25,13 +27,16 @@ namespace Hadal.Interactables
 
         IEnumerator colorLerpIn()
         {
-            for(int i = 1; i < 1000; i++)
+            percent = 0f;
+            while (percent < 1f)
             {
+                percent += Time.deltaTime * 0.05f;
                 RenderSettings.fogColor = Color.Lerp(RenderSettings.fogColor, targetColor, lerpTime);
                 RenderSettings.fogDensity = Mathf.Lerp(RenderSettings.fogDensity, targetFogDensity, lerpTime * 2);
                 yield return null;
             }
-            RenderSettings.fogColor = targetColor;
+            percent = 1f;
+            //RenderSettings.fogColor = targetColor;
             RenderSettings.fogDensity = targetFogDensity;
         }
 
