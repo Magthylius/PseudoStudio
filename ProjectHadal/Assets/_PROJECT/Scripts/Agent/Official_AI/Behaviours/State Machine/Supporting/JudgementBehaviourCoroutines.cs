@@ -150,6 +150,7 @@ namespace Hadal.AI
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
                         JState.IsBehaviourRunning = false;
+                        RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
                         break;
                     }
 
@@ -296,6 +297,7 @@ namespace Hadal.AI
 			ResetJudgementPersistCount();
             Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
+            JState.StopAnyRunningCoroutines();
 
             yield return null;
         }
@@ -359,6 +361,7 @@ namespace Hadal.AI
 			ResetJudgementPersistCount();
             Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
+            JState.StopAnyRunningCoroutines();
 
             yield return null;
         }
@@ -415,6 +418,7 @@ namespace Hadal.AI
 			ResetJudgementPersistCount();
             Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
+            JState.StopAnyRunningCoroutines();
 
             yield return null;
         }

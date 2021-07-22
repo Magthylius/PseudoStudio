@@ -111,6 +111,11 @@ namespace Hadal.AI
 			cavernTag = newTag;
 		}
 
+		public void Destroy()
+		{
+			Destroy(gameObject);
+		}
+
 		public void SetIsTunnelEntry(bool isEntry) => isTunnelEntry = isEntry;
 		public void SetDisableGraphics(bool state) => disableGraphics = state;
         public void SetIsHidingPoint(bool _isHidingPoint) => isHidingPoint = _isHidingPoint;
