@@ -616,7 +616,7 @@ namespace Hadal.AI
             }
 
             currentPoint.Deselect();
-            if (currentPoint.CavernTag == CavernTag.Custom_Point) Destroy(currentPoint.gameObject);
+            if (currentPoint.CavernTag == CavernTag.Custom_Point) currentPoint.Destroy();
             if (automaticallySelectNewPoint) SelectNewNavPoint();
             if (enableDebug) $"New point selected: {currentPoint.gameObject.name}".Msg();
         }
@@ -645,7 +645,7 @@ namespace Hadal.AI
                     if (!isStunned) CavernModeSteering();
                     else StunnedModeSteering();
 
-                    Destroy(currentPoint.gameObject);
+                    currentPoint.Destroy();
                 }
 
                 if (enableDebug) "Stopping custom path".Msg();
@@ -855,7 +855,7 @@ namespace Hadal.AI
                 {
                     currentPoint.Deselect();
                     if (isOnCustomPath)
-                        Destroy(currentPoint.gameObject);
+                        currentPoint.Destroy();
 
                     currentPoint = pointPath.Dequeue();
                     hasReachedPoint = false;
