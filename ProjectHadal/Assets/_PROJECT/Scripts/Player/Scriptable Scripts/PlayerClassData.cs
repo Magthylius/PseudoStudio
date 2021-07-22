@@ -22,8 +22,11 @@ namespace Hadal.Player
         [Header("Passive Power Ups")]
         public bool PowerUpDodgeBoost;
         public int DodgeBoostCount = 3;
+
         public bool PowerUpReviveTime;
         public float ReviveTime = 1;
+        public float RevivePercentHealth = 0.7f;
+
         public bool ActivateHydrophone = false;
         
         public bool PowerUpTorpFireRate;
@@ -68,7 +71,8 @@ namespace Hadal.Player
             if(PowerUpReviveTime)
             {
                 playerHealth.SetReviveOtherTime(ReviveTime);
-                object[] content = new object[] { playerPView.ViewID, ReviveTime};
+                playerHealth.SetReviveOtherPercentAmount(RevivePercentHealth);
+                object[] content = new object[] { playerPView.ViewID, ReviveTime, RevivePercentHealth};
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_UPDATED_REVIVE_TIME, content);
             }
 
