@@ -33,6 +33,7 @@ namespace Hadal.Player.Behaviours
 		[SerializeField, ReadOnly] private float _localReviveDelayTimer;
         [SerializeField] private float minOtherPlayerRevivalDistance;
 		[SerializeField] private float localReviveDelayTime = 2f;
+        [SerializeField] private float reviveOtherHealthPercent;
 
         [Header("Health Settings")]
         [SerializeField] private int maxHealth;
@@ -342,14 +343,19 @@ namespace Hadal.Player.Behaviours
         {
             reviveOtherTime = newReviveOtherTime;
         }
+
+        public void SetReviveOtherPercentAmount(float newRevivePercentAmount)
+        {
+            reviveOtherHealthPercent = newRevivePercentAmount;
+        }
         #endregion
 
         #region Is Down / Revive Control Methods
 
         /// <summary> Method to manage settings for revival player stats if a "full revive" is not necessary. </summary>
-        private void SetRevivalCustomisations()
+        private void SetRevivalCustomisations(float revivePercentAmount)
         {
-            Safe_SetHealthToPercent(0.2f); //! Revive at x% hp?
+            Safe_SetHealthToPercent(revivePercentAmount); //! Revive at x% hp?
             _controller.UI.InvokeOnHealthChange(_currentHealth);
         }
 
@@ -378,7 +384,7 @@ namespace Hadal.Player.Behaviours
         }
 
         /// <summary> Activates movement & rotation system for revival. Will only be called on the local player. </summary>
-        private bool TryRestoreControllerSystem()
+        private bool TryRestoreControllerSystem(float revivePercentAmount)
         {
             if (IsUnalive || !IsDown || !IsLocalPlayer)
                 return false;
@@ -387,7 +393,7 @@ namespace Hadal.Player.Behaviours
                 "Restoring control system for local player.".Msg();
             StopAllCoroutines();
             ResetHealth();
-            SetRevivalCustomisations();
+            SetRevivalCustomisations(revivePercentAmount);
             _isDead = false; //! Make sure this is false
 
             _controller.SetIsDown(false); //! Enable movement & rotation
@@ -400,14 +406,14 @@ namespace Hadal.Player.Behaviours
         /// Checks whether the player should revive from IsDown status (fails if already dead). Should only be used in network callbacks.
         /// Only works for the local player.
         /// </summary>
-        private void NetOnly_EvaluateRevive()
+        private void NetOnly_EvaluateRevive(float revivePercentAmount)
         {
             if (!_shouldRevive || !IsLocalPlayer || IsUnalive)
                 return;
 
             //! revive the Local player
             _shouldRevive = false;
-            TryRestoreControllerSystem();
+            TryRestoreControllerSystem(revivePercentAmount);
             CheckHealthStatus();
             OnNetworkReviveAttempt?.Invoke(true);
             Send_HealthUpdateStatus(false); //! send revive message to non-local players
@@ -498,7 +504,8 @@ namespace Hadal.Player.Behaviours
                 {
                     _pView.ViewID,
                     sendToTrueLocalPlayer,
-                    shouldRevive
+                    shouldRevive,
+                    reviveOtherHealthPercent
                 };
                 _shouldRevive = false; //! reset should revive per event sent
 
@@ -545,7 +552,7 @@ namespace Hadal.Player.Behaviours
                 if (debugEnabled)
                     $"Received event from another player's computer, evaluating for local player. Should revive: {_shouldRevive}".Msg();
 				
-				NetOnly_EvaluateRevive();
+				NetOnly_EvaluateRevive((float)content[3]);
             }
             else //! Evaluate on Non-local player
             {
@@ -573,6 +580,7 @@ namespace Hadal.Player.Behaviours
                 return;
 
             SetReviveOtherTime(content[1].AsFloat());
+            SetReviveOtherPercentAmount(content[2].AsFloat());
         }
         #endregion
 
@@ -646,7 +654,7 @@ namespace Hadal.Player.Behaviours
 					
                     //! This will be true only for debugging local reviving
                     if (reviveLocallyOnTimerReached)
-                        TryRestoreControllerSystem();
+                        TryRestoreControllerSystem(reviveOtherHealthPercent);
 
                     if (debugEnabled)
                         $"Criteria for revival complete.".Msg();
@@ -767,7 +775,7 @@ namespace Hadal.Player.Behaviours
                 return;
             }
 
-            TryRestoreControllerSystem();
+            TryRestoreControllerSystem(reviveOtherHealthPercent);
             OnNetworkReviveAttempt?.Invoke(true);
 
             if (!IsDown && !IsUnalive)
