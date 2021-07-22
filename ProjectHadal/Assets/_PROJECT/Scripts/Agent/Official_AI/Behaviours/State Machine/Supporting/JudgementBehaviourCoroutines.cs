@@ -54,6 +54,7 @@ namespace Hadal.AI
         private bool blockThresh;
         private bool isAttacking;
         private bool isDamaging;
+        private bool isPlayerTagged;
         private Coroutine damageManagerRoutine;
         private CoroutineData threshRoutineData;
         private CoroutineData approachRoutineData;
@@ -103,13 +104,11 @@ namespace Hadal.AI
                 //! Set custom nav point to destination: current target/isolated player if not already moving towards it.
                 if ((HasCurrentTargetPlayer() || HasTargetIsolatedPlayer()) && !targetMarked)
                 {
-                    bool success;
-                    if (JState.IsolatedPlayer != null)
-                        success = TrySetCustomNavPoint(JState.IsolatedPlayer);
-                    else
-                        success = TrySetCustomNavPoint(Brain.CurrentTarget);
+                    PlayerController target = JState.IsolatedPlayer != null ? JState.IsolatedPlayer : Brain.CurrentTarget;
+                    Coroutine routine = Brain.StartCoroutine(TrySetCustomNavPoint(target));
+                    yield return routine;
 
-                    if (success && !targetMarked)
+                    if (isPlayerTagged && !targetMarked)
                     {
                         targetMarked = true;
                         AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
@@ -429,18 +428,19 @@ namespace Hadal.AI
         /// (spawned a custom nav point and informed the navigation handler to chase); it will return False if the player has already been tagged.
         /// </summary>
         /// <param name="player">Player to tag.</param>
-        private bool TrySetCustomNavPoint(PlayerController player)
+        private IEnumerator TrySetCustomNavPoint(PlayerController player)
         {
             if (player.GetIsTaggedByLeviathan)
-                return false;
+                yield break;
 
             NavPoint point = Object.Instantiate(RuntimeData.navPointPrefab.gameObject, player.GetTarget.position, Quaternion.identity).GetComponent<NavPoint>();
+            yield return null;
             point.tag = "NavigationPoint";
             point.AttachTo(player.transform);
             point.SetCavernTag(CavernTag.Custom_Point);
             NavigationHandler.SetCustomPath(point, true);
             player.SetIsTaggedByLeviathan(true);
-            return true;
+            isPlayerTagged = player.GetIsTaggedByLeviathan;
         }
 
         /// <summary>
@@ -505,6 +505,7 @@ namespace Hadal.AI
             blockThresh = false;
             isAttacking = false;
             isDamaging = false;
+            isPlayerTagged = false;
             JState.ResetStateValues();
 
             NavigationHandler.Enable(); //always enable when it exits the behaviour
