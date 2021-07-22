@@ -497,7 +497,7 @@ namespace Hadal.Player.Behaviours
         /// </summary>
         /// <param name="sendToTrueLocalPlayer">If true, the nature of the event will be Non-local player -> Local player.
         /// If false, the nature will be Local player -> Non-local player.</param>
-        private void Send_HealthUpdateStatus(bool sendToTrueLocalPlayer)
+        private void Send_HealthUpdateStatus(bool sendToTrueLocalPlayer, float otherPlayerReviveHealthPercent = 0.2f)
         {
             object[] content;
             if (sendToTrueLocalPlayer) //! Non-local to Local player
@@ -508,7 +508,7 @@ namespace Hadal.Player.Behaviours
                     _pView.ViewID,
                     sendToTrueLocalPlayer,
                     shouldRevive,
-                    reviveOtherHealthPercent
+                    otherPlayerReviveHealthPercent
                 };
                 _shouldRevive = false; //! reset should revive per event sent
 
@@ -653,7 +653,7 @@ namespace Hadal.Player.Behaviours
                     otherPlayerInfo.HealthManager.OnLocalReviveAttempt?.Invoke(true);
 					
                     //! Send message of revival to Local player of this photon view ID
-					Send_HealthUpdateStatus(true);
+					Send_HealthUpdateStatus(true, otherPlayerInfo.HealthManager.reviveOtherHealthPercent);
 					
                     //! This will be true only for debugging local reviving
                     if (reviveLocallyOnTimerReached)
