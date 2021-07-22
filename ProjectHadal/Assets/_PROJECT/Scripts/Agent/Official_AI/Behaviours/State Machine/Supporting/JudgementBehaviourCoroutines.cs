@@ -150,7 +150,9 @@ namespace Hadal.AI
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
                         RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
-                        HandleAnyBehaviourEnd();
+                        
+                        ResetJudgementBehaviour();
+                        DecideOnJudgementPersist();
                         break;
                     }
 
@@ -444,6 +446,15 @@ namespace Hadal.AI
 
             ResetJudgementBehaviour();
 
+            BrainState brainState = DecideOnJudgementPersist();
+
+            string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
+            debugMsg += brainState == BrainState.Judgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
+            TryDebug(debugMsg);
+        }
+
+        private BrainState DecideOnJudgementPersist()
+        {
             //! Randomise judgement persist chance
             BrainState brainState;
 			if (judgementPersistCount < Settings.JudgementPersistCountLimitPerEntry)
@@ -458,9 +469,7 @@ namespace Hadal.AI
 			else
 				ResetJudgementPersistCount();
 
-            string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
-            debugMsg += brainState == BrainState.Judgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
-            TryDebug(debugMsg);
+            return brainState;
         }
 
         private void HandleAnyBehaviourEnd()
