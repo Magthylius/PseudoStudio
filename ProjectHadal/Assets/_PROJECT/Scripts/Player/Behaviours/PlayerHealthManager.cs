@@ -355,6 +355,7 @@ namespace Hadal.Player.Behaviours
         /// <summary> Method to manage settings for revival player stats if a "full revive" is not necessary. </summary>
         private void SetRevivalCustomisations(float revivePercentAmount)
         {
+            Debug.LogError("Revival final" + revivePercentAmount);
             Safe_SetHealthToPercent(revivePercentAmount); //! Revive at x% hp?
             _controller.UI.InvokeOnHealthChange(_currentHealth);
         }
@@ -393,6 +394,7 @@ namespace Hadal.Player.Behaviours
                 "Restoring control system for local player.".Msg();
             StopAllCoroutines();
             ResetHealth();
+            Debug.LogError("Revival 2" + revivePercentAmount);
             SetRevivalCustomisations(revivePercentAmount);
             _isDead = false; //! Make sure this is false
 
@@ -413,6 +415,7 @@ namespace Hadal.Player.Behaviours
 
             //! revive the Local player
             _shouldRevive = false;
+            Debug.LogError("Revival 1" + revivePercentAmount);
             TryRestoreControllerSystem(revivePercentAmount);
             CheckHealthStatus();
             OnNetworkReviveAttempt?.Invoke(true);
@@ -551,8 +554,8 @@ namespace Hadal.Player.Behaviours
 
                 if (debugEnabled)
                     $"Received event from another player's computer, evaluating for local player. Should revive: {_shouldRevive}".Msg();
-				
-				NetOnly_EvaluateRevive((float)content[3]);
+                Debug.LogError("Revival 0" + (float)content[3]);
+                NetOnly_EvaluateRevive((float)content[3]);
             }
             else //! Evaluate on Non-local player
             {
