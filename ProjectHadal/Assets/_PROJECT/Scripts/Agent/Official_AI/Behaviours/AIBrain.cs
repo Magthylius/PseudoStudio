@@ -65,8 +65,6 @@ namespace Hadal.AI
         [ReadOnly] public AIEgg Egg;
         [SerializeField, ReadOnly] private PlayerController currentTarget;
         public PlayerController CurrentTarget { get => currentTarget; private set => currentTarget = value; }
-        [SerializeField] private NavPoint spawnedNavPoint;
-        public NavPoint GetSpawnedNavPoint => spawnedNavPoint;
         /// <summary> Allows safely setting the current target of the AI if it is not already in Judgement state. </summary>
         public void TrySetCurrentTarget(PlayerController newTarget)
         {
@@ -231,7 +229,6 @@ namespace Hadal.AI
             cavernManager = FindObjectOfType<CavernManager>();
 			animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
             Egg = FindObjectOfType<AIEgg>();
-            spawnedNavPoint = Instantiate(runtimeData.navPointPrefab, transform);
 
             //! Event handling
             if (cavernManager != null)
