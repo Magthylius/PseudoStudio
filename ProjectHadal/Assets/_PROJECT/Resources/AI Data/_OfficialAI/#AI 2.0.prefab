@@ -70,7 +70,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793168799261823607}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -11.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2206939684412345072}
@@ -185,6 +185,7 @@ MonoBehaviour:
   Players: []
   Egg: {fileID: 0}
   currentTarget: {fileID: 0}
+  spawnedNavPoint: {fileID: 0}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   followNetworkManagerOfflineStatus: 1
   isOffline: 0
@@ -415,7 +416,7 @@ MonoBehaviour:
   - associatedEnum: 2
     audioAsset: {fileID: 11400000, guid: 93d5707948f7ac149bc31b6bd538937f, type: 2}
   - associatedEnum: 3
-    audioAsset: {fileID: 11400000, guid: a06d46ea43def364c87b525d0d7b10c1, type: 2}
+    audioAsset: {fileID: 11400000, guid: 88ebb8a6a63bfdd45b629033c119946c, type: 2}
   - associatedEnum: 4
     audioAsset: {fileID: 0}
   brain: {fileID: 2206939684412345039}
