@@ -102,10 +102,10 @@ namespace Hadal.AI
 
                 //! damage calculation will be rounded down in favour of the AI
                 totalDamage = damage - (damage * totalDamageResistance).Floor();
-                
+
                 currentHealth = (currentHealth - totalDamage).Clamp0();
                 _additionalDamageResistance = GetHealthRatio <= lowHealthPercent ? resistenceOnLowHealth : 0f;
-                
+
                 brain.RuntimeData.AddDamageCount();
             }
 
@@ -323,5 +323,13 @@ namespace Hadal.AI
             if (vfx == null) return;
             vfx.SpawnAt(position);
         }
+
+
+        // private void HandleEggDestroyedEvent(bool isDestroyed)
+        // {
+        //     if (isDestroyed)
+        //     {
+        //     }
+        // }
     }
 }
