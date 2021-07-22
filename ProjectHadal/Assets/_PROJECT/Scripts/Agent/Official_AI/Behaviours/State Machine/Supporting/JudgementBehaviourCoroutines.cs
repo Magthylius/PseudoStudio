@@ -83,7 +83,10 @@ namespace Hadal.AI
             bool targetMarked = false;
 
             if (ShouldHandleNullTargetTerminationCase())
+            {
+                HandleAnyBehaviourEnd();
                 yield break;
+            }
 
             //! Look at the target for a set amount of time (while doing nothing), before chasing after them
             {
@@ -99,7 +102,10 @@ namespace Hadal.AI
             while (JState.IsBehaviourRunning)
             {
                 if (ShouldHandleNullTargetTerminationCase())
+                {
+                    HandleAnyBehaviourEnd();
                     yield break;
+                }
 
                 //! Set custom nav point to destination: current target/isolated player if not already moving towards it.
                 if ((HasCurrentTargetPlayer() || HasTargetIsolatedPlayer()) && !targetMarked)
@@ -259,6 +265,7 @@ namespace Hadal.AI
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
                     TryDebug("Defensive behaviour took too long, ending immediately.");
+                    HandleAnyBehaviourEnd();
                     break;
                 }
 
@@ -266,6 +273,7 @@ namespace Hadal.AI
                 if (PlayerCountDroppedTo0)
                 {
                     TryDebug("No more players detected in cavern or nearby, stopping defensive behaviour.");
+                    HandleAnyBehaviourEnd();
                     break;
                 }
 
