@@ -233,7 +233,7 @@ namespace Hadal.Player.Behaviours
         private void Safe_SetHealthToPercent(float percent)
         {
             percent = percent.Clamp01();
-            Safe_SetHealthValue((int)(maxHealth * percent));
+            Safe_SetHealthValue((maxHealth * percent).Round());
         }
 
         #endregion
