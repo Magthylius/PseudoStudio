@@ -296,6 +296,7 @@ namespace Hadal.AI
 			ResetJudgementPersistCount();
             Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
+            JState.StopAnyRunningCoroutines();
 
             yield return null;
         }
@@ -359,6 +360,7 @@ namespace Hadal.AI
 			ResetJudgementPersistCount();
             Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
+            JState.StopAnyRunningCoroutines();
 
             yield return null;
         }
@@ -415,6 +417,7 @@ namespace Hadal.AI
 			ResetJudgementPersistCount();
             Brain.TryDropCarriedPlayer();
             RuntimeData.SetBrainState(BrainState.Recovery);
+            JState.StopAnyRunningCoroutines();
 
             yield return null;
         }
