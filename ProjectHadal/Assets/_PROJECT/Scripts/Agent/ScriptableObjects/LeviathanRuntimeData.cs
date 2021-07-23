@@ -60,7 +60,7 @@ namespace Hadal.AI
         public void AddDamageCount()
         {
             cumulativeDamageCount++;
-            if (IsCumulativeDamageCountReached)
+            if (cumulativeDamageCount == cumulativeDamageCountThreshold)
                 OnCumulativeDamageCountReached?.Invoke();
         }
         public void UpdateCumulativeDamageCountThreshold(int newThreshold) => cumulativeDamageCountThreshold = newThreshold;

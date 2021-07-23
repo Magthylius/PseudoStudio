@@ -605,7 +605,7 @@ namespace Hadal.AI
 
         public bool CheckForJudgementStateCondition()
         {
-            if (CurrentTarget != null && CavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid)
+            if (CurrentTarget != null)
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
                 if (NavigationHandler.Data_IsOnQueuePath)
