@@ -26,6 +26,7 @@ namespace Hadal.AI.States
         [Min(0)] public int G_DisruptionDamageCount;
         [Min(0f)] public float G_DistanceFromFrontForBiteAnimation = 15f;
         [Min(0f)] public float G_CarryKnockbackAdditionalRange = 30f;
+        [Min(0f)] public float G_CarryKnockbackForce = 40.0f;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;

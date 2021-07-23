@@ -129,7 +129,7 @@ namespace Hadal.AI
                     {
                         //! set delay timer & start lerp to stop
                         SetCarryDelayTimer(carryDelayTime);
-                        NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null, 0.1f);
+                        NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null);
 
                         //! plays sound cue that should inform the player that they should start dodging
                         AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
@@ -156,7 +156,7 @@ namespace Hadal.AI
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
                         RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
-                        
+                        NavigationHandler.Enable();
                         ResetJudgementBehaviour();
                         DecideOnJudgementPersist();
                         break;
