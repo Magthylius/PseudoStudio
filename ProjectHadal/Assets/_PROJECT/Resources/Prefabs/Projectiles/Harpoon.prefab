@@ -279,8 +279,10 @@ MonoBehaviour:
   validLayer:
   - Monster
   - Obstacle
-  defaultAttachDuration: 4
-  poweredAttachDuration: 8
+  defaultAttachDuration: 20
+  defaultSlowCount: 1
+  poweredAttachDuration: 20
+  poweredSlowCount: 2
   projPhysics: {fileID: 5627941608468223027}
   impulseMode: {fileID: 0}
   attachMode: {fileID: 0}

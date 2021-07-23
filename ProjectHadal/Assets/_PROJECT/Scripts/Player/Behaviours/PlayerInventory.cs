@@ -404,7 +404,10 @@ namespace Hadal.Player.Behaviours
             while (++i < allUtilities.Count)
             {
                 if (allUtilities[i] is TLauncher)
+                {
                     allUtilities[i].IsPowered = isPowered;
+                    allUtilities[i].PowerUp();
+                }
             }
         }
 
