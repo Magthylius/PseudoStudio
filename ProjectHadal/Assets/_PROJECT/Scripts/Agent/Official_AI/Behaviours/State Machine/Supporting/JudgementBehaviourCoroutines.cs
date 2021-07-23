@@ -156,7 +156,7 @@ namespace Hadal.AI
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
                         RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
-                        
+                        NavigationHandler.Enable();
                         ResetJudgementBehaviour();
                         DecideOnJudgementPersist();
                         break;
