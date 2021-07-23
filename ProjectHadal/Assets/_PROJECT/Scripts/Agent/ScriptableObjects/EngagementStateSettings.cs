@@ -23,6 +23,7 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_PrepareHaltBeforeCarryDistance = 10f;
         [Min(0f)] public float G_HaltingTime = 2.5f;
         [Min(0f)] public float G_GlareAtTargetBeforeJudgementApproachTime = 2f;
+        [Range(0f, 1f)] public float G_JudgementPersistChance = 0.8f;
         [Min(0)] public int G_DisruptionDamageCount;
         [Min(0f)] public float G_DistanceFromFrontForBiteAnimation = 15f;
         [Min(0f)] public float G_CarryKnockbackAdditionalRange = 30f;
@@ -47,7 +48,6 @@ namespace Hadal.AI.States
         [Min(0f)] public float JudgementTimer2 = 45f;
         [Min(0f)] public float JudgementTimer3 = 60f;
         [Min(0f)] public float JudgementTimer4 = 90f;
-        [Range(0f, 1f)] public float PostStunRemainJudgementChance = 0.8f;
 		[Min(0)] public int JudgementPersistCountLimitPerEntry = 2;
         public int AGG_AdditionalThreshDamagePerSecond;
         public int DEF_AdditionalThreshDamagePerSecond;

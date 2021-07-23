@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using Hadal.AI.Caverns;
 using Hadal.AI.States;
 using Hadal.Player;
@@ -107,6 +108,8 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning)
             {
+                TryWarn("Move to Current Target is running!");
+
                 if (ShouldHandleNullTargetTerminationCase())
                 {
                     OnStandardEndBehaviour?.Invoke();
@@ -160,10 +163,31 @@ namespace Hadal.AI
                     canCarry = false;
                     if (!CloseThresholdReached)
                     {
-                        TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
-                        RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
-                        OnPersistAttemptEndBehaviour?.Invoke(false);
-                        break;
+                        PlayerController alternativeTarget = null;
+                        foreach (var player in Brain.Players)
+                        {
+                            bool playerIsCurrentTarget = player == Brain.CurrentTarget;
+                            bool playerIsDownOrUnalive = player.GetInfo.HealthManager.IsDownOrUnalive;
+                            bool playerIsNotCloseEnough = (player.GetTarget.position - Brain.transform.position).sqrMagnitude > Settings.G_ApproachCloseDistanceThreshold.Sqr();
+
+                            if (playerIsCurrentTarget || playerIsDownOrUnalive || playerIsNotCloseEnough)
+                                continue;
+
+                            alternativeTarget = player;
+                            break;
+                        }
+
+                        if (alternativeTarget == null)
+                        {
+                            TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
+                            RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
+                            OnPersistAttemptEndBehaviour?.Invoke(false);
+                            break;
+                        }
+
+                        NavigationHandler.StopCustomPath(false);
+                        Brain.ResetAllPlayersTaggedStatus();
+                        Brain.ForceSetCurrentTarget(alternativeTarget);
                     }
 
                     //! Call this to block threshing the target until it is disabled
@@ -233,6 +257,7 @@ namespace Hadal.AI
 
             while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
             {
+                TryWarn("Threshing is running!");
                 if (RuntimeData.IsCumulativeDamageCountReached)
                 {
                     success = false;
@@ -264,8 +289,9 @@ namespace Hadal.AI
 
             approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
 
-            while (JState.IsBehaviourRunning)
+            while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
+                TryWarn("Defensive behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
 
                 //! When the behaviour takes too long
@@ -329,8 +355,9 @@ namespace Hadal.AI
 
             approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
 
-            while (JState.IsBehaviourRunning)
+            while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
+                TryWarn("Aggressive behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
 
                 //! When the behaviour takes too long
@@ -392,8 +419,9 @@ namespace Hadal.AI
 
             approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer));
 
-            while (JState.IsBehaviourRunning)
+            while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
+                TryWarn("Ambush behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
 
                 //! When the behaviour takes too long
@@ -481,12 +509,12 @@ namespace Hadal.AI
                 yield return null;
 
                 ResetJudgementPersistCount();
-                RuntimeData.SetBrainState(BrainState.Recovery);
                 ResetJudgementBehaviour();
+                Brain.ResetAllPlayersTaggedStatus();
 
                 //! Double affirm JState state is terminated
-                JState.ResetStateValues();
                 JState.StopAnyRunningCoroutines();
+                JState.ResetStateValues();
                 JState.ShouldExit = true;
 
                 JState.AllowStateTick = true;
@@ -503,13 +531,14 @@ namespace Hadal.AI
                 yield return null;
 
                 ResetJudgementBehaviour();
+                Brain.ResetAllPlayersTaggedStatus();
                 bool isJudgement = DecideOnShouldJudgementPersist();
-                if (!isJudgement)
-                    JState.ShouldExit = true;
 
                 //! Double affirm JState state is terminated
-                JState.ResetStateValues();
                 JState.StopAnyRunningCoroutines();
+                JState.ResetStateValues();
+
+                JState.ShouldExit = !isJudgement;
 
                 JState.AllowStateTick = true;
 
@@ -548,8 +577,8 @@ namespace Hadal.AI
             //! Reset third party states
             Brain.TryDropCarriedPlayer();
             NavigationHandler.Enable();
-            NavigationHandler.StopCustomPath(false);
             NavigationHandler.ResetSpeedMultiplier();
+            NavigationHandler.StopCustomPath(true);
         }
 
         /// <summary> Safely stops all coroutines facilitated by this class </summary>
@@ -590,7 +619,7 @@ namespace Hadal.AI
         /// </summary>
         private BrainState GetRandomBrainStateAfterStun()
         {
-            bool shouldStayJudgement = Settings.PostStunRemainJudgementChance.HasHitPercentChance();
+            bool shouldStayJudgement = Settings.G_JudgementPersistChance.HasHitPercentChance();
             return shouldStayJudgement ? BrainState.Judgement : BrainState.Recovery;
         }
 
@@ -600,6 +629,14 @@ namespace Hadal.AI
             {
                 msg = "Judgement: " + msg;
                 msg.Msg();
+            }
+        }
+        private void TryWarn(object msg)
+        {
+            if (Brain.DebugEnabled)
+            {
+                msg = "Judgement: " + msg;
+                msg.Warn();
             }
         }
 

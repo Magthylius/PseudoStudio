@@ -570,6 +570,11 @@ namespace Hadal.AI
 
         public void TryToTargetClosestPlayerInAICavern() => TrySetCurrentTarget(GetClosestPlayerInAICavern());
 
+        public void ResetAllPlayersTaggedStatus()
+        {
+            Players.ForEach(p => p.SetIsTaggedByLeviathan(false));
+        }
+
         #endregion
 
         #region Data
