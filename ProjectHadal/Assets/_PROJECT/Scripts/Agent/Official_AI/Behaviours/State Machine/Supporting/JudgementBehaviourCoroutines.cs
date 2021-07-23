@@ -464,40 +464,51 @@ namespace Hadal.AI
 
         private void HandleAnyBehaviourEnd()
         {
-            JState.AllowStateTick = false;
+            Brain.StartCoroutine(Routine());
 
-            ResetJudgementPersistCount();
-            RuntimeData.SetBrainState(BrainState.Recovery);
-            ResetJudgementBehaviour();
+            IEnumerator Routine()
+            {
+                JState.AllowStateTick = false;
+                yield return null;
 
-            //! Double affirm JState state is terminated
-            JState.StopAnyRunningCoroutines();
-            JState.ResetStateValues();
-            JState.ShouldExit = true;
+                ResetJudgementPersistCount();
+                RuntimeData.SetBrainState(BrainState.Recovery);
+                ResetJudgementBehaviour();
 
-            JState.AllowStateTick = true;
+                //! Double affirm JState state is terminated
+                JState.ResetStateValues();
+                JState.StopAnyRunningCoroutines();
+                JState.ShouldExit = true;
+
+                JState.AllowStateTick = true;
+            }
         }
 
         private void HandleBehaviourEndWithChanceToPersist(bool judgementPersistDebug = false)
         {
-            JState.AllowStateTick = false;
+            Brain.StartCoroutine(Routine());
 
-            ResetJudgementBehaviour();
-            bool isJudgement = DecideOnShouldJudgementPersist();
+            IEnumerator Routine()
+            {
+                JState.AllowStateTick = false;
+                yield return null;
 
-            //! Double affirm JState state is terminated
-            JState.StopAnyRunningCoroutines();
-            JState.ResetStateValues();
-            
-            if (!isJudgement)
-                JState.ShouldExit = true;
-            
-            JState.AllowStateTick = true;
+                ResetJudgementBehaviour();
+                bool isJudgement = DecideOnShouldJudgementPersist();
+                if (!isJudgement)
+                    JState.ShouldExit = true;
 
-            if (!judgementPersistDebug) return;
-            string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
-            debugMsg += isJudgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
-            TryDebug(debugMsg);
+                //! Double affirm JState state is terminated
+                JState.ResetStateValues();
+                JState.StopAnyRunningCoroutines();
+
+                JState.AllowStateTick = true;
+
+                if (!judgementPersistDebug) yield break;
+                string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
+                debugMsg += isJudgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
+                TryDebug(debugMsg);
+            }
         }
 
         private bool DecideOnShouldJudgementPersist()
