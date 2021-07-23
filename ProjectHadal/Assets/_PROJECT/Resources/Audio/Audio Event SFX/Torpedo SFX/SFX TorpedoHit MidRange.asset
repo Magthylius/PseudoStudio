@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
-  m_Name: TorpedoHit MidRange SFX
+  m_Name: SFX TorpedoHit MidRange
   m_EditorClassIdentifier: 
   Clips:
   - {fileID: 8300000, guid: cdcc407e68b7c5244b87b1ff05e25bc9, type: 3}
@@ -20,6 +20,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bd05bb95474907d4e9f6f459fff43d17, type: 3}
   - {fileID: 8300000, guid: 68bc610b519c2c54faf3394a1ac4e744, type: 3}
   Settings:
+    ReplayTime: 0.5
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7

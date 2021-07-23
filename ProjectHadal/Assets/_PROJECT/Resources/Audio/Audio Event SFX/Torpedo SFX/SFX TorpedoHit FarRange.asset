@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
-  m_Name: TorpedoHit FarRange SFX
+  m_Name: SFX TorpedoHit FarRange
   m_EditorClassIdentifier: 
   Clips:
   - {fileID: 8300000, guid: 348f608fdd1221443b804c12f7907b2d, type: 3}
   - {fileID: 8300000, guid: 08364c96b828ac945a8bbd531ab70f9b, type: 3}
   - {fileID: 8300000, guid: c57c024c25bf3ee409d91047cde793b3, type: 3}
   Settings:
+    ReplayTime: 0.5
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
