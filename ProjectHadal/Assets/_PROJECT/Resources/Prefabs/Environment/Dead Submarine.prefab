@@ -512,6 +512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableDebug: 1
+  reloadAmount: 3
   ableToInteract: 1
   isInteracting: 0
   interactionType: 1
@@ -519,7 +520,7 @@ MonoBehaviour:
   interactionMaintainDistance: 12
   interactionWindupTime: 3
   regenerateTimer: 0
-  regenerateTimerMax: 10
+  regenerateTimerMax: 80
   flareIndicator: {fileID: 1858030981906500889}
   submarineRenderer: {fileID: 3927018817974995140}
 --- !u!1 &4705442787812856914

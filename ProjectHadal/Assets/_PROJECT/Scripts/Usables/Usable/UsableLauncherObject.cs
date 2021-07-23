@@ -88,7 +88,7 @@ namespace Hadal.Usables
             Data.ToggleProjectile(HasToggleAmmo);
         }
 
-        public virtual void ReceiveInteractEvent(InteractionType interactionType, int interactableID)
+        public virtual void ReceiveInteractEvent(InteractionType interactionType, int interactableID, int reloadAmount)
         {
             return;
         }
@@ -138,6 +138,14 @@ namespace Hadal.Usables
             UpdateReserveCount(ReserveCount + 1);
             OnReservesChanged?.Invoke(true);
         }
+
+        public void IncrementReserve(int reloadAmount)
+        {
+            IsRegenerating = false;
+            UpdateReserveCount(ReserveCount + reloadAmount);
+            OnReservesChanged?.Invoke(true);
+        }
+
         public void ChangeChamberReloadTime(float newReloadTime)
         {
             chamberReloadTime = newReloadTime;
