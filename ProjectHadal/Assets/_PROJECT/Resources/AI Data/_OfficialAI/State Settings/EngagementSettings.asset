@@ -20,12 +20,13 @@ MonoBehaviour:
   G_TotalThreshTimeInSeconds: 4
   G_BaseMinThreshDamagePerSecond: 12
   G_BaseMaxThreshDamagePerSecond: 15
-  G_PrepareHaltBeforeCarryDistance: 15
+  G_PrepareHaltBeforeCarryDistance: 10
   G_HaltingTime: 0.5
-  G_GlareAtTargetBeforeJudgementApproachTime: 1
+  G_GlareAtTargetBeforeJudgementApproachTime: 1.5
   G_DisruptionDamageCount: 1
-  G_DistanceFromFrontForBiteAnimation: 10
+  G_DistanceFromFrontForBiteAnimation: 20
   G_CarryKnockbackAdditionalRange: 30
+  G_CarryKnockbackForce: 40
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 35
   AM_PounceSpeedMultiplier: 1.2
@@ -33,13 +34,13 @@ MonoBehaviour:
   AM_DisruptionDamageCount: 1
   AM_AdditionalThreshDamagePerSecond: 2
   HU_RoamingSpeedMultiplier: 1.8
-  HU_MaxHuntingTime: 120
+  HU_MaxHuntingTime: 60
   HU_DisruptionDamageCount: 1
-  HU_PeriodicCavernUpdateTime: 5
-  JudgementTimer1: 30
-  JudgementTimer2: 30
-  JudgementTimer3: 25
-  JudgementTimer4: 20
+  HU_PeriodicCavernUpdateTime: 4
+  JudgementTimer1: 40
+  JudgementTimer2: 40
+  JudgementTimer3: 35
+  JudgementTimer4: 30
   PostStunRemainJudgementChance: 0.8
   JudgementPersistCountLimitPerEntry: 2
   AGG_AdditionalThreshDamagePerSecond: 1

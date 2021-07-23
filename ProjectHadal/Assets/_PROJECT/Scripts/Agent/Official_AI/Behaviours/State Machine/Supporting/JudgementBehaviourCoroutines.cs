@@ -41,11 +41,15 @@ namespace Hadal.AI
             ResetStateValues();
 
             Brain.OnStunnedEvent += HandleStunEvent;
+            OnStandardEndBehaviour += HandleAnyBehaviourEnd;
+            OnPersistAttemptEndBehaviour += HandleBehaviourEndWithChanceToPersist;
         }
 
         ~JudgementBehaviourCoroutines()
         {
             Brain.OnStunnedEvent -= HandleStunEvent;
+            OnStandardEndBehaviour -= HandleAnyBehaviourEnd;
+            OnPersistAttemptEndBehaviour -= HandleBehaviourEndWithChanceToPersist;
         }
 
         private float carryDelayTimer;
@@ -58,6 +62,8 @@ namespace Hadal.AI
         private Coroutine damageManagerRoutine;
         private CoroutineData threshRoutineData;
         private CoroutineData approachRoutineData;
+        private event System.Action OnStandardEndBehaviour;
+        private event System.Action<bool> OnPersistAttemptEndBehaviour;
 
         #region Coroutines
 
@@ -84,7 +90,7 @@ namespace Hadal.AI
 
             if (ShouldHandleNullTargetTerminationCase())
             {
-                HandleAnyBehaviourEnd();
+                OnStandardEndBehaviour?.Invoke();
                 yield break;
             }
 
@@ -103,7 +109,7 @@ namespace Hadal.AI
             {
                 if (ShouldHandleNullTargetTerminationCase())
                 {
-                    HandleAnyBehaviourEnd();
+                    OnStandardEndBehaviour?.Invoke();
                     yield break;
                 }
 
@@ -143,8 +149,8 @@ namespace Hadal.AI
                 //! Stop behaviour and wait for Jtimer if too far away from current target player
                 if (FarThresholdReached)
                 {
-                    HandleAnyBehaviourEnd();
                     TryDebug("Target got too far from the Leviathan, stopping behaviour.");
+                    OnStandardEndBehaviour?.Invoke();
                     break;
                 }
 
@@ -156,9 +162,7 @@ namespace Hadal.AI
                     {
                         TryDebug("Target was able to get away from being grabbed. Stopping behaviour.");
                         RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
-                        NavigationHandler.Enable();
-                        ResetJudgementBehaviour();
-                        DecideOnJudgementPersist();
+                        OnPersistAttemptEndBehaviour?.Invoke(false);
                         break;
                     }
 
@@ -171,7 +175,7 @@ namespace Hadal.AI
                     if (!success)
                     {
                         blockThresh = false;
-                        HandleAnyBehaviourEnd();
+                        OnStandardEndBehaviour?.Invoke();
                         break;
                     }
 
@@ -265,7 +269,7 @@ namespace Hadal.AI
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
                     TryDebug("Defensive behaviour took too long, ending immediately.");
-                    HandleAnyBehaviourEnd();
+                    OnStandardEndBehaviour?.Invoke();
                     break;
                 }
 
@@ -273,7 +277,7 @@ namespace Hadal.AI
                 if (PlayerCountDroppedTo0)
                 {
                     TryDebug("No more players detected in cavern or nearby, stopping defensive behaviour.");
-                    HandleAnyBehaviourEnd();
+                    OnStandardEndBehaviour?.Invoke();
                     break;
                 }
 
@@ -303,7 +307,7 @@ namespace Hadal.AI
             }
             
             //! Handle Behaviour ending
-            HandleAnyBehaviourEnd();
+            OnStandardEndBehaviour?.Invoke();
 
             yield return null;
         }
@@ -327,7 +331,7 @@ namespace Hadal.AI
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
                     TryDebug("Aggressive behaviour took too long, ending immediately.");
-                    HandleAnyBehaviourEnd();
+                    OnStandardEndBehaviour?.Invoke();
                     break;
                 }
 
@@ -335,7 +339,7 @@ namespace Hadal.AI
                 if (PlayerCountDroppedTo0)
                 {
                     TryDebug("No more players detected in cavern or nearby, stopping aggressive behaviour.");
-                    HandleAnyBehaviourEnd();
+                    OnStandardEndBehaviour?.Invoke();
                     break;
                 }
 
@@ -364,7 +368,7 @@ namespace Hadal.AI
             }
             
             //! Handle Behaviour ending
-            HandleAnyBehaviourEnd();
+            OnStandardEndBehaviour?.Invoke();
 
             yield return null;
         }
@@ -387,7 +391,7 @@ namespace Hadal.AI
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
                     TryDebug("Ambush behaviour took too long, ending immediately.");
-                    HandleAnyBehaviourEnd();
+                    OnStandardEndBehaviour?.Invoke();
                     break;
                 }
 
@@ -417,7 +421,7 @@ namespace Hadal.AI
             }
             
             //! Handle Behaviour ending
-            HandleAnyBehaviourEnd();
+            OnStandardEndBehaviour?.Invoke();
 
             yield return null;
         }
@@ -455,16 +459,32 @@ namespace Hadal.AI
             if (!isStunned)
                 return;
 
+            OnPersistAttemptEndBehaviour?.Invoke(true);
+        }
+
+        private void HandleAnyBehaviourEnd()
+        {
+            ResetJudgementPersistCount();
+            RuntimeData.SetBrainState(BrainState.Recovery);
+			ResetJudgementBehaviour();
+
+            JState.ShouldExit = true;
+        }
+
+        private void HandleBehaviourEndWithChanceToPersist(bool judgementPersistDebug = false)
+        {
             ResetJudgementBehaviour();
+            bool isJudgement = DecideOnShouldJudgementPersist();
+            if (!isJudgement)
+                JState.ShouldExit = true;
 
-            BrainState brainState = DecideOnJudgementPersist();
-
+            if (!judgementPersistDebug) return;
             string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
-            debugMsg += brainState == BrainState.Judgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
+            debugMsg += isJudgement ? "but has chosen to remain in Judgement state." : "and has chosen to go to Recovery state.";
             TryDebug(debugMsg);
         }
 
-        private BrainState DecideOnJudgementPersist()
+        private bool DecideOnShouldJudgementPersist()
         {
             //! Randomise judgement persist chance
             BrainState brainState;
@@ -480,14 +500,7 @@ namespace Hadal.AI
 			else
 				ResetJudgementPersistCount();
 
-            return brainState;
-        }
-
-        private void HandleAnyBehaviourEnd()
-        {
-            ResetJudgementPersistCount();
-            RuntimeData.SetBrainState(BrainState.Recovery);
-			ResetJudgementBehaviour();
+            return brainState == BrainState.Judgement;
         }
 
         private void ResetJudgementBehaviour()
