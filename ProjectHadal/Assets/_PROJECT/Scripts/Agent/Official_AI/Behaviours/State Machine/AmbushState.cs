@@ -75,6 +75,7 @@ namespace Hadal.AI.States
             if (!NavigationHandler.Data_ChosenAmbushPoint)
             {
                 NavigationHandler.SelectAmbushPoint();
+                AudioBank.Play3D(soundType: AISound.AmbushPounce, Brain.transform);
             }
         }
 
@@ -87,14 +88,23 @@ namespace Hadal.AI.States
             }
         }
 
-
+        bool playAudioOnce = true;
         /// <summary>
         /// Detect players and if in range, pounce, else go to recovery. 
         /// </summary>
         void CheckPouncingRange()
         {
+            bool anyPlayersNearIt = CavernManager.AnyPlayersPresentInAnyCavern();
+
+            if (anyPlayersNearIt && playAudioOnce)
+            {
+                AudioBank.Play3D(soundType: AISound.AmbushPlayerClose, Brain.transform);
+                playAudioOnce = false;
+            }
+
             if (SenseDetection.DetectedPlayersCount > 0 && SenseDetection.DetectedPlayersCount < 4)
             {
+
                 //1 commenting this out because Brain.CurrentTarget.transform.position will give NullReferenceException if Brain.CurrentTarget == null
                 // float distance = Vector3.Distance(Brain.transform.position, Brain.CurrentTarget.transform.position);
                 // if (distance < settings.AM_TargetPlayerRange && Brain.CurrentTarget != null)
@@ -113,7 +123,7 @@ namespace Hadal.AI.States
                 if (Brain.CurrentTarget != null)
                 {
 
-                    //AudioBank.Play3D(soundType: AISound.AmbushPounce, Brain.transform);
+
                     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
 

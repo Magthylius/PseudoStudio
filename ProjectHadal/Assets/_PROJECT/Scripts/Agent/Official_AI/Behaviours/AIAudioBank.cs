@@ -67,6 +67,7 @@ namespace Hadal.AI
         Swim,
         AmbushPounce,
         Damaged,
+        AmbushPlayerClose,
         Death
     }
 }
