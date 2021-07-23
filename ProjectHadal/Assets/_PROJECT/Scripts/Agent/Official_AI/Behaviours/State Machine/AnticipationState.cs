@@ -52,7 +52,7 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
-            
+
             if (CheckForIsolatedPlayerCondition(Brain.DeltaTime)) return;
             if (Brain.CheckForJudgementStateCondition()) return;
             if (CheckForAutoActCondition(Brain.DeltaTime)) return;
@@ -90,12 +90,12 @@ namespace Hadal.AI.States
             }
             else if (gameStartupInitialization) DetermineNextCavern();
 
-            Brain.NavigationHandler.CavernModeSteering(); 
+            Brain.NavigationHandler.CavernModeSteering();
         }
 
         public override void OnCavernLeave(CavernHandler cavern)
         {
-            Brain.NavigationHandler.TunnelModeSteering(); 
+            Brain.NavigationHandler.TunnelModeSteering();
         }
 
         void StartInitialization(bool booleanData)
@@ -105,10 +105,10 @@ namespace Hadal.AI.States
 
         IEnumerator InitializeAfterCaverns()
         {
-			while (Brain == null)
-			{
-				yield return null;
-			}
+            while (Brain == null)
+            {
+                yield return null;
+            }
 
             //! Wait for caverns to init
             while (!CavernManager.CavernsInitialized)
@@ -191,6 +191,7 @@ namespace Hadal.AI.States
             NavigationHandler.EnableCachedQueuePathTimer();
             Brain.UpdateNextMoveCavern(nextCavern);
 
+            Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
             if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
         }
 
@@ -206,9 +207,10 @@ namespace Hadal.AI.States
                 PlayerController isolatedPlayer = GetAnyIsolatedPlayer();
                 if (isolatedPlayer == null)
                     return false;
-                
+
                 //! Try to set current target of the brain & return the result of the judgement check
                 Brain.TrySetCurrentTarget(isolatedPlayer);
+
                 return Brain.CheckForJudgementStateCondition();
             }
 
@@ -230,7 +232,7 @@ namespace Hadal.AI.States
             if (AutoActTimerReached())
             {
                 ResetAutoActTimer();
-                //Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
+
                 RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
                 string debugMsg = string.Empty;
@@ -259,7 +261,7 @@ namespace Hadal.AI.States
                             targetCavern = SetNewTargetCavern();
                             debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
                         }
-                        
+
                         if (!anyPlayersToHunt || targetCavern.cavernTag == aiCavernTag)
                         {
                             RuntimeData.SetBrainState(BrainState.Ambush);

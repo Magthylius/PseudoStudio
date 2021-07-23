@@ -65,6 +65,7 @@ namespace Hadal.AI
         CarryWarning,
         Thresh,
         Swim,
+        Ambush,
         AmbushPounce,
         Damaged,
         AmbushPlayerClose,
