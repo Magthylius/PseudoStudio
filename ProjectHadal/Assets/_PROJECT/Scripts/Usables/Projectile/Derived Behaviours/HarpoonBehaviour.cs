@@ -187,10 +187,12 @@ namespace Hadal.Usables.Projectiles
             if (!isPowerForm)
             {
                 attachMode.endTime = defaultAttachDuration;
+                transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
                 attachMode.endTime = poweredAttachDuration;
+                transform.localScale = new Vector3(2, 2, 2);
             }
         }
 
