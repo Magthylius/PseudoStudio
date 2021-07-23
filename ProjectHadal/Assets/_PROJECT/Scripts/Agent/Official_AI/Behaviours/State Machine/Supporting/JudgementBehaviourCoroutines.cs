@@ -53,7 +53,7 @@ namespace Hadal.AI
         }
 
         private float carryDelayTimer;
-		private int judgementPersistCount;
+        private int judgementPersistCount;
         private bool canCarry;
         private bool blockThresh;
         private bool isAttacking;
@@ -79,9 +79,9 @@ namespace Hadal.AI
             bool HasCurrentTargetPlayer() => Brain.CurrentTarget != null;
             bool ShouldHandleNullTargetTerminationCase()
             {
-                if (Brain.CurrentTarget == null)
+                if (Brain.CurrentTarget == null && JState.IsolatedPlayer == null)
                 {
-                    JState.IsBehaviourRunning = false;
+                    TryDebug("Current target and Isolated player is missing, ending behaviour immediately.");
                     return true;
                 }
                 return false;
@@ -168,7 +168,7 @@ namespace Hadal.AI
 
                     //! Call this to block threshing the target until it is disabled
                     blockThresh = true;
-                    
+
                     //! Carry the target player without triggering thresh
                     bool success = Brain.TryCarryTargetPlayer();
                     TryDebug(success ? "Succeeded in carrying target player." : "Failed to carry target player, stopping behaviour.");
@@ -181,7 +181,7 @@ namespace Hadal.AI
 
                     //! Disable handling the carried player (which will usually lock it firmly to the mouth area)
                     Brain.SetDoNotHandleCarriedPlayer(true);
-                    
+
                     //! Teleport player to the correct location in front of the AI & disable navigation
                     NavigationHandler.ForceDisable();
                     Brain.CarriedPlayer.GetTarget.position = Brain.transform.position + (Brain.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
@@ -192,7 +192,7 @@ namespace Hadal.AI
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
                     yield return new WaitForSeconds(AnimationManager.GetAnimationClipLengthFor(AIAnim.Bite));
-                    
+
                     //! Reenable handling the carried player & allow thresh to work
                     Brain.SetDoNotHandleCarriedPlayer(false);
                     blockThresh = false;
@@ -305,7 +305,7 @@ namespace Hadal.AI
 
                 yield return null;
             }
-            
+
             //! Handle Behaviour ending
             OnStandardEndBehaviour?.Invoke();
 
@@ -366,7 +366,7 @@ namespace Hadal.AI
                 }
                 yield return null;
             }
-            
+
             //! Handle Behaviour ending
             OnStandardEndBehaviour?.Invoke();
 
@@ -419,7 +419,7 @@ namespace Hadal.AI
 
                 yield return null;
             }
-            
+
             //! Handle Behaviour ending
             OnStandardEndBehaviour?.Invoke();
 
@@ -464,19 +464,35 @@ namespace Hadal.AI
 
         private void HandleAnyBehaviourEnd()
         {
+            JState.AllowStateTick = false;
+
             ResetJudgementPersistCount();
             RuntimeData.SetBrainState(BrainState.Recovery);
-			ResetJudgementBehaviour();
+            ResetJudgementBehaviour();
 
+            //! Double affirm JState state is terminated
+            JState.StopAnyRunningCoroutines();
+            JState.ResetStateValues();
             JState.ShouldExit = true;
+
+            JState.AllowStateTick = true;
         }
 
         private void HandleBehaviourEndWithChanceToPersist(bool judgementPersistDebug = false)
         {
+            JState.AllowStateTick = false;
+
             ResetJudgementBehaviour();
             bool isJudgement = DecideOnShouldJudgementPersist();
+
+            //! Double affirm JState state is terminated
+            JState.StopAnyRunningCoroutines();
+            JState.ResetStateValues();
+            
             if (!isJudgement)
                 JState.ShouldExit = true;
+            
+            JState.AllowStateTick = true;
 
             if (!judgementPersistDebug) return;
             string debugMsg = "The Leviathan has been stunned. Stopping behaviour ";
@@ -488,17 +504,17 @@ namespace Hadal.AI
         {
             //! Randomise judgement persist chance
             BrainState brainState;
-			if (judgementPersistCount < Settings.JudgementPersistCountLimitPerEntry)
-				brainState = GetRandomBrainStateAfterStun();
-			else
-				brainState = BrainState.Recovery;
-			
+            if (judgementPersistCount < Settings.JudgementPersistCountLimitPerEntry)
+                brainState = GetRandomBrainStateAfterStun();
+            else
+                brainState = BrainState.Recovery;
+
             RuntimeData.SetBrainState(brainState);
 
-			if (brainState == BrainState.Judgement)
-				judgementPersistCount++;
-			else
-				ResetJudgementPersistCount();
+            if (brainState == BrainState.Judgement)
+                judgementPersistCount++;
+            else
+                ResetJudgementPersistCount();
 
             return brainState == BrainState.Judgement;
         }
@@ -509,14 +525,10 @@ namespace Hadal.AI
             StopAllRunningCoroutines();
             ResetStateValues();
 
-            //! Double affirm JState state is terminated
-            JState.IsBehaviourRunning = false;
-            JState.StopAnyRunningCoroutines();
-
             //! Reset third party states
             Brain.TryDropCarriedPlayer();
             NavigationHandler.Enable();
-            NavigationHandler.StopCustomPath(true);
+            NavigationHandler.StopCustomPath(false);
             NavigationHandler.ResetSpeedMultiplier();
         }
 
@@ -542,16 +554,15 @@ namespace Hadal.AI
             isAttacking = false;
             isDamaging = false;
             isPlayerTagged = false;
-            JState.ResetStateValues();
 
             NavigationHandler.Enable(); //always enable when it exits the behaviour
             Brain.SetDoNotHandleCarriedPlayer(false);
         }
-		
-		private void ResetJudgementPersistCount()
-		{
-			judgementPersistCount = 0;
-		}
+
+        private void ResetJudgementPersistCount()
+        {
+            judgementPersistCount = 0;
+        }
 
         /// <summary>
         /// Facilitates the random chance event to choose between Judgement state or Recovery state. Returns the result of this random

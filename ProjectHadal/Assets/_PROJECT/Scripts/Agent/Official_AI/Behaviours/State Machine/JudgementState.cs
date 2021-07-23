@@ -43,6 +43,8 @@ namespace Hadal.AI.States
 
         public override void StateTick()
         {
+            if (!AllowStateTick) return;
+
             float deltaTime = Brain.DeltaTime;
             RuntimeData.TickEngagementTicker(deltaTime);
 
