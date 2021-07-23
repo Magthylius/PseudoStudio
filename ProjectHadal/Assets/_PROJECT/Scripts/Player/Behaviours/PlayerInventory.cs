@@ -190,7 +190,7 @@ namespace Hadal.Player.Behaviours
         void HandleHarpoonReserveChanged(bool isIncrement)
         {
             var harpoonUtility = quickFireUtilities[typeof(HarpoonLauncherObject)];
-            _controller.UI.UpdateHarpoonReserve(harpoonUtility.ReserveCount);
+            _controller.UI.UpdateHarpoonReserve(harpoonUtility.TotalAmmoCount);
         }
 
         private void LogWarnMissingUsableLauncherInKeyValuePair(string utilName)

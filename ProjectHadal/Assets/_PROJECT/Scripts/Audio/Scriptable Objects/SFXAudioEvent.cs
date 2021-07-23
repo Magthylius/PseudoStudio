@@ -9,22 +9,33 @@ namespace Hadal.AudioSystem
     {
         [SerializeField] private AudioClip[] Clips;
         [SerializeField] private AudioSourceSettings Settings;
+        private float lastPlayTime = 0f;
         public override string Description => "Audio event meant to play SFX sounds. Clip variants may be used per each audio event (refer to examples or ask the Tech for help). "
                                             + "\n\nSupports 3D Playing, and 2D Playing functions. "
                                             + "\n\nNote: Preview Button will only play 2D audio for now.";
+
+        private bool CheckForPlayTime()
+        {
+            if (Time.time > lastPlayTime)
+            {
+                lastPlayTime = Time.time + Settings.ReplayTime;
+                return true;
+            }
+            return false;
+        }
 
         #region Locational based Play
 
         public override bool Play(Transform followPosTransform)
         {
-            if (Clips.IsNullOrEmpty()) return false;
+            if (Clips.IsNullOrEmpty() || !CheckForPlayTime()) return false;
             return RuntimePlay(followPosTransform.position, followPosTransform);
         }
 
         /// <summary> Plays audio at a world position. </summary>
         public override bool Play(Vector3 position)
         {
-            if (Clips.IsNullOrEmpty()) return false;
+            if (Clips.IsNullOrEmpty() || !CheckForPlayTime()) return false;
             return RuntimePlay(position);
         }
 
@@ -72,11 +83,19 @@ namespace Hadal.AudioSystem
         /// <param name="source">Play with this source. If null, a new one will be created automatically.</param>
         public override void Play(AudioSource source)
         {
-            if (source == null || Clips.IsNullOrEmpty()) return;
+            if (Clips.IsNullOrEmpty() || !CheckForPlayTime()) return;
 
             int index = ArrangeSourceWithClip(ref source);
-            source.spatialBlend = 0f; //this may be commented out if you want partial spatial sounds
-            source.PlayOneShot(Clips[index]);
+            
+            var manager = AudioManager.Instance;
+            if (manager != null)
+            {
+                var handler = manager.GetAvailableAudioSourceHandler();
+                handler.Setup(in Settings);
+                handler.Source.clip = Clips[index];
+                handler.Source.spatialBlend = 0f;
+                handler.PlaySource();
+            }
         }
 
         #endregion
