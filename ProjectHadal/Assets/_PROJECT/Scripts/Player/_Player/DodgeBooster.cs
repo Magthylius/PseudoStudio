@@ -15,6 +15,7 @@ namespace Hadal.Player
         Down,
         Forward,
         Backward,
+        None
     };
     public class DodgeBooster : MonoBehaviour, IPlayerComponent
     {
@@ -142,39 +143,35 @@ namespace Hadal.Player
             if (isBoosting)
                 return false;
 
-            bool result = true;
+            boostDirection = BoostDirection.Forward;
 
-            if (input.DoubleHorizontalRight)
+            if (input.HorizontalRight)
             {
                 boostDirection = BoostDirection.Right;
             }
-            else if (input.DoubleHorizontalLeft)
+            else if (input.HorizontalLeft)
             {
                 boostDirection = BoostDirection.Left;
             }
-            else if (input.DoubleHoverUp)
+            else if (input.HoverUp)
             {
                 boostDirection = BoostDirection.Up;
             }
-            else if (input.DoubleHoverDown)
+            else if (input.HoverDown)
             {
                 boostDirection = BoostDirection.Down;
             }
-            else if (input.DoubleVerticalForward)
+            else if (input.VerticalForward)
             {
                 boostDirection = BoostDirection.Forward;
             }
-            else if (input.DoubleVerticalBackward)
+            else if (input.VerticalBackward)
             {
                 boostDirection = BoostDirection.Backward;
             }
-            else
-            {
-                result = false;
-            }
 
-            isBoosting = result;
-            return result;
+            isBoosting = input.BoostActive;
+            return isBoosting;
         }
 
         #region Booster Reload Methods

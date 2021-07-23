@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConfidenceIncrementValue: 10
   ConfidenceDecrementValue: 20
-  G_ApproachCloseDistanceThreshold: 20
+  G_ApproachCloseDistanceThreshold: 16
   G_ApproachFarDistanceThreshold: 500
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 4
@@ -23,6 +23,7 @@ MonoBehaviour:
   G_PrepareHaltBeforeCarryDistance: 15
   G_HaltingTime: 0.5
   G_GlareAtTargetBeforeJudgementApproachTime: 1.5
+  G_JudgementPersistChance: 0.8
   G_DisruptionDamageCount: 3
   G_DistanceFromFrontForBiteAnimation: 20
   G_CarryKnockbackAdditionalRange: 30
@@ -41,7 +42,6 @@ MonoBehaviour:
   JudgementTimer2: 40
   JudgementTimer3: 35
   JudgementTimer4: 30
-  PostStunRemainJudgementChance: 0.8
   JudgementPersistCountLimitPerEntry: 2
   AGG_AdditionalThreshDamagePerSecond: 1
   DEF_AdditionalThreshDamagePerSecond: -1
