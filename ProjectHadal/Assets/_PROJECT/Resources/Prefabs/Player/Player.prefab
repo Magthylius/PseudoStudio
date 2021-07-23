@@ -3960,11 +3960,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: maxReserveCapacity
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: reserveRegenerationTime
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
+      propertyPath: poweredUpReserveCapacity
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4014725249324593813, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: m_Name

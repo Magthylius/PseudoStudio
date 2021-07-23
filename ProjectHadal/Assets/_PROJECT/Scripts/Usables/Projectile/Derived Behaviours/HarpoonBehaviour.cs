@@ -17,10 +17,13 @@ namespace Hadal.Usables.Projectiles
 
         [Header("Harpoon Default Settings")]
         [SerializeField] float defaultAttachDuration;
+        [SerializeField] int defaultSlowCount;
         [Header("Harpoon Powered Settings")]
         [SerializeField] float poweredAttachDuration;
+        [SerializeField] int poweredSlowCount;
 
         [Header("Misc")]
+        private ISlowable slowable;
         public ProjectilePhysics projPhysics;
         public ImpulseMode impulseMode;
         public AttachMode attachMode;
@@ -69,6 +72,21 @@ namespace Hadal.Usables.Projectiles
         {
             impulseMode.ModeSwapped -= ModeSwap;
             selfDeactivation.selfDeactivated -= ModeOff;
+            
+            if(slowable != null)
+            {
+                int slowCount = 0;
+
+                if (isPowerForm)
+                    slowCount = poweredSlowCount;
+                else
+                    slowCount = defaultSlowCount;
+
+                for (int i = 0; i < slowCount; i++)
+                {
+                    PPhysics.PhysicsFinished -= slowable.DetachProjectile;
+                }
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -90,12 +108,22 @@ namespace Hadal.Usables.Projectiles
                 //Debug.LogWarning("hit ai!");
                 if (IsLocal)
                 {
-                    ISlowable slowable = collision.gameObject.GetComponentInChildren<ISlowable>();
+                    slowable = collision.gameObject.GetComponentInChildren<ISlowable>();
                     if (slowable != null)
                     {
                         attachedToMonster = true;
-                        slowable.AttachProjectile();
-                        PPhysics.PhysicsFinished += slowable.DetachProjectile;
+                        int slowCount = 0;
+                        
+                        if (isPowerForm)
+                            slowCount = poweredSlowCount;
+                        else
+                            slowCount = defaultSlowCount;
+
+                        for(int i = 0; i < slowCount; i++)
+                        {
+                            slowable.AttachProjectile();
+                            PPhysics.PhysicsFinished += slowable.DetachProjectile;
+                        }    
                     }
                     else { $"AI was hit but it does not have an ISlowable interface implemented. Is the collider on the wrong layer ({collision.gameObject.name})?".Msg(); }
                 }
@@ -131,40 +159,6 @@ namespace Hadal.Usables.Projectiles
                 }
 
             }
-
-
-
-            /*foreach (string layerName in validLayer)
-            {
-                LayerMask layer = LayerMask.NameToLayer(layerName);
-                if (collision.gameObject.layer == layer.value)
-                {
-                    //attach locally
-                    transform.parent = collision.gameObject.transform;
-                    Rigidbody.isKinematic = true;
-                    IsAttached = true;
-
-                    //send event data to attach          
-                    
-                    if (UsableBlackboard.InAILayers(collision.gameObject.layer))
-                    {
-                        attachedToMonster = true;
-                        Send_IncrementLeviathanSlowStacks();
-                        //Debug.LogWarning("attached to monster");
-                    }
-                    else
-                    {
-                        attachedToMonster = false;
-                    }
-                    Vector3 collisionSpot = gameObject.transform.position;
-
-                    object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
-                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
-                    ImpactBehaviour();
-
-                    
-                }
-            }*/
         }
 
         protected override void ImpactBehaviour()
@@ -193,10 +187,12 @@ namespace Hadal.Usables.Projectiles
             if (!isPowerForm)
             {
                 attachMode.endTime = defaultAttachDuration;
+                transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
                 attachMode.endTime = poweredAttachDuration;
+                transform.localScale = new Vector3(2, 2, 2);
             }
         }
 

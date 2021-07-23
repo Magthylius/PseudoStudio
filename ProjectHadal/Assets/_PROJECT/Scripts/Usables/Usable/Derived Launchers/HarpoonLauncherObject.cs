@@ -5,12 +5,19 @@ namespace Hadal.Usables
 {
     public class HarpoonLauncherObject : UsableLauncherObject
     {
-       /* public override bool Use(UsableHandlerInfo info)
+        [SerializeField] int poweredUpReserveCapacity;
+        public override void PowerUp()
         {
-            if (!IsActive) return false;
-            info.IsPowered = IsPowered;
-            base.Use(info);
-            return true;
-        }*/
+            maxReserveCapacity = poweredUpReserveCapacity;
+            SetDefaults();
+            return;
+        }
+        /* public override bool Use(UsableHandlerInfo info)
+         {
+             if (!IsActive) return false;
+             info.IsPowered = IsPowered;
+             base.Use(info);
+             return true;
+         }*/
     }
 }
