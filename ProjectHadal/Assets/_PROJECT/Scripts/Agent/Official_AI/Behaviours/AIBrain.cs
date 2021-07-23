@@ -559,6 +559,7 @@ namespace Hadal.AI
             if (isDestroyed)
             {
                 RuntimeData.SetIsEggDestroyed(true);
+                AudioBank.Play3D(soundType: AISound.EggDestroyed, this.transform);
                 RuntimeData.UpdateBonusConfidence(MachineData.EggDestroyedPermanentConfidence);
                 return;
             }
