@@ -45,9 +45,6 @@ namespace Hadal.AI.States
         {
             if (!AllowStateTick) return;
 
-            float deltaTime = Brain.DeltaTime;
-            RuntimeData.TickEngagementTicker(deltaTime);
-
             if (ShouldExit)
             {
                 RuntimeData.SetBrainState(BrainState.Recovery);

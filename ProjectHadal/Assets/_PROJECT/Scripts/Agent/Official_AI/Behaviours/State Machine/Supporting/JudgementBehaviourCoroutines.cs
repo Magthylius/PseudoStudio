@@ -258,6 +258,7 @@ namespace Hadal.AI
         public IEnumerator DefensiveStance(int stanceIndex)
         {
             TryDebug($"Starting Defensive Behaviour for player count: {stanceIndex}.");
+            JState.AllowStateTick = false;
             JState.IsBehaviourRunning = true;
             int jTimerIndex = 5 - stanceIndex;
 
@@ -265,6 +266,8 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning)
             {
+                RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
@@ -320,6 +323,7 @@ namespace Hadal.AI
         public IEnumerator AggressiveStance(int stanceIndex)
         {
             TryDebug($"Starting Aggressive Behaviour for player count: {stanceIndex}.");
+            JState.AllowStateTick = false;
             JState.IsBehaviourRunning = true;
             int jTimerIndex = 5 - stanceIndex;
 
@@ -327,6 +331,8 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning)
             {
+                RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
@@ -380,6 +386,7 @@ namespace Hadal.AI
         public IEnumerator AmbushStance()
         {
             TryDebug($"Starting Ambush Behaviour in Judgement behaviour.");
+            JState.AllowStateTick = false;
             JState.IsBehaviourRunning = true;
             int jTimerIndex = 1;
 
@@ -387,6 +394,8 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning)
             {
+                RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
                 {
