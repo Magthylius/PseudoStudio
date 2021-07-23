@@ -292,7 +292,7 @@ namespace Hadal.UI
             int count = 0;
             foreach (UIFillerBehaviour filler in harpoonFillers)
             {
-                if (count < harpoonCount - 1) filler.ToFilled();
+                if (count < harpoonCount) filler.ToFilled();
                 else filler.ToHollow();
                 count++;
             }
