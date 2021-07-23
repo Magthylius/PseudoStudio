@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Hadal.Networking.UI.MainMenu
@@ -10,6 +11,7 @@ namespace Hadal.Networking.UI.MainMenu
     public class MainMenuDeployButton : MonoBehaviour
     {
         [Header("References")] 
+        [SerializeField] private UnityEvent deployReadyAudio;
         [SerializeField] private ParticleSystem highlightParticleSystem;
         [SerializeField] private MagthyliusPointerButton highlightButton;
         [SerializeField] private Image centerImage;
@@ -86,6 +88,8 @@ namespace Hadal.Networking.UI.MainMenu
 
                 if (AllPlayersReady && !previousReadyState)
                 {
+                    deployReadyAudio.Invoke();
+                    
                     previousReadyState = true;
                     
                     centerImage.color = readyColor;
