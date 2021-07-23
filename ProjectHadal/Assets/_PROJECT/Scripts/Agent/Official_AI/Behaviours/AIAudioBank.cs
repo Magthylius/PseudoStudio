@@ -66,6 +66,7 @@ namespace Hadal.AI
         Thresh,
         Swim,
         AmbushPounce,
+        Damaged,
         Death
     }
 }
