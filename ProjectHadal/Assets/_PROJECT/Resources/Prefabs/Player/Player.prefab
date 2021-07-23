@@ -2307,14 +2307,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugKey: Player
+  torpedoFireAudioEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 2e7b4c7f32bcb5a4a84f764830138703, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   controller: {fileID: 7088606113726875039}
   aimParentRb: {fileID: 6419753948795626213}
   aimParentObject: {fileID: 2719752003713521067}
   aimPoint: {fileID: 1085777647585770244}
-  torpedoMinAngle: 40
-  rayIgnoreMask:
-    serializedVersion: 2
-    m_Bits: 2080375
   tLauncher: {fileID: 6593565318549421644}
   torpedoFirePoint: {fileID: 3869409784348184770}
   hLauncher: {fileID: 8794171486015856055}

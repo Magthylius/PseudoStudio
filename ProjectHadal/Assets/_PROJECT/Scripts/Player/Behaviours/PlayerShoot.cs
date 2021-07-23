@@ -9,6 +9,7 @@ using Photon.Pun;
 using ExitGames.Client.Photon;
 using Hadal.UI;
 using Hadal.Networking;
+using UnityEngine.Events;
 
 namespace Hadal.Player.Behaviours
 {
@@ -18,6 +19,9 @@ namespace Hadal.Player.Behaviours
 
         NetworkEventManager neManager;
 
+        [Header("Audio")] 
+        public UnityEvent torpedoFireAudioEvent;
+        
         [Header("Player")]
         [SerializeField] PlayerController controller;
 		private bool _allowUpdate;
@@ -27,10 +31,6 @@ namespace Hadal.Player.Behaviours
         public Rigidbody aimParentRb;
         public Transform aimParentObject;
         public Transform aimPoint;
-        public float torpedoMinAngle = 25f;
-        public LayerMask rayIgnoreMask;
-        private Ray aimingRay;
-        float aimPointYDelta;
         
         //RaycastHit aimHit;
         //private bool aimHitBool;
@@ -77,9 +77,6 @@ namespace Hadal.Player.Behaviours
         {
             UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
             DoDebugEnabling(debugKey);
-
-            aimingRay = new Ray(aimPoint.position, aimParentObject.forward * 1000f);
-            aimPointYDelta = (torpedoFirePoint.position - aimPoint.position).magnitude;
 
             // listen to salvage event, if local.
             if (NetworkEventManager.Instance.isOfflineMode)
@@ -186,6 +183,7 @@ namespace Hadal.Player.Behaviours
             if (!eventFire)
             {
                 projectileID += tLauncher.Data.ProjectileData.ProjTypeInt;
+                torpedoFireAudioEvent.Invoke();
             }
 
             HandleTorpedoObject(projectileID, !eventFire, RELookatPoint);
