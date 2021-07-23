@@ -14,7 +14,7 @@ namespace Hadal.InteractableEvents
     {
         public static InteractableEventManager Instance;
 
-        public delegate void InteractEvent(InteractionType interactionType, int interactID);
+        public delegate void InteractEvent(InteractionType interactionType, int interactID, int reloadAmount);
 
         public event InteractEvent OnInteraction;
 
@@ -34,9 +34,9 @@ namespace Hadal.InteractableEvents
             }
         }
 
-        public void InvokeInteraction(InteractionType interactionType, int interactID)
+        public void InvokeInteraction(InteractionType interactionType, int interactID, int reloadAmount)
         {
-            OnInteraction?.Invoke(interactionType, interactID);
+            OnInteraction?.Invoke(interactionType, interactID, reloadAmount);
         }
 
         public void InvokeInteractConfirmation(int interactID)
