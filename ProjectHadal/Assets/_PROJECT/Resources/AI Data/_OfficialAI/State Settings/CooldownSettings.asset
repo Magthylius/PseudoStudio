@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b29c90acf22f9aa4c9fc0fa7fd3ce542, type: 3}
   m_Name: CooldownSettings
   m_EditorClassIdentifier: 
-  PlayerDetectRange: 100
-  ConfidenceIncrementValue: 10
-  ConfidenceDecrementValue: 10
+  ConfidenceIncrementValue: 1
+  ConfidenceDecrementValue: 1
   MaxCooldownTime: 20
   ElusiveSpeedModifier: 2.5
