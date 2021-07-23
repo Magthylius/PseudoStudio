@@ -230,7 +230,7 @@ namespace Hadal.AI.States
             if (AutoActTimerReached())
             {
                 ResetAutoActTimer();
-                Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
+                //Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
                 RuntimeData.SetEngagementObjective(settings.GetRandomInfluencedObjective(RuntimeData.NormalisedConfidence));
 
                 string debugMsg = string.Empty;
