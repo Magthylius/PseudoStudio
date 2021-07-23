@@ -10,18 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
-  m_Name: UI Ping SFX
+  m_Name: TorpedoHit EvenFarRange SFX
   m_EditorClassIdentifier: 
   Clips:
-  - {fileID: 8300000, guid: da1433b8572e4884e911e1125550b5f6, type: 3}
+  - {fileID: 8300000, guid: f43a069b29411a44388141e46068c14f, type: 3}
+  - {fileID: 8300000, guid: 5ff0843e79b996c47a3d8d4e91fa8217, type: 3}
+  - {fileID: 8300000, guid: 57c6958c68099dc49b0780c688c91d1d, type: 3}
   Settings:
-    Volume: {x: 0.1, y: 0.1}
+    Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
     Priority: 128
     StereoPan: 0
     ReverbZoneMix: 1
-    OutputMixerGroup: {fileID: 2054086400647329625, guid: 29349254421fc3742874fe18b3785b50, type: 2}
+    OutputMixerGroup: {fileID: -9146416442801694759, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
     BypassListenerEffects: 0

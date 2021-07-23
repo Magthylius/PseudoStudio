@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 34088011}
   - component: {fileID: 34088010}
   - component: {fileID: 34088009}
+  - component: {fileID: 34088013}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -571,6 +572,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 34088007}
   m_CullTransparentMesh: 1
+--- !u!114 &34088013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34088007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &36107406
 GameObject:
   m_ObjectHideFlags: 0
@@ -2294,6 +2322,7 @@ GameObject:
   - component: {fileID: 234893627}
   - component: {fileID: 234893626}
   - component: {fileID: 234893630}
+  - component: {fileID: 234893631}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -2432,6 +2461,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &234893631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234893624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -3490,6 +3546,7 @@ GameObject:
   - component: {fileID: 392050018}
   - component: {fileID: 392050016}
   - component: {fileID: 392050019}
+  - component: {fileID: 392050020}
   m_Layer: 5
   m_Name: Find Room Button
   m_TagString: Untagged
@@ -3621,6 +3678,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &392050020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392050014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -3857,6 +3941,7 @@ GameObject:
   - component: {fileID: 456277540}
   - component: {fileID: 456277539}
   - component: {fileID: 456277538}
+  - component: {fileID: 456277542}
   m_Layer: 5
   m_Name: Quit
   m_TagString: Untagged
@@ -4001,6 +4086,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 456277536}
   m_CullTransparentMesh: 1
+--- !u!114 &456277542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456277536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &463731235
 GameObject:
   m_ObjectHideFlags: 0
@@ -4217,6 +4329,7 @@ GameObject:
   - component: {fileID: 498067624}
   - component: {fileID: 498067623}
   - component: {fileID: 498067626}
+  - component: {fileID: 498067627}
   m_Layer: 5
   m_Name: Quit Button
   m_TagString: Untagged
@@ -4348,6 +4461,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &498067627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498067621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -4797,6 +4937,7 @@ GameObject:
   - component: {fileID: 576912063}
   - component: {fileID: 576912062}
   - component: {fileID: 576912065}
+  - component: {fileID: 576912066}
   m_Layer: 5
   m_Name: Create Room
   m_TagString: Untagged
@@ -4928,6 +5069,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &576912066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576912060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -6398,6 +6566,7 @@ GameObject:
   - component: {fileID: 771382615}
   - component: {fileID: 771382619}
   - component: {fileID: 771382620}
+  - component: {fileID: 771382621}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -6563,6 +6732,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &771382621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771382613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -7157,6 +7353,7 @@ GameObject:
   - component: {fileID: 822923922}
   - component: {fileID: 822923920}
   - component: {fileID: 822923923}
+  - component: {fileID: 822923924}
   m_Layer: 5
   m_Name: Back Button
   m_TagString: Untagged
@@ -7288,6 +7485,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &822923924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822923918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -7651,6 +7875,7 @@ GameObject:
   - component: {fileID: 859631233}
   - component: {fileID: 859631232}
   - component: {fileID: 859631236}
+  - component: {fileID: 859631237}
   m_Layer: 5
   m_Name: Hyperlink
   m_TagString: Untagged
@@ -7797,6 +8022,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &859631237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859631230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -11489,6 +11741,7 @@ GameObject:
   - component: {fileID: 1048464267}
   - component: {fileID: 1048464266}
   - component: {fileID: 1048464269}
+  - component: {fileID: 1048464270}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
@@ -11678,6 +11931,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1048464270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048464264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -12792,6 +13072,7 @@ GameObject:
   - component: {fileID: 1153335288}
   - component: {fileID: 1153335292}
   - component: {fileID: 1153335293}
+  - component: {fileID: 1153335294}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -12957,6 +13238,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1153335294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153335286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -19905,6 +20213,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e0e8e710a0cf2b4788f50043e800882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deployReadyAudio:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: bc4744a9f8323d04cb93b20f6ea57303, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   highlightParticleSystem: {fileID: 1314653884}
   highlightButton: {fileID: 34088009}
   centerImage: {fileID: 1630425476}
@@ -20142,6 +20465,7 @@ GameObject:
   - component: {fileID: 1464754548}
   - component: {fileID: 1464754547}
   - component: {fileID: 1464754551}
+  - component: {fileID: 1464754552}
   m_Layer: 5
   m_Name: Clickable
   m_TagString: Untagged
@@ -20296,6 +20620,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1464754552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464754545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -20841,6 +21192,7 @@ GameObject:
   - component: {fileID: 1544713598}
   - component: {fileID: 1544713596}
   - component: {fileID: 1544713599}
+  - component: {fileID: 1544713600}
   m_Layer: 5
   m_Name: Create Room Button
   m_TagString: Untagged
@@ -20972,6 +21324,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1544713600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544713594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -21978,6 +22357,7 @@ GameObject:
   - component: {fileID: 1711550311}
   - component: {fileID: 1711550315}
   - component: {fileID: 1711550316}
+  - component: {fileID: 1711550317}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -22160,6 +22540,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1711550317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711550309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1713536048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5862261170718821397, guid: 2fd1614b1f2dd1347b40fb391f3d47db, type: 3}
@@ -22262,6 +22669,7 @@ GameObject:
   - component: {fileID: 1741075249}
   - component: {fileID: 1741075253}
   - component: {fileID: 1741075254}
+  - component: {fileID: 1741075255}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -22427,6 +22835,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1741075255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741075247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -23475,6 +23910,7 @@ GameObject:
   - component: {fileID: 1873822888}
   - component: {fileID: 1873822887}
   - component: {fileID: 1873822891}
+  - component: {fileID: 1873822892}
   m_Layer: 5
   m_Name: Clickable
   m_TagString: Untagged
@@ -23629,6 +24065,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1873822892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873822885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
@@ -24918,6 +25381,7 @@ GameObject:
   - component: {fileID: 1972216232}
   - component: {fileID: 1972216231}
   - component: {fileID: 1972216235}
+  - component: {fileID: 1972216236}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -25056,6 +25520,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a351abab3478fe47b09379f0ea8f993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PointerEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: b0e4a30f971edba47afbfb46e2cfa6f8, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: Play
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1919678494}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1972216236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972216229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9578baf42601c47b9e94593fa5ee0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   PointerEvent:
