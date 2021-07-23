@@ -8,6 +8,7 @@ using ExitGames.Client.Photon;
 using Hadal.Networking.Diegetics;
 using Hadal.Networking.UI.Loading;
 using NaughtyAttributes;
+using UnityEngine.Events;
 
 //! C: Jon
 namespace Hadal.Networking.UI.MainMenu
@@ -30,6 +31,7 @@ namespace Hadal.Networking.UI.MainMenu
         [Header("References")] 
         public MainMenuClassSelector ClassSelector;
         public DiegeticPlayerEntryHandler DiegeticHandler;
+        public UnityEvent bgmAmbience; 
         
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
@@ -107,6 +109,8 @@ namespace Hadal.Networking.UI.MainMenu
             //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
             InitMainMenu();
             //p
+            
+            bgmAmbience.Invoke();
 
         }
 

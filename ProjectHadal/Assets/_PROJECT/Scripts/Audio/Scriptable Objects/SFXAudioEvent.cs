@@ -73,10 +73,11 @@ namespace Hadal.AudioSystem
         public override void Play(AudioSource source)
         {
             if (source == null || Clips.IsNullOrEmpty()) return;
-
+            source.Stop();
             int index = ArrangeSourceWithClip(ref source);
             source.spatialBlend = 0f; //this may be commented out if you want partial spatial sounds
-            source.PlayOneShot(Clips[index]);
+            //source.PlayOneShot(Clips[index]);
+            source.Play();
         }
 
         #endregion
