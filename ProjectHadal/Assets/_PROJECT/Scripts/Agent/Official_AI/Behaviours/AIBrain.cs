@@ -548,7 +548,7 @@ namespace Hadal.AI
             ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
             expSettings.Position = position;
             expSettings.Radius = SenseDetection.GetCurrentSenseDetectionRadius() + MachineData.Engagement.G_CarryKnockbackAdditionalRange;
-            expSettings.Force = 40.0f;
+            expSettings.Force = MachineData.Engagement.G_CarryKnockbackForce;
             expSettings.IgnoreLayers = MachineData.Engagement.JG_KnockbackIgnoreMasks;
 
             ExplosivePoint.Create(expSettings);
@@ -559,6 +559,7 @@ namespace Hadal.AI
             if (isDestroyed)
             {
                 RuntimeData.SetIsEggDestroyed(true);
+                AudioBank.Play3D(soundType: AISound.EggDestroyed, this.transform);
                 RuntimeData.UpdateBonusConfidence(MachineData.EggDestroyedPermanentConfidence);
                 return;
             }
@@ -605,7 +606,7 @@ namespace Hadal.AI
 
         public bool CheckForJudgementStateCondition()
         {
-            if (CurrentTarget != null && CavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid)
+            if (CurrentTarget != null)
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
                 if (NavigationHandler.Data_IsOnQueuePath)

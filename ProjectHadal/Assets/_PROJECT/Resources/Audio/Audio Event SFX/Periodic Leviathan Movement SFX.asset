@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Periodic Leviathan Movement SFX
   m_EditorClassIdentifier: 
   Clips:
-  - {fileID: 8300000, guid: 36bbe4710bab2d34fb7ebe43d492ce3e, type: 3}
+  - {fileID: 8300000, guid: 8f657f7c32bd68d4c8ac824adf7f73bc, type: 3}
   Settings:
     Volume: {x: 1, y: 1}
-    Pitch: {x: 0.9, y: 0.9}
-    SpatialBlend: 0.7
+    Pitch: {x: 1, y: 1}
+    SpatialBlend: 0
     Priority: 150
     StereoPan: 0
     ReverbZoneMix: 1
@@ -32,5 +32,5 @@ MonoBehaviour:
     Spread: 0
     VolumeRolloff: 0
     MinDistance: 1
-    MaxDistance: 500
+    MaxDistance: 10000
     RolloffCurveTemplate: {fileID: 0}

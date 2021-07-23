@@ -66,7 +66,7 @@ namespace Hadal.AI.States
 
         void CheckPlayerCountAtNeighbourCaverns()
         {
-
+            
         }
 
 
@@ -75,7 +75,7 @@ namespace Hadal.AI.States
             if (!NavigationHandler.Data_ChosenAmbushPoint)
             {
                 NavigationHandler.SelectAmbushPoint();
-                AudioBank.Play3D(soundType: AISound.AmbushPounce, Brain.transform);
+                AudioBank.Play3D(soundType: AISound.Ambush, Brain.transform);
             }
         }
 
@@ -98,6 +98,7 @@ namespace Hadal.AI.States
 
             if (anyPlayersNearIt && playAudioOnce)
             {
+                
                 AudioBank.Play3D(soundType: AISound.AmbushPlayerClose, Brain.transform);
                 playAudioOnce = false;
             }

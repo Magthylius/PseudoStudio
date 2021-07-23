@@ -18,6 +18,7 @@ namespace Hadal.Interactables
         [SerializeField] private bool enableDebug = true;
 
         [Header("General")]
+        [SerializeField] private int reloadAmount;
         [SerializeField] private bool ableToInteract;
         [SerializeField] private bool isInteracting;
         [SerializeField] private InteractionType interactionType;
@@ -181,7 +182,7 @@ namespace Hadal.Interactables
         private void Send_InteractionDetected()
         {
             if (interManager != null)
-                interManager.InvokeInteraction(interactionType, interactableID);
+                interManager.InvokeInteraction(interactionType, interactableID, reloadAmount);
         }
 
         private void Receive_ConfirmedInteract(int interactID)
