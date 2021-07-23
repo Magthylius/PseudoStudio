@@ -167,9 +167,20 @@ namespace Hadal.AI.Caverns
 
         public PlayerController GetIsolatedPlayer()
         {
-            if (playersInCavern.Count == 1)
-                return playersInCavern[0];
+            int livePlayerCount = 0;
+            PlayerController target = null;
+            foreach (var player in playersInCavern)
+            {
+                if (player.GetInfo.HealthManager.IsDownOrUnalive)
+                    continue;
+                
+                livePlayerCount++;
+                target = player;
+            }
 
+            if (livePlayerCount == 1)
+                return target;
+            
             return null;
         }
 
