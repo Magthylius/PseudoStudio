@@ -31,7 +31,7 @@ namespace Hadal.AI
             AudioEventData asset = GetAudioAssetOfType(soundType);
             if (asset == null)
                 return;
-            
+
             brain.Send_PlayAudio(is3D: false, soundType);
             asset.Play(source2D);
         }
@@ -67,8 +67,9 @@ namespace Hadal.AI
         Swim,
         Ambush,
         AmbushPounce,
-        Damaged,
         AmbushPlayerClose,
+        Damaged,
+        EggDestroyed,
         Death
     }
 }
