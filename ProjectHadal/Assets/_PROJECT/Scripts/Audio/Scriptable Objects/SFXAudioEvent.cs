@@ -91,11 +91,13 @@ namespace Hadal.AudioSystem
             if (manager != null)
             {
                 var handler = manager.GetAvailableAudioSourceHandler();
+                Debug.LogWarning(handler);
                 handler.Setup(in Settings);
                 handler.Source.clip = Clips[index];
                 handler.Source.spatialBlend = 0f;
                 handler.PlaySource();
             }
+            else Debug.LogWarning($"manager null");
         }
 
         #endregion
