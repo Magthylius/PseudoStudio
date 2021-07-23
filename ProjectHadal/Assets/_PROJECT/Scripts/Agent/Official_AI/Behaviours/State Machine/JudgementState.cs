@@ -65,6 +65,7 @@ namespace Hadal.AI.States
             if (IsolatedPlayer != null && IsolatedPlayer.GetInfo.HealthManager.IsDownOrUnalive)
                 IsolatedPlayer = null;
 
+            RuntimeData.ResetEngagementTicker();
             RuntimeData.ResetCumulativeDamageCount();
 
             bool isDefensive = RuntimeData.NormalisedConfidence < 0.5f;
