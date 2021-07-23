@@ -15,6 +15,7 @@ namespace Hadal.Player
         Down,
         Forward,
         Backward,
+        None
     };
     public class DodgeBooster : MonoBehaviour, IPlayerComponent
     {
@@ -142,7 +143,7 @@ namespace Hadal.Player
             if (isBoosting)
                 return false;
 
-            bool result = true;
+            boostDirection = BoostDirection.Forward;
 
             if (input.HorizontalRight)
             {
@@ -168,12 +169,8 @@ namespace Hadal.Player
             {
                 boostDirection = BoostDirection.Backward;
             }
-            else
-            {
-                result = false;
-            }
 
-            isBoosting = result && input.BoostActive;
+            isBoosting = input.BoostActive;
             return isBoosting;
         }
 
