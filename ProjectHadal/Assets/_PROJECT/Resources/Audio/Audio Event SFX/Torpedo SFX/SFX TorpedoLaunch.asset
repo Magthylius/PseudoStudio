@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
+  m_Name: TorpedoLaunch SFX
+  m_EditorClassIdentifier: 
+  Clips:
+  - {fileID: 8300000, guid: d749bbb068036ea4dbd55547ad860d2c, type: 3}
+  Settings:
+    Volume: {x: 1, y: 1}
+    Pitch: {x: 1, y: 1}
+    SpatialBlend: 0.7
+    Priority: 128
+    StereoPan: 0
+    ReverbZoneMix: 1
+    OutputMixerGroup: {fileID: -9146416442801694759, guid: 29349254421fc3742874fe18b3785b50, type: 2}
+    Mute: 0
+    BypassEffects: 0
+    BypassListenerEffects: 0
+    BypassReverbZones: 0
+    PlayOnAwake: 0
+    Loop: 0
+    DopplerLevel: 1
+    Spread: 0
+    VolumeRolloff: 0
+    MinDistance: 1
+    MaxDistance: 500
+    RolloffCurveTemplate: {fileID: 0}

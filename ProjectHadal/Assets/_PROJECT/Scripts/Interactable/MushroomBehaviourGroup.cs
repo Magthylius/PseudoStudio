@@ -47,15 +47,15 @@ namespace Hadal.Interactables
             //! Caching default material/shader data
             MushroomBehaviour mush = mushrooms.FirstOrDefault();
             if (mush == null) return;
-            var rendOuter = mush.GetOuterRenderer;
+            // var rendOuter = mush.GetOuterRenderer;
             var rendInner = mush.GetInnerRenderer;
             defaultData = new MushroomShaderData
             {
-                BorderColour = rendOuter.sharedMaterial.GetColor(BorderColour),
+                // BorderColour = rendOuter.sharedMaterial.GetColor(BorderColour),
                 Colour = rendInner.sharedMaterial.GetColor(Colour),
-                BorderPower = rendOuter.sharedMaterial.GetFloat(BorderPower),
-                NoiseScale = rendOuter.sharedMaterial.GetFloat(NoiseScale),
-                Alpha = rendOuter.sharedMaterial.GetFloat(Alpha)
+                // BorderPower = rendOuter.sharedMaterial.GetFloat(BorderPower),
+                // NoiseScale = rendOuter.sharedMaterial.GetFloat(NoiseScale),
+                // Alpha = rendOuter.sharedMaterial.GetFloat(Alpha)
             };
 
             //! Set starting emission settings
@@ -137,11 +137,11 @@ namespace Hadal.Interactables
         private bool CanCollide(Collider other) => other.gameObject.layer.IsAMatchingMask(reactiveMask);
 
         #region Macro Strings
-        private readonly string BorderColour = "_BorderColor";
+        // private readonly string BorderColour = "_BorderColor";
         private readonly string Colour = "_Color";
-        private readonly string BorderPower = "_BorderPower";
-        private readonly string NoiseScale = "_NoiseScale";
-        private readonly string Alpha = "_Alpha";
+        // private readonly string BorderPower = "_BorderPower";
+        // private readonly string NoiseScale = "_NoiseScale";
+        // private readonly string Alpha = "_Alpha";
         #endregion
     }
 }
