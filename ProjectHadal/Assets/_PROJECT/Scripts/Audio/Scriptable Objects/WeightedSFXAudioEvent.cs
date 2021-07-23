@@ -84,7 +84,7 @@ namespace Hadal.AudioSystem
         /// <param name="source">Play with this source. If null, a new one will be created automatically.</param>
         public override void Play(AudioSource source)
         {
-            if (source == null || WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+            if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
 
             var clip = ArrangeSourceWithClip(ref source);
             
