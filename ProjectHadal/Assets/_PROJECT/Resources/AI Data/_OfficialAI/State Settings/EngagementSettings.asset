@@ -15,7 +15,7 @@ MonoBehaviour:
   ConfidenceIncrementValue: 10
   ConfidenceDecrementValue: 20
   G_ApproachCloseDistanceThreshold: 16
-  G_ApproachFarDistanceThreshold: 500
+  G_ApproachFarDistanceThreshold: 300
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 4
   G_BaseMinThreshDamagePerSecond: 12
@@ -26,16 +26,16 @@ MonoBehaviour:
   G_JudgementPersistChance: 0.8
   G_DisruptionDamageCount: 3
   G_DistanceFromFrontForBiteAnimation: 20
-  G_CarryKnockbackAdditionalRange: 30
+  G_CarryKnockbackAdditionalRange: 40
   G_CarryKnockbackForce: 40
   AM_TargetPlayerRange: 100
-  AM_MaxWaitTime: 35
-  AM_PounceSpeedMultiplier: 1.2
+  AM_MaxWaitTime: 30
+  AM_PounceSpeedMultiplier: 1.5
   AM_CarryDelayTimer: 0.8
   AM_DisruptionDamageCount: 1
   AM_AdditionalThreshDamagePerSecond: 2
-  HU_RoamingSpeedMultiplier: 1.8
-  HU_MaxHuntingTime: 60
+  HU_RoamingSpeedMultiplier: 1.75
+  HU_MaxHuntingTime: 50
   HU_DisruptionDamageCount: 1
   HU_PeriodicCavernUpdateTime: 4
   JudgementTimer1: 40
@@ -46,7 +46,7 @@ MonoBehaviour:
   AGG_AdditionalThreshDamagePerSecond: 1
   DEF_AdditionalThreshDamagePerSecond: -1
   EGG_PermanentThreshDamagePerSecond: 1
-  EGG_PermanentDamageResistance: 0
+  EGG_PermanentDamageResistance: 0.02
   JG_KnockbackIgnoreMasks:
     serializedVersion: 2
     m_Bits: 7359488

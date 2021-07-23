@@ -264,6 +264,15 @@ namespace Hadal.AI
                     TryDebug("Cumulative damage count threshold reached. Ending thresh damage early.");
                     break;
                 }
+                if (Brain.CarriedPlayer.GetInfo.HealthManager.IsDownOrUnalive)
+                {
+                    success = true;
+                    if (damageManagerRoutine != null)
+                        Brain.StopCoroutine(damageManagerRoutine);
+                    
+                    TryDebug("Carried player died during thresh.");
+                    break;
+                }
                 yield return null;
             }
 
