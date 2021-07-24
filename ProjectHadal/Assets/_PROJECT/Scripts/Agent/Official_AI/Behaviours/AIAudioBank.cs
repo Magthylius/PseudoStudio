@@ -36,6 +36,16 @@ namespace Hadal.AI
             asset.Play(source2D);
         }
 
+        public void PlayOneShot(AISound soundType, Transform followTransform)
+        {
+            AudioEventData asset = GetAudioAssetOfType(soundType);
+            if (asset == null)
+                return;
+
+            brain.Send_PlayAudio(is3D: true, soundType);
+            asset.PlayOneShot(followTransform.position);
+        }
+        
         private AudioEventData GetAudioAssetOfType(AISound soundType)
         {
             AudioEventData asset = null;
@@ -70,6 +80,7 @@ namespace Hadal.AI
         AmbushPlayerClose,
         Damaged,
         EggDestroyed,
-        Death
+        Death,
+        GrabRiser,
     }
 }

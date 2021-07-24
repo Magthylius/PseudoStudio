@@ -22,6 +22,7 @@ namespace Hadal.Usables.Projectiles
 
         [Header("Visual Effect")]
         [SerializeField] private GameObject explodeEffect;
+        [SerializeField] private float explodeDurationMax;
         private Timer explodeDuration;
         private bool isExploding;
 
@@ -29,7 +30,7 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            explodeDuration = new Timer(2f);
+            explodeDuration = new Timer(explodeDurationMax);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
 
@@ -67,6 +68,7 @@ namespace Hadal.Usables.Projectiles
         {
             if (!IsLocal)
                 return;
+
 
             //Scan for monster locally
             LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
@@ -115,13 +117,15 @@ namespace Hadal.Usables.Projectiles
             print("i explode");
             isExploding = true;
             explodeEffect.SetActive(true);
+            Rigidbody.isKinematic = true;
+            Rigidbody.velocity = Vector3.zero;
         }
 
         private void StopExplosion()
         {
-            print("i stop explode");
             isExploding = false;
             explodeEffect.SetActive(false);
+            Rigidbody.isKinematic = false;
             UnSubcribeModeEvent();
             PPhysics.OnPhysicsFinished();
         }

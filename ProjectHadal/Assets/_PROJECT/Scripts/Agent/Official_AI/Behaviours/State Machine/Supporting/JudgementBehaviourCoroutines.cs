@@ -99,6 +99,7 @@ namespace Hadal.AI
             {
                 NavigationHandler.StopMovement();
                 AnimationManager.SetAnimation(AIAnim.Aggro);
+                AudioBank.PlayOneShot(AISound.GrabRiser, Brain.transform);
                 if (JState.IsolatedPlayer != null)
                     NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
                 else
@@ -127,7 +128,10 @@ namespace Hadal.AI
                     if (isPlayerTagged && !targetMarked)
                     {
                         targetMarked = true;
-                        AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                        //AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                        AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
+                        //AudioBank.Play3D(AISound.GrabRiser, Brain.transform);
+                        
                         TryDebug("Set custom nav point onto target. Moving to chase target.");
                     }
                 }
@@ -142,7 +146,8 @@ namespace Hadal.AI
                         NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null);
 
                         //! plays sound cue that should inform the player that they should start dodging
-                        AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
+                        //AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
+                        AudioBank.PlayOneShot(AISound.CarryWarning, Brain.transform);
                     }
 
                     canCarry = true;
