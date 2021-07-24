@@ -820,16 +820,34 @@ MonoBehaviour:
   additionalFOVOnBoost: 8
   fovBoostTransitionSpeed: 5
   fovRecoverTransitionSpeed: 8
-  enableCameraShake: 0
+  enableCameraShake: 1
   shakeProperties:
     Angle: 50
-    Strength: 0.2
-    MaxSpeed: 1
+    Strength: 0.5
+    MaxSpeed: 5
     MinSpeed: 0.1
-    Duration: 0.75
-    NoisePercent: 0.1
-    DampingPercent: 0.7
-    RotationPercent: 0
+    Duration: 0.5
+    NoisePercent: 0.8
+    DampingPercent: 0.15
+    RotationPercent: 0.05
+  leviathanShakeProperties:
+    Angle: 180
+    Strength: 1
+    MaxSpeed: 5
+    MinSpeed: 1
+    Duration: 1
+    NoisePercent: 0.5
+    DampingPercent: 0.5
+    RotationPercent: 0.2
+  shakeSpeedMultiplier:
+    Angle: 0
+    Strength: 0.1
+    MaxSpeed: 0.2
+    MinSpeed: 0.2
+    Duration: 0.2
+    NoisePercent: 0.2
+    DampingPercent: 0.1
+    RotationPercent: 0.1
   cameraShakeTarget: {fileID: 2720187582479781533}
 --- !u!1 &3309683987410669343
 GameObject:
@@ -1169,7 +1187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4944ec5961e45184385376828cf8aa72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionSpeedThreshold: 0.4
+  forceSpeedThreshold: 10
 --- !u!1 &5329164883190651356
 GameObject:
   m_ObjectHideFlags: 0

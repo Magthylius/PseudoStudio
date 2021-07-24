@@ -9,6 +9,7 @@ namespace Hadal.Player
     {
         [SerializeField] private MeshRenderer emissiveRenderer;
         [SerializeField] private string emissiveColorString;
+        public GameObject GraphicsObject => gameObject;
 
         public void ChangeEmissiveColor(Color newColor)
         {
