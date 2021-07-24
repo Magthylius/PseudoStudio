@@ -319,7 +319,7 @@ namespace Hadal.AI
         private void HandleCarriedPlayer()
         {
             if (CarriedPlayer == null || doNotHandleCarriedPlayer) return;
-            CarriedPlayer.GetTarget.localPosition = vZero;
+            CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * 2f);
         }
 
         #region Event Handlers
@@ -493,6 +493,7 @@ namespace Hadal.AI
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
                 CarriedPlayer.GetTarget.localPosition = Vector3.zero;
+                CarriedPlayer.GetTarget.LookAt(mouth.position + (mouth.forward * -2f), mouth.up);
 
                 //! Send event if host
                 if (neManager.IsMasterClient)

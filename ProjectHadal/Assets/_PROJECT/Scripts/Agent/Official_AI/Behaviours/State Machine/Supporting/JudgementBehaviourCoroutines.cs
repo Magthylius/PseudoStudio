@@ -98,6 +98,7 @@ namespace Hadal.AI
             //! Look at the target for a set amount of time (while doing nothing), before chasing after them
             {
                 NavigationHandler.StopMovement();
+                AnimationManager.SetAnimation(AIAnim.Aggro);
                 if (JState.IsolatedPlayer != null)
                     NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
                 else
@@ -208,14 +209,14 @@ namespace Hadal.AI
 
                     //! Teleport player to the correct location in front of the AI & disable navigation
                     NavigationHandler.ForceDisable();
-                    Brain.CarriedPlayer.GetTarget.position = Brain.transform.position + (Brain.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
+                    Brain.CarriedPlayer.GetTarget.position = Brain.MouthObject.transform.position + (Brain.MouthObject.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
 
                     //! Spawn explosive point to blast away unwanted attention
                     Brain.SpawnExplosivePointAt(Brain.CarriedPlayer.GetTarget.position);
 
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
-                    yield return new WaitForSeconds(AnimationManager.GetAnimationClipLengthFor(AIAnim.Bite));
+                    yield return new WaitForSeconds(2f);
 
                     //! Reenable handling the carried player & allow thresh to work
                     Brain.SetDoNotHandleCarriedPlayer(false);
@@ -282,6 +283,8 @@ namespace Hadal.AI
                 successCallback?.Invoke();
             else
                 failureCallback?.Invoke();
+            
+            AnimationManager.SetAnimation(AIAnim.Swim);
         }
 
         /// <summary>
@@ -591,6 +594,7 @@ namespace Hadal.AI
             NavigationHandler.Enable();
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
+            AnimationManager.SetAnimation(AIAnim.Swim);
         }
 
         /// <summary> Safely stops all coroutines facilitated by this class </summary>

@@ -37,6 +37,7 @@ namespace Hadal.AI.States
             RuntimeData.ResetEngagementTicker();
             RuntimeData.ResetCumulativeDamageCount();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.HU_DisruptionDamageCount);
+            DoRoar();
 
             hasReachedTargetCavern = false;
             if (AICavern != null && AICavern.cavernTag == Brain.TargetMoveCavern.cavernTag)
@@ -130,10 +131,10 @@ namespace Hadal.AI.States
 
         public override void OnCavernLeave(CavernHandler cavern)
         {
-            if (hasReachedTargetCavern)
-            {
-                DoRoar();
-            }
+            // if (hasReachedTargetCavern)
+            // {
+            //     DoRoar();
+            // }
 
             Brain.NavigationHandler.TunnelModeSteering();
 
