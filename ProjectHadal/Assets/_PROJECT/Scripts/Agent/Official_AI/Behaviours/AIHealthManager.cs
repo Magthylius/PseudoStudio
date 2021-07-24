@@ -120,15 +120,14 @@ namespace Hadal.AI
         {
             string extraMsg = string.Empty;
             if (_killedWithCheat)
-                extraMsg = " ..., you sure you did not cheat???".Bold();
+                if (brain.DebugEnabled)
+                    extraMsg = " ..., you sure you did not cheat???".Bold();
 
-            $"Leviathan is unalive. Congrats!!!{extraMsg}".Msg();
-
-            // AIGraphicsHandler gHandler = brain.GraphicsHandler;
-            // if (gHandler == null) gHandler = FindObjectOfType<AIGraphicsHandler>();
-            // gHandler.gameObject.SetActive(false);
+            if (brain.DebugEnabled) $"Leviathan is unalive. Congrats!!!{extraMsg}".Msg();
 
             brain.DetachAnyCarriedPlayer();
+            brain.AnimationManager.SetAnimation(AIAnim.Death);
+
             brain.DisableBrain(); //! disable update loops of the brain
             brain.StartCoroutine(Bleed(0.5f));
             if (PhotonNetwork.IsMasterClient)
@@ -313,6 +312,8 @@ namespace Hadal.AI
                 while (++i < vfxCountPerHit)
                     PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
             }
+
+            brain.AnimationManager.SetAnimation(AIAnim.Hurt, 1f);
         }
 
         private Vector3 GetRandomHitPosition() => randomHitPoints.RandomElement().position;

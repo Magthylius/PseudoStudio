@@ -13,21 +13,28 @@ namespace Hadal.AI.States
     [CreateAssetMenu(fileName = "EngagementSettings", menuName = "StateSettings/Engagement")]
     public class EngagementStateSettings : StateSettings
     {
-        [Header("General")]
+        [Header("General: Approach")]
         [Min(0f)] public float G_ApproachCloseDistanceThreshold;
         [Min(0f)] public float G_ApproachFarDistanceThreshold;
+        [Min(0f)] public float G_GlareAtTargetBeforeJudgementApproachTime = 2f;
+        [Min(0f)] public float G_PrepareHaltBeforeCarryDistance = 10f;
+        [Min(0f)] public float G_HaltingTime = 2.5f;
         [Min(0f)] public float G_CarryDelayTimer;
+
+        [Header("General: Thresh")]
         [Min(0)] public int G_TotalThreshTimeInSeconds;
         [Min(5)] public int G_BaseMinThreshDamagePerSecond;
         [Min(8)] public int G_BaseMaxThreshDamagePerSecond;
-        [Min(0f)] public float G_PrepareHaltBeforeCarryDistance = 10f;
-        [Min(0f)] public float G_HaltingTime = 2.5f;
-        [Min(0f)] public float G_GlareAtTargetBeforeJudgementApproachTime = 2f;
+
+        [Header("General: Misc")]
         [Range(0f, 1f)] public float G_JudgementPersistChance = 0.8f;
         [Min(0)] public int G_DisruptionDamageCount;
         [Min(0f)] public float G_DistanceFromFrontForBiteAnimation = 15f;
         [Min(0f)] public float G_CarryKnockbackAdditionalRange = 30f;
         [Min(0f)] public float G_CarryKnockbackForce = 40.0f;
+        [Min(0f)] public float G_TunnelKnockbackCooldownTime = 2f;
+        [Min(0f)] public float G_TunnelKnockbackAdditionalRange = 50f;
+        [Min(0f)] public float G_TunnelKnockbackForce = 80.0f;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;

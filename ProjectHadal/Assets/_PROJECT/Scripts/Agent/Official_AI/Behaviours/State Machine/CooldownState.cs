@@ -31,7 +31,10 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             if (!Brain.IsStunned)
+            {
                 RuntimeData.TickCooldownTicker(Time.deltaTime);
+                if (Brain.CheckForAIAndPlayersInTunnel()) return;
+            }
 
             if (RuntimeData.GetCooldownTicks >= settings.MaxCooldownTime)
             {

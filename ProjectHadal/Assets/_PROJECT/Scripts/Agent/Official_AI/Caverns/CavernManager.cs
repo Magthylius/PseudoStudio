@@ -525,6 +525,16 @@ namespace Hadal.AI.Caverns
             return null;
         }
 
+        public bool IsPlayerInValidCavern(PlayerController player)
+        {
+            foreach (var handler in handlerList)
+            {
+                if (handler.GetPlayersInCavern.Contains(player))
+                    return true;
+            }
+            return false;
+        }
+
         #endregion
 
         #region Cavern | Player enquiry

@@ -65,7 +65,7 @@ namespace Hadal.AI.States
             {
                 SenseDetection.RequestImmediateSensing();
                 playerCount = SenseDetection.DetectedPlayersCount;
-                IsolatedPlayer = SenseDetection.GetIsolatedPlayerIfAny();
+                IsolatedPlayer = SenseDetection.GetIsolatedPlayerIfAny(false);
             }
 
             //! Cannot target down or unalive players again
