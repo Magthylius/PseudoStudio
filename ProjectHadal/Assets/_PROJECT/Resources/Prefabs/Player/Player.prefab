@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tapDetectionTime: 0.1
-  dodgeForce: 100
+  dodgeForce: 125
   boostTimerMax: 0.5
   maxReserveCapacity: 1
   reserveRegenerationTime: 8
@@ -3964,7 +3964,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: reserveRegenerationTime
-      value: 1.5
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: poweredUpReserveCapacity

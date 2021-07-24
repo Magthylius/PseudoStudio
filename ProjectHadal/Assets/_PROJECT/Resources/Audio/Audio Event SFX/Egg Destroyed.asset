@@ -15,10 +15,11 @@ MonoBehaviour:
   Clips:
   - {fileID: 8300000, guid: cd763312e8df6cf41a5acf76701e4055, type: 3}
   Settings:
+    ReplayTime: 0.5
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
-    SpatialBlend: 0.2
-    Priority: 120
+    SpatialBlend: 0.5
+    Priority: 100
     StereoPan: 0
     ReverbZoneMix: 1
     OutputMixerGroup: {fileID: 24300002, guid: 29349254421fc3742874fe18b3785b50, type: 2}
@@ -28,9 +29,9 @@ MonoBehaviour:
     BypassReverbZones: 0
     PlayOnAwake: 0
     Loop: 0
-    DopplerLevel: 1
-    Spread: 120
+    DopplerLevel: 0
+    Spread: 360
     VolumeRolloff: 0
     MinDistance: 1
-    MaxDistance: 10000
+    MaxDistance: 5000
     RolloffCurveTemplate: {fileID: 0}
