@@ -56,6 +56,7 @@ namespace Hadal.Usables.Projectiles
         private void OnDisable()
         {
             Rigidbody.isKinematic = false;
+            ProjectileCollider.enabled = true;
             IsAttached = false;
         }
         #endregion
@@ -72,9 +73,14 @@ namespace Hadal.Usables.Projectiles
         {
             impulseMode.ModeSwapped -= ModeSwap;
             selfDeactivation.selfDeactivated -= ModeOff;
-            
-            if(slowable != null)
+        }
+
+        public void UnSubscribeDetachProjectile()
+        {
+            if (slowable != null)
             {
+                PPhysics.PhysicsFinished -= UnSubscribeDetachProjectile;
+
                 int slowCount = 0;
 
                 if (isPowerForm)
@@ -123,6 +129,7 @@ namespace Hadal.Usables.Projectiles
                         {
                             slowable.AttachProjectile();
                             PPhysics.PhysicsFinished += slowable.DetachProjectile;
+                            PPhysics.PhysicsFinished += UnSubscribeDetachProjectile;
                         }    
                     }
                     else { $"AI was hit but it does not have an ISlowable interface implemented. Is the collider on the wrong layer ({collision.gameObject.name})?".Msg(); }
@@ -144,7 +151,6 @@ namespace Hadal.Usables.Projectiles
                 if (IsLocal)
                 {
                     transform.parent = collision.gameObject.transform;
-                    Rigidbody.isKinematic = true;
                     IsAttached = true;
 
                     Vector3 collisionSpot = gameObject.transform.position;
@@ -169,6 +175,7 @@ namespace Hadal.Usables.Projectiles
             }
 
             Rigidbody.isKinematic = true;
+            ProjectileCollider.enabled = false;
             projectileAsset.SetActive(true);
             particleEffect.SetActive(true);
             isVisualizing = true;
