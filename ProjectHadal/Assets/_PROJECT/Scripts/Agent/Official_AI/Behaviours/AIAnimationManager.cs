@@ -284,6 +284,8 @@ namespace Hadal.AI
 	{
 		Swim = 0,
 		Bite,
-		Attack
+		Aggro,
+		Hurt,
+		Death
 	}
 }
