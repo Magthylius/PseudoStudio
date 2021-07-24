@@ -10,12 +10,17 @@ namespace Hadal.Networking.UI.EndScreen
     public class EndScreenManager : MonoBehaviour
     {
         public static EndScreenManager Instance;
-        
+
         [Header("References")]
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private TextMeshProUGUI missionOutcomeTMP;
         [SerializeField] private TextMeshProUGUI timeTakenTMP;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource endAudio;
+        [SerializeField] private AudioClip winAudio;
+        [SerializeField] private AudioClip loseAudio;
+        
         [Header("Settings")] 
         [SerializeField] private string missionOutcomeText;
         [SerializeField] private string successOutcomeText;
@@ -68,9 +73,17 @@ namespace Hadal.Networking.UI.EndScreen
             string outcomeText = missionOutcomeText;
 
             if (MissionSuccess)
+            {
                 outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(successColor) + "> " + successOutcomeText;
+                endAudio.clip = winAudio;
+            }
             else
+            {
                 outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(failureColor) + "> " + failureOutcomeText;
+                endAudio.clip = loseAudio;
+            }
+            
+            endAudio.Play();
 
             TimeSpan timeSpan = TimeSpan.FromSeconds(TimeTaken);
             missionOutcomeTMP.text = outcomeText;
