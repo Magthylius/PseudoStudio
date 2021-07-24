@@ -16,18 +16,21 @@ MonoBehaviour:
   ConfidenceDecrementValue: 2
   G_ApproachCloseDistanceThreshold: 16
   G_ApproachFarDistanceThreshold: 300
+  G_GlareAtTargetBeforeJudgementApproachTime: 1.5
+  G_PrepareHaltBeforeCarryDistance: 15
+  G_HaltingTime: 0.5
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 3
   G_BaseMinThreshDamagePerSecond: 17
   G_BaseMaxThreshDamagePerSecond: 19
-  G_PrepareHaltBeforeCarryDistance: 15
-  G_HaltingTime: 0.5
-  G_GlareAtTargetBeforeJudgementApproachTime: 1.5
   G_JudgementPersistChance: 0.8
   G_DisruptionDamageCount: 3
   G_DistanceFromFrontForBiteAnimation: 5
   G_CarryKnockbackAdditionalRange: 40
   G_CarryKnockbackForce: 40
+  G_TunnelKnockbackCooldownTime: 2
+  G_TunnelKnockbackAdditionalRange: 60
+  G_TunnelKnockbackForce: 80
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 30
   AM_PounceSpeedMultiplier: 3
