@@ -113,7 +113,7 @@ namespace Hadal.Player
             lureLauncherObject.OnLureActivate += InvokeLureActivatedEvent;
             TryInjectDependencies();
             if (NetworkEventManager.Instance.isOfflineMode && !isDummy)
-                SetLocalPlayerLayer();
+                SetLocalPlayerSettings();
 
             if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
             {
@@ -278,7 +278,7 @@ namespace Hadal.Player
             //! This is online called in online mode, this function is called on PlayerManager for host
             print("Everyone ready. Begin !");
             
-            SetLocalPlayerLayer();
+            SetLocalPlayerSettings();
             PlayerClassManager.Instance.ApplyClass();
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
@@ -374,7 +374,7 @@ namespace Hadal.Player
             {
                 gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
                 mover.ToggleEnablility(true);
-                SetLocalPlayerLayer();
+                SetLocalPlayerSettings();
             }
             
             if (UITrackerBridge.LocalPlayerUIManager == null && isMine)
@@ -530,10 +530,11 @@ namespace Hadal.Player
             rotator.Enable();
         }
 
-        private void SetLocalPlayerLayer()
+        private void SetLocalPlayerSettings()
         {
             gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
             _isLocalPlayer = true;
+            graphicsHandler.GraphicsObject.SetActive(false);
         }
         #endregion
 

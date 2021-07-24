@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 1
-  endTime: 1
+  endTime: 0.5
   armsProjectile: 0
   skipsOnContact: 0
   direction: {x: 0, y: 0, z: 3}
@@ -273,6 +273,7 @@ MonoBehaviour:
   impulseMode: {fileID: 0}
   isHighHz: 0
   explodeEffect: {fileID: 1382363811699004463}
+  explodeDurationMax: 2
 --- !u!114 &2162494160188478927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7465129731039626558, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7465129731039626559, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: speed
