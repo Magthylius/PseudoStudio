@@ -69,9 +69,9 @@ namespace Hadal.AudioSystem
             if (position.HasValue) source.transform.position = position.Value;
             source.transform.parent = parent;
             source.Play();
-            
+
             if (destroyOnComplete) Destroy(source.gameObject, Clips[index].length);
-            
+
             return true;
         }
 
@@ -85,19 +85,46 @@ namespace Hadal.AudioSystem
         {
             if (Clips.IsNullOrEmpty() || !CheckForPlayTime()) return;
 
-            int index = ArrangeSourceWithClip(ref source);
-            
-            var manager = AudioManager.Instance;
+            AudioManager manager = AudioManager.Instance;
             if (manager != null)
             {
-                var handler = manager.GetAvailableAudioSourceHandler();
-                Debug.LogWarning(handler);
+                AudioSourceHandler handler = manager.GetAvailableAudioSourceHandler();
                 handler.Setup(in Settings);
                 handler.Source.clip = Clips[index];
                 handler.Source.spatialBlend = 0f;
                 handler.PlaySource();
             }
-            else Debug.LogWarning($"manager null");
+            else
+            {
+                AudioSource aSource = GetFallbackAudioSource();
+                ArrangeSourceWithClip(ref aSource);
+                aSource.spatialBlend = 0f;
+                aSource.Play();
+                Destroy(aSource, aSource.clip.length);
+            }
+        }
+
+        public override void Play2D()
+        {
+            if (Clips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+
+            AudioManager manager = AudioManager.Instance;
+            if (manager != null)
+            {
+                AudioSourceHandler handler = manager.GetAvailableAudioSourceHandler();
+                handler.Setup(in Settings);
+                handler.Source.clip = Clips.RandomElement();
+                handler.Source.spatialBlend = 0f;
+                handler.PlaySource();
+            }
+            else
+            {
+                AudioSource aSource = GetFallbackAudioSource();
+                ArrangeSourceWithClip(ref aSource);
+                aSource.spatialBlend = 0f;
+                aSource.Play();
+                Destroy(aSource, aSource.clip.length);
+            }
         }
 
         #endregion

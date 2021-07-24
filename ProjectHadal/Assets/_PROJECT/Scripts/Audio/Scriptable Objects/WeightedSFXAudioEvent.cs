@@ -86,17 +86,28 @@ namespace Hadal.AudioSystem
         {
             if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
 
-            var clip = ArrangeSourceWithClip(ref source);
-            
-            var manager = AudioManager.Instance;
+            AudioManager manager = AudioManager.Instance;
             if (manager != null)
             {
-                var handler = manager.GetAvailableAudioSourceHandler();
+                AudioSourceHandler handler = manager.GetAvailableAudioSourceHandler();
                 handler.Setup(in Settings);
-                handler.Source.clip = clip;
+                handler.Source.clip = GetWeightedClip();
                 handler.Source.spatialBlend = 0f;
                 handler.PlaySource();
             }
+            else
+            {
+                AudioSource aSource = GetFallbackAudioSource();
+                ArrangeSourceWithClip(ref aSource);
+                aSource.spatialBlend = 0f;
+                aSource.Play();
+                Destroy(aSource, aSource.clip.length);
+            }
+        }
+
+        public override void Play2D()
+        {
+            
         }
 
         #endregion
