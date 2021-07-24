@@ -70,9 +70,6 @@ namespace Hadal.Player
             }
         }
 
-        /*public void SetPlayerClass(PlayerClassData newPlayerClass)
-        {
-            PlayerClass = newPlayerClass;
-        }*/
+        public PlayerClassData GetCurrentPlayerClass() => currentPlayerClass;
     }
 }

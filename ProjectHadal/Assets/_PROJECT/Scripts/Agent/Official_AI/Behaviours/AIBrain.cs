@@ -317,7 +317,7 @@ namespace Hadal.AI
         private readonly Vector3 vZero = Vector3.zero;
         private bool doNotHandleCarriedPlayer = false;
         public void SetDoNotHandleCarriedPlayer(bool statement) => doNotHandleCarriedPlayer = statement;
-        private void HandleCarriedPlayer()
+        public void HandleCarriedPlayer()
         {
             if (CarriedPlayer == null || doNotHandleCarriedPlayer) return;
             CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * 4.5f);
@@ -703,6 +703,7 @@ namespace Hadal.AI
             {
                 knockCooldownTimer = Time.time + MachineData.Engagement.G_TunnelKnockbackCooldownTime;
                 SpawnExplosivePointAt(MouthObject.transform.position, true, true);
+                AudioBank.Play3D(AISound.Roar, transform);
                 return true;
             }
             return false;

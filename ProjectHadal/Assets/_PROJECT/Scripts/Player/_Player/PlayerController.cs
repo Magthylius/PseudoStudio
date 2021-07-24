@@ -34,6 +34,7 @@ namespace Hadal.Player
         [Foldout("Components"), SerializeField] UIManager playerUI;
         [Foldout("Components"), SerializeField] DodgeBooster dodgeBooster;
         [Foldout("Components"), SerializeField] PlayerGraphicsHandler graphicsHandler;
+        [Foldout("Components"), SerializeField] PlayerAudio playerAudio;
 
         [Foldout("Photon"), SerializeField] PlayerPhotonInfo photonInfo;
         [Foldout("Settings"), SerializeField] string localPlayerLayer;
@@ -145,6 +146,7 @@ namespace Hadal.Player
             lamp.DoUpdate(DeltaTime);
             healthManager.DoUpdate(DeltaTime);
             shooter.DoUpdate(DeltaTime);
+            playerAudio.DoUpdate(DeltaTime);
 
             // mover for Vector Type.
             if (CanMove)
@@ -280,6 +282,9 @@ namespace Hadal.Player
             
             SetLocalPlayerSettings();
             PlayerClassManager.Instance.ApplyClass();
+            if (PlayerClassManager.Instance.GetCurrentPlayerClass().ClassType == PlayerClassType.Informer)
+                playerAudio.EnableInRegister(PlayerSound.Informer_Whalesong);
+            
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
             _manager.InstantiatePViewList();
@@ -545,7 +550,8 @@ namespace Hadal.Player
         private bool IsBoosted => BoostInputSpeed > float.Epsilon + 1.0f;
         public Transform GetTarget => pTrans;
         public PlayerControllerInfo GetInfo
-            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp, shooter, interact, photonInfo, mover, rotator, dodgeBooster, _rBody, _collider);
+            => new PlayerControllerInfo(cameraController, healthManager, inventory, lamp,
+                shooter, interact, photonInfo, mover, rotator, dodgeBooster, graphicsHandler, playerAudio, _rBody, _collider);
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => _pView.ViewID;
         public bool CanMove => !_isKnocked && !_isCarried && !_isDown;
