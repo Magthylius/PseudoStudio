@@ -37,7 +37,7 @@ namespace Hadal.UI
         public UICockpitCamera CockpitCamera;
         public UIClassInfoHandler ClassInfoHandler;
         public Camera PlayerCamera;
-
+        
         [Header("Reticle Settings")]
         [SerializeField] RectTransform reticleGroup;
         [SerializeField] RectTransform reticleDirectors;
@@ -495,6 +495,27 @@ namespace Hadal.UI
 
         public bool IsOpen => pauseMenuOpen;
         public static bool IsNull => Instance == null;
+        #endregion
+
+        #region Debug
+
+        [Header("Hide All UI")] 
+        public List<GameObject> thingsToHide;
+
+        [Button("Hide All UI")]
+        public void HideUI()
+        {
+            if (gameObject != null)
+                foreach (GameObject go in thingsToHide) go.SetActive(false);
+        }
+
+        [Button("Show All UI")]
+        public void UnhideUI()
+        {
+            if (gameObject != null)
+                foreach (GameObject go in thingsToHide) go.SetActive(true);
+        }
+
         #endregion
     }
 }
