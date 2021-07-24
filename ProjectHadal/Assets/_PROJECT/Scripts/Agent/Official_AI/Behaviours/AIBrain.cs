@@ -152,6 +152,7 @@ namespace Hadal.AI
 				emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
 				animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
                 neManager.AddListener(ByteEvents.AI_PLAY_AUDIO, Receive_PlayAudio);
+                neManager.AddListener(ByteEvents.AI_EXPLOSION_POINT, Receive_SpawnExplosivePoint);
                 return;
             }
 			
@@ -386,6 +387,22 @@ namespace Hadal.AI
                 AudioBank.Play2D(soundType);
         }
 
+        private void Send_SpawnExplosivePoint(Vector3 position)
+        {
+            if (neManager == null || !neManager.IsMasterClient) //! only master client can send this
+                return;
+
+            object[] content = new object[] { position };
+            neManager.RaiseEvent(ByteEvents.AI_EXPLOSION_POINT, content, SendOptions.SendReliable);
+        }
+
+        private void Receive_SpawnExplosivePoint(EventData eventData)
+        {
+            object[] content = (object[])eventData.CustomData;
+            Vector3 spawnPos = (Vector3)content[0];
+            SpawnExplosivePointAt(spawnPos);
+        }
+
         #endregion
 
         #region Transition Conditions
@@ -543,7 +560,7 @@ namespace Hadal.AI
             return true;
         }
 
-        public void SpawnExplosivePointAt(Vector3 position)
+        public void SpawnExplosivePointAt(Vector3 position, bool sendWithEvent = false)
         {
             ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
             expSettings.Position = position;
@@ -552,6 +569,9 @@ namespace Hadal.AI
             expSettings.IgnoreLayers = MachineData.Engagement.JG_KnockbackIgnoreMasks;
 
             ExplosivePoint.Create(expSettings);
+
+            if (sendWithEvent)
+                Send_SpawnExplosivePoint(position);
         }
 
         private void HandleEggDestroyedEvent(bool isDestroyed)
@@ -573,6 +593,16 @@ namespace Hadal.AI
         public void ResetAllPlayersTaggedStatus()
         {
             Players.ForEach(p => p.SetIsTaggedByLeviathan(false));
+        }
+
+        public Vector3 GetEndThreshExplosionPosition()
+        {
+            if (CarriedPlayer == null)
+                return MouthObject.transform.position;
+
+            return CarriedPlayer.GetTarget.position
+                + (CarriedPlayer.GetTarget.forward * 4f)
+                + (CarriedPlayer.GetTarget.up * 6f);
         }
 
         #endregion
@@ -698,11 +728,5 @@ namespace Hadal.AI
         public void StartWithOverrideState() => startWithOverrideState = true;
 
         #endregion
-    }
-
-    public enum AIDamageType
-    {
-        Thresh,
-        Tail
     }
 }

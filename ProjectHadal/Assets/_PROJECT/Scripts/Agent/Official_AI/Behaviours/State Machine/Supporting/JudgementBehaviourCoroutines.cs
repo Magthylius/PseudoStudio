@@ -269,7 +269,7 @@ namespace Hadal.AI
                     success = true;
                     if (damageManagerRoutine != null)
                         Brain.StopCoroutine(damageManagerRoutine);
-                    
+
                     TryDebug("Carried player died during thresh.");
                     break;
                 }
@@ -337,6 +337,7 @@ namespace Hadal.AI
                     TryDebug("Thresh damage in outer routine is finished!");
 
                     Brain.TryDropCarriedPlayer();
+                    Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
                 }
@@ -403,6 +404,7 @@ namespace Hadal.AI
                     TryDebug("Thresh damage in outer routine is finished!");
 
                     Brain.TryDropCarriedPlayer();
+                    Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
                 }
@@ -459,6 +461,7 @@ namespace Hadal.AI
                     TryDebug("Thresh damage in outer routine is finished!");
 
                     Brain.TryDropCarriedPlayer();
+                    Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
                 }

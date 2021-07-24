@@ -59,6 +59,7 @@ namespace Hadal.Networking
 		AI_PLAY_ANIMATION,
         AI_SET_ANIMATION_SPEED,
         AI_EGG_DAMAGED,
+        AI_EXPLOSION_POINT,
         TOTAL_EVENTS
     }
 
