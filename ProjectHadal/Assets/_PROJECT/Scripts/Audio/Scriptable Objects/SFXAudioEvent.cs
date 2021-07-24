@@ -39,6 +39,20 @@ namespace Hadal.AudioSystem
             return RuntimePlay(position);
         }
 
+        public override void PlayOneShot(Vector3 position)
+        {
+            var manager = AudioManager.Instance;
+            if (manager != null)
+            {
+                var handler = manager.GetAvailableAudioSourceHandler();
+                handler.Setup(in Settings);
+                handler.SetWorldPosition(position);
+                //handler.SetParent(parent);
+                handler.Source.clip = Clips.RandomElement();
+                handler.PlayOneShot();
+            }
+        }
+
         /// <summary> Plays an audio clip sfx through the audio manager & related runtime audio source handlers. </summary>
         private bool RuntimePlay(Vector3 position, Transform parent = null)
         {
