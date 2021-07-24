@@ -44,6 +44,7 @@ namespace Hadal.Usables.Projectiles
             IsAttached = false;
             isPowerForm = false;
             Rigidbody.isKinematic = false;
+            ProjectileCollider.enabled = true;
             rb.useGravity = false;
         }
 
@@ -79,6 +80,7 @@ namespace Hadal.Usables.Projectiles
                     //attach locally
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
+                    ProjectileCollider.enabled = false;
                     IsAttached = true;
 
                     rb.useGravity = false;

@@ -20,6 +20,7 @@ namespace Hadal.Usables.Projectiles
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
+        public Collider ProjectileCollider;
         public bool IsArmed { get; set; } = false;
         public bool IsAttached = false;
         public event Action<bool> OnHit;
@@ -214,6 +215,7 @@ namespace Hadal.Usables.Projectiles
                 {
                     gameObject.transform.position = (Vector3)data[1];
                     Rigidbody.isKinematic = true;
+                    ProjectileCollider.enabled = false;
                     IsAttached = true;
                     ImpactBehaviour();
                     print(projectileID + "projectile attaching due to event");
