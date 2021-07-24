@@ -303,8 +303,13 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
-                TryWarn("Defensive behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+                if (CheckForTargetEnteredTunnel())
+                {
+                    TryDebug("Target entered a tunnel, unable to continue chase, ending immediately.");
+                    OnStandardEndBehaviour?.Invoke();
+                    break;
+                }
 
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
@@ -370,8 +375,13 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
-                TryWarn("Aggressive behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+                if (CheckForTargetEnteredTunnel())
+                {
+                    TryDebug("Target entered a tunnel, unable to continue chase, ending immediately.");
+                    OnStandardEndBehaviour?.Invoke();
+                    break;
+                }
 
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
@@ -435,8 +445,13 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
-                TryWarn("Ambush behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+                if (CheckForTargetEnteredTunnel())
+                {
+                    TryDebug("Target entered a tunnel, unable to continue chase, ending immediately.");
+                    OnStandardEndBehaviour?.Invoke();
+                    break;
+                }
 
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
@@ -500,6 +515,11 @@ namespace Hadal.AI
             NavigationHandler.SetCustomPath(point, true);
             player.SetIsTaggedByLeviathan(true);
             isPlayerTagged = player.GetIsTaggedByLeviathan;
+        }
+
+        private bool CheckForTargetEnteredTunnel()
+        {
+            return Brain.CurrentTarget != null && !CavernManager.IsPlayerInValidCavern(Brain.CurrentTarget);
         }
 
         /// <summary>

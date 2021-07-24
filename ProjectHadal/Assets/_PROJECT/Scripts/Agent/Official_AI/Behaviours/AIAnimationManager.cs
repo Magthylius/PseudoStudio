@@ -23,6 +23,7 @@ namespace Hadal.AI
 		private bool shouldUseStunMultiplier;
 		private AIBrain _brain;
 		private Coroutine mainLerpRoutine;
+		private Coroutine independentLerpRoutine;
 		private Coroutine stopDelaySubroutine;
 		private const string SpeedMultiplierString = "SpeedMultiplier";
 		
@@ -93,7 +94,15 @@ namespace Hadal.AI
 		public void SetAnimation(AIAnim animType, float customAnimLerpTime = -1f)
 		{
 			StopAllRunningCoroutines();
-			mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
+			AnimationFloat curFloat = GetAnimationFloatFromAnimType(animType);
+			if (curFloat.ShouldBeChangedIndependently())
+			{
+				if (independentLerpRoutine != null) return;
+				independentLerpRoutine = StartCoroutine(LerpIndependentAnimation(animType, customAnimLerpTime));
+			}
+			else
+				mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
+
 			Send_SetAnimation(animType, customAnimLerpTime);
 		}
 
@@ -113,7 +122,7 @@ namespace Hadal.AI
 
 			float lerpTime = 1f / (customAnimLerpTime > 0f ? customAnimLerpTime : defaultAnimLerpTime);
 			float percent = 0f;
-			
+
 			ResetSpeed();
 			if (currentFloat.ShouldPauseOnClipFinished())
 			{
@@ -132,6 +141,47 @@ namespace Hadal.AI
 			}
 			
 			mainLerpRoutine = null;
+		}
+
+		private IEnumerator LerpIndependentAnimation(AIAnim animType, float customAnimLerpTime)
+		{
+			AnimationFloat currentFloat = GetAnimationFloatFromAnimType(animType);
+
+			if (currentFloat == null)
+			{
+				string theName = System.Enum.GetName(typeof(AIAnim), animType);
+				$"Unable to find animation float of enum value: {theName}, is it not properly assigned?".Warn();
+				yield break;
+			}
+
+			float lerpTime = 1f / (customAnimLerpTime > 0f ? customAnimLerpTime : defaultAnimLerpTime);
+			float percent = 0f;
+
+			ResetSpeed();
+			if (currentFloat.ShouldPauseOnClipFinished())
+			{
+				isSpeedStopped = false;
+				stopDelaySubroutine = StartCoroutine(StopSpeedAfterDelay(currentFloat.GetClipLength()));
+			}
+			if (currentFloat.ShouldRefreshTree())
+				RefreshBlendTree();
+
+			while (percent < 1f)
+			{
+				percent += Time.deltaTime * lerpTime;
+				currentFloat.LerpToFocusedValue(percent);
+				yield return null;
+			}
+
+			percent = 0f;
+			while (percent < 1f)
+			{
+				percent += Time.deltaTime * lerpTime;
+				currentFloat.LerpToUnfocusedValue(percent);
+				yield return null;
+			}
+
+			independentLerpRoutine = null;
 		}
 
 		private IEnumerator StopSpeedAfterDelay(float delayInSeconds)
@@ -238,6 +288,7 @@ namespace Hadal.AI
             [Range(0f, 1f), SerializeField] private float focusedValue = 1f;
             [Range(0f, 1f), SerializeField] private float unfocusedValue = 0f;
 			[SerializeField] private bool isDefaultAnimationClip;
+			[SerializeField] private bool isIndependentChange;
             [SerializeField] private bool pauseOnClipFinished;
 			[SerializeField] private bool refreshTreeOnClipStart = true;
             [SerializeField] private AnimationClip associatedClip;
@@ -265,6 +316,7 @@ namespace Hadal.AI
             public float GetFocusedValue() => focusedValue;
             public float GetUnfocusedValue() => unfocusedValue;
 			public bool IsDefault() => isDefaultAnimationClip;
+			public bool ShouldBeChangedIndependently() => isIndependentChange;
             public bool ShouldPauseOnClipFinished() => pauseOnClipFinished;
 			public bool ShouldRefreshTree() => refreshTreeOnClipStart;
             public float GetClipLength() => associatedClip.length;

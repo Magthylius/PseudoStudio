@@ -52,6 +52,7 @@ namespace Hadal.Player
         private bool _isCarried;
         private bool _isTaggedByLeviathan;
         private bool _isDown;
+        private bool _isLocalPlayer;
         [SerializeField] LureLauncherObject lureLauncherObject;
         public Action<bool, PlayerController> OnLureHasActivated;
         public bool HasLureLauncher => lureLauncherObject != null;
@@ -532,6 +533,7 @@ namespace Hadal.Player
         private void SetLocalPlayerLayer()
         {
             gameObject.layer = LayerMask.NameToLayer(localPlayerLayer);
+            _isLocalPlayer = true;
         }
         #endregion
 
@@ -547,6 +549,7 @@ namespace Hadal.Player
         public int ViewID => _pView.ViewID;
         public bool CanMove => !_isKnocked && !_isCarried && !_isDown;
         public bool CanRotate => !_isDown && !_isCarried;
+        public bool IsLocalPlayer => _isLocalPlayer;
 
         #endregion
 

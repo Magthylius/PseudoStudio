@@ -38,8 +38,8 @@ namespace Hadal.AI
         [SerializeField] private AIAudioBank audioBank;
         [SerializeField] private AIGraphicsHandler graphicsHandler;
         [SerializeField] private CavernManager cavernManager;
-		[SerializeField] private AIEmissiveColor emissiveColor;
-		[SerializeField] private AIAnimationManager animationManager;
+        [SerializeField] private AIEmissiveColor emissiveColor;
+        [SerializeField] private AIAnimationManager animationManager;
         private NetworkEventManager neManager;
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
@@ -50,8 +50,8 @@ namespace Hadal.AI
         public AIAudioBank AudioBank => audioBank;
         public AIGraphicsHandler GraphicsHandler => graphicsHandler;
         public CavernManager CavernManager => cavernManager;
-		public AIEmissiveColor EmissiveColor => emissiveColor;
-		public AIAnimationManager AnimationManager => animationManager;
+        public AIEmissiveColor EmissiveColor => emissiveColor;
+        public AIAnimationManager AnimationManager => animationManager;
 
         private StateMachine stateMachine;
         private List<ILeviathanComponent> allAIUpdateComponents;
@@ -149,13 +149,13 @@ namespace Hadal.AI
             if (!onMasterClient)
             {
                 healthManager.Initialise(this);
-				emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
-				animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
+                emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
+                animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
                 neManager.AddListener(ByteEvents.AI_PLAY_AUDIO, Receive_PlayAudio);
                 neManager.AddListener(ByteEvents.AI_EXPLOSION_POINT, Receive_SpawnExplosivePoint);
                 return;
             }
-			
+
             if (!isEnabled) return;
 
             Setup();
@@ -185,6 +185,7 @@ namespace Hadal.AI
             stateMachine?.MachineTick();
             mainUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
             HandleCarriedPlayer();
+            PlaySoundWhenEggDestroyed();
         }
         private void LateUpdate()
         {
@@ -216,7 +217,7 @@ namespace Hadal.AI
             if (Egg != null) Egg.eggDestroyedEvent -= HandleEggDestroyedEvent;
             if (!onMasterClient)
             {
-                
+
             }
         }
 
@@ -226,9 +227,9 @@ namespace Hadal.AI
                 "Leviathan brain initialising in Offline mode.".Msg();
 
             allAIUpdateComponents.ForEach(i => i.Initialise(this));
-			emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
+            emissiveColor = FindObjectOfType<AIEmissiveColor>(); emissiveColor.Initialise(this, onMasterClient);
             cavernManager = FindObjectOfType<CavernManager>();
-			animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
+            animationManager = FindObjectOfType<AIAnimationManager>(); animationManager.Initialise(this, onMasterClient);
             Egg = FindObjectOfType<AIEgg>();
 
             //! Event handling
@@ -371,7 +372,7 @@ namespace Hadal.AI
         {
             if (neManager == null || !neManager.IsMasterClient) //! only master client can send this
                 return;
-            
+
             object[] content = new object[] { is3D, (int)soundType };
             neManager.RaiseEvent(ByteEvents.AI_PLAY_AUDIO, content, SendOptions.SendReliable);
         }
@@ -388,12 +389,12 @@ namespace Hadal.AI
                 AudioBank.Play2D(soundType);
         }
 
-        private void Send_SpawnExplosivePoint(Vector3 position)
+        private void Send_SpawnExplosivePoint(Vector3 position, bool useTunnelExplosion)
         {
             if (neManager == null || !neManager.IsMasterClient) //! only master client can send this
                 return;
 
-            object[] content = new object[] { position };
+            object[] content = new object[] { position, useTunnelExplosion };
             neManager.RaiseEvent(ByteEvents.AI_EXPLOSION_POINT, content, SendOptions.SendReliable);
         }
 
@@ -401,7 +402,8 @@ namespace Hadal.AI
         {
             object[] content = (object[])eventData.CustomData;
             Vector3 spawnPos = (Vector3)content[0];
-            SpawnExplosivePointAt(spawnPos);
+            bool useTunnelExplosion = (bool)content[1];
+            SpawnExplosivePointAt(spawnPos, useTunnelExplosion: useTunnelExplosion);
         }
 
         #endregion
@@ -522,9 +524,14 @@ namespace Hadal.AI
             //! Make sure any player in mouth is released
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
             int freeLayerIndex = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+            int freeLocalLayerIndex = LayerMask.NameToLayer(RuntimeData.FreeLocalPlayerLayer);
             foreach (var player in controllers)
             {
-                player.gameObject.layer = freeLayerIndex;
+                if (player.IsLocalPlayer)
+                    player.gameObject.layer = freeLocalLayerIndex;
+                else
+                    player.gameObject.layer = freeLayerIndex;
+                
                 player.SetIsCarried(false);
                 player.SetIsTaggedByLeviathan(false);
             }
@@ -562,32 +569,65 @@ namespace Hadal.AI
             return true;
         }
 
-        public void SpawnExplosivePointAt(Vector3 position, bool sendWithEvent = false)
+        public void SpawnExplosivePointAt(Vector3 position, bool sendWithEvent = false, bool useTunnelExplosion = false)
         {
             ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
+            float additionalRadius = 0f;
+            float knockForce = 0f;
+            if (useTunnelExplosion)
+            {
+                additionalRadius = MachineData.Engagement.G_TunnelKnockbackAdditionalRange;
+                knockForce = MachineData.Engagement.G_CarryKnockbackForce;
+            }
+            else
+            {
+                additionalRadius = MachineData.Engagement.G_CarryKnockbackAdditionalRange;
+                knockForce = MachineData.Engagement.G_TunnelKnockbackForce;
+            }
+
             expSettings.Position = position;
-            expSettings.Radius = SenseDetection.GetCurrentSenseDetectionRadius() + MachineData.Engagement.G_CarryKnockbackAdditionalRange;
-            expSettings.Force = MachineData.Engagement.G_CarryKnockbackForce;
+            expSettings.Radius = 70f + additionalRadius;
+            expSettings.Force = knockForce;
             expSettings.IgnoreLayers = MachineData.Engagement.JG_KnockbackIgnoreMasks;
 
             ExplosivePoint.Create(expSettings);
 
             if (sendWithEvent)
-                Send_SpawnExplosivePoint(position);
+                Send_SpawnExplosivePoint(position, useTunnelExplosion);
         }
 
+        bool eggDestroyedSound;
         private void HandleEggDestroyedEvent(bool isDestroyed)
         {
             if (isDestroyed)
             {
                 RuntimeData.SetIsEggDestroyed(true);
-                AudioBank.Play3D(soundType: AISound.EggDestroyed, this.transform);
                 RuntimeData.UpdateBonusConfidence(MachineData.EggDestroyedPermanentConfidence);
+                eggDestroyedSound = true;
+
+
                 return;
             }
 
             RuntimeData.SetIsEggDestroyed(false);
             RuntimeData.UpdateBonusConfidence(0);
+        }
+
+        void PlaySoundWhenEggDestroyed()
+        {
+            if (eggDestroyedSound)
+            {
+                if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Lair)
+                {
+                    AudioBank.Play3D(soundType: AISound.EggDestroyed, transform);
+                    Debug.LogWarning("HEY RAWR");
+                    eggDestroyedSound = false;
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         public void TryToTargetClosestPlayerInAICavern() => TrySetCurrentTarget(GetClosestPlayerInAICavern());
@@ -643,7 +683,7 @@ namespace Hadal.AI
 
         public bool CheckForJudgementStateCondition()
         {
-            if (CurrentTarget != null)
+            if (CurrentTarget != null && CavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid)
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
                 if (NavigationHandler.Data_IsOnQueuePath)
@@ -655,12 +695,25 @@ namespace Hadal.AI
             return false;
         }
 
+        private float knockCooldownTimer = 0f;
+        public bool CheckForAIAndPlayersInTunnel()
+        {
+            if (CavernManager.GetCavernTagOfAILocation() == CavernTag.Invalid && SenseDetection.AnyDetectedPlayersInTunnels()
+                && Time.time > knockCooldownTimer)
+            {
+                knockCooldownTimer = Time.time + MachineData.Engagement.G_TunnelKnockbackCooldownTime;
+                SpawnExplosivePointAt(MouthObject.transform.position, true, true);
+                return true;
+            }
+            return false;
+        }
+
         public PlayerController GetClosestPlayerInAICavern()
         {
             var handler = CavernManager.GetHandlerOfAILocation;
             if (handler != null)
                 return handler.GetClosestPlayerTo(transform);
-            
+
             return null;
         }
 

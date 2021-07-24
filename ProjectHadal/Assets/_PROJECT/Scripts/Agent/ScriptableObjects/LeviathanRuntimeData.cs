@@ -13,6 +13,7 @@ namespace Hadal.AI
         [Header("Information")]
         public string GrabbedPlayerLayer;
         public string FreePlayerLayer;
+        public string FreeLocalPlayerLayer;
         public LayerMask PlayerMask;
         public LayerMask ObstacleMask;
         public NavPoint navPointPrefab;

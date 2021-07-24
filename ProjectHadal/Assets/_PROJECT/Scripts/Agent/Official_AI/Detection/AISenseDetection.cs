@@ -61,13 +61,18 @@ namespace Hadal.AI
 
         public void RequestImmediateSensing() => SenseSurroundings();
 
-        public PlayerController GetIsolatedPlayerIfAny()
+        public PlayerController GetIsolatedPlayerIfAny(bool includePlayersInTunnel)
         {
             int livePlayerCount = 0;
             PlayerController target = null;
             foreach (var player in _detectedPlayers)
             {
+                //! Do not count down players
                 if (player.GetInfo.HealthManager.IsDownOrUnalive)
+                    continue;
+                
+                //! Do not count players that are not in caverns
+                if (!includePlayersInTunnel && !_brain.CavernManager.IsPlayerInValidCavern(player))
                     continue;
                 
                 livePlayerCount++;
@@ -128,49 +133,16 @@ namespace Hadal.AI
             //! If already targetting, takes closest player
             if (_brain.CurrentTarget && allowSwitchTarget)
                 _brain.ForceSetCurrentTarget(_detectedPlayers.FirstOrDefault());
-
         }
 
-        void HostActivatedLure(bool lureActivated, PlayerController actor)
+        public bool AnyDetectedPlayersInTunnels()
         {
-            bool playerInSameCavernAsAI = _brain.CavernManager.GetCavernTagOfAILocation() == _brain.CavernManager.GetCavernWithPlayerOfViewID(actor.ViewID).cavernTag;
-            bool lureCriteriaMet = lureActivated && playerInSameCavernAsAI;
-
-            if (debugEnabled)
-                $"Received lure activated update, evaluating with lureActivated:{lureActivated} and playerInSameCavern:{playerInSameCavernAsAI}.".Msg();
-
-            if (lureCriteriaMet)
+            foreach (var player in _detectedPlayers)
             {
-                if (debugEnabled)
-                    $"AI should be lured.".Msg();
-
-                NavPoint point = actor.GetComponentInChildren<NavPoint>(); //! check if actor already has a navpoint attached to it
-                if (point == null || !point.IsLurePoint) // run this if there is no navpoint or it is not a lure point
-                {
-                    point = Instantiate(_brain.RuntimeData.navPointPrefab);
-                    point.AttachTo(actor.GetTarget);
-                    point.SetIsLurePoint(true);
-                    SetAIToBecomeLured();
-                }
-                else if (point != null && point.IsLurePoint) //! point already exists && is a lure point
-                {
-                    SetAIToBecomeLured();
-                }
-
-                void SetAIToBecomeLured()
-                {
-                    _brain.NavigationHandler.SetCustomPath(point, false);
-                    // _brain.RuntimeData.SetBrainState(BrainState.Lure);
-                }
+                if (!_brain.CavernManager.IsPlayerInValidCavern(player))
+                    return true;
             }
-            else if (!lureActivated) //! lure has become inactive
-            {
-                if (debugEnabled)
-                    $"AI should no longer be lured.".Msg();
-
-                //_brain.NavigationHandler.StopCustomPath();
-
-            }
+            return false;
         }
 
         private float TickTimer(in float deltaTime) => _checkTimer -= deltaTime;
