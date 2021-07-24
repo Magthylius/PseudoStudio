@@ -13,6 +13,7 @@ namespace Hadal.AI.States
         private JudgementBehaviourCoroutines behaviour;
         private Coroutine currentRoutine;
         public bool IsBehaviourRunning { get; set; }
+        public bool ShouldExit { get; set; }
         public PlayerController IsolatedPlayer { get; private set; }
         
         public JudgementState(AIBrain brain)
@@ -27,6 +28,7 @@ namespace Hadal.AI.States
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             AllowStateTick = true;
+            ShouldExit = false;
             RuntimeData.ResetEngagementTicker();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
 
@@ -41,8 +43,13 @@ namespace Hadal.AI.States
 
         public override void StateTick()
         {
-            float deltaTime = Brain.DeltaTime;
-            RuntimeData.TickEngagementTicker(deltaTime);
+            if (!AllowStateTick) return;
+
+            if (ShouldExit)
+            {
+                RuntimeData.SetBrainState(BrainState.Recovery);
+                return;
+            }
 
             if (IsBehaviourRunning || !AllowStateTick)
                 return;

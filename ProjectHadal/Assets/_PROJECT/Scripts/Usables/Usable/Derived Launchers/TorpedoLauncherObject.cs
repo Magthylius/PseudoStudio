@@ -28,14 +28,14 @@ namespace Hadal.Usables
             InteractableEventManager.Instance.OnInteraction += ReceiveInteractEvent;
         }
 
-        public override void ReceiveInteractEvent(InteractionType interactionType, int interactableID)
+        public override void ReceiveInteractEvent(InteractionType interactionType, int interactableID, int reloadAmount)
         {
             if(interactionType == InteractionType.Salvage_Torpedo)
             {
                 if(ReserveCount < maxReserveCapacity)
                 {
                    InteractableEventManager.Instance.InvokeInteractConfirmation(interactableID);
-                   IncrementReserve();
+                   IncrementReserve(reloadAmount);
                 }
                 // Debug.LogError("Torpedo Added");
             }

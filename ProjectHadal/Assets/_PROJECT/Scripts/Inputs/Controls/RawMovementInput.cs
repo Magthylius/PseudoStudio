@@ -19,7 +19,7 @@ namespace Hadal.Inputs
         public bool HoverUp => HoverAxis >= float.Epsilon;
         public bool HoverDown => HoverAxis <= -float.Epsilon;
         public float BoostAxis => Input.GetAxisRaw("Boost");
-        public bool BoostActive => BoostAxis >= float.Epsilon;
+        public bool BoostActive => Input.GetKeyDown(KeyCode.LeftShift);
 
         //! Double tapping
         public float DoubleTapDetectionTime { get; set; } = 0.4f;

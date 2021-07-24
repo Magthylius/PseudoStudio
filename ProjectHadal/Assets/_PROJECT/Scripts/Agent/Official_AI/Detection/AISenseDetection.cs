@@ -63,8 +63,19 @@ namespace Hadal.AI
 
         public PlayerController GetIsolatedPlayerIfAny()
         {
-            if (_detectedPlayers.Count == 1)
-                return _detectedPlayers.FirstOrDefault();
+            int livePlayerCount = 0;
+            PlayerController target = null;
+            foreach (var player in _detectedPlayers)
+            {
+                if (player.GetInfo.HealthManager.IsDownOrUnalive)
+                    continue;
+                
+                livePlayerCount++;
+                target = player;
+            }
+            
+            if (livePlayerCount == 1)
+                return target;
 
             return null;
         }

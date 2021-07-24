@@ -39,6 +39,7 @@ namespace Hadal.AI.States
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.HU_DisruptionDamageCount);
             DoRoar();
 
+            hasReachedTargetCavern = false;
             if (AICavern != null && AICavern.cavernTag == Brain.TargetMoveCavern.cavernTag)
             {
                 hasReachedTargetCavern = true;
@@ -60,12 +61,12 @@ namespace Hadal.AI.States
             if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime)
                 RuntimeData.SetBrainState(BrainState.Anticipation);
 
-            checkTimer -= Brain.DeltaTime;
-            if (checkTimer <= 0f)
-            {
-                checkTimer = settings.HU_PeriodicCavernUpdateTime;
-                OnCavernEnter(AICavern);
-            }
+            // checkTimer -= Brain.DeltaTime;
+            // if (checkTimer <= 0f)
+            // {
+            //     checkTimer = settings.HU_PeriodicCavernUpdateTime;
+            //     OnCavernEnter(AICavern);
+            // }
 
             if (Brain.CheckForJudgementStateCondition())
             {

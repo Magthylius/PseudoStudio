@@ -50,8 +50,8 @@ namespace Hadal.AI
         [SerializeField, ReadOnly] int bonusConfidence;
         public int ActualConfidenceValue => (confidence + bonusConfidence).Clamp(machineData.MinConfidence, machineData.MaxConfidence);
         public float NormalisedConfidence => ActualConfidenceValue.NormaliseValue(machineData.MinConfidence, machineData.MaxConfidence);
-        public void UpdateConfidenceValue(int change) => confidence += change;
-        public void UpdateBonusConfidence(int change) => bonusConfidence += change;
+        public void UpdateConfidenceValue(int change) => confidence = (confidence + change).Clamp0();
+        public void UpdateBonusConfidence(int change) => bonusConfidence = (bonusConfidence + change).Clamp0();
 
         [Header("Cummulative Damage")]
         [SerializeField, ReadOnly] int cumulativeDamageCount;

@@ -185,7 +185,6 @@ MonoBehaviour:
   Players: []
   Egg: {fileID: 0}
   currentTarget: {fileID: 0}
-  spawnedNavPoint: {fileID: 0}
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   followNetworkManagerOfflineStatus: 1
   isOffline: 0
@@ -351,14 +350,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 150
   currentHealth: 0
-  slowPercentPerStack: 0.025
-  maxSlowStacks: 4
-  maxSlowPercent: 0.1
-  currentMaxSlowPercent: 0.1
+  slowPercentPerStack: 0.015
+  maxSlowStacks: 20
+  maxSlowPercent: 0.3
+  currentMaxSlowPercent: 0.29999998
   currentSlowPercent: 0
   currentSlowStacks: 0
-  lowHealthPercent: 0
-  resistenceOnLowHealth: 0
+  lowHealthPercent: 0.2
+  resistenceOnLowHealth: 0.2
   _baseDamageResistance: 0
   _additionalDamageResistance: 0
   randomHitPoints: []
@@ -418,7 +417,13 @@ MonoBehaviour:
   - associatedEnum: 3
     audioAsset: {fileID: 11400000, guid: 88ebb8a6a63bfdd45b629033c119946c, type: 2}
   - associatedEnum: 4
+    audioAsset: {fileID: 11400000, guid: 9d3a3cdb568109943ad40ca62b48aaa7, type: 2}
+  - associatedEnum: 6
+    audioAsset: {fileID: 11400000, guid: 27e1556e32ee9b1418919e4c2e221e66, type: 2}
+  - associatedEnum: 5
     audioAsset: {fileID: 0}
+  - associatedEnum: 8
+    audioAsset: {fileID: 11400000, guid: b1c41526438608b44a829a764ff1244e, type: 2}
   brain: {fileID: 2206939684412345039}
   source2D: {fileID: 0}
 --- !u!1 &3778157195922931001

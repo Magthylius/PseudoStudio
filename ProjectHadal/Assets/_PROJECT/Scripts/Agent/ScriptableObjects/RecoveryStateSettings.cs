@@ -18,6 +18,7 @@ namespace Hadal.AI.States
         [Header("Escape Settings")]
         [Min(0f)] public float MaxEscapeTime = 100f;
         [Min(0f)] public float MaxEscapeDamageThresholdPercentage = 0.6f;
+        [Min(0f)] public float EscapeSpeedMultiplier = 1.8f;
 
         public float GetEscapeDamageThreshold(float aiCurrentHealth)
         {
