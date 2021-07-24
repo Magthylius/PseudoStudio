@@ -14,12 +14,6 @@ namespace Hadal.AI
         [SerializeField] private List<AnimationFloat> floats;
         [SerializeField] private string target;
 
-        private enum Typo
-        {
-            Swim = 0,
-            Carry
-        }
-
         private void Awake()
         {
             if (animator == null)
