@@ -493,6 +493,7 @@ namespace Hadal.AI
                 CarriedPlayer.GetTarget.SetParent(mouth, true);
                 CarriedPlayer.gameObject.layer = LayerMask.NameToLayer(RuntimeData.GrabbedPlayerLayer);
                 CarriedPlayer.GetTarget.localPosition = Vector3.zero;
+                CarriedPlayer.GetTarget.LookAt(mouth.position + (mouth.forward * -2f), mouth.up);
 
                 //! Send event if host
                 if (neManager.IsMasterClient)

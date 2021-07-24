@@ -373,6 +373,7 @@ namespace Hadal.Player
             {
                 gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
                 mover.ToggleEnablility(true);
+                SetLocalPlayerLayer();
             }
             
             if (UITrackerBridge.LocalPlayerUIManager == null && isMine)
@@ -545,7 +546,7 @@ namespace Hadal.Player
         public Photon.Realtime.Player AttachedPlayer => attachedPlayer;
         public int ViewID => _pView.ViewID;
         public bool CanMove => !_isKnocked && !_isCarried && !_isDown;
-        public bool CanRotate => !_isDown;
+        public bool CanRotate => !_isDown && !_isCarried;
 
         #endregion
 
