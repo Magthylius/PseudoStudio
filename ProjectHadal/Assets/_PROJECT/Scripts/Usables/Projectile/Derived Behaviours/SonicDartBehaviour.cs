@@ -1,3 +1,4 @@
+using Hadal.Networking;
 using Hadal.UI;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] private ProjectilePhysics projPhysics;
         [SerializeField] private AttachMode attachMode;
         [SerializeField] private SelfDeactivationMode selfDeactivation;
+        bool attachedToMonster;
         public void SubscribeModeEvent()
         {
             attachMode.SwitchedToAttachEvent += enableSonicDartUI;
@@ -24,6 +26,8 @@ namespace Hadal.Usables.Projectiles
 
         public void OnDisable()
         {
+            Rigidbody.isKinematic = false;
+            ProjectileCollider.enabled = true;
             IsAttached = false;
         }
 
@@ -32,10 +36,44 @@ namespace Hadal.Usables.Projectiles
             if (IsAttached)
                 return;
 
-            foreach (string layerName in validLayer)
+            if (collision.gameObject.layer == 11)
             {
-                LayerMask layer = LayerMask.NameToLayer(layerName);
-                if (collision.gameObject.layer == layer.value)
+                return;
+            }
+
+            int layer = collision.gameObject.layer;
+
+            if (UsableBlackboard.InAILayers(layer))
+            {
+                //Debug.LogWarning("hit ai!");
+                if (IsLocal)
+                {
+                    attachedToMonster = true;
+                }
+            }
+            else
+            {
+                attachedToMonster = false;
+            }
+
+            if (!UsableBlackboard.InPlayerLayers(layer) && !UsableBlackboard.InUtilityLayers(layer))
+            {
+                if (IsLocal)
+                {
+                    transform.parent = collision.gameObject.transform;
+                    IsAttached = true;
+
+                    Vector3 collisionSpot = gameObject.transform.position;
+                    object[] content = new object[] { projectileID, collisionSpot, attachedToMonster };
+                    NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ATTACH, content);
+                    ImpactBehaviour();
+                }
+            }
+
+           /* foreach (string layerName in validLayer)
+            {
+                LayerMask layers = LayerMask.NameToLayer(layerName);
+                if (collision.gameObject.layer == layers.value)
                 {
                     transform.parent = collision.gameObject.transform;
                     Rigidbody.isKinematic = true;
@@ -46,6 +84,17 @@ namespace Hadal.Usables.Projectiles
                         projPhysics.SwapModes();
                     }
                 }
+            }*/
+        }
+
+        protected override void ImpactBehaviour()
+        {
+            Rigidbody.isKinematic = true;
+            ProjectileCollider.enabled = false;
+
+            if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
+            {
+                projPhysics.SwapModes();
             }
         }
 

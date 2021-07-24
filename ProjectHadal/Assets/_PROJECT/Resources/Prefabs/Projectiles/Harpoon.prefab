@@ -270,6 +270,7 @@ MonoBehaviour:
   projectileID: 0
   IsLocal: 0
   aimedPoint: {x: 0, y: 0, z: 0}
+  ProjectileCollider: {fileID: 5418744652871356807}
   IsAttached: 0
   particleEffect: {fileID: 6004869895138044315}
   projectileAsset: {fileID: 514449710122028283}
@@ -279,9 +280,9 @@ MonoBehaviour:
   validLayer:
   - Monster
   - Obstacle
-  defaultAttachDuration: 20
+  defaultAttachDuration: 15
   defaultSlowCount: 1
-  poweredAttachDuration: 20
+  poweredAttachDuration: 15
   poweredSlowCount: 2
   projPhysics: {fileID: 5627941608468223027}
   impulseMode: {fileID: 0}
