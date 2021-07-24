@@ -211,9 +211,6 @@ namespace Hadal.AI
                     NavigationHandler.ForceDisable();
                     Brain.CarriedPlayer.GetTarget.position = Brain.MouthObject.transform.position + (Brain.MouthObject.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
 
-                    //! Spawn explosive point to blast away unwanted attention
-                    Brain.SpawnExplosivePointAt(Brain.CarriedPlayer.GetTarget.position);
-
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
                     yield return new WaitForSeconds(2f);

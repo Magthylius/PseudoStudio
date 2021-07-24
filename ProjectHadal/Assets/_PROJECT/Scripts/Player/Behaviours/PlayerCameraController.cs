@@ -18,6 +18,8 @@ namespace Hadal.Player.Behaviours
         [Header("Special Effects")]
         [SerializeField] private bool enableCameraShake = true;
         [SerializeField] private CameraShakeProperties shakeProperties;
+        [SerializeField] private CameraShakeProperties leviathanShakeProperties;
+        [SerializeField] private CameraShakeProperties shakeSpeedMultiplier;
         [SerializeField] private GameObject cameraShakeTarget = null;
 
         private float _originalCameraFOV;
@@ -62,28 +64,47 @@ namespace Hadal.Player.Behaviours
 
         #region Camera Shake
 
+        [NaughtyAttributes.Button("Shake Camera")]
+        private void ShakeCamera()
+        {
+            ShakeCameraDefault();
+        }
+
+        public void ShakeCamera(CameraShakeProperties customProperties)
+        {
+            if (_isDisabled || !enableCameraShake) return;
+            customProperties.Angle = Random.Range(0f, 360f);
+            this.ShakeCamera(cameraShakeTarget, customProperties);
+        }
         public void ShakeCameraDefault()
         {
             if (_isDisabled || !enableCameraShake) return;
+            shakeProperties.Angle = Random.Range(0f, 360f);
             this.ShakeCamera(cameraShakeTarget, shakeProperties);
+        }
+        public void ShakeCameraLeviathan()
+        {
+            if (_isDisabled || !enableCameraShake) return;
+            leviathanShakeProperties.Angle = Random.Range(0f, 360f);
+            this.ShakeCamera(cameraShakeTarget, leviathanShakeProperties);
         }
         public void ShakeCamera(float normSpeed)
         {
             if (_isDisabled || !enableCameraShake) return;
-            var sProp = ShakePropertiesWithSpeed(normSpeed);
-            this.ShakeCamera(cameraShakeTarget, sProp, true);
+            this.ShakeCamera(cameraShakeTarget, ShakePropertiesWithSpeed(normSpeed));
         }
         private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
         {
+            speed = speed.Clamp01();
             var newShakeProperties = new CameraShakeProperties(
-                shakeProperties.Angle,
-                shakeProperties.Strength + (speed * 5),
-                shakeProperties.MaxSpeed + (speed * 20),
-                shakeProperties.MinSpeed + (speed * 10),
-                shakeProperties.Duration + (speed * 3),
-                shakeProperties.NoisePercent + (speed * 0.25f),
-                shakeProperties.DampingPercent - (speed * 0.25f),
-                shakeProperties.RotationPercent
+                Random.Range(0f, 360f),
+                shakeProperties.Strength + (speed * shakeSpeedMultiplier.Strength),
+                shakeProperties.MaxSpeed + (speed * shakeSpeedMultiplier.MaxSpeed),
+                shakeProperties.MinSpeed + (speed * shakeSpeedMultiplier.MinSpeed),
+                shakeProperties.Duration + (speed * shakeSpeedMultiplier.Duration),
+                (shakeProperties.NoisePercent + (speed * shakeSpeedMultiplier.NoisePercent)).Clamp01(),
+                (shakeProperties.DampingPercent + (speed * shakeSpeedMultiplier.DampingPercent)).Clamp01(),
+                (shakeProperties.RotationPercent + (speed * shakeSpeedMultiplier.RotationPercent)).Clamp01()
             );
             return newShakeProperties;
         }
