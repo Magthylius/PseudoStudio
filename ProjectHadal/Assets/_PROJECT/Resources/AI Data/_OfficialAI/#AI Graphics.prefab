@@ -1165,7 +1165,7 @@ MonoBehaviour:
     unfocusedValue: 0
     isDefaultAnimationClip: 1
     pauseOnClipFinished: 0
-    refreshTreeOnClipStart: 1
+    refreshTreeOnClipStart: 0
     associatedClip: {fileID: 1827226128182048838, guid: 489060b15d3f7ee44a80c295cd314604, type: 3}
   - name: Bite
     animationEnum: 1
@@ -1176,6 +1176,33 @@ MonoBehaviour:
     pauseOnClipFinished: 0
     refreshTreeOnClipStart: 1
     associatedClip: {fileID: 1827226128182048838, guid: d966f2fc9fd00be408a3fd633a10a9d3, type: 3}
+  - name: Aggro
+    animationEnum: 2
+    defaultValue: 0
+    focusedValue: 1
+    unfocusedValue: 0
+    isDefaultAnimationClip: 0
+    pauseOnClipFinished: 0
+    refreshTreeOnClipStart: 1
+    associatedClip: {fileID: 1827226128182048838, guid: 55cc74595fc58fa469372a70953b3c34, type: 3}
+  - name: Hurt
+    animationEnum: 3
+    defaultValue: 0
+    focusedValue: 1
+    unfocusedValue: 0
+    isDefaultAnimationClip: 0
+    pauseOnClipFinished: 0
+    refreshTreeOnClipStart: 1
+    associatedClip: {fileID: 0}
+  - name: Death
+    animationEnum: 4
+    defaultValue: 0
+    focusedValue: 1
+    unfocusedValue: 0
+    isDefaultAnimationClip: 0
+    pauseOnClipFinished: 0
+    refreshTreeOnClipStart: 0
+    associatedClip: {fileID: 0}
 --- !u!1 &5634010867674647572
 GameObject:
   m_ObjectHideFlags: 0
