@@ -319,7 +319,8 @@ namespace Hadal.AI
         private void HandleCarriedPlayer()
         {
             if (CarriedPlayer == null || doNotHandleCarriedPlayer) return;
-            CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * 2f);
+            CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * 4.5f);
+            CarriedPlayer.GetTarget.LookAt(MouthObject.transform.position + (MouthObject.transform.forward * -2f));
         }
 
         #region Event Handlers
