@@ -7,7 +7,9 @@ using Hadal.AudioSystem;
 namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
-    {     
+    {
+        [SerializeField] int explosionSelfDamage;
+
         #region Unity Lifecycle
 
         protected override void OnEnable()
@@ -113,6 +115,7 @@ namespace Hadal.Usables.Projectiles
         private ExplosionSettings CreateExplosionInfo()
         {
             ExplosionSettings explodeInfo = new ExplosionSettings();
+            explodeInfo.Damage = explosionSelfDamage;
             explodeInfo.Position = this.transform.position;
             return explodeInfo;
         }

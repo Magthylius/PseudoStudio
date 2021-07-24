@@ -7,6 +7,7 @@ namespace Hadal
 {
     public class ExplosivePoint : MonoBehaviour
     {
+        public int ExplosionDamage { get; private set; }
         public float RadiusOfEffect { get; private set; }
         public float ForceAmount { get; private set; }
         public bool DetonateAutomatically { get; private set; }
@@ -41,6 +42,11 @@ namespace Hadal
 
             rigidbodies.ForEach(r =>
             {
+                // if its local player, damage them
+                if(LayerMask.LayerToName(r.gameObject.layer) == "LocalPlayer")
+                {
+                    r.GetComponentInChildren<IDamageable>().TakeDamage(ExplosionDamage);
+                }
                 //! determine direction of resultant force
                 Vector3 forceDirection = r.transform.position - GetPosition;
                 
@@ -93,6 +99,7 @@ namespace Hadal
         {
             ExplosivePoint prefab = Resources.Load<ExplosivePoint>(PathManager.ExplosivePointPrefabPath);
             ExplosivePoint point = Instantiate(prefab, settings.Position, Quaternion.identity);
+            point.ExplosionDamage = settings.Damage;
             point.RadiusOfEffect = settings.Radius;
             point.ForceAmount = settings.Force;
             point.DetonateAutomatically = !settings.DetonateOnRemote;
@@ -104,6 +111,7 @@ namespace Hadal
         public class ExplosionSettings
         {
             public Vector3 Position = Vector3.zero;
+            public int Damage = 0;
             public float Radius = 30f;
             public float Force = 50f;
             public bool DetonateOnRemote = false;
