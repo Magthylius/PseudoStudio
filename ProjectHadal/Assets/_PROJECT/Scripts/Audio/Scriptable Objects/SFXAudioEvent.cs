@@ -90,7 +90,7 @@ namespace Hadal.AudioSystem
             {
                 AudioSourceHandler handler = manager.GetAvailableAudioSourceHandler();
                 handler.Setup(in Settings);
-                handler.Source.clip = Clips[index];
+                handler.Source.clip = Clips.RandomElement();
                 handler.Source.spatialBlend = 0f;
                 handler.PlaySource();
             }
