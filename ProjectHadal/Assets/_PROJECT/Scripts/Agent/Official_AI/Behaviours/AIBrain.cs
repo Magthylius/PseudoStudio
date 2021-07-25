@@ -664,7 +664,7 @@ namespace Hadal.AI
 
             return CarriedPlayer.GetTarget.position
                 + (CarriedPlayer.GetTarget.forward * 2f)
-                + (CarriedPlayer.GetTarget.up * 12f);
+                + (CarriedPlayer.GetTarget.up * 20f);
         }
 
         #endregion
