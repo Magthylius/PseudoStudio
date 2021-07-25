@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 1692377485682228084}
   - component: {fileID: 6021279049498701051}
   - component: {fileID: 9221971048963321059}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Radar Handlers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,11 +122,10 @@ GameObject:
   - component: {fileID: 2206939684412345039}
   - component: {fileID: 8848565156750440696}
   - component: {fileID: 5803568158776345075}
-  - component: {fileID: 7028138779165439690}
   - component: {fileID: 2206939684412345074}
   - component: {fileID: 2007591999211397865}
   - component: {fileID: 2007591999211397866}
-  m_Layer: 14
+  m_Layer: 23
   m_Name: '#AI 2.0'
   m_TagString: Monster
   m_Icon: {fileID: 0}
@@ -218,20 +217,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7028138779165439690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2206939684412345075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b0fc187d7cd3d8408bab40ca03b8aa6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitboxDamageMultiplier: 1
-  healthManager: {fileID: 0}
 --- !u!54 &2206939684412345074
 Rigidbody:
   m_ObjectHideFlags: 0
