@@ -82,28 +82,14 @@ namespace Hadal.Usables.Projectiles
             projectileTriggered = true;
 
             int layer = other.gameObject.layer;
-            if (UsableBlackboard.InPlayerLayers(layer))
-            {
-                //! hits player
 
-                ExplodeAndDespawn();
-            }
-            else if (UsableBlackboard.InAILayers(layer))
+            if (UsableBlackboard.InAILayers(layer))
             {
                 //! hits AI
+                Debug.LogError(other.name);
                 if (IsLocal)
                     other.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
 
-                ExplodeAndDespawn();
-
-            }
-            else if (UsableBlackboard.InCollidableLayers(layer))
-            {
-                //! hits collidables   
-                ExplodeAndDespawn();
-            }
-            else if (UsableBlackboard.InUtilityLayers(layer))
-            {
                 ExplodeAndDespawn();
             }
         }
