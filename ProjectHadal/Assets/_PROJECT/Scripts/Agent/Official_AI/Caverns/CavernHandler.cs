@@ -79,7 +79,6 @@ namespace Hadal.AI.Caverns
         {
             //! Prechecks
             NavPoint nPoint = other.GetComponent<NavPoint>();
-            int layerVal = other.gameObject.layer;
 
             if (other.GetComponent<PlayerController>() != null)
             {
@@ -106,9 +105,6 @@ namespace Hadal.AI.Caverns
 
         void ColliderTriggerLeave(Collider other)
         {
-            //! Prechecks
-            int layerVal = other.gameObject.layer;
-
             if (other.GetComponent<PlayerController>() != null)
             {
                 PlayerController player = other.GetComponent<PlayerController>();

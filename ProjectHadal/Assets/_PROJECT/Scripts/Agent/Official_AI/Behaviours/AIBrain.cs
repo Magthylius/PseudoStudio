@@ -13,6 +13,8 @@ using Hadal.Player;
 using Hadal.AI.Graphics;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 
 namespace Hadal.AI
 {
@@ -416,6 +418,12 @@ namespace Hadal.AI
             bool useTunnelExplosion = (bool)content[1];
             SpawnExplosivePointAt(spawnPos, useTunnelExplosion: useTunnelExplosion);
         }
+		
+		internal void Send_JudgementEvent(bool isJudgement)
+		{
+			RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+			neManager.RaiseEvent(ByteEvents.AI_JUDGEMENT_EVENT, isJudgement, options, SendOptions.SendReliable);
+		}
 
         #endregion
 

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace Hadal.AudioSystem
@@ -9,6 +11,7 @@ namespace Hadal.AudioSystem
         [SerializeField] private bool playWithDelay;
         [SerializeField, Min(0f)] private float playDelaySeconds;
         [SerializeField] private AudioEventData ambienceAsset;
+		[SerializeField] private AudioEventData hydrophoneAmbienceAsset;
 
         private bool hasStartedPlaying = false;
 
@@ -28,6 +31,12 @@ namespace Hadal.AudioSystem
             if (ambienceAsset == null || hasStartedPlaying) return;
             StartCoroutine(AmbienceRoutine(playWithDelay ? playDelaySeconds : 0f));
         }
+		
+		public void PlayHydrophoneAmbience()
+		{
+			if (hydrophoneAmbienceAsset != null)
+				hydrophoneAmbienceAsset.Play((AudioSource)null);
+		}
 
         private IEnumerator AmbienceRoutine(float delay)
         {

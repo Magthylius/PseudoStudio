@@ -336,10 +336,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 793300d9292372940858f770c48b001d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assets: []
+  assets:
+  - associatedEnum: 0
+    asset: {fileID: 11400000, guid: ef83f50cda1b4f742a3a9a8718ff4d2c, type: 2}
+  - associatedEnum: 1
+    asset: {fileID: 11400000, guid: 90b1fe27d53d2764c9c8e4f4a359b0c5, type: 2}
   registers:
   - associatedEnum: 0
-    durationRange: {x: 5, y: 8}
+    durationRange: {x: 5.5, y: 9}
 --- !u!1 &1538790924821076008
 GameObject:
   m_ObjectHideFlags: 0
@@ -1194,6 +1198,7 @@ MonoBehaviour:
   tapDetectionTime: 0.1
   dodgeForce: 125
   boostTimerMax: 0.5
+  boostSound: {fileID: 11400000, guid: 90b1fe27d53d2764c9c8e4f4a359b0c5, type: 2}
   maxReserveCapacity: 1
   reserveRegenerationTime: 8
   maxChamberCapacity: 1

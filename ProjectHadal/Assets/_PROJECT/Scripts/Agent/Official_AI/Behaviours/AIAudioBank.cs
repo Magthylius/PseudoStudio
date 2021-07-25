@@ -69,7 +69,7 @@ namespace Hadal.AI
         }
     }
 	
-	public enum AIPlayAudioType
+	internal enum AIPlayAudioType
 	{
 		Dimension2 = 0,
 		Dimension3,
