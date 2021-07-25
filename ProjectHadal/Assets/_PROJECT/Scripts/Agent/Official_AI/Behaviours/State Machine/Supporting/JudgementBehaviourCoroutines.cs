@@ -210,7 +210,6 @@ namespace Hadal.AI
                     //! Teleport player to the correct location in front of the AI & disable navigation
                     NavigationHandler.ForceDisable();
                     Brain.CarriedPlayer.GetTarget.position = Brain.MouthObject.transform.position + (Brain.MouthObject.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
-                    AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
 
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
@@ -242,6 +241,7 @@ namespace Hadal.AI
             int totalDamageSeconds = Settings.G_TotalThreshTimeInSeconds;
             isDamaging = true;
             NavigationHandler.DisableWithLerp(2f); //try to disable if not already disabled
+			AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
 
             void StopAttack()
             {

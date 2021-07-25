@@ -97,11 +97,14 @@ namespace Hadal.AudioSystem
             }
             else
             {
-                AudioSource aSource = GetFallbackAudioSource();
-                ArrangeSourceWithClip(ref aSource);
-                aSource.spatialBlend = 0f;
-                aSource.Play();
-                Destroy(aSource, aSource.clip.length);
+                AudioSourceHandler handler = GetFallbackAudioSourceHandler();
+                ArrangeSourceWithClip(ref handler.Source);
+                handler.Source.spatialBlend = 0f;
+                handler.PlaySource();
+                if (Application.isPlaying)
+					Destroy(handler.gameObject, handler.Source.clip.length);
+				else
+					handler.DestroyImmediateOnFinish = true;
             }
         }
 
@@ -125,14 +128,41 @@ namespace Hadal.AudioSystem
             }
 			else
 			{
-				AudioSource aSource = GetFallbackAudioSource();
-			 	ArrangeSourceWithClip(ref aSource);
-				aSource.transform.position = followPosTransform.position;
-				aSource.transform.parent = followPosTransform;
-				aSource.PlayOneShot(aSource.clip, Settings.Volume.RandomBetweenXY());
-				Destroy(aSource.gameObject, aSource.clip.length);
+				AudioSourceHandler handler = GetFallbackAudioSourceHandler();
+			 	ArrangeSourceWithClip(ref handler.Source);
+				handler.SetWorldPosition(followPosTransform.position);
+				handler.SetParent(followPosTransform);
+				handler.Source.clip = GetWeightedClip();
+				handler.Source.PlayOneShot(handler.Source.clip, Settings.Volume.RandomBetweenXY());
+				if (Application.isPlaying)
+					Destroy(handler.gameObject, handler.Source.clip.length);
+				else
+					handler.DestroyImmediateOnFinish = true;
 			}
         }
+		
+		public override void PlayOneShot2D()
+		{
+			if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+			
+			var manager = AudioManager.Instance;
+            if (manager != null)
+            {
+                var handler = manager.GetAvailableAudioSourceHandler();
+                handler.Setup(in Settings);
+				handler.Source.spatialBlend = 0f;
+				handler.Source.clip = GetWeightedClip();
+                handler.Source.PlayOneShot(handler.Source.clip, Settings.Volume.RandomBetweenXY());
+            }
+			else
+			{
+				AudioSourceHandler handler = GetFallbackAudioSourceHandler();
+			 	ArrangeSourceWithClip(ref handler.Source);
+				handler.Source.spatialBlend = 0f;
+				handler.Source.PlayOneShot(handler.Source.clip, Settings.Volume.RandomBetweenXY());
+				Destroy(handler.gameObject, handler.Source.clip.length);
+			}
+		}
 		
 		#endregion
 
@@ -166,6 +196,13 @@ namespace Hadal.AudioSystem
             }
             return null;
         }
+		
+		private AudioSourceHandler GetFallbackAudioSourceHandler()
+		{
+			AudioSourceHandler handler = new GameObject("New Audiosource Handler").AddComponent<AudioSourceHandler>();
+			handler.Source = GetFallbackAudioSource();
+			return handler;
+		}
 
         /// <summary> Returns an audio source on a newly instantiated game object. </summary>
         private AudioSource GetFallbackAudioSource()

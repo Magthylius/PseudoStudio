@@ -325,6 +325,7 @@ namespace Hadal.AI
             }
 
             brain.AnimationManager.SetAnimation(AIAnim.Hurt, 1f);
+			brain.AudioBank.PlayOneShot(soundType: AISound.Hurt, brain.transform);
         }
 
         private Vector3 GetRandomHitPosition() => randomHitPoints.RandomElement().position;
@@ -335,13 +336,5 @@ namespace Hadal.AI
             if (vfx == null) return;
             vfx.SpawnAt(position);
         }
-
-
-        // private void HandleEggDestroyedEvent(bool isDestroyed)
-        // {
-        //     if (isDestroyed)
-        //     {
-        //     }
-        // }
     }
 }
