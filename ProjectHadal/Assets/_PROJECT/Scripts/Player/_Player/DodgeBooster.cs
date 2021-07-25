@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Inputs;
+using Hadal.AudioSystem;
 
 namespace Hadal.Player
 {
@@ -29,6 +30,7 @@ namespace Hadal.Player
         private float boostTimer;
         private BoostDirection boostDirection;
         [SerializeField] private float boostTimerMax;
+        [SerializeField] private AudioEventData boostSound;
 
         #region Boost Refill logic
         [SerializeField] private int maxReserveCapacity;
@@ -69,6 +71,9 @@ namespace Hadal.Player
             {
                 if(CheckForInput())
                 {
+                    if(boostSound)
+                        boostSound.PlayOneShot(playerController.GetTarget);
+
                     DecrementChamber();
                 }
             }
