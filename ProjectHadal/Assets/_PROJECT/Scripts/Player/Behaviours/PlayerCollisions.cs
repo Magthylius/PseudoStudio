@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Hadal.Locomotion;
 using Tenshi;
+using Hadal.AudioSystem;
 
 //Created by Jet
 //edited by Jin
@@ -14,6 +15,7 @@ namespace Hadal.Player.Behaviours
         private PlayerController _playerController;
         private PlayerCameraController _cameraController;
 
+        [SerializeField] private AudioEventData collisionSound;
 
         public void Inject(PlayerController controller)
         {
@@ -25,9 +27,13 @@ namespace Hadal.Player.Behaviours
         internal void CollisionEnter(Collision collision)
         {
             float force = _playerController.GetInfo.Rigidbody.velocity.magnitude;
+            
             if (force >= forceSpeedThreshold)
             {
                 _cameraController.ShakeCamera(force);
+
+                if (collisionSound)
+                    collisionSound.PlayOneShot(_playerController.GetTarget);
             }
         }
 
