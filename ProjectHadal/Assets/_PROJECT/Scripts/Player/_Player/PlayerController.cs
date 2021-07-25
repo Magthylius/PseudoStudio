@@ -14,6 +14,7 @@ using System.Collections;
 using Hadal.Networking.UI.Loading;
 using Hadal.Usables;
 using Hadal.Locomotion;
+using Hadal.AudioSystem;
 
 // Created by Jet, E: Jon, Jin
 namespace Hadal.Player
@@ -283,7 +284,14 @@ namespace Hadal.Player
             SetLocalPlayerSettings();
             PlayerClassManager.Instance.ApplyClass();
             if (PlayerClassManager.Instance.GetCurrentPlayerClass().ClassType == PlayerClassType.Informer)
-                playerAudio.EnableInRegister(PlayerSound.Informer_Whalesong);
+            {
+				playerAudio.EnableInRegister(PlayerSound.Informer_Whalesong);
+				var ambiencePlayer = FindObjectOfType<AmbiencePlayer>();
+				if (ambiencePlayer != null)
+					ambiencePlayer.PlayHydrophoneAmbience();
+				else
+					"Ambience Player cannot be found in current scene.".Warn();
+			}
             
             mover.ToggleEnablility(true);
             LoadingManager.Instance.StartEndLoad();
@@ -292,7 +300,6 @@ namespace Hadal.Player
             LocalGameStartEvent?.Invoke(this);
 
             UpdateDiegetics();
-            //Debug.LogWarning($"pView owner:  {_pView.Owner.NickName}");
         }
 
         public void TrackNamesOnline()
