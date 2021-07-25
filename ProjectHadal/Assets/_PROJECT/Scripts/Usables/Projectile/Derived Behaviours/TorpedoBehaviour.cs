@@ -51,7 +51,7 @@ namespace Hadal.Usables.Projectiles
             if (UsableBlackboard.InPlayerLayers(layer))
             {
                 //! hits player
-                
+               
                 ExplodeAndDespawn();
             }
             else if (UsableBlackboard.InAILayers(layer))
@@ -72,22 +72,55 @@ namespace Hadal.Usables.Projectiles
             {
                 ExplodeAndDespawn();
             }
-            
+           
+        }
 
-            void ExplodeAndDespawn()
+        private void OnTriggerEnter(Collider other)
+        {
+            if (projectileTriggered) return;
+
+            projectileTriggered = true;
+
+            int layer = other.gameObject.layer;
+            if (UsableBlackboard.InPlayerLayers(layer))
             {
-                //if not local, only hide art asset
-                if(!IsLocal)
-                {
-                    projectileAsset.SetActive(false);
-                    return;
-                }
+                //! hits player
 
-                Vector3 collisionSpot = gameObject.transform.position;
-                object[] content = {projectileID, collisionSpot};
-                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
-                ImpactBehaviour();
+                ExplodeAndDespawn();
             }
+            else if (UsableBlackboard.InAILayers(layer))
+            {
+                //! hits AI
+                if (IsLocal)
+                    other.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
+
+                ExplodeAndDespawn();
+
+            }
+            else if (UsableBlackboard.InCollidableLayers(layer))
+            {
+                //! hits collidables   
+                ExplodeAndDespawn();
+            }
+            else if (UsableBlackboard.InUtilityLayers(layer))
+            {
+                ExplodeAndDespawn();
+            }
+        }
+
+        private void ExplodeAndDespawn()
+        {
+            //if not local, only hide art asset
+            if (!IsLocal)
+            {
+                projectileAsset.SetActive(false);
+                return;
+            }
+
+            Vector3 collisionSpot = gameObject.transform.position;
+            object[] content = { projectileID, collisionSpot };
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
+            ImpactBehaviour();
         }
 
         #region Protected Overried Function
