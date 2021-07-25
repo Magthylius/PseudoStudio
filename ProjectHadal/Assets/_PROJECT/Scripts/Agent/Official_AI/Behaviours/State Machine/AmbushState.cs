@@ -94,12 +94,18 @@ namespace Hadal.AI.States
         /// </summary>
         void CheckPouncingRange()
         {
-            if (AICavern.GetPlayerCount > 0 && playAudioOnce)
+            if (AICavern != null)
             {
+                if (AICavern.GetPlayerCount > 0 && playAudioOnce)
+                {
 
-                AudioBank.PlayOneShot(soundType: AISound.AmbushPlayerClose, Brain.transform);
-                playAudioOnce = false;
+                    AudioBank.PlayOneShot(soundType: AISound.AmbushPlayerClose, Brain.transform);
+                    playAudioOnce = false;
+                    Debug.LogError("AMBUSH CLOSE");
+
+                }
             }
+
 
             if (SenseDetection.DetectedPlayersCount > 0 && SenseDetection.DetectedPlayersCount < 4)
             {
