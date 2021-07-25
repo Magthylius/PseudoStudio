@@ -657,7 +657,10 @@ namespace Hadal.AI
         private BrainState GetRandomBrainStateAfterStun()
         {
             bool shouldStayJudgement = Settings.G_JudgementPersistChance.HasHitPercentChance();
-            return shouldStayJudgement ? BrainState.Judgement : BrainState.Recovery;
+            if (shouldStayJudgement && RuntimeData.GetBrainState == BrainState.Judgement)
+				return BrainState.Judgement;
+			
+			return BrainState.Recovery;
         }
 
         private void TryDebug(object msg)
