@@ -17,8 +17,6 @@ namespace Hadal.Player
 
         public void Inject(PlayerController controller)
         {
-            registers = new List<AudioRegister>();
-
             //! Initialise timers
             foreach (var reg in registers)
             {
