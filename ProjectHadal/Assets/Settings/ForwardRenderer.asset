@@ -79,7 +79,8 @@ MonoBehaviour:
   - {fileID: -2175915334453168368}
   - {fileID: 6871624700251851988}
   - {fileID: -1426451523226748003}
-  m_RendererFeatureMap: 10f797248898cde1d4cc4fe841ea5c5f9d3bc1b4e53934ec
+  - {fileID: 7640448518237933891}
+  m_RendererFeatureMap: 10f797248898cde1d4cc4fe841ea5c5f9d3bc1b4e53934ec43513b4e7253086a
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -174,3 +175,25 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 1}
       cameraFieldOfView: 90
+--- !u!114 &7640448518237933891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
+  m_Name: Ambient Occlusion
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
+  m_Settings:
+    Downsample: 0
+    Source: 1
+    NormalSamples: 1
+    Intensity: 4.9
+    DirectLightingStrength: 0.25
+    Radius: 0.035
+    SampleCount: 6
