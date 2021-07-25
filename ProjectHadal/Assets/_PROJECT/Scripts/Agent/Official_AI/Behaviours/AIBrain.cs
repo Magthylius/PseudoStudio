@@ -554,7 +554,11 @@ namespace Hadal.AI
 
             if (CarriedPlayer != null)
             {
-                CarriedPlayer.gameObject.layer = freeLayerIndex;
+				if (CarriedPlayer.IsLocalPlayer)
+                    CarriedPlayer.gameObject.layer = freeLocalLayerIndex;
+                else
+                    CarriedPlayer.gameObject.layer = freeLayerIndex;
+				
                 CarriedPlayer.SetIsCarried(false);
                 CarriedPlayer.SetIsTaggedByLeviathan(false);
             }
