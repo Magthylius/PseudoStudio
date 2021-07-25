@@ -138,6 +138,7 @@ namespace Hadal.AI
 
             brain.DetachAnyCarriedPlayer();
             brain.AnimationManager.SetAnimation(AIAnim.Death);
+			brain.AudioBank.PlayOneShot(soundType: AISound.Death, brain.transform);
 
             brain.DisableBrain(); //! disable update loops of the brain
             brain.StartCoroutine(Bleed(0.5f));

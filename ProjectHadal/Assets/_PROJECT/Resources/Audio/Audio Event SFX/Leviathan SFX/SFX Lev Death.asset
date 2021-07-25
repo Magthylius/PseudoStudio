@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
   m_Name: SFX Lev Death
   m_EditorClassIdentifier: 
-  Clips: []
+  Clips:
+  - {fileID: 8300000, guid: 7a4fb768c70ea654fb30bc2f7619dda8, type: 3}
   Settings:
     ReplayTime: 0.5
-    Volume: {x: 1, y: 1}
+    Volume: {x: 0.6, y: 0.6}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
     Priority: 128
     StereoPan: 0
     ReverbZoneMix: 1
-    OutputMixerGroup: {fileID: 0}
+    OutputMixerGroup: {fileID: 1575329012907256561, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
     BypassListenerEffects: 0
