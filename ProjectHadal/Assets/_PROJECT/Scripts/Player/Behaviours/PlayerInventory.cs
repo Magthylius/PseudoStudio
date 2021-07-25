@@ -208,6 +208,8 @@ namespace Hadal.Player.Behaviours
 
         private void EquipItem(int _index)
         {
+			if (EquippedUsable == null)
+				return;
             if (EquippedUsable.isEquipLocked)
                 return;
 
