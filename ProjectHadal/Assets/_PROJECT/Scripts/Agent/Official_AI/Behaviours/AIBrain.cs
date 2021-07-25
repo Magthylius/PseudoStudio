@@ -416,6 +416,12 @@ namespace Hadal.AI
             bool useTunnelExplosion = (bool)content[1];
             SpawnExplosivePointAt(spawnPos, useTunnelExplosion: useTunnelExplosion);
         }
+		
+		internal void Send_JudgementEvent(bool isJudgement)
+		{
+			RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+			neManager.RaiseEvent(ByteEvents.AI_JUDGEMENT_EVENT, isJudgement, options, SendOptions.SendReliable);
+		}
 
         #endregion
 
@@ -666,15 +672,6 @@ namespace Hadal.AI
                 + (CarriedPlayer.GetTarget.forward * 2f)
                 + (CarriedPlayer.GetTarget.up * 20f);
         }
-		
-		private List<PlayerAudio> playerAudios = null;
-		public void UpdatePlayerAudioAngryStatus(bool isAngry)
-		{
-			if (playerAudios == null)
-				playerAudios = FindObjectsOfType<PlayerAudio>().ToList();
-			
-			playerAudios.ForEach(p => p.SetIsLeviathanAngry(isAngry));
-		}
 
         #endregion
 

@@ -15,11 +15,11 @@ namespace Hadal.Player
         [SerializeField] private List<AudioRegister> registers;
 		private PlayerController _controller;
 		
-		private bool isLeviathanAngry;
+		private bool isLeviathanInJudgement;
 
         public void Inject(PlayerController controller)
         {
-			isLeviathanAngry = false;
+			isLeviathanInJudgement = false;
 			
             //! Initialise timers
             foreach (var reg in registers)
@@ -28,7 +28,7 @@ namespace Hadal.Player
                             .WithDuration(reg.GetNewDuration)
                             .WithOnCompleteEvent(() =>
                             {
-								if (!isLeviathanAngry)
+								if (!isLeviathanInJudgement)
 									GetAssetOfType(reg.associatedEnum).asset.PlayOneShot(_controller.GetTarget);
                                 else
 									"The leviathan is hangry, therefore no cute sounds :)".Msg();
@@ -60,9 +60,8 @@ namespace Hadal.Player
 				return;
 			
 			NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_PLAY_AUDIO, Receive_PlayOneShot);
+			NetworkEventManager.Instance.AddListener(ByteEvents.AI_JUDGEMENT_EVENT, data => isLeviathanInJudgement = (bool)data.CustomData);
 		}
-		
-		public void SetIsLeviathanAngry(bool statement) => isLeviathanAngry = statement;
 		
 		public void Send_PlayOneShot(AudioEventData audioAsset)
 		{

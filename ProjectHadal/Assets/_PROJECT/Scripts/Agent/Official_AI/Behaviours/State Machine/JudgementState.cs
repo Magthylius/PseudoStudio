@@ -30,7 +30,7 @@ namespace Hadal.AI.States
             AllowStateTick = true;
             ShouldExit = false;
 			
-			Brain.UpdatePlayerAudioAngryStatus(true);
+			Brain.Send_JudgementEvent(true);
             RuntimeData.ResetEngagementTicker();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
 
@@ -86,8 +86,9 @@ namespace Hadal.AI.States
         {
             StopAnyRunningCoroutines();
             if (behaviour != null) behaviour.ResetStateValues();
-            Brain.DetachAnyCarriedPlayer();
-			Brain.UpdatePlayerAudioAngryStatus(false);
+            
+			Brain.Send_JudgementEvent(true);
+			Brain.DetachAnyCarriedPlayer();
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
             AnimationManager.SetAnimation(AIAnim.Swim);
