@@ -10,7 +10,7 @@ namespace Hadal.AudioSystem
     {
         [Header("General")]
         [SerializeField, Range(0f, 5f)] public float ReplayTime = 0.5f;
-        [SerializeField, MinMaxSlider(0f, 1f)] private Vector2 Volume = Vector2.one;
+        [SerializeField, MinMaxSlider(0f, 1f)] public Vector2 Volume = Vector2.one;
         [SerializeField, MinMaxSlider(-3f, 3f)] private Vector2 Pitch = Vector2.one;
         [SerializeField, Range(0f, 1f)] private float SpatialBlend = 0.7f;
         [SerializeField, Range(0, 256)] private int Priority = 128;
@@ -61,14 +61,7 @@ namespace Hadal.AudioSystem
             {
                 //! Only need to inject volume roll off
                 var animCurveForRolloff = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.CustomRolloff);
-                // var animCurveForSpatialBlend = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.SpatialBlend);
-                // var animCurveForReverb = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.ReverbZoneMix);
-                // var animCurveForSpread = RolloffCurveTemplate.GetCustomCurve(AudioSourceCurveType.Spread);
-                
                 source.SetCustomCurve(AudioSourceCurveType.CustomRolloff, animCurveForRolloff);
-                // source.SetCustomCurve(AudioSourceCurveType.SpatialBlend, animCurveForSpatialBlend);
-                // source.SetCustomCurve(AudioSourceCurveType.ReverbZoneMix, animCurveForReverb);
-                // source.SetCustomCurve(AudioSourceCurveType.Spread, animCurveForSpread);
             }
         }
 

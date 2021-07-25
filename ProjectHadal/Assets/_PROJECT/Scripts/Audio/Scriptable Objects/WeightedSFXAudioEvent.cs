@@ -105,12 +105,36 @@ namespace Hadal.AudioSystem
             }
         }
 
-        public override void Play2D()
-        {
-            
-        }
-
         #endregion
+		
+		#region Play One Shot
+		
+		public override void PlayOneShot(Transform followPosTransform)
+        {
+			if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+			
+            var manager = AudioManager.Instance;
+            if (manager != null)
+            {
+                var handler = manager.GetAvailableAudioSourceHandler();
+                handler.Setup(in Settings);
+				handler.SetWorldPosition(followPosTransform.position);
+				handler.SetParent(followPosTransform);
+				handler.Source.clip = GetWeightedClip();
+                handler.Source.PlayOneShot(handler.Source.clip, Settings.Volume.RandomBetweenXY());
+            }
+			else
+			{
+				AudioSource aSource = GetFallbackAudioSource();
+			 	ArrangeSourceWithClip(ref aSource);
+				aSource.transform.position = followPosTransform.position;
+				aSource.transform.parent = followPosTransform;
+				aSource.PlayOneShot(aSource.clip, Settings.Volume.RandomBetweenXY());
+				Destroy(aSource.gameObject, aSource.clip.length);
+			}
+        }
+		
+		#endregion
 
         #region Utility Methods
 

@@ -39,20 +39,6 @@ namespace Hadal.AudioSystem
             return RuntimePlay(position);
         }
 
-        public override void PlayOneShot(Vector3 position)
-        {
-            var manager = AudioManager.Instance;
-            if (manager != null)
-            {
-                var handler = manager.GetAvailableAudioSourceHandler();
-                handler.Setup(in Settings);
-                handler.SetWorldPosition(position);
-                //handler.SetParent(parent);
-                handler.Source.clip = Clips.RandomElement();
-                handler.PlayOneShot();
-            }
-        }
-
         /// <summary> Plays an audio clip sfx through the audio manager & related runtime audio source handlers. </summary>
         private bool RuntimePlay(Vector3 position, Transform parent = null)
         {
@@ -118,30 +104,36 @@ namespace Hadal.AudioSystem
             }
         }
 
-        public override void Play2D()
+        #endregion
+		
+		#region Play One Shot
+		
+		public override void PlayOneShot(Transform followPosTransform)
         {
-            if (Clips.IsNullOrEmpty() || !CheckForPlayTime()) return;
-
-            AudioManager manager = AudioManager.Instance;
+			if (Clips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+			
+            var manager = AudioManager.Instance;
             if (manager != null)
             {
-                AudioSourceHandler handler = manager.GetAvailableAudioSourceHandler();
+                var handler = manager.GetAvailableAudioSourceHandler();
                 handler.Setup(in Settings);
-                handler.Source.clip = Clips.RandomElement();
-                handler.Source.spatialBlend = 0f;
-                handler.PlaySource();
+				handler.SetWorldPosition(followPosTransform.position);
+				handler.SetParent(followPosTransform);
+				handler.Source.clip = Clips.RandomElement();
+                handler.Source.PlayOneShot(handler.Source.clip, Settings.Volume.RandomBetweenXY());
             }
-            else
-            {
-                AudioSource aSource = GetFallbackAudioSource();
-                ArrangeSourceWithClip(ref aSource);
-                aSource.spatialBlend = 0f;
-                aSource.Play();
-                Destroy(aSource, aSource.clip.length);
-            }
+			else
+			{
+				AudioSource aSource = GetFallbackAudioSource();
+			 	int index = ArrangeSourceWithClip(ref aSource);
+				aSource.transform.position = followPosTransform.position;
+				aSource.transform.parent = followPosTransform;
+				aSource.PlayOneShot(Clips[index], Settings.Volume.RandomBetweenXY());
+				Destroy(aSource.gameObject, Clips[index].length);
+			}
         }
-
-        #endregion
+		
+		#endregion
 
         #region Utility Methods
 

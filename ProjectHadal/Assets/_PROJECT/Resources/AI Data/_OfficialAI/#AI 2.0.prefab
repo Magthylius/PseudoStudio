@@ -148,7 +148,6 @@ Transform:
   - {fileID: 1692377485682228084}
   - {fileID: 8001679023775102921}
   - {fileID: 2051193414400263174}
-  - {fileID: 6611737787032109846}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -169,7 +168,7 @@ MonoBehaviour:
   targetMoveCavern: {fileID: 0}
   nextMoveCavern: {fileID: 0}
   cachedCurrentCavern: {fileID: 0}
-  healthManager: {fileID: 2206939684562575358}
+  healthManager: {fileID: 0}
   navigationHandler: {fileID: 4086058519835168119}
   senseDetection: {fileID: 6021279049498701051}
   sightDetection: {fileID: 9221971048963321059}
@@ -191,7 +190,7 @@ MonoBehaviour:
   DebugEnabled: 1
   isStunned: 0
   stunDuration: 8
-  leviathanCollider: {fileID: 2776788264762976261}
+  leviathanCollider: {fileID: 0}
 --- !u!114 &8848565156750440696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,7 +301,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2206939684562575359}
   - component: {fileID: 2206939684562575357}
-  - component: {fileID: 2206939684562575358}
   m_Layer: 0
   m_Name: Other Modules
   m_TagString: Untagged
@@ -336,34 +334,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaaffe75309867347a447d5cad18889c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2206939684562575358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2206939684562575328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6491a7d1743f0e41bceb1173beda619, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 150
-  currentHealth: 0
-  slowPercentPerStack: 0.1
-  maxSlowStacks: 5
-  maxSlowPercent: 0.5
-  currentMaxSlowPercent: 0.5
-  currentSlowPercent: 0
-  currentSlowStacks: 0
-  lowHealthPercent: 0.2
-  resistenceOnLowHealth: 0.2
-  _baseDamageResistance: 0
-  _additionalDamageResistance: 0
-  randomHitPoints: []
-  vfx_OnDamaged: {fileID: 11400000, guid: 801216130b69d5544a53c2a323082230, type: 2}
-  vfxCountPerHit: 4
-  vfxCountPerDeath: 20
 --- !u!1 &3596619662574149774
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,52 +394,10 @@ MonoBehaviour:
     audioAsset: {fileID: 0}
   - associatedEnum: 8
     audioAsset: {fileID: 11400000, guid: b1c41526438608b44a829a764ff1244e, type: 2}
+  - associatedEnum: 10
+    audioAsset: {fileID: 11400000, guid: 0dceadae1a7e58844ac2cc26137a1e78, type: 2}
   brain: {fileID: 2206939684412345039}
   source2D: {fileID: 0}
---- !u!1 &3778157195922931001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6611737787032109846}
-  - component: {fileID: 2776788264762976261}
-  m_Layer: 11
-  m_Name: Leviathan Collider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6611737787032109846
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3778157195922931001}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2206939684412345072}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &2776788264762976261
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3778157195922931001}
-  m_Material: {fileID: 13400000, guid: 60f53cdeacc472147ad0dcb791e4fabf, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3348522405853159205
 PrefabInstance:
   m_ObjectHideFlags: 0

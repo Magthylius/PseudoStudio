@@ -20,12 +20,13 @@ MonoBehaviour:
   G_PrepareHaltBeforeCarryDistance: 15
   G_HaltingTime: 0.5
   G_CarryDelayTimer: 0.8
-  G_TotalThreshTimeInSeconds: 3
-  G_BaseMinThreshDamagePerSecond: 17
-  G_BaseMaxThreshDamagePerSecond: 19
+  G_TotalThreshTimeInSeconds: 2
+  G_BaseMinThreshDamagePerSecond: 26
+  G_BaseMaxThreshDamagePerSecond: 28
   G_JudgementPersistChance: 0.8
   G_DisruptionDamageCount: 3
   G_DistanceFromFrontForBiteAnimation: 5
+  G_BiteAnimationWaitTimeBeforeThresh: 1
   G_CarryKnockbackAdditionalRange: 40
   G_CarryKnockbackForce: 40
   G_TunnelKnockbackCooldownTime: 2
@@ -36,7 +37,7 @@ MonoBehaviour:
   AM_PounceSpeedMultiplier: 3
   AM_CarryDelayTimer: 0.8
   AM_DisruptionDamageCount: 1
-  AM_AdditionalThreshDamagePerSecond: 2
+  AM_AdditionalThreshDamagePerSecond: 4
   HU_RoamingSpeedMultiplier: 2.5
   HU_MaxHuntingTime: 50
   HU_DisruptionDamageCount: 1
@@ -46,9 +47,9 @@ MonoBehaviour:
   JudgementTimer3: 35
   JudgementTimer4: 30
   JudgementPersistCountLimitPerEntry: 2
-  AGG_AdditionalThreshDamagePerSecond: 1
+  AGG_AdditionalThreshDamagePerSecond: 2
   DEF_AdditionalThreshDamagePerSecond: -1
-  EGG_PermanentThreshDamagePerSecond: 1
+  EGG_PermanentThreshDamagePerSecond: 2
   EGG_PermanentDamageResistance: 0.02
   JG_KnockbackIgnoreMasks:
     serializedVersion: 2

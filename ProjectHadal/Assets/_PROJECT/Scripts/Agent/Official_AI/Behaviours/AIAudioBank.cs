@@ -21,7 +21,7 @@ namespace Hadal.AI
             if (asset == null)
                 return false;
 
-            brain.Send_PlayAudio(is3D: true, soundType);
+            brain.Send_PlayAudio(AIPlayAudioType.Dimension3, soundType);
             return asset.Play(followTransform);
         }
 
@@ -32,7 +32,7 @@ namespace Hadal.AI
             if (asset == null)
                 return;
 
-            brain.Send_PlayAudio(is3D: false, soundType);
+            brain.Send_PlayAudio(AIPlayAudioType.Dimension2, soundType);
             asset.Play(source2D);
         }
 
@@ -42,8 +42,8 @@ namespace Hadal.AI
             if (asset == null)
                 return;
 
-            brain.Send_PlayAudio(is3D: true, soundType);
-            asset.PlayOneShot(followTransform.position);
+            brain.Send_PlayAudio(AIPlayAudioType.OneShot, soundType);
+            asset.PlayOneShot(followTransform);
         }
         
         private AudioEventData GetAudioAssetOfType(AISound soundType)
@@ -68,6 +68,13 @@ namespace Hadal.AI
             public AudioEventData audioAsset;
         }
     }
+	
+	public enum AIPlayAudioType
+	{
+		Dimension2 = 0,
+		Dimension3,
+		OneShot
+	}
 
     public enum AISound
     {

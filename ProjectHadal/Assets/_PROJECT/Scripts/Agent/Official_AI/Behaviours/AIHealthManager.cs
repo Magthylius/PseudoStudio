@@ -53,6 +53,7 @@ namespace Hadal.AI
             ResetHealth();
             ResetAllSlowStacks();
             UpdateDamageResistance(0f);
+			InitialiseHitboxHandlers();
 
             //! Stun Timer
             stunTimer = brain.Create_A_Timer()
@@ -69,6 +70,16 @@ namespace Hadal.AI
         {
             CheckHealthStatus();
         }
+		
+		public void InitialiseHitboxHandlers()
+		{
+			var hitboxes = FindObjectsOfType<AIHitboxHandler>();
+			if (brain.DebugEnabled) $"Found {hitboxes.Length} active hitbox handlers for the AI. Initialisating all of them.".Msg();
+			
+			int i = -1;
+			while (++i < hitboxes.Length)
+				hitboxes[i].Initialise(this, LayerMask.NameToLayer("Monster"));
+		}
 
         /// <summary> Checks whether the AI should die on the master client's computer and send the death event over the network. </summary>
         public void CheckHealthStatus()

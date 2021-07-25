@@ -30,6 +30,7 @@ namespace Hadal.AI.States
         [Range(0f, 1f)] public float G_JudgementPersistChance = 0.8f;
         [Min(0)] public int G_DisruptionDamageCount;
         [Min(0f)] public float G_DistanceFromFrontForBiteAnimation = 15f;
+		[Min(0f)] public float G_BiteAnimationWaitTimeBeforeThresh = 1.5f;
         [Min(0f)] public float G_CarryKnockbackAdditionalRange = 30f;
         [Min(0f)] public float G_CarryKnockbackForce = 40.0f;
         [Min(0f)] public float G_TunnelKnockbackCooldownTime = 2f;

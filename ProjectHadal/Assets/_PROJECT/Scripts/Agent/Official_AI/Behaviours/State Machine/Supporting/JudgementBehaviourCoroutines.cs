@@ -218,7 +218,7 @@ namespace Hadal.AI
 
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
-                    yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(Settings.G_BiteAnimationWaitTimeBeforeThresh);
 
                     //! Reenable handling the carried player & allow thresh to work
                     Brain.SetDoNotHandleCarriedPlayer(false);

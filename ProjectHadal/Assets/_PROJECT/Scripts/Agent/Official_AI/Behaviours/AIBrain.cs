@@ -122,6 +122,7 @@ namespace Hadal.AI
 
             _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
+			healthManager = FindObjectOfType<AIHealthManager>();
             graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
             isStunned = false;
 
@@ -368,25 +369,28 @@ namespace Hadal.AI
         }
 
         //! Network events
-        internal void Send_PlayAudio(bool is3D, AISound soundType)
+        internal void Send_PlayAudio(AIPlayAudioType theType, AISound soundType)
         {
             if (neManager == null || !neManager.IsMasterClient) //! only master client can send this
                 return;
 
-            object[] content = new object[] { is3D, (int)soundType };
+            object[] content = new object[] { (int)theType, (int)soundType };
             neManager.RaiseEvent(ByteEvents.AI_PLAY_AUDIO, content, SendOptions.SendReliable);
         }
 
         private void Receive_PlayAudio(EventData eventData)
         {
             object[] content = (object[])eventData.CustomData;
-            bool is3D = (bool)content[0];
+            AIPlayAudioType theType = (AIPlayAudioType)(int)content[0];
             AISound soundType = (AISound)(int)content[1];
 
-            if (is3D)
-                AudioBank.Play3D(soundType, transform);
-            else
-                AudioBank.Play2D(soundType);
+			switch (theType)
+			{
+				case AIPlayAudioType.Dimension2: { AudioBank.Play2D(soundType); return; }
+				case AIPlayAudioType.Dimension3: { AudioBank.Play3D(soundType, transform); return; }
+				case AIPlayAudioType.OneShot: { AudioBank.PlayOneShot(soundType, transform); return; }
+				default: break;
+			}
         }
 
         private void Send_SpawnExplosivePoint(Vector3 position, bool useTunnelExplosion)
@@ -467,6 +471,11 @@ namespace Hadal.AI
         [SerializeField] Collider leviathanCollider;
         public void ChangeColliderMaterial(PhysicMaterial physicMaterial)
         {
+			if (leviathanCollider == null)
+			{
+				if (DebugEnabled) "Leviathan collider is missing, unable to swap physic material!".Warn();
+				return;
+			}
             leviathanCollider.material = physicMaterial;
         }
 
