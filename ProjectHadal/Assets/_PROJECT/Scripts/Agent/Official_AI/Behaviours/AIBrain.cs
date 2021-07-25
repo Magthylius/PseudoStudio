@@ -659,8 +659,8 @@ namespace Hadal.AI
                 return MouthObject.transform.position;
 
             return CarriedPlayer.GetTarget.position
-                + (CarriedPlayer.GetTarget.forward * 4f)
-                + (CarriedPlayer.GetTarget.up * 6f);
+                + (CarriedPlayer.GetTarget.forward * 2f)
+                + (CarriedPlayer.GetTarget.up * 12f);
         }
 
         #endregion
