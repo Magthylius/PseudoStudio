@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
-  m_Name: SFX Lev Thresh
+  m_Name: SFX PlayerCollision
   m_EditorClassIdentifier: 
   Clips:
-  - {fileID: 8300000, guid: 88677d66a282afb4d998468246360cc2, type: 3}
+  - {fileID: 8300000, guid: b3a443d9945f0234f92b79532b402dcb, type: 3}
+  - {fileID: 8300000, guid: 223ca87269ef96f44a2bdae473bbc876, type: 3}
+  - {fileID: 8300000, guid: a99f28b799bb24f4898edf65daf0e649, type: 3}
   Settings:
     ReplayTime: 0.5
-    Volume: {x: 0.8, y: 0.8}
+    Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
-    SpatialBlend: 0
+    SpatialBlend: 0.7
     Priority: 128
     StereoPan: 0
     ReverbZoneMix: 1
-    OutputMixerGroup: {fileID: 1575329012907256561, guid: 29349254421fc3742874fe18b3785b50, type: 2}
+    OutputMixerGroup: {fileID: -743427184034653034, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
     BypassListenerEffects: 0
@@ -30,8 +32,8 @@ MonoBehaviour:
     PlayOnAwake: 0
     Loop: 0
     DopplerLevel: 1
-    Spread: 360
+    Spread: 0
     VolumeRolloff: 0
-    MinDistance: 100
-    MaxDistance: 2000
+    MinDistance: 1
+    MaxDistance: 500
     RolloffCurveTemplate: {fileID: 0}

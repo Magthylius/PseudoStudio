@@ -11,6 +11,7 @@ namespace Hadal.AudioSystem
     {
         public AudioSource Source;
         public bool DumpOnFinish = true;
+		public bool DestroyImmediateOnFinish = false;
         public Transform OriginalParent;
 
         public event AudioEvent AudioFinishedEvent;
@@ -52,6 +53,8 @@ namespace Hadal.AudioSystem
                     yield return null;
                 
                 transform.parent = OriginalParent != null ? OriginalParent : null;
+				if (DestroyImmediateOnFinish)
+					DestroyImmediate(gameObject);
                 AudioFinishedEvent?.Invoke(this);
             }
         }
@@ -77,6 +80,11 @@ namespace Hadal.AudioSystem
 
         public bool IsActive => gameObject.activeInHierarchy;
         public void SetActive(bool activeState) => gameObject.SetActive(activeState);
-        public void RefreshSource() => Source = GetComponent<AudioSource>();
+        public void RefreshSource()
+		{
+			var s = GetComponent<AudioSource>();
+			if (s != null)
+				Source = s;
+		}
     }
 }
