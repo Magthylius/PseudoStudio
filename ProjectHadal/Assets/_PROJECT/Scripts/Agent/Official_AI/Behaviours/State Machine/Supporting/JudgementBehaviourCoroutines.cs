@@ -74,7 +74,7 @@ namespace Hadal.AI
         /// </summary>
         /// <param name="carryDelayTime">A custom time used to make the AI wait for a while before actually carrying the target. It
         /// is usually made less than 1 second. </param>
-        private IEnumerator MoveToCurrentTarget(float carryDelayTime)
+        private IEnumerator MoveToCurrentTarget(float carryDelayTime, bool ambushSounds)
         {
             bool HasTargetIsolatedPlayer() => JState.IsolatedPlayer != null;
             bool HasCurrentTargetPlayer() => Brain.CurrentTarget != null;
@@ -296,7 +296,7 @@ namespace Hadal.AI
             JState.IsBehaviourRunning = true;
             int jTimerIndex = 5 - stanceIndex;
 
-            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
+            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer, false));
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
@@ -368,7 +368,7 @@ namespace Hadal.AI
             JState.IsBehaviourRunning = true;
             int jTimerIndex = 5 - stanceIndex;
 
-            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer));
+            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.G_CarryDelayTimer, false));
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
@@ -438,7 +438,7 @@ namespace Hadal.AI
             JState.IsBehaviourRunning = true;
             int jTimerIndex = 1;
 
-            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer));
+            approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer, true));
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
