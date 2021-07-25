@@ -421,8 +421,14 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 200
+      - m_Value: 300
         m_Name: Rate
+        m_Overridden: 1
+      - m_Value: 10
+        m_Name: Size
+        m_Overridden: 0
+      - m_Value: 2
+        m_Name: ParticleSize
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
