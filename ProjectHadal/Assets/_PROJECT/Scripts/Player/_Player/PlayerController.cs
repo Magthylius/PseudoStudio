@@ -291,6 +291,8 @@ namespace Hadal.Player
 					ambiencePlayer.PlayHydrophoneAmbience();
 				else
 					"Ambience Player cannot be found in current scene.".Warn();
+				
+				"Starting custom audio for Informer.".Msg();
 			}
             
             mover.ToggleEnablility(true);
