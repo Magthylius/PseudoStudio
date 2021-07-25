@@ -614,7 +614,7 @@ namespace Hadal.AI
             Brain.TryDropCarriedPlayer();
             NavigationHandler.Enable();
             NavigationHandler.ResetSpeedMultiplier();
-            NavigationHandler.StopCustomPath(true);
+            NavigationHandler.StopCustomPath(false);
             AnimationManager.SetAnimation(AIAnim.Swim);
         }
 
