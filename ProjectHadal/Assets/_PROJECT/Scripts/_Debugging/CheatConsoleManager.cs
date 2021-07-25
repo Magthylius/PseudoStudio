@@ -44,16 +44,16 @@ namespace Hadal.Debugging
         public static DebugCommand C_ChangeMovesetToF;
         public static DebugCommand C_ChangeMovesetToV;
         public static DebugCommand C_ChangeMovesetToH;
-   
+
         //! Player Inventory
         public static DebugCommand C_SimplifyLoadout;
-		public static DebugCommand C_AddGrenadeAndTrap;
-		public static DebugCommand C_AddTrapAndGrenade;
-		public static DebugCommand C_AddGrenade;
-		public static DebugCommand C_AddTrap;
-		public static DebugCommand C_AddHarpoon;
-		public static DebugCommand C_AddLure;
-		public static DebugCommand C_AddSonicDart;
+        public static DebugCommand C_AddGrenadeAndTrap;
+        public static DebugCommand C_AddTrapAndGrenade;
+        public static DebugCommand C_AddGrenade;
+        public static DebugCommand C_AddTrap;
+        public static DebugCommand C_AddHarpoon;
+        public static DebugCommand C_AddLure;
+        public static DebugCommand C_AddSonicDart;
 
         #region Input system
 
@@ -111,7 +111,7 @@ namespace Hadal.Debugging
             {
                 FindObjectOfType<AIBrain>().NavigationHandler.SetDebugVelocityMultiplier(x);
             });
-            C_AISetState = new DebugCommand<int>("aisetstate", "Forces the AI into (1)Anticipation, (2)Engagement, (3)Recovery, (4)Cooldown", "aisetstate", (x) =>
+            C_AISetState = new DebugCommand<int>("aisetstate", "Forces the AI into (1)Anticipation, (2)Engagement, (3)Recovery, (4)Cooldown, (5)Ambush", "aisetstate", (x) =>
             {
                 switch (x)
                 {
@@ -126,6 +126,9 @@ namespace Hadal.Debugging
                         break;
                     case 4:
                         FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Cooldown);
+                        break;
+                    case 5:
+                        FindObjectOfType<AIBrain>().RuntimeData.SetBrainState(BrainState.Ambush);
                         break;
                     default:
                         break;
@@ -200,61 +203,61 @@ namespace Hadal.Debugging
                 player.ChangeMoverToHyrid();
                 player.ChangeRotatorToHyrid();
             });
-          
 
-        //! Player Inventory
-        C_SimplifyLoadout = new DebugCommand("SimplifyLoadout", "Sets the utility loadout to only have a flare.", "SimplifyLoadout", () =>
-			{
-				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
 
-                playerInv.ResetEquipIndex();
-                playerInv.DeactivateAllUtilities();
-                playerInv.GetEquippedUsableObjects.Clear();
-                playerInv.AddEquipmentOfType<FlareLauncherObject>(true);
-			});
-			C_AddGrenadeAndTrap = new DebugCommand("Add_GrenadeAndTrap", "Adds Grenade & Trap/Paralyzer utilities to the loadout (in order).", "AddGrenadeAndTrap", () =>
-			{
-				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+            //! Player Inventory
+            C_SimplifyLoadout = new DebugCommand("SimplifyLoadout", "Sets the utility loadout to only have a flare.", "SimplifyLoadout", () =>
+                {
+                    var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+
+                    playerInv.ResetEquipIndex();
+                    playerInv.DeactivateAllUtilities();
+                    playerInv.GetEquippedUsableObjects.Clear();
+                    playerInv.AddEquipmentOfType<FlareLauncherObject>(true);
+                });
+            C_AddGrenadeAndTrap = new DebugCommand("Add_GrenadeAndTrap", "Adds Grenade & Trap/Paralyzer utilities to the loadout (in order).", "AddGrenadeAndTrap", () =>
+            {
+                var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
                 playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>();
-				playerInv.AddEquipmentOfType<TrapLauncherObject>();
-			});
+                playerInv.AddEquipmentOfType<TrapLauncherObject>();
+            });
             C_AddTrapAndGrenade = new DebugCommand("Add_TrapAndGrenade", "Adds Trap/Paralyzer & Grenade utilities to the loadout (in order).", "AddTrapAndGrenade", () =>
             {
                 var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
                 playerInv.AddEquipmentOfType<TrapLauncherObject>();
                 playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>();
             });
-			C_AddGrenade = new DebugCommand("AddGrenade", "Adds the Grenade utility to the loadout.", "AddGrenade", () =>
-			{
-				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
-				playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>();
-			});
-			C_AddTrap = new DebugCommand("AddTrap", "Adds the Trap/Paralyzer utility to the loadout.", "AddTrap", () =>
-			{
-				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
-				playerInv.AddEquipmentOfType<TrapLauncherObject>();
-			});
-			C_AddHarpoon = new DebugCommand("AddHarpoon", "Adds the Harpoon utility to the loadout.", "AddHarpoon", () =>
-			{
-				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
-				playerInv.AddEquipmentOfType<HarpoonLauncherObject>();
-			});
-			C_AddLure = new DebugCommand("AddLure", "Adds the Lure utility to the loadout.", "AddLure", () =>
-			{
-				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
-				playerInv.AddEquipmentOfType<LureLauncherObject>();
-			});
-			C_AddSonicDart = new DebugCommand("AddSonicDart", "Adds the Sonic Dart utility to the loadout.", "AddSonicDart", () =>
-			{
-				var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
-				playerInv.AddEquipmentOfType<SonicDartLauncherObject>();
-			});
+            C_AddGrenade = new DebugCommand("AddGrenade", "Adds the Grenade utility to the loadout.", "AddGrenade", () =>
+            {
+                var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+                playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>();
+            });
+            C_AddTrap = new DebugCommand("AddTrap", "Adds the Trap/Paralyzer utility to the loadout.", "AddTrap", () =>
+            {
+                var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+                playerInv.AddEquipmentOfType<TrapLauncherObject>();
+            });
+            C_AddHarpoon = new DebugCommand("AddHarpoon", "Adds the Harpoon utility to the loadout.", "AddHarpoon", () =>
+            {
+                var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+                playerInv.AddEquipmentOfType<HarpoonLauncherObject>();
+            });
+            C_AddLure = new DebugCommand("AddLure", "Adds the Lure utility to the loadout.", "AddLure", () =>
+            {
+                var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+                playerInv.AddEquipmentOfType<LureLauncherObject>();
+            });
+            C_AddSonicDart = new DebugCommand("AddSonicDart", "Adds the Sonic Dart utility to the loadout.", "AddSonicDart", () =>
+            {
+                var playerInv = PlayerManager.Instance.LocalPlayerController.GetInfo.Inventory;
+                playerInv.AddEquipmentOfType<SonicDartLauncherObject>();
+            });
 
             commandList = new List<object>
             {
                 C_Help,
                 C_Close,
-                
+
                 C_AIStop,
                 C_AIMove,
                 C_AISetSpeed,
@@ -263,7 +266,7 @@ namespace Hadal.Debugging
                 C_AISetSlowStacks,
                 C_AIClearDebuffs,
                 C_AISmite,
-                
+
                 C_DownSelf,
                 C_Revive,
                 C_SetHp,
@@ -275,13 +278,13 @@ namespace Hadal.Debugging
                 C_ChangeMovesetToH,
 
         C_SimplifyLoadout,
-				C_AddGrenadeAndTrap,
+                C_AddGrenadeAndTrap,
                 C_AddTrapAndGrenade,
-				C_AddGrenade,
-				C_AddTrap,
-				C_AddHarpoon,
-				C_AddLure,
-				C_AddSonicDart
+                C_AddGrenade,
+                C_AddTrap,
+                C_AddHarpoon,
+                C_AddLure,
+                C_AddSonicDart
             };
         }
 
@@ -362,7 +365,7 @@ namespace Hadal.Debugging
             //! Dont disable if in MainMenu
             if (NetworkEventManager.Instance.IsInGame)
                 Cursor.visible = false;
-            
+
             //Cursor.lockState = CursorLockMode.Locked;
 
             if (ResolvePlayerController()) localPlayerController.UI.PNTR_Resume();
