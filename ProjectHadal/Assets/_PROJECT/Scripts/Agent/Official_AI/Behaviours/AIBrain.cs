@@ -13,6 +13,8 @@ using Hadal.Player;
 using Hadal.AI.Graphics;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 
 namespace Hadal.AI
 {
