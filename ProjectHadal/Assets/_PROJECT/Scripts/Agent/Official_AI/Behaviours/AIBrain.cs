@@ -126,11 +126,18 @@ namespace Hadal.AI
             graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
             isStunned = false;
 
+			var graphicsAIUpdateComponents = graphicsHandler.GetComponentsInChildren<ILeviathanComponent>().ToList();
+			
             allAIUpdateComponents = GetComponentsInChildren<ILeviathanComponent>()
                 .Where(c => c.LeviathanUpdateMode != UpdateMode.DoNotUpdate)
                 .ToList();
+			allAIUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode != UpdateMode.DoNotUpdate).ToList());
+			
             preUpdateComponents = allAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
+			preUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList());
+			
             mainUpdateComponents = allAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
+			mainUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList());
 
             Players = new List<PlayerController>();
             CurrentTarget = null;
