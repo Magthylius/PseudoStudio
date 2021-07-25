@@ -24,6 +24,7 @@ namespace Hadal.Player
         #region Variable Definitions
 
         [SerializeField] private bool debugEnabled;
+		internal bool DebugEnabled => debugEnabled;
 
         [Foldout("Components"), SerializeField] PlayerCameraController cameraController;
         [Foldout("Components"), SerializeField] PlayerHealthManager healthManager;

@@ -666,6 +666,15 @@ namespace Hadal.AI
                 + (CarriedPlayer.GetTarget.forward * 2f)
                 + (CarriedPlayer.GetTarget.up * 20f);
         }
+		
+		private List<PlayerAudio> playerAudios = null;
+		public void UpdatePlayerAudioAngryStatus(bool isAngry)
+		{
+			if (playerAudios == null)
+				playerAudios = FindObjectsOfType<PlayerAudio>().ToList();
+			
+			playerAudios.ForEach(p => p.SetIsLeviathanAngry(isAngry));
+		}
 
         #endregion
 

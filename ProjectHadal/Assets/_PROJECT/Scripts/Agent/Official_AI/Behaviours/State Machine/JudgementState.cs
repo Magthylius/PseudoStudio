@@ -29,6 +29,8 @@ namespace Hadal.AI.States
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
             AllowStateTick = true;
             ShouldExit = false;
+			
+			Brain.UpdatePlayerAudioAngryStatus(true);
             RuntimeData.ResetEngagementTicker();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
 
@@ -85,6 +87,7 @@ namespace Hadal.AI.States
             StopAnyRunningCoroutines();
             if (behaviour != null) behaviour.ResetStateValues();
             Brain.DetachAnyCarriedPlayer();
+			Brain.UpdatePlayerAudioAngryStatus(false);
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
             AnimationManager.SetAnimation(AIAnim.Swim);
