@@ -36,8 +36,8 @@ namespace Hadal.Usables.Projectiles
 
         [Header("Audio")]
         [SerializeField] private AudioEventData impactAudio;
-        
-        
+        [SerializeField] protected AudioEventData triggerSound;
+
         #region Unity Lifecycle
         protected virtual void Awake() => HandleDependentComponents();
         protected virtual void OnEnable()
