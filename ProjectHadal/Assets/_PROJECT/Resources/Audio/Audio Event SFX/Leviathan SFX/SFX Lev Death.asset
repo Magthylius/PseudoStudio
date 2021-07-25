@@ -19,7 +19,7 @@ MonoBehaviour:
     Volume: {x: 0.6, y: 0.6}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
-    Priority: 128
+    Priority: 100
     StereoPan: 0
     ReverbZoneMix: 1
     OutputMixerGroup: {fileID: 1575329012907256561, guid: 29349254421fc3742874fe18b3785b50, type: 2}
@@ -33,5 +33,5 @@ MonoBehaviour:
     Spread: 0
     VolumeRolloff: 0
     MinDistance: 1
-    MaxDistance: 500
+    MaxDistance: 10000
     RolloffCurveTemplate: {fileID: 0}
