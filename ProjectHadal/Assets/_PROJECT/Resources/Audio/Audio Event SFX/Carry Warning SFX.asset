@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Carry Warning SFX
   m_EditorClassIdentifier: 
   Clips:
-  - {fileID: 8300000, guid: 6b9d176b94c49434da2561d879f5afc7, type: 3}
+  - {fileID: 8300000, guid: 79a881ecc6f99414184e36dd0d99691f, type: 3}
   Settings:
-    Volume: {x: 0.8, y: 0.8}
-    Pitch: {x: 1.2, y: 1.5}
+    ReplayTime: 0.5
+    Volume: {x: 1, y: 1}
+    Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
     Priority: 128
     StereoPan: 0
