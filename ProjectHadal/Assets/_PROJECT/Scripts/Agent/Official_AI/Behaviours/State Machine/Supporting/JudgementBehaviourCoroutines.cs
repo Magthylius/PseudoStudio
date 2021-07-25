@@ -600,7 +600,7 @@ namespace Hadal.AI
             return brainState == BrainState.Judgement;
         }
 
-        private void ResetJudgementBehaviour()
+        internal void ResetJudgementBehaviour()
         {
             //! Settle all local states
             StopAllRunningCoroutines();

@@ -185,6 +185,11 @@ namespace Hadal.AI
             Gizmos.DrawLine(pilotTrans.position, currentPoint.GetPosition);
         }
 
+		[Button("Skip Current Point")]
+		private void SkipCurrentPoint()
+		{
+			SkipCurrentPoint(false);
+		}
 
         #region Public Methods
 
@@ -602,7 +607,7 @@ namespace Hadal.AI
 
             if (enableDebug) "Stopping Queued path on request. Resuming normal movement.".Msg();
         }
-
+		
         /// <summary>
         /// If there is no point path queue and the parameter is set to True, it will ask the handler to immediately find a new point
         /// in the cavern. Otherwise, it will skip the current point in the queue and move on to the next point in the next update frame.
