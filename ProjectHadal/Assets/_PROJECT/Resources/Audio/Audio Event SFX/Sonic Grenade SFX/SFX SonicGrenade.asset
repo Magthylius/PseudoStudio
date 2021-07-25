@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
   m_Name: SFX SonicGrenade
   m_EditorClassIdentifier: 
-  Clips: []
+  Clips:
+  - {fileID: 8300000, guid: 3c6effff4c6a8d442be78095c0bbfee0, type: 3}
   Settings:
     ReplayTime: 0.5
     Volume: {x: 1, y: 1}
@@ -21,7 +22,7 @@ MonoBehaviour:
     Priority: 128
     StereoPan: 0
     ReverbZoneMix: 1
-    OutputMixerGroup: {fileID: 0}
+    OutputMixerGroup: {fileID: 2270673824568394528, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
     BypassListenerEffects: 0
