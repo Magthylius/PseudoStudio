@@ -1198,12 +1198,12 @@ MonoBehaviour:
   tapDetectionTime: 0.1
   dodgeForce: 125
   boostTimerMax: 0.5
-  boostSound: {fileID: 11400000, guid: 90b1fe27d53d2764c9c8e4f4a359b0c5, type: 2}
   maxReserveCapacity: 1
   reserveRegenerationTime: 8
   maxChamberCapacity: 1
   chamberReloadTime: 0.7
   maxOnLoadOut: 1
+  boostSound: {fileID: 11400000, guid: 90b1fe27d53d2764c9c8e4f4a359b0c5, type: 2}
 --- !u!1 &4843741649145227763
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,7 +1247,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4944ec5961e45184385376828cf8aa72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceSpeedThreshold: 10
+  forceSpeedThreshold: 7
+  collisionSound: {fileID: 11400000, guid: ff95540f558362f41be37b6509227569, type: 2}
 --- !u!1 &5329164883190651356
 GameObject:
   m_ObjectHideFlags: 0

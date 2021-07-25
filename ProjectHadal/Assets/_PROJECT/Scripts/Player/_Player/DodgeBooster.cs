@@ -30,7 +30,6 @@ namespace Hadal.Player
         private float boostTimer;
         private BoostDirection boostDirection;
         [SerializeField] private float boostTimerMax;
-        [SerializeField] private AudioEventData boostSound;
 
         #region Boost Refill logic
         [SerializeField] private int maxReserveCapacity;
@@ -55,6 +54,7 @@ namespace Hadal.Player
 
         public int TotalAmmoCount => ReserveCount + ChamberCount;
         #endregion
+        [SerializeField] private AudioEventData boostSound;
 
         #region Unity Lifecycle
         private void Awake()
