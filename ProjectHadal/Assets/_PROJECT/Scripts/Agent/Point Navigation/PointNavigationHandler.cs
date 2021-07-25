@@ -428,7 +428,20 @@ namespace Hadal.AI
             NavPoint[] entryPoints = currentCavern.GetEntryNavPoints(destination);
 
             cachedPointPath.Clear();
-
+			
+			CavernTag aiTag = cavernManager.GetCavernTagOfAILocation();
+            if (aiTag == CavernTag.Invalid)
+                aiTag = Data_CachedLatestCavernTag;
+			
+			var potentialPreFirst = navPoints
+								.Where(o => o != null
+										&& o.CavernTag == aiTag
+										&& !o.IsTunnelEntry
+										&& !o.IsHidingPoint)
+								.ToList();
+			
+			NavPoint preFirst = potentialPreFirst.RandomElement();
+			
             //! First point and its approach points. Enqueue approach first.
             NavPoint first = entryPoints.Single(point => point.CavernTag == currentCavern.cavernTag);
 
@@ -438,6 +451,8 @@ namespace Hadal.AI
                 cachedPointPath.Enqueue(appChild);
                 appChild = appChild.approachPoint;
             }
+			
+			cachedPointPath.Enqueue(preFirst);
 
             //! Approach points need to reversed so that FirstInLastOut
             cachedPointPath = new Queue<NavPoint>(cachedPointPath.Reverse());

@@ -90,7 +90,7 @@ namespace Hadal.AI.States
 			Brain.Send_JudgementEvent(false);
 			Brain.DetachAnyCarriedPlayer();
             NavigationHandler.ResetSpeedMultiplier();
-            NavigationHandler.StopCustomPath(true);
+            NavigationHandler.StopCustomPath(false);
             AnimationManager.SetAnimation(AIAnim.Swim);
         }
 
