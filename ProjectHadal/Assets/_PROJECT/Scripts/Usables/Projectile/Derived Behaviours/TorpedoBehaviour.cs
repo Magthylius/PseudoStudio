@@ -92,6 +92,10 @@ namespace Hadal.Usables.Projectiles
 
                 ExplodeAndDespawn();
             }
+            else if(LayerMask.LayerToName(layer) == "Interactable")
+            {
+                ExplodeAndDespawn();
+            }
         }
 
         private void ExplodeAndDespawn()
