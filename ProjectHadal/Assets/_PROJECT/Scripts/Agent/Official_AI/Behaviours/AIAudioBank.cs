@@ -85,7 +85,7 @@ namespace Hadal.AI
         Ambush,
         AmbushPounce,
         AmbushPlayerClose,
-        Damaged,
+        Hurt,
         EggDestroyed,
         Death,
         GrabRiser,

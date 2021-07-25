@@ -138,6 +138,7 @@ namespace Hadal.AI
 
             brain.DetachAnyCarriedPlayer();
             brain.AnimationManager.SetAnimation(AIAnim.Death);
+			brain.AudioBank.PlayOneShot(soundType: AISound.Death, brain.transform);
 
             brain.DisableBrain(); //! disable update loops of the brain
             brain.StartCoroutine(Bleed(0.5f));
@@ -325,6 +326,7 @@ namespace Hadal.AI
             }
 
             brain.AnimationManager.SetAnimation(AIAnim.Hurt, 1f);
+			brain.AudioBank.PlayOneShot(soundType: AISound.Hurt, brain.transform);
         }
 
         private Vector3 GetRandomHitPosition() => randomHitPoints.RandomElement().position;
@@ -335,13 +337,5 @@ namespace Hadal.AI
             if (vfx == null) return;
             vfx.SpawnAt(position);
         }
-
-
-        // private void HandleEggDestroyedEvent(bool isDestroyed)
-        // {
-        //     if (isDestroyed)
-        //     {
-        //     }
-        // }
     }
 }
