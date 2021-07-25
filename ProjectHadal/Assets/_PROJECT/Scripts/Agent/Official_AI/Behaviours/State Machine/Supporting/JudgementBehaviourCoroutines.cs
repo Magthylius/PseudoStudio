@@ -99,7 +99,9 @@ namespace Hadal.AI
             {
                 NavigationHandler.StopMovement();
                 AnimationManager.SetAnimation(AIAnim.Aggro);
-                AudioBank.PlayOneShot(AISound.GrabRiser, Brain.transform);
+                if (!ambushSounds)
+                    AudioBank.PlayOneShot(AISound.GrabRiser, Brain.transform);
+
                 if (JState.IsolatedPlayer != null)
                     NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
                 else
@@ -126,8 +128,8 @@ namespace Hadal.AI
                     if (isPlayerTagged && !targetMarked)
                     {
                         targetMarked = true;
-                        
-                        
+
+
                         TryDebug("Set custom nav point onto target. Moving to chase target.");
                     }
                 }
@@ -142,7 +144,8 @@ namespace Hadal.AI
                         NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null);
 
                         //! plays sound cue that should inform the player that they should start dodging
-                        AudioBank.PlayOneShot(AISound.CarryWarning, Brain.transform);
+                        if (!ambushSounds)
+                            AudioBank.PlayOneShot(AISound.CarryWarning, Brain.transform);
                     }
 
                     canCarry = true;
@@ -210,6 +213,8 @@ namespace Hadal.AI
                     //! Teleport player to the correct location in front of the AI & disable navigation
                     NavigationHandler.ForceDisable();
                     Brain.CarriedPlayer.GetTarget.position = Brain.MouthObject.transform.position + (Brain.MouthObject.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
+                    if (!ambushSounds)
+                        AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
 
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
@@ -241,7 +246,6 @@ namespace Hadal.AI
             int totalDamageSeconds = Settings.G_TotalThreshTimeInSeconds;
             isDamaging = true;
             NavigationHandler.DisableWithLerp(2f); //try to disable if not already disabled
-			AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
 
             void StopAttack()
             {
@@ -280,7 +284,7 @@ namespace Hadal.AI
                 successCallback?.Invoke();
             else
                 failureCallback?.Invoke();
-            
+
             AnimationManager.SetAnimation(AIAnim.Swim);
         }
 
@@ -600,7 +604,7 @@ namespace Hadal.AI
             return brainState == BrainState.Judgement;
         }
 
-        private void ResetJudgementBehaviour()
+        internal void ResetJudgementBehaviour()
         {
             //! Settle all local states
             StopAllRunningCoroutines();

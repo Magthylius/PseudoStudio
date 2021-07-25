@@ -85,9 +85,9 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             StopAnyRunningCoroutines();
-            if (behaviour != null) behaviour.ResetStateValues();
+            if (behaviour != null) behaviour.ResetJudgementBehaviour();
             
-			Brain.Send_JudgementEvent(true);
+			Brain.Send_JudgementEvent(false);
 			Brain.DetachAnyCarriedPlayer();
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(true);
