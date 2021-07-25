@@ -91,6 +91,7 @@ namespace Hadal.AI.States
 			Brain.DetachAnyCarriedPlayer();
             NavigationHandler.ResetSpeedMultiplier();
             NavigationHandler.StopCustomPath(false);
+			NavigationHandler.SetLookAtTarget(null);
             AnimationManager.SetAnimation(AIAnim.Swim);
         }
 
