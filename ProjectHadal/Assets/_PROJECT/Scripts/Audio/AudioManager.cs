@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Hadal.Networking.UI.Loading;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 namespace Hadal.AudioSystem
@@ -19,13 +20,61 @@ namespace Hadal.AudioSystem
         void Awake()
         {
             if (Instance == null) Instance = this;
-            else Destroy(this);
+            else
+			{
+				Destroy(this);
+				return;
+			}
+			
+			SceneManager.sceneLoaded += HandleInitialise;
         }
-
-        private void Start()
-        {
-            StartCoroutine(HandleObjectPooling());
-        }
+		
+		private void OnDestroy()
+		{
+			SceneManager.sceneLoaded -= HandleInitialise;
+			try
+			{
+				SceneManager.sceneUnloaded -= HandleDeinitialise;
+			}
+			catch { }
+		}
+		
+		private void HandleInitialise(Scene scene, LoadSceneMode mode)
+		{
+			//! Only initialise for in-game scene
+			if (scene.buildIndex != 2)
+				return;
+			
+			//! Subscribe once per load
+			SceneManager.sceneUnloaded += HandleDeinitialise;
+			
+			//! Initialise object pool
+			StartCoroutine(HandleObjectPooling());
+		}
+		
+		private void HandleDeinitialise(Scene current)
+		{
+			//! Only deinitialise for in-game scene
+			if (current.buildIndex != 2)
+				return;
+			
+			//! Unsubscribe once per unload
+			SceneManager.sceneUnloaded -= HandleDeinitialise;
+			StopAllCoroutines();
+			
+			//! Stop all audio
+			int i = -1;
+			while (++i < audioSourceHandlers.Count)
+				audioSourceHandlers[i].Stop();
+			
+			//! Destroy all audio objects
+			for (i = audioSourceHandlers.Count - 1; i >= 0; i--)
+			{
+				var handler = audioSourceHandlers[i];
+				audioSourceHandlers.RemoveAt(i);
+				Destroy(handler.gameObject);
+			}
+		}
 
         /// <summary>
         /// Returns an available audio source handler from the object pool, setting it up with the dump event and activating its game object.
