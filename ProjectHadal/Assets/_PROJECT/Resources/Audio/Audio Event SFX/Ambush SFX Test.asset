@@ -15,12 +15,13 @@ MonoBehaviour:
   Clips:
   - {fileID: 8300000, guid: a221c19d721cedb4a983037cb36d4f49, type: 3}
   Settings:
+    ReplayTime: 0.5
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.2
     Priority: 120
     StereoPan: 0
-    ReverbZoneMix: 1
+    ReverbZoneMix: 0.1
     OutputMixerGroup: {fileID: 24300002, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
