@@ -317,7 +317,7 @@ namespace Hadal.AI
         private readonly Vector3 vZero = Vector3.zero;
         private bool doNotHandleCarriedPlayer = false;
         public void SetDoNotHandleCarriedPlayer(bool statement) => doNotHandleCarriedPlayer = statement;
-        private void HandleCarriedPlayer()
+        public void HandleCarriedPlayer()
         {
             if (CarriedPlayer == null || doNotHandleCarriedPlayer) return;
             CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * 4.5f);
@@ -389,12 +389,12 @@ namespace Hadal.AI
                 AudioBank.Play2D(soundType);
         }
 
-        private void Send_SpawnExplosivePoint(Vector3 position)
+        private void Send_SpawnExplosivePoint(Vector3 position, bool useTunnelExplosion)
         {
             if (neManager == null || !neManager.IsMasterClient) //! only master client can send this
                 return;
 
-            object[] content = new object[] { position };
+            object[] content = new object[] { position, useTunnelExplosion };
             neManager.RaiseEvent(ByteEvents.AI_EXPLOSION_POINT, content, SendOptions.SendReliable);
         }
 
@@ -402,7 +402,8 @@ namespace Hadal.AI
         {
             object[] content = (object[])eventData.CustomData;
             Vector3 spawnPos = (Vector3)content[0];
-            SpawnExplosivePointAt(spawnPos);
+            bool useTunnelExplosion = (bool)content[1];
+            SpawnExplosivePointAt(spawnPos, useTunnelExplosion: useTunnelExplosion);
         }
 
         #endregion
@@ -523,9 +524,14 @@ namespace Hadal.AI
             //! Make sure any player in mouth is released
             PlayerController[] controllers = MouthObject.GetComponentsInChildren<PlayerController>();
             int freeLayerIndex = LayerMask.NameToLayer(RuntimeData.FreePlayerLayer);
+            int freeLocalLayerIndex = LayerMask.NameToLayer(RuntimeData.FreeLocalPlayerLayer);
             foreach (var player in controllers)
             {
-                player.gameObject.layer = freeLayerIndex;
+                if (player.IsLocalPlayer)
+                    player.gameObject.layer = freeLocalLayerIndex;
+                else
+                    player.gameObject.layer = freeLayerIndex;
+                
                 player.SetIsCarried(false);
                 player.SetIsTaggedByLeviathan(false);
             }
@@ -563,18 +569,31 @@ namespace Hadal.AI
             return true;
         }
 
-        public void SpawnExplosivePointAt(Vector3 position, bool sendWithEvent = false)
+        public void SpawnExplosivePointAt(Vector3 position, bool sendWithEvent = false, bool useTunnelExplosion = false)
         {
             ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
+            float additionalRadius = 0f;
+            float knockForce = 0f;
+            if (useTunnelExplosion)
+            {
+                additionalRadius = MachineData.Engagement.G_TunnelKnockbackAdditionalRange;
+                knockForce = MachineData.Engagement.G_CarryKnockbackForce;
+            }
+            else
+            {
+                additionalRadius = MachineData.Engagement.G_CarryKnockbackAdditionalRange;
+                knockForce = MachineData.Engagement.G_TunnelKnockbackForce;
+            }
+
             expSettings.Position = position;
-            expSettings.Radius = SenseDetection.GetCurrentSenseDetectionRadius() + MachineData.Engagement.G_CarryKnockbackAdditionalRange;
-            expSettings.Force = MachineData.Engagement.G_CarryKnockbackForce;
+            expSettings.Radius = 70f + additionalRadius;
+            expSettings.Force = knockForce;
             expSettings.IgnoreLayers = MachineData.Engagement.JG_KnockbackIgnoreMasks;
 
             ExplosivePoint.Create(expSettings);
 
             if (sendWithEvent)
-                Send_SpawnExplosivePoint(position);
+                Send_SpawnExplosivePoint(position, useTunnelExplosion);
         }
 
         bool eggDestroyedSound;
@@ -664,13 +683,27 @@ namespace Hadal.AI
 
         public bool CheckForJudgementStateCondition()
         {
-            if (CurrentTarget != null)
+            if (CurrentTarget != null && CavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid)
             {
                 RuntimeData.SetBrainState(BrainState.Judgement);
                 if (NavigationHandler.Data_IsOnQueuePath)
                     NavigationHandler.StopQueuedPath();
 
                 if (DebugEnabled) "Spotted and entered engagement!".Msg();
+                return true;
+            }
+            return false;
+        }
+
+        private float knockCooldownTimer = 0f;
+        public bool CheckForAIAndPlayersInTunnel()
+        {
+            if (CavernManager.GetCavernTagOfAILocation() == CavernTag.Invalid && SenseDetection.AnyDetectedPlayersInTunnels()
+                && Time.time > knockCooldownTimer)
+            {
+                knockCooldownTimer = Time.time + MachineData.Engagement.G_TunnelKnockbackCooldownTime;
+                SpawnExplosivePointAt(MouthObject.transform.position, true, true);
+                AudioBank.Play3D(AISound.Roar, transform);
                 return true;
             }
             return false;

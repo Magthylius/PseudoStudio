@@ -55,6 +55,17 @@ namespace Hadal.AudioSystem
                 AudioFinishedEvent?.Invoke(this);
             }
         }
+
+        public void PlayOneShot()
+        {
+            Source.PlayOneShot(Source.clip);
+        }
+        
+        public void PlayOneShot(AudioClip clip)
+        {
+            Source.PlayOneShot(clip);
+        }
+        
         public void Pause() => Source.Pause();
         public void UnPause() => Source.UnPause();
         public void Stop()

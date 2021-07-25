@@ -40,7 +40,10 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             if(!Brain.IsStunned)
+            {
                 RuntimeData.TickRecoveryTicker(Brain.DeltaTime);
+                if (Brain.CheckForAIAndPlayersInTunnel()) return;
+            }
 
             //! When hit too much or time too long, force back into Judgement State
             if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.IsCumulativeDamageCountReached)

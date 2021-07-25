@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GrabbedPlayerLayer: PlayerGrabbed
   FreePlayerLayer: Player
+  FreeLocalPlayerLayer: LocalPlayer
   PlayerMask:
     serializedVersion: 2
     m_Bits: 1048768
@@ -21,13 +22,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4352
   navPointPrefab: {fileID: 9011680927767773169, guid: 42cb9a163467d1a44b9fb2e0eba679e2, type: 3}
+  eggDestroyed: 0
   machineData: {fileID: 11400000, guid: 4c62742eb6089ce45b8d91e08efae0d5, type: 2}
   brainState: 2
-  engagementSubState: 3
+  previousBrainState: 0
+  engagementObjective: 0
   confidence: 50
   bonusConfidence: 0
-  cumulativeDamage: 0
-  cumulativeDamageThreshold: 60.000004
+  cumulativeDamageCount: 0
+  cumulativeDamageCountThreshold: 0
+  idleTicker: 0
   anticipationTicker: 29.38597
   engagementTicker: 21.866451
   recoveryTicker: 0

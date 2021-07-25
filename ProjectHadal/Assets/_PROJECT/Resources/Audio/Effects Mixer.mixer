@@ -68,6 +68,7 @@ AudioMixerController:
     - f51b9726ba8258740995dc9387da6961
     - 0b0ad326fc38d4a4088f46fe14ce8442
     - 9d416819a29d5924c96e057f4dda420f
+    - 64abef5d0fae0ad4cafa6b5c661cfa5b
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -83,6 +84,7 @@ AudioMixerGroupController:
   m_Children:
   - {fileID: 2054086400647329625}
   - {fileID: -9146416442801694759}
+  - {fileID: 1575329012907256561}
   m_Volume: b31fea1c9881cbd4db95634ca18cee08
   m_Pitch: 7e005b1d34d0b9f4e818283d7cc0ed10
   m_Send: 00000000000000000000000000000000
@@ -118,6 +120,39 @@ AudioMixerSnapshotController:
   m_FloatValues:
     b31fea1c9881cbd4db95634ca18cee08: -0.02577656
   m_TransitionOverrides: {}
+--- !u!244 &1344485103353417247
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: b1d856af7ebcf284aa72d5420f4b3438
+  m_EffectName: Attenuation
+  m_MixLevel: 51f3dc00a1eb86f4087e899658095dc6
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!243 &1575329012907256561
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Leviathan
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 64abef5d0fae0ad4cafa6b5c661cfa5b
+  m_Children: []
+  m_Volume: 62211f59282a1704fbeb1c8702ec61d9
+  m_Pitch: c920bf0c31fe6ad498afae67e677c112
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 1344485103353417247}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!243 &2054086400647329625
 AudioMixerGroupController:
   m_ObjectHideFlags: 0

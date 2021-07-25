@@ -145,7 +145,11 @@ namespace Hadal.Player
 
             boostDirection = BoostDirection.Forward;
 
-            if (input.HorizontalRight)
+            if (input.VerticalForward)
+            {
+                boostDirection = BoostDirection.Forward;
+            }
+            else if (input.HorizontalRight)
             {
                 boostDirection = BoostDirection.Right;
             }
@@ -160,10 +164,6 @@ namespace Hadal.Player
             else if (input.HoverDown)
             {
                 boostDirection = BoostDirection.Down;
-            }
-            else if (input.VerticalForward)
-            {
-                boostDirection = BoostDirection.Forward;
             }
             else if (input.VerticalBackward)
             {

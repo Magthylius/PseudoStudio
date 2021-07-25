@@ -275,7 +275,11 @@ namespace Hadal.Player.Behaviours
 
         private void DoOnHitEffects(int damage)
         {
-            _cameraController.ShakeCameraDefault();
+            if (damage <= 5)
+                _cameraController.ShakeCameraDefault();
+            else
+                _cameraController.ShakeCameraLeviathan();
+
             OnHit?.Invoke(damage);
             _controller.UI.InvokeOnHealthChange(_currentHealth);
         }

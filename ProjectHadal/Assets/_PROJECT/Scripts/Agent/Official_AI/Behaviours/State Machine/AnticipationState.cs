@@ -49,10 +49,11 @@ namespace Hadal.AI.States
 
         public override void StateTick()
         {
-            if (!AllowStateTick) return;
+            if (!AllowStateTick || Brain.IsStunned) return;
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
-
+            
+            if (Brain.CheckForAIAndPlayersInTunnel()) return;
             if (CheckForIsolatedPlayerCondition(Brain.DeltaTime)) return;
             if (Brain.CheckForJudgementStateCondition()) return;
             if (CheckForAutoActCondition(Brain.DeltaTime)) return;
@@ -221,7 +222,7 @@ namespace Hadal.AI.States
             PlayerController GetAnyIsolatedPlayer()
             {
                 var player = AICavern != null ? AICavern.GetIsolatedPlayer() : null;
-                if (player == null) player = SenseDetection.GetIsolatedPlayerIfAny();
+                if (player == null) player = SenseDetection.GetIsolatedPlayerIfAny(false);
                 return player;
             }
         }

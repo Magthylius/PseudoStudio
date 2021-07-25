@@ -99,6 +99,7 @@ namespace Hadal.AI
             {
                 NavigationHandler.StopMovement();
                 AnimationManager.SetAnimation(AIAnim.Aggro);
+                AudioBank.PlayOneShot(AISound.GrabRiser, Brain.transform);
                 if (JState.IsolatedPlayer != null)
                     NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
                 else
@@ -127,7 +128,10 @@ namespace Hadal.AI
                     if (isPlayerTagged && !targetMarked)
                     {
                         targetMarked = true;
-                        AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                        //AudioBank.Play3D(soundType: AISound.Thresh, Brain.transform);
+                        AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
+                        //AudioBank.Play3D(AISound.GrabRiser, Brain.transform);
+                        
                         TryDebug("Set custom nav point onto target. Moving to chase target.");
                     }
                 }
@@ -142,7 +146,8 @@ namespace Hadal.AI
                         NavigationHandler.DisableWithLerp(Settings.G_HaltingTime, null);
 
                         //! plays sound cue that should inform the player that they should start dodging
-                        AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
+                        //AudioBank.Play3D(soundType: AISound.CarryWarning, Brain.transform);
+                        AudioBank.PlayOneShot(AISound.CarryWarning, Brain.transform);
                     }
 
                     canCarry = true;
@@ -210,9 +215,6 @@ namespace Hadal.AI
                     //! Teleport player to the correct location in front of the AI & disable navigation
                     NavigationHandler.ForceDisable();
                     Brain.CarriedPlayer.GetTarget.position = Brain.MouthObject.transform.position + (Brain.MouthObject.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
-
-                    //! Spawn explosive point to blast away unwanted attention
-                    Brain.SpawnExplosivePointAt(Brain.CarriedPlayer.GetTarget.position);
 
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
@@ -303,8 +305,13 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
-                TryWarn("Defensive behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+                if (CheckForTargetEnteredTunnel())
+                {
+                    TryDebug("Target entered a tunnel, unable to continue chase, ending immediately.");
+                    OnStandardEndBehaviour?.Invoke();
+                    break;
+                }
 
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
@@ -370,8 +377,13 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
-                TryWarn("Aggressive behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+                if (CheckForTargetEnteredTunnel())
+                {
+                    TryDebug("Target entered a tunnel, unable to continue chase, ending immediately.");
+                    OnStandardEndBehaviour?.Invoke();
+                    break;
+                }
 
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
@@ -435,8 +447,13 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
-                TryWarn("Ambush behaviour is running!");
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
+                if (CheckForTargetEnteredTunnel())
+                {
+                    TryDebug("Target entered a tunnel, unable to continue chase, ending immediately.");
+                    OnStandardEndBehaviour?.Invoke();
+                    break;
+                }
 
                 //! When the behaviour takes too long
                 if (IsJudgementThresholdReached(jTimerIndex))
@@ -500,6 +517,11 @@ namespace Hadal.AI
             NavigationHandler.SetCustomPath(point, true);
             player.SetIsTaggedByLeviathan(true);
             isPlayerTagged = player.GetIsTaggedByLeviathan;
+        }
+
+        private bool CheckForTargetEnteredTunnel()
+        {
+            return Brain.CurrentTarget != null && !CavernManager.IsPlayerInValidCavern(Brain.CurrentTarget);
         }
 
         /// <summary>
