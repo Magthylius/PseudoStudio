@@ -31,7 +31,7 @@ namespace Hadal.Player
 								if (!isLeviathanAngry)
 									GetAssetOfType(reg.associatedEnum).asset.PlayOneShot(_controller.GetTarget);
                                 else
-									"The leviathan is angry, therefore no cute sounds :)".Msg();
+									"The leviathan is hangry, therefore no cute sounds :)".Msg();
 								
                                 reg.timer.RestartWithDuration(reg.GetNewDuration);
                             })
