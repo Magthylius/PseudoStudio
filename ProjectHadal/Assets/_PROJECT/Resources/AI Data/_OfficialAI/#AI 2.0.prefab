@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 1692377485682228084}
   - component: {fileID: 6021279049498701051}
   - component: {fileID: 9221971048963321059}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Radar Handlers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,11 +121,11 @@ GameObject:
   - component: {fileID: 2206939684412345072}
   - component: {fileID: 2206939684412345039}
   - component: {fileID: 8848565156750440696}
+  - component: {fileID: 5803568158776345075}
   - component: {fileID: 2206939684412345074}
-  - component: {fileID: 1426898462492377322}
   - component: {fileID: 2007591999211397865}
   - component: {fileID: 2007591999211397866}
-  m_Layer: 14
+  m_Layer: 23
   m_Name: '#AI 2.0'
   m_TagString: Monster
   m_Icon: {fileID: 0}
@@ -204,6 +204,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   brain: {fileID: 2206939684412345039}
+--- !u!135 &5803568158776345075
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206939684412345075}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2206939684412345074
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -220,19 +233,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
---- !u!135 &1426898462492377322
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2206939684412345075}
-  m_Material: {fileID: 13400000, guid: 60f53cdeacc472147ad0dcb791e4fabf, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2007591999211397865
 MonoBehaviour:
   m_ObjectHideFlags: 0

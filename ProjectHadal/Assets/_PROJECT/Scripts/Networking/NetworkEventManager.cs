@@ -33,6 +33,7 @@ namespace Hadal.Networking
         PLAYER_RECEIVE_DAMAGE,
         PLAYER_INTERACTING,
         PLAYER_INTERACTED,
+		PLAYER_PLAY_AUDIO,
         GAME_MENU_CLASS_CHOOSE,
         GAME_MENU_CLASS_UNCHOOSE,
         GAME_START_LOAD,
@@ -60,6 +61,7 @@ namespace Hadal.Networking
         AI_SET_ANIMATION_SPEED,
         AI_EGG_DAMAGED,
         AI_EXPLOSION_POINT,
+		AI_JUDGEMENT_EVENT,
         TOTAL_EVENTS
     }
 

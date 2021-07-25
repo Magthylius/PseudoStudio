@@ -110,8 +110,6 @@ namespace Hadal.AI
 
             while (JState.IsBehaviourRunning)
             {
-                TryWarn("Move to Current Target is running!");
-
                 if (ShouldHandleNullTargetTerminationCase())
                 {
                     OnStandardEndBehaviour?.Invoke();
@@ -258,7 +256,6 @@ namespace Hadal.AI
 
             while (isDamaging && DamageManager != null && JState.IsBehaviourRunning)
             {
-                TryWarn("Threshing is running!");
                 if (RuntimeData.IsCumulativeDamageCountReached)
                 {
                     success = false;

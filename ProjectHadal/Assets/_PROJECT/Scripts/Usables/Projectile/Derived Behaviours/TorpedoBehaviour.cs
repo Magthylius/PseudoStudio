@@ -51,7 +51,7 @@ namespace Hadal.Usables.Projectiles
             if (UsableBlackboard.InPlayerLayers(layer))
             {
                 //! hits player
-                
+               
                 ExplodeAndDespawn();
             }
             else if (UsableBlackboard.InAILayers(layer))
@@ -72,22 +72,41 @@ namespace Hadal.Usables.Projectiles
             {
                 ExplodeAndDespawn();
             }
-            
+           
+        }
 
-            void ExplodeAndDespawn()
+        private void OnTriggerEnter(Collider other)
+        {
+            if (projectileTriggered) return;
+
+            projectileTriggered = true;
+
+            int layer = other.gameObject.layer;
+
+            if (UsableBlackboard.InAILayers(layer))
             {
-                //if not local, only hide art asset
-                if(!IsLocal)
-                {
-                    projectileAsset.SetActive(false);
-                    return;
-                }
+                //! hits AI
+                Debug.LogError(other.name);
+                if (IsLocal)
+                    other.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
 
-                Vector3 collisionSpot = gameObject.transform.position;
-                object[] content = {projectileID, collisionSpot};
-                NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
-                ImpactBehaviour();
+                ExplodeAndDespawn();
             }
+        }
+
+        private void ExplodeAndDespawn()
+        {
+            //if not local, only hide art asset
+            if (!IsLocal)
+            {
+                projectileAsset.SetActive(false);
+                return;
+            }
+
+            Vector3 collisionSpot = gameObject.transform.position;
+            object[] content = { projectileID, collisionSpot };
+            NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_DESPAWN, content);
+            ImpactBehaviour();
         }
 
         #region Protected Overried Function

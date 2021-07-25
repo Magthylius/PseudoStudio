@@ -416,6 +416,12 @@ namespace Hadal.AI
             bool useTunnelExplosion = (bool)content[1];
             SpawnExplosivePointAt(spawnPos, useTunnelExplosion: useTunnelExplosion);
         }
+		
+		internal void Send_JudgementEvent(bool isJudgement)
+		{
+			RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+			neManager.RaiseEvent(ByteEvents.AI_JUDGEMENT_EVENT, isJudgement, options, SendOptions.SendReliable);
+		}
 
         #endregion
 
@@ -554,7 +560,11 @@ namespace Hadal.AI
 
             if (CarriedPlayer != null)
             {
-                CarriedPlayer.gameObject.layer = freeLayerIndex;
+				if (CarriedPlayer.IsLocalPlayer)
+                    CarriedPlayer.gameObject.layer = freeLocalLayerIndex;
+                else
+                    CarriedPlayer.gameObject.layer = freeLayerIndex;
+				
                 CarriedPlayer.SetIsCarried(false);
                 CarriedPlayer.SetIsTaggedByLeviathan(false);
             }
@@ -660,7 +670,7 @@ namespace Hadal.AI
 
             return CarriedPlayer.GetTarget.position
                 + (CarriedPlayer.GetTarget.forward * 2f)
-                + (CarriedPlayer.GetTarget.up * 12f);
+                + (CarriedPlayer.GetTarget.up * 20f);
         }
 
         #endregion
