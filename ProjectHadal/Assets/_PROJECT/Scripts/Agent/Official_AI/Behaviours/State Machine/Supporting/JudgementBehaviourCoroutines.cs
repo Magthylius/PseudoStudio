@@ -529,9 +529,9 @@ namespace Hadal.AI
         /// </summary>
         private void HandleStunEvent(bool isStunned)
         {
-            if (!isStunned)
+            if (!isStunned || RuntimeData.GetBrainState != BrainState.Judgement)
                 return;
-
+			
             OnPersistAttemptEndBehaviour?.Invoke(true);
         }
 
