@@ -94,9 +94,7 @@ namespace Hadal.AI.States
         /// </summary>
         void CheckPouncingRange()
         {
-            bool anyPlayersNearIt = CavernManager.AnyPlayersPresentInAnyCavern();
-
-            if (anyPlayersNearIt && playAudioOnce)
+            if (AICavern.GetPlayerCount > 0 && playAudioOnce)
             {
 
                 AudioBank.PlayOneShot(soundType: AISound.AmbushPlayerClose, Brain.transform);
