@@ -4,6 +4,7 @@ using UnityEngine;
 using Magthylius.DataFunctions;
 using ExitGames.Client.Photon;
 using Hadal.Networking;
+using Hadal.AudioSystem;
 
 //Created by Jet
 namespace Hadal.Usables.Projectiles
@@ -24,6 +25,7 @@ namespace Hadal.Usables.Projectiles
         [SerializeField] private GameObject explodeEffect;
         [ColorUsageAttribute(true, true)]
         [SerializeField] private Color activateColor;
+        [SerializeField] private float explodeDurationMax;
         private Timer explodeDuration;
         private bool isExploding;
 
@@ -37,7 +39,7 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            explodeDuration = new Timer(1f);
+            explodeDuration = new Timer(explodeDurationMax);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
 
@@ -89,7 +91,10 @@ namespace Hadal.Usables.Projectiles
                 return false;
 
             //! Explode locally, check for AI
-            //Debug.LogWarning("triggered");
+            isExploding = true;
+            triggerSound.PlayOneShot(transform);
+            explodeEffect.SetActive(true);
+   
             Collider[] creatureCollider = new Collider[1];
             int r = Physics.OverlapSphereNonAlloc(transform.position, radius, creatureCollider, UsableBlackboard.AIHitboxLayerMask);
 
@@ -99,9 +104,6 @@ namespace Hadal.Usables.Projectiles
                 if (creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>() != null) 
                     creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>().TryStun(stunTime);
             }
-            
-            isExploding = true;
-            explodeEffect.SetActive(true);
 
             //! Send event to explode.
             Vector3 activatedSpot = gameObject.transform.position;
@@ -122,6 +124,7 @@ namespace Hadal.Usables.Projectiles
                 {
                     gameObject.transform.position = (Vector3)data[1];
                     isExploding = true;
+                    triggerSound.PlayOneShot(transform);
                     explodeEffect.SetActive(true);
                 }
             }            

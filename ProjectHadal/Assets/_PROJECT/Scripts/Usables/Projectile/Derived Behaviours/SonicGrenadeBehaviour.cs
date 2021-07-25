@@ -114,8 +114,8 @@ namespace Hadal.Usables.Projectiles
 
         private void StartExplosionEffect()
         {
-            print("i explode");
             isExploding = true;
+            triggerSound.PlayOneShot(transform);
             explodeEffect.SetActive(true);
             Rigidbody.isKinematic = true;
             Rigidbody.velocity = Vector3.zero;
