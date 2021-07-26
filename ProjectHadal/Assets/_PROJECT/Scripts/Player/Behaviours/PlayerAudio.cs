@@ -65,7 +65,23 @@ namespace Hadal.Player
 			NetworkEventManager.Instance.AddListener(ByteEvents.AI_JUDGEMENT_EVENT, data => isLeviathanInJudgement = (bool)data.CustomData);
 		}
 		
-		public void Send_PlayOneShot(AudioEventData audioAsset)
+		public void PlayOneShot2D(PlayerSound soundType, bool networkSound = false)
+		{
+			AudioAsset asset = GetAssetOfType(soundType);
+			asset.asset.PlayOneShot2D();
+			if (networkSound)
+				Send_PlayOneShot(asset.asset, false);
+		}
+		
+		public void PlayOneShot(PlayerSound soundType, bool networkSound = false)
+		{
+			AudioAsset asset = GetAssetOfType(soundType);
+			asset.asset.PlayOneShot(_controller.GetTarget);
+			if (networkSound)
+				Send_PlayOneShot(asset.asset, true);
+		}
+		
+		private void Send_PlayOneShot(AudioEventData audioAsset, bool is3D)
 		{
 			if (!_controller.IsLocalPlayer)
 				return;
@@ -74,7 +90,7 @@ namespace Hadal.Player
 			if (index == -1)
 				"Audio event data scriptable object is not found in the asset list.".Warn();
 			
-			object[] content = new object[] { _controller.ViewID, index };
+			object[] content = new object[] { _controller.ViewID, index, is3D };
 			NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_PLAY_AUDIO, content, SendOptions.SendReliable);
 		}
 		
@@ -92,7 +108,13 @@ namespace Hadal.Player
 			int index = (int)content[1];
 			AudioAsset asset = assets[index];
 			if (asset != null)
-				asset.asset.PlayOneShot(_controller.GetTarget);
+			{
+				bool is3D = (bool)content[2];
+				if (is3D)
+					asset.asset.PlayOneShot(_controller.GetTarget);
+				else
+					asset.asset.PlayOneShot2D();
+			}
 		}
 
         public bool EnableInRegister(PlayerSound soundType)
