@@ -16,12 +16,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5a7e0f2825bde6d4899cfa4c35085373, type: 3}
   Settings:
     ReplayTime: 0.05
-    Volume: {x: 0.2, y: 0.2}
+    Volume: {x: 0.5, y: 0.5}
     Pitch: {x: 1, y: 1}
-    SpatialBlend: 0
-    Priority: 128
+    SpatialBlend: 0.7
+    Priority: 120
     StereoPan: 0
-    ReverbZoneMix: 0
+    ReverbZoneMix: 0.2
     OutputMixerGroup: {fileID: 1575329012907256561, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
@@ -33,5 +33,5 @@ MonoBehaviour:
     Spread: 360
     VolumeRolloff: 2
     MinDistance: 1
-    MaxDistance: 2000
+    MaxDistance: 1000
     RolloffCurveTemplate: {fileID: 5955611999743336601, guid: 6d56ffef46e73584c8663faa953cad25, type: 3}
