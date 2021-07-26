@@ -119,7 +119,8 @@ namespace Hadal.AudioSystem
             var manager = AudioManager.Instance;
             if (manager != null)
             {
-                var handler = manager.GetAvailableAudioSourceHandler();
+                //var handler = manager.GetAvailableAudioSourceHandler();
+                var handler = manager.GetOneShotAudioSourceHandler(GetWeightedClip());
                 handler.Setup(in Settings);
 				handler.SetWorldPosition(followPosTransform.position);
 				handler.SetParent(followPosTransform);
@@ -148,7 +149,8 @@ namespace Hadal.AudioSystem
 			var manager = AudioManager.Instance;
             if (manager != null)
             {
-                var handler = manager.GetAvailableAudioSourceHandler();
+                //var handler = manager.GetAvailableAudioSourceHandler();
+                var handler = manager.GetOneShotAudioSourceHandler(GetWeightedClip());
                 handler.Setup(in Settings);
 				handler.Source.spatialBlend = 0f;
 				handler.Source.clip = GetWeightedClip();

@@ -91,6 +91,19 @@ namespace Hadal.AudioSystem
             return handler;
         }
 
+        public AudioSourceHandler GetOneShotAudioSourceHandler(AudioClip clip)
+        {
+	        foreach (AudioSourceHandler handler in audioSourceHandlers)
+	        {
+		        if (handler.Source.clip == clip)
+		        {
+			        return handler;
+		        }
+	        }
+	        
+	        return InstantiateAudioSource();
+        }
+
         #region Object pooling
         IEnumerator HandleObjectPooling()
         {
@@ -107,7 +120,7 @@ namespace Hadal.AudioSystem
         AudioSourceHandler InstantiateAudioSource()
         {
             GameObject audioSource = Instantiate(AudioObjectPrefab, transform);
-            audioSource.SetActive(false);
+            audioSource.SetActive(true);
             AudioSourceHandler handler = audioSource.GetComponent<AudioSourceHandler>();
             handler.OriginalParent = transform;
             audioSourceHandlers.Add(handler);
