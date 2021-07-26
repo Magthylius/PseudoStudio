@@ -30,7 +30,7 @@ namespace Hadal.AudioSystem
                     index = Random.Range(0, Ambiences.Length);
             
             chosenIndex = index;
-
+			Ambiences[chosenIndex].Stop(!Application.isPlaying);
             Ambiences[chosenIndex].Play(source);
         }
 
@@ -38,9 +38,23 @@ namespace Hadal.AudioSystem
         {
             if (Ambiences.IsNullOrEmpty()) return;
             chosenIndex = track;
-            Stop();
+            Ambiences[chosenIndex].Stop(!Application.isPlaying);
             Ambiences[chosenIndex].Play((AudioSource)null);
         }
+		
+		public override void PlayOneShot2D()
+		{
+			if (Ambiences.IsNullOrEmpty()) return;
+			
+			int index = Random.Range(0, Ambiences.Length);
+            if (preventConsecutiveRepeatedRandoms)
+                while (chosenIndex == index)
+                    index = Random.Range(0, Ambiences.Length);
+			
+			chosenIndex = index;
+			Ambiences[chosenIndex].Stop(!Application.isPlaying);
+            Ambiences[chosenIndex].PlayOneShot2D();
+		}
 
         public override void Pause(bool isPaused)
         {

@@ -65,19 +65,29 @@ namespace Hadal.Player
 		
 		public void Send_PlayOneShot(AudioEventData audioAsset)
 		{
+			if (!_controller.IsLocalPlayer)
+				return;
+			
 			int index = GetAssetIndex(audioAsset);
 			if (index == -1)
 				"Audio event data scriptable object is not found in the asset list.".Warn();
 			
-			object[] content = new object[] { index };
+			object[] content = new object[] { _controller.ViewID, index };
 			NetworkEventManager.Instance.RaiseEvent(ByteEvents.PLAYER_PLAY_AUDIO, content, SendOptions.SendReliable);
 		}
 		
 		private void Receive_PlayOneShot(EventData eventData)
 		{
-			object[] content = (object[])eventData.CustomData;
-			int index = (int)content[0];
+			if (_controller.IsLocalPlayer)
+				return;
 			
+			object[] content = (object[])eventData.CustomData;
+			
+			int viewID = (int)content[0];
+			if (viewID != _controller.ViewID)
+				return;
+			
+			int index = (int)content[1];
 			AudioAsset asset = assets[index];
 			if (asset != null)
 				asset.asset.PlayOneShot(_controller.GetTarget);

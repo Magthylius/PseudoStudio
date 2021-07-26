@@ -20,24 +20,30 @@ namespace Hadal.AudioSystem
         /// <summary> 2D Ambience playing, passed in source can be null. </summary>
         public override void Play(AudioSource source)
         {
-            if (Clip == null) return;
-
-            HandleAnyExistingHandler();
-
-            var manager = AudioManager.Instance;
-            if (manager != null)
-            {
-                activeHandler = manager.GetAvailableAudioSourceHandler();
+            PlayOneShot2D();
+        }
+		
+		public override void PlayOneShot2D()
+		{
+			if (Clip == null) return;
+			
+			HandleAnyExistingHandler();
+			
+			var manager = AudioManager.Instance;
+			if (manager != null)
+			{
+				usingSimulatedHandler = false;
+				activeHandler = manager.GetAvailableAudioSourceHandler();
                 AssignSourceSettings(activeHandler.Source);
                 activeHandler.PlaySource();
                 return;
-            }
-
-            //! fallback
+			}
+			
+			//! fallback
             activeHandler = GetFallbackAudioSourceHandler();
             AssignSourceSettings(activeHandler.Source);
             activeHandler.PlaySource();
-        }
+		}
 
         public override void Pause(bool isPaused)
         {

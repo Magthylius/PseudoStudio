@@ -140,6 +140,7 @@ namespace Hadal.Usables.Projectiles
             ExplosionSettings explodeInfo = new ExplosionSettings();
             explodeInfo.Damage = explosionSelfDamage;
             explodeInfo.Position = this.transform.position;
+			explodeInfo.Force = 20f;
             return explodeInfo;
         }
 

@@ -9,7 +9,7 @@ namespace Hadal.AI.Graphics
         [SerializeField] private float maxDistanceLerp = 10f;
         [SerializeField] private float maxRotationLerp = 10f;
         private AIBrain brain;
-        
+		
         void OnEnable()
         {
             StartCoroutine(TryLinkAIBrain());
@@ -17,6 +17,7 @@ namespace Hadal.AI.Graphics
         
         void FixedUpdate()
         {
+			if (brain == null) return;
             transform.position = Vector3.Lerp(transform.position, brain.transform.position, maxDistanceLerp * Time.deltaTime);
             transform.rotation = Quaternion.Lerp(transform.rotation, brain.transform.rotation, maxRotationLerp * Time.deltaTime);
         }

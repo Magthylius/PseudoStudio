@@ -65,14 +65,18 @@ namespace Hadal.AudioSystem
 			//! Stop all audio
 			int i = -1;
 			while (++i < audioSourceHandlers.Count)
-				audioSourceHandlers[i].Stop();
+			{
+				if (audioSourceHandlers[i] != null)
+					audioSourceHandlers[i].Stop();
+			}
 			
 			//! Destroy all audio objects
 			for (i = audioSourceHandlers.Count - 1; i >= 0; i--)
 			{
 				var handler = audioSourceHandlers[i];
 				audioSourceHandlers.RemoveAt(i);
-				Destroy(handler.gameObject);
+				if (handler != null)
+					Destroy(handler.gameObject);
 			}
 		}
 
@@ -115,6 +119,9 @@ namespace Hadal.AudioSystem
         {
             foreach (AudioSourceHandler handler in audioSourceHandlers)
             {
+				if (handler == null)
+					continue;
+				
                 if (!handler.IsActive)
                     return handler;
             }

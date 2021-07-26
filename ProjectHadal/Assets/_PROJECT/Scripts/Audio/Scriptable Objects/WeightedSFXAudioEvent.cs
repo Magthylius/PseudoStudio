@@ -200,7 +200,7 @@ namespace Hadal.AudioSystem
 		private AudioSourceHandler GetFallbackAudioSourceHandler()
 		{
 			AudioSourceHandler handler = new GameObject("New Audiosource Handler").AddComponent<AudioSourceHandler>();
-			handler.Source = GetFallbackAudioSource();
+			handler.Source = handler.gameObject.AddComponent<AudioSource>();
 			return handler;
 		}
 
