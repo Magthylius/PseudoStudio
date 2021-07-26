@@ -20,7 +20,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bd05bb95474907d4e9f6f459fff43d17, type: 3}
   - {fileID: 8300000, guid: 68bc610b519c2c54faf3394a1ac4e744, type: 3}
   Settings:
-    ReplayTime: 0.5
+    ReplayTime: 0
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
@@ -35,8 +35,8 @@ MonoBehaviour:
     PlayOnAwake: 0
     Loop: 0
     DopplerLevel: 1
-    Spread: 0
+    Spread: 300
     VolumeRolloff: 0
     MinDistance: 1
-    MaxDistance: 500
+    MaxDistance: 1000
     RolloffCurveTemplate: {fileID: 0}
