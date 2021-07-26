@@ -350,7 +350,10 @@ namespace Hadal.AI
                     Brain.TryDropCarriedPlayer();
                     Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
 					if (HasConfidenceToContinueJudgement)
-						OnConfirmedPersistEndBehaviour?.Invoke();
+					{
+                        OnConfirmedPersistEndBehaviour?.Invoke();
+                        break;
+                    }
 					
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
@@ -426,7 +429,10 @@ namespace Hadal.AI
                     Brain.TryDropCarriedPlayer();
                     Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
 					if (HasConfidenceToContinueJudgement)
-						OnConfirmedPersistEndBehaviour?.Invoke();
+					{
+                        OnConfirmedPersistEndBehaviour?.Invoke();
+                        break;
+                    }
 					
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
@@ -492,7 +498,10 @@ namespace Hadal.AI
                     Brain.TryDropCarriedPlayer();
                     Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
 					if (HasConfidenceToContinueJudgement)
-						OnConfirmedPersistEndBehaviour?.Invoke();
+					{
+                        OnConfirmedPersistEndBehaviour?.Invoke();
+                        break;
+                    }
 					
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;

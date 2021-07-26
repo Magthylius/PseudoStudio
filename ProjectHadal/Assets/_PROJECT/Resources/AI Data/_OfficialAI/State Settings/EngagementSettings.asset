@@ -21,8 +21,8 @@ MonoBehaviour:
   G_HaltingTime: 0.5
   G_CarryDelayTimer: 0.8
   G_TotalThreshTimeInSeconds: 2
-  G_BaseMinThreshDamagePerSecond: 26
-  G_BaseMaxThreshDamagePerSecond: 28
+  G_BaseMinThreshDamagePerSecond: 20
+  G_BaseMaxThreshDamagePerSecond: 22
   G_JudgementPersistChance: 0.8
   G_DisruptionDamageCount: 3
   G_DistanceFromFrontForBiteAnimation: 5
@@ -32,6 +32,7 @@ MonoBehaviour:
   G_TunnelKnockbackCooldownTime: 2
   G_TunnelKnockbackAdditionalRange: 60
   G_TunnelKnockbackForce: 80
+  G_ConfidenceGateForNewJudgementTarget: 0.75
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 30
   AM_PounceSpeedMultiplier: 3
