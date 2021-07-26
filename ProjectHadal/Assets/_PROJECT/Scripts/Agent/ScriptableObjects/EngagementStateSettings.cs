@@ -37,6 +37,7 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_TunnelKnockbackAdditionalRange = 50f;
         [Min(0f)] public float G_TunnelKnockbackForce = 80.0f;
 		[Range(0f, 1f)] public float G_ConfidenceGateForNewJudgementTarget = 0.75f;
+        [Min(0f)] public float G_RoarStareAudioDelayTime = 2f;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;
