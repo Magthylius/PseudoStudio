@@ -127,12 +127,8 @@ namespace Hadal.AI.States
                 //! wait for sense detection to handle current target
                 if (Brain.CurrentTarget != null)
                 {
-
-                    AudioBank.PlayOneShot(soundType: AISound.AmbushPounce, Brain.transform);
                     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
-
-
                 }
             }
             else if (SenseDetection.DetectedPlayersCount == 4)

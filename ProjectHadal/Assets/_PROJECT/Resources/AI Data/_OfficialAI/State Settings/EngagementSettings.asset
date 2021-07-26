@@ -19,7 +19,7 @@ MonoBehaviour:
   G_GlareAtTargetBeforeJudgementApproachTime: 1.5
   G_PrepareHaltBeforeCarryDistance: 15
   G_HaltingTime: 0.5
-  G_CarryDelayTimer: 0.8
+  G_CarryDelayTimer: 0.5
   G_TotalThreshTimeInSeconds: 2
   G_BaseMinThreshDamagePerSecond: 20
   G_BaseMaxThreshDamagePerSecond: 22
@@ -32,7 +32,7 @@ MonoBehaviour:
   G_TunnelKnockbackCooldownTime: 2
   G_TunnelKnockbackAdditionalRange: 60
   G_TunnelKnockbackForce: 80
-  G_ConfidenceGateForNewJudgementTarget: 0.75
+  G_ConfidenceGateForNewJudgementTarget: 0.4
   AM_TargetPlayerRange: 100
   AM_MaxWaitTime: 30
   AM_PounceSpeedMultiplier: 3
@@ -51,7 +51,7 @@ MonoBehaviour:
   AGG_AdditionalThreshDamagePerSecond: 2
   DEF_AdditionalThreshDamagePerSecond: -1
   EGG_PermanentThreshDamagePerSecond: 2
-  EGG_PermanentDamageResistance: 0.02
+  EGG_PermanentDamageResistance: 0.1
   JG_KnockbackIgnoreMasks:
     serializedVersion: 2
     m_Bits: 7359488

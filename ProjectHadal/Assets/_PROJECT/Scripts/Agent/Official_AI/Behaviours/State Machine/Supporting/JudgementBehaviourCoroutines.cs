@@ -216,6 +216,8 @@ namespace Hadal.AI
                     Brain.CarriedPlayer.GetTarget.position = Brain.MouthObject.transform.position + (Brain.MouthObject.transform.forward * Settings.G_DistanceFromFrontForBiteAnimation);
                     if (!ambushSounds)
                         AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
+                    else
+                        AudioBank.PlayOneShot(soundType: AISound.AmbushPounce, Brain.transform);
 
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
