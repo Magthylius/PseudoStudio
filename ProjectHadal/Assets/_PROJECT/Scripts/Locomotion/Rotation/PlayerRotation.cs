@@ -11,10 +11,7 @@ namespace Hadal.Locomotion
 
         Quaternion currentQT;
         Quaternion targetQT;
-
-        Quaternion testCurrentQT;
-        Quaternion testLastQT;
-        int sl_MP;
+        
 
         public override void Initialise(Transform target)
         {
@@ -25,11 +22,6 @@ namespace Hadal.Locomotion
 
             currentQT = target.localRotation;
             targetQT = currentQT;
-
-            testCurrentQT = currentQT;
-            testLastQT = currentQT;
-
-            /*sl_MP = DebugManager.Instance.CreateScreenLogger();*/
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -43,7 +35,7 @@ namespace Hadal.Locomotion
             //if (!allowUpdate) return;
 
             RotateByQT();
-            CalculateRotationSpeed();
+            //CalculateRotationSpeed();
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -80,11 +72,11 @@ namespace Hadal.Locomotion
             targetQT *= Quaternion.Euler(normalizedDirection * force);
         }
 
-        void CalculateRotationSpeed()
+        /*void CalculateRotationSpeed()
         {
             testLastQT = testCurrentQT;
             testCurrentQT = target.localRotation;
             float angle = Quaternion.Angle(testLastQT, testCurrentQT);
-        }
+        }*/
     }
 }
