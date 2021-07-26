@@ -237,6 +237,7 @@ namespace Hadal.Player
             if (_isCarried)
 			{
 				SetPhysicIncapacitated();
+				playerAudio.PlayOneShot(PlayerSound.Grabbed, true);
 				playerAudio.AmbiencePlayer.PlayAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
 			}
             else
