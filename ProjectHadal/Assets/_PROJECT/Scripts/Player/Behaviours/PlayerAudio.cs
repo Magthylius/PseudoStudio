@@ -14,6 +14,7 @@ namespace Hadal.Player
         [SerializeField] private List<AudioAsset> assets;
         [SerializeField] private List<AudioRegister> registers;
 		private PlayerController _controller;
+		private AmbiencePlayer _ambiencePlayer;
 		
 		private bool isLeviathanInJudgement;
 
@@ -59,6 +60,7 @@ namespace Hadal.Player
 			if (player != _controller)
 				return;
 			
+			_ambiencePlayer = FindObjectOfType<AmbiencePlayer>();
 			NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_PLAY_AUDIO, Receive_PlayOneShot);
 			NetworkEventManager.Instance.AddListener(ByteEvents.AI_JUDGEMENT_EVENT, data => isLeviathanInJudgement = (bool)data.CustomData);
 		}
@@ -104,6 +106,17 @@ namespace Hadal.Player
             return false;
         }
 		
+		public bool DisableInRegister(PlayerSound soundType)
+		{
+			AudioRegister reg = registers.Where(r => r.associatedEnum == soundType).FirstOrDefault();
+            if (reg != null)
+            {
+                reg.timer.Pause();
+                return true;
+            }
+            return false;
+		}
+		
 		private int GetAssetIndex(AudioEventData asset)
 		{
 			int i = -1;
@@ -124,6 +137,8 @@ namespace Hadal.Player
             }
             return null;
         }
+		
+		public AmbiencePlayer AmbiencePlayer => _ambiencePlayer;
 
         [System.Serializable]
         private class AudioAsset
@@ -147,6 +162,7 @@ namespace Hadal.Player
     public enum PlayerSound
     {
         Informer_Whalesong = 0,
+		Grabbed,
 		Networked_Others
     }
 }

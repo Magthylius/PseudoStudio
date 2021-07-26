@@ -15,8 +15,9 @@ MonoBehaviour:
   Clips:
   - {fileID: 8300000, guid: ea2db4d0385db224eb7ba55fed9b495a, type: 3}
   Settings:
-    Volume: {x: 0.6, y: 0.6}
-    Pitch: {x: 0.3, y: 0.3}
+    ReplayTime: 0
+    Volume: {x: 1, y: 1}
+    Pitch: {x: 1, y: 1}
     SpatialBlend: 1
     Priority: 128
     StereoPan: 0
@@ -28,8 +29,8 @@ MonoBehaviour:
     BypassReverbZones: 0
     PlayOnAwake: 0
     Loop: 0
-    DopplerLevel: 1
-    Spread: 30
+    DopplerLevel: 2
+    Spread: 300
     VolumeRolloff: 1
     MinDistance: 1
     MaxDistance: 1000

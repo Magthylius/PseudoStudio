@@ -234,8 +234,16 @@ namespace Hadal.Player
         public void SetIsCarried(in bool statement)
         {
             _isCarried = statement;
-            if (_isCarried) SetPhysicIncapacitated();
-            else SetPhysicDefault();
+            if (_isCarried)
+			{
+				SetPhysicIncapacitated();
+				playerAudio.AmbiencePlayer.PlayAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
+			}
+            else
+			{
+				SetPhysicDefault();
+				playerAudio.AmbiencePlayer.StopAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
+			}
         }
         public bool GetIsCarried => _isCarried;
         public void SetIsTaggedByLeviathan(in bool statement) => _isTaggedByLeviathan = statement;
@@ -287,13 +295,9 @@ namespace Hadal.Player
             if (PlayerClassManager.Instance.GetCurrentPlayerClass().ClassType == PlayerClassType.Informer)
             {
 				playerAudio.EnableInRegister(PlayerSound.Informer_Whalesong);
-				var ambiencePlayer = FindObjectOfType<AmbiencePlayer>();
-				if (ambiencePlayer != null)
-					ambiencePlayer.PlayHydrophoneAmbience();
-				else
+				bool success = playerAudio.AmbiencePlayer.PlayAmbienceOfType(AmbienceType.Hydrophone_Whalesong);
+				if (!success)
 					"Ambience Player cannot be found in current scene.".Warn();
-				
-				"Starting custom audio for Informer.".Msg();
 			}
             
             mover.ToggleEnablility(true);
