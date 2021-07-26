@@ -41,15 +41,14 @@ namespace Hadal.Player.Behaviours
                 if (collisionSound)
                     collisionSound.PlayOneShot(_playerController.GetTarget);
 
-
                 if (!ableToDamage)
                     return;
 
                 float ratio = (force / forceSpeedThreshold);
                 int damage = collisionDamage * Mathf.RoundToInt(ratio);
-                //Debug.LogError(damage + " before clamp");
+                /*Debug.LogError(damage + " before clamp");*/
                 damage = Mathf.Clamp(damage, collisionDamage, collisionDamageMax);
-                //Debug.LogError(damage + " after clamp");
+                /*Debug.LogError(damage + " after clamp");*/
                 _playerController.GetInfo.HealthManager.TakeDamage(damage);
                 ableToDamage = false;
                 damageCDCoroutine = DamageCDCoroutine(damageTimer);
