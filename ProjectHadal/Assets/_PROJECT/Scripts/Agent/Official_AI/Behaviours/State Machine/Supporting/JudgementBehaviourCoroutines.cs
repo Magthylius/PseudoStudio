@@ -284,6 +284,7 @@ namespace Hadal.AI
                 failureCallback?.Invoke();
 
             AnimationManager.SetAnimation(AIAnim.Swim);
+			AudioBank.PlayOneShot_RoarWithDistance(Brain.transform);
         }
 
         /// <summary>
