@@ -149,7 +149,7 @@ namespace Hadal.Player
                 return false;
 
             boostDirection = BoostDirection.Forward;
-
+ 
             if (input.VerticalForward)
             {
                 boostDirection = BoostDirection.Forward;
