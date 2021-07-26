@@ -732,7 +732,7 @@ namespace Hadal.AI
             {
                 knockCooldownTimer = Time.time + MachineData.Engagement.G_TunnelKnockbackCooldownTime;
                 SpawnExplosivePointAt(MouthObject.transform.position, true, true);
-                AudioBank.PlayOneShot_RoarWithDistance(transform);
+                AudioBank.PlayOneShot(AISound.Roar_Close, transform);
                 return true;
             }
             return false;
