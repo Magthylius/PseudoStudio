@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1b21abb945c4224b9df744d7fdfd4e0, type: 3}
-  m_Name: AMB Hydrophone Noise
+  m_Name: AMB Grabbed by Leviathan
   m_EditorClassIdentifier: 
-  Clip: {fileID: 8300000, guid: eaafcdd05a44ece469f470ef70e1573d, type: 3}
+  Clip: {fileID: 8300000, guid: 7de6cb9671ab7244f8414704def67d67, type: 3}
   Settings:
     ReplayTime: 0.5
-    Volume: {x: 0.75, y: 0.75}
+    Volume: {x: 0.1, y: 0.1}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0
-    Priority: 140
+    Priority: 120
     StereoPan: 0
     ReverbZoneMix: 1
     OutputMixerGroup: {fileID: -7288053993519863899, guid: 3e83b3c61923ca4459841fdf3b41f403, type: 2}
