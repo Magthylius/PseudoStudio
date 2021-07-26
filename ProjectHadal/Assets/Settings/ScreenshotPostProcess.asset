@@ -32,7 +32,7 @@ MonoBehaviour:
     m_Value: 100
     min: 0
   tint:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
@@ -136,9 +136,9 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
   red:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value:
-      <length>k__BackingField: 2
+      <length>k__BackingField: 3
       m_Loop: 0
       m_ZeroValue: 0
       m_Range: 1
@@ -150,6 +150,15 @@ MonoBehaviour:
           value: 0
           inSlope: 1
           outSlope: 1
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.19322033
+          value: 0.33576643
+          inSlope: 1.5660249
+          outSlope: 1.5660249
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
@@ -301,11 +310,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   intensity:
-    m_OverrideState: 0
-    m_Value: -0.23
+    m_OverrideState: 1
+    m_Value: 0.23
     min: -1
     max: 1
   xMultiplier:
@@ -345,7 +354,7 @@ MonoBehaviour:
     m_Value: 1
   gaussianStart:
     m_OverrideState: 1
-    m_Value: 131.2
+    m_Value: 114.5
     min: 0
   gaussianEnd:
     m_OverrideState: 1
@@ -413,7 +422,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.359
     min: 0
     max: 1
   smoothness:
