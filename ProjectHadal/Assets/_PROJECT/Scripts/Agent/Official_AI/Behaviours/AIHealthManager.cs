@@ -228,7 +228,7 @@ namespace Hadal.AI
         /// <returns>Success if the AI can be and has been stunned.</returns>
         public bool TryStun(float duration)
         {
-            if (!brain || brain.IsStunned)
+            if (!brain || brain.IsStunned || IsUnalive)
                 return false;
 
             stunTimer.RestartWithDuration(duration);
@@ -242,7 +242,7 @@ namespace Hadal.AI
         /// <summary> Same as the normal TryStun but this should always be called on network event callbacks. </summary>
         public void Receive_TryStun(float duration)
         {
-            if (!brain || brain.IsStunned)
+            if (!brain || brain.IsStunned || IsUnalive)
                 return;
 
             stunTimer.RestartWithDuration(duration);
@@ -290,9 +290,6 @@ namespace Hadal.AI
 
             if (_ignoreSlowDebuffs) return;
             brain.NavigationHandler.SetSlowMultiplier(GetSlowPercentage());
-
-            // if (isLocal)
-            //     $"Updated Slow locally. Current stacks are {CurrentClampedSlowStacks} (exccess: {ExcessSlowStacks}); Max Velocity is now {brain.NavigationHandler.MaxVelocity}.".Msg();
         }
         public void ResetAllSlowStacks()
         {
@@ -325,8 +322,11 @@ namespace Hadal.AI
                     PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
             }
 
-            brain.AnimationManager.SetAnimation(AIAnim.Hurt, 1f);
-			brain.AudioBank.PlayOneShot(soundType: AISound.Hurt, brain.transform);
+            if (!IsUnalive)
+            {
+                brain.AnimationManager.SetAnimation(AIAnim.Hurt, 1f);
+			    brain.AudioBank.PlayOneShot(soundType: AISound.Hurt, brain.transform);
+            }
         }
 
         private Vector3 GetRandomHitPosition() => randomHitPoints.RandomElement().position;
