@@ -11,8 +11,6 @@ namespace Hadal.AudioSystem
         [SerializeField] private bool playWithDelay;
         [SerializeField, Min(0f)] private float playDelaySeconds;
 		[SerializeField] private List<AmbienceGroup> ambiences;
-        [SerializeField] private AudioEventData ambienceAsset;
-		[SerializeField] private AudioEventData hydrophoneAmbienceAsset;
 
         private bool hasStartedPlaying = false;
 
@@ -29,7 +27,7 @@ namespace Hadal.AudioSystem
 
         public void PlayDefaultAmbience()
         {
-            if (ambienceAsset == null || hasStartedPlaying) return;
+            if (hasStartedPlaying) return;
             StartCoroutine(AmbienceRoutine(playWithDelay ? playDelaySeconds : 0f));
         }
 		
@@ -52,12 +50,6 @@ namespace Hadal.AudioSystem
 			ambience.Stop();
 			return true;
 		}
-		
-		public void PlayHydrophoneAmbience()
-		{
-			if (hydrophoneAmbienceAsset != null)
-				hydrophoneAmbienceAsset.Play((AudioSource)null);
-		}
 
         private IEnumerator AmbienceRoutine(float delay)
         {
@@ -70,8 +62,6 @@ namespace Hadal.AudioSystem
 
             GetAmbienceOfType(AmbienceType.Default).Play((AudioSource)null);
         }
-
-        public AudioEventData AmbienceEvent => ambienceAsset;
 		
 		private AudioEventData GetAmbienceOfType(AmbienceType type)
 		{
