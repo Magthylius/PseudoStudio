@@ -11,10 +11,7 @@ namespace Hadal.Locomotion
 
         Quaternion currentQT;
         Quaternion targetQT;
-
-        Quaternion testCurrentQT;
-        Quaternion testLastQT;
-        int sl_MP;
+        
 
         public override void Initialise(Transform target)
         {
@@ -25,11 +22,6 @@ namespace Hadal.Locomotion
 
             currentQT = target.localRotation;
             targetQT = currentQT;
-
-            testCurrentQT = currentQT;
-            testLastQT = currentQT;
-
-            /*sl_MP = DebugManager.Instance.CreateScreenLogger();*/
         }
 
         public override void DoUpdate(in float deltaTime)
@@ -43,7 +35,7 @@ namespace Hadal.Locomotion
             //if (!allowUpdate) return;
 
             RotateByQT();
-            CalculateRotationSpeed();
+            //CalculateRotationSpeed();
         }
 
         public override void DoLateUpdate(in float deltaTime)
@@ -73,16 +65,18 @@ namespace Hadal.Locomotion
             currentQT = Quaternion.Lerp(currentQT, yawInfluencedQT, 5f * Time.deltaTime);
             target.localRotation = currentQT;
 
-            /*DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);*/
-            //DebugManager.Instance.SLog(sl_MP, Mathf.Sign(yaw) + " | " + yawInfluence);
-            //DebugManager.Instance.SLog(sl_MP, "P: " + pitch + " | Y: " + yaw + " | CurZ: " + currentEA.z);
         }
 
-        void CalculateRotationSpeed()
+        public void AddRotation(Vector3 normalizedDirection, float force)
+        {
+            targetQT *= Quaternion.Euler(normalizedDirection * force);
+        }
+
+        /*void CalculateRotationSpeed()
         {
             testLastQT = testCurrentQT;
             testCurrentQT = target.localRotation;
             float angle = Quaternion.Angle(testLastQT, testCurrentQT);
-        }
+        }*/
     }
 }
