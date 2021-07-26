@@ -15,6 +15,7 @@ namespace Hadal.Networking.UI
         public event ClassEvent ClassChangedEvent;
         
         public List<MainMenuHighlightBehaviour> ChosenHighlighters;
+        public List<MainMenuIconBehaviour> ClassIcons;
         
         //! Networked other player chosen classes, effectively NOT eligible player choices
         [SerializeField, ReadOnly] private List<PlayerClassType> chosenClassTypes = new List<PlayerClassType>();
@@ -76,8 +77,9 @@ namespace Hadal.Networking.UI
             GetHighlighter(type).Select(pColor, false);
             
             //! Update room properties so that other players have the information
-            //Debug.LogWarning($"Chose PlayerIndex: {neManager.GetCurrentPlayerIndex()}");
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), type);
+
+            UpdateIcons();
             
             ClassChangedEvent?.Invoke(_currentClassType);
         }
@@ -91,12 +93,55 @@ namespace Hadal.Networking.UI
             neManager.RaiseEvent(ByteEvents.GAME_MENU_CLASS_UNCHOOSE, _currentClassType);
             GetHighlighter(_currentClassType).Deselect();
             _currentClassType = PlayerClassType.Invalid;
+
+            UpdateIcons();
             
             //Debug.LogWarning($"Unchose PlayerIndex: {neManager.GetCurrentPlayerIndex()}");
             neManager.UpdatePlayerClass(neManager.GetCurrentPlayerIndex(), PlayerClassType.Invalid);
             ClassChangedEvent?.Invoke(_currentClassType);
         }
+        
+        void UpdateIcons()
+        {
+            /*if (_currentClassChooser == null)
+            {
+                //Debug.LogWarning($"not null");
+                foreach (MainMenuIconBehaviour icon in ClassIcons)
+                {
+                    if (icon == _currentClassChooser.CorrespondingIconBehaviour)
+                        icon.SetSelectable();
+                    else
+                        icon.SetUnselectable();
+                }
+            }
+            else
+            {
+                //Debug.LogWarning($"is null");
+                foreach (MainMenuIconBehaviour icon in ClassIcons)
+                {
+                    icon.SetSelectable();
+                }
+            }*/
 
+            if (_currentClassType == PlayerClassType.Invalid)
+            {
+                foreach (MainMenuIconBehaviour icon in ClassIcons)
+                {
+                    icon.SetSelectable();
+                }
+            }
+            else
+            {
+                foreach (MainMenuIconBehaviour icon in ClassIcons)
+                {
+                    if (icon.ClassType == _currentClassType)
+                        icon.SetSelectable();
+                    else
+                        icon.SetUnselectable();
+                }
+            }
+        }
+        
         public void FreeAllSelectors()
         {
             if (_currentClassChooser != null) 

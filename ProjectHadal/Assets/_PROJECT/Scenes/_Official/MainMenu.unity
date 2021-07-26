@@ -724,6 +724,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b03888e8f39fa49a2791af449fa8bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ClassType: 2
+  icon: {fileID: 107766822}
+  SelectableColor: {r: 1, g: 1, b: 1, a: 1}
+  UnselectableColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
   iconRect: {fileID: 39574048}
   targetScale: 1.2
   lerpSpeed: 5
@@ -2388,14 +2392,38 @@ MonoBehaviour:
     triggerObject: {fileID: 0}
     eventDelegates:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1885736365}
+          m_TargetAssemblyTypeName: Hadal.Networking.UI.MainMenuIconBehaviour, Hadal.Networking
+          m_MethodName: StartEnlarge
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   pointerExitEvent:
     eventType: 1
     color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 0}
     triggerObject: {fileID: 0}
     eventDelegates:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1885736365}
+          m_TargetAssemblyTypeName: Hadal.Networking.UI.MainMenuIconBehaviour, Hadal.Networking
+          m_MethodName: StartShrink
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   pointerUpEvent:
     eventType: 3
     color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 0.6862745}
@@ -5314,6 +5342,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b03888e8f39fa49a2791af449fa8bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ClassType: 4
+  icon: {fileID: 1482056815}
+  SelectableColor: {r: 1, g: 1, b: 1, a: 1}
+  UnselectableColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
   iconRect: {fileID: 616253298}
   targetScale: 1.2
   lerpSpeed: 5
@@ -6584,6 +6616,13 @@ MonoBehaviour:
   - {fileID: 346284130}
   - {fileID: 2035271528}
   - {fileID: 16554794}
+  ClassIcons:
+  - {fileID: 616253299}
+  - {fileID: 876017715}
+  - {fileID: 39574049}
+  - {fileID: 2053472658}
+  - {fileID: 885770564}
+  - {fileID: 1885736365}
   chosenClassTypes: 
 --- !u!1 &771382613
 GameObject:
@@ -6779,6 +6818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
   CorrespondingHighlight: {fileID: 2040076333}
+  CorrespondingIconBehaviour: {fileID: 876017715}
   type: 3
 --- !u!114 &771382620
 MonoBehaviour:
@@ -8242,6 +8282,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b03888e8f39fa49a2791af449fa8bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ClassType: 3
+  icon: {fileID: 786701946}
+  SelectableColor: {r: 1, g: 1, b: 1, a: 1}
+  UnselectableColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
   iconRect: {fileID: 876017714}
   targetScale: 1.2
   lerpSpeed: 5
@@ -8388,6 +8432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 885770563}
+  - component: {fileID: 885770564}
   m_Layer: 5
   m_Name: 3
   m_TagString: Untagged
@@ -8415,6 +8460,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &885770564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885770562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b03888e8f39fa49a2791af449fa8bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ClassType: 0
+  icon: {fileID: 1427643312}
+  SelectableColor: {r: 1, g: 1, b: 1, a: 1}
+  UnselectableColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
+  iconRect: {fileID: 885770563}
+  targetScale: 1.2
+  lerpSpeed: 5
 --- !u!1 &888382397
 GameObject:
   m_ObjectHideFlags: 0
@@ -13325,6 +13389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
   CorrespondingHighlight: {fileID: 16554794}
+  CorrespondingIconBehaviour: {fileID: 2053472658}
   type: 1
 --- !u!114 &1153335293
 MonoBehaviour:
@@ -22634,6 +22699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
   CorrespondingHighlight: {fileID: 346284130}
+  CorrespondingIconBehaviour: {fileID: 616253299}
   type: 4
 --- !u!114 &1711550316
 MonoBehaviour:
@@ -22970,6 +23036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Selector: {fileID: 770934340}
   CorrespondingHighlight: {fileID: 2035271528}
+  CorrespondingIconBehaviour: {fileID: 39574049}
   type: 2
 --- !u!114 &1741075254
 MonoBehaviour:
@@ -24415,6 +24482,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1885736364}
+  - component: {fileID: 1885736365}
   m_Layer: 5
   m_Name: 4
   m_TagString: Untagged
@@ -24442,6 +24510,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1885736365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885736363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b03888e8f39fa49a2791af449fa8bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ClassType: 0
+  icon: {fileID: 1566844568}
+  SelectableColor: {r: 1, g: 1, b: 1, a: 1}
+  UnselectableColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
+  iconRect: {fileID: 1885736364}
+  targetScale: 1.2
+  lerpSpeed: 5
 --- !u!1 &1887582760
 GameObject:
   m_ObjectHideFlags: 0
@@ -25433,14 +25520,38 @@ MonoBehaviour:
     triggerObject: {fileID: 0}
     eventDelegates:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 885770564}
+          m_TargetAssemblyTypeName: Hadal.Networking.UI.MainMenuIconBehaviour, Hadal.Networking
+          m_MethodName: StartEnlarge
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   pointerExitEvent:
     eventType: 1
     color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 0}
     triggerObject: {fileID: 0}
     eventDelegates:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 885770564}
+          m_TargetAssemblyTypeName: Hadal.Networking.UI.MainMenuIconBehaviour, Hadal.Networking
+          m_MethodName: StartShrink
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   pointerUpEvent:
     eventType: 3
     color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 0.6862745}
@@ -25959,6 +26070,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b03888e8f39fa49a2791af449fa8bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ClassType: 1
+  icon: {fileID: 1938790231}
+  SelectableColor: {r: 1, g: 1, b: 1, a: 1}
+  UnselectableColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
   iconRect: {fileID: 2053472657}
   targetScale: 1.2
   lerpSpeed: 5
