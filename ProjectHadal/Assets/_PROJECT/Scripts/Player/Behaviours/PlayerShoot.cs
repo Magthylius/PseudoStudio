@@ -129,7 +129,7 @@ namespace Hadal.Player.Behaviours
             enableTracer = false;
         }
         
-        public UsableHandlerInfo CalculateTorpedoAngle(UsableHandlerInfo info)
+        public UsableHandlerInfo CalculateDeployAngle(UsableHandlerInfo info)
         {
             /*if (aimHitBool)
             {
@@ -196,7 +196,7 @@ namespace Hadal.Player.Behaviours
 
             if (isLocal)
             {
-                info = CalculateTorpedoAngle(info);
+                info = CalculateDeployAngle(info);
             }
             else
             {
@@ -230,7 +230,7 @@ namespace Hadal.Player.Behaviours
 
             if (!eventFire)
             {
-                info = CalculateTorpedoAngle(info);
+                info = CalculateDeployAngle(info);
             }             
             else
             {
@@ -257,7 +257,9 @@ namespace Hadal.Player.Behaviours
             if (aimParentRb)
             {
                 //Debug.LogWarning("Rigidbody torpedo found");
-                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, 0f, aimParentRb.velocity, Vector3.zero, isLocal);
+                var info = new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, 0f, aimParentRb.velocity, Vector3.zero, isLocal);
+                info.OwnerObject = controller.GetTarget.gameObject;
+                return info;
             }
             else
             {
@@ -270,7 +272,8 @@ namespace Hadal.Player.Behaviours
             if(aimParentRb)
             {
                 //Debug.LogWarning("Rigidbody utility found");
-                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
+                var info = new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
+                return info;
             }
             else
             {

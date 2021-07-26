@@ -16,6 +16,8 @@ namespace Hadal.AudioSystem
 
         private bool CheckForPlayTime()
         {
+	        return true;
+	        
             if (Time.time > lastPlayTime)
             {
                 lastPlayTime = Time.time + Settings.ReplayTime;
@@ -118,11 +120,13 @@ namespace Hadal.AudioSystem
             var manager = AudioManager.Instance;
             if (manager != null)
             {
-                var handler = manager.GetAvailableAudioSourceHandler();
+                //var handler = manager.GetAvailableAudioSourceHandler();
+                AudioClip randomClip = Clips.RandomElement();
+                var handler = manager.GetOneShotAudioSourceHandler(randomClip);
                 handler.Setup(in Settings);
 				handler.SetWorldPosition(followPosTransform.position);
 				handler.SetParent(followPosTransform);
-				handler.Source.clip = Clips.RandomElement();
+				handler.Source.clip = randomClip;
                 handler.Source.PlayOneShot(handler.Source.clip, Settings.Volume.RandomBetweenXY());
             }
 			else
@@ -147,10 +151,12 @@ namespace Hadal.AudioSystem
 			var manager = AudioManager.Instance;
             if (manager != null)
             {
-                var handler = manager.GetAvailableAudioSourceHandler();
+	            AudioClip randomClip = Clips.RandomElement();
+                //var handler = manager.GetAvailableAudioSourceHandler();
+                var handler = manager.GetOneShotAudioSourceHandler(randomClip);
                 handler.Setup(in Settings);
 				handler.Source.spatialBlend = 0f;
-				handler.Source.clip = Clips.RandomElement();
+				handler.Source.clip = randomClip;
                 handler.Source.PlayOneShot(handler.Source.clip, Settings.Volume.RandomBetweenXY());
             }
 			else

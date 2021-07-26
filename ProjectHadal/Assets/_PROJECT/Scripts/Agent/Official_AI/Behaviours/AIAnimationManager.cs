@@ -16,6 +16,7 @@ namespace Hadal.AI
 		[SerializeField] private Animator animator;
 		[SerializeField] private float defaultAnimLerpTime;
 		[SerializeField] private float stunnedAnimSpeedMultiplier = 0.2f;
+		[SerializeField] private float deathAnimStopTime = 1f;
 		[SerializeField] private List<AnimationFloat> floatData;
 		
 		private bool onMasterClient;
@@ -34,7 +35,7 @@ namespace Hadal.AI
 			onMasterClient = isMasterClient;
 			if (animator == null) animator = GetComponent<Animator>();
 			floatData.ForEach(f => f.Initialise(animator));
-			Net_SetSpeed(1f);
+			SetSpeed(1f);
 			
 			//! Events
 			if (onMasterClient)
@@ -82,7 +83,7 @@ namespace Hadal.AI
 		{
 			object[] content = (object[])eventData.CustomData;
 			float speed = (float)content[0];
-			Net_SetSpeed(speed);
+			SetSpeed(speed);
 		}
 
 		private void OnDestroy()
@@ -95,13 +96,18 @@ namespace Hadal.AI
 		{
 			StopAllRunningCoroutines();
 			AnimationFloat curFloat = GetAnimationFloatFromAnimType(animType);
-			if (curFloat.ShouldBeChangedIndependently())
+			if (!curFloat.ShouldBeChangedIndependently())
+			{
+				if (animType == AIAnim.Death)
+					StartCoroutine(LerpSpeedToDeathStop());
+				
+				mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
+			}
+			else
 			{
 				if (independentLerpRoutine != null) return;
 				independentLerpRoutine = StartCoroutine(LerpIndependentAnimation(animType, customAnimLerpTime));
 			}
-			else
-				mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
 
 			Send_SetAnimation(animType, customAnimLerpTime);
 		}
@@ -184,6 +190,23 @@ namespace Hadal.AI
 			independentLerpRoutine = null;
 		}
 
+		private IEnumerator LerpSpeedToDeathStop()
+		{
+			float percent = 0f;
+			float lerpSpeed = 1f / deathAnimStopTime;
+			while (percent < 1f)
+			{
+				percent += Time.deltaTime * lerpSpeed;
+				float speed = Mathf.Lerp(GetSpeed(), 0f, percent);
+				
+				SetSpeed(speed);
+				Send_UpdateAnimationSpeed();
+				yield return null;
+			}
+			SetSpeed(0f);
+			Send_UpdateAnimationSpeed();
+		}
+
 		private IEnumerator StopSpeedAfterDelay(float delayInSeconds)
         {
             yield return new WaitForSeconds(delayInSeconds);
@@ -235,7 +258,7 @@ namespace Hadal.AI
 			Send_UpdateAnimationSpeed();
 		}
 		private float GetSpeed() => animator.GetFloat(SpeedMultiplierString);
-		private void Net_SetSpeed(float speed) => animator.SetFloat(SpeedMultiplierString, speed);
+		private void SetSpeed(float value) => animator.SetFloat(SpeedMultiplierString, value);
 		private float GetStunnedMultiplier()
 		{
 			bool IsStunnedAndSpeedIsNotStopped = shouldUseStunMultiplier && !isSpeedStopped;

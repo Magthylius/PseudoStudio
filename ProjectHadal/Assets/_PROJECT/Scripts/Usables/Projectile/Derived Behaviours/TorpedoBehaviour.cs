@@ -3,12 +3,19 @@ using Magthylius.DataFunctions;
 using Hadal.Networking;
 using static Hadal.ExplosivePoint;
 using Hadal.AudioSystem;
+using Tenshi;
+using Tenshi.UnitySoku;
 
 namespace Hadal.Usables.Projectiles
 {
     public class TorpedoBehaviour : ProjectileBehaviour
     {
         [SerializeField] int explosionSelfDamage;
+        [SerializeField] float audioDistanceRank = 50f;
+        [SerializeField] AudioEventData closeExplosionAudio;
+        [SerializeField] AudioEventData mediumExplosionAudio;
+        [SerializeField] AudioEventData farExplosionAudio;
+        private bool _didDamage;
 
         #region Unity Lifecycle
 
@@ -20,10 +27,11 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
-            //impactVFXTime = particleEffect.GetComponent<VisualEffect>().GetFloat("Explosion Lifetime");
             impactVFXTime = 4f;
             impactDuration = new Timer(impactVFXTime);
             impactDuration.TargetTickedEvent.AddListener(StopImpactEffect);
+            OnHit -= PlayImpactAudioAtSelfPosition;
+            _didDamage = false;
         }
         
         private void Update()
@@ -51,7 +59,7 @@ namespace Hadal.Usables.Projectiles
             if (UsableBlackboard.InPlayerLayers(layer))
             {
                 //! hits player
-               
+                _didDamage = true;
                 ExplodeAndDespawn();
             }
             else if (UsableBlackboard.InAILayers(layer))
@@ -60,6 +68,7 @@ namespace Hadal.Usables.Projectiles
                 if(IsLocal)
                     collision.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
                 
+                _didDamage = true;
                 ExplodeAndDespawn();
                 
             }
@@ -90,6 +99,7 @@ namespace Hadal.Usables.Projectiles
                 if (IsLocal)
                     other.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
 
+                _didDamage = true;
                 ExplodeAndDespawn();
             }
             else if(LayerMask.LayerToName(layer) == "Interactable")
@@ -104,6 +114,7 @@ namespace Hadal.Usables.Projectiles
             if (!IsLocal)
             {
                 projectileAsset.SetActive(false);
+                _didDamage = false;
                 return;
             }
 
@@ -120,8 +131,10 @@ namespace Hadal.Usables.Projectiles
             isVisualizing = true;
             particleEffect.SetActive(true);
             projectileAsset.SetActive(false);
+            PlayExplosionAudioBasedOnDistance();
             Create(CreateExplosionInfo());
-            InvokeOnHit(false);
+            InvokeOnHit(_didDamage);
+            _didDamage = false;
         }
 
         protected override void StopImpactEffect()
@@ -135,6 +148,27 @@ namespace Hadal.Usables.Projectiles
 
         #region Misc Function
         
+        private void PlayExplosionAudioBasedOnDistance()
+        {
+            if (OwnerObject == null)
+            {
+                "Owner object does not exist, therefore unable to play the explosion audio.".Warn();
+                return;
+            }
+            
+            float sqrDist = (transform.position - OwnerObject.transform.position).sqrMagnitude;
+            float rank1 = audioDistanceRank.Sqr();
+            float rank2 = audioDistanceRank.Sqr() * 2f;
+            float rank3 = audioDistanceRank.Sqr() * 3f;
+
+            if (sqrDist <= rank1)
+				PlayAudioAt(closeExplosionAudio, transform.position);
+			else if (sqrDist > rank1 && sqrDist <= rank2)
+				PlayAudioAt(mediumExplosionAudio, transform.position);
+			else if (sqrDist > rank3)
+				PlayAudioAt(farExplosionAudio, transform.position);
+        }
+
         private ExplosionSettings CreateExplosionInfo()
         {
             ExplosionSettings explodeInfo = new ExplosionSettings();

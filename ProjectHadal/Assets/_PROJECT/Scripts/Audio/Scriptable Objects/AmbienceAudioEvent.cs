@@ -33,7 +33,8 @@ namespace Hadal.AudioSystem
 			if (manager != null)
 			{
 				usingSimulatedHandler = false;
-				activeHandler = manager.GetAvailableAudioSourceHandler();
+				//activeHandler = manager.GetAvailableAudioSourceHandler();
+				activeHandler = manager.GetOneShotAudioSourceHandler(Clip);
                 AssignSourceSettings(activeHandler.Source);
                 activeHandler.PlaySource();
                 return;

@@ -897,9 +897,9 @@ MonoBehaviour:
     MaxSpeed: 5
     MinSpeed: 1
     Duration: 1
-    NoisePercent: 0.5
-    DampingPercent: 0.5
-    RotationPercent: 0.2
+    NoisePercent: 0.75
+    DampingPercent: 0.2
+    RotationPercent: 0.1
   shakeSpeedMultiplier:
     Angle: 0
     Strength: 0.1
@@ -1249,7 +1249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4944ec5961e45184385376828cf8aa72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceSpeedThreshold: 7
+  forceSpeedThreshold: 10
   collisionDamage: 1
   collisionDamageMax: 15
   damageTimer: 2
@@ -1819,7 +1819,7 @@ MonoBehaviour:
   _localReviveDelayTimer: 0
   minOtherPlayerRevivalDistance: 20
   localReviveDelayTime: 2
-  reviveOtherHealthPercent: 0.2
+  reviveOtherHealthPercent: 0.4
   maxHealth: 100
   _currentHealth: 0
 --- !u!114 &4790383674308879192
@@ -2060,7 +2060,7 @@ MonoBehaviour:
     TeleportIfDistanceGreaterThan: 10
     InterpolateOption: 4
     InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 10
+    InterpolateLerpSpeed: 1
     ExtrapolateOption: 2
     ExtrapolateSpeed: 1
     ExtrapolateIncludingRoundTripTime: 1
@@ -2069,7 +2069,7 @@ MonoBehaviour:
     SynchronizeEnabled: 1
     InterpolateOption: 2
     InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
+    InterpolateLerpSpeed: 1
   m_ScaleModel:
     SynchronizeEnabled: 0
     InterpolateOption: 0

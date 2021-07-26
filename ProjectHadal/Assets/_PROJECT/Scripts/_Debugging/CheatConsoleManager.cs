@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Hadal.AI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -182,7 +183,8 @@ namespace Hadal.Debugging
             });
             C_GodMode = new DebugCommand("god", "Turns the player into god", "god", () =>
             {
-                var player = PlayerManager.Instance.LocalPlayerController;
+                var player = FindObjectsOfType<PlayerController>().Where(p => p.IsLocalPlayer).FirstOrDefault();
+                if (player == null) return;
                 player.GetInfo.HealthManager.Debug_ToggleGodMode();
             });
             C_ChangeMovesetToF = new DebugCommand("movesetA", "Switching player movement to ForceMode", "movesetA", () =>

@@ -8,6 +8,7 @@ namespace Hadal.Networking.UI
     {
         public MainMenuClassSelector Selector;
         public MainMenuHighlightBehaviour CorrespondingHighlight;
+        public MainMenuIconBehaviour CorrespondingIconBehaviour;
         public PlayerClassType type;
         
         private bool selected = false;

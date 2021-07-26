@@ -20,6 +20,7 @@ namespace Hadal.Usables.Projectiles
         public virtual ProjectileData Data { get; set; }
         public virtual ProjectilePhysics PPhysics { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
+        public GameObject OwnerObject { get; set; }
         public Collider ProjectileCollider;
         public bool IsArmed { get; set; } = false;
         public bool IsAttached = false;
@@ -50,26 +51,24 @@ namespace Hadal.Usables.Projectiles
         protected virtual void Start()
         {
             DoDebugEnabling(DebugKey);
-            /*if(!neManager)
-            {
-                print("network Event Manager not found");
-            }
-            else
-            {
-                print("network Event Manager found");
-            }*/
             
             NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_DESPAWN, REdump);
             NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_ATTACH, REattach);
             NetworkEventManager.Instance.AddListener(ByteEvents.PROJECTILE_ACTIVATED, ReTriggerBehavior);
             PPhysics.PhysicsFinished += Dump;
 
+            OnHit += ResetOwner;
             OnHit += PlayImpactAudioAtSelfPosition;
         }
 
         protected virtual void OnDestroy()
         {
-            OnHit -= PlayImpactAudioAtSelfPosition;
+            OnHit -= ResetOwner;
+            try
+            {
+                OnHit -= PlayImpactAudioAtSelfPosition;
+            }
+            catch { }
         }
 
         #endregion
@@ -166,10 +165,15 @@ namespace Hadal.Usables.Projectiles
             }
         }
 
-        private void PlayImpactAudioAtSelfPosition(bool didDamage) => PlayAudioAt(impactAudio, transform.position);
+        protected void ResetOwner(bool didDamage)
+        {
+            OwnerObject = null;
+        }
+
+        protected void PlayImpactAudioAtSelfPosition(bool didDamage) => PlayAudioAt(impactAudio, transform.position);
 
         /// <summary> Players audio at a position. Automatically does null check so use this when playing sounds. </summary>
-        private void PlayAudioAt(AudioEventData audio, Vector3 position)
+        protected void PlayAudioAt(AudioEventData audio, Vector3 position)
         {
             if (audio == null) return;
             audio.Play(position);
