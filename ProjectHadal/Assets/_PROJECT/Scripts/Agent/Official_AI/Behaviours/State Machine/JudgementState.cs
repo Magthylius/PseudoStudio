@@ -33,6 +33,7 @@ namespace Hadal.AI.States
 			Brain.Send_JudgementEvent(true);
             RuntimeData.ResetEngagementTicker();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
+			AudioBank.PlayOneShot(AISound.GrabRiser, Brain.transform);
 
             if (RuntimeData.IsPreviousBrainStateEqualTo(BrainState.Ambush))
             {
