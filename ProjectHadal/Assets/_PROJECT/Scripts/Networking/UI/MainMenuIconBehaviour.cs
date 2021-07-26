@@ -24,7 +24,6 @@ namespace Hadal.Networking.UI
         {
             if (mode == FadeMode.FadeLarge)
             {
-                Debug.LogWarning(Vector3.SqrMagnitude(TargetRectScale - iconRect.localScale));
                 if (Vector3.SqrMagnitude(TargetRectScale - iconRect.localScale) > 0.0001f)
                 {
                     iconRect.localScale = Vector3.Lerp(iconRect.localScale, TargetRectScale, lerpSpeed * Time.deltaTime);
