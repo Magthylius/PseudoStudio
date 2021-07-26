@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 511bc02433f9c9c42871a8e561a5fa95, type: 3}
+  m_Name: SFX Lev Growl Medium
+  m_EditorClassIdentifier: 
+  Clips:
+  - {fileID: 8300000, guid: a520def145e294e4ca670b720c204e33, type: 3}
+  - {fileID: 8300000, guid: 79a881ecc6f99414184e36dd0d99691f, type: 3}
+  - {fileID: 8300000, guid: 8f01c1ca10ee0894192454ff6e325dec, type: 3}
+  - {fileID: 8300000, guid: 81b1b060e5558514f9a02d256d9cabfe, type: 3}
+  - {fileID: 8300000, guid: 2791b304fa1a7cb4f8e2bb21ad244020, type: 3}
+  - {fileID: 8300000, guid: a5c42dbf2967cbf448ab585d3a62ca29, type: 3}
+  - {fileID: 8300000, guid: 9ac9b973a9efcb74da2515d04e362900, type: 3}
+  - {fileID: 8300000, guid: da89580d281e4604486722962ae28349, type: 3}
+  - {fileID: 8300000, guid: 78e9110821567154e9a1664b4e00d7c7, type: 3}
+  - {fileID: 8300000, guid: 8057e802021f8354897f75485552017d, type: 3}
+  - {fileID: 8300000, guid: 78bae291a6e574d4a84b7217092e056f, type: 3}
+  - {fileID: 8300000, guid: 8f657f7c32bd68d4c8ac824adf7f73bc, type: 3}
+  - {fileID: 8300000, guid: 2701991aeeeb41e448bbb10f72468b4e, type: 3}
+  Settings:
+    ReplayTime: 0.05
+    Volume: {x: 1, y: 1}
+    Pitch: {x: 1, y: 1}
+    SpatialBlend: 0.7
+    Priority: 128
+    StereoPan: 0
+    ReverbZoneMix: 1
+    OutputMixerGroup: {fileID: 1575329012907256561, guid: 29349254421fc3742874fe18b3785b50, type: 2}
+    Mute: 0
+    BypassEffects: 0
+    BypassListenerEffects: 0
+    BypassReverbZones: 0
+    PlayOnAwake: 0
+    Loop: 0
+    DopplerLevel: 1
+    Spread: 0
+    VolumeRolloff: 2
+    MinDistance: 1
+    MaxDistance: 250
+    RolloffCurveTemplate: {fileID: 5955611999743336601, guid: 6d56ffef46e73584c8663faa953cad25, type: 3}

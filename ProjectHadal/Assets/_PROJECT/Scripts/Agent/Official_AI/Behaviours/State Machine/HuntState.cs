@@ -155,7 +155,7 @@ namespace Hadal.AI.States
 
         private void DoRoar()
         {
-            AudioBank.Play3D(soundType: AISound.Roar, Brain.transform);
+            AudioBank.PlayOneShot_RoarWithDistance(Brain.transform);
         }
 
         private void TryUpdateCachedCavern()
