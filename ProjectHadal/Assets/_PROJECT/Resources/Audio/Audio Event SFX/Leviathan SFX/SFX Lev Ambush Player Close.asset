@@ -15,7 +15,7 @@ MonoBehaviour:
   Clips:
   - {fileID: 8300000, guid: 681545b07105fba4b890e888a066893b, type: 3}
   Settings:
-    ReplayTime: 0.5
+    ReplayTime: 0.05
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0
@@ -30,8 +30,8 @@ MonoBehaviour:
     PlayOnAwake: 0
     Loop: 0
     DopplerLevel: 1
-    Spread: 0
-    VolumeRolloff: 0
+    Spread: 360
+    VolumeRolloff: 2
     MinDistance: 1
     MaxDistance: 500
-    RolloffCurveTemplate: {fileID: 0}
+    RolloffCurveTemplate: {fileID: 5955611999743336601, guid: 6d56ffef46e73584c8663faa953cad25, type: 3}

@@ -99,8 +99,6 @@ namespace Hadal.AI
             {
                 NavigationHandler.StopMovement();
                 AnimationManager.SetAnimation(AIAnim.Aggro);
-                if (!ambushSounds)
-                    AudioBank.PlayOneShot(AISound.GrabRiser, Brain.transform);
 
                 if (JState.IsolatedPlayer != null)
                     NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
@@ -286,6 +284,7 @@ namespace Hadal.AI
                 failureCallback?.Invoke();
 
             AnimationManager.SetAnimation(AIAnim.Swim);
+			AudioBank.PlayOneShot_RoarWithDistance(Brain.transform);
         }
 
         /// <summary>
