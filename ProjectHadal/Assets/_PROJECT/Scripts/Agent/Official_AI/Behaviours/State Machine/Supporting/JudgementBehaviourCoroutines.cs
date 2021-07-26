@@ -44,6 +44,7 @@ namespace Hadal.AI
             Brain.OnStunnedEvent += HandleStunEvent;
             OnStandardEndBehaviour += HandleAnyBehaviourEnd;
             OnPersistAttemptEndBehaviour += HandleBehaviourEndWithChanceToPersist;
+			OnConfirmedPersistEndBehaviour += HandleConfirmedBehaviourPersist;
         }
 
         ~JudgementBehaviourCoroutines()
@@ -51,6 +52,7 @@ namespace Hadal.AI
             Brain.OnStunnedEvent -= HandleStunEvent;
             OnStandardEndBehaviour -= HandleAnyBehaviourEnd;
             OnPersistAttemptEndBehaviour -= HandleBehaviourEndWithChanceToPersist;
+			OnConfirmedPersistEndBehaviour -= HandleConfirmedBehaviourPersist;
         }
 
         private float carryDelayTimer;
@@ -65,6 +67,7 @@ namespace Hadal.AI
         private CoroutineData approachRoutineData;
         private event System.Action OnStandardEndBehaviour;
         private event System.Action<bool> OnPersistAttemptEndBehaviour;
+		private event System.Action OnConfirmedPersistEndBehaviour;
 
         #region Coroutines
 
@@ -346,6 +349,9 @@ namespace Hadal.AI
 
                     Brain.TryDropCarriedPlayer();
                     Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
+					if (HasConfidenceToContinueJudgement)
+						OnConfirmedPersistEndBehaviour?.Invoke();
+					
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
                 }
@@ -418,6 +424,9 @@ namespace Hadal.AI
 
                     Brain.TryDropCarriedPlayer();
                     Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
+					if (HasConfidenceToContinueJudgement)
+						OnConfirmedPersistEndBehaviour?.Invoke();
+					
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
                 }
@@ -480,6 +489,9 @@ namespace Hadal.AI
 
                     Brain.TryDropCarriedPlayer();
                     Brain.SpawnExplosivePointAt(Brain.GetEndThreshExplosionPosition(), sendWithEvent: true);
+					if (HasConfidenceToContinueJudgement)
+						OnConfirmedPersistEndBehaviour?.Invoke();
+					
                     TryDebug("Attacking is done, dropping carried player. Stopping behaviour.");
                     break;
                 }
@@ -572,7 +584,6 @@ namespace Hadal.AI
                 //! Double affirm JState state is terminated
                 JState.StopAnyRunningCoroutines();
                 JState.ResetStateValues();
-
                 JState.ShouldExit = !isJudgement;
 
                 JState.AllowStateTick = true;
@@ -583,6 +594,58 @@ namespace Hadal.AI
                 TryDebug(debugMsg);
             }
         }
+		
+		private void HandleConfirmedBehaviourPersist()
+		{
+			Brain.StartCoroutine(Routine());
+			
+			IEnumerator Routine()
+			{
+				JState.AllowStateTick = false;
+				yield return null;
+				
+				ResetJudgementPersistCount();
+				ResetJudgementBehaviour();
+				Brain.ResetAllPlayersTaggedStatus();
+				
+				//! Double affirm JState state is terminated
+                JState.StopAnyRunningCoroutines();
+                JState.ResetStateValues();
+				JState.ShouldExit = false;
+
+				//! Choose new target
+				{
+					SenseDetection.RequestImmediateSensing();
+					
+					PlayerController newTarget = null;
+					foreach (var player in SenseDetection.DetectedPlayers)
+					{
+						bool playerIsCurrentTarget = player == Brain.CurrentTarget;
+						bool playerIsDownOrUnalive = player.GetInfo.HealthManager.IsDownOrUnalive;
+
+						if (playerIsCurrentTarget || playerIsDownOrUnalive)
+							continue;
+
+						newTarget = player;
+					}
+
+					if (newTarget == null)
+					{
+						TryDebug("Unable to find a new target to continue Judgement. Stopping behaviour.");
+						RuntimeData.UpdateConfidenceValue(-Settings.ConfidenceDecrementValue);
+						OnPersistAttemptEndBehaviour?.Invoke(false);
+						JState.ShouldExit = true;
+					}
+					else
+					{
+						NavigationHandler.StopCustomPath(false);
+						Brain.ForceSetCurrentTarget(newTarget);
+					}
+				}
+				
+				JState.AllowStateTick = true;
+			}
+		}
 
         private bool DecideOnShouldJudgementPersist()
         {
@@ -678,6 +741,8 @@ namespace Hadal.AI
                 msg.Warn();
             }
         }
+		
+		private bool HasConfidenceToContinueJudgement => RuntimeData.NormalisedConfidence > Settings.G_ConfidenceGateForNewJudgementTarget;
 
         private bool NoMorePlayersInCavern => JState.AICavern != null && JState.AICavern.GetPlayerCount == 0;
         private bool NoMorePlayersNearby => SenseDetection.DetectedPlayersCount == 0;
