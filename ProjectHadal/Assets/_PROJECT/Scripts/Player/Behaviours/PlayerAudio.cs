@@ -160,7 +160,7 @@ namespace Hadal.Player
             return null;
         }
 		
-		public AmbiencePlayer AmbiencePlayer => _ambiencePlayer;
+		public AmbiencePlayer AmbiencePlayer => _ambiencePlayer != null ? _ambiencePlayer : FindObjectOfType<AmbiencePlayer>();
 
         [System.Serializable]
         private class AudioAsset
