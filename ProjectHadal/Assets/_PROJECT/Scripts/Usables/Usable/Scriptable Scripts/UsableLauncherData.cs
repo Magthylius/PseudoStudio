@@ -28,6 +28,7 @@ namespace Hadal.Usables
             projectileObj.Data = ProjectileData;
             projectileObj.DumpEvent += DumpProjectileMethod;
             projectileObj.SetPositionRotation(info.FirePoint, info.Orientation);
+            projectileObj.OwnerObject = info.OwnerObject;
             projectileObj.Rigidbody.velocity += info.shooterVelocity;
             projectileObj.WithGObjectSetActive(true);
             projectileObj.GetComponentInChildren<ImpulseMode>().OverrideForce

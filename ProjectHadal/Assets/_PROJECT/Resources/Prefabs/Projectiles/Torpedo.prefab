@@ -229,9 +229,13 @@ MonoBehaviour:
   particleEffect: {fileID: 4603006734267967293}
   projectileAsset: {fileID: 6491809912568808441}
   impactVFXTime: 5
-  impactAudio: {fileID: 11400000, guid: c6254b82b0523bd468d17c1c1ecfe833, type: 2}
+  impactAudio: {fileID: 0}
   triggerSound: {fileID: 0}
   explosionSelfDamage: 2
+  audioDistanceRank: 100
+  closeExplosionAudio: {fileID: 11400000, guid: c6254b82b0523bd468d17c1c1ecfe833, type: 2}
+  mediumExplosionAudio: {fileID: 11400000, guid: 381ae30cd1d076740970179df6ac468d, type: 2}
+  farExplosionAudio: {fileID: 11400000, guid: 610a5136432058b4fa42611f3a6514b9, type: 2}
 --- !u!54 &5112791235449951143
 Rigidbody:
   m_ObjectHideFlags: 0

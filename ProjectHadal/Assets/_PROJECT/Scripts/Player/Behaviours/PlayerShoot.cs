@@ -270,7 +270,9 @@ namespace Hadal.Player.Behaviours
             if(aimParentRb)
             {
                 //Debug.LogWarning("Rigidbody utility found");
-                return new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
+                var info = new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
+                info.OwnerObject = controller.GetTarget.gameObject;
+                return info;
             }
             else
             {

@@ -14,6 +14,7 @@ namespace Hadal.Usables
         public Vector3 AimedPoint { get; set; }
         public TrapBehaviour Trap { get; set; }
         public bool LocallyFired { get; private set; }
+        public GameObject OwnerObject { get; set; }
         public static UsableHandlerInfo Null => new UsableHandlerInfo(0,null, 0.0f, Vector3.zero);
 
         public UsableHandlerInfo() { }
