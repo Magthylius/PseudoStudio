@@ -652,6 +652,7 @@ namespace Hadal.AI
 					}
 					else
 					{
+                        TryDebug("Found a new target to continue Judgement, switching targets now.");
 						NavigationHandler.StopCustomPath(false);
 						Brain.ForceSetCurrentTarget(newTarget);
 					}
