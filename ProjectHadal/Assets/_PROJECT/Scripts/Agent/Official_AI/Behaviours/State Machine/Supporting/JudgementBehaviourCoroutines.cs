@@ -360,7 +360,8 @@ namespace Hadal.AI
             }
 
             //! Handle Behaviour ending
-            OnStandardEndBehaviour?.Invoke();
+            if (!HasConfidenceToContinueJudgement)
+				OnStandardEndBehaviour?.Invoke();
 
             yield return null;
         }
@@ -434,7 +435,8 @@ namespace Hadal.AI
             }
 
             //! Handle Behaviour ending
-            OnStandardEndBehaviour?.Invoke();
+            if (!HasConfidenceToContinueJudgement)
+				OnStandardEndBehaviour?.Invoke();
 
             yield return null;
         }
@@ -500,7 +502,8 @@ namespace Hadal.AI
             }
 
             //! Handle Behaviour ending
-            OnStandardEndBehaviour?.Invoke();
+            if (!HasConfidenceToContinueJudgement)
+				OnStandardEndBehaviour?.Invoke();
 
             yield return null;
         }
