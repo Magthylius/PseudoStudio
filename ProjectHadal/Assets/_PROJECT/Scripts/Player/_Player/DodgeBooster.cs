@@ -16,6 +16,10 @@ namespace Hadal.Player
         Down,
         Forward,
         Backward,
+        ForwardLeft,
+        ForwardRight,
+        BackwardLeft,
+        BackwarRight,
         None
     };
     public class DodgeBooster : MonoBehaviour, IPlayerComponent
@@ -133,6 +137,22 @@ namespace Hadal.Player
                         playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.back * dodgeForce, ForceMode.Acceleration);
                         return;
 
+                    case BoostDirection.ForwardLeft:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce((Vector3.forward + Vector3.left) / 2 * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.ForwardRight:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce((Vector3.forward + Vector3.right) / 2 * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.BackwardLeft:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce((Vector3.back + Vector3.left) / 2 * dodgeForce, ForceMode.Acceleration);
+                        return;
+
+                    case BoostDirection.BackwarRight:
+                        playerController.GetInfo.Rigidbody.AddRelativeForce((Vector3.back + Vector3.right) / 2 * dodgeForce, ForceMode.Acceleration);
+                        return;
+
                 }
             }
         }
@@ -150,7 +170,23 @@ namespace Hadal.Player
 
             boostDirection = BoostDirection.Forward;
 
-            if (input.VerticalForward)
+            if (input.VerticalForward && input.HorizontalRight)
+            {
+                boostDirection = BoostDirection.ForwardRight;
+            }
+            else if (input.VerticalForward && input.HorizontalLeft)
+            {
+                boostDirection = BoostDirection.ForwardLeft;
+            }
+            else if (input.VerticalBackward && input.HorizontalRight)
+            {
+                boostDirection = BoostDirection.BackwarRight;
+            }
+            else if (input.VerticalBackward && input.HorizontalLeft)
+            {
+                boostDirection = BoostDirection.BackwardLeft;
+            }
+            else if (input.VerticalForward)
             {
                 boostDirection = BoostDirection.Forward;
             }
