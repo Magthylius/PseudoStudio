@@ -73,9 +73,11 @@ namespace Hadal.Locomotion
             currentQT = Quaternion.Lerp(currentQT, yawInfluencedQT, 5f * Time.deltaTime);
             target.localRotation = currentQT;
 
-            /*DebugManager.Instance.SLog(sl_MP, pitch + "|" + yaw + "|" + roll);*/
-            //DebugManager.Instance.SLog(sl_MP, Mathf.Sign(yaw) + " | " + yawInfluence);
-            //DebugManager.Instance.SLog(sl_MP, "P: " + pitch + " | Y: " + yaw + " | CurZ: " + currentEA.z);
+        }
+
+        public void AddRotation(Vector3 normalizedDirection, float force)
+        {
+            targetQT *= Quaternion.Euler(normalizedDirection * force);
         }
 
         void CalculateRotationSpeed()
