@@ -14,9 +14,10 @@ namespace Hadal.Player.Behaviours
 
         private PlayerController _playerController;
         private PlayerCameraController _cameraController;
+        [SerializeField] private int collisionDamage;
+        [SerializeField] private int collisionDamageMax;
 
         [SerializeField] private AudioEventData collisionSound;
-
         public void Inject(PlayerController controller)
         {
             var info = controller.GetInfo;
@@ -34,6 +35,11 @@ namespace Hadal.Player.Behaviours
 
                 if (collisionSound)
                     collisionSound.PlayOneShot(_playerController.GetTarget);
+                
+                float ratio = (force / forceSpeedThreshold);
+                int damage = collisionDamage * Mathf.RoundToInt(ratio);
+                damage = Mathf.Clamp(damage, collisionDamage, collisionDamageMax);
+                _playerController.GetInfo.HealthManager.TakeDamage(damage);
             }
         }
 
