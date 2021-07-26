@@ -398,6 +398,7 @@ namespace Hadal.AI
 				case AIPlayAudioType.Dimension2: { AudioBank.Play2D(soundType); return; }
 				case AIPlayAudioType.Dimension3: { AudioBank.Play3D(soundType, transform); return; }
 				case AIPlayAudioType.OneShot: { AudioBank.PlayOneShot(soundType, transform); return; }
+				case AIPlayAudioType.DistanceBasedRoar: { AudioBank.PlayOneShot_RoarWithDistance(transform); return; }
 				default: break;
 			}
         }
@@ -731,7 +732,7 @@ namespace Hadal.AI
             {
                 knockCooldownTimer = Time.time + MachineData.Engagement.G_TunnelKnockbackCooldownTime;
                 SpawnExplosivePointAt(MouthObject.transform.position, true, true);
-                AudioBank.Play3D(AISound.Roar, transform);
+                AudioBank.PlayOneShot_RoarWithDistance(transform);
                 return true;
             }
             return false;
