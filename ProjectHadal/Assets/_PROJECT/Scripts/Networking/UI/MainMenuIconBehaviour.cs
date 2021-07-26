@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Hadal.Networking.UI
 {
@@ -13,12 +14,21 @@ namespace Hadal.Networking.UI
             FadeLarge,
             FadeShrink
         }
-        
+
+        public PlayerClassType ClassType;
+        public Image icon;
+        public Color SelectableColor = Color.white;
+        public Color UnselectableColor = Color.gray;
         public RectTransform iconRect;
         public float targetScale = 1.2f;
         public float lerpSpeed = 5f;
 
         private FadeMode mode;
+
+        private void Start()
+        {
+            SetSelectable();
+        }
 
         private void LateUpdate()
         {
@@ -46,6 +56,16 @@ namespace Hadal.Networking.UI
                     mode = FadeMode.Normal;
                 }
             }
+        }
+
+        public void SetSelectable()
+        {
+            icon.color = SelectableColor;
+        }
+
+        public void SetUnselectable()
+        {
+            icon.color = UnselectableColor;
         }
 
         public void StartEnlarge() => mode = FadeMode.FadeLarge;
