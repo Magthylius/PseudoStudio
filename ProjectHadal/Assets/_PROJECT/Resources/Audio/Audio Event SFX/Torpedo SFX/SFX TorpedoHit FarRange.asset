@@ -20,10 +20,10 @@ MonoBehaviour:
     ReplayTime: 0
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
-    SpatialBlend: 0.7
+    SpatialBlend: 0.9
     Priority: 128
     StereoPan: 0
-    ReverbZoneMix: 1
+    ReverbZoneMix: 0.6
     OutputMixerGroup: {fileID: -9146416442801694759, guid: 29349254421fc3742874fe18b3785b50, type: 2}
     Mute: 0
     BypassEffects: 0
@@ -33,7 +33,7 @@ MonoBehaviour:
     Loop: 0
     DopplerLevel: 1
     Spread: 0
-    VolumeRolloff: 0
+    VolumeRolloff: 2
     MinDistance: 1
-    MaxDistance: 500
-    RolloffCurveTemplate: {fileID: 0}
+    MaxDistance: 1000
+    RolloffCurveTemplate: {fileID: 5955611999743336601, guid: 6d56ffef46e73584c8663faa953cad25, type: 3}
