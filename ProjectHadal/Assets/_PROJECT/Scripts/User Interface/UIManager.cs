@@ -36,6 +36,7 @@ namespace Hadal.UI
         public UIHydrophoneBehaviour HydrophoneBehaviour;
         public UICockpitCamera CockpitCamera;
         public UIClassInfoHandler ClassInfoHandler;
+        public UIBoostBehaviour BoostBehaviour;
         public Camera PlayerCamera;
         
         [Header("Reticle Settings")]
