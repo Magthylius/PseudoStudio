@@ -856,7 +856,7 @@ MonoBehaviour:
     Strength: 0.01
     MaxSpeed: 0
     MinSpeed: 0
-    Duration: 0.25
+    Duration: 0.1
     NoisePercent: 0.2
     DampingPercent: 0.1
     RotationPercent: 0
@@ -872,8 +872,8 @@ MonoBehaviour:
   shakeSpeedMultiplier:
     Angle: 0
     Strength: 0.05
-    MaxSpeed: 2
-    MinSpeed: 0.2
+    MaxSpeed: 0.5
+    MinSpeed: 0.05
     Duration: 0.2
     NoisePercent: 0.8
     DampingPercent: 0.5
@@ -1621,7 +1621,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1200
-  field of view: 80
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
