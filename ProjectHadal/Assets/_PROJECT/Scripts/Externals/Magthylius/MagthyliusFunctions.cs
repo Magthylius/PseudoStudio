@@ -928,20 +928,27 @@ namespace Magthylius
             }
 
             // float
-            public static bool Float(float a, float b, float lerpSpeed = 1f)
+            public static bool Float(float a, float b, float lerpSpeed = 1f, float tolerance = 0.01f)
             {
                 if (b < a)
                     a = Mathf.Lerp(b, a, lerpSpeed * Time.deltaTime);
                 else
                     a = Mathf.Lerp(a, b, lerpSpeed * Time.deltaTime);
 
-                if (Tolerance(a, b))
+                if (Tolerance(a, b, tolerance))
                 {
                     a = b;
                     return true;
                 }
 
                 return false;
+            }
+
+            public static float Snap(float a, float b, float t, float tolerance = 0.001f)
+            {
+                float r = Mathf.Lerp(a, b, t);
+                if (Tolerance(a, b, tolerance)) return b;
+                return r;
             }
 
             // anchored position

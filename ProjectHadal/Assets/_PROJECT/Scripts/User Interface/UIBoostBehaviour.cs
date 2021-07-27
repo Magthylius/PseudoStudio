@@ -26,7 +26,7 @@ namespace Hadal.UI
             //RightGauge.fillAmount = Mathf.Lerp(RightGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
 
             //LeftGauge.fillAmount = 
-            if (Lerp.Float(LeftGauge.fillAmount, targetProgress, lerpSpeed)) LeftGauge.fillAmount = targetProgress;
+            LeftGauge.fillAmount = Lerp.Snap(LeftGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
             RightGauge.fillAmount = LeftGauge.fillAmount;
         }
 
