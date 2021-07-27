@@ -8,6 +8,7 @@ namespace Hadal.Usables.Projectiles
 {
     public class SonicDartBehaviour : ProjectileBehaviour
     {
+        [SerializeField] SonicDartTrackerBehaviour sonicTrackerUIBehavior;
         [SerializeField] private string[] validLayer;
         [SerializeField] private ProjectilePhysics projPhysics;
         [SerializeField] private AttachMode attachMode;
@@ -43,14 +44,12 @@ namespace Hadal.Usables.Projectiles
             if(pingTimer != null)
              pingTimer.Pause();
 
+            if(sonicTrackerUIBehavior)
+                disableSonicDartUI();
+
             Rigidbody.isKinematic = false;
             ProjectileCollider.enabled = true;
             IsAttached = false;
-        }
-
-        private void Update()
-        {
-            
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -109,7 +108,12 @@ namespace Hadal.Usables.Projectiles
 
         private void enableSonicDartUI()
         {
-            //enable UI here.
+            sonicTrackerUIBehavior.Activate();
+        }
+
+        private void disableSonicDartUI()
+        {
+            sonicTrackerUIBehavior.Deactivate();
         }
 
         private void playPing()
@@ -121,6 +125,11 @@ namespace Hadal.Usables.Projectiles
         private void ModeOff()
         {
             UnsubscribeModeEvent();
+        }
+
+        public void InjectUIDependency(SonicDartTrackerBehaviour uiTracker)
+        {
+            sonicTrackerUIBehavior = uiTracker;
         }
     }
 }

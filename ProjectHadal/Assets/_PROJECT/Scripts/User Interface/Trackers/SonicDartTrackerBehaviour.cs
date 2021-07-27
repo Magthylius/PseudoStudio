@@ -10,7 +10,14 @@ namespace Hadal.UI
 
         public void Activate()
         {
+            Debug.LogError("Activated");
             GetComponent<Animator>().SetBool(Started, true);
+        }
+
+        public void Deactivate()
+        {
+            Debug.LogError("Deactivate");
+            GetComponent<Animator>().SetBool(Started, false);
         }
     }
 
