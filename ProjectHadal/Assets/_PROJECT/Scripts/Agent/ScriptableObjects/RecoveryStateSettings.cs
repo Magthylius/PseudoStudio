@@ -14,6 +14,7 @@ namespace Hadal.AI.States
         [Min(0f)] public float MinimumRecoveryTime;
         [Min(0)] public int G_DisruptionDamageCount = 2;
         [Min(0)] public int G_JudgementLapseCountLimit = 2;
+        [MinMaxSlider(0f, 60f)] public Vector2 G_LingerInCurrentCavernTimerRange;
         
         [Header("Escape Settings")]
         [Min(0f)] public float MaxEscapeTime = 100f;
@@ -23,6 +24,11 @@ namespace Hadal.AI.States
         public float GetEscapeDamageThreshold(float aiCurrentHealth)
         {
             return aiCurrentHealth * MaxEscapeDamageThresholdPercentage;
+        }
+
+        public float GetLingerInCurrentCavernTime()
+        {
+            return Random.Range(G_LingerInCurrentCavernTimerRange.x, G_LingerInCurrentCavernTimerRange.y);
         }
     }
 }
