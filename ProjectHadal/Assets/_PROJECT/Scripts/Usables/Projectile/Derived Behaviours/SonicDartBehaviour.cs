@@ -40,6 +40,9 @@ namespace Hadal.Usables.Projectiles
 
         public void OnDisable()
         {
+            if(pingTimer != null)
+             pingTimer.Pause();
+
             Rigidbody.isKinematic = false;
             ProjectileCollider.enabled = true;
             IsAttached = false;
