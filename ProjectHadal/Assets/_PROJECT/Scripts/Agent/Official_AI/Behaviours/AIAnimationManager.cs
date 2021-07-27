@@ -233,7 +233,7 @@ namespace Hadal.AI
             animator.Play("Tree", 0, 0f);
         }
 
-		private void StopSpeed()
+		internal void StopSpeed()
 		{
 			if (!onMasterClient)
 				return;
@@ -241,7 +241,7 @@ namespace Hadal.AI
 			animator.SetFloat(SpeedMultiplierString, 0f);
 			Send_UpdateAnimationSpeed();
 		}
-        private void ResetSpeed()
+        internal void ResetSpeed()
 		{
 			if (!onMasterClient)
 				return;
@@ -258,7 +258,7 @@ namespace Hadal.AI
 			Send_UpdateAnimationSpeed();
 		}
 		private float GetSpeed() => animator.GetFloat(SpeedMultiplierString);
-		private void SetSpeed(float value) => animator.SetFloat(SpeedMultiplierString, value);
+		internal void SetSpeed(float value) => animator.SetFloat(SpeedMultiplierString, value);
 		private float GetStunnedMultiplier()
 		{
 			bool IsStunnedAndSpeedIsNotStopped = shouldUseStunMultiplier && !isSpeedStopped;

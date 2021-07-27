@@ -23,6 +23,7 @@ namespace Hadal.AI.States
         {
             if (Brain.DebugEnabled) $"Switch state to: {this.NameOfClass()}".Msg();
 
+            NavigationHandler.OnReachedAmbushPoint += HandlePointReachedEvent;
             RuntimeData.ResetEngagementTicker();
             RuntimeData.ResetCumulativeDamageCount();
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.AM_DisruptionDamageCount);
@@ -43,7 +44,9 @@ namespace Hadal.AI.States
         public override void FixedStateTick() { }
         public override void OnStateEnd()
         {
+            NavigationHandler.OnReachedAmbushPoint -= HandlePointReachedEvent;
             NavigationHandler.ResetAmbushPoint();
+            AnimationManager.ResetSpeed();
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Normal);
         }
         public override void OnCavernEnter(CavernHandler cavern)
@@ -123,6 +126,14 @@ namespace Hadal.AI.States
                 return true;
             }
             return false;
+        }
+
+        private void HandlePointReachedEvent()
+        {
+            if (RuntimeData.GetBrainState != BrainState.Ambush)
+                return;
+            
+            AnimationManager.SetSpeed(0.1f);
         }
     }
 }
