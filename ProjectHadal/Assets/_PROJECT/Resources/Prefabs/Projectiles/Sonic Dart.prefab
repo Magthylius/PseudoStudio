@@ -193,7 +193,8 @@ MonoBehaviour:
   particleEffect: {fileID: 0}
   projectileAsset: {fileID: 607100969816460507}
   impactVFXTime: 5
-  impactAudio: {fileID: 0}
+  impactAudio: {fileID: 11400000, guid: b72d4624c426c23498f5c0971d8b2711, type: 2}
+  triggerSound: {fileID: 11400000, guid: 6eb22428929c24a448a28844740f2644, type: 2}
   validLayer:
   - Obstacle
   - Monster
@@ -201,6 +202,7 @@ MonoBehaviour:
   projPhysics: {fileID: 5627941608468223027}
   attachMode: {fileID: 880114878162419551}
   selfDeactivation: {fileID: 4943504598434740513}
+  pingDuration: 2
 --- !u!1 &7553957830394924370
 GameObject:
   m_ObjectHideFlags: 0

@@ -172,12 +172,13 @@ namespace Hadal.Usables.Projectiles
             if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
             {
                 projPhysics.SwapModes();
-            }
+            }   
 
             Rigidbody.isKinematic = true;
             ProjectileCollider.enabled = false;
             projectileAsset.SetActive(true);
             particleEffect.SetActive(true);
+            PlayImpactAudioAtSelfPosition(false);
             isVisualizing = true;
         }
 
