@@ -45,6 +45,7 @@ namespace Hadal.Debugging
         public static DebugCommand C_ChangeMovesetToF;
         public static DebugCommand C_ChangeMovesetToV;
         public static DebugCommand C_ChangeMovesetToH;
+        public static DebugCommand C_ToggleIgnoreAmmo;
 
         //! Player Inventory
         public static DebugCommand C_SimplifyLoadout;
@@ -205,6 +206,13 @@ namespace Hadal.Debugging
                 player.ChangeMoverToHyrid();
                 player.ChangeRotatorToHyrid();
             });
+            C_ToggleIgnoreAmmo = new DebugCommand("toggleammo", "Toggles between infinite ammo", "toggleammo", () =>
+            {
+                var player = FindObjectsOfType<PlayerController>().Where(p => p.IsLocalPlayer).FirstOrDefault();
+                if (player == null) return;
+                player.GetInfo.Shooter.GetTorpedoLauncher.IgnoreAmmo = !player.GetInfo.Shooter.GetTorpedoLauncher.IgnoreAmmo;
+                player.GetInfo.Inventory.GetAllUsableObjects.ForEach(u => u.IgnoreAmmo = !u.IgnoreAmmo);
+            });
 
 
             //! Player Inventory
@@ -278,8 +286,9 @@ namespace Hadal.Debugging
                 C_ChangeMovesetToF,
                 C_ChangeMovesetToV,
                 C_ChangeMovesetToH,
+                C_ToggleIgnoreAmmo,
 
-        C_SimplifyLoadout,
+                C_SimplifyLoadout,
                 C_AddGrenadeAndTrap,
                 C_AddTrapAndGrenade,
                 C_AddGrenade,

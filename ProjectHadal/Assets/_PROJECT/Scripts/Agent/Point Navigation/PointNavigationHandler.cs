@@ -160,6 +160,7 @@ namespace Hadal.AI
         private Transform _lookAtTarget = null;
         public event Action<float> OnObstacleDetectRadiusChange;
         public event Action OnReachedPoint;
+        public event Action OnReachedAmbushPoint;
 
         private void OnValidate()
         {
@@ -906,7 +907,7 @@ namespace Hadal.AI
                     }
                     pilotTrans.position = currentPoint.GetPosition;
                     ChangeRotationOnAmbushPoints();
-
+                    OnReachedAmbushPoint?.Invoke();
                 }
 
                 //! If the boolean is true, make it false & reset some variables (if this is called it means that the queue point path is empty)

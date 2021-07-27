@@ -24,6 +24,11 @@ namespace Hadal.AudioSystem
         }
 
         private void Start() => PlayDefaultAmbience();
+		private void OnDestroy()
+		{
+			GetAmbienceOfType(AmbienceType.Submarine_Engine).Stop();
+            GetAmbienceOfType(AmbienceType.Hadal_Zone).Stop();
+		}
 
         public void PlayDefaultAmbience()
         {
@@ -60,7 +65,9 @@ namespace Hadal.AudioSystem
             else
                 yield return new WaitForSeconds(delay);
 
-            GetAmbienceOfType(AmbienceType.Default).Play((AudioSource)null);
+			GetAmbienceOfType(AmbienceType.Main_Menu).Stop();
+            GetAmbienceOfType(AmbienceType.Submarine_Engine).Play((AudioSource)null);
+            GetAmbienceOfType(AmbienceType.Hadal_Zone).Play((AudioSource)null);
         }
 		
 		private AudioEventData GetAmbienceOfType(AmbienceType type)
@@ -84,8 +91,10 @@ namespace Hadal.AudioSystem
 	
 	public enum AmbienceType
 	{
-		Default = 0,
+		Submarine_Engine = 0,
+		Hadal_Zone,
 		Hydrophone_Whalesong,
-		Grabbed_by_Leviathan
+		Grabbed_by_Leviathan,
+		Main_Menu
 	}
 }

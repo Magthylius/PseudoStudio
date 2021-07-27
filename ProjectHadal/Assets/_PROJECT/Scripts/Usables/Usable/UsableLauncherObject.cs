@@ -29,6 +29,7 @@ namespace Hadal.Usables
         public event Action<UsableLauncherObject, bool> OnSwitch;
         public bool HasToggleAmmo { get; private set; } = false;
         public bool isEquipLocked { get; set; } = false;
+        public bool IgnoreAmmo { get; set; } = false;
 
         // public float ChargedTime;
         protected Camera PCamera { get; set; } = null;

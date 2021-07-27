@@ -16,7 +16,7 @@ namespace Hadal.AI.States
         [Header("General: Approach")]
         [Min(0f)] public float G_ApproachCloseDistanceThreshold;
         [Min(0f)] public float G_ApproachFarDistanceThreshold;
-        [Min(0f)] public float G_GlareAtTargetBeforeJudgementApproachTime = 2f;
+        [MinMaxSlider(0f, 10f)] public Vector2 G_GlareAtTargetBeforeJudgementApproachTimeRange;
         [Min(0f)] public float G_PrepareHaltBeforeCarryDistance = 10f;
         [Min(0f)] public float G_HaltingTime = 2.5f;
         [Min(0f)] public float G_CarryDelayTimer;
@@ -70,6 +70,11 @@ namespace Hadal.AI.States
         public bool AllowTarget_HighestDMGPlayer = true;
         public bool AllowTarget_HighestHPPlayer = true;
         public bool AllowTarget_IsolatedPlayer = true;
+
+        public float GetGlareAtTargetBeforeJudgementApproachTime()
+        {
+            return Random.Range(G_GlareAtTargetBeforeJudgementApproachTimeRange.x, G_GlareAtTargetBeforeJudgementApproachTimeRange.y);
+        }
 
         public PlayerController AM_GetRandomAmbushPoint()
         {

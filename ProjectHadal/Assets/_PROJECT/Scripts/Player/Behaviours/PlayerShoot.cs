@@ -191,7 +191,7 @@ namespace Hadal.Player.Behaviours
         private void HandleTorpedoObject(int projectileID, bool isLocal, Vector3 RELookatPoint)
         {
             //actual firing
-            tLauncher.DecrementChamber();
+            if (!tLauncher.IgnoreAmmo) tLauncher.DecrementChamber();
             UsableHandlerInfo info = CreateInfoForTorpedo(projectileID, tLauncher.IsPowered, isLocal);
 
             if (isLocal)
@@ -239,7 +239,7 @@ namespace Hadal.Player.Behaviours
 
             if (usable.Use(info))
             {
-                if (!eventFire)
+                if (!eventFire && !usable.IgnoreAmmo)
                     usable.DecrementChamber();
             }
             controller.GetInfo.Inventory.IncreaseProjectileCount();
