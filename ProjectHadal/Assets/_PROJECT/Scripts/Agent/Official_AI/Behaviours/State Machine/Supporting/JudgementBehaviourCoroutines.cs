@@ -154,6 +154,7 @@ namespace Hadal.AI
                         //! plays sound cue that should inform the player that they should start dodging
                         if (!ambushSounds)
                             AudioBank.PlayOneShot(AISound.CarryWarning, Brain.transform);
+
                     }
 
                     canCarry = true;
@@ -224,7 +225,11 @@ namespace Hadal.AI
                     if (!ambushSounds)
                         AudioBank.PlayOneShot(soundType: AISound.Thresh, Brain.transform);
                     else
+                    {
                         AudioBank.PlayOneShot(soundType: AISound.AmbushPounce, Brain.transform);
+                        //Debug.LogError("I PLAY EAR RAPE");
+                    }
+
 
                     //! Perform animation and wait until it is finished
                     AnimationManager.SetAnimation(AIAnim.Bite);
@@ -491,6 +496,7 @@ namespace Hadal.AI
                 if (Brain.IsCarryingAPlayer() && !isAttacking && !blockThresh)
                 {
                     isAttacking = true;
+                    //Debug.LogError("AMBUSHSTANCEATTACK"); 
 
                     TryDebug("Starting threshing routine.");
                     threshRoutineData = new CoroutineData(Brain,

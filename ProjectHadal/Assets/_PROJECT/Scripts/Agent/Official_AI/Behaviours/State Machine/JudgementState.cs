@@ -108,7 +108,9 @@ namespace Hadal.AI.States
 
         private void PerformAmbushLinkBehaviour()
         {
+
             StopAnyRunningCoroutines();
+            //Debug.LogError("LINK");
             currentRoutine = Brain.StartCoroutine(behaviour.AmbushStance());
         }
 
