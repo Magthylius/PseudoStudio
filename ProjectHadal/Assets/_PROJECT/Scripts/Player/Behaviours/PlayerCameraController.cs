@@ -1,6 +1,5 @@
 ﻿using Tenshi;
 using Tenshi.UnitySoku;
-using Photon.Pun;
 using UnityEngine;
 
 //Created by Jet
@@ -21,12 +20,9 @@ namespace Hadal.Player.Behaviours
         [SerializeField] private CameraShakeProperties leviathanShakeProperties;
         [SerializeField] private CameraShakeProperties shakeSpeedMultiplier;
         [SerializeField] private CameraShakeProperties maxShakeProperties;
-        [SerializeField] private GameObject cameraShakeTarget = null;
 
         private float _originalCameraFOV;
         private bool _isDisabled = false;
-        private PhotonView _pView;
-        private PlayerController _controller;
 
         #endregion
 
@@ -75,27 +71,23 @@ namespace Hadal.Player.Behaviours
         {
             if (_isDisabled || !enableCameraShake) return;
             customProperties.Angle = Random.Range(0f, 360f);
-            // this.ShakeCamera(cameraShakeTarget, customProperties);
             this.ShakeCamera(selfCamera, customProperties);
         }
         public void ShakeCameraDefault()
         {
             if (_isDisabled || !enableCameraShake) return;
             shakeProperties.Angle = Random.Range(0f, 360f);
-            // this.ShakeCamera(cameraShakeTarget, shakeProperties);
             this.ShakeCamera(selfCamera, shakeProperties);
         }
         public void ShakeCameraLeviathan()
         {
             if (_isDisabled || !enableCameraShake) return;
             leviathanShakeProperties.Angle = Random.Range(0f, 360f);
-            // this.ShakeCamera(cameraShakeTarget, leviathanShakeProperties);
             this.ShakeCamera(selfCamera, leviathanShakeProperties);
         }
         public void ShakeCamera(float normSpeed)
         {
             if (_isDisabled || !enableCameraShake) return;
-            // this.ShakeCamera(cameraShakeTarget, ShakePropertiesWithSpeed(normSpeed));
             this.ShakeCamera(selfCamera, ShakePropertiesWithSpeed(normSpeed));
         }
         private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
@@ -139,9 +131,6 @@ namespace Hadal.Player.Behaviours
             _isDisabled = false;
             selfCamera.enabled = true;
             selfCamera.gameObject.SetActive(true);
-
-            // var listener = selfCamera.GetComponent<AudioListener>();
-            // if (listener == null) selfCamera.gameObject.AddComponent<AudioListener>();
         }
 
         public void Deactivate()
@@ -149,16 +138,10 @@ namespace Hadal.Player.Behaviours
             _isDisabled = true;
             selfCamera.enabled = false;
             selfCamera.gameObject.SetActive(false);
-            
-            // var listener = selfCamera.GetComponent<AudioListener>();
-            // if (listener != null) Destroy(listener);
         }
 
         public void Inject(PlayerController controller)
         {
-            _controller = controller;
-            var info = _controller.GetInfo;
-            _pView = info.PhotonInfo.PView;
         }
 
         #endregion
