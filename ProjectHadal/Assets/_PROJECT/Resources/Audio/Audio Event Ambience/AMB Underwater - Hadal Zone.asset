@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1b21abb945c4224b9df744d7fdfd4e0, type: 3}
   m_Name: AMB Underwater - Hadal Zone
   m_EditorClassIdentifier: 
-  Clip: {fileID: 8300000, guid: 717325faab6135944b39219ac6988e73, type: 3}
+  Clip: {fileID: 8300000, guid: 2cb0d8d69e330114fa9b36b11925463b, type: 3}
   Settings:
-    Volume: {x: 0.4, y: 0.4}
-    Pitch: {x: 0.4, y: 0.5}
-    SpatialBlend: 0
+    Volume: {x: 0.4, y: 0.5}
+    Pitch: {x: 0.5, y: 0.5}
+    SpatialBlend: 0.3
     Priority: 150
     StereoPan: 0
     ReverbZoneMix: 1
-    OutputMixerGroup: {fileID: -3072411245432573835, guid: 3e83b3c61923ca4459841fdf3b41f403, type: 2}
+    OutputMixerGroup: {fileID: 24300002, guid: 3e83b3c61923ca4459841fdf3b41f403, type: 2}
     Mute: 0
     BypassEffects: 0
     BypassListenerEffects: 0
