@@ -288,7 +288,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6127029581042345575}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children: []
@@ -393,7 +393,7 @@ CapsuleCollider:
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 3.9430475
-  m_Direction: 1
+  m_Direction: 2
   m_Center: {x: 0, y: -0.014346538, z: -2.4323438e-17}
 --- !u!54 &1726207187124534749
 Rigidbody:
@@ -433,6 +433,7 @@ MonoBehaviour:
   projectileAsset: {fileID: 0}
   impactVFXTime: 5
   impactAudio: {fileID: 0}
+  triggerSound: {fileID: 0}
   isAttach: 1
   isPowerForm: 0
   flareLight: {fileID: 6458389941356830930}

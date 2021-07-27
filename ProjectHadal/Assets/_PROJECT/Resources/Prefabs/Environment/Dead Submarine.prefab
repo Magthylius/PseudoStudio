@@ -172,7 +172,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 637643460c9b4714db44b51d996297c0, type: 2}
+  - {fileID: 2100000, guid: 0631d4b8614a8964cb6a3639edfd36a7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -253,7 +253,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d980250f9e6da62418f7b034154e84e8, type: 2}
+  - {fileID: 2100000, guid: 6611ad3f60d4e1240a35bddb9e9cb744, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -318,8 +318,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.07212779, b: 0, a: 1}
-  m_Intensity: 20
-  m_Range: 50
+  m_Intensity: 10
+  m_Range: 25
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -360,7 +360,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -427,7 +427,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f6182b850d0a274eafa5734fd9a69fa, type: 2}
+  - {fileID: 2100000, guid: 155932ca8f4287e47a5537a219db3f77, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -460,6 +460,7 @@ GameObject:
   - component: {fileID: 4705442787074637113}
   - component: {fileID: 339628171261807218}
   - component: {fileID: 6374300155031646708}
+  - component: {fileID: 2724608671914481981}
   m_Layer: 9
   m_Name: Dead Submarine
   m_TagString: Untagged
@@ -523,6 +524,22 @@ MonoBehaviour:
   regenerateTimerMax: 80
   flareIndicator: {fileID: 1858030981906500889}
   submarineRenderer: {fileID: 3927018817974995140}
+--- !u!114 &2724608671914481981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4705442787074637118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 176fb75ec6d0a674595f5eafad1e0720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BeaconLight: {fileID: 7228810221752905905}
+  EmissiveMaterialMesh: {fileID: 3927018817974995140}
+  flashSpeed: 2
+  flashOffsetRange: {x: 0, y: 10}
 --- !u!1 &4705442787812856914
 GameObject:
   m_ObjectHideFlags: 0
@@ -735,7 +752,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f6182b850d0a274eafa5734fd9a69fa, type: 2}
+  - {fileID: 2100000, guid: 59341e364667bbf40aedca593cab8925, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -816,7 +833,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f6182b850d0a274eafa5734fd9a69fa, type: 2}
+  - {fileID: 2100000, guid: 59341e364667bbf40aedca593cab8925, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1014,7 +1031,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f6182b850d0a274eafa5734fd9a69fa, type: 2}
+  - {fileID: 2100000, guid: 155932ca8f4287e47a5537a219db3f77, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
