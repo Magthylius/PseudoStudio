@@ -114,7 +114,11 @@ namespace Hadal.AI
                     NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
                 else
                     NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
-                yield return new WaitForSeconds(Settings.G_GlareAtTargetBeforeJudgementApproachTime);
+                
+                float glareTime = Settings.GetGlareAtTargetBeforeJudgementApproachTime();
+                TryDebug($"Glaring at target before full engagement for {glareTime} seconds.");
+                yield return new WaitForSeconds(glareTime);
+                
                 NavigationHandler.SetLookAtTarget(null);
             }
 

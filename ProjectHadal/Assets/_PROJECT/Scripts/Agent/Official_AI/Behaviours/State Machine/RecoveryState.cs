@@ -15,6 +15,8 @@ namespace Hadal.AI.States
     {
         RecoveryStateSettings settings;
         private int judgementLapseCount;
+        private float currentEscapeTargetTime;
+        private bool escapeNow = false;
 
         public RecoveryState(AIBrain brain)
         {
@@ -30,8 +32,9 @@ namespace Hadal.AI.States
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
             RuntimeData.ResetCumulativeDamageCount();
             NavigationHandler.SetSpeedMultiplier(settings.EscapeSpeedMultiplier);
-            SetNewTargetCavern();
             AllowStateTick = true;
+            currentEscapeTargetTime = settings.GetLingerInCurrentCavernTime();
+            escapeNow = false;
         }
 
         public override void StateTick()
@@ -41,6 +44,7 @@ namespace Hadal.AI.States
             if(!Brain.IsStunned)
             {
                 RuntimeData.TickRecoveryTicker(Brain.DeltaTime);
+                if (CheckForEscapeLingerTime()) return;
                 if (Brain.CheckForAIAndPlayersInTunnel()) return;
             }
 
@@ -151,6 +155,20 @@ namespace Hadal.AI.States
                 NavigationHandler.SetImmediateDestinationToCavern(nextCavern);
                 Brain.UpdateNextMoveCavern(nextCavern);
             }
+        }
+
+        private bool CheckForEscapeLingerTime()
+        {
+            if (escapeNow)
+                return false;
+
+            if (RuntimeData.GetRecoveryTicks >= currentEscapeTargetTime)
+            {
+                escapeNow = true;
+                SetNewTargetCavern();
+                return true;
+            }
+            return false;
         }
 
         #endregion
