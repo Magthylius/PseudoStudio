@@ -36,6 +36,7 @@ namespace Hadal.UI
         public UIHydrophoneBehaviour HydrophoneBehaviour;
         public UICockpitCamera CockpitCamera;
         public UIClassInfoHandler ClassInfoHandler;
+        public UIBoostBehaviour BoostBehaviour;
         public Camera PlayerCamera;
         
         [Header("Reticle Settings")]
@@ -229,7 +230,7 @@ namespace Hadal.UI
         }
         void UpdateHealthUI(int currentHealth)
         {
-            ScreenDataHandler.UpdateTargetHealth(currentHealth);
+            //ScreenDataHandler.UpdateTargetHealth(currentHealth);
         }
         #endregion
 
@@ -310,7 +311,7 @@ namespace Hadal.UI
             playerRigidbody = playerTransform.GetComponent<Rigidbody>();
             
             ShootTracer.InjectDependencies(PlayerCamera);
-            ScreenDataHandler.InjectDependencies(this, playerTransform);
+            //ScreenDataHandler.InjectDependencies(this, playerTransform);
             EffectsHandler.InjectDependencies(playerRigidbody, ShootTracer);
             HydrophoneBehaviour.InjectPlayerDependencies(playerTransform);
             CockpitCamera.InjectDependencies(playerRotationInput);

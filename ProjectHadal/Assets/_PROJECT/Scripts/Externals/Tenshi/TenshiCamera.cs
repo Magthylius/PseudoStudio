@@ -26,6 +26,14 @@ namespace Tenshi.UnitySoku
             instance.StartCoroutine(_currentCameraShakeRoutine);
         }
 
+        public static void ShakeCamera(this MonoBehaviour instance, Camera camera, CameraShakeProperties properties, bool preventOverride = false)
+        {
+            if (_currentCameraShakeRoutine != null && !preventOverride) instance.StopCoroutine(_currentCameraShakeRoutine);
+            if (!preventOverride && _isShaking) _isShaking = false;
+            _currentCameraShakeRoutine = ShakeProjection(camera, properties);
+            instance.StartCoroutine(_currentCameraShakeRoutine);
+        }
+
         public static void BillboardToCamera(this Transform objectTransform, Camera camera) => objectTransform.forward = camera.transform.forward;
         public static void BillboardToCamera(this Camera camera, Transform objectTransform) => objectTransform.forward = camera.transform.forward;
 
@@ -80,6 +88,66 @@ namespace Tenshi.UnitySoku
                 } while (moveDistance > 0);
 
                 _isShaking = false;
+            }
+        }
+
+        private static IEnumerator ShakeProjection(Camera camera, CameraShakeProperties properties)
+        {
+            if (_isShaking)
+                yield break;
+
+            _isShaking = true;
+
+            float completionPercent = 0;
+            float movePercent = 0;
+
+            float angleRadians = properties.Angle * Mathf.Deg2Rad - Mathf.PI;
+            Vector2 cPosition = Vector2.zero;
+            Vector2 previousWaypoint = Vector2.zero;
+            Vector2 currentWaypoint = Vector2.zero;
+
+            float moveDistance = 0;
+            float speed = 0;
+
+            do
+            {
+                if (movePercent >= 1 || completionPercent == 0)
+                {
+                    float dampingFactor = DampCurve(completionPercent, properties.DampingPercent);
+
+                    float noiseAngle = (UnityEngine.Random.value - 0.5f) * Mathf.PI;
+                    angleRadians += Mathf.PI + noiseAngle * properties.NoisePercent;
+
+                    currentWaypoint = new Vector2(cPosition.x + Mathf.Cos(angleRadians), cPosition.y + Mathf.Sin(angleRadians)) * properties.Strength * dampingFactor;
+                    previousWaypoint = cPosition;
+                    moveDistance = Vector3.Distance(currentWaypoint, previousWaypoint);
+
+                    speed = Mathf.Lerp(properties.MinSpeed, properties.MaxSpeed, dampingFactor);
+
+                    movePercent = 0;
+                }
+
+                completionPercent += Time.deltaTime / properties.Duration;
+                movePercent += Time.deltaTime / moveDistance * speed;
+
+                cPosition = Vector2.Lerp(previousWaypoint, currentWaypoint, movePercent);
+                OffsetCamera(cPosition.x, cPosition.y);
+
+                yield return null;
+            } while (moveDistance > 0);
+
+            _isShaking = false;
+
+            void OffsetCamera(float xOffset, float yOffset)
+            {
+                float frustumHeight = 2 * camera.nearClipPlane * Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+                float frustumWidth = frustumHeight * camera.aspect;
+
+                Matrix4x4 projection = camera.projectionMatrix;
+                projection[0, 2] = 2 * xOffset / frustumWidth;
+                projection[1, 2] = 2 * yOffset / frustumHeight;
+
+                camera.projectionMatrix = projection;
             }
         }
 

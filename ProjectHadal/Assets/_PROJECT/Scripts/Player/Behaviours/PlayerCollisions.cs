@@ -33,11 +33,10 @@ namespace Hadal.Player.Behaviours
         internal void CollisionEnter(Collision collision)
         {
             float force = _playerController.GetInfo.Rigidbody.velocity.magnitude;
-            
+            _cameraController.ShakeCamera(force);
+
             if (force >= forceSpeedThreshold)
             {
-                _cameraController.ShakeCamera(force);
-
                 if (collisionSound)
                     collisionSound.PlayOneShot(_playerController.GetTarget);
 

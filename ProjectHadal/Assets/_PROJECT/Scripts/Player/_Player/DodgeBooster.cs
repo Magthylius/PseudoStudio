@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hadal.Inputs;
 using Hadal.AudioSystem;
+using Hadal.UI;
 
 namespace Hadal.Player
 {
@@ -23,6 +24,7 @@ namespace Hadal.Player
         public event Action<DodgeBooster> OnRestock;
         private IMovementInput input;
         private PlayerController playerController;
+        private UIBoostBehaviour BoostBehaviour;
 
         [SerializeField, Range(0.1f, 0.6f)] private float tapDetectionTime;
         [SerializeField] private float dodgeForce;
@@ -64,7 +66,7 @@ namespace Hadal.Player
             input = new RawMovementInput();
             input.DoubleTapDetectionTime = tapDetectionTime;
         }
-
+        
         public void DoUpdate(float deltaTime)
         {
             if(IsChamberLoaded)
@@ -90,10 +92,13 @@ namespace Hadal.Player
                 }
             }
 
-            if (ReserveCount < maxReserveCapacity && !IsRegenerating)
+            if (!IsRegenerating)
             {
-                IsRegenerating = true;
-                _reserveRegenTimer.Restart();
+                if (ReserveCount < maxReserveCapacity)
+                {
+                    IsRegenerating = true;
+                    _reserveRegenTimer.Restart();
+                }
             }
 
             if (ChamberCount < maxChamberCapacity && !IsReloading && HasAnyReserves)
@@ -101,46 +106,55 @@ namespace Hadal.Player
                 IsReloading = true;
                 _chamberReloadTimer.Restart();
             }
+            
+
         }
 
         public void DoFixedUpdate(float fixedDeltaTime)
         {
-            if(isBoosting)
+            if (isBoosting)
             {
                 switch (boostDirection) 
                 {
                     case BoostDirection.Left:
                         playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.left * dodgeForce, ForceMode.Acceleration);
-                        return;
+                        break;
 
                     case BoostDirection.Right:
                         playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.right * dodgeForce, ForceMode.Acceleration);
-                        return;
+                        break;
 
                     case BoostDirection.Up:
                         playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.up * dodgeForce, ForceMode.Acceleration);
-                        return;
+                        break;
 
                     case BoostDirection.Down:
                         playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.down * dodgeForce, ForceMode.Acceleration);
-                        return;
+                        break;
 
                     case BoostDirection.Forward:
                         playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.forward * dodgeForce, ForceMode.Acceleration);
-                        return;
+                        break;
 
                     case BoostDirection.Backward:
                         playerController.GetInfo.Rigidbody.AddRelativeForce(Vector3.back * dodgeForce, ForceMode.Acceleration);
-                        return;
+                        break;
 
                 }
             }
+
+            float v = GetReserveCompletionRatio() + (float)ReserveCount + (float)ChamberCount;
+            //DebugManager.Instance.SLog(slDebug, v);
+            BoostBehaviour.UpdateGaugeValue(v);
         }
         #endregion
 
         public void Inject(PlayerController controller)
         {
             playerController = controller;
+            BoostBehaviour = playerController.UI.BoostBehaviour;
+            
+            BoostBehaviour.Initialize(ChamberCount + ReserveCount);
         }
 
         private bool CheckForInput()
@@ -209,6 +223,7 @@ namespace Hadal.Player
         {
             maxReserveCapacity = newMaxReserve;
             UpdateReserveCount(maxReserveCapacity);
+            BoostBehaviour.Initialize(newMaxReserve + ChamberCount);
         }
 
         private void UpdateReserveCount(in int count) => ReserveCount = Mathf.Clamp(count, 0, maxReserveCapacity);
@@ -235,6 +250,13 @@ namespace Hadal.Player
             IsRegenerating = false;
             IsReloading = false;
         }
+
+        public float GetReserveCompletionRatio()
+        {
+            if (ReserveCount == maxReserveCapacity) return 0f;
+            return _reserveRegenTimer.GetCompletionRatio;
+        }
+        
         #endregion
     }
 }
