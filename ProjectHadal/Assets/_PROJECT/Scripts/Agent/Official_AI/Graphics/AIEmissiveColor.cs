@@ -15,7 +15,7 @@ namespace Hadal.AI.Graphics
         [SerializeField] private float transitionSpeed;
         private float percent;
         private AIBrain _brain;
-		private bool _onMasterClient;
+        private bool _onMasterClient;
 
         [Header("Color")]
         [ColorUsageAttribute(true, true)]
@@ -30,10 +30,16 @@ namespace Hadal.AI.Graphics
 
         private Coroutine colourRoutine;
 
+        //Ambush Pulse
+        Color colorEnd;
+        Color colorStart;
+        [SerializeField] private float colorRate;
+        private Coroutine ambushPulseRoutine;
+
         public void Initialise(AIBrain brain, bool onMasterClient)
         {
             _brain = brain;
-			_onMasterClient = onMasterClient;
+            _onMasterClient = onMasterClient;
             if (_onMasterClient)
                 _brain.RuntimeData.OnAIStateChange += JudgementColor;
 
@@ -48,6 +54,9 @@ namespace Hadal.AI.Graphics
             UpdateMaterialData();
             if (!_onMasterClient)
                 NetworkEventManager.Instance.AddListener(ByteEvents.AI_COLOUR_CHANGE, Receive_ChangeColour);
+
+            colorEnd = ambushStateColor;
+            colorStart = otherStateColor;
         }
 
         private void Receive_ChangeColour(EventData eventData)
@@ -84,6 +93,9 @@ namespace Hadal.AI.Graphics
             if (isAmbush) SetLerpTarget(ambushStateColor);
             else
             {
+                if (ambushPulseRoutine != null)
+                    StopCoroutine(ambushPulseRoutine);
+
                 if (isJudgement) SetLerpTarget(judgementStateColor);
                 else SetLerpTarget(otherStateColor);
             }
@@ -98,6 +110,12 @@ namespace Hadal.AI.Graphics
             percent = 1f;
             UpdateMaterialData();
             colourRoutine = null;
+
+            if (isAmbush)
+            {
+                ambushPulseRoutine = StartCoroutine(AmbushStateColorPulse(isAmbush));
+            }
+
         }
 
         private void UpdateMaterialData()
@@ -119,6 +137,19 @@ namespace Hadal.AI.Graphics
         {
             if (_onMasterClient)
                 _brain.RuntimeData.OnAIStateChange -= JudgementColor;
+        }
+
+        IEnumerator AmbushStateColorPulse(bool isAmbush)
+        {
+            float time = 0;
+            while (isAmbush)
+            {
+                time += Time.deltaTime * colorRate;
+                Color lerpColor = Color.Lerp(colorStart, colorEnd, Mathf.PingPong(time, 1));
+                materialProp.SetColor("_EmissionColor", lerpColor);
+                leviathanRenderer.SetPropertyBlock(materialProp);
+                yield return null;
+            }
         }
     }
 }
