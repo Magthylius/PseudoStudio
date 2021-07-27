@@ -9,58 +9,102 @@ namespace Hadal.UI
 {
     public class UIBoostBehaviour : MonoBehaviour
     {
+        enum BoostStage
+        {
+            Full,
+            Partial,
+            Empty
+        }
+        
         public Image LeftGauge;
         public Image RightGauge;
+        public List<Image> BoostIcons;
+        [Space(10f)]
         public float lerpSpeed = 5f;
         public Color GaugeFullColor;
         public Color GaugePartialColor;
         public Color GaugeEmptyColor;
 
+        private bool isInitialized = false;
         private float dodgeCount;
         private float segmentDivident;
         private float targetProgress;
 
+        private BoostStage currentStage = BoostStage.Full;
+        private Action<BoostStage> boostStageChangedEvent;
+
+        private void OnEnable()
+        {
+            boostStageChangedEvent += OnBoostStageChanged;
+        }
+
+        private void OnDisable()
+        {
+            boostStageChangedEvent -= OnBoostStageChanged;
+        }
+
         private void LateUpdate()
         {
-            //LeftGauge.fillAmount = Mathf.Lerp(LeftGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
-            //RightGauge.fillAmount = Mathf.Lerp(RightGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
-
-            //LeftGauge.fillAmount = 
+            if (!isInitialized) return;
+            
             LeftGauge.fillAmount = Lerp.Snap(LeftGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
             RightGauge.fillAmount = LeftGauge.fillAmount;
         }
 
         public void Initialize(int dashCount)
         {
+            isInitialized = true;
             segmentDivident = 1.0f / (float) dashCount;
             dodgeCount = dashCount;
-            //Debug.LogWarning(dodgeCount);
+            currentStage = BoostStage.Full;
+            OnBoostStageChanged(currentStage);
         }
         
         public void UpdateGaugeValue(float value)
         {
-            //Debug.LogWarning(value);
+            if (!isInitialized) return;
+            
             float progress = value * segmentDivident;
             progress = Mathf.Clamp(progress, 0f, dodgeCount);
             
             targetProgress = progress;
             //RightGauge.fillAmount = progress;
+            BoostStage updatedStage;
 
-            if (targetProgress < segmentDivident)
+            if (targetProgress < segmentDivident) updatedStage = BoostStage.Empty;
+            else if (targetProgress >= 1f) updatedStage = BoostStage.Full;
+            else updatedStage = BoostStage.Partial;
+
+            if (updatedStage != currentStage)
             {
-                LeftGauge.color = GaugeEmptyColor;
-                RightGauge.color = GaugeEmptyColor;
+                boostStageChangedEvent.Invoke(updatedStage);
             }
-            else if (targetProgress >= 1f)
+        }
+
+        void OnBoostStageChanged(BoostStage stage)
+        {
+            if (!isInitialized) return;
+            
+            currentStage = stage;
+
+            Color currentColor = Color.white;
+            
+            switch (stage)
             {
-                LeftGauge.color = GaugeFullColor;
-                RightGauge.color = GaugeFullColor;
+                case BoostStage.Empty:
+                    currentColor = GaugeEmptyColor;
+                    break;
+                case BoostStage.Partial:
+                    currentColor = GaugePartialColor;
+                    break;
+                case BoostStage.Full:
+                    currentColor = GaugeFullColor;
+                    break;
             }
-            else
-            {
-                LeftGauge.color = GaugePartialColor;
-                RightGauge.color = GaugePartialColor;
-            }
+            
+            LeftGauge.color = currentColor;
+            RightGauge.color = currentColor;
+            BoostIcons.ForEach(o => o.color = currentColor);
         }
     }
 }
