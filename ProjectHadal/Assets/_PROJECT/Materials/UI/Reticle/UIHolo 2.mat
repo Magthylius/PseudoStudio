@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UIHolo
+  m_Name: UIHolo 2
   m_Shader: {fileID: -6465566751694194690, guid: 4118ba738ea45504583886e4b31071b8, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -76,11 +76,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_1cb1963175004f999fdcb4369ea1fe21: 50
-    - Vector1_7cede0e4bebb4d63864cacdb3ecfd1fc: 0.1
-    - Vector1_873be8b6d03e40209fa484b2ef28706b: 0.2
-    - Vector1_bd13037b39e04455a14456cf4c5f8443: 0.15
-    - Vector1_c9c2a49971e94053a2c6d625dbd2162b: 11
+    - Vector1_1cb1963175004f999fdcb4369ea1fe21: 4
+    - Vector1_7cede0e4bebb4d63864cacdb3ecfd1fc: 1
+    - Vector1_873be8b6d03e40209fa484b2ef28706b: -0.05
+    - Vector1_bd13037b39e04455a14456cf4c5f8443: 15
+    - Vector1_c9c2a49971e94053a2c6d625dbd2162b: 0.001
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -109,7 +109,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    - _Color: {r: 0.34509805, g: 1.6862745, b: 0.5882353, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
