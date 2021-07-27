@@ -8,8 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: c50545d5541d4f144bd7a425aabe1592
+  m_OcclusionCullingData: {fileID: 36300000, guid: 29f619b649a820f49b618453e12eafb4, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -10803,6 +10803,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1358695192}
     m_Modifications:
+    - target: {fileID: 5117496758041741413, guid: b54daf54792220b439c0a1983779c70d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 5459605066193012605, guid: b54daf54792220b439c0a1983779c70d, type: 3}
       propertyPath: m_Name
       value: Seaweed 5 (1)
@@ -11398,6 +11402,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1358695192}
     m_Modifications:
+    - target: {fileID: 5117496758041741413, guid: b54daf54792220b439c0a1983779c70d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 5459605066193012605, guid: b54daf54792220b439c0a1983779c70d, type: 3}
       propertyPath: m_Name
       value: Seaweed 5
@@ -27172,7 +27180,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!114 &4229992308412390988
 MonoBehaviour:
