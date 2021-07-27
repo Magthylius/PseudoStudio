@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Clip: {fileID: 8300000, guid: bc1f8043e76027f4b8e7c39483d50f56, type: 3}
   Settings:
-    ReplayTime: 0.5
     Volume: {x: 0.3950851, y: 0.48960304}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0.7
@@ -27,7 +26,7 @@ MonoBehaviour:
     BypassListenerEffects: 0
     BypassReverbZones: 0
     PlayOnAwake: 0
-    Loop: 0
+    Loop: 1
     DopplerLevel: 1
     Spread: 0
     VolumeRolloff: 0
