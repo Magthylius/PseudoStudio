@@ -74,24 +74,28 @@ namespace Hadal.Player.Behaviours
         {
             if (_isDisabled || !enableCameraShake) return;
             customProperties.Angle = Random.Range(0f, 360f);
-            this.ShakeCamera(cameraShakeTarget, customProperties);
+            // this.ShakeCamera(cameraShakeTarget, customProperties);
+            this.ShakeCamera(selfCamera, customProperties);
         }
         public void ShakeCameraDefault()
         {
             if (_isDisabled || !enableCameraShake) return;
             shakeProperties.Angle = Random.Range(0f, 360f);
-            this.ShakeCamera(cameraShakeTarget, shakeProperties);
+            // this.ShakeCamera(cameraShakeTarget, shakeProperties);
+            this.ShakeCamera(selfCamera, shakeProperties);
         }
         public void ShakeCameraLeviathan()
         {
             if (_isDisabled || !enableCameraShake) return;
             leviathanShakeProperties.Angle = Random.Range(0f, 360f);
-            this.ShakeCamera(cameraShakeTarget, leviathanShakeProperties);
+            // this.ShakeCamera(cameraShakeTarget, leviathanShakeProperties);
+            this.ShakeCamera(selfCamera, leviathanShakeProperties);
         }
         public void ShakeCamera(float normSpeed)
         {
             if (_isDisabled || !enableCameraShake) return;
-            this.ShakeCamera(cameraShakeTarget, ShakePropertiesWithSpeed(normSpeed));
+            // this.ShakeCamera(cameraShakeTarget, ShakePropertiesWithSpeed(normSpeed));
+            this.ShakeCamera(selfCamera, ShakePropertiesWithSpeed(normSpeed));
         }
         private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
         {

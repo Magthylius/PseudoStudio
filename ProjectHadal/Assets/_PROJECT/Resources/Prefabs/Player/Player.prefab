@@ -884,22 +884,22 @@ MonoBehaviour:
   enableCameraShake: 1
   shakeProperties:
     Angle: 50
-    Strength: 0.5
+    Strength: 0.2
     MaxSpeed: 5
-    MinSpeed: 0.1
+    MinSpeed: 2
     Duration: 0.5
     NoisePercent: 0.8
-    DampingPercent: 0.15
-    RotationPercent: 0.05
+    DampingPercent: 0.5
+    RotationPercent: 0
   leviathanShakeProperties:
     Angle: 180
-    Strength: 1
+    Strength: 0.5
     MaxSpeed: 5
-    MinSpeed: 1
+    MinSpeed: 3
     Duration: 1
-    NoisePercent: 0.75
-    DampingPercent: 0.2
-    RotationPercent: 0.1
+    NoisePercent: 0.9
+    DampingPercent: 0.6
+    RotationPercent: 0
   shakeSpeedMultiplier:
     Angle: 0
     Strength: 0.1
@@ -908,7 +908,7 @@ MonoBehaviour:
     Duration: 0.2
     NoisePercent: 0.2
     DampingPercent: 0.1
-    RotationPercent: 0.1
+    RotationPercent: 0
   cameraShakeTarget: {fileID: 2720187582479781533}
 --- !u!1 &3309683987410669343
 GameObject:
