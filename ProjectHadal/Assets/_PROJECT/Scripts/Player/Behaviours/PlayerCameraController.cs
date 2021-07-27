@@ -20,6 +20,7 @@ namespace Hadal.Player.Behaviours
         [SerializeField] private CameraShakeProperties shakeProperties;
         [SerializeField] private CameraShakeProperties leviathanShakeProperties;
         [SerializeField] private CameraShakeProperties shakeSpeedMultiplier;
+        [SerializeField] private CameraShakeProperties maxShakeProperties;
         [SerializeField] private GameObject cameraShakeTarget = null;
 
         private float _originalCameraFOV;
@@ -110,6 +111,17 @@ namespace Hadal.Player.Behaviours
                 (shakeProperties.DampingPercent + (speed * shakeSpeedMultiplier.DampingPercent)).Clamp01(),
                 (shakeProperties.RotationPercent + (speed * shakeSpeedMultiplier.RotationPercent)).Clamp01()
             );
+
+            newShakeProperties.Strength.Clamp(0f, maxShakeProperties.Strength);
+            newShakeProperties.MaxSpeed.Clamp(0f, maxShakeProperties.MaxSpeed);
+            newShakeProperties.MinSpeed.Clamp(0f, maxShakeProperties.MinSpeed);
+            newShakeProperties.Duration.Clamp(0f, maxShakeProperties.Duration);
+            newShakeProperties.NoisePercent.Clamp(0f, maxShakeProperties.NoisePercent);
+            newShakeProperties.DampingPercent.Clamp(0f, maxShakeProperties.DampingPercent);
+            newShakeProperties.RotationPercent.Clamp(0f, maxShakeProperties.RotationPercent);
+
+            // ($"str: {newShakeProperties.Strength}, max: {newShakeProperties.MaxSpeed}, min: {newShakeProperties.MinSpeed}, " +
+            // $"dur: {newShakeProperties.Duration}, noise: {newShakeProperties.NoisePercent}, damp: {newShakeProperties.DampingPercent}").Msg();
             return newShakeProperties;
         }
 
