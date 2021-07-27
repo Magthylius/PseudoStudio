@@ -351,7 +351,8 @@ MonoBehaviour:
   projectileAsset: {fileID: 0}
   impactVFXTime: 5
   impactAudio: {fileID: 0}
-  stunTime: 5
+  triggerSound: {fileID: 11400000, guid: 3ec16fb1606c98442b39b6ceaeb5a8d3, type: 2}
+  stunTime: 2
   radius: 70
   isSet: 0
   selfDeactivation: {fileID: 0}
@@ -359,7 +360,6 @@ MonoBehaviour:
   explodeEffect: {fileID: 3791313692687117044}
   activateColor: {r: 8, g: 0, b: 0, a: 0}
   explodeDurationMax: 2
-  triggerSound: {fileID: 11400000, guid: 3ec16fb1606c98442b39b6ceaeb5a8d3, type: 2}
 --- !u!1001 &3790297980800970658
 PrefabInstance:
   m_ObjectHideFlags: 0

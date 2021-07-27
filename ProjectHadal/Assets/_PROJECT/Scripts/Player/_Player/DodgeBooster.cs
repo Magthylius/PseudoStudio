@@ -92,10 +92,13 @@ namespace Hadal.Player
                 }
             }
 
-            if (ReserveCount < maxReserveCapacity && !IsRegenerating)
+            if (!IsRegenerating)
             {
-                IsRegenerating = true;
-                _reserveRegenTimer.Restart();
+                if (ReserveCount < maxReserveCapacity)
+                {
+                    IsRegenerating = true;
+                    _reserveRegenTimer.Restart();
+                }
             }
 
             if (ChamberCount < maxChamberCapacity && !IsReloading && HasAnyReserves)
@@ -140,7 +143,7 @@ namespace Hadal.Player
                 }
             }
 
-            float v = _reserveRegenTimer.GetCompletionRatio + (float)ReserveCount + (float)ChamberCount;
+            float v = GetReserveCompletionRatio() + (float)ReserveCount + (float)ChamberCount;
             //DebugManager.Instance.SLog(slDebug, v);
             BoostBehaviour.UpdateGaugeValue(v);
         }
@@ -247,6 +250,13 @@ namespace Hadal.Player
             IsRegenerating = false;
             IsReloading = false;
         }
+
+        public float GetReserveCompletionRatio()
+        {
+            if (ReserveCount == maxReserveCapacity) return 0f;
+            return _reserveRegenTimer.GetCompletionRatio;
+        }
+        
         #endregion
     }
 }

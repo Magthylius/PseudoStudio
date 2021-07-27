@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Magthylius.LerpFunctions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,8 +22,12 @@ namespace Hadal.UI
 
         private void LateUpdate()
         {
-            LeftGauge.fillAmount = Mathf.Lerp(LeftGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
-            RightGauge.fillAmount = Mathf.Lerp(RightGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
+            //LeftGauge.fillAmount = Mathf.Lerp(LeftGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
+            //RightGauge.fillAmount = Mathf.Lerp(RightGauge.fillAmount, targetProgress, lerpSpeed * Time.deltaTime);
+
+            //LeftGauge.fillAmount = 
+            if (Lerp.Float(LeftGauge.fillAmount, targetProgress, lerpSpeed)) LeftGauge.fillAmount = targetProgress;
+            RightGauge.fillAmount = LeftGauge.fillAmount;
         }
 
         public void Initialize(int dashCount)
@@ -40,6 +45,22 @@ namespace Hadal.UI
             
             targetProgress = progress;
             //RightGauge.fillAmount = progress;
+
+            if (targetProgress < segmentDivident)
+            {
+                LeftGauge.color = GaugeEmptyColor;
+                RightGauge.color = GaugeEmptyColor;
+            }
+            else if (targetProgress >= 1f)
+            {
+                LeftGauge.color = GaugeFullColor;
+                RightGauge.color = GaugeFullColor;
+            }
+            else
+            {
+                LeftGauge.color = GaugePartialColor;
+                RightGauge.color = GaugePartialColor;
+            }
         }
     }
 }

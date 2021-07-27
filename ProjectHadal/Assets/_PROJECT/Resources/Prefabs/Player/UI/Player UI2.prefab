@@ -174,9 +174,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftGauge: {fileID: 733765390061107642}
   RightGauge: {fileID: 2230237588069784119}
-  GaugeFullColor: {r: 0, g: 0, b: 0, a: 0}
-  GaugePartialColor: {r: 0, g: 0, b: 0, a: 0}
-  GaugeEmptyColor: {r: 0, g: 0, b: 0, a: 0}
+  lerpSpeed: 5
+  GaugeFullColor: {r: 0, g: 0.67058825, b: 1, a: 1}
+  GaugePartialColor: {r: 1, g: 0.7607843, b: 0, a: 1}
+  GaugeEmptyColor: {r: 0.6886792, g: 0.009745443, b: 0.009745443, a: 1}
 --- !u!1 &38556483616558015
 GameObject:
   m_ObjectHideFlags: 0
