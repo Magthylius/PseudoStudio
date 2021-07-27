@@ -45,7 +45,6 @@ namespace Hadal.UI
         //[SerializeField] MagthyliusUILineRenderer reticleLineRenderer;
         [SerializeField] float maxDirectorRadius = 10f;
         [SerializeField] float directorReactionSpeed = 5f;
-        [SerializeField] float directorInputCamp = 5f;
 
         [Header("Reticle Line Settings")]
         [SerializeField] Image reticleLineImage;
@@ -85,9 +84,7 @@ namespace Hadal.UI
         public int torpCount;
         public Image torpLoader;
         public List<Image> reloadProgressors;
-        public GameObject floodText;
-        public GameObject reloadText;
-        
+
         List<UIFillerBehaviour> torpedoFillers;
         private bool torpIsEmpty = false;
 
@@ -272,8 +269,7 @@ namespace Hadal.UI
         }
 
         public void UpdateReload(float progress, bool showReloading)
-        {           
-            reloadText.SetActive(showReloading);
+        {
             foreach (Image progressors in reloadProgressors)
             {
                 progressors.fillAmount = progress;

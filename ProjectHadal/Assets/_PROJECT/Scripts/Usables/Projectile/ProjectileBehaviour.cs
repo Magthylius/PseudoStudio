@@ -170,13 +170,13 @@ namespace Hadal.Usables.Projectiles
             OwnerObject = null;
         }
 
-        protected void PlayImpactAudioAtSelfPosition(bool didDamage) => PlayAudioAt(impactAudio, transform.position);
-
+        protected void PlayImpactAudioAtSelfPosition(bool didDamage) => PlayAudioAt(impactAudio, transform);
+        protected void PlayTriggerAudioAtSelfPosition() => PlayAudioAt(triggerSound, transform);
         /// <summary> Players audio at a position. Automatically does null check so use this when playing sounds. </summary>
-        protected void PlayAudioAt(AudioEventData audio, Vector3 position)
+        protected void PlayAudioAt(AudioEventData audio, Transform position)
         {
             if (audio == null) return;
-            audio.Play(position);
+            audio.PlayOneShot(position);
         }
 
         public void SetPositionRotation(Vector3 position, Quaternion rotation)
