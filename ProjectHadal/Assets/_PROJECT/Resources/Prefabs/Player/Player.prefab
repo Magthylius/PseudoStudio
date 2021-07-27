@@ -856,7 +856,7 @@ MonoBehaviour:
     Strength: 0.01
     MaxSpeed: 0
     MinSpeed: 0
-    Duration: 0.25
+    Duration: 0.1
     NoisePercent: 0.2
     DampingPercent: 0.1
     RotationPercent: 0
@@ -872,8 +872,8 @@ MonoBehaviour:
   shakeSpeedMultiplier:
     Angle: 0
     Strength: 0.05
-    MaxSpeed: 2
-    MinSpeed: 0.2
+    MaxSpeed: 0.5
+    MinSpeed: 0.05
     Duration: 0.2
     NoisePercent: 0.8
     DampingPercent: 0.5
@@ -887,7 +887,6 @@ MonoBehaviour:
     NoisePercent: 0.9
     DampingPercent: 0.75
     RotationPercent: 0
-  cameraShakeTarget: {fileID: 2720187582479781533}
 --- !u!1 &3309683987410669343
 GameObject:
   m_ObjectHideFlags: 0
