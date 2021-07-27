@@ -286,8 +286,9 @@ namespace Hadal.Debugging
                 C_ChangeMovesetToF,
                 C_ChangeMovesetToV,
                 C_ChangeMovesetToH,
+                C_ToggleIgnoreAmmo,
 
-        C_SimplifyLoadout,
+                C_SimplifyLoadout,
                 C_AddGrenadeAndTrap,
                 C_AddTrapAndGrenade,
                 C_AddGrenade,
