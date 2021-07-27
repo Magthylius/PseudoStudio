@@ -10,33 +10,23 @@ namespace Hadal.AudioSystem
     {
         [SerializeField] private WeightedAudioClip[] WeightedClips;
         [SerializeField] private AudioSourceSettings Settings;
-        private float lastPlayTime = 0f;
         public override string Description => "Audio event meant to play SFX weight sounds. Clip variants used in this audio event may be assigned a weight value to make specific clips in the list play more or less often (refer to examples or ask the Tech for help). "
                                             + "\n\nSupports 3D Weighted Playing, and 2D Weighted Playing functions."
                                             + "\n\nNote: Preview Button will only play 2D audio for now.";
 
-        private bool CheckForPlayTime()
-        {
-            if (Time.time > lastPlayTime)
-            {
-                lastPlayTime = Time.time + Settings.ReplayTime;
-                return true;
-            }
-            return false;
-        }
 
         #region Locational based Play
 
         public override bool Play(Transform followPosTransform)
         {
-            if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return false;
+            if (WeightedClips.IsNullOrEmpty()) return false;
             return RuntimePlay(followPosTransform.position, followPosTransform);
         }
 
         /// <summary> Plays weighted audio at a world position. </summary>
         public override bool Play(Vector3 position)
         {
-            if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return false;
+            if (WeightedClips.IsNullOrEmpty()) return false;
             return RuntimePlay(position);
         }
 
@@ -84,7 +74,7 @@ namespace Hadal.AudioSystem
         /// <param name="source">Play with this source. If null, a new one will be created automatically.</param>
         public override void Play(AudioSource source)
         {
-            if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+            if (WeightedClips.IsNullOrEmpty()) return;
 
             AudioManager manager = AudioManager.Instance;
             if (manager != null)
@@ -114,7 +104,7 @@ namespace Hadal.AudioSystem
 		
 		public override void PlayOneShot(Transform followPosTransform)
         {
-			if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+			if (WeightedClips.IsNullOrEmpty()) return;
 			
             var manager = AudioManager.Instance;
             if (manager != null)
@@ -144,7 +134,7 @@ namespace Hadal.AudioSystem
 		
 		public override void PlayOneShot2D()
 		{
-			if (WeightedClips.IsNullOrEmpty() || !CheckForPlayTime()) return;
+			if (WeightedClips.IsNullOrEmpty()) return;
 			
 			var manager = AudioManager.Instance;
             if (manager != null)

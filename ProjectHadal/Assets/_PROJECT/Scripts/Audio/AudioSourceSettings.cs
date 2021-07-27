@@ -9,7 +9,6 @@ namespace Hadal.AudioSystem
     public class AudioSourceSettings
     {
         [Header("General")]
-        [SerializeField, Range(0f, 5f)] public float ReplayTime = 0.5f;
         [SerializeField, MinMaxSlider(0f, 1f)] public Vector2 Volume = Vector2.one;
         [SerializeField, MinMaxSlider(-3f, 3f)] private Vector2 Pitch = Vector2.one;
         [SerializeField, Range(0f, 1f)] private float SpatialBlend = 0.7f;

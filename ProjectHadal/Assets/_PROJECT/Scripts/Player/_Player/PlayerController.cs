@@ -237,13 +237,19 @@ namespace Hadal.Player
             if (_isCarried)
 			{
 				SetPhysicIncapacitated();
-				playerAudio.PlayOneShot(PlayerSound.Grabbed, true);
-				playerAudio.AmbiencePlayer.PlayAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
+                if (IsLocalPlayer)
+				{
+                    playerAudio.PlayOneShot(PlayerSound.Grabbed, true);
+				    playerAudio.AmbiencePlayer.PlayAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
+                }
 			}
             else
 			{
 				SetPhysicDefault();
-				playerAudio.AmbiencePlayer.StopAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
+				if (IsLocalPlayer)
+                {
+                    playerAudio.AmbiencePlayer.StopAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
+                }
 			}
         }
         public bool GetIsCarried => _isCarried;
