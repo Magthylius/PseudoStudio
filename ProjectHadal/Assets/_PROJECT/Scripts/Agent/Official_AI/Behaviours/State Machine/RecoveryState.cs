@@ -29,7 +29,6 @@ namespace Hadal.AI.States
 
             RuntimeData.UpdateCumulativeDamageCountThreshold(settings.G_DisruptionDamageCount);
             RuntimeData.ResetCumulativeDamageCount();
-            HealthManager.SetIgnoreSlowDebuffs(true);
             NavigationHandler.SetSpeedMultiplier(settings.EscapeSpeedMultiplier);
             SetNewTargetCavern();
             AllowStateTick = true;
@@ -90,10 +89,8 @@ namespace Hadal.AI.States
         public override void OnStateEnd()
         {
             RuntimeData.ResetRecoveryTicker();
-            HealthManager.SetIgnoreSlowDebuffs(false);
             NavigationHandler.ResetSpeedMultiplier();
             AllowStateTick = false;
-            Debug.LogWarning("StateTickFalse:" + AllowStateTick);
         }
 
         public override void OnCavernEnter(CavernHandler cavern)

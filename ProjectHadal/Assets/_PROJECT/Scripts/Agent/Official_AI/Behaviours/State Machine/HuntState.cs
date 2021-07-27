@@ -13,7 +13,6 @@ namespace Hadal.AI.States
         private CavernHandler cachedCavern;
         private CavernTag targetTag;
         private bool hasReachedTargetCavern;
-        private float checkTimer;
 
         public HuntState(AIBrain brain)
         {
@@ -41,32 +40,22 @@ namespace Hadal.AI.States
 
             hasReachedTargetCavern = false;
             if (AICavern != null && AICavern.cavernTag == Brain.TargetMoveCavern.cavernTag)
-            {
                 hasReachedTargetCavern = true;
-            }
-            else targetTag = Brain.TargetMoveCavern.cavernTag;
+            
+            targetTag = Brain.TargetMoveCavern.cavernTag;
 
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);
             NavigationHandler.SetIgnoreCavernLingerTimer(true);
             TryUpdateCachedCavern();
-
-            checkTimer = settings.HU_PeriodicCavernUpdateTime;
         }
         public override void StateTick()
         {
             if (!AllowStateTick) return;
 
             RuntimeData.TickEngagementTicker(Brain.DeltaTime);
-            if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime)
+            if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime || hasReachedTargetCavern)
                 RuntimeData.SetBrainState(BrainState.Anticipation);
-
-            // checkTimer -= Brain.DeltaTime;
-            // if (checkTimer <= 0f)
-            // {
-            //     checkTimer = settings.HU_PeriodicCavernUpdateTime;
-            //     OnCavernEnter(AICavern);
-            // }
 
             if (Brain.CheckForJudgementStateCondition())
             {
@@ -77,12 +66,10 @@ namespace Hadal.AI.States
         public override void LateStateTick()
         {
             if (!AllowStateTick) return;
-
         }
         public override void FixedStateTick()
         {
             if (!AllowStateTick) return;
-
         }
         public override void OnStateEnd()
         {
@@ -126,6 +113,7 @@ namespace Hadal.AI.States
                 if (Brain.DebugEnabled) $"Hunt: Determined Next Cavern to be {nextCavern.cavernTag}.".Msg();
 
                 Brain.NavigationHandler.CavernModeSteering();
+                DoRoar();
             }
         }
 

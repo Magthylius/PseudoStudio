@@ -32,7 +32,7 @@ namespace Hadal.AI.States
 
             if (!Brain.IsStunned)
             {
-                RuntimeData.TickCooldownTicker(Time.deltaTime);
+                RuntimeData.TickCooldownTicker(Brain.DeltaTime);
                 if (Brain.CheckForAIAndPlayersInTunnel()) return;
             }
 
