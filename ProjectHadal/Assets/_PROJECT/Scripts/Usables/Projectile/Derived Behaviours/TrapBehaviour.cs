@@ -11,6 +11,8 @@ namespace Hadal.Usables.Projectiles
 {
     public class TrapBehaviour : ProjectileBehaviour
     {
+        [SerializeField] private AudioEventData readyAudio;
+
         [Header("Stun Settings")] 
         public float stunTime = 5f;
         
@@ -142,6 +144,7 @@ namespace Hadal.Usables.Projectiles
         private void ModeOn()
         {
             meshRenderer.material.SetColor("_EmissionColor", activateColor);
+            readyAudio.PlayOneShot(transform);
             isSet = true;
         }
     }
