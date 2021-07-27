@@ -105,7 +105,7 @@ namespace Hadal.AI.States
             }
             else if (SenseDetection.DetectedPlayersCount == 4)
             {
-                RuntimeData.UpdateConfidenceValue(settings.ConfidenceDecrementValue);
+                RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
                 RuntimeData.SetBrainState(BrainState.Recovery);
                 return true;
             }

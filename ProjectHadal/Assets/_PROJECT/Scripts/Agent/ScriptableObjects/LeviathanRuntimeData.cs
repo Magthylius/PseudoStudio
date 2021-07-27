@@ -118,8 +118,6 @@ namespace Hadal.AI
             //! Components are not initialised at this phase
 
             //! Information
-            if (PlayerMask == default) PlayerMask = LayerMask.GetMask("LocalPlayer");
-            if (ObstacleMask == default) ObstacleMask = LayerMask.GetMask("Wall");
             SetIsEggDestroyed(false);
 
             //! Objectives Reset

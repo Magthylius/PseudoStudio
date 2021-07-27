@@ -26,7 +26,6 @@ namespace Hadal.AI.AStarPathfinding
 
         void OnDestroy()
         {
-            print("pathfinder destroyed");
             GridGenerator.GridLoadedEvent -= SetGrid;
         }
 
