@@ -56,15 +56,6 @@ namespace Hadal.Player
         private bool _isTaggedByLeviathan;
         private bool _isDown;
         private bool _isLocalPlayer;
-        [SerializeField] LureLauncherObject lureLauncherObject;
-        public Action<bool, PlayerController> OnLureHasActivated;
-        public bool HasLureLauncher => lureLauncherObject != null;
-        private void InvokeLureActivatedEvent(bool statement)
-        {
-            if (debugEnabled && PhotonNetwork.IsMasterClient)
-                $"Invoking lure event, isActive: {statement}.".Msg();
-            OnLureHasActivated?.Invoke(statement, this);
-        }
         public Action<PlayerController> LocalGameStartEvent;
 
         //! Ready checks
@@ -100,6 +91,9 @@ namespace Hadal.Player
 
         public override void OnDisable()
         {
+            if (_manager == null)
+                return;
+            
             if (!_manager.managerPView.IsMine) // If NOT the Host player, handle camera activation.
             {
                 if (_pView.IsMine) // If camera started for a local player, send event to signify that its ready.
@@ -113,7 +107,6 @@ namespace Hadal.Player
         void Start()
         {
             _rBody.maxDepenetrationVelocity = 1f; //! This is meant to make sure the collider does not penetrate too deeply into environmental collider (thus reducing bouncing)
-            lureLauncherObject.OnLureActivate += InvokeLureActivatedEvent;
             TryInjectDependencies();
             if (NetworkEventManager.Instance.isOfflineMode && !isDummy)
                 SetLocalPlayerSettings();
@@ -181,8 +174,6 @@ namespace Hadal.Player
             //! Might need to uninject player
             playerUI.PauseMenuOpened -= Disable;
             playerUI.PauseMenuClosed -= Enable;
-            lureLauncherObject.OnLureActivate -= InvokeLureActivatedEvent;
-            OnLureHasActivated = null;
         }
 
         #endregion
@@ -325,17 +316,6 @@ namespace Hadal.Player
                 //! Track player names online, offline tracking called from player manager
                 foreach (PlayerController controller in allPlayerControllers)
                 {
-                    //! ignore self
-                    //if (controller == this) continue;
-                
-                    /*foreach (var dict in NetworkEventManager.Instance.AllPlayers)
-                    {
-                        if (controller._pView.Owner == dict.Value)
-                        {
-                            playerUI.TrackPlayerName(controller.transform, dict.Value.NickName);
-                        }
-                    }*/
-                    
                     foreach (var dict in NetworkEventManager.Instance.GetSortedPlayerIndices())
                     {
                         if (controller._pView.Owner == dict.Key)
@@ -412,7 +392,6 @@ namespace Hadal.Player
                 playerUI.PauseMenuClosed += Enable;
 
                 UITrackerBridge.LocalPlayerUIManager = playerUI;
-                //Debug.LogWarning(UITrackerBridge.LocalPlayerUIManager);
 
                 Activate();
                 cameraController.Activate();
@@ -421,7 +400,6 @@ namespace Hadal.Player
             {
                 Deactivate();
                 cameraController.Deactivate();
-                //print("Camera Deactivated");
 
                 try
                 {
@@ -429,7 +407,6 @@ namespace Hadal.Player
                     playerUI.PauseMenuClosed -= Enable;
                 }
                 catch { }
-
             }
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -455,7 +432,6 @@ namespace Hadal.Player
         
         public void InjectAIDependencies(Transform aiTransform)
         {
-            //Debug.LogWarning("Player ai init called");
             playerUI.InjectAIDependencies(aiTransform);
         }
 
