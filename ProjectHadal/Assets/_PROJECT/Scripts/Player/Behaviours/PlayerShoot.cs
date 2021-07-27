@@ -1,8 +1,6 @@
 //created by Jin, edited by Jon, edited by Jey
 
-using System;
 using UnityEngine;
-using System.Collections;
 using Hadal.Usables;
 using Hadal.Utility;
 using Photon.Pun;
@@ -29,36 +27,19 @@ namespace Hadal.Player.Behaviours
 
         [Header("Aiming")]
         public Rigidbody aimParentRb;
-        public Transform aimParentObject;
-        public Transform aimPoint;
-        
-        //RaycastHit aimHit;
-        //private bool aimHitBool;
+        [SerializeField] Transform firePoint;
 
-        private bool enableTracer = false;
-
-        [Header("Torpedo")]
+        [Header("Launchers")]
         [SerializeField] TorpedoLauncherObject tLauncher;
-        [SerializeField] Transform torpedoFirePoint;
-        public TorpedoLauncherObject GetTorpedoLauncher => tLauncher;
-
-        [Header("Harpoon")] 
         [SerializeField] private HarpoonLauncherObject hLauncher;
-
-        [Header("Utility")]
-        [SerializeField] Transform utilityFirePoint;
-        [SerializeField] float utilityFireDelay;
-        private Timer _utilityReloadTimer;
-        private bool _canUtilityFire;
+        public TorpedoLauncherObject GetTorpedoLauncher => tLauncher;
 
         [Header("Event")]
         private PhotonView _pView;
-        //private const byte PLAYER_TOR_LAUNCH_EVENT = 1;
 
         #region Unity Lifecycle
         private void OnEnable()
         {
-            //PhotonNetwork.NetworkingClient.EventReceived += NetworkingClient_EventReceived;
             neManager = NetworkEventManager.Instance;
             neManager.AddListener(ByteEvents.PLAYER_TORPEDO_LAUNCH, REFireTorpedo);
         }
@@ -83,7 +64,6 @@ namespace Hadal.Player.Behaviours
             {
                 if (controller == LocalPlayerData.PlayerController)
                 {
-                    Debug.LogWarning("Subscribed to Salvage");
                     tLauncher.SubscribeToSalvageEvent();
                     controller.UI.Initialize(tLauncher.TotalAmmoCount, hLauncher.TotalAmmoCount);
                     
@@ -92,7 +72,6 @@ namespace Hadal.Player.Behaviours
             else
             {
                // need to only subscribe if local
-                Debug.LogWarning("Subscribed to Salvage");
                 tLauncher.SubscribeToSalvageEvent();
                 controller.UI.Initialize(tLauncher.TotalAmmoCount, hLauncher.TotalAmmoCount);
             }
@@ -120,25 +99,19 @@ namespace Hadal.Player.Behaviours
         public void StartShootTracer()
         {
             controller.UI.ShootTracer.Activate();
-            enableTracer = true;
         }
 
         public void StopShootTracer()
         {
             controller.UI.ShootTracer.Deactivate();
-            enableTracer = false;
         }
         
         public UsableHandlerInfo CalculateDeployAngle(UsableHandlerInfo info)
         {
-            /*if (aimHitBool)
-            {
-                info.AimedPoint = aimHit.point;
-            }*/
             UIShootTracer tracer = controller.UI.ShootTracer;
             if (tracer == null || Vector3.Distance(tracer.HitPoint, transform.position) < 10f)
             {
-                info.AimedPoint = torpedoFirePoint.position + torpedoFirePoint.forward;
+                info.AimedPoint = firePoint.position + firePoint.forward;
             }
             else
             {
@@ -165,7 +138,6 @@ namespace Hadal.Player.Behaviours
         public void SendTorpedoEvent(int projectileID, Vector3 lookAtPoint)
         {
             if (!AllowUpdate) return;
-            //PhotonNetwork.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, _pView.ViewID, RaiseEventOptions.Default, SendOptions.SendUnreliable);
             object[] content = new object[] { _pView.ViewID, projectileID, lookAtPoint};
             neManager.RaiseEvent(ByteEvents.PLAYER_TORPEDO_LAUNCH, content);
         }
@@ -175,7 +147,6 @@ namespace Hadal.Player.Behaviours
             if (!AllowUpdate) return;
             if (!eventFire && !tLauncher.IsChamberLoaded)
             {
-                //if (UIManager.IsNull) return;
                 controller.UI.UpdateFiringVFX(true);
                 return;
             }
@@ -205,7 +176,6 @@ namespace Hadal.Player.Behaviours
 
             tLauncher.Use(info);
             controller.GetInfo.Inventory.IncreaseProjectileCount();
-
 
             //send event to torpedo ONLY when fire locally. local = (!eventFire)
             if (isLocal) SendTorpedoEvent(projectileID, info.AimedPoint);
@@ -243,6 +213,7 @@ namespace Hadal.Player.Behaviours
                     usable.DecrementChamber();
             }
             controller.GetInfo.Inventory.IncreaseProjectileCount();
+
             //send event to utility ONLY when fire locally. local = (!eventFire)
             if (!eventFire)
             {
@@ -256,14 +227,12 @@ namespace Hadal.Player.Behaviours
         {
             if (aimParentRb)
             {
-                //Debug.LogWarning("Rigidbody torpedo found");
-                var info = new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, 0f, aimParentRb.velocity, Vector3.zero, isLocal);
+                var info = new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, firePoint, 0f, aimParentRb.velocity, Vector3.zero, isLocal);
                 info.OwnerObject = controller.GetTarget.gameObject;
                 return info;
             }
             else
             {
-                //Debug.LogWarning("Rigidbody torpedo not found");
                 return null;
             }
         }
@@ -271,13 +240,11 @@ namespace Hadal.Player.Behaviours
         {
             if(aimParentRb)
             {
-                //Debug.LogWarning("Rigidbody utility found");
-                var info = new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, torpedoFirePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
+                var info = new UsableHandlerInfo().WithTransformForceInfo(projectileID, isPowered, firePoint, chargedTime, aimParentRb.velocity, Vector3.zero, isLocal);
                 return info;
             }
             else
             {
-                //Debug.LogWarning("Rigidbody utility not found");
                 return null;
             }
         }
@@ -298,7 +265,6 @@ namespace Hadal.Player.Behaviours
 
         private void OnChamberChangedMethod(bool isIncrement)
         {
-            //UpdateUITorpedoCount(false);
             if (isIncrement)
             {
                 UpdateUIFloodRatio(1f);
@@ -316,7 +282,6 @@ namespace Hadal.Player.Behaviours
         }
         private void OnReserveChangedMethod(bool isIncrement)
         {
-            //UpdateUITorpedoCount(isIncrement);
             if (!isIncrement) return;
             DebugLog("Torpedo Regenerated (Loaded)!");
             
@@ -330,30 +295,17 @@ namespace Hadal.Player.Behaviours
         private void OnUnityUpdateUI()
         {
             if (tLauncher.TotalAmmoCount > 0) UpdateUIFloodRatio(tLauncher.ChamberReloadRatio);
-            //UpdateUIRegenRatio(tLauncher.ReserveRegenRatio);
-
-            /*aimHitBool = Physics.Raycast(aimPoint.position, aimParentObject.forward, out aimHit,
-                Mathf.Infinity, ~rayIgnoreMask, QueryTriggerInteraction.Ignore);
-                
-            controller.UI.ShootTracer.SetEndPoint(aimHit.point);*/
         }
         private void UpdateUITorpedoCount(bool isReloadEvent)
         {
-            //if (UIManager.IsNull) return;
-            
-            //print($"{tLauncher.TotalAmmoCount}: {tLauncher.ReserveCount} + {tLauncher.ChamberCount}");
             controller.UI.UpdateTorpedoReserve(tLauncher.TotalAmmoCount);
         }
         private void UpdateUIRegenRatio(in float ratio)
         {
-           // if (UIManager.IsNull) return;
-
             controller.UI.UpdateReload(ratio, tLauncher.IsRegenerating);
         }
         private void UpdateUIFloodRatio(in float ratio)
         {
-            //if (UIManager.IsNull) return;
-
             controller.UI.UpdateTorpedoChamber(ratio, !tLauncher.IsChamberLoaded);
         }
 
@@ -363,20 +315,11 @@ namespace Hadal.Player.Behaviours
 
         private void BuildTimers()
         {
-            SetCanUtilityFire();
-            _utilityReloadTimer = this.Create_A_Timer()
-                        .WithDuration(utilityFireDelay)
-                        .WithOnCompleteEvent(SetCanUtilityFire)
-                        .WithShouldPersist(true);
-            _utilityReloadTimer.PausedOnStart();
         }
         private void HandleUtilityReloadTimer(UsableLauncherObject usable)
         {
-            _canUtilityFire = false;
-            _utilityReloadTimer.Restart();
             usable.OnRestockInvoke();
         }
-        private void SetCanUtilityFire() => _canUtilityFire = true;
 
         public void Inject(PlayerController controller)
         {

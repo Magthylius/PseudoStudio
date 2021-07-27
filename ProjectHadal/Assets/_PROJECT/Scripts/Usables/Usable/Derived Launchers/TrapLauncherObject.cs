@@ -8,7 +8,6 @@ namespace Hadal.Usables
     public class TrapLauncherObject : UsableLauncherObject
     {
         [SerializeField] ProjectileBehaviour activeTrap;
-        public override event Action<UsableLauncherObject> OnFire;
         
         public override bool Use(UsableHandlerInfo info)
         {
