@@ -158,6 +158,13 @@ namespace Hadal.Usables
             _chamberReloadTimer.RestartWithDuration(chamberReloadTime);
             _chamberReloadTimer.CompletedOnStart();
         }
+		
+		public void ChangeReserveRegenTime(float newRegenTime)
+		{
+			reserveRegenerationTime = newRegenTime;
+			_reserveRegenTimer.RestartWithDuration(reserveRegenerationTime);
+			_reserveRegenTimer.Pause();
+		}
 
         private void UpdateReserveCount(in int count) => ReserveCount = Mathf.Clamp(count, 0, maxReserveCapacity);
         private void UpdateChamberCount(in int count) => ChamberCount = Mathf.Clamp(count, 0, maxChamberCapacity);

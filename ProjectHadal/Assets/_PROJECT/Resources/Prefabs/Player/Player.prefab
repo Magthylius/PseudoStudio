@@ -1825,7 +1825,7 @@ MonoBehaviour:
   _localReviveTimer: 0
   _localReviveDelayTimer: 0
   minOtherPlayerRevivalDistance: 20
-  localReviveDelayTime: 0.1
+  localReviveDelayTime: 1
   reviveOtherHealthPercent: 0.4
   maxHealth: 100
   _currentHealth: 0
@@ -4030,26 +4030,6 @@ PrefabInstance:
     - target: {fileID: 628160377840392337, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: chamberReloadTime
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: maxChamberCapacity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: maxReserveCapacity
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: reserveRegenerationTime
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: poweredUpReserveCapacity
-      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4014725249324593813, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: m_Name

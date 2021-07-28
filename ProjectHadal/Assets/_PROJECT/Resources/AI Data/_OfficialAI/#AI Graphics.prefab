@@ -823,6 +823,7 @@ MonoBehaviour:
   otherStateColor: {r: 0, g: 0.20392157, b: 2.9960785, a: 0}
   judgementStateColor: {r: 6.0535517, g: 0.11502131, b: 0, a: 0}
   ambushStateColor: {r: 0, g: 0, b: 0, a: 0}
+  colorRate: 0
 --- !u!114 &6835992963274504710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -837,8 +838,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 200
   currentHealth: 0
-  slowPercentPerStack: 0.1
-  maxSlowStacks: 8
+  slowPercentPerStack: 0.05
+  maxSlowStacks: 16
   maxSlowPercent: 0.8
   currentMaxSlowPercent: 0.8
   currentSlowPercent: 0
