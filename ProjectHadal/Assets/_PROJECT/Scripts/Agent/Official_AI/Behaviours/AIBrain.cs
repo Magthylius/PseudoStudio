@@ -193,7 +193,6 @@ namespace Hadal.AI
             navigationHandler.DoUpdate(deltaTime);
             stateMachine?.MachineTick();
             mainUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
-            HandleCarriedPlayer();
             PlaySoundWhenEggDestroyed();
         }
         private void LateUpdate()
@@ -211,6 +210,8 @@ namespace Hadal.AI
             navigationHandler.DoFixedUpdate(fixedDeltaTime);
             stateMachine?.FixedMachineTick();
             allAIUpdateComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
+
+            HandleCarriedPlayer();
         }
 
         private void OnDestroy()
@@ -600,8 +601,8 @@ namespace Hadal.AI
         public void SpawnExplosivePointAt(Vector3 position, bool sendWithEvent = false, bool useTunnelExplosion = false)
         {
             ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
-            float additionalRadius = 0f;
-            float knockForce = 0f;
+            float additionalRadius;
+            float knockForce;
             if (useTunnelExplosion)
             {
                 additionalRadius = MachineData.Engagement.G_TunnelKnockbackAdditionalRange;
@@ -632,8 +633,6 @@ namespace Hadal.AI
                 RuntimeData.SetIsEggDestroyed(true);
                 RuntimeData.UpdateBonusConfidence(MachineData.EggDestroyedPermanentConfidence);
                 eggDestroyedSound = true;
-
-
                 return;
             }
 
@@ -648,22 +647,14 @@ namespace Hadal.AI
                 if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Lair)
                 {
                     AudioBank.Play3D(soundType: AISound.EggDestroyed, transform);
-                    Debug.LogWarning("HEY RAWR");
                     eggDestroyedSound = false;
-                }
-                else
-                {
-                    return;
                 }
             }
         }
 
         public void TryToTargetClosestPlayerInAICavern() => TrySetCurrentTarget(GetClosestPlayerInAICavern());
 
-        public void ResetAllPlayersTaggedStatus()
-        {
-            Players.ForEach(p => p.SetIsTaggedByLeviathan(false));
-        }
+        public void ResetAllPlayersTaggedStatus() => Players.ForEach(p => p.SetIsTaggedByLeviathan(false));
 
         public Vector3 GetEndThreshExplosionPosition()
         {
@@ -722,6 +713,25 @@ namespace Hadal.AI
             }
             return false;
         }
+        public bool CheckForJudgementStateCondition(out Action performOnSuccess)
+        {
+            performOnSuccess = null;
+            if (CurrentTarget != null && CavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid)
+            {
+                RuntimeData.SetBrainState(BrainState.Judgement);
+                performOnSuccess = () =>
+                {
+                    if (NavigationHandler.Data_IsOnQueuePath)
+                        NavigationHandler.StopQueuedPath();
+                    
+                    if (DebugEnabled) "Perform on success judgement state called.".Msg();
+                };
+                
+                if (DebugEnabled) "Spotted and entered engagement!".Msg();
+                return true;
+            }
+            return false;
+        }
 
         private float knockCooldownTimer = 0f;
         public bool CheckForAIAndPlayersInTunnel()
@@ -757,6 +767,8 @@ namespace Hadal.AI
             => state switch
             {
                 BrainState.Anticipation => anticipationState,
+                BrainState.Judgement => judgementState,
+                BrainState.Ambush => ambushState,
                 BrainState.Hunt => huntState,
                 BrainState.Recovery => recoveryState,
                 BrainState.Cooldown => cooldownState,
