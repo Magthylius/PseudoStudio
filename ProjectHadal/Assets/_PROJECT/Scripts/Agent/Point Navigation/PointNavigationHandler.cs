@@ -226,6 +226,7 @@ namespace Hadal.AI
 
             CavernModeSteering();
             ResetCavernLingerTimer();
+            ResetDebugVelocityMultiplier();
 
             if (disableOnStart)
                 Disable();
@@ -245,7 +246,8 @@ namespace Hadal.AI
             }
 
             HandleSpeedAndDirection(fixedDeltaTime);
-            ClampMaxVelocity();
+            if (!isStunned)
+                ClampMaxVelocity();
         }
 
         public Func<bool> OnCollisionDetected() => () =>
@@ -545,14 +547,14 @@ namespace Hadal.AI
             }
 
             ComputeCachedDestinationCavernPath(destination);
-            SetQueuedPathFromCache(true);
+            SetQueuedPathFromCache();
         }
 
         /// <summary>
         /// Sets the handler's path to use the cached queue path that has been generated. If there is no cache queue path that has
         /// been generated beforehand, the function will return. See <see cref="ComputeCachedDestinationCavernPath"/>.
         /// </summary>
-        public void SetQueuedPathFromCache(bool setTunnelSteeringUntilQueuePathEnd = false)
+        public void SetQueuedPathFromCache()
         {
             if (cachedPointPath.IsNullOrEmpty())
             {
@@ -561,15 +563,6 @@ namespace Hadal.AI
             }
             if (enableDebug) "Running cached queue path...".Msg();
             SetQueuedPath(cachedPointPath);
-            if (setTunnelSteeringUntilQueuePathEnd)
-            {
-                lockSteeringBehaviour = true;
-                //TunnelModeSteering();
-                if(enableDebug) Debug.LogWarning("STEERINGTUNNEL");
-
-            }
-
-
         }
 
         /// <summary>
@@ -828,17 +821,12 @@ namespace Hadal.AI
             }
 
             //! Look at
-            // Vector3 lerpResult;
             float totalLerpSpeed = deltaTime * smoothLookAtSpeed;
 
             if (_lookAtTarget == null)
                 pilotTrans.forward = Vector3.Lerp(pilotTrans.forward, rBody.velocity.normalized, totalLerpSpeed);
             else
                 pilotTrans.LookAt(_lookAtTarget);
-                // lerpResult = Vector3.RotateTowards(pilotTrans.forward, _lookAtTarget.position, totalLerpSpeed, 0f);
-                // Vector3.Lerp(pilotTrans.forward, (_lookAtTarget.position - pilotTrans.position).normalized, totalLerpSpeed);
-
-            //  = lerpResult;
         }
 
         private void ClampMaxVelocity()
@@ -849,7 +837,7 @@ namespace Hadal.AI
                 return;
             }
 
-            if (rBody.velocity.magnitude > TotalMaxVelocity * (1f - slowMultiplier))
+            if (rBody.velocity.magnitude > TotalMaxVelocity)
                 rBody.velocity = rBody.velocity.normalized * TotalMaxVelocity;
         }
 
@@ -1041,7 +1029,7 @@ namespace Hadal.AI
 
             _tickCavernLingerTimer = false;
             ResetCavernLingerTimer();
-            SetQueuedPathFromCache(true);
+            SetQueuedPathFromCache();
         }
 
         /// <summary> The actual logic that selects a new nav point. The algorithm behaviour can be adjusted with

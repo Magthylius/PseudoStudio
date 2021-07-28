@@ -128,11 +128,14 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: aedb40335b868f94d8f8e06b06245f9e, type: 2}
   UtilityName: Harpoon
   IsPowered: 0
-  maxReserveCapacity: 9
-  reserveRegenerationTime: 2
+  maxReserveCapacity: 2
+  reserveRegenerationTime: 5
   maxChamberCapacity: 1
-  chamberReloadTime: 0.3
+  chamberReloadTime: 0.5
   maxOnLoadOut: 1
+  poweredUpReserveCapacity: 4
+  poweredUpChamberReloadTime: 0.1
+  poweredUpReserveRegenTime: 1
 --- !u!1 &5799704096644430337
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Tenshi.AIDolls;
 using System;
 using Tenshi;
 using Tenshi.UnitySoku;
-using Hadal.AI.States;
 using Hadal.AI.Caverns;
 
 //! C: Jon
@@ -33,55 +30,26 @@ namespace Hadal.AI.States
             RuntimeData.ResetCumulativeDamageCount();
             NavigationHandler.SetSpeedMultiplier(settings.EscapeSpeedMultiplier);
             AllowStateTick = true;
-            currentEscapeTargetTime = settings.GetLingerInCurrentCavernTime();
             escapeNow = false;
+
+            //! Get randomised linger timer & make sure it is always lower than the max escape time
+            currentEscapeTargetTime = settings.GetLingerInCurrentCavernTime();
+            if (currentEscapeTargetTime >= settings.MaxEscapeTime)
+                currentEscapeTargetTime = settings.MaxEscapeTime - 1f;
         }
 
         public override void StateTick()
         {
             if (!AllowStateTick) return;
 
-            if(!Brain.IsStunned)
+            if (!Brain.IsStunned)
             {
                 RuntimeData.TickRecoveryTicker(Brain.DeltaTime);
-                if (CheckForEscapeLingerTime()) return;
                 if (Brain.CheckForAIAndPlayersInTunnel()) return;
             }
 
-            //! When hit too much or time too long, force back into Judgement State
-            if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.IsCumulativeDamageCountReached)
-            {
-                SenseDetection.RequestImmediateSensing();
-                bool anyPlayersInAICavern = AICavern != null && AICavern.GetPlayerCount > 0;
-                bool anyPlayersInDetection = SenseDetection.DetectedPlayersCount > 0;
-
-                if (anyPlayersInAICavern || anyPlayersInDetection)
-                {
-                    RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
-                    RuntimeData.ResetRecoveryTicker();
-                    AllowStateTick = false;
-
-                    if (!Brain.CheckForJudgementStateCondition())
-                    {
-                        //! if did not detect any target players yet, go to anticipation state instead
-                        RuntimeData.SetBrainState(BrainState.Anticipation);
-                        judgementLapseCount = 0;
-                    }
-                    else
-                    {
-                        if (RuntimeData.GetPreviousBrainState == BrainState.Judgement)
-                            judgementLapseCount++;
-                        else
-                            judgementLapseCount = 0;
-
-                        if (judgementLapseCount > settings.G_JudgementLapseCountLimit)
-                        {
-                            RuntimeData.SetBrainState(BrainState.Cooldown);
-                            judgementLapseCount = 0;
-                        }
-                    }
-                }
-            }
+            if (CheckForEscapeLingerTime()) return;
+            if (CheckForLastResortCase()) return;
         }
 
         public override void LateStateTick()
@@ -113,12 +81,12 @@ namespace Hadal.AI.States
                 DetermineNextCavern();
             }
 
-            Brain.NavigationHandler.CavernModeSteering();
+            NavigationHandler.CavernModeSteering();
         }
 
         public override void OnCavernLeave(CavernHandler cavern)
         {
-            Brain.NavigationHandler.TunnelModeSteering();
+            NavigationHandler.TunnelModeSteering();
         }
 
         public override void OnPlayerEnterAICavern(CavernPlayerData data)
@@ -142,7 +110,7 @@ namespace Hadal.AI.States
         {
             if (cavernRoutine != null)
                 Brain.StopCoroutine(cavernRoutine);
-            
+
             cavernRoutine = null;
             cavernRoutine = Brain.StartCoroutine(WaitForAICavern());
 
@@ -167,6 +135,41 @@ namespace Hadal.AI.States
                 escapeNow = true;
                 SetNewTargetCavern();
                 return true;
+            }
+            return false;
+        }
+
+        private bool CheckForLastResortCase()
+        {
+            //! When hit too much or escape time is too long, do a last resort check
+            if (RuntimeData.GetRecoveryTicks >= settings.MaxEscapeTime || RuntimeData.IsCumulativeDamageCountReached)
+            {
+                SenseDetection.RequestImmediateSensing();
+                bool anyPlayersInAICavern = AICavern != null && AICavern.GetPlayerCount > 0;
+                bool anyPlayersInDetection = SenseDetection.DetectedPlayersCount > 0;
+
+                if (anyPlayersInAICavern || anyPlayersInDetection)
+                {
+                    RuntimeData.UpdateConfidenceValue(-settings.ConfidenceDecrementValue);
+                    RuntimeData.ResetRecoveryTicker();
+                    AllowStateTick = false;
+
+                    if (Brain.CheckForJudgementStateCondition())
+                    {
+                        if (RuntimeData.IsPreviousBrainStateEqualTo(BrainState.Judgement))
+                            judgementLapseCount++;
+                        else
+                            judgementLapseCount = 0;
+
+                        if (judgementLapseCount < settings.G_JudgementLapseCountLimit)
+                            return true;
+                    }
+
+                    //! if did not detect any target players or judgement lapse limit reached: go to cooldown state
+                    RuntimeData.SetBrainState(BrainState.Cooldown);
+                    judgementLapseCount = 0;
+                    return true;
+                }
             }
             return false;
         }

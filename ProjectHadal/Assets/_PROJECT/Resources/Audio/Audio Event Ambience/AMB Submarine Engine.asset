@@ -17,9 +17,9 @@ MonoBehaviour:
     Volume: {x: 0.8, y: 0.8}
     Pitch: {x: 1, y: 1}
     SpatialBlend: 0
-    Priority: 150
+    Priority: 80
     StereoPan: 0
-    ReverbZoneMix: 1
+    ReverbZoneMix: 0
     OutputMixerGroup: {fileID: -3072411245432573835, guid: 3e83b3c61923ca4459841fdf3b41f403, type: 2}
     Mute: 0
     BypassEffects: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
     BypassReverbZones: 0
     PlayOnAwake: 0
     Loop: 1
-    DopplerLevel: 1
+    DopplerLevel: 0
     Spread: 0
     VolumeRolloff: 0
     MinDistance: 1

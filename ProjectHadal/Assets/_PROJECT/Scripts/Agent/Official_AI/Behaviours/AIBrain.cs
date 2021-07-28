@@ -14,6 +14,7 @@ using Hadal.AI.Graphics;
 using Hadal.Networking;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
+using Hadal.AudioSystem;
 
 namespace Hadal.AI
 {
@@ -123,22 +124,22 @@ namespace Hadal.AI
 
             _playersAreReady = false;
             rBody = GetComponent<Rigidbody>();
-			healthManager = FindObjectOfType<AIHealthManager>();
+            healthManager = FindObjectOfType<AIHealthManager>();
             graphicsHandler = FindObjectOfType<AIGraphicsHandler>();
             isStunned = false;
 
-			var graphicsAIUpdateComponents = graphicsHandler.GetComponentsInChildren<ILeviathanComponent>().ToList();
-			
+            var graphicsAIUpdateComponents = graphicsHandler.GetComponentsInChildren<ILeviathanComponent>().ToList();
+
             allAIUpdateComponents = GetComponentsInChildren<ILeviathanComponent>()
                 .Where(c => c.LeviathanUpdateMode != UpdateMode.DoNotUpdate)
                 .ToList();
-			allAIUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode != UpdateMode.DoNotUpdate).ToList());
-			
+            allAIUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode != UpdateMode.DoNotUpdate).ToList());
+
             preUpdateComponents = allAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList();
-			preUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList());
-			
+            preUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.PreUpdate).ToList());
+
             mainUpdateComponents = allAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList();
-			mainUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList());
+            mainUpdateComponents.AddRange(graphicsAIUpdateComponents.Where(c => c.LeviathanUpdateMode == UpdateMode.MainUpdate).ToList());
 
             Players = new List<PlayerController>();
             CurrentTarget = null;
@@ -193,7 +194,6 @@ namespace Hadal.AI
             navigationHandler.DoUpdate(deltaTime);
             stateMachine?.MachineTick();
             mainUpdateComponents.ForEach(c => c.DoUpdate(deltaTime));
-            HandleCarriedPlayer();
             PlaySoundWhenEggDestroyed();
         }
         private void LateUpdate()
@@ -211,6 +211,8 @@ namespace Hadal.AI
             navigationHandler.DoFixedUpdate(fixedDeltaTime);
             stateMachine?.FixedMachineTick();
             allAIUpdateComponents.ForEach(c => c.DoFixedUpdate(fixedDeltaTime));
+
+            HandleCarriedPlayer();
         }
 
         private void OnDestroy()
@@ -229,6 +231,9 @@ namespace Hadal.AI
 
             }
         }
+
+
+        public AmbiencePlayer ambiencePlayer;
 
         void Setup()
         {
@@ -276,6 +281,7 @@ namespace Hadal.AI
             navigationHandler.SetCavernManager(cavernManager);
             if (graphicsHandler != null) MouthObject = graphicsHandler.MouthObject;
 
+            ambiencePlayer = FindObjectOfType<AmbiencePlayer>();
         }
 
         private void InitialiseStates()
@@ -329,7 +335,7 @@ namespace Hadal.AI
         public void HandleCarriedPlayer()
         {
             if (CarriedPlayer == null || doNotHandleCarriedPlayer) return;
-            CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * 4.5f);
+            CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * MachineData.Engagement.G_DistanceFromFrontForThreshAnimation);
             CarriedPlayer.GetTarget.LookAt(MouthObject.transform.position + (MouthObject.transform.forward * -2f));
         }
 
@@ -392,14 +398,15 @@ namespace Hadal.AI
             AIPlayAudioType theType = (AIPlayAudioType)(int)content[0];
             AISound soundType = (AISound)(int)content[1];
 
-			switch (theType)
-			{
-				case AIPlayAudioType.Dimension2: { AudioBank.Play2D(soundType); return; }
-				case AIPlayAudioType.Dimension3: { AudioBank.Play3D(soundType, transform); return; }
-				case AIPlayAudioType.OneShot: { AudioBank.PlayOneShot(soundType, transform); return; }
-				case AIPlayAudioType.DistanceBasedRoar: { AudioBank.PlayOneShot_RoarWithDistance(transform); return; }
-				default: break;
-			}
+            switch (theType)
+            {
+                case AIPlayAudioType.Dimension2: { AudioBank.Play2D(soundType); return; }
+                case AIPlayAudioType.Dimension3: { AudioBank.Play3D(soundType, transform); return; }
+                case AIPlayAudioType.OneShot: { AudioBank.PlayOneShot(soundType, transform); return; }
+                case AIPlayAudioType.DistanceBasedRoar: { AudioBank.PlayOneShot_RoarWithDistance(transform); return; }
+                case AIPlayAudioType.StopAudio: { AudioBank.StopSound(soundType); return; }
+                default: break;
+            }
         }
 
         private void Send_SpawnExplosivePoint(Vector3 position, bool useTunnelExplosion)
@@ -418,12 +425,12 @@ namespace Hadal.AI
             bool useTunnelExplosion = (bool)content[1];
             SpawnExplosivePointAt(spawnPos, useTunnelExplosion: useTunnelExplosion);
         }
-		
-		internal void Send_JudgementEvent(bool isJudgement)
-		{
-			RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
-			neManager.RaiseEvent(ByteEvents.AI_JUDGEMENT_EVENT, isJudgement, options, SendOptions.SendReliable);
-		}
+
+        internal void Send_JudgementEvent(bool isJudgement)
+        {
+            RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+            neManager.RaiseEvent(ByteEvents.AI_JUDGEMENT_EVENT, isJudgement, options, SendOptions.SendReliable);
+        }
 
         #endregion
 
@@ -486,11 +493,11 @@ namespace Hadal.AI
         [SerializeField] Collider leviathanCollider;
         public void ChangeColliderMaterial(PhysicMaterial physicMaterial)
         {
-			if (leviathanCollider == null)
-			{
-				if (DebugEnabled) "Leviathan collider is missing, unable to swap physic material!".Warn();
-				return;
-			}
+            if (leviathanCollider == null)
+            {
+                if (DebugEnabled) "Leviathan collider is missing, unable to swap physic material!".Warn();
+                return;
+            }
             leviathanCollider.material = physicMaterial;
         }
 
@@ -555,18 +562,18 @@ namespace Hadal.AI
                     player.gameObject.layer = freeLocalLayerIndex;
                 else
                     player.gameObject.layer = freeLayerIndex;
-                
+
                 player.SetIsCarried(false);
                 player.SetIsTaggedByLeviathan(false);
             }
 
             if (CarriedPlayer != null)
             {
-				if (CarriedPlayer.IsLocalPlayer)
+                if (CarriedPlayer.IsLocalPlayer)
                     CarriedPlayer.gameObject.layer = freeLocalLayerIndex;
                 else
                     CarriedPlayer.gameObject.layer = freeLayerIndex;
-				
+
                 CarriedPlayer.SetIsCarried(false);
                 CarriedPlayer.SetIsTaggedByLeviathan(false);
             }
@@ -600,8 +607,8 @@ namespace Hadal.AI
         public void SpawnExplosivePointAt(Vector3 position, bool sendWithEvent = false, bool useTunnelExplosion = false)
         {
             ExplosivePoint.ExplosionSettings expSettings = new ExplosivePoint.ExplosionSettings();
-            float additionalRadius = 0f;
-            float knockForce = 0f;
+            float additionalRadius;
+            float knockForce;
             if (useTunnelExplosion)
             {
                 additionalRadius = MachineData.Engagement.G_TunnelKnockbackAdditionalRange;
@@ -632,8 +639,6 @@ namespace Hadal.AI
                 RuntimeData.SetIsEggDestroyed(true);
                 RuntimeData.UpdateBonusConfidence(MachineData.EggDestroyedPermanentConfidence);
                 eggDestroyedSound = true;
-
-
                 return;
             }
 
@@ -647,23 +652,16 @@ namespace Hadal.AI
             {
                 if (cavernManager.GetCavernTagOfAILocation() == CavernTag.Lair)
                 {
-                    AudioBank.Play3D(soundType: AISound.EggDestroyed, transform);
-                    Debug.LogWarning("HEY RAWR");
+                    AudioBank.PlayOneShot(soundType: AISound.EggDestroyed, transform);
                     eggDestroyedSound = false;
-                }
-                else
-                {
-                    return;
                 }
             }
         }
 
+
         public void TryToTargetClosestPlayerInAICavern() => TrySetCurrentTarget(GetClosestPlayerInAICavern());
 
-        public void ResetAllPlayersTaggedStatus()
-        {
-            Players.ForEach(p => p.SetIsTaggedByLeviathan(false));
-        }
+        public void ResetAllPlayersTaggedStatus() => Players.ForEach(p => p.SetIsTaggedByLeviathan(false));
 
         public Vector3 GetEndThreshExplosionPosition()
         {
@@ -757,6 +755,8 @@ namespace Hadal.AI
             => state switch
             {
                 BrainState.Anticipation => anticipationState,
+                BrainState.Judgement => judgementState,
+                BrainState.Ambush => ambushState,
                 BrainState.Hunt => huntState,
                 BrainState.Recovery => recoveryState,
                 BrainState.Cooldown => cooldownState,

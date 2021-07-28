@@ -4,6 +4,7 @@ using Tenshi;
 using Tenshi.UnitySoku;
 using Hadal.AI.Caverns;
 using UnityEngine;
+using System.Collections;
 
 namespace Hadal.AI.States
 {
@@ -17,6 +18,7 @@ namespace Hadal.AI.States
         {
             Initialize(brain);
             settings = MachineData.Engagement;
+
         }
 
         public override void OnStateStart()
@@ -32,6 +34,7 @@ namespace Hadal.AI.States
             NavigationHandler.StopQueuedPath();
             SelectNewAmbushPoint();
             playAmbushCloseAudioOnce = true;
+
         }
         public override void StateTick()
         {
@@ -39,7 +42,7 @@ namespace Hadal.AI.States
             if (CheckPouncingRange()) return;
             if (CheckAmbushTimer()) return;
         }
-        
+
         public override void LateStateTick() { }
         public override void FixedStateTick() { }
         public override void OnStateEnd()
@@ -57,7 +60,7 @@ namespace Hadal.AI.States
         {
             Brain.NavigationHandler.TunnelModeSteering();
         }
-        
+
         public override Func<bool> ShouldTerminate() => () => false;
 
         void SelectNewAmbushPoint()
@@ -79,7 +82,9 @@ namespace Hadal.AI.States
             }
             return false;
         }
-        
+
+
+  
         /// <summary>
         /// Detect players and if in range, pounce, else go to recovery. 
         /// </summary>
@@ -89,10 +94,9 @@ namespace Hadal.AI.States
             {
                 if (AICavern.GetPlayerCount > 0 && playAmbushCloseAudioOnce)
                 {
-
-                    AudioBank.PlayOneShot(soundType: AISound.AmbushPlayerClose, Brain.transform);
+                    Debug.LogWarning("YO");
+                    Brain.ambiencePlayer.PlayAmbienceOfType(AudioSystem.AmbienceType.AmbushHeartbeat);
                     playAmbushCloseAudioOnce = false;
-                    Debug.LogError("AMBUSH CLOSE");
                 }
             }
 
@@ -101,6 +105,7 @@ namespace Hadal.AI.States
                 //! wait for sense detection to handle current target
                 if (Brain.CurrentTarget != null)
                 {
+                   
                     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
                     return true;
@@ -132,7 +137,7 @@ namespace Hadal.AI.States
         {
             if (RuntimeData.GetBrainState != BrainState.Ambush)
                 return;
-            
+
             AnimationManager.SetSpeed(0.1f);
         }
     }

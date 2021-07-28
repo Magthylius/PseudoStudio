@@ -12,7 +12,7 @@ namespace Hadal.AI
         [Header("Bank")]
         [SerializeField] private List<AudioEventType> audioAssetList = new List<AudioEventType>();
         [SerializeField] private AIBrain brain;
-		[SerializeField] private float audioDistanceRank = 50f;
+        [SerializeField] private float audioDistanceRank = 50f;
         [SerializeField, ReadOnly] private AudioSource source2D;
 
         private void Awake() => source2D = gameObject.GetOrAddComponent<AudioSource>();
@@ -48,28 +48,38 @@ namespace Hadal.AI
             brain.Send_PlayAudio(AIPlayAudioType.OneShot, soundType);
             asset.PlayOneShot(followTransform);
         }
-		
-		public void PlayOneShot_RoarWithDistance(Transform followTransform)
-		{
-			PlayerController player = brain.Players.Where(p => p.IsLocalPlayer).FirstOrDefault();
-			if (player == null)
-				return;
-			
-			float sqrDist = (player.GetTarget.position - followTransform.position).sqrMagnitude;
-			
-			float rank1 = audioDistanceRank.Sqr();
-			float rank2 = audioDistanceRank.Sqr() * 2f;
-			float rank3 = audioDistanceRank.Sqr() * 3f;
-			
-			brain.Send_PlayAudio(AIPlayAudioType.DistanceBasedRoar, AISound.Roar_Default);
-			if (sqrDist <= rank1)
-				PlayOneShot(AISound.Roar_Close, followTransform);
-			else if (sqrDist > rank1 && sqrDist <= rank2)
-				PlayOneShot(AISound.Roar_Medium, followTransform);
-			else if (sqrDist > rank3)
-				PlayOneShot(AISound.Roar_Far, followTransform);
-		}
-        
+
+        public void PlayOneShot_RoarWithDistance(Transform followTransform)
+        {
+            PlayerController player = brain.Players.Where(p => p.IsLocalPlayer).FirstOrDefault();
+            if (player == null)
+                return;
+
+            float sqrDist = (player.GetTarget.position - followTransform.position).sqrMagnitude;
+
+            float rank1 = audioDistanceRank.Sqr();
+            float rank2 = audioDistanceRank.Sqr() * 2f;
+            float rank3 = audioDistanceRank.Sqr() * 3f;
+
+            brain.Send_PlayAudio(AIPlayAudioType.DistanceBasedRoar, AISound.Roar_Default);
+            if (sqrDist <= rank1)
+                PlayOneShot(AISound.Roar_Close, followTransform);
+            else if (sqrDist > rank1 && sqrDist <= rank2)
+                PlayOneShot(AISound.Roar_Medium, followTransform);
+            else if (sqrDist > rank3)
+                PlayOneShot(AISound.Roar_Far, followTransform);
+        }
+
+        public void StopSound(AISound soundType)
+        {
+            AudioEventData asset = GetAudioAssetOfType(soundType);
+            if (asset == null)
+                return;
+
+            asset.Stop();
+            brain.Send_PlayAudio(AIPlayAudioType.StopAudio, soundType);
+        }
+
         private AudioEventData GetAudioAssetOfType(AISound soundType)
         {
             AudioEventData asset = null;
@@ -92,21 +102,22 @@ namespace Hadal.AI
             public AudioEventData audioAsset;
         }
     }
-	
-	internal enum AIPlayAudioType
-	{
-		Dimension2 = 0,
-		Dimension3,
-		OneShot,
-		DistanceBasedRoar
-	}
+
+    internal enum AIPlayAudioType
+    {
+        Dimension2 = 0,
+        Dimension3,
+        OneShot,
+        DistanceBasedRoar,
+        StopAudio
+    }
 
     public enum AISound
     {
         Roar_Default = 0,
-		Roar_Close,
-		Roar_Medium,
-		Roar_Far,
+        Roar_Close,
+        Roar_Medium,
+        Roar_Far,
         CarryWarning,
         Thresh,
         Swim,

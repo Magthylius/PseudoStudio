@@ -29,8 +29,6 @@ namespace Hadal.AI.States
         [Header("General: Misc")]
         [Range(0f, 1f)] public float G_JudgementPersistChance = 0.8f;
         [Min(0)] public int G_DisruptionDamageCount;
-        [Min(0f)] public float G_DistanceFromFrontForBiteAnimation = 15f;
-		[Min(0f)] public float G_BiteAnimationWaitTimeBeforeThresh = 1.5f;
         [Min(0f)] public float G_CarryKnockbackAdditionalRange = 30f;
         [Min(0f)] public float G_CarryKnockbackForce = 40.0f;
         [Min(0f)] public float G_TunnelKnockbackCooldownTime = 2f;
@@ -38,6 +36,11 @@ namespace Hadal.AI.States
         [Min(0f)] public float G_TunnelKnockbackForce = 80.0f;
 		[Range(0f, 1f)] public float G_ConfidenceGateForNewJudgementTarget = 0.75f;
         [Min(0f)] public float G_RoarStareAudioDelayTime = 2f;
+
+        [Header("General: Animation")]
+        [Min(0f)] public float G_BiteAnimationWaitTimeBeforeThresh = 1.5f;
+        [Min(0f)] public float G_DistanceFromFrontForBiteAnimation = 15f;
+        [Min(0f)] public float G_DistanceFromFrontForThreshAnimation = 4.5f;
 
         [Header("Ambush Settings")]
         [Min(0f)] public float AM_TargetPlayerRange = 100f;

@@ -95,6 +95,7 @@ namespace Hadal.AudioSystem
 		Hadal_Zone,
 		Hydrophone_Whalesong,
 		Grabbed_by_Leviathan,
-		Main_Menu
+		Main_Menu,
+		AmbushHeartbeat
 	}
 }

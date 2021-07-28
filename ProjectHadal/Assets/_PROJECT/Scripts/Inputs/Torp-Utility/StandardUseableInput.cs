@@ -12,7 +12,7 @@ namespace Hadal.Inputs
         public bool FireKeyUtilityHeld => K(KeyCode.R);
         public bool FireKeyUtilityRelease => KUp(KeyCode.R);
         public bool FireKeyQuickFlare => KDown(KeyCode.F);
-        public bool FireKeyQuickHarpoon => MBDown(1);
+        public bool FireKeyQuickHarpoon => MBDown(1) || MB(1);
         public bool EscKeyDown => KDown(KeyCode.Escape);
         public bool EscKeyUp => KUp(KeyCode.Escape);
         public bool TabKeyDown => KDown(KeyCode.Tab);

@@ -23,6 +23,7 @@ namespace Hadal.Player.Behaviours
         [Header("Settings")]
         [SerializeField] private bool enableQuickFlare;
         [SerializeField] private bool enableQuickHarpoon;
+		
         private Dictionary<Type, UsableLauncherObject> quickFireUtilities;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
@@ -408,7 +409,8 @@ namespace Hadal.Player.Behaviours
                 if (allUtilities[i] is TLauncher)
                 {
                     allUtilities[i].IsPowered = isPowered;
-                    allUtilities[i].PowerUp();
+                    if (isPowered)
+						allUtilities[i].PowerUp();
                 }
             }
         }
