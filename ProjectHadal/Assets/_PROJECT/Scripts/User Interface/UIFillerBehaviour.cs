@@ -24,5 +24,10 @@ namespace Hadal.UI
             FilledImage.gameObject.SetActive(false);
             HollowImage.gameObject.SetActive(true);
         }
+
+        public void UpdateFiller(float amount)
+        {
+            FilledImage.fillAmount = amount;
+        }
     }
 }

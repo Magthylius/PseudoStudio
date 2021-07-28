@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class UIUtilitiesHandler : MonoBehaviour
+namespace Hadal.UI
 {
-    [SerializeField] TextMeshProUGUI utilitiesTMP;
-    [SerializeField] bool toUpperLabel;
-
-    public void UpdateCurrentUtilities(string utilityName)
+    public class UIUtilitiesHandler : MonoBehaviour
     {
-        if (toUpperLabel) utilityName = utilityName.ToUpper();
-        utilitiesTMP.text = utilityName;
+        public UIGenericGaugeHandler FlareGauge;
+
+        public void SetupFlare(int amount)
+        {
+            
+        }
     }
 }

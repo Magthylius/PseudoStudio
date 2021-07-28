@@ -37,6 +37,8 @@ namespace Hadal.Player.Behaviours
 
         NetworkEventManager neManager;
 
+        private FlareLauncherObject fLauncher;
+
         private void Awake()
         {
             _eInput = new StandardEquipmentInput();
@@ -47,6 +49,10 @@ namespace Hadal.Player.Behaviours
             var flareUtility = allUtilities.Where(u => u is FlareLauncherObject).Single();
             var harpoonUtility = allUtilities.Where(u => u is HarpoonLauncherObject).Single();
             harpoonUtility.OnReservesChanged += HandleHarpoonReserveChanged;
+            flareUtility.OnReservesChanged += HandleFlareReserves;
+            
+            //! Sorry jet i have no idea why you want to make flareUtil a local var
+            fLauncher = flareUtility as FlareLauncherObject;
 
             quickFireUtilities.Add(typeof(FlareLauncherObject), flareUtility);
             quickFireUtilities.Add(typeof(HarpoonLauncherObject), harpoonUtility);
@@ -180,6 +186,12 @@ namespace Hadal.Player.Behaviours
         {
             if (EquippedUsable == null) return;
             _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, EquippedUsable.IsPowered, false, Vector3.zero);
+        }
+
+        void HandleFlareReserves(bool isIncrement)
+        {
+            Debug.LogWarning($"f laucnher: {fLauncher.TotalAmmoCount}");
+            _controller.UI.UpdateFlareCount(fLauncher.TotalAmmoCount);
         }
 
         void UpdateHarpoonChamberRatio()

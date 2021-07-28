@@ -37,6 +37,7 @@ namespace Hadal.UI
         public UICockpitCamera CockpitCamera;
         public UIClassInfoHandler ClassInfoHandler;
         public UIBoostBehaviour BoostBehaviour;
+        public UIUtilitiesHandler UtilitiesHandler;
         public Camera PlayerCamera;
         
         [Header("Reticle Settings")]
@@ -101,10 +102,7 @@ namespace Hadal.UI
 
         [Header("Module Settings")]
         [SerializeField] UITrackerHandler trackerHandler;
-
-        [Header("Utilities Settings")]
-        [SerializeField] UIUtilitiesHandler utilitiesHandler;
-
+        
         [Header("Pause Menu Settings")]
         [SerializeField] Menu pauseMenu;
         StandardUseableInput playerInput;
@@ -296,6 +294,14 @@ namespace Hadal.UI
         }
 
         #endregion
+        
+        #region Flares
+
+        public void UpdateFlareCount(int amount)
+        {
+            UtilitiesHandler.FlareGauge.UpdateFullGauge(amount - 1);
+        }
+        #endregion
 
         #region Modules
         public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput)
@@ -436,7 +442,7 @@ namespace Hadal.UI
         #region Utilities
         public void UpdateCurrentUtility(string utilityName)
         {
-            utilitiesHandler.UpdateCurrentUtilities(utilityName);
+            //utilitiesHandler.UpdateCurrentUtilities(utilityName);
         }
         #endregion
 
