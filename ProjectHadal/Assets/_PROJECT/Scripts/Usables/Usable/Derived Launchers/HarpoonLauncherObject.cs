@@ -5,6 +5,7 @@ namespace Hadal.Usables
 {
     public class HarpoonLauncherObject : UsableLauncherObject
     {
+		[Header("Powered Up Settings")]
         [SerializeField] int poweredUpReserveCapacity;
 		[SerializeField] float poweredUpChamberReloadTime;
 		[SerializeField] float poweredUpReserveRegenTime;

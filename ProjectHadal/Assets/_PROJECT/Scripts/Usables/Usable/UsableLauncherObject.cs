@@ -9,6 +9,7 @@ namespace Hadal.Usables
 {
     public class UsableLauncherObject : MonoBehaviour, IUsable, IUnityServicer
     {
+		[Header("General")]
         [SerializeField] private UsableLauncherData data;
         public virtual UsableLauncherData Data { get => data; set => data = value; }
 
