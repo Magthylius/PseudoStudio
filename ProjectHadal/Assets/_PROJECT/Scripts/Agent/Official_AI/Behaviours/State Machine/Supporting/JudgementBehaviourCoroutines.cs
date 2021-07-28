@@ -114,11 +114,11 @@ namespace Hadal.AI
                     NavigationHandler.SetLookAtTarget(JState.IsolatedPlayer.GetTarget);
                 else
                     NavigationHandler.SetLookAtTarget(Brain.CurrentTarget.GetTarget);
-                
+
                 float glareTime = Settings.GetGlareAtTargetBeforeJudgementApproachTime();
                 TryDebug($"Glaring at target before full engagement for {glareTime} seconds.");
                 yield return new WaitForSeconds(glareTime);
-                
+
                 NavigationHandler.SetLookAtTarget(null);
             }
 
@@ -477,7 +477,7 @@ namespace Hadal.AI
             int jTimerIndex = 1;
 
             approachRoutineData = new CoroutineData(Brain, MoveToCurrentTarget(Settings.AM_CarryDelayTimer, true));
-
+            Brain.ambiencePlayer.StopAmbienceOfType(AudioSystem.AmbienceType.AmbushHeartbeat);
             while (JState.IsBehaviourRunning && RuntimeData.GetBrainState == BrainState.Judgement)
             {
                 RuntimeData.TickEngagementTicker(Brain.DeltaTime);
