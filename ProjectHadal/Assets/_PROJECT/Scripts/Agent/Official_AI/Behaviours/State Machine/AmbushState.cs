@@ -90,7 +90,7 @@ namespace Hadal.AI.States
                 if (AICavern.GetPlayerCount > 0 && playAmbushCloseAudioOnce)
                 {
 
-                    AudioBank.PlayOneShot(soundType: AISound.AmbushPlayerClose, Brain.transform);
+                    AudioBank.Play2D(soundType: AISound.AmbushPlayerClose);
                     playAmbushCloseAudioOnce = false;
                 }
             }
@@ -100,6 +100,7 @@ namespace Hadal.AI.States
                 //! wait for sense detection to handle current target
                 if (Brain.CurrentTarget != null)
                 {
+                    AudioBank.StopSound(soundType: AISound.AmbushPlayerClose);
                     RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
                     RuntimeData.SetBrainState(BrainState.Judgement);
                     return true;

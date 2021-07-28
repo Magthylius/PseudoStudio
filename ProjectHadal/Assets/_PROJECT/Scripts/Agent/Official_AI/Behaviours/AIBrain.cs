@@ -399,6 +399,7 @@ namespace Hadal.AI
 				case AIPlayAudioType.Dimension3: { AudioBank.Play3D(soundType, transform); return; }
 				case AIPlayAudioType.OneShot: { AudioBank.PlayOneShot(soundType, transform); return; }
 				case AIPlayAudioType.DistanceBasedRoar: { AudioBank.PlayOneShot_RoarWithDistance(transform); return; }
+                case AIPlayAudioType.StopAudio: {AudioBank.StopSound(soundType); return;}
 				default: break;
 			}
         }

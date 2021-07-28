@@ -70,14 +70,15 @@ namespace Hadal.AI
                 PlayOneShot(AISound.Roar_Far, followTransform);
         }
 
-        // public void StopSound(AISound soundType)
-        // {
-        //     AudioEventData asset = GetAudioAssetOfType(soundType);
-        //     if (asset == null)
-        //         return;
+        public void StopSound(AISound soundType)
+        {
+            AudioEventData asset = GetAudioAssetOfType(soundType);
+            if (asset == null)
+                return;
 
-        //     asset.Stop();
-        // }
+            asset.Stop();
+            brain.Send_PlayAudio(AIPlayAudioType.StopAudio, soundType);
+        }
 
         private AudioEventData GetAudioAssetOfType(AISound soundType)
         {
@@ -107,7 +108,8 @@ namespace Hadal.AI
         Dimension2 = 0,
         Dimension3,
         OneShot,
-        DistanceBasedRoar
+        DistanceBasedRoar,
+        StopAudio
     }
 
     public enum AISound
