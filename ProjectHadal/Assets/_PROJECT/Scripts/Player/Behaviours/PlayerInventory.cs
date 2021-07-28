@@ -23,6 +23,7 @@ namespace Hadal.Player.Behaviours
         [Header("Settings")]
         [SerializeField] private bool enableQuickFlare;
         [SerializeField] private bool enableQuickHarpoon;
+		
         private Dictionary<Type, UsableLauncherObject> quickFireUtilities;
         private IEquipmentInput _eInput;
         private IUseableInput _uInput;
