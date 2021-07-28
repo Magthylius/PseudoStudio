@@ -25,7 +25,7 @@ namespace Hadal.UI
                     classInfoText.text = $"SAVIOUR";
                     break;
                 case PlayerClassType.Trapper:
-                    classInfoText.text = $"Trapper";
+                    classInfoText.text = $"TRAPPER";
                     break;
                 default:
                     classInfoText.text = $"IMPOSTER";
