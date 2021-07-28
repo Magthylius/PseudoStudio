@@ -92,7 +92,6 @@ namespace Hadal.AI.States
 
                     AudioBank.PlayOneShot(soundType: AISound.AmbushPlayerClose, Brain.transform);
                     playAmbushCloseAudioOnce = false;
-                    Debug.LogError("AMBUSH CLOSE");
                 }
             }
 
