@@ -52,7 +52,7 @@ namespace Hadal.AI.States
             if (!AllowStateTick || Brain.IsStunned) return;
 
             RuntimeData.TickAnticipationTicker(Brain.DeltaTime);
-            
+
             if (Brain.CheckForAIAndPlayersInTunnel()) return;
             if (CheckForIsolatedPlayerCondition(Brain.DeltaTime)) return;
             if (Brain.CheckForJudgementStateCondition()) return;
@@ -192,7 +192,11 @@ namespace Hadal.AI.States
             NavigationHandler.EnableCachedQueuePathTimer();
             Brain.UpdateNextMoveCavern(nextCavern);
 
-            Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
+            int rando = UnityEngine.Random.Range(0, 2);
+            if (rando == 2)
+            {
+                Brain.AudioBank.Play3D(AISound.Swim, Brain.transform);
+            }
             if (Brain.DebugEnabled) "Determining Next Cavern".Msg();
         }
 
