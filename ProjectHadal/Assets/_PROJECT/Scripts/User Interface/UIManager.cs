@@ -378,17 +378,18 @@ namespace Hadal.UI
             }
         }
         
-        public void TrackProjectile(Transform projectileTransform, TrackerType projectileType)
+        public UITrackerBehaviour TrackProjectile(Transform projectileTransform, TrackerType projectileType)
         {
             UITrackerBehaviour tracker = trackerHandler.Scoop(projectileType);
 
             if (tracker)
             {
                 tracker.TrackTransform(projectileTransform);
-                return;
+                return tracker;
             }
 
             Debug.LogWarning("Failed to scoop projectile!");
+            return null;
         }
 
         public void UntrackProjectile(Transform projectileTransform)

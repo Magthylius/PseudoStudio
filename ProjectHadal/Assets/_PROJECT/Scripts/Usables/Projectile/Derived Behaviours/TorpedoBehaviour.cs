@@ -162,11 +162,11 @@ namespace Hadal.Usables.Projectiles
             float rank3 = audioDistanceRank.Sqr() * 3f;
 
             if (sqrDist <= rank1)
-				PlayAudioAt(closeExplosionAudio, transform.position);
+				PlayAudioAt(closeExplosionAudio, transform);
 			else if (sqrDist > rank1 && sqrDist <= rank2)
-				PlayAudioAt(mediumExplosionAudio, transform.position);
+				PlayAudioAt(mediumExplosionAudio, transform);
 			else if (sqrDist > rank3)
-				PlayAudioAt(farExplosionAudio, transform.position);
+				PlayAudioAt(farExplosionAudio, transform);
         }
 
         private ExplosionSettings CreateExplosionInfo()

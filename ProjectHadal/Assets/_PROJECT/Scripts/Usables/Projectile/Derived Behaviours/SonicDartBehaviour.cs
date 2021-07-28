@@ -1,5 +1,6 @@
 using Hadal.Networking;
 using Hadal.UI;
+using Hadal.Utility;
 using UnityEngine;
 
 //Created by Jon, edited by Jin
@@ -7,11 +8,15 @@ namespace Hadal.Usables.Projectiles
 {
     public class SonicDartBehaviour : ProjectileBehaviour
     {
+        [SerializeField] SonicDartTrackerBehaviour sonicTrackerUIBehavior;
         [SerializeField] private string[] validLayer;
         [SerializeField] private ProjectilePhysics projPhysics;
         [SerializeField] private AttachMode attachMode;
         [SerializeField] private SelfDeactivationMode selfDeactivation;
         bool attachedToMonster;
+        private Timer pingTimer;
+        [SerializeField]private float pingDuration;
+
         public void SubscribeModeEvent()
         {
             attachMode.SwitchedToAttachEvent += enableSonicDartUI;
@@ -24,8 +29,24 @@ namespace Hadal.Usables.Projectiles
             selfDeactivation.selfDeactivated -= ModeOff;
         }
 
+        protected override void Start()
+        {
+            base.Start();
+            pingTimer = this.Create_A_Timer()
+                              .WithDuration(this.pingDuration)
+                              .WithOnCompleteEvent(playPing)
+                              .WithShouldPersist(true);
+            pingTimer.Pause();
+        }
+
         public void OnDisable()
         {
+            if(pingTimer != null)
+             pingTimer.Pause();
+
+            if(sonicTrackerUIBehavior)
+                disableSonicDartUI();
+
             Rigidbody.isKinematic = false;
             ProjectileCollider.enabled = true;
             IsAttached = false;
@@ -69,22 +90,6 @@ namespace Hadal.Usables.Projectiles
                     ImpactBehaviour();
                 }
             }
-
-           /* foreach (string layerName in validLayer)
-            {
-                LayerMask layers = LayerMask.NameToLayer(layerName);
-                if (collision.gameObject.layer == layers.value)
-                {
-                    transform.parent = collision.gameObject.transform;
-                    Rigidbody.isKinematic = true;
-                    IsAttached = true;
-
-                    if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
-                    {
-                        projPhysics.SwapModes();
-                    }
-                }
-            }*/
         }
 
         protected override void ImpactBehaviour()
@@ -96,16 +101,35 @@ namespace Hadal.Usables.Projectiles
             {
                 projPhysics.SwapModes();
             }
+
+            pingTimer.Restart();
+            PlayImpactAudioAtSelfPosition(false);
         }
 
         private void enableSonicDartUI()
         {
-            //enable UI here.
+            sonicTrackerUIBehavior.Activate();
+        }
+
+        private void disableSonicDartUI()
+        {
+            sonicTrackerUIBehavior.Deactivate();
+        }
+
+        private void playPing()
+        {
+            PlayTriggerAudioAtSelfPosition();
+            pingTimer.RestartWithDuration(pingDuration);
         }
 
         private void ModeOff()
         {
             UnsubscribeModeEvent();
+        }
+
+        public void InjectUIDependency(SonicDartTrackerBehaviour uiTracker)
+        {
+            sonicTrackerUIBehavior = uiTracker;
         }
     }
 }
