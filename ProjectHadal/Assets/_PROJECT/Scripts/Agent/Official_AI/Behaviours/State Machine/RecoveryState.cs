@@ -154,7 +154,7 @@ namespace Hadal.AI.States
                     RuntimeData.ResetRecoveryTicker();
                     AllowStateTick = false;
 
-                    if (Brain.CheckForJudgementStateCondition(out var OnSuccess))
+                    if (Brain.CheckForJudgementStateCondition())
                     {
                         if (RuntimeData.IsPreviousBrainStateEqualTo(BrainState.Judgement))
                             judgementLapseCount++;
@@ -162,10 +162,7 @@ namespace Hadal.AI.States
                             judgementLapseCount = 0;
 
                         if (judgementLapseCount < settings.G_JudgementLapseCountLimit)
-                        {
-                            OnSuccess?.Invoke();
                             return true;
-                        }
                     }
 
                     //! if did not detect any target players or judgement lapse limit reached: go to cooldown state

@@ -330,7 +330,7 @@ namespace Hadal.AI
         public void HandleCarriedPlayer()
         {
             if (CarriedPlayer == null || doNotHandleCarriedPlayer) return;
-            CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * 4.5f);
+            CarriedPlayer.GetTarget.position = MouthObject.transform.position + (MouthObject.transform.forward * MachineData.Engagement.G_DistanceFromFrontForThreshAnimation);
             CarriedPlayer.GetTarget.LookAt(MouthObject.transform.position + (MouthObject.transform.forward * -2f));
         }
 
@@ -713,26 +713,7 @@ namespace Hadal.AI
             }
             return false;
         }
-        public bool CheckForJudgementStateCondition(out Action performOnSuccess)
-        {
-            performOnSuccess = null;
-            if (CurrentTarget != null && CavernManager.GetCavernTagOfAILocation() != CavernTag.Invalid)
-            {
-                RuntimeData.SetBrainState(BrainState.Judgement);
-                performOnSuccess = () =>
-                {
-                    if (NavigationHandler.Data_IsOnQueuePath)
-                        NavigationHandler.StopQueuedPath();
-                    
-                    if (DebugEnabled) "Perform on success judgement state called.".Msg();
-                };
-                
-                if (DebugEnabled) "Spotted and entered engagement!".Msg();
-                return true;
-            }
-            return false;
-        }
-
+        
         private float knockCooldownTimer = 0f;
         public bool CheckForAIAndPlayersInTunnel()
         {
