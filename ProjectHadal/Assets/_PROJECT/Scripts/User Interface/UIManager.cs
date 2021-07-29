@@ -318,7 +318,7 @@ namespace Hadal.UI
             playerRigidbody = playerTransform.GetComponent<Rigidbody>();
             
             ShootTracer.InjectDependencies(PlayerCamera);
-            ScreenDataHandler.InjectDependencies(this, playerTransform);
+            ScreenDataHandler.InjectDependencies(this, playerTransform, playerRigidbody);
             EffectsHandler.InjectDependencies(playerRigidbody, ShootTracer);
             HydrophoneBehaviour.InjectPlayerDependencies(playerTransform);
             CockpitCamera.InjectDependencies(playerRotationInput);

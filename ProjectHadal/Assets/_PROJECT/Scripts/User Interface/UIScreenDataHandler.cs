@@ -11,6 +11,7 @@ public class UIScreenDataHandler : MonoBehaviour
 {
     private UIManager playerUI;
     private Transform playerTransform;
+    private Rigidbody playerRB;
 
     private bool initialized = false;
     
@@ -21,12 +22,14 @@ public class UIScreenDataHandler : MonoBehaviour
         UpdateHealth();
         UpdateDepth(-playerTransform.position.z);
         UpdateDistance(playerUI.ShootTracer.HitDistance);
+        UpdateSpeed(playerRB.velocity.magnitude);
     }
 
-    public void InjectDependencies(UIManager ui, Transform pTransform)
+    public void InjectDependencies(UIManager ui, Transform pTransform, Rigidbody pRB)
     {
         playerUI = ui;
         playerTransform = pTransform;
+        playerRB = pRB;
 
         initialized = true;
     }
@@ -101,5 +104,14 @@ public class UIScreenDataHandler : MonoBehaviour
     public void UpdateDepth(float depth)
     {
         depthData.UpdateText((int)(depth + initialDepth));
+    }
+
+
+    [Header("Speed")] 
+    public UIDataFormatBehaviour speedData;
+
+    public void UpdateSpeed(float speed)
+    {
+        speedData.UpdateText(speed.ToString("F2"));
     }
 }
