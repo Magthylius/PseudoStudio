@@ -129,10 +129,12 @@ MonoBehaviour:
   UtilityName: Sonic Grenade
   IsPowered: 0
   maxReserveCapacity: 2
-  reserveRegenerationTime: 20
+  reserveRegenerationTime: 5
   maxChamberCapacity: 1
   chamberReloadTime: 1
   maxOnLoadOut: 1
+  chamberReloadedAudio: {fileID: 0}
+  reverseReloadedAudio: {fileID: 0}
 --- !u!1 &5799704096644430337
 GameObject:
   m_ObjectHideFlags: 0

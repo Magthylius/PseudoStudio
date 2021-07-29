@@ -7,8 +7,8 @@ namespace Hadal.Usables
     {
 		[Header("Powered Up Settings")]
         [SerializeField] int poweredUpReserveCapacity;
-		[SerializeField] float poweredUpChamberReloadTime;
-		[SerializeField] float poweredUpReserveRegenTime;
+        [SerializeField] float poweredUpReserveRegenTime;
+        [SerializeField] float poweredUpChamberReloadTime;
 		
         public override void PowerUp()
         {
