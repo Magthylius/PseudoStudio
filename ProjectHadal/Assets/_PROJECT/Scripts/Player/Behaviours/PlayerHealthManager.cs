@@ -101,6 +101,7 @@ namespace Hadal.Player.Behaviours
             OnLocalRevivingAPlayer += TriggerStartJumpstart;
             OnLocalReviveAttempt += JumpstartAttempt;
             OnNetworkReviveAttempt += UpdateReviveUI;
+            OnNetworkReviveAttempt += StopDownSound;
 
             //initializing sound loop set up
             downSoundTimer = this.Create_A_Timer()
@@ -113,6 +114,7 @@ namespace Hadal.Player.Behaviours
         private void OnDestroy()
         {
             OnDown = null;
+            OnNetworkReviveAttempt = null;
         }
         private void OnValidate()
         {
@@ -397,9 +399,10 @@ namespace Hadal.Player.Behaviours
             downSoundTimer.RestartWithDuration(downSoundDuration);
         }
 
-        private void StopDownSound()
+        private void StopDownSound(bool success)
         {
-            downSoundTimer.Pause();
+            if(success)
+                downSoundTimer.Pause();
         }
 
         /// <summary>
@@ -510,10 +513,6 @@ namespace Hadal.Player.Behaviours
             Debug.LogWarning(_controller.ViewID + " Triggered jumpstart attempt: " + success);
             if (success) _controller.UI.ContextHandler.SuccessJumpstart();
             else _controller.UI.ContextHandler.FailJumpstart();
-
-            //stop sound here
-            if (success)
-                StopDownSound();
         }
 
         #endregion
