@@ -8,6 +8,9 @@ namespace Hadal.Usables.Projectiles
     public class SonicGrenadeBehaviour : ProjectileBehaviour
     {
         [Header("Stun Settings")]
+        private Timer stunTimer;
+        [SerializeField] private float stunInterval;
+
         public float stunTime = 1f;
 
         public SelfDeactivationMode selfDeactivation;
@@ -30,6 +33,9 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
+            stunTimer = new Timer(stunInterval);
+            stunTimer.TargetTickedEvent.AddListener(TryMiniStunAI);
+
             explodeDuration = new Timer(explodeDurationMax);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
@@ -38,6 +44,7 @@ namespace Hadal.Usables.Projectiles
         {
             if (isExploding)
             {
+                stunTimer.Tick(Time.deltaTime);
                 explodeDuration.Tick(Time.deltaTime);
             }
         }
@@ -71,7 +78,8 @@ namespace Hadal.Usables.Projectiles
 
 
             //Scan for monster locally
-            LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
+            TryMiniStunAI();
+            /*LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
             detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
 
             foreach (Collider col in detectedObjects)
@@ -82,7 +90,7 @@ namespace Hadal.Usables.Projectiles
                 { 
                     col.gameObject.GetComponent<IAmLeviathan>()?.TryToMakeRunAway();
                 }
-            }
+            }*/
 
             //Send event to clones
             Vector3 activatedSpot = gameObject.transform.position;
@@ -93,6 +101,24 @@ namespace Hadal.Usables.Projectiles
            /* UnSubcribeModeEvent();
             PPhysics.OnPhysicsFinished();*/
             return;
+        }
+
+        private void TryMiniStunAI()
+        {
+            LayerMask dectectionMask = LayerMask.GetMask("Monster"); // change this mask to AI
+            detectedObjects = Physics.OverlapSphere(this.transform.position, radius, dectectionMask);
+
+            foreach (Collider col in detectedObjects)
+            {
+                Debug.Log("Sonic : Enemy Detected");
+                col.gameObject.GetComponentInChildren<IStunnable>()?.TryStun(stunTime);
+                if (isHighHz)
+                {
+                    col.gameObject.GetComponent<IAmLeviathan>()?.TryToMakeRunAway();
+                }
+            }
+
+            stunTimer.Reset();
         }
 
         // Trigger network clones.
@@ -126,6 +152,8 @@ namespace Hadal.Usables.Projectiles
             isExploding = false;
             explodeEffect.SetActive(false);
             Rigidbody.isKinematic = false;
+            explodeDuration.Reset();
+            stunTimer.Reset();
             UnSubcribeModeEvent();
             PPhysics.OnPhysicsFinished();
         }
