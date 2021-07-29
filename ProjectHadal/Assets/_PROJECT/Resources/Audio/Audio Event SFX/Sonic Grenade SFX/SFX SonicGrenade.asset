@@ -17,7 +17,7 @@ MonoBehaviour:
   Settings:
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
-    SpatialBlend: 0.7
+    SpatialBlend: 1
     Priority: 128
     StereoPan: 0
     ReverbZoneMix: 1
@@ -32,5 +32,5 @@ MonoBehaviour:
     Spread: 0
     VolumeRolloff: 2
     MinDistance: 1
-    MaxDistance: 1000
-    RolloffCurveTemplate: {fileID: 5955611999743336601, guid: 6d56ffef46e73584c8663faa953cad25, type: 3}
+    MaxDistance: 100
+    RolloffCurveTemplate: {fileID: 7374942284132434549, guid: fbfda664ad7d00749af10f5e4488b9f8, type: 3}

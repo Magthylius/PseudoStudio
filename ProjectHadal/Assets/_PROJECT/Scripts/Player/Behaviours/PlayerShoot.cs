@@ -31,7 +31,7 @@ namespace Hadal.Player.Behaviours
         [SerializeField] Transform firePoint;
 
         [Header("Launchers")]
-        [SerializeField] TorpedoLauncherObject tLauncher;
+        [SerializeField] private TorpedoLauncherObject tLauncher;
         [SerializeField] private HarpoonLauncherObject hLauncher;
         public TorpedoLauncherObject GetTorpedoLauncher => tLauncher;
 
