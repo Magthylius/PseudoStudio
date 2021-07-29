@@ -133,9 +133,11 @@ MonoBehaviour:
   maxChamberCapacity: 1
   chamberReloadTime: 0.5
   maxOnLoadOut: 1
-  poweredUpReserveCapacity: 4
-  poweredUpChamberReloadTime: 0.1
-  poweredUpReserveRegenTime: 1
+  chamberReloadedAudio: {fileID: 0}
+  reverseReloadedAudio: {fileID: 0}
+  poweredUpReserveCapacity: 1
+  poweredUpReserveRegenTime: 5
+  poweredUpChamberReloadTime: 1
 --- !u!1 &5799704096644430337
 GameObject:
   m_ObjectHideFlags: 0
