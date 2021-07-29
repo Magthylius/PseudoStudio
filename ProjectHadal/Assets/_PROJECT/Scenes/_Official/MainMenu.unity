@@ -27099,6 +27099,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70c62239cd4fceb44825061da3ac767c, type: 3}
+--- !u!1 &511089401062230618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 890606302587801824}
+  - component: {fileID: 4320018723184795461}
+  - component: {fileID: 2024154083008949135}
+  m_Layer: 0
+  m_Name: SnailFish
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &890606302587801824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 511089401062230618}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -49.72}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1770961937770886812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27168,33 +27200,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e43a2e562b690044a8340665e33d21a, type: 3}
---- !u!1 &2159650284813408693
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5298851016329858528}
-  - component: {fileID: 2159650284813408695}
-  - component: {fileID: 2159650284813408694}
-  m_Layer: 0
-  m_Name: 'SnailFish '
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!23 &2159650284813408694
+--- !u!23 &2024154083008949135
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2159650284813408693}
+  m_GameObject: {fileID: 511089401062230618}
   m_Enabled: 1
-  m_CastShadows: 0
+  m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
@@ -27227,14 +27241,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &2159650284813408695
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2159650284813408693}
-  m_Mesh: {fileID: -6846250343747206726, guid: 8a40f3fc1c8714147a5bf91810b06d1c, type: 3}
 --- !u!1 &2502101264919524231
 GameObject:
   m_ObjectHideFlags: 0
@@ -27274,6 +27280,14 @@ MonoBehaviour:
   downwardRotation: {x: -0.73332834, y: -0.3920977, z: 0.16953065, w: 0.5289124}
   turnLeftRotation: {x: 0.41806313, y: 0.74842924, z: -0.40561846, w: -0.31709713}
   turnRightRotation: {x: -0.70914465, y: -0.48170215, z: 0.2805384, w: 0.43171185}
+--- !u!33 &4320018723184795461
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 511089401062230618}
+  m_Mesh: {fileID: -6430823161342096004, guid: 391edde15ed29cb439977d44f11a1b3e, type: 3}
 --- !u!114 &4598421268356635481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27312,20 +27326,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5298851016329858528
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2159650284813408693}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -49.72}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5513491339455288060
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -27610,3 +27610,60 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1001 &8790808781390925449
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -49.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3492109325868974953, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7207910594776602428, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
+      propertyPath: m_Name
+      value: 'SnailFish '
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ec8333a4b17d91548a58fc8aecb9903e, type: 3}
