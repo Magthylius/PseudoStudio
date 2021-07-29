@@ -20,8 +20,8 @@ namespace Hadal.UI
 
         public void UpdateFullGauge(int index)
         {
-            index = Mathf.Clamp(index, 0, HandledFillers.Count - 1);
-            Debug.LogWarning($"index captured: {index}");
+            index = Mathf.Clamp(index, 0, HandledFillers.Count);
+            //Debug.LogWarning($"index captured: {index}");
 
             for (int i = 0; i < HandledFillers.Count; i++)
             {

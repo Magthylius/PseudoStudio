@@ -15,8 +15,10 @@ namespace Hadal.Usables.Projectiles
 
         [Header("Stun Settings")] 
         public float stunTime = 5f;
-        
+
         [Header("AOE logic")]
+        private Timer stunTimer;
+        [SerializeField] private float stunInterval;
         [SerializeField] private float radius = 70;
         [SerializeField] private bool isSet;
         private Collider[] detectedObjects;
@@ -41,6 +43,9 @@ namespace Hadal.Usables.Projectiles
         protected override void Start()
         {
             base.Start();
+            stunTimer = new Timer(stunInterval);
+            stunTimer.TargetTickedEvent.AddListener(TryStunAI);
+
             explodeDuration = new Timer(explodeDurationMax);
             explodeDuration.TargetTickedEvent.AddListener(StopExplosion);
         }
@@ -54,7 +59,8 @@ namespace Hadal.Usables.Projectiles
         {
             if(isExploding)
             {
-                explodeDuration.Tick(Time.deltaTime);            
+                stunTimer.Tick(Time.deltaTime);
+                explodeDuration.Tick(Time.deltaTime);
             }     
         }
 
@@ -96,8 +102,9 @@ namespace Hadal.Usables.Projectiles
             isExploding = true;
             triggerSound.PlayOneShot(transform);
             explodeEffect.SetActive(true);
-   
-            Collider[] creatureCollider = new Collider[1];
+
+            TryStunAI();
+            /*Collider[] creatureCollider = new Collider[1];
             int r = Physics.OverlapSphereNonAlloc(transform.position, radius, creatureCollider, UsableBlackboard.AIHitboxLayerMask);
 
             if (creatureCollider[0])
@@ -105,7 +112,7 @@ namespace Hadal.Usables.Projectiles
                 //Debug.LogWarning("Creature hit: " + creatureCollider[0].gameObject.name);
                 if (creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>() != null) 
                     creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>().TryStun(stunTime);
-            }
+            }*/
 
             //! Send event to explode.
             Vector3 activatedSpot = gameObject.transform.position;
@@ -113,6 +120,21 @@ namespace Hadal.Usables.Projectiles
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.PROJECTILE_ACTIVATED, content);
 
             return true;   
+        }
+
+        private void TryStunAI()
+        {
+            Collider[] creatureCollider = new Collider[1];
+            int r = Physics.OverlapSphereNonAlloc(transform.position, radius, creatureCollider, UsableBlackboard.AIHitboxLayerMask);
+
+            if (creatureCollider[0])
+            {
+                //Debug.LogWarning("Creature hit: " + creatureCollider[0].gameObject.name);
+                if (creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>() != null)
+                    creatureCollider[0].gameObject.GetComponentInChildren<IStunnable>().TryStun(stunTime);
+            }
+
+            stunTimer.Reset();
         }
 
         //! Trigger network clones.
@@ -136,6 +158,8 @@ namespace Hadal.Usables.Projectiles
         private void StopExplosion()
         {
             isExploding = false;
+            explodeDuration.Reset();
+            stunTimer.Reset();
             UnSubcribeModeEvent();
             PPhysics.OnPhysicsFinished();
         }
@@ -144,7 +168,7 @@ namespace Hadal.Usables.Projectiles
         private void ModeOn()
         {
             meshRenderer.material.SetColor("_EmissionColor", activateColor);
-            readyAudio.PlayOneShot(transform);
+            readyAudio.PlayOneShot2D();
             isSet = true;
         }
     }

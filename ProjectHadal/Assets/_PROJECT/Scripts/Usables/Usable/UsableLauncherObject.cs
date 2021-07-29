@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using Hadal.Utility;
 using Hadal.InteractableEvents;
+using Hadal.AudioSystem;
 
 //Created by Jet
 namespace Hadal.Usables
@@ -58,6 +59,10 @@ namespace Hadal.Usables
         protected Timer _chamberReloadTimer;
 
         public int TotalAmmoCount => ReserveCount + ChamberCount;
+        
+        [Header("Audio")]
+        [SerializeField] private AudioEventData chamberReloadedAudio;
+        [SerializeField] private AudioEventData reverseReloadedAudio;
         #endregion
 
         #region Unity Lifecycle
@@ -133,6 +138,11 @@ namespace Hadal.Usables
             UpdateChamberCount(ChamberCount + 1);
             OnChamberChanged?.Invoke(true);
             OnRestockInvoke();
+
+            if(chamberReloadedAudio)
+            {
+                chamberReloadedAudio.PlayOneShot2D();
+            }
         }
         private void DecrementReserve()
         {
@@ -144,6 +154,11 @@ namespace Hadal.Usables
             IsRegenerating = false;
             UpdateReserveCount(ReserveCount + 1);
             OnReservesChanged?.Invoke(true);
+
+            if (reverseReloadedAudio)
+            {
+                reverseReloadedAudio.PlayOneShot2D();
+            }
         }
 
         public void IncrementReserve(int reloadAmount)
@@ -151,6 +166,11 @@ namespace Hadal.Usables
             IsRegenerating = false;
             UpdateReserveCount(ReserveCount + reloadAmount);
             OnReservesChanged?.Invoke(true);
+
+            if (reverseReloadedAudio)
+            {
+                reverseReloadedAudio.PlayOneShot2D();
+            }
         }
 
         public void ChangeChamberReloadTime(float newReloadTime)
