@@ -381,7 +381,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 30}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -98.4, y: 224}
+  m_AnchoredPosition: {x: -97.99, y: 224}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &214076261
@@ -458,7 +458,7 @@ GameObject:
   - component: {fileID: 214653765}
   - component: {fileID: 214653764}
   m_Layer: 0
-  m_Name: Sonic Dart
+  m_Name: Tracking Dart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1111,7 +1111,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ' Mouse To Look
+  m_text: 'Mouse To Look
 
 
     WASD To Move
@@ -1880,8 +1880,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "[Control]\nPress R : launches the dart.\n\n[Function]\nReleases a pulse
-    visible to all players.\nAttaching it to the monster will notify \nall players
-    on the monster's location."
+    visible to all players.\nThe Tracking Dart will activate upon impact \nwith any
+    surface\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 97eb2920862a436439bb88f34214afec, type: 2}
   m_sharedMaterial: {fileID: -6266749041970903357, guid: 97eb2920862a436439bb88f34214afec, type: 2}
@@ -2158,7 +2158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: -15.159, y: -88.685, z: 30.261}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -91.6, y: 241.3}
+  m_AnchoredPosition: {x: -90.7, y: 241.1}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &567049016
@@ -3978,7 +3978,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 918098379}
   m_LocalRotation: {x: -0.2973903, y: 0.752491, z: -0.061575525, w: 0.5844012}
-  m_LocalPosition: {x: 0, y: 0, z: 203.7439}
+  m_LocalPosition: {x: 0, y: 0, z: 204.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1030829099}
@@ -3987,7 +3987,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: -14.769, y: 108.659, z: -32.499}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 36.680016, y: 241.3038}
+  m_AnchoredPosition: {x: 34.81, y: 241.33}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &918098381
@@ -4810,7 +4810,7 @@ GameObject:
   - component: {fileID: 1038026014}
   - component: {fileID: 1038026013}
   m_Layer: 0
-  m_Name: Tutorial Ctrl and Spaace
+  m_Name: Tutorial Ctrl/C and Space
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6870,13 +6870,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Double Tap
+  m_text: 'Press Shift and a combination of
 
     WASD/Space/Ctrl
 
     to
 
-    Dodge Boost
+    Dodge
+    Boost
 
 '
   m_isRightToLeft: 0
@@ -7353,7 +7354,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sonic Dart
+  m_text: Tracking Dart
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 97eb2920862a436439bb88f34214afec, type: 2}
   m_sharedMaterial: {fileID: -6266749041970903357, guid: 97eb2920862a436439bb88f34214afec, type: 2}
@@ -8216,9 +8217,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Ctrl to Move UP
+  m_text: 'Space to Move Up
 
-    Space to Move Down
+    Ctrl or C to Move Down
+
 
 '
   m_isRightToLeft: 0
