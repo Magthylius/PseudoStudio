@@ -68,7 +68,7 @@ namespace Hadal.Player.Behaviours
             if (neManager != null) neManager.AddListener(ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
             ResetEquipIndex();
             
-            StartCoroutine(HandleFlareUIUpdate());
+            StartCoroutine(HandleFlareUtilUIUpdate());
         }
 
         public void Inject(PlayerController controller)
@@ -194,12 +194,16 @@ namespace Hadal.Player.Behaviours
             _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, EquippedUsable.IsPowered, false, Vector3.zero);
         }
 
-        IEnumerator HandleFlareUIUpdate()
+        IEnumerator HandleFlareUtilUIUpdate()
         {
+            //! Wait for EquippedUsable to ready
+            while (EquippedUsable == null || _controller.UI.UtilitiesHandler.CurrentUtilGauge == null) yield return null;
+            
             while (true)
             {
                 //Debug.LogWarning($"f launch: {fLauncher.TotalAmmoCount}");
                 _controller.UI.UpdateFlareCount(fLauncher.TotalAmmoCount);
+                _controller.UI.UpdateUtilCount(EquippedUsable.TotalAmmoCount);
                 yield return new WaitForSeconds(0.2f);
             }
         }

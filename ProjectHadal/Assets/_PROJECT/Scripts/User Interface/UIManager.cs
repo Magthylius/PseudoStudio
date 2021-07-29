@@ -301,6 +301,11 @@ namespace Hadal.UI
         {
             UtilitiesHandler.FlareGauge.UpdateFullGauge(amount);
         }
+
+        public void UpdateUtilCount(int amount)
+        {
+            UtilitiesHandler.CurrentUtilGauge.UpdateFullGauge(amount);
+        }
         #endregion
 
         #region Modules
