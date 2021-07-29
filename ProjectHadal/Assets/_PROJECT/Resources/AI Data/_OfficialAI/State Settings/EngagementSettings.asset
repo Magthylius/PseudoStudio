@@ -15,13 +15,13 @@ MonoBehaviour:
   ConfidenceIncrementValue: 5
   ConfidenceDecrementValue: 1
   G_ApproachCloseDistanceThreshold: 25
-  G_ApproachFarDistanceThreshold: 300
+  G_ApproachFarDistanceThreshold: 400
   G_GlareAtTargetBeforeJudgementApproachTimeRange: {x: 1.5, y: 2}
   G_PrepareHaltBeforeCarryDistance: 6
   G_HaltingTime: 0.5
   G_CarryDelayTimer: 0.7
   G_TotalThreshTimeInSeconds: 2
-  G_BaseMinThreshDamagePerSecond: 19
+  G_BaseMinThreshDamagePerSecond: 20
   G_BaseMaxThreshDamagePerSecond: 22
   G_JudgementPersistChance: 0.8
   G_DisruptionDamageCount: 6
@@ -50,8 +50,8 @@ MonoBehaviour:
   JudgementTimer3: 35
   JudgementTimer4: 30
   JudgementPersistCountLimitPerEntry: 2
-  AGG_AdditionalThreshDamagePerSecond: 2
-  DEF_AdditionalThreshDamagePerSecond: -1
+  AGG_AdditionalThreshDamagePerSecond: 1
+  DEF_AdditionalThreshDamagePerSecond: 0
   EGG_PermanentThreshDamagePerSecond: 2
   EGG_PermanentDamageResistance: 0.1
   JG_KnockbackIgnoreMasks:
