@@ -144,7 +144,7 @@ namespace Hadal.Usables.Projectiles
         private void ModeOn()
         {
             meshRenderer.material.SetColor("_EmissionColor", activateColor);
-            readyAudio.PlayOneShot(transform);
+            readyAudio.PlayOneShot2D();
             isSet = true;
         }
     }

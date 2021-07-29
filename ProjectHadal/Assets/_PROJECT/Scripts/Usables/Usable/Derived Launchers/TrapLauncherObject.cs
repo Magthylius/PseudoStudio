@@ -8,7 +8,6 @@ namespace Hadal.Usables
     public class TrapLauncherObject : UsableLauncherObject
     {
         [SerializeField] ProjectileBehaviour activeTrap;
-        
         public override bool Use(UsableHandlerInfo info)
         {
             if (!IsActive) return false;
@@ -33,6 +32,11 @@ namespace Hadal.Usables
 
             base.Use(info);
             return false;
+        }
+
+        public ProjectileBehaviour GetActiveTrap()
+        {
+            return activeTrap;
         }
     }
 }

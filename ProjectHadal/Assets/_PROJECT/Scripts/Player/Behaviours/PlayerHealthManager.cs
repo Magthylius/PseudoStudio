@@ -10,6 +10,8 @@ using Tenshi.UnitySoku;
 using NaughtyAttributes;
 using ReadOnly = Tenshi.ReadOnlyAttribute;
 using System.Collections.Generic;
+using Hadal.Utility;
+using Hadal.AudioSystem;
 
 //Created by Jet
 namespace Hadal.Player.Behaviours
@@ -51,6 +53,10 @@ namespace Hadal.Player.Behaviours
 		
 		public float ReviveTimeRatio { get; private set; } = 0f;
 
+        [Header ("Downed Audio")]
+        [SerializeField] private AudioEventData downedAudio;
+        private Timer downSoundTimer;
+        [SerializeField] private float downSoundDuration;
         #endregion
 
         #region Events
@@ -95,6 +101,13 @@ namespace Hadal.Player.Behaviours
             OnLocalRevivingAPlayer += TriggerStartJumpstart;
             OnLocalReviveAttempt += JumpstartAttempt;
             OnNetworkReviveAttempt += UpdateReviveUI;
+
+            //initializing sound loop set up
+            downSoundTimer = this.Create_A_Timer()
+                           .WithDuration(this.downSoundDuration)
+                           .WithOnCompleteEvent(PlayDownSound)
+                           .WithShouldPersist(true);
+            downSoundTimer.Pause();
         }
 
         private void OnDestroy()
@@ -207,6 +220,7 @@ namespace Hadal.Player.Behaviours
             {
                 if (debugEnabled) "For local player: Subscribing deactivate function in the case of IsDown = true.".Msg();
                 OnDown += DeactivateControllerSystem;
+                OnDown += ActivateDownLoopSound;
             }
         }
 
@@ -364,6 +378,30 @@ namespace Hadal.Player.Behaviours
             _controller.UI.InvokeOnHealthChange(_currentHealth);
         }
 
+        /// <summary> This do be playing the downed Audio loop - Jin
+        private void ActivateDownLoopSound()
+        {
+            //! Only the local player can be deactivated
+            if (!IsLocalPlayer)
+                return;
+
+            Debug.LogError("Thats abit sussy");
+            PlayDownSound();
+            OnDown -= ActivateDownLoopSound;
+        }
+
+        private void PlayDownSound()
+        {
+            downedAudio.PlayOneShot2D();
+            /*downedAudio.PlayOneShot(transform);*/
+            downSoundTimer.RestartWithDuration(downSoundDuration);
+        }
+
+        private void StopDownSound()
+        {
+            downSoundTimer.Pause();
+        }
+
         /// <summary>
         /// Deactivates movement & rotation system and simulate a "down but not out" condition. Will only be called on the local player.
         /// </summary>
@@ -472,6 +510,10 @@ namespace Hadal.Player.Behaviours
             Debug.LogWarning(_controller.ViewID + " Triggered jumpstart attempt: " + success);
             if (success) _controller.UI.ContextHandler.SuccessJumpstart();
             else _controller.UI.ContextHandler.FailJumpstart();
+
+            //stop sound here
+            if (success)
+                StopDownSound();
         }
 
         #endregion

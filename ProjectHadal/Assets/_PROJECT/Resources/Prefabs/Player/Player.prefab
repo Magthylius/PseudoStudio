@@ -1829,6 +1829,8 @@ MonoBehaviour:
   reviveOtherHealthPercent: 0.4
   maxHealth: 100
   _currentHealth: 0
+  downedAudio: {fileID: 11400000, guid: e51e86c87cc712845898e1431964bf4a, type: 2}
+  downSoundDuration: 2
 --- !u!114 &4790383674308879192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2403,6 +2405,21 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11400000, guid: 2e7b4c7f32bcb5a4a84f764830138703, type: 2}
+        m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 3869409784348184770}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  utilityFireAudioEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: bfbde25be658e79468e3c20e1e7880df, type: 2}
         m_TargetAssemblyTypeName: Hadal.AudioSystem.SFXAudioEvent, Hadal.AudioSystem
         m_MethodName: PlayOneShot
         m_Mode: 2
@@ -3802,6 +3819,14 @@ PrefabInstance:
       propertyPath: maxReserveCapacity
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7792106367881664894, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
+      propertyPath: chamberReloadedAudio
+      value: 
+      objectReference: {fileID: 11400000, guid: ee6972a945fecd340a7d20dcb585eae6, type: 2}
+    - target: {fileID: 7792106367881664894, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
+      propertyPath: reverseReloadedAudio
+      value: 
+      objectReference: {fileID: 11400000, guid: d91c076e6c4e06347b82df2927a408c5, type: 2}
     - target: {fileID: 9158828926594837158, guid: 4487dbeddf0223b41b0e9b20a66c7aec, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -4035,6 +4060,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
+      propertyPath: chamberReloadedAudio
+      value: 
+      objectReference: {fileID: 11400000, guid: 43cc65e86f4467f4d92c2079b5ddb9e7, type: 2}
     - target: {fileID: 4014725249324593813, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: m_Name
       value: HarpoonLauncher
