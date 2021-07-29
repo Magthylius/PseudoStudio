@@ -19,6 +19,7 @@ namespace Hadal.Player.Behaviours
 
         [Header("Audio")] 
         public UnityEvent torpedoFireAudioEvent;
+        public UnityEvent utilityFireAudioEvent;
         
         [Header("Player")]
         [SerializeField] PlayerController controller;
@@ -193,6 +194,21 @@ namespace Hadal.Player.Behaviours
             if(!eventFire)
             {
                 projectileID += usable.Data.ProjectileData.ProjTypeInt;
+
+                //here deals with the sound of launching utilities.
+                //only play sound if trap launcher is launching, not triggering.
+                if(usable is TrapLauncherObject)
+                {
+                    var trapUsable = usable as TrapLauncherObject;
+
+                    //if has no active trap while triggering, play launch sound.
+                    if (!trapUsable.GetActiveTrap())
+                        utilityFireAudioEvent.Invoke();
+                }
+                else // otherwise, just play launch sound when used.
+                {
+                    utilityFireAudioEvent.Invoke();
+                }
             }
 
             //! Use utility here. If utility is used, decrement chamber! //
