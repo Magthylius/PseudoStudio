@@ -197,13 +197,17 @@ namespace Hadal.Player.Behaviours
         IEnumerator HandleFlareUtilUIUpdate()
         {
             //! Wait for EquippedUsable to ready
-            while (EquippedUsable == null || _controller.UI.UtilitiesHandler.CurrentUtilGauge == null) yield return null;
+            while (_controller.UI.UtilitiesHandler.CurrentUtilGauge == null)
+            {
+                //Debug.LogWarning($"w: {EquippedUsable}, {_controller.UI.UtilitiesHandler.CurrentUtilGauge}");
+                yield return null;
+            }
             
             while (true)
             {
                 //Debug.LogWarning($"f launch: {fLauncher.TotalAmmoCount}");
                 _controller.UI.UpdateFlareCount(fLauncher.TotalAmmoCount);
-                _controller.UI.UpdateUtilCount(EquippedUsable.TotalAmmoCount);
+                if (EquippedUsable != null) _controller.UI.UpdateUtilCount(EquippedUsable.TotalAmmoCount);
                 yield return new WaitForSeconds(0.2f);
             }
         }
