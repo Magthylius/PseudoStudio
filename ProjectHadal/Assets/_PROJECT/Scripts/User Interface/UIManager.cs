@@ -299,7 +299,7 @@ namespace Hadal.UI
 
         public void UpdateFlareCount(int amount)
         {
-            UtilitiesHandler.FlareGauge.UpdateFullGauge(amount - 1);
+            UtilitiesHandler.FlareGauge.UpdateFullGauge(amount);
         }
         #endregion
 

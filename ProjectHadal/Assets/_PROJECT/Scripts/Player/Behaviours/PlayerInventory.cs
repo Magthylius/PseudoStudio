@@ -7,9 +7,11 @@ using Hadal.Inputs;
 using Hadal.Networking;
 using Hadal.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Tenshi.UnitySoku;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 //Created by Jet, edited by Jin
 namespace Hadal.Player.Behaviours
@@ -49,11 +51,13 @@ namespace Hadal.Player.Behaviours
             var flareUtility = allUtilities.Where(u => u is FlareLauncherObject).Single();
             var harpoonUtility = allUtilities.Where(u => u is HarpoonLauncherObject).Single();
             harpoonUtility.OnReservesChanged += HandleHarpoonReserveChanged;
-            flareUtility.OnReservesChanged += HandleFlareReserves;
-            
+            //flareUtility.OnReservesChanged += HandleFlareReserves;
+            //flareUtility.OnChamberChanged += HandleFlareChambers;
+           // flareUtility.OnRestock += HandleFlareRestock;
+           
             //! Sorry jet i have no idea why you want to make flareUtil a local var
             fLauncher = flareUtility as FlareLauncherObject;
-
+            
             quickFireUtilities.Add(typeof(FlareLauncherObject), flareUtility);
             quickFireUtilities.Add(typeof(HarpoonLauncherObject), harpoonUtility);
         }
@@ -63,6 +67,8 @@ namespace Hadal.Player.Behaviours
             neManager = NetworkEventManager.Instance;
             if (neManager != null) neManager.AddListener(ByteEvents.PLAYER_UTILITIES_LAUNCH, REFireUtility);
             ResetEquipIndex();
+            
+            StartCoroutine(HandleFlareUIUpdate());
         }
 
         public void Inject(PlayerController controller)
@@ -188,10 +194,14 @@ namespace Hadal.Player.Behaviours
             _controllerInfo.Shooter.FireUtility(projectileID, EquippedUsable, _selectedItem, _chargeTime, EquippedUsable.IsPowered, false, Vector3.zero);
         }
 
-        void HandleFlareReserves(bool isIncrement)
+        IEnumerator HandleFlareUIUpdate()
         {
-            Debug.LogWarning($"f laucnher: {fLauncher.TotalAmmoCount}");
-            _controller.UI.UpdateFlareCount(fLauncher.TotalAmmoCount);
+            while (true)
+            {
+                //Debug.LogWarning($"f launch: {fLauncher.TotalAmmoCount}");
+                _controller.UI.UpdateFlareCount(fLauncher.TotalAmmoCount);
+                yield return new WaitForSeconds(0.2f);
+            }
         }
 
         void UpdateHarpoonChamberRatio()
