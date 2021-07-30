@@ -102,6 +102,10 @@ namespace Hadal.Player
             {
                 playerInv.AddEquipmentOfType<SonicGrenadeLauncherObject>(true);
             }
+            else if (t.Equals(typeof(SeismicHarpoonLauncherObject)))
+            {
+                playerInv.AddEquipmentOfType<SeismicHarpoonLauncherObject>(true);
+            }
             else if (t.Equals(typeof(HarpoonLauncherObject)))
             {
                 var harpoon = playerInv.AddEquipmentOfType<HarpoonLauncherObject>();
