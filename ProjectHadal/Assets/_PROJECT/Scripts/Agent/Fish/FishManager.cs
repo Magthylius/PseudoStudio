@@ -15,26 +15,26 @@ namespace Hadal.AI
         [Range(0, 10)]
         [SerializeField] private float _minSpeed;
         public float minSpeed { get { return _minSpeed; } }
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _maxSpeed;
         public float maxSpeed { get { return _maxSpeed; } }
 
 
         [Header("Detection Distances")]
 
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _cohesionDistance;
         public float cohesionDistance { get { return _cohesionDistance; } }
 
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _avoidanceDistance;
         public float avoidanceDistance { get { return _avoidanceDistance; } }
 
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _aligementDistance;
         public float aligementDistance { get { return _aligementDistance; } }
 
-        [Range(0, 10)]
+        [Range(0, 100)]
         [SerializeField] private float _obstacleDistance;
         public float obstacleDistance { get { return _obstacleDistance; } }
 
@@ -45,19 +45,19 @@ namespace Hadal.AI
 
         [Header("Behaviour Weights")]
 
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _cohesionWeight;
         public float cohesionWeight { get { return _cohesionWeight; } }
 
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _avoidanceWeight;
         public float avoidanceWeight { get { return _avoidanceWeight; } }
 
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _aligementWeight;
         public float aligementWeight { get { return _aligementWeight; } }
 
-        [Range(0, 10)]
+        [Range(0, 50)]
         [SerializeField] private float _boundsWeight;
         public float boundsWeight { get { return _boundsWeight; } }
 
