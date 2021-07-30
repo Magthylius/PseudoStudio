@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
+using Hadal.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +14,7 @@ namespace Hadal.UI
         {
             SetupTorpedoSalvage();
         }
+        
 
         [Header("Revive UI")] 
         [SerializeField] private Animator reviveAnimator;
@@ -35,18 +38,48 @@ namespace Hadal.UI
         [SerializeField] private Image salvageLeftFiller;
         [SerializeField] private Image salvageRightFiller;
         [SerializeField] private Animator salvageAnimator;
+        private static readonly int StartSalvage = Animator.StringToHash("StartSalvage");
+        private static readonly int SalvageOutcome = Animator.StringToHash("SalvageOutcome");
 
+        private Coroutine torpCoroutine = null;
+        
         void SetupTorpedoSalvage()
         {
             salvageLeftFiller.fillAmount = 0f;
             salvageRightFiller.fillAmount = 0f;
         }
 
-        void SetSalvageFillerRatio(float amount)
+        public void StartSalvageFiller(float time)
         {
-            salvageLeftFiller.fillAmount = amount;
-            salvageRightFiller.fillAmount = amount;
+            //Debug.LogWarning($"UI Start Received");
+            torpCoroutine = StartCoroutine(AnimateFillers());
+            salvageLeftFiller.gameObject.SetActive(true);
+            salvageRightFiller.gameObject.SetActive(true);
+            
+            salvageAnimator.SetTrigger(StartSalvage);
+            
+            IEnumerator AnimateFillers()
+            {
+                while (salvageLeftFiller.fillAmount < 1f)
+                {
+                    float stepsNeeded = Time.deltaTime / time;
+                    salvageLeftFiller.fillAmount += stepsNeeded;
+                    salvageRightFiller.fillAmount += stepsNeeded;
+                    yield return new WaitForEndOfFrame();
+                }
+            }
         }
-        
+
+        public void EndSalvageFiller(bool success)
+        {
+            if (torpCoroutine != null) StopCoroutine(torpCoroutine);
+            
+            //Debug.LogWarning($"UI End Received");
+            if (success) salvageAnimator.SetFloat(SalvageOutcome, 1f);
+            else salvageAnimator.SetFloat(SalvageOutcome, -1f);
+
+            salvageLeftFiller.fillAmount = 0f;
+            salvageRightFiller.fillAmount = 0f;
+        }
     }
 }

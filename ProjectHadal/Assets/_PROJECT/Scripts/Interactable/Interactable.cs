@@ -8,6 +8,7 @@ using ExitGames.Client.Photon;
 using System.Collections;
 using Tenshi.UnitySoku;
 using System.Linq;
+using Photon.Realtime;
 using Tenshi;
 
 namespace Hadal.Interactables
@@ -40,7 +41,7 @@ namespace Hadal.Interactables
         private MaterialPropertyBlock materialProp;
         private Color defaultColor;
 
-        private int interactingPlayerID = -1;
+        private int interactingPlayerViewID = -1;
 
         private void Start()
         {
@@ -111,7 +112,7 @@ namespace Hadal.Interactables
                 else if (gO.GetComponentInChildren<PhotonView>().ViewID == viewID)
                 {
                     actorPlayer = gO;
-                    interactingPlayerID = viewID;
+                    interactingPlayerViewID = viewID;
                 }
             }
 
@@ -132,22 +133,36 @@ namespace Hadal.Interactables
                 "Interacting player is not found, unable to start interaction wind-up timer.".Warn();
                 yield break;
             }
-
-            //unable to be interacted when someone else is interacting. Send event to notify others.
-            isInteracting = true;
-            object[] content = new object[] { interactableID, isInteracting };
-            neManager.RaiseEvent(ByteEvents.PLAYER_INTERACTING, content);
-            //
-
+            
             //! Save transform info of the player that has interacted with this script
             Transform otherTrans = pObject.transform;
 
             //! Setup timer values
             float sqrMaintainDist = interactionMaintainDistance.Sqr();
+
+            //if (!InteractorIsWithinInteractionDistance()) yield return null;
+
+            //! Unable to be interacted when someone else is interacting. Send event to notify others.
+            isInteracting = true;
+            object[] content = { interactableID, isInteracting };
+            neManager.RaiseEvent(ByteEvents.PLAYER_INTERACTING, content);
+
+            //! For UI to handle
+            RaiseEventOptions eventOps = new RaiseEventOptions {Receivers = ReceiverGroup.All};
+
+            object[] data = { interactingPlayerViewID, interactionWindupTime };
+            neManager.RaiseEvent(ByteEvents.PLAYER_UI_SALVAGESTART, data, eventOps);
+            //Debug.LogWarning($"Salvage start sent");
+
+           
             ResetWindupTimer();
 
+            bool hasEnteredRadius = false;
+
+            //Debug.LogWarning($"Compare distancesqr: {SqrDistanceBetweenInteractorAndInteractee()} vs {sqrMaintainDist}");
             while (InteractorIsWithinInteractionDistance())
             {
+                hasEnteredRadius = true;
                 bool timerFinished = ElapseWindupTimer(DeltaTime) <= 0f;
                 if (timerFinished)
                 {
@@ -158,7 +173,7 @@ namespace Hadal.Interactables
             }
 
             //! Interaction fail case (went out of distance)
-            HandleExitSequence(false);
+            if (hasEnteredRadius) HandleExitSequence(false);
             yield break;
 
             //! Local function definitions
@@ -173,9 +188,12 @@ namespace Hadal.Interactables
                 content = new object[] { interactableID, isInteracting };
                 neManager.RaiseEvent(ByteEvents.PLAYER_INTERACTING, content);
                 //
+                
+                data = new object[] { interactingPlayerViewID, isSuccess };
+                neManager.RaiseEvent(ByteEvents.PLAYER_UI_SALVAGEEND, data, eventOps);
+                //Debug.LogWarning($"Salvage end sent: {isSuccess}");
 
-                if (isSuccess)              
-                    Send_InteractionDetected();
+                if (isSuccess) Send_InteractionDetected();
            
                 _activeTimerRoutine = null;
             }
