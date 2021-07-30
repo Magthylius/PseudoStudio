@@ -56,6 +56,7 @@ namespace Hadal.UI
             salvageLeftFiller.gameObject.SetActive(true);
             salvageRightFiller.gameObject.SetActive(true);
             
+            if (!salvageAnimator.isInitialized) salvageAnimator.Rebind();
             salvageAnimator.SetTrigger(StartSalvage);
             
             IEnumerator AnimateFillers()
