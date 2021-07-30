@@ -385,7 +385,10 @@ namespace Hadal.Networking.UI.MainMenu
                 loadingManager.LoadLevel(NetworkEventManager.Instance.TutorialScene);
             }
             else
+            {
                 loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
+                NetworkEventManager.Instance.SettleStaticClassInfo();
+            }
             
         }
 

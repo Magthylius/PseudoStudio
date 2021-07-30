@@ -364,7 +364,7 @@ namespace Hadal.UI
             }
         }
         
-        public void TrackPlayerName(Transform otherPlayer, string playerName)
+        public void TrackPlayerName(Transform otherPlayer, string playerName, PlayerClassType playerClass)
         {
             //print("tracking: " + playerName);
             PlayerNameTrackerBehaviour nameTracker;
@@ -384,6 +384,7 @@ namespace Hadal.UI
                 if (pNameTracker)
                 {
                     pNameTracker.UpdateText(playerName);
+                    pNameTracker.UpdateIcon(playerClass);
                     otherPlayerTrackers.Add(pNameTracker);  
                 }
             }
