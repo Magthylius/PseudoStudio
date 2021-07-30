@@ -59,7 +59,7 @@ namespace Hadal.UI
 
         void FixedUpdate()
         {
-            if (!isAIInitialized || !isPlayerInitialized) return;
+            if (!isAIInitialized || !isPlayerInitialized || !aiTransform) return;
 
             aiDistance = minimumDistance - (aiTransform.position - playerTransform.position).magnitude;
             currentIntensity = Mathf.Clamp((aiDistance + randomIntensity) * intensityPerUnit, 0f, maxIntensity);
