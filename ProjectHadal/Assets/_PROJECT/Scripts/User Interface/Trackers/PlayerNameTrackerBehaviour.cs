@@ -17,6 +17,7 @@ namespace Hadal.UI
         
         [Header("Class Icon Settings")]
         public Image ClassIcon;
+        public Image ClassIcon2;
         public Sprite HunterIcon;
         public Sprite MedicIcon;
         public Sprite TrackerIcon;
@@ -95,18 +96,22 @@ namespace Hadal.UI
             {
                 case PlayerClassType.Harpooner:
                     ClassIcon.sprite = HunterIcon;
+                    ClassIcon2.sprite = HunterIcon;
                     break;
                 
                 case PlayerClassType.Saviour:
                     ClassIcon.sprite = MedicIcon;
+                    ClassIcon2.sprite = MedicIcon;
                     break;
                 
                 case PlayerClassType.Informer:
                     ClassIcon.sprite = TrackerIcon;
+                    ClassIcon2.sprite = TrackerIcon;
                     break;
                 
                 case PlayerClassType.Trapper:
                     ClassIcon.sprite = TrapperIcon;
+                    ClassIcon2.sprite = TrapperIcon;
                     break;
             }
         }
