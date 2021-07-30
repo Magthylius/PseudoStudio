@@ -88,44 +88,48 @@ namespace Hadal.Networking.UI.MainMenu
 
                 if (AllPlayersReady && !previousReadyState)
                 {
-                    deployReadyAudio.Invoke();
+                    StartCoroutine(DelayButton());
                     
-                    previousReadyState = true;
-                    
-                    centerImage.color = readyColor;
-                    
-                    if (effectList != null)
+                    IEnumerator DelayButton()
                     {
-                        foreach (GameObject obj in effectList)
+                        yield return new WaitForSeconds(0.5f);
+                        
+                        deployReadyAudio.Invoke();
+                    
+                        previousReadyState = true;
+                    
+                        centerImage.color = readyColor;
+                    
+                        if (effectList != null)
                         {
-                            obj.SetActive(true);
+                            foreach (GameObject obj in effectList)
+                            {
+                                obj.SetActive(true);
+                            }
                         }
-                    }
 
-                    if (hideList != null)
-                    {
-                        foreach (GameObject obj in hideList)
+                        if (hideList != null)
                         {
-                            obj.SetActive(false);
+                            foreach (GameObject obj in hideList)
+                            {
+                                obj.SetActive(false);
+                            }
                         }
-                    }
 
-                    if (NetworkEventManager.Instance.IsMasterClient)
-                    {
-                        //Debug.LogWarning("Master clienmt");
-                        readyText.SetActive(true);
-                        highlightButton.AllowDetection();
+                        if (NetworkEventManager.Instance.IsMasterClient)
+                        {
+                            //Debug.LogWarning("Master clienmt");
+                            readyText.SetActive(true);
+                            highlightButton.AllowDetection();
+                        }
+                        else
+                        {
+                            //Debug.LogWarning(" not Master clienmt");
+                            waitingText.SetActive(true);
+                        }
+                        diveText.color = diveReadyColor;
+                        highlightParticleSystem.Emit(1);
                     }
-                    else
-                    {
-                        //Debug.LogWarning(" not Master clienmt");
-                        waitingText.SetActive(true);
-                    }
-
-                    diveText.color = diveReadyColor;
-                    
-                    
-                    highlightParticleSystem.Emit(1);
                 }
                 else if (!AllPlayersReady && previousReadyState)
                 {

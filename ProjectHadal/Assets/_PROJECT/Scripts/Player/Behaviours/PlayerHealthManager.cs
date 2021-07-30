@@ -304,7 +304,7 @@ namespace Hadal.Player.Behaviours
         private void DoOnHitEffects(int damage)
         {
             if (damage <= 5)
-                _cameraController.ShakeCameraDefault();
+                _cameraController.ShakeCamera(damage * 4f);
             else
                 _cameraController.ShakeCameraLeviathan();
 
@@ -487,10 +487,10 @@ namespace Hadal.Player.Behaviours
         {
             _controller.UI.ContextHandler.PlayerWentDown();
             
-            //Debug.LogWarning($"update down ui");
+            Debug.LogWarning($"update down ui");
             if (_controller.transform != LocalPlayerData.PlayerController.transform)
             {
-                //Debug.LogWarning($"track player down");
+                Debug.LogWarning($"track player down");
                 LocalPlayerData.PlayerController.UI.TrackPlayerDown(_controller.transform);
             }
         }
@@ -498,10 +498,10 @@ namespace Hadal.Player.Behaviours
         /// <summary> Meant for the networked other player that is being revived. </summary>
         void UpdateReviveUI(bool attemptSucceeded)
         {
-            //Debug.LogWarning("update revive ui called: " + attemptSucceeded);
+            Debug.LogWarning("update revive ui called: " + attemptSucceeded);
             if (attemptSucceeded)
             {
-                //Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
+                Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
                 _controller.UI.ContextHandler.PlayerRevived();
                 
                 if (_controller.transform != LocalPlayerData.PlayerController.transform)

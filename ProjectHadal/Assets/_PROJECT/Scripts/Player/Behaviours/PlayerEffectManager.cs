@@ -76,11 +76,11 @@ namespace Hadal.Player
                 allowEffects = !(camReady && caReady);
             }
 
-            if (AllowMotionBlur)
+            /*if (AllowMotionBlur)
             {
                 mbSettings.LerpIntensity(targetMotionBlurIntensity, effectSpeed * Time.deltaTime);
                 PostProcessingManager.Instance.EditMotionBlur(mbSettings);
-            }
+            }*/
         }
 
         public void HandleDamageEffect(float normalizedIntensity)

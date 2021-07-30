@@ -17,10 +17,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5ff0843e79b996c47a3d8d4e91fa8217, type: 3}
   - {fileID: 8300000, guid: 57c6958c68099dc49b0780c688c91d1d, type: 3}
   Settings:
-    ReplayTime: 0
     Volume: {x: 1, y: 1}
     Pitch: {x: 1, y: 1}
-    SpatialBlend: 0.9
+    SpatialBlend: 0.7
     Priority: 128
     StereoPan: 0
     ReverbZoneMix: 0.6
@@ -35,5 +34,5 @@ MonoBehaviour:
     Spread: 0
     VolumeRolloff: 2
     MinDistance: 1
-    MaxDistance: 1000
+    MaxDistance: 2500
     RolloffCurveTemplate: {fileID: 5955611999743336601, guid: 6d56ffef46e73584c8663faa953cad25, type: 3}
