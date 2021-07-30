@@ -40,6 +40,8 @@ namespace Hadal.Interactables
         private MaterialPropertyBlock materialProp;
         private Color defaultColor;
 
+        private int interactingPlayerID = -1;
+
         private void Start()
         {
             neManager = NetworkEventManager.Instance;
@@ -109,6 +111,7 @@ namespace Hadal.Interactables
                 else if (gO.GetComponentInChildren<PhotonView>().ViewID == viewID)
                 {
                     actorPlayer = gO;
+                    interactingPlayerID = viewID;
                 }
             }
 
