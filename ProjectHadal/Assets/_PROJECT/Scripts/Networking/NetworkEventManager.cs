@@ -34,6 +34,10 @@ namespace Hadal.Networking
         PLAYER_INTERACTING,
         PLAYER_INTERACTED,
 		PLAYER_PLAY_AUDIO,
+        PLAYER_UI_SALVAGESTART,
+        PLAYER_UI_SALVAGEEND,
+        PLAYER_UTILITIES_LAUNCH,
+        PLAYER_TORPEDO_LAUNCH,
         GAME_MENU_CLASS_CHOOSE,
         GAME_MENU_CLASS_UNCHOOSE,
         GAME_START_LOAD,
@@ -42,8 +46,6 @@ namespace Hadal.Networking
         GAME_CLIENT_FORCEDKICKCALLBACK,
         GAME_START_END,
         GAME_UPDATE_AMBIENCE,
-        PLAYER_UTILITIES_LAUNCH,
-        PLAYER_TORPEDO_LAUNCH,
         PROJECTILE_DESPAWN,
         PROJECTILE_ACTIVATED,
         PROJECTILE_ATTACH,
@@ -86,6 +88,12 @@ namespace Hadal.Networking
         [Header("Offline settings")] 
         [Range(0, 3)] public int DummyCount;
         public bool DummyMirrorsMovement;
+
+        [Header("Packet resend settings")] 
+        public int QuickResendCount = 3;
+        public int MaxResendsBeforeDisconnect = 7;
+        public bool AllowResentCounter = true;
+        [SerializeField, ReadOnly] private int CommandResentCount = -1;
         
         //! internal references
         bool loadsToMainMenu = false;
@@ -120,6 +128,23 @@ namespace Hadal.Networking
             {
                 GameManager.Instance.StartGameEvent();
             }
+
+            PhotonNetwork.QuickResends = QuickResendCount;
+            PhotonNetwork.MaxResendsBeforeDisconnect = MaxResendsBeforeDisconnect;
+            
+            //! Network monitoring
+            if (AllowResentCounter) StartCoroutine(ResentCounter());
+            else CommandResentCount = -1;
+
+            IEnumerator ResentCounter()
+            {
+                while (AllowResentCounter)
+                {
+                    CommandResentCount = PhotonNetwork.ResentReliableCommands;
+                    yield return null;
+                }
+            }
+            
         }
 
         public override void OnEnable()
