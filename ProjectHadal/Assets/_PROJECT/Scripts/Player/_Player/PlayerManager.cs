@@ -54,7 +54,7 @@ namespace Hadal.Player
                     foreach (KeyValuePair<int, Photon.Realtime.Player> playerDict in neManager.AllPlayers)
                     {
                         SpawnPlayer(playerDict.Value);
-                        print("Player Spawned");
+                        //print("Player Spawned");
                     }
 
                     NetworkEventManager.Instance.PlayerEnteredEvent += SpawnPlayer;
@@ -107,12 +107,9 @@ namespace Hadal.Player
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_ACTUAL_START, null, SendOptions.SendReliable);
                 
                 //! Host start games here
-                /*LoadingManager.Instance.StartEndLoad();
-                InstantiatePViewList();
-                localPlayerController.Mover.ToggleEnablility(true);
-                localPlayerController.TrackNamesOnline();*/
+                
                 localPlayerController.StartGame(null);
-                print("All player ready, sending event to notify all players.");
+                //print("All player ready, sending event to notify all players.");
                 if (PhotonNetwork.IsMasterClient) OnAllPlayersReadyEvent?.Invoke();
             }
         }
@@ -250,7 +247,7 @@ namespace Hadal.Player
 
         public void InstantiatePViewList()
         {
-            print("instantiate PView Called");
+            //print("instantiate PView Called");
             var playerControllers = FindObjectsOfType<PlayerController>();
             GameManager.Instance.pViewList = new List<PhotonView>();
 

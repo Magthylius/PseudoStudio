@@ -198,14 +198,14 @@ namespace Hadal.Player
                 {
                     LocalPlayerData.PlayerController = this;                
                     gameObject.AddComponent<AudioListener>();
-                    Debug.LogWarning("Audio listener added");
+                    //Debug.LogWarning("Audio listener added");
                 }
             }
             else if (_pView.IsMine)
             {
                 LocalPlayerData.PlayerController = this;            
                 gameObject.AddComponent<AudioListener>();
-                Debug.LogWarning("Audio listener added");
+                //Debug.LogWarning("Audio listener added");
             }
 
             NetworkData.AddPlayer(this);
@@ -287,7 +287,7 @@ namespace Hadal.Player
         public void StartGame(EventData obj)
         {
             //! This is online called in online mode, this function is called on PlayerManager for host
-            print("Everyone ready. Begin !");
+            //print("Everyone ready. Begin !");
             
             SetLocalPlayerSettings();
             PlayerClassManager.Instance.ApplyClass();
