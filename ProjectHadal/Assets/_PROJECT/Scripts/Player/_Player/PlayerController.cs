@@ -156,6 +156,7 @@ namespace Hadal.Player
         {
             if (!_pView.IsMine || isDummy || !PlayerReadyForUpdateLoop) return;
 
+            collisions.DoFixedUpdate(FixedDeltaTime);
             if (CanMove) mover.DoFixedUpdate(FixedDeltaTime);
             if (CanMove) dodgeBooster?.DoFixedUpdate(FixedDeltaTime);
             if (CanRotate) rotator.DoFixedUpdate(FixedDeltaTime);
