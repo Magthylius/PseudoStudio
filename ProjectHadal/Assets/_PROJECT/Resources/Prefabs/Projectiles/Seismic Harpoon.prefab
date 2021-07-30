@@ -130,7 +130,7 @@ MonoBehaviour:
   debugKey: Projectile Physics
   rootTransform: {fileID: 5118692649966226049}
   projectileRigidbody: {fileID: 5112791235449951143}
-  projectileBehavior: {fileID: 0}
+  projectileBehavior: {fileID: 3905179702757291743}
   projectileModeList:
   - {fileID: 6971419611592527743}
   - {fileID: 5261640096164849296}
@@ -199,9 +199,9 @@ GameObject:
   - component: {fileID: 5118692649966226049}
   - component: {fileID: 5112791235449951143}
   - component: {fileID: 5418744652871356807}
-  - component: {fileID: 4272147183127872304}
+  - component: {fileID: 3905179702757291743}
   m_Layer: 13
-  m_Name: Harpoon
+  m_Name: Seismic Harpoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,7 +216,7 @@ Transform:
   m_GameObject: {fileID: 7351274592407701336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children:
   - {fileID: 9019930035885817092}
   - {fileID: 1110699958241314260}
@@ -252,9 +252,9 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.125, y: 0.125, z: 1.05}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4272147183127872304
+  m_Size: {x: 0.125, y: 0.125, z: 0.75}
+  m_Center: {x: 0, y: 0, z: 0.25}
+--- !u!114 &3905179702757291743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -263,7 +263,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7351274592407701336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d26677f0a59f21a498d8cf51840007b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a4730ed60e0d92469c9a78615d222e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   DebugKey: 
@@ -281,8 +281,8 @@ MonoBehaviour:
   validLayer:
   - Monster
   - Obstacle
-  defaultAttachDuration: 15
-  defaultSlowCount: 1
+  defaultAttachDuration: 25
+  defaultSlowCount: 5
   poweredAttachDuration: 15
   poweredSlowCount: 1
   projPhysics: {fileID: 5627941608468223027}
@@ -437,7 +437,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 4501bd36bab0cb96c9cdaeb0a573102d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e4326f944d4fd64888f7c0fda348d98a, type: 2}
+      objectReference: {fileID: 2100000, guid: d4c8239239dfed548b4d0902d61160a5, type: 2}
     - target: {fileID: 919132149155446097, guid: 4501bd36bab0cb96c9cdaeb0a573102d, type: 3}
       propertyPath: m_Name
       value: Harpoon
@@ -483,15 +483,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8565945202466799124, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8565945202466799124, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8565945202466799124, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8565945202466799124, guid: 61a03b57a672b8542b7162ead5394ec0, type: 3}
       propertyPath: m_LocalPosition.x

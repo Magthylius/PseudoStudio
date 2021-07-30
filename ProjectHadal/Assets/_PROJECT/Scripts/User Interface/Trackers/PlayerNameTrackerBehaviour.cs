@@ -118,12 +118,16 @@ namespace Hadal.UI
 
         public void SetDownSettings()
         {
+            ClassIcon.color = playerDownColor;
+            ClassIcon2.color = playerDownColor;
             NameText.color = playerDownColor;
             DistanceText.color = playerDownColor;
         }
         
         public void SetDefaultSettings()
         {
+            ClassIcon.color = playerDefaultColor;
+            ClassIcon2.color = playerDefaultColor;
             NameText.color = playerDefaultColor;
             DistanceText.color = playerDefaultColor;
         }

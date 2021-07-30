@@ -397,9 +397,11 @@ namespace Hadal.Player.Behaviours
         {
             //! Only the local player can be deactivated
             if (!IsLocalPlayer)
+            if (!IsLocalPlayer)
                 return;
 
-            Debug.LogError("Thats abit sussy");
+            //Jin is a mistake
+            //Debug.LogError("Thats abit sussy");
             PlayDownSound();
             OnDown -= ActivateDownLoopSound;
         }
@@ -487,10 +489,10 @@ namespace Hadal.Player.Behaviours
         {
             _controller.UI.ContextHandler.PlayerWentDown();
             
-            //Debug.LogWarning($"update down ui");
+            Debug.LogWarning($"update down ui");
             if (_controller.transform != LocalPlayerData.PlayerController.transform)
             {
-                //Debug.LogWarning($"track player down");
+                Debug.LogWarning($"track player down");
                 LocalPlayerData.PlayerController.UI.TrackPlayerDown(_controller.transform);
             }
         }
@@ -498,10 +500,10 @@ namespace Hadal.Player.Behaviours
         /// <summary> Meant for the networked other player that is being revived. </summary>
         void UpdateReviveUI(bool attemptSucceeded)
         {
-            //Debug.LogWarning("update revive ui called: " + attemptSucceeded);
+            Debug.LogWarning("update revive ui called: " + attemptSucceeded);
             if (attemptSucceeded)
             {
-                //Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
+                Debug.LogWarning(_controller.ViewID + " Triggered revive attempt");
                 _controller.UI.ContextHandler.PlayerRevived();
                 
                 if (_controller.transform != LocalPlayerData.PlayerController.transform)

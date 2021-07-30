@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_c54021617d6c4a4e903d2f4ac70a4bf2:
-        m_Texture: {fileID: 2800000, guid: 13c2bbd4303a7c645b6e7d909f167289, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1f1e0d047cdc7bd4087180a256d82711, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -88,7 +88,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Boolean_a9fba24290764268aca2896401ca3bc8: 1
+    - Boolean_a9fba24290764268aca2896401ca3bc8: 0
     - Vector1_3c741770c2224fa390f56cf0fdc1b4ba: 1
     - Vector1_46dec6d2d1ea47d1aec27628d6065dc5: 0.4
     - Vector1_5d50e44989f34414aecbe5b69ce19dcc: -0.5
@@ -114,14 +114,14 @@ Material:
     - _Pivot: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Side: 0.8
+    - _Side: 0.4
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
     - _TimeScale: 3
-    - _Twist: 1
+    - _Twist: 2
     - _Wave: -0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -130,7 +130,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Mask: {r: -1.5, g: 2, b: 0, a: 0}
+    - _Mask: {r: -1, g: 0.5, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &4442011167914522052
