@@ -9,6 +9,7 @@ using Hadal.Networking.Diegetics;
 using Hadal.Networking.UI.Loading;
 using NaughtyAttributes;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 //! C: Jon
 namespace Hadal.Networking.UI.MainMenu
@@ -245,12 +246,8 @@ namespace Hadal.Networking.UI.MainMenu
 
         void EndStartPhase()
         {
-            //InitMainMenu(); 
-            //print("start");
-
             ChangePhase(MenuPhase.MAIN);
             CloseMenu(startMenu);
-            //DetermineMenuToOpen();
 
             if (PlayerPrefs.HasKey("PlayerName"))
             {
@@ -292,6 +289,15 @@ namespace Hadal.Networking.UI.MainMenu
         #endregion
 
         #region Lobby Phase
+
+        public void BTN_ChangeNickname()
+        {
+            PlayerPrefs.DeleteKey("PlayerName");
+            //NetworkEventManager.Instance.Disconnect();
+            CloseMenu(lobbyMenu);
+            OpenMenu(nicknameMenu);
+        }
+        
         public void BTN_StartGame()
         {
             CloseMenu(gameOptions);
