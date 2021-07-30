@@ -397,9 +397,11 @@ namespace Hadal.Player.Behaviours
         {
             //! Only the local player can be deactivated
             if (!IsLocalPlayer)
+            if (!IsLocalPlayer)
                 return;
 
-            Debug.LogError("Thats abit sussy");
+            //Jin is a mistake
+            //Debug.LogError("Thats abit sussy");
             PlayDownSound();
             OnDown -= ActivateDownLoopSound;
         }
