@@ -16,12 +16,14 @@ MonoBehaviour:
   ClassType: 1
   GiveFlareHarpoon: 0
   PowerUpFlare: 0
-  PowerUpHarpoon: 1
+  PowerUpHarpoon: 0
   PowerUpDodgeBoost: 1
   DodgeBoostCount: 3
   PowerUpReviveTime: 0
   ReviveTime: 1
+  RevivePercentHealth: 0.7
   ActivateHydrophone: 0
   PowerUpTorpFireRate: 0
   TorpFireRate: 0.1
-  ClassLauncher: []
+  ClassLauncher:
+  - {fileID: 7587868738020312899, guid: d4beff5e6cad4c44190baf07a976a0f9, type: 3}

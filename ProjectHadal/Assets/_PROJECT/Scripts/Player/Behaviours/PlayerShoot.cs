@@ -223,8 +223,11 @@ namespace Hadal.Player.Behaviours
                 info.AimedPoint = RELookatPoint;
             }
 
+            Debug.LogError(usable.name + "here");
+
             if (usable.Use(info))
             {
+                Debug.LogError(usable.name + "used");
                 if (!eventFire && !usable.IgnoreAmmo)
                     usable.DecrementChamber();
             }
