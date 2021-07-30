@@ -1250,12 +1250,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4944ec5961e45184385376828cf8aa72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logCollisionInformation: 0
   forceSpeedThreshold: 8
   collisionDamage: 1
   collisionDamageMax: 15
   damageTimer: 2
-  ableToDamage: 1
   collisionSound: {fileID: 11400000, guid: ff95540f558362f41be37b6509227569, type: 2}
+  velocity: {x: 0, y: 0, z: 0}
+  ableToDamage: 1
 --- !u!1 &5329164883190651356
 GameObject:
   m_ObjectHideFlags: 0
@@ -4142,18 +4144,6 @@ PrefabInstance:
     - target: {fileID: 628160377840392337, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: maxReserveCapacity
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: chamberReloadedAudio
-      value: 
-      objectReference: {fileID: 11400000, guid: 43cc65e86f4467f4d92c2079b5ddb9e7, type: 2}
-    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
-      propertyPath: reserveRegenerationTime
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4014725249324593813, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: m_Name
