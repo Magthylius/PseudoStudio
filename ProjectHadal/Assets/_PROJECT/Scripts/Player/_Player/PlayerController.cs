@@ -130,6 +130,9 @@ namespace Hadal.Player
 
             NetworkEventManager.Instance.AddPlayer(gameObject);
             StartCoroutine(InitialiseData(() => OnInitialiseComplete?.Invoke(this)));
+            
+            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_UI_SALVAGESTART, SalvageStartListener);
+            NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_UI_SALVAGEEND, SalvageEndListener);
         }
 
         protected override void Update()
@@ -176,6 +179,9 @@ namespace Hadal.Player
             //! Might need to uninject player
             playerUI.PauseMenuOpened -= Disable;
             playerUI.PauseMenuClosed -= Enable;
+            
+            NetworkEventManager.Instance.RemoveListener(ByteEvents.PLAYER_UI_SALVAGESTART, SalvageStartListener);
+            NetworkEventManager.Instance.RemoveListener(ByteEvents.PLAYER_UI_SALVAGEEND, SalvageEndListener);
         }
 
         #endregion
@@ -543,6 +549,37 @@ namespace Hadal.Player
             _isLocalPlayer = true;
             graphicsHandler.GraphicsObject.SetActive(false);
         }
+        #endregion
+
+        #region UI
+
+        void SalvageStartListener(EventData data)
+        {
+            //Debug.LogWarning($"PC Received");
+            object[] content = (object[])data.CustomData;
+
+            int viewID = (int)content[0];
+            float time = (float)content[1];
+
+            if (viewID == _pView.ViewID)
+            {
+                UI.ContextHandler.StartSalvageFiller(time);
+            }
+        }
+        
+        void SalvageEndListener(EventData data)
+        {
+            object[] content = (object[])data.CustomData;
+            
+            int viewID = (int)content[0];
+            bool success = (bool)content[1];
+            
+            if (viewID == _pView.ViewID)
+            {
+                UI.ContextHandler.EndSalvageFiller(success);
+            }
+        }
+
         #endregion
 
         #region Shorthands
