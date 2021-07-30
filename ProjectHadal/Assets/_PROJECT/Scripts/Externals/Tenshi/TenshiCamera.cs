@@ -12,6 +12,7 @@ namespace Tenshi.UnitySoku
 
         public static void ShakeCamera(this MonoBehaviour instance, GameObject cameraObject, CameraShakeProperties properties, bool preventOverride = false)
         {
+            if (instance == null) return;
             if (_currentCameraShakeRoutine != null && !preventOverride) instance.StopCoroutine(_currentCameraShakeRoutine);
             if (!preventOverride && _isShaking) _isShaking = false;
             _currentCameraShakeRoutine = Shake(cameraObject, properties);
@@ -20,6 +21,7 @@ namespace Tenshi.UnitySoku
 
         public static void ShakeCamera(GameObject cameraObject, CameraShakeProperties properties, MonoBehaviour instance, bool preventOverride = false)
         {
+            if (instance == null) return;
             if (_currentCameraShakeRoutine != null && !preventOverride) instance.StopCoroutine(_currentCameraShakeRoutine);
             if (!preventOverride && _isShaking) _isShaking = false;
             _currentCameraShakeRoutine = Shake(cameraObject, properties);
@@ -28,6 +30,7 @@ namespace Tenshi.UnitySoku
 
         public static void ShakeCamera(this MonoBehaviour instance, Camera camera, CameraShakeProperties properties, bool preventOverride = false)
         {
+            if (instance == null) return;
             if (_currentCameraShakeRoutine != null && !preventOverride) instance.StopCoroutine(_currentCameraShakeRoutine);
             if (!preventOverride && _isShaking) _isShaking = false;
             _currentCameraShakeRoutine = ShakeProjection(camera, properties);
