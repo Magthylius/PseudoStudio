@@ -10,7 +10,6 @@ namespace Hadal.Usables
     {
         public override void DoEffect(UsableHandlerInfo info)
         {
-            Debug.LogError("gay");
             var projectileObj = SeismicHarpoonPool.Instance.Scoop();
             projectileObj.Data = ProjectileData;
             projectileObj.projectileID = info.ProjectileID;

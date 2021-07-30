@@ -4144,9 +4144,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
+      propertyPath: maxReserveCapacity
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: chamberReloadedAudio
       value: 
       objectReference: {fileID: 11400000, guid: 43cc65e86f4467f4d92c2079b5ddb9e7, type: 2}
+    - target: {fileID: 1275541528094104063, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
+      propertyPath: reserveRegenerationTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4014725249324593813, guid: 5470d5f47422d2645bc3e7bb0ec1c8c5, type: 3}
       propertyPath: m_Name
       value: HarpoonLauncher
