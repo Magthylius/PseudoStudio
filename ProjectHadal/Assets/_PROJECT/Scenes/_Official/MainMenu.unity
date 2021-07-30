@@ -217,18 +217,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13536529}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 715049120}
-  m_RootOrder: 1
+  m_Father: {fileID: 1660006357}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1407.1, y: -287.62}
-  m_SizeDelta: {x: 449.91, y: 62.38}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 221.19012}
+  m_SizeDelta: {x: 449.91003, y: 62.38}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &13536531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3026,7 +3026,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 715049120}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6501,12 +6501,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 784008222}
-  - {fileID: 13536530}
-  - {fileID: 988997550}
   - {fileID: 302721317}
   - {fileID: 1103180372}
   - {fileID: 770934339}
   - {fileID: 1932922299}
+  - {fileID: 1660006357}
   m_Father: {fileID: 1235797652}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6910,7 +6909,7 @@ RectTransform:
   - {fileID: 2136700392}
   - {fileID: 1437704098}
   m_Father: {fileID: 715049120}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11579,19 +11578,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988997549}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 711146080}
-  m_Father: {fileID: 715049120}
-  m_RootOrder: 2
+  m_Father: {fileID: 1660006357}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 679.62, y: -96.112}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -96.11201}
   m_SizeDelta: {x: 434.8, y: 572.22}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &990042290
 GameObject:
   m_ObjectHideFlags: 0
@@ -13506,7 +13505,7 @@ RectTransform:
   - {fileID: 1031088489}
   - {fileID: 1409513999}
   m_Father: {fileID: 715049120}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -23070,6 +23069,43 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0e43a2e562b690044a8340665e33d21a, type: 3}
   m_PrefabInstance: {fileID: 1770961937770886812}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1660006356
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1660006357}
+  m_Layer: 5
+  m_Name: Right Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1660006357
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660006356}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 13536530}
+  - {fileID: 988997550}
+  m_Father: {fileID: 715049120}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -100, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!4 &1663267218 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5862261170718821397, guid: 2fd1614b1f2dd1347b40fb391f3d47db, type: 3}
@@ -25927,7 +25963,7 @@ RectTransform:
   - {fileID: 69737027}
   - {fileID: 1930872215}
   m_Father: {fileID: 715049120}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
@@ -25958,34 +25994,34 @@ MonoBehaviour:
     ClassTitle: Hunter
     ClassDesc: The point holder, the forward spear. Agile and mobile, this sub excels
       in close range engagements.
-    PassiveTitle: Powered Thrusters
+    PassiveTitle: 'PASSIVE: Powered Thrusters'
     PassiveDesc: Supercharged thrusters allows twice the dodge boosting.
-    ActiveTitle: Comically Large Harpoons
-    ActiveDesc: Biggest harpoon for the biggest slow proc.
+    ActiveTitle: 'ACTIVE (R): Seismic Harpoons'
+    ActiveDesc: Large tremor harpoons that severely disrupts any movement once impaled.
   - ClassType: 2
     ClassTitle: Medic
     ClassDesc: The saviour of subs, outfitted just to babysit and save others.
-    PassiveTitle: Defib Cables
+    PassiveTitle: 'PASSIVE: Defib Cables'
     PassiveDesc: Reviving others are much faster and much better.
-    ActiveTitle: Static Grenades
+    ActiveTitle: 'ACTIVE (R): Static Grenades'
     ActiveDesc: A imploding grenade that creates a static field to temporarily disorient
       creatures.
   - ClassType: 3
     ClassTitle: Trapper
     ClassDesc: Outfitted to ambush, traps set can change turn the mouse into a cat.
-    PassiveTitle: Pneumatic Loaders
+    PassiveTitle: 'PASSIVE: Pneumatic Loaders'
     PassiveDesc: Faster fire rate on torpedo and harpoon launchers.
-    ActiveTitle: Paralyzers
+    ActiveTitle: 'ACTIVE (R): Paralyzers'
     ActiveDesc: A remote-detonated trap device that severly impacts the movement
       and reaction of creatures.
   - ClassType: 4
     ClassTitle: Tracker
     ClassDesc: Dedicated for recon, this sub is crucial for providing information
       to the team.
-    PassiveTitle: Hydrophones
+    PassiveTitle: 'PASSIVE: Hydrophones'
     PassiveDesc: Hydrophones has allowed the sub to listen and monitor creature noises
       underwater.
-    ActiveTitle: Tracker Darts
+    ActiveTitle: 'ACTIVE (R): Tracker Darts'
     ActiveDesc: Tracker darts launched creates sonar pings to inform the team on
       activation.
   - ClassType: 0
@@ -26029,7 +26065,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1932922298}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
