@@ -86,6 +86,12 @@ namespace Hadal.Networking
         [Header("Offline settings")] 
         [Range(0, 3)] public int DummyCount;
         public bool DummyMirrorsMovement;
+
+        [Header("Packet resend settings")] 
+        public int QuickResendCount = 3;
+        public int MaxResendsBeforeDisconnect = 7;
+        public bool AllowResentCounter = true;
+        [SerializeField, ReadOnly] private int CommandResentCount = -1;
         
         //! internal references
         bool loadsToMainMenu = false;
@@ -120,6 +126,23 @@ namespace Hadal.Networking
             {
                 GameManager.Instance.StartGameEvent();
             }
+
+            PhotonNetwork.QuickResends = QuickResendCount;
+            PhotonNetwork.MaxResendsBeforeDisconnect = MaxResendsBeforeDisconnect;
+            
+            //! Network monitoring
+            if (AllowResentCounter) StartCoroutine(ResentCounter());
+            else CommandResentCount = -1;
+
+            IEnumerator ResentCounter()
+            {
+                while (AllowResentCounter)
+                {
+                    CommandResentCount = PhotonNetwork.ResentReliableCommands;
+                    yield return null;
+                }
+            }
+            
         }
 
         public override void OnEnable()
