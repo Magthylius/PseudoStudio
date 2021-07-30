@@ -95,7 +95,6 @@ namespace Hadal.Usables.Projectiles
             if (UsableBlackboard.InAILayers(layer))
             {
                 //! hits AI
-                Debug.LogError(other.name);
                 if (IsLocal)
                     other.gameObject.GetComponentInChildren<IDamageable>().TakeDamage(Data.BaseDamage);
 
