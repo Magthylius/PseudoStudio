@@ -89,15 +89,14 @@ namespace Hadal.Networking.UI.MainMenu
                 if (AllPlayersReady && !previousReadyState)
                 {
                     StartCoroutine(DelayButton());
+                    previousReadyState = true;
                     
                     IEnumerator DelayButton()
                     {
                         yield return new WaitForSeconds(0.5f);
                         
                         deployReadyAudio.Invoke();
-                    
-                        previousReadyState = true;
-                    
+
                         centerImage.color = readyColor;
                     
                         if (effectList != null)
