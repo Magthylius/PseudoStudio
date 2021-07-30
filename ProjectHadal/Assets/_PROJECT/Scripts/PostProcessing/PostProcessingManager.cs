@@ -137,6 +137,17 @@ namespace Hadal.PostProcess
             Debug.LogError("Tried to edit chromatic aberration, but not found!");
         }
 
+        public void EditMotionBlur(MotionBlurSettings settings)
+        {
+            MotionBlur mb;
+            if (CurrentVolumeTryGet(out mb))
+            {
+                mb.intensity.Override(settings.Intensity);
+                return;
+            }
+            Debug.LogError("Tried to edit motion blur, but not found!");
+        }
+
         public void ResetVolumeToDefault()
         {
             foreach (VolumeComponent component in DefaultProfile.components)

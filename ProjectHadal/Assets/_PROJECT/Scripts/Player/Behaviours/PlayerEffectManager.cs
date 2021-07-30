@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Hadal.Player.Behaviours;
+using Hadal.PostProcess;
+using Hadal.PostProcess.Settings;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -25,11 +27,15 @@ namespace Hadal.Player
         [Foldout("Chromatic Aberration")] public bool AllowChromaticAberrationEffect = true;
         [Foldout("Chromatic Aberration")] public float caMaxIntensity = 1f;
         private float caOriginalIntensity;
-
         private ChromaticAberration caComp;
 
+        [Header("External Effects")] 
+        public bool AllowMotionBlur;
+        public float MotionBlurMaxIntensity;
+        private float targetMotionBlurIntensity;
+        private MotionBlurSettings mbSettings = new MotionBlurSettings(0f);
+        
         private VolumeProfile volumeProfile;
-
         private bool allowEffects;
         
         public void Start()
@@ -48,26 +54,33 @@ namespace Hadal.Player
 
         private void LateUpdate()
         {
-            if (!allowEffects) return;
-
-            bool caReady = false;
-            bool camReady = false;
-
-            if (Tolerance(caComp.intensity.value, caOriginalIntensity, 0.01f))
+            if (allowEffects)
             {
-                caComp.intensity.Override(caOriginalIntensity);
-                caReady = true;
-            }
-            else caComp.intensity.Override(Mathf.Lerp(caComp.intensity.value, caOriginalIntensity, effectSpeed * Time.deltaTime));
+                bool caReady = false;
+                bool camReady = false;
 
-            if (Tolerance(playerCamera.fieldOfView, cameraOriginalFOV, 0.01f))
+                if (Tolerance(caComp.intensity.value, caOriginalIntensity, 0.01f))
+                {
+                    caComp.intensity.Override(caOriginalIntensity);
+                    caReady = true;
+                }
+                else caComp.intensity.Override(Mathf.Lerp(caComp.intensity.value, caOriginalIntensity, effectSpeed * Time.deltaTime));
+
+                if (Tolerance(playerCamera.fieldOfView, cameraOriginalFOV, 0.01f))
+                {
+                    playerCamera.fieldOfView = cameraOriginalFOV;
+                    camReady = true;
+                }
+                else playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, cameraOriginalFOV, effectSpeed * Time.deltaTime);
+
+                allowEffects = !(camReady && caReady);
+            }
+
+            if (AllowMotionBlur)
             {
-                playerCamera.fieldOfView = cameraOriginalFOV;
-                camReady = true;
+                mbSettings.LerpIntensity(targetMotionBlurIntensity, effectSpeed * Time.deltaTime);
+                PostProcessingManager.Instance.EditMotionBlur(mbSettings);
             }
-            else playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, cameraOriginalFOV, effectSpeed * Time.deltaTime);
-
-            allowEffects = !(camReady && caReady);
         }
 
         public void HandleDamageEffect(float normalizedIntensity)
@@ -84,6 +97,10 @@ namespace Hadal.Player
             
             allowEffects = true;
         }
-        
+
+        public void SetTargetMotionBlurIntensity(float normalizedIntensity)
+        {
+            targetMotionBlurIntensity = MotionBlurMaxIntensity * normalizedIntensity;
+        }
     }
 }

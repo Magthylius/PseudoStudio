@@ -135,4 +135,44 @@ namespace Hadal.PostProcess.Settings
             return false;
         }
     }
+
+    [System.Serializable]
+    public struct MotionBlurSettings
+    {
+        public MotionBlurQuality Mode;
+        [Range(0f, 1f)] public float Intensity;
+        [Range(0f, 0.2f)] public float Clamp;
+        
+        public MotionBlurSettings(in MotionBlur motionBlur)
+        {
+            Mode = motionBlur.quality.value;
+            Intensity = motionBlur.intensity.value;
+            Clamp = motionBlur.clamp.value;
+        }
+        public MotionBlurSettings(MotionBlurSettings other)
+        {
+            Mode = other.Mode;
+            Intensity = other.Intensity;
+            Clamp = other.Clamp;
+        }
+        public MotionBlurSettings(float intensity)
+        {
+            Mode = MotionBlurQuality.Medium;
+            Intensity = intensity;
+            Clamp = 0f;
+        }
+        
+        public bool LerpIntensity(float targetIntensity, float speed, float tolerance = 0.01f)
+        {
+            Intensity = Mathf.Lerp(Intensity, targetIntensity, speed);
+
+            if (Mathf.Abs(targetIntensity - Intensity) <= tolerance)
+            {
+                Intensity = targetIntensity;
+                return true;
+            }
+
+            return false;
+        }
+    }
 }
