@@ -628,111 +628,6 @@ namespace Hadal.Networking
         {
             PhotonNetwork.Instantiate(PathManager.AIPrefabPath, pos, rot);
         }
-
-        private string playerClassHash = "PlayerClasses";
-        public string PlayerClassHash => playerClassHash;
-
-        public void UpdateAllPlayerIndices(int leavingPlayerIndex)
-        {
-            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
-            {
-                Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
-
-                if (playerClassInfo.ContainsKey(leavingPlayerIndex))
-                {
-                    playerClassInfo.Remove(leavingPlayerIndex);
-
-                    List<int> playerTypeInt = new List<int>();
-                    foreach (var pair in playerClassInfo)
-                        playerTypeInt.Add(pair.Value);
-
-                    Dictionary<int, int> newPlayerClassInfo = new Dictionary<int, int>();
-                    for (int i = 0; i < playerTypeInt.Count; i++)
-                        newPlayerClassInfo.Add(i, playerTypeInt[0]);
-                    
-                    SetCurrentRoomCustomProperty(playerClassHash, newPlayerClassInfo);
-                }
-
-            }
-        }
-        
-        /// <summary> Restructure custom properties when player leaves </summary>
-        public void UpdatePlayerIndices(PlayerClassType type, int newPlayerIndex)
-        {
-            Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
-            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
-            {
-                
-
-                /*foreach (var pClass in playerClassInfo)
-                {
-                    if (pClass.Value == (int)type)
-                    {
-                        playerClassInfo.Remove(pClass.Key);
-                        playerClassInfo.Add(newPlayerIndex, (int)type);
-                        break;
-                    }
-                }*/
-
-                if (playerClassInfo.ContainsKey(newPlayerIndex))
-                    playerClassInfo[newPlayerIndex] = (int) type;
-                else
-                    playerClassInfo.Add(newPlayerIndex, (int)type);
-            }
-
-            List<int> keysToRemove = new List<int>();
-            foreach (var pair in playerClassInfo)
-            {
-                if (pair.Key >= PlayerList.Length) keysToRemove.Add(pair.Key);
-            }
-
-            foreach (int key in keysToRemove)
-            {
-                Debug.LogWarning($"Removed key: {key} which is {(PlayerClassType)playerClassInfo[key]} class!");
-                playerClassInfo.Remove(key);
-            }
-            
-            SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
-        }
-
-        public void FlushClassProperties()
-        {
-            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
-            {
-                Debug.LogWarning("Custom properties flushed!");
-                //CurrentRoom.CustomProperties[playerClassHash] = null;
-                SetCurrentRoomCustomProperty(playerClassHash, new Dictionary<int, int>());
-            }
-        }
-        
-        /// <summary> Update properties when player chooses something </summary>
-        public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
-        {
-            //! Have to convert enum type to int because they cant handle it
-            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
-            {
-                Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
-
-                if (playerClassInfo.ContainsKey(playerIndex))
-                    playerClassInfo[playerIndex] = (int)type;
-                else
-                    playerClassInfo.Add(playerIndex, (int)type);
-
-                SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
-            }
-            else
-            {
-                Debug.LogWarning("No properties found, CustomProperties rebuilt");
-                
-                //! No properties found, create hashtable as init
-                Dictionary<int, int> playerClassInfo = new Dictionary<int, int>
-                {
-                    {playerIndex, (int)type}
-                };
-                
-                SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
-            }
-        }
         #endregion
 
         #region Accessors
@@ -822,7 +717,13 @@ namespace Hadal.Networking
         public Color SecondPlayerColor;
         public Color ThirdPlayerColor;
         public Color FourthPlayerColor;
-
+        
+        private string playerClassHash = "PlayerClasses";
+        public string PlayerClassHash => playerClassHash;
+        
+        //! meant for after game starts, sorted player to class dict
+        private string staticClassHash = "StaticClassInfo";
+        
         public Color GetPlayerColor(Player player)
         {
             int index = GetPlayerIndex(player);
@@ -906,7 +807,99 @@ namespace Hadal.Networking
 
             return -1;
         }
+
+        /// <summary> Gets player class, use this only after static classes are settled! </summary>
+        /// <returns>PlayerClassType, invalid when player not found</returns>
+        public PlayerClassType GetPlayerClass(Player player)
+        {
+            /*if (CurrentRoom.CustomProperties.ContainsKey(staticClassHash))
+            {
+                Dictionary<Player, int> staticClassInfo = (Dictionary<Player, int>)CurrentRoom.CustomProperties[staticClassHash];
+
+                if (staticClassInfo.ContainsKey(player))
+                    return (PlayerClassType) staticClassInfo[player];
+                else return PlayerClassType.Invalid;
+
+            }
+            
+            return PlayerClassType.Invalid;*/
+            
+            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
+                Dictionary<Player, int> sortedDict = GetSortedPlayerIndices();
+
+                if (sortedDict.ContainsKey(player))
+                {
+                    if (playerClassInfo.ContainsKey(sortedDict[player]))
+                    {
+                        return (PlayerClassType) playerClassInfo[sortedDict[player]];
+                    }
+                }
+            }
+            
+            return PlayerClassType.Invalid;
+        }
         
+        //! More towards room management
+        public void FlushClassProperties()
+        {
+            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                Debug.LogWarning("Custom properties flushed!");
+                //CurrentRoom.CustomProperties[playerClassHash] = null;
+                SetCurrentRoomCustomProperty(playerClassHash, new Dictionary<int, int>());
+            }
+        }
+        
+        /// <summary> Update properties when player chooses something </summary>
+        public void UpdatePlayerClass(int playerIndex, PlayerClassType type)
+        {
+            //! Have to convert enum type to int because they cant handle it
+            if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
+            {
+                Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
+
+                if (playerClassInfo.ContainsKey(playerIndex))
+                    playerClassInfo[playerIndex] = (int)type;
+                else
+                    playerClassInfo.Add(playerIndex, (int)type);
+
+                SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
+            }
+            else
+            {
+                Debug.LogWarning("No properties found, CustomProperties rebuilt");
+                
+                //! No properties found, create hashtable as init
+                Dictionary<int, int> playerClassInfo = new Dictionary<int, int>
+                {
+                    {playerIndex, (int)type}
+                };
+                
+                SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
+            }
+        }
+
+        public void SettleStaticClassInfo()
+        {
+            return;
+            
+            Dictionary<Player, int> sortedDict = GetSortedPlayerIndices();
+            Dictionary<Player, int> staticClass = new Dictionary<Player, int>();
+            Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
+
+            foreach (var playerPair in sortedDict)
+            {
+                foreach (var classPair in playerClassInfo)
+                {
+                    if (playerPair.Value == classPair.Key)
+                        staticClass.Add(playerPair.Key, classPair.Value);
+                }
+            }
+            
+            SetCurrentRoomCustomProperty(staticClassHash, staticClass);
+        }
         #endregion
     }
 }

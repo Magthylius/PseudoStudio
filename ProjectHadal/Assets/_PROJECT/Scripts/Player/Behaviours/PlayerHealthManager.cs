@@ -57,6 +57,11 @@ namespace Hadal.Player.Behaviours
         [SerializeField] private AudioEventData downedAudio;
         private Timer downSoundTimer;
         [SerializeField] private float downSoundDuration;
+
+        [Header("Effects")] 
+        public PlayerEffectManager EffectManager;
+        public float MaxDamageEffect = 20f;
+        
         #endregion
 
         #region Events
@@ -69,6 +74,9 @@ namespace Hadal.Player.Behaviours
 
         /// <summary> Event will trigger when the player becomes down but not out. </summary>
         public event Action OnDown;
+
+        /// <summary> Event will trigger when the player takes damage. </summary>
+        public event Action<float> OnDamageTaken;
 		
 		/// <summary> Event will trigger everytime the revive timer is initiated, cancelled or finished.
         /// Returns true when starting to revive another player ; returns false when no longer reviving another player. </summary>
@@ -102,6 +110,7 @@ namespace Hadal.Player.Behaviours
             OnLocalReviveAttempt += JumpstartAttempt;
             OnNetworkReviveAttempt += UpdateReviveUI;
             OnNetworkReviveAttempt += StopDownSound;
+            OnDamageTaken += EffectManager.HandleDamageEffect;
 
             //initializing sound loop set up
             downSoundTimer = this.Create_A_Timer()
@@ -115,6 +124,7 @@ namespace Hadal.Player.Behaviours
         {
             OnDown = null;
             OnNetworkReviveAttempt = null;
+            OnDamageTaken = null;
         }
         private void OnValidate()
         {
@@ -205,6 +215,8 @@ namespace Hadal.Player.Behaviours
 
             CheckHealthStatus();
             Send_HealthUpdateStatus(false);
+            
+            OnDamageTaken?.Invoke(Mathf.Clamp01(damage / MaxDamageEffect));
             return true;
         }
 

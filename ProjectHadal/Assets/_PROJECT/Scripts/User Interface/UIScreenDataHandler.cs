@@ -54,7 +54,7 @@ public class UIScreenDataHandler : MonoBehaviour
         if (targetHealth == 0)
             healthData.UpdateTextNoSuffix("ERROR");
         else
-            healthData.UpdateText(Mathf.RoundToInt(displayHealth));
+            healthData.UpdateText(displayHealth.ToString("F1"));
 
         healthFill.fillAmount = displayHealth / 100f;
     }
@@ -105,13 +105,18 @@ public class UIScreenDataHandler : MonoBehaviour
     {
         depthData.UpdateText((int)(depth + initialDepth));
     }
-
-
+    
     [Header("Speed")] 
     public UIDataFormatBehaviour speedData;
+    public GameObject SpeedLayer1;
+    public float SpeedGate1;
+    public GameObject SpeedLayer2;
+    public float SpeedGate2;
 
     public void UpdateSpeed(float speed)
     {
         speedData.UpdateText(speed.ToString("F2"));
+        SpeedLayer1.SetActive(speed > SpeedGate1);
+        SpeedLayer2.SetActive(speed > SpeedGate2);
     }
 }
