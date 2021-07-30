@@ -238,6 +238,7 @@ namespace Hadal.Player
 				SetPhysicIncapacitated();
                 if (IsLocalPlayer)
 				{
+                    UI.ShootTracer.Deactivate();
                     playerAudio.PlayOneShot(PlayerSound.Grabbed, true);
 				    playerAudio.AmbiencePlayer.PlayAmbienceOfType(AmbienceType.Grabbed_by_Leviathan);
                 }
