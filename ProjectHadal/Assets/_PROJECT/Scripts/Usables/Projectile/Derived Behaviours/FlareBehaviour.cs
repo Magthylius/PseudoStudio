@@ -29,7 +29,7 @@ namespace Hadal.Usables.Projectiles
         {
             base.OnEnable();
             if (!rb) rb = GetComponent<Rigidbody>();
-            /*rb.useGravity = true;*/
+            rb.useGravity = true;
 
             if (enableRandomTorque)
             {

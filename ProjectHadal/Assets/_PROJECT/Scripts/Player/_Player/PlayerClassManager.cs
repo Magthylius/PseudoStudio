@@ -27,8 +27,8 @@ namespace Hadal.Player
 
             SceneManager.sceneLoaded += OnSceneLoad;
             
-            if (defaultType == PlayerClassType.Invalid)
-                Debug.LogError($"Default cannot be invalid!");
+            /*if (defaultType == PlayerClassType.Invalid)
+                Debug.LogError($"Default cannot be invalid!");*/
         }
 
         private void Start()
