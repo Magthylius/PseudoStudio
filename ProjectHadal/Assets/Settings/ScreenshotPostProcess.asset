@@ -217,8 +217,8 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.34464753
-          value: 0.5248619
+          time: 0.53524804
+          value: 0.9060773
           inSlope: 1.1594642
           outSlope: 1.1594642
           tangentMode: 0
@@ -301,11 +301,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   m_AdvancedMode: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.23
+    m_Value: 0.2
     min: -1
     max: 1
   xMultiplier:
@@ -345,11 +345,11 @@ MonoBehaviour:
     m_Value: 1
   gaussianStart:
     m_OverrideState: 1
-    m_Value: 100
+    m_Value: 229.1
     min: 0
   gaussianEnd:
     m_OverrideState: 1
-    m_Value: 605.1
+    m_Value: 500
     min: 0
   gaussianMaxRadius:
     m_OverrideState: 1
@@ -413,7 +413,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.321
+    m_Value: 0.3
     min: 0
     max: 1
   smoothness:
