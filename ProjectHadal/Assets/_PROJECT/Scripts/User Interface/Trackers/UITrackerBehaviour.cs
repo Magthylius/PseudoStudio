@@ -19,16 +19,16 @@ namespace Hadal.UI
         [SerializeField] private Graphic graphic;
         
         [Header("Fade Settings")]
-        [SerializeField] private bool fadeWhenDistant = false;
-        [SerializeField] private float fadeOutDistance = 100f;
-        [SerializeField] private float fadeInDistance = 100f;
-        [SerializeField] private float fadeSpeed = 2f;
+        [SerializeField] protected bool fadeWhenDistant = false;
+        [SerializeField] protected float fadeOutDistance = 100f;
+        [SerializeField] protected float fadeInDistance = 100f;
+        [SerializeField] protected float fadeSpeed = 2f;
 
-        private CanvasGroup canvasGroup;
-        private RectTransform rectTransform;
-        private Transform trackingTransform;
-        private Camera playerCamera;
-        private Transform playerTransform;
+        protected CanvasGroup canvasGroup;
+        protected RectTransform rectTransform;
+        protected Transform trackingTransform;
+        protected Camera playerCamera;
+        protected Transform playerTransform;
 
         private FlexibleRect flexRect;
         private CanvasGroupFader cgf;
@@ -97,7 +97,7 @@ namespace Hadal.UI
             }
         }
         
-        private void LateUpdate()
+        public virtual void LateUpdate()
         {
             if (!fadeWhenDistant) return;
             
@@ -147,7 +147,7 @@ namespace Hadal.UI
         /// Checks if still valid to track. 
         /// </summary>
         /// <returns>True if valid, false if not</returns>
-        bool IsValid()
+        protected bool IsValid()
         {
             if (trackingTransform == null || playerCamera == null)
             {

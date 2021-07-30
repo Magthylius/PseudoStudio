@@ -84,6 +84,7 @@ namespace Hadal.Player
             
             playerUI.ClassInfoHandler.SetClass(ClassType);
             playerUI.UtilitiesHandler.Initialize(ClassType);
+            LocalPlayerData.PlayerController.SetPlayerClass(ClassType);
             //playerUI.ClassInfoHandler.SetPanelColor(NetworkEventManager.Instance.GetCurrentPlayerColor());
         }
 

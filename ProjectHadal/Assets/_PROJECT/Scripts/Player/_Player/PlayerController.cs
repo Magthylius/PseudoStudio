@@ -68,6 +68,7 @@ namespace Hadal.Player
 
         //! Self information
         Photon.Realtime.Player attachedPlayer;
+        private PlayerClassType classType;
 
         public static event Action<PlayerController> OnInitialiseComplete;
 
@@ -311,17 +312,19 @@ namespace Hadal.Player
         {
             PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
 
-            if (!NetworkEventManager.Instance.isOfflineMode)
+            NetworkEventManager neManager = NetworkEventManager.Instance;
+
+            if (!neManager.isOfflineMode)
             {
                 //! Track player names online, offline tracking called from player manager
                 foreach (PlayerController controller in allPlayerControllers)
                 {
-                    foreach (var dict in NetworkEventManager.Instance.GetSortedPlayerIndices())
+                    foreach (var dict in neManager.GetSortedPlayerIndices())
                     {
                         if (controller._pView.Owner == dict.Key)
                         {
-                            if (controller != this) playerUI.TrackPlayerName(controller.transform, dict.Key.NickName);
-                            controller.SetPlayerColor(NetworkEventManager.Instance.GetPlayerColor(dict.Key));
+                            if (controller != this) playerUI.TrackPlayerName(controller.transform, dict.Key.NickName, neManager.GetPlayerClass(controller._pView.Owner));
+                            controller.SetPlayerColor(neManager.GetPlayerColor(dict.Key));
                         }
                     }
                 }
@@ -337,7 +340,7 @@ namespace Hadal.Player
                 //! ignore self
                 if (controller == this) continue;
                 
-                playerUI.TrackPlayerName(controller.transform, controller.gameObject.name);
+                playerUI.TrackPlayerName(controller.transform, controller.gameObject.name, PlayerClassType.Harpooner);
             }
         }
 
@@ -554,7 +557,8 @@ namespace Hadal.Player
         public bool CanMove => !_isKnocked && !_isCarried && !_isDown;
         public bool CanRotate => !_isDown && !_isCarried;
         public bool IsLocalPlayer => _isLocalPlayer;
-
+        public PlayerClassType PlayerClass => classType;
+        public void SetPlayerClass(PlayerClassType type) => classType = type;
         #endregion
 
         #region Accessors

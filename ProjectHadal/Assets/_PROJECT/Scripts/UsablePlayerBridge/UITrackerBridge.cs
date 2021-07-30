@@ -21,7 +21,7 @@ public static class UITrackerBridge
         PlayerRemovedEvent = null;
     }
     
-    public static void AddPlayerTransform(Transform otherPlayer, string name)
+    /*public static void AddPlayerTransform(Transform otherPlayer, string name)
     {
         if (!OtherPlayerNames.ContainsKey(otherPlayer))
         {
@@ -30,7 +30,7 @@ public static class UITrackerBridge
             else Debug.LogWarning("UI Manager not init yet!");
             OtherPlayerNames.Add(otherPlayer, name);
         }
-    }
+    }*/
 
     public static void RemovePlayerTransform(Transform otherPlayer, string name)
     {
