@@ -151,18 +151,17 @@ namespace Hadal.Interactables
             RaiseEventOptions eventOps = new RaiseEventOptions {Receivers = ReceiverGroup.All};
 
             object[] data = { interactingPlayerViewID, interactionWindupTime };
-            neManager.RaiseEvent(ByteEvents.PLAYER_UI_SALVAGESTART, data, eventOps);
+            neManager.RaiseEvent(ByteEvents.PLAYER_UI_SALVAGESTART, data, eventOps, SendOptions.SendReliable);
             //Debug.LogWarning($"Salvage start sent");
 
-           
             ResetWindupTimer();
 
-            bool hasEnteredRadius = false;
+            //bool hasEnteredRadius = false;
 
             //Debug.LogWarning($"Compare distancesqr: {SqrDistanceBetweenInteractorAndInteractee()} vs {sqrMaintainDist}");
             while (InteractorIsWithinInteractionDistance())
             {
-                hasEnteredRadius = true;
+                //hasEnteredRadius = true;
                 bool timerFinished = ElapseWindupTimer(DeltaTime) <= 0f;
                 if (timerFinished)
                 {
@@ -171,9 +170,10 @@ namespace Hadal.Interactables
                 }
                 yield return null;
             }
-
+            HandleExitSequence(false);
             //! Interaction fail case (went out of distance)
-            if (hasEnteredRadius) HandleExitSequence(false);
+            //if (hasEnteredRadius) HandleExitSequence(false);
+            //else Debug.LogWarning($"Outside radius, Coroutine yielded break");
             yield break;
 
             //! Local function definitions
@@ -190,7 +190,7 @@ namespace Hadal.Interactables
                 //
                 
                 data = new object[] { interactingPlayerViewID, isSuccess };
-                neManager.RaiseEvent(ByteEvents.PLAYER_UI_SALVAGEEND, data, eventOps);
+                neManager.RaiseEvent(ByteEvents.PLAYER_UI_SALVAGEEND, data, eventOps, SendOptions.SendReliable);
                 //Debug.LogWarning($"Salvage end sent: {isSuccess}");
 
                 if (isSuccess) Send_InteractionDetected();
