@@ -49,6 +49,7 @@ namespace Hadal.Player.Behaviours
         private bool _isKami;
         private bool _initialiseOnce;
         private bool _shouldRevive;
+        private bool _tellNonLocalsToRevive;
 		private bool _canBeRevivedByOthers;
 		
 		public float ReviveTimeRatio { get; private set; } = 0f;
@@ -163,7 +164,6 @@ namespace Hadal.Player.Behaviours
         private IEnumerator InitialiseRoutine()
         {
             yield return new WaitForSeconds(0.1f);
-            ResetHealth();
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_UPDATED_REVIVE_TIME, Receive_ReviveTimeUpdate);
 
@@ -478,7 +478,10 @@ namespace Hadal.Player.Behaviours
             TryRestoreControllerSystem(revivePercentAmount);
             CheckHealthStatus();
             OnNetworkReviveAttempt?.Invoke(true);
+
+            _tellNonLocalsToRevive = true;
             Send_HealthUpdateStatus(false); //! send revive message to non-local players
+            _tellNonLocalsToRevive = false;
         }
 
         #endregion
@@ -581,7 +584,8 @@ namespace Hadal.Player.Behaviours
                     _pView.ViewID,
                     sendToTrueLocalPlayer,
                     _currentHealth,
-                    _isDead
+                    _isDead,
+                    _tellNonLocalsToRevive
                 };
 
                 if (debugEnabled)
@@ -626,6 +630,10 @@ namespace Hadal.Player.Behaviours
                 bool isDead = content[3].AsBool();
                 _isDead = isDead; // set is dead or not
                 CheckHealthStatus();
+
+                bool shouldRevive = content[4].AsBool();
+                if (shouldRevive)
+                    OnNetworkReviveAttempt?.Invoke(true);
 
                 if (debugEnabled)
                     $"Received event from another player's computer, evaluating for non-local player. New health: {_currentHealth}; Is Dead: {_isDead}".Msg();
