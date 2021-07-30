@@ -380,7 +380,8 @@ namespace Hadal.Player
             {
                 gameObject.name = "Player " + UnityEngine.Random.Range(0, 100);
                 mover.ToggleEnablility(true);
-                SetLocalPlayerSettings();
+                if (!isDummy)
+                    SetLocalPlayerSettings();
             }
             
             if (UITrackerBridge.LocalPlayerUIManager == null && isMine)
