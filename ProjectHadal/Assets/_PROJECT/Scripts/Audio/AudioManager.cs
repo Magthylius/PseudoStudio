@@ -95,6 +95,9 @@ namespace Hadal.AudioSystem
         {
 	        foreach (AudioSourceHandler handler in audioSourceHandlers)
 	        {
+                if (handler == null || handler.Source == null)
+                    continue;
+                
 		        if (handler.Source.clip == clip)
 		        {
 			        return handler;
