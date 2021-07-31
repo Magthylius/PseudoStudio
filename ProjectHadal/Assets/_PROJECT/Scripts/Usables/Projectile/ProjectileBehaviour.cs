@@ -6,6 +6,7 @@ using ExitGames.Client.Photon;
 using Magthylius.DataFunctions;
 using Random = UnityEngine.Random;
 using Hadal.AudioSystem;
+using UnityEngine.VFX;
 
 //Created by Jet, Edited by Jon
 namespace Hadal.Usables.Projectiles
@@ -31,6 +32,7 @@ namespace Hadal.Usables.Projectiles
         [Header("Impact Effect")]
         [SerializeField] protected GameObject particleEffect;
         [SerializeField] protected GameObject projectileAsset;
+        [SerializeField] protected VisualEffect bubbleAsset;
         protected Timer impactDuration;
         protected bool isVisualizing;
         [SerializeField] protected float impactVFXTime = 5f;
