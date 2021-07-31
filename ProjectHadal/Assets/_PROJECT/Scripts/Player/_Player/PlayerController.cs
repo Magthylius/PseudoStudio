@@ -62,6 +62,7 @@ namespace Hadal.Player
         bool playerReady = false;
         bool cameraReady = false;
         bool loadingReady = false;
+        bool playerStarted = false;
 
         //Dummy System
         [SerializeField] bool isDummy = false;
@@ -304,15 +305,22 @@ namespace Hadal.Player
 				if (!success)
 					"Ambience Player cannot be found in current scene.".Warn();
 			}
-            
+
             /*mover.ToggleEnablility(true);
             rotator.ToggleEnablility(true);*/
             LoadingManager.Instance.StartEndLoad();
+            LoadingManager.Instance.LoadingFadeEndedEvent += UnlockPlayerAfterLoading;
             _manager.InstantiatePViewList();
             TrackNamesOnline();
             LocalGameStartEvent?.Invoke(this);
 
             UpdateDiegetics();
+        }
+
+        public void UnlockPlayerAfterLoading()
+        {
+            playerStarted = true;
+            LoadingManager.Instance.LoadingFadeEndedEvent -= UnlockPlayerAfterLoading;
         }
 
         public void UnlockPlayerControlOnStart()
@@ -637,7 +645,7 @@ namespace Hadal.Player
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
         public PlayerGraphicsHandler GraphicsHandler => graphicsHandler;
-        public bool PlayerReadyForUpdateLoop => playerReady || (NetworkEventManager.Instance != null && NetworkEventManager.Instance.isOfflineMode);
+        public bool PlayerReadyForUpdateLoop => (playerReady && playerStarted) || (NetworkEventManager.Instance != null && NetworkEventManager.Instance.isOfflineMode);
         #endregion
     }
 }
