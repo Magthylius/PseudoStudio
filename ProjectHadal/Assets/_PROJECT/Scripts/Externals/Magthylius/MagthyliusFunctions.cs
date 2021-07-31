@@ -3,10 +3,8 @@ using System;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
-// Version 1.6.0
+// Version 1.7.0
 namespace Magthylius
 {
     namespace Utilities
@@ -132,6 +130,8 @@ namespace Magthylius
             public Vector2 originalPosition;
             public Vector2 targetPosition;
 
+            public Vector2 targetSizeDelta;
+            
             Vector2 endPosition;
             bool allowTransition = false;
             bool isMovingAway = true;
@@ -144,9 +144,10 @@ namespace Magthylius
                 targetPosition = Vector2.zero;
                 endPosition = Vector2.zero;
 
+                targetSizeDelta = rectTransform.sizeDelta;
+                
                 isMovingAway = true;
             }
-
             public FlexibleRect(RectTransform rectTr, Vector2 targetPos)
             {
                 rectTransform = rectTr;
@@ -154,6 +155,8 @@ namespace Magthylius
 
                 targetPosition = targetPos;
                 endPosition = Vector2.zero;
+                
+                targetSizeDelta = rectTransform.sizeDelta;
 
                 isMovingAway = true;
             }
@@ -162,7 +165,7 @@ namespace Magthylius
             {
                 if (allowTransition)
                 {
-                    allowTransition = !Lerp(endPosition, speed, precision);
+                    allowTransition = !LerpPosition(endPosition, speed, precision);
                 }
             }
 
@@ -188,6 +191,7 @@ namespace Magthylius
                 endPosition = endPos;
 
                 isMovingAway = true;
+                DetermineEndPosition();
             }
 
             void DetermineEndPosition()
@@ -201,7 +205,7 @@ namespace Magthylius
                 allowTransition = false;
             }
 
-            public bool Lerp(Vector2 targetPosition, float speed, float precision = 0.1f)
+            public bool LerpPosition(Vector2 targetPosition, float speed, float precision = 0.1f)
             {
                 Vector2 destination = Vector2.Lerp(center, targetPosition, speed);
 
@@ -215,6 +219,21 @@ namespace Magthylius
                 return false;
             }
 
+            public bool LerpSize(Vector2 targetSize, float speed, float precision = 0.1f)
+            {
+                Vector2 destination = Vector2.Lerp(rectTransform.sizeDelta, targetSize, speed);
+
+                if ((targetSizeDelta - destination).sqrMagnitude <= precision * precision)
+                {
+                    //MoveTo(targetPosition);
+                    rectTransform.sizeDelta = targetSize;
+                    return true;
+                }
+
+                rectTransform.sizeDelta = destination;
+                return false;
+            }
+            
             public void LerpUnsnapped(Vector2 targetPosition, float progress)
             {
                 Vector2 destination = Vector2.Lerp(center, targetPosition, progress);
@@ -232,6 +251,11 @@ namespace Magthylius
 
             public void MoveToStart() => MoveTo(originalPosition);
             public void MoveToEnd() => MoveTo(targetPosition);
+            
+            //! Size
+            public void Resize(Vector2 newSize) => rectTransform.sizeDelta = newSize;
+            public void ResizeX(float newSizeX) => rectTransform.sizeDelta = new Vector2(newSizeX, rectTransform.sizeDelta.y);
+            public void ResizeY(float newSizeY) => rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, newSizeY);
 
             //! Setters
             public void SetMovingAway(bool status) => isMovingAway = status;
@@ -247,6 +271,12 @@ namespace Magthylius
             public Vector2 GetBodyOffset(Vector2 direction, float degreeOfSelf)
             {
                 return new Vector2(originalPosition.x + (direction.normalized.x * degreeOfSelf * halfWidth), originalPosition.y + (direction.normalized.y * degreeOfSelf * halfHeight));
+            }
+            
+            //! Statics
+            public static Vector2 GetCenterPos(RectTransform otherTransform)
+            {
+                return (otherTransform.offsetMax + otherTransform.offsetMin) * 0.5f;
             }
 
             public float AngleFromOriginRad => Mathf.Atan2(center.y - originalPosition.y, center.x - originalPosition.x);

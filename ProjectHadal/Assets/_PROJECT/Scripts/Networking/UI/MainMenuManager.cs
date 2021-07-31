@@ -233,15 +233,12 @@ namespace Hadal.Networking.UI.MainMenu
         void ChangePhase(MenuPhase phase) => menuPhase = phase;
 
         #region Start phase
-        //public void PNTR_ChargeStartFiller() => startIF.StartCharge();
-        //public void PNTR_DischargeStartFiller() => startIF.StopCharge();
+
         void ConnectToLobby()
         {
             NetworkEventManager.Instance.ConnectUsingSettings();
             connectLMBPrompt.SetActive(false);
             connectingTMP.SetActive(true);
-
-            //print("Connecting to lobby");
         }
 
         void EndStartPhase()
@@ -296,6 +293,9 @@ namespace Hadal.Networking.UI.MainMenu
             //NetworkEventManager.Instance.Disconnect();
             CloseMenu(lobbyMenu);
             OpenMenu(nicknameMenu);
+            
+            findRoomFR.StartLerp(true);
+            createRoomFR.StartLerp(true);
         }
         
         public void BTN_StartGame()
@@ -306,14 +306,6 @@ namespace Hadal.Networking.UI.MainMenu
 
         public void BTN_LaunchTutorial()
         {
-            /*if (hasStartedLevel) return;
-            hasStartedLevel = true;*/
-            
-            //NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
-            //NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
-            //NetworkEventManager.Instance.CurrentRoom.IsOpen = false;
-            //NetworkEventManager.Instance.CurrentRoom.IsVisible = false;
-            //NetworkEventManager.Instance.ToOfflineMode();
             RoomOptions ro = new RoomOptions();
             ro.IsOpen = false;
             ro.IsVisible = false;
