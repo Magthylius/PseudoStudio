@@ -33,8 +33,10 @@ namespace Hadal.AI.Graphics
         //Ambush Pulse
         Color colorEnd;
         Color colorStart;
-        [SerializeField] private float colorRate;
+        [SerializeField] private float ambushColorRate;
+        [SerializeField] private float anticipationColorRate;
         private Coroutine ambushPulseRoutine;
+        private Coroutine anticipationPulseRoutine;
 
         public void Initialise(AIBrain brain, bool onMasterClient)
         {
@@ -64,18 +66,20 @@ namespace Hadal.AI.Graphics
             var content = (object[])eventData.CustomData;
             bool judgement = (bool)content[0];
             bool ambush = (bool)content[1];
+            bool anticipation = (bool)content[2];
             if (colourRoutine != null)
                 StopCoroutine(colourRoutine);
-            colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush));
+            colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush, anticipation));
         }
 
         public void JudgementColor(BrainState state, EngagementObjective objective)
         {
             bool judgement = state == BrainState.Judgement;
             bool ambush = state == BrainState.Ambush;
+            bool anticipation = state == BrainState.Anticipation;
             if (colourRoutine != null)
                 StopCoroutine(colourRoutine);
-            colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush));
+            colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush, anticipation));
 
             if (_onMasterClient)
             {
@@ -88,7 +92,7 @@ namespace Hadal.AI.Graphics
         /// Lerps the material colour of the leviathan renderer to change its colour. Percent will up go towards 1f if isJudgement is true;
         /// percent will up go down towards 0f if isJudgement is false.
         /// </summary>
-        IEnumerator AIColorLerp(bool isJudgement, bool isAmbush)
+        IEnumerator AIColorLerp(bool isJudgement, bool isAmbush, bool isAnticipation)
         {
             if (isAmbush) SetLerpTarget(ambushStateColor);
             else
@@ -96,9 +100,14 @@ namespace Hadal.AI.Graphics
                 if (ambushPulseRoutine != null)
                     StopCoroutine(ambushPulseRoutine);
 
+                if (anticipationPulseRoutine != null)
+                    StopCoroutine(anticipationPulseRoutine);
+
                 if (isJudgement) SetLerpTarget(judgementStateColor);
                 else SetLerpTarget(otherStateColor);
             }
+
+
 
             percent = 0f;
             while (percent < 1f)
@@ -114,6 +123,11 @@ namespace Hadal.AI.Graphics
             if (isAmbush)
             {
                 ambushPulseRoutine = StartCoroutine(AmbushStateColorPulse(isAmbush));
+            }
+
+            if (isAnticipation)
+            {
+                anticipationPulseRoutine = StartCoroutine(AnticipationStateColorPulse(isAnticipation));
             }
 
         }
@@ -144,7 +158,21 @@ namespace Hadal.AI.Graphics
             float time = 0;
             while (isAmbush)
             {
-                time += Time.deltaTime * colorRate;
+                time += Time.deltaTime * ambushColorRate;
+                Color lerpColor = Color.Lerp(colorStart, colorEnd, Mathf.PingPong(time, 1));
+                materialProp.SetColor("_EmissionColor", lerpColor);
+                leviathanRenderer.SetPropertyBlock(materialProp);
+                yield return null;
+            }
+        }
+
+
+        IEnumerator AnticipationStateColorPulse(bool isAnticipation)
+        {
+            float time = 0;
+            while (isAnticipation)
+            {
+                time += Time.deltaTime * anticipationColorRate;
                 Color lerpColor = Color.Lerp(colorStart, colorEnd, Mathf.PingPong(time, 1));
                 materialProp.SetColor("_EmissionColor", lerpColor);
                 leviathanRenderer.SetPropertyBlock(materialProp);
