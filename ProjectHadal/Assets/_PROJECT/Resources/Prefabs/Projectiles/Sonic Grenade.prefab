@@ -276,6 +276,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: c60f1f1316803e8ae6a03c1c5733236b, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: c60f1f1316803e8ae6a03c1c5733236b, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6042bca6cfe4fe1d9124a9167eb372ad, type: 2}
@@ -303,7 +307,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7465129731039626558, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7465129731039626559, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: speed
@@ -319,15 +323,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 3.8
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.8
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.8
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalPosition.x

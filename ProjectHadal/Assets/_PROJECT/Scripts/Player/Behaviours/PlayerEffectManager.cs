@@ -17,6 +17,7 @@ namespace Hadal.Player
     {
         public Volume UIVolume;
 
+        public PlayerController Controller;
         public float effectSpeed = 1f;
         
         [Foldout("Camera")] public bool AllowCameraEffects = true;
@@ -37,6 +38,16 @@ namespace Hadal.Player
         
         private VolumeProfile volumeProfile;
         private bool allowEffects;
+
+        [Header("Pause effects")] 
+        public float PauseEffectSpeed = 5f;
+        public bool AllowDepthOfField = true;
+        public float ClosedBlurFDistance = 3.0f;
+        public float OpenedBlurFDistance  = 0.1f;
+
+        private bool allowPauseEffects = false;
+        private DepthOfField dof;
+        private float targetBlurFDistance;
         
         public void Start()
         {
@@ -49,7 +60,20 @@ namespace Hadal.Player
                 else AllowChromaticAberrationEffect = false;
             }
 
+            if (AllowDepthOfField)
+            {
+                if (volumeProfile.TryGet(out dof))
+                { dof.focusDistance.Override(ClosedBlurFDistance); }
+                else AllowDepthOfField = false;
+            }
+
             cameraOriginalFOV = playerCamera.fieldOfView;
+
+            if (AllowDepthOfField)
+            {
+                Controller.UI.PauseMenuOpened += ActivatePauseBlur;
+                Controller.UI.PauseMenuClosed += DeactivatePauseBlur;
+            }
         }
 
         private void LateUpdate()
@@ -76,11 +100,26 @@ namespace Hadal.Player
                 allowEffects = !(camReady && caReady);
             }
 
-            /*if (AllowMotionBlur)
+            if (allowPauseEffects)
             {
-                mbSettings.LerpIntensity(targetMotionBlurIntensity, effectSpeed * Time.deltaTime);
-                PostProcessingManager.Instance.EditMotionBlur(mbSettings);
-            }*/
+                float dofVal = dof.focusDistance.value;
+                if (Tolerance(dofVal, targetBlurFDistance, 0.01f))
+                {
+                    dof.focusDistance.Override(targetBlurFDistance);
+                    allowPauseEffects = false;
+                }
+                else 
+                    dof.focusDistance.Override(Mathf.Lerp(dofVal, targetBlurFDistance, PauseEffectSpeed * Time.deltaTime));
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (AllowDepthOfField)
+            {
+                Controller.UI.PauseMenuOpened -= ActivatePauseBlur;
+                Controller.UI.PauseMenuClosed -= DeactivatePauseBlur;
+            }
         }
 
         public void HandleDamageEffect(float normalizedIntensity)
@@ -96,6 +135,20 @@ namespace Hadal.Player
             }
             
             allowEffects = true;
+        }
+
+        public void ActivatePauseBlur()
+        {
+            //dof.focusDistance.Override(OpenedBlurFDistance);
+            targetBlurFDistance = OpenedBlurFDistance;
+            allowPauseEffects = true;
+        }
+        
+        public void DeactivatePauseBlur()
+        {
+            //dof.focusDistance.Override(ClosedBlurFDistance);
+            targetBlurFDistance = ClosedBlurFDistance;
+            allowPauseEffects = true;
         }
 
         public void SetTargetMotionBlurIntensity(float normalizedIntensity)

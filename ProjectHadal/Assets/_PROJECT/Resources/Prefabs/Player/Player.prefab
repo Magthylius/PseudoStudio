@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIVolume: {fileID: 7321777272075676571}
+  Controller: {fileID: 7088606113726875039}
   effectSpeed: 1
   AllowCameraEffects: 1
   playerCamera: {fileID: 2395039191367145501}
@@ -77,6 +78,10 @@ MonoBehaviour:
   caMaxIntensity: 1
   AllowMotionBlur: 1
   MotionBlurMaxIntensity: 0.1
+  PauseEffectSpeed: 10
+  AllowDepthOfField: 1
+  ClosedBlurFDistance: 3
+  OpenedBlurFDistance: 0.1
 --- !u!1 &146881534339094740
 GameObject:
   m_ObjectHideFlags: 0
@@ -2585,6 +2590,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  BubblesVFX: {fileID: 619133030248666218}
   controller: {fileID: 7088606113726875039}
   aimParentRb: {fileID: 6419753948795626213}
   firePoint: {fileID: 3869409784348184770}
@@ -3350,6 +3356,10 @@ PrefabInstance:
     - target: {fileID: 4014725249324593813, guid: d4beff5e6cad4c44190baf07a976a0f9, type: 3}
       propertyPath: m_Name
       value: SeismicHarpoonLauncher
+      objectReference: {fileID: 0}
+    - target: {fileID: 7587868738020312899, guid: d4beff5e6cad4c44190baf07a976a0f9, type: 3}
+      propertyPath: reserveRegenerationTime
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4beff5e6cad4c44190baf07a976a0f9, type: 3}
