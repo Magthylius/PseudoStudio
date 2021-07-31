@@ -11,23 +11,6 @@ namespace Hadal.Networking.UI
 {
     public class MainMenuClassDescription : MonoBehaviour
     {
-        [System.Serializable]
-        public class ClassDescriptionBlock
-        {
-            public PlayerClassType ClassType;
-
-            [Space(10f)] 
-            public string ClassTitle;
-            [TextArea] public string ClassDesc;
-            
-            [Space(10f)]
-            public string PassiveTitle;
-            [TextArea] public string PassiveDesc;
-            
-            [Space(10f)]
-            public string ActiveTitle;
-            [TextArea] public string ActiveDesc;
-        }
 
         [Header("References")] 
         public CanvasGroup CanvasGroup;
@@ -42,8 +25,13 @@ namespace Hadal.Networking.UI
         public TextMeshProUGUI ActiveTitle;
         public TextMeshProUGUI ActiveDesc;
 
-        [Space(10f)] 
-        [SerializeField] private List<ClassDescriptionBlock> ClassDescriptionBlocks;
+        [Header("Settings")] 
+        public string PassivePrefix = "PASSIVE: ";
+        public string ActivePrefix = "ACTIVE: ";
+
+        //[Space(10f)] 
+        //[SerializeField] private List<ClassDescriptionBlock> ClassDescriptionBlocks;
+        [SerializeField] private List<PlayerClassInfo> ClassInfos; 
 
         private void Start()
         {
@@ -57,18 +45,15 @@ namespace Hadal.Networking.UI
 
         public void UpdateDescriptions(PlayerClassType classType)
         {
-            ClassDescriptionBlock block = FindDescriptionBlock(classType);
-
-            if (block != null)
-            {
-                ClassTitle.text = block.ClassTitle;
-                ClassDesc.text = block.ClassDesc;
-                PassiveTitle.text = block.PassiveTitle;
-                PassiveDesc.text = block.PassiveDesc;
-                ActiveTitle.text = block.ActiveTitle;
-                ActiveDesc.text = block.ActiveDesc;
-            }
-
+            
+            PlayerClassInfo info = GetClassInfo(classType);
+            ClassTitle.text = info.ClassName;
+            ClassDesc.text = info.ClassDesc;
+            PassiveTitle.text = $"{PassivePrefix}{info.PassiveTitle}";
+            PassiveDesc.text = $"{info.PassiveDesc}";
+            ActiveTitle.text = $"{ActivePrefix}{info.ActiveTitle}";
+            ActiveDesc.text = $"{info.ActiveDesc}";
+            
             StartCoroutine(FadeCanvas());
             
             IEnumerator FadeCanvas()
@@ -82,15 +67,16 @@ namespace Hadal.Networking.UI
             }
         }
 
-        ClassDescriptionBlock FindDescriptionBlock(PlayerClassType classType)
+        PlayerClassInfo GetClassInfo(PlayerClassType classType)
         {
-            foreach (ClassDescriptionBlock block in ClassDescriptionBlocks)
+            foreach (PlayerClassInfo info in ClassInfos)
             {
-                if (block.ClassType == classType) return block;
+                if (info.ClassType == classType) return info;
             }
 
             return null;
         }
+        
 
         public void Desc_Hunter() => UpdateDescriptions(PlayerClassType.Harpooner);
         public void Desc_Medic() => UpdateDescriptions(PlayerClassType.Saviour);

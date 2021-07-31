@@ -38,6 +38,7 @@ namespace Hadal.UI
         public UIClassInfoHandler ClassInfoHandler;
         public UIBoostBehaviour BoostBehaviour;
         public UIUtilitiesHandler UtilitiesHandler;
+        public UIPauseInfoHandler PauseInfoHandler;
         public Camera PlayerCamera;
         
         [Header("Reticle Settings")]
@@ -309,7 +310,7 @@ namespace Hadal.UI
         #endregion
 
         #region Modules
-        public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput)
+        public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput, PlayerClassType classType)
         {
             playerTransform = Transform;
             playerRotator = Rotator;
@@ -322,6 +323,7 @@ namespace Hadal.UI
             EffectsHandler.InjectDependencies(playerRigidbody, ShootTracer);
             HydrophoneBehaviour.InjectPlayerDependencies(playerTransform);
             CockpitCamera.InjectDependencies(playerRotationInput);
+            PauseInfoHandler.InitInformation(classType);
         }
 
         public void InjectAIDependencies(Transform AITransform)
