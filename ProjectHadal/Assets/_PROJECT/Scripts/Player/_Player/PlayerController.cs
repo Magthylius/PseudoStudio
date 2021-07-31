@@ -557,7 +557,7 @@ namespace Hadal.Player
             int viewID = (int)content[0];
             float time = (float)content[1];
 
-            if (viewID == _pView.ViewID)
+            if (viewID == _pView.ViewID && viewID == LocalPlayerData.PlayerController._pView.ViewID)
             {
                 UI.ContextHandler.StartSalvageFiller(time);
             }
