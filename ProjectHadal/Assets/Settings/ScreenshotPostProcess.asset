@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   m_AdvancedMode: 0
   threshold:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.91
     min: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.12
     min: 0
   scatter:
     m_OverrideState: 1
@@ -33,7 +33,7 @@ MonoBehaviour:
     min: 0
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.6226415, g: 0.32274958, b: 0.27901387, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
@@ -155,10 +155,10 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.42727274
-          value: 0.42727274
-          inSlope: 1
-          outSlope: 1
+          time: 0.30769232
+          value: 0.79
+          inSlope: 1.6127025
+          outSlope: 1.6127025
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   intensity:
     m_OverrideState: 1
@@ -347,14 +347,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c01700fd266d6914ababb731e09af2eb, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   mode:
     m_OverrideState: 1
     m_Value: 1
   gaussianStart:
     m_OverrideState: 1
-    m_Value: 229.1
+    m_Value: 100
     min: 0
   gaussianEnd:
     m_OverrideState: 1
@@ -362,7 +362,7 @@ MonoBehaviour:
     min: 0
   gaussianMaxRadius:
     m_OverrideState: 1
-    m_Value: 0.814
+    m_Value: 0.5
     min: 0.5
     max: 1.5
   highQualitySampling:
@@ -422,7 +422,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.23
+    m_Value: 0.38
     min: 0
     max: 1
   smoothness:

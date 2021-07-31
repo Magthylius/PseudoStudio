@@ -93,7 +93,7 @@ namespace Hadal.Networking.UI.MainMenu
                     
                     IEnumerator DelayButton()
                     {
-                        yield return new WaitForSeconds(0.5f);
+                        yield return new WaitForSeconds(0.25f);
                         
                         deployReadyAudio.Invoke();
 
