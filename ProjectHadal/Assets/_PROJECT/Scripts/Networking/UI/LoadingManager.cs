@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,6 +82,7 @@ namespace Hadal.Networking.UI.Loading
 
         [Header("Events")]
         public UnityEvent LoadingCompletedEvent;
+        public event Action LoadingFadeEndedEvent;
         bool networkedLoad = false;
         bool allowLoadingCompletion = true;
 
@@ -276,6 +278,8 @@ namespace Hadal.Networking.UI.Loading
             GameManager.Instance.StartGameEvent();
 
             ResetLoadingElements();
+            
+            LoadingFadeEndedEvent?.Invoke();
         }
 
         /// <summary>
@@ -421,7 +425,7 @@ namespace Hadal.Networking.UI.Loading
             bool playersWon = (bool)parsedData[0];
             float timeTaken = (float)parsedData[1];
             
-            Debug.LogWarning("Received order to end myself: " + playersWon + ", " + timeTaken);
+            //Debug.LogWarning("Received order to end myself: " + playersWon + ", " + timeTaken);
             StartCoroutine(TriggerEndScreen(playersWon, timeTaken));
         }
         
@@ -431,7 +435,6 @@ namespace Hadal.Networking.UI.Loading
                 
             //! Enable first before update!
             endsScreenManager.Enable();
-            //endsScreenHandler.gameObject.SetActive(true);
 
             //! have to wait for it to enable
             //while (!endsScreenHandler.IsActive) yield return null;
