@@ -93,7 +93,7 @@ namespace Hadal.Networking.UI.MainMenu
                     
                     IEnumerator DelayButton()
                     {
-                        yield return new WaitForSeconds(0.25f);
+                        //yield return new WaitForSeconds(0.25f);
                         
                         deployReadyAudio.Invoke();
 
@@ -128,6 +128,7 @@ namespace Hadal.Networking.UI.MainMenu
                         }
                         diveText.color = diveReadyColor;
                         highlightParticleSystem.Emit(1);
+                        yield return null;
                     }
                 }
                 else if (!AllPlayersReady && previousReadyState)
