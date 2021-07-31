@@ -130,12 +130,12 @@ namespace Hadal.UI
             SetupPauseMenu();
             
             //! Bypass because Jin moment
-            //PNTR_Resume();
+            PNTR_Resume();
             
-            pauseMenu.Close();
+            /*pauseMenu.Close();
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            pauseMenuOpen = false;
+            pauseMenuOpen = false;*/
         }
 
         void Update()
