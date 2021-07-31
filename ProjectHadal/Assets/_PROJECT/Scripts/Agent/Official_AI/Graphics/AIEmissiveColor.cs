@@ -173,7 +173,7 @@ namespace Hadal.AI.Graphics
             while (isAnticipation)
             {
                 time += Time.deltaTime * anticipationColorRate;
-                Color lerpColor = Color.Lerp(colorStart, colorEnd, Mathf.PingPong(time, 1));
+                Color lerpColor = Color.Lerp(colorStart, colorEnd, Mathf.PingPong(time, 1.5f));
                 materialProp.SetColor("_EmissionColor", lerpColor);
                 leviathanRenderer.SetPropertyBlock(materialProp);
                 yield return null;
