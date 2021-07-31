@@ -34,7 +34,6 @@ namespace Hadal.AI
         [SerializeField] private AIHealthManager healthManager;
         [SerializeField] private PointNavigationHandler navigationHandler;
         [SerializeField] private AISenseDetection senseDetection;
-        [SerializeField] private AISightDetection sightDetection;
         [SerializeField] private AIDamageManager damageManager;
         [SerializeField] private AIGameHandler gameHandler;
         [SerializeField] private AIAudioBank audioBank;
@@ -46,7 +45,6 @@ namespace Hadal.AI
         public AIHealthManager HealthManager => healthManager;
         public PointNavigationHandler NavigationHandler => navigationHandler;
         public AISenseDetection SenseDetection => senseDetection;
-        public AISightDetection SightDetection => sightDetection;
         public AIDamageManager DamageManager => damageManager;
         public AIGameHandler GameHandler => gameHandler;
         public AIAudioBank AudioBank => audioBank;

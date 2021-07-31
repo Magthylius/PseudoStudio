@@ -54,6 +54,14 @@ namespace Hadal
             SceneManager.sceneLoaded += HandleSceneLoad;
             GameEndedEvent += HandleGameEndedEvent;
         }
+		
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.L))
+			{
+				ApplicationHandler.RestartApp();
+			}
+		}
 
         private void FixedUpdate()
         {
