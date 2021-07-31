@@ -427,7 +427,7 @@ namespace Hadal.Networking.UI.Loading
         
         IEnumerator TriggerEndScreen(bool playersWon, float timeTaken)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(8f);
                 
             //! Enable first before update!
             endsScreenManager.Enable();
