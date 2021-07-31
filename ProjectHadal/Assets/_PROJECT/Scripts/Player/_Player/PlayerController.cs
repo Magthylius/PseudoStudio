@@ -352,7 +352,8 @@ namespace Hadal.Player
             PlayerController[] allPlayerControllers = FindObjectsOfType<PlayerController>();
             foreach (PlayerController player in allPlayerControllers)
             {
-                player.GraphicsHandler.ChangeEmissiveColor(NetworkEventManager.Instance.GetPlayerColor(player._pView.Owner));
+                player.GraphicsHandler.ChangeEmissiveColor(NetworkEventManager.Instance.GetPlayerColorHDR(player._pView.Owner));
+                //Debug.LogWarning($"PC: {NetworkEventManager.Instance.GetPlayerColorHDR(player._pView.Owner)}");
             }
         }
         

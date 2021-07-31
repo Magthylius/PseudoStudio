@@ -738,14 +738,24 @@ namespace Hadal.Networking
         #region Player Classes
 
         [Header("Player effects")] 
-        [ColorUsageAttribute(true, true)]
+        //[ColorUsageAttribute(true, true)]
         public Color FirstPlayerColor;
-        [ColorUsageAttribute(true, true)]
+        //[ColorUsageAttribute(true, true)]
         public Color SecondPlayerColor;
-        [ColorUsageAttribute(true, true)]
+        //[ColorUsageAttribute(true, true)]
         public Color ThirdPlayerColor;
-        [ColorUsageAttribute(true, true)]
+        //[ColorUsageAttribute(true, true)]
         public Color FourthPlayerColor;
+
+        [Space(10f)] 
+        [ColorUsageAttribute(true, true)]
+        public Color FirstPlayerColorHDR;
+        [ColorUsageAttribute(true, true)]
+        public Color SecondPlayerColorHDR;
+        [ColorUsageAttribute(true, true)]
+        public Color ThirdPlayerColorHDR;
+        [ColorUsageAttribute(true, true)]
+        public Color FourthPlayerColorHDR;
         
         private string playerClassHash = "PlayerClasses";
         public string PlayerClassHash => playerClassHash;
@@ -763,6 +773,19 @@ namespace Hadal.Networking
                 case 1: return SecondPlayerColor;
                 case 2: return ThirdPlayerColor;
                 default: return FourthPlayerColor;
+            }
+        }
+        
+        public Color GetPlayerColorHDR(Player player)
+        {
+            int index = GetPlayerIndex(player);
+            
+            switch (index)
+            {
+                case 0: return FirstPlayerColorHDR;
+                case 1: return SecondPlayerColorHDR;
+                case 2: return ThirdPlayerColorHDR;
+                default: return FourthPlayerColorHDR;
             }
         }
         
@@ -841,18 +864,6 @@ namespace Hadal.Networking
         /// <returns>PlayerClassType, invalid when player not found</returns>
         public PlayerClassType GetPlayerClass(Player player)
         {
-            /*if (CurrentRoom.CustomProperties.ContainsKey(staticClassHash))
-            {
-                Dictionary<Player, int> staticClassInfo = (Dictionary<Player, int>)CurrentRoom.CustomProperties[staticClassHash];
-
-                if (staticClassInfo.ContainsKey(player))
-                    return (PlayerClassType) staticClassInfo[player];
-                else return PlayerClassType.Invalid;
-
-            }
-            
-            return PlayerClassType.Invalid;*/
-            
             if (CurrentRoom.CustomProperties.ContainsKey(playerClassHash))
             {
                 Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
@@ -908,26 +919,6 @@ namespace Hadal.Networking
                 
                 SetCurrentRoomCustomProperty(playerClassHash, playerClassInfo);
             }
-        }
-
-        public void SettleStaticClassInfo()
-        {
-            return;
-            
-            Dictionary<Player, int> sortedDict = GetSortedPlayerIndices();
-            Dictionary<Player, int> staticClass = new Dictionary<Player, int>();
-            Dictionary<int, int> playerClassInfo = (Dictionary<int, int>)CurrentRoom.CustomProperties[playerClassHash];
-
-            foreach (var playerPair in sortedDict)
-            {
-                foreach (var classPair in playerClassInfo)
-                {
-                    if (playerPair.Value == classPair.Key)
-                        staticClass.Add(playerPair.Key, classPair.Value);
-                }
-            }
-            
-            SetCurrentRoomCustomProperty(staticClassHash, staticClass);
         }
         #endregion
     }

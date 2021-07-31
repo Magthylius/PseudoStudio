@@ -13,6 +13,7 @@ namespace Hadal.Player
 
         public void ChangeEmissiveColor(Color newColor)
         {
+            //Debug.LogWarning($"GH: {newColor}");
             if (emissiveRenderer.material.HasProperty(emissiveColorString))
                 emissiveRenderer.material.SetColor(emissiveColorString, newColor);
         }
