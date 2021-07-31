@@ -27,9 +27,19 @@ namespace Hadal.Interactables
 
         public void SonicActivate()
         {
+            StartCoroutine(Sonic());
             StartCoroutine(DissolveAnim());
         }
 
+        IEnumerator Sonic()
+        {
+            for(float t = 0.0f; t <= 3.0f; t+= Time.deltaTime * 2.5f)
+            {
+                this.transform.localScale = this.transform.localScale * 1.035f;
+                yield return null;
+            }
+
+        }
         IEnumerator DissolveAnim() {
             materialProp.SetFloat("_CuttoffHeight", startHeight);
             for(float t = startHeight; t <= endHeight; t+= Time.deltaTime * speed)
@@ -38,7 +48,7 @@ namespace Hadal.Interactables
                 sonicRenderer.SetPropertyBlock(materialProp);
                 yield return null;
             }
-            materialProp.SetFloat("_CuttoffHeight", endHeight);
+            //materialProp.SetFloat("_CuttoffHeight", endHeight);
         }
     }
 }

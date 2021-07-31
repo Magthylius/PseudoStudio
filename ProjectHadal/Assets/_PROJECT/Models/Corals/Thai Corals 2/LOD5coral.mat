@@ -8,18 +8,41 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LOD5coral
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 971650f2f0e0ed742a79122e209021c0, type: 3}
   m_ShaderKeywords: _EMISSION _METALLICSPECGLOSSMAP _NORMALMAP
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_0823596043f5482dbc922c8f9023305c:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_27e31fb4892e4552923e7cef6ac76473:
+        m_Texture: {fileID: 2800000, guid: 6e5cfb04b12a1ae47b909a6829f63314, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_462d8bdf22d543acba56c32f2ea73dfc:
+        m_Texture: {fileID: 2800000, guid: d1b50d21d3e4a00448acae38c9799819, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_a92d116488194681bf713e12951f7579:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_df529487d26649bda85de163f8dd9353:
+        m_Texture: {fileID: 2800000, guid: 7830e5d49ce51864687ec9b7b2dd52a7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_fc19b18d39ec41c188552f04109bc563:
+        m_Texture: {fileID: 2800000, guid: 933d2a243068d79429c70ab84593b075, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 6e5cfb04b12a1ae47b909a6829f63314, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -77,6 +100,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_062537632c1c4d03992da5d4e392bcff: 0
+    - Vector1_f4e1912b7d6c41dd98ef3d6530513ceb: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -87,6 +112,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EmissionIntensity: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -106,7 +132,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.1607843, g: 0.21430418, b: 0.62352943, a: 1}
+    - _EmissionColor: {r: 0.47205424, g: 0.94352794, b: 2.5660381, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &1128943374074591293
