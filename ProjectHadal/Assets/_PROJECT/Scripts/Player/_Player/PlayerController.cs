@@ -62,6 +62,7 @@ namespace Hadal.Player
         bool playerReady = false;
         bool cameraReady = false;
         bool loadingReady = false;
+        bool playerStarted = false;
 
         //Dummy System
         [SerializeField] bool isDummy = false;
@@ -89,8 +90,7 @@ namespace Hadal.Player
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
-            FirstEnable();
-            //Enable();
+            Enable();
         }
 
         public override void OnDisable()
@@ -294,7 +294,6 @@ namespace Hadal.Player
         {
             //! This is online called in online mode, this function is called on PlayerManager for host
             //print("Everyone ready. Begin !");
-            
             SetLocalPlayerSettings();
             PlayerClassManager.Instance.ApplyClass();
             if (PlayerClassManager.Instance.GetCurrentPlayerClass().ClassType == PlayerClassType.Informer)
@@ -304,15 +303,23 @@ namespace Hadal.Player
 				if (!success)
 					"Ambience Player cannot be found in current scene.".Warn();
 			}
-            
+
             /*mover.ToggleEnablility(true);
             rotator.ToggleEnablility(true);*/
             LoadingManager.Instance.StartEndLoad();
+            LoadingManager.Instance.LoadingFadeEndedEvent += UnlockPlayerAfterLoading;
             _manager.InstantiatePViewList();
             TrackNamesOnline();
             LocalGameStartEvent?.Invoke(this);
 
             UpdateDiegetics();
+        }
+
+        public void UnlockPlayerAfterLoading()
+        {
+            Debug.LogWarning("player has been allowed to move and rotate.");
+            playerStarted = true;
+            LoadingManager.Instance.LoadingFadeEndedEvent -= UnlockPlayerAfterLoading;
         }
 
         public void UnlockPlayerControlOnStart()
@@ -460,22 +467,11 @@ namespace Hadal.Player
         private IPlayerEnabler[] enablerArray;
         public void Enable()
         {
-            Debug.LogWarning("Hi, i am enabled");
             if (enablerArray.IsNullOrEmpty()) return;
             AllowUpdate = true;
             enablerArray.ToList().ForEach(i => i.Enable());
             mover.Enable();
             rotator.Enable();
-            dodgeBooster.Enable();
-        }
-
-        public void FirstEnable()
-        {
-            if (enablerArray.IsNullOrEmpty()) return;
-            AllowUpdate = true;
-            enablerArray.ToList().ForEach(i => i.Enable());
-            mover.Enable();
-            //rotator.Enable();
             dodgeBooster.Enable();
         }
 
@@ -637,7 +633,7 @@ namespace Hadal.Player
         public string PlayerName => gameObject.name;
         public UIManager UI => playerUI;
         public PlayerGraphicsHandler GraphicsHandler => graphicsHandler;
-        public bool PlayerReadyForUpdateLoop => playerReady || (NetworkEventManager.Instance != null && NetworkEventManager.Instance.isOfflineMode);
+        public bool PlayerReadyForUpdateLoop => (playerReady && playerStarted) || (NetworkEventManager.Instance != null && NetworkEventManager.Instance.isOfflineMode);
         #endregion
     }
 }

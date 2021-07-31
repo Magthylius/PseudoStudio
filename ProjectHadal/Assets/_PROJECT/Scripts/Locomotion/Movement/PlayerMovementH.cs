@@ -66,7 +66,7 @@ namespace Hadal.Locomotion
             //this cant be enabled because when the game starts
             //base.Enable will allow the allowUpdate.
             //which allows the player to move while loading.
-            /*base.Enable();*/
+            base.Enable();
 
             _isEnabled = true;
             Input = DefaultInputs;
