@@ -177,6 +177,8 @@ namespace Hadal.Usables.Projectiles
             Rigidbody.isKinematic = true;
             ProjectileCollider.enabled = false;
             projectileAsset.SetActive(true);
+            if(bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", false);
             particleEffect.SetActive(true);
             PlayImpactAudioAtSelfPosition(false);
             isVisualizing = true;
