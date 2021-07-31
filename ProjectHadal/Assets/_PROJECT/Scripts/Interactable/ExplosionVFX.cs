@@ -7,7 +7,6 @@ namespace Hadal.Interactables
     public class ExplosionVFX : MonoBehaviour
     {
         [Header("Settings")]
-
         [SerializeField] private MeshRenderer explosion1;
         [SerializeField] private MeshRenderer explosion2;
         [SerializeField] private MeshRenderer explosion3;
@@ -39,9 +38,22 @@ namespace Hadal.Interactables
         {
             //explosionAura.transform.localScale = new Vector3(0,0,0);
             //explosionAura2.transform.localScale = new Vector3(0,0,0);
+            StartCoroutine(Explosion());
             StartCoroutine(ExplosionActivate());
             StartCoroutine(ExplosionActivate2());
             StartCoroutine(ExplosionActivate3());
+        }
+
+        IEnumerator Explosion()
+        {
+            for(float t = 0.0f; t <= 3.0f; t+= Time.deltaTime * speed1)
+            {
+                explosion1.transform.localScale = explosion1.transform.localScale * 1.005f;
+                explosion2.transform.localScale = explosion2.transform.localScale * 1.005f;
+                explosion3.transform.localScale = explosion3.transform.localScale * 1.005f;
+                yield return null;
+            }
+
         }
 
         IEnumerator ExplosionActivate()
@@ -57,7 +69,7 @@ namespace Hadal.Interactables
 
         IEnumerator ExplosionActivate2()
         {
-            for(float t = 1.0f; t >= 0.0f; t-= Time.deltaTime * speed2)
+            for(float t = 0.5f; t >= 0.0f; t-= Time.deltaTime * speed2)
             {
                 materialProp2.SetFloat("_Alpha", t);
                 explosion2.SetPropertyBlock(materialProp2);
