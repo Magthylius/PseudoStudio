@@ -738,9 +738,13 @@ namespace Hadal.Networking
         #region Player Classes
 
         [Header("Player effects")] 
+        [ColorUsageAttribute(true, true)]
         public Color FirstPlayerColor;
+        [ColorUsageAttribute(true, true)]
         public Color SecondPlayerColor;
+        [ColorUsageAttribute(true, true)]
         public Color ThirdPlayerColor;
+        [ColorUsageAttribute(true, true)]
         public Color FourthPlayerColor;
         
         private string playerClassHash = "PlayerClasses";
