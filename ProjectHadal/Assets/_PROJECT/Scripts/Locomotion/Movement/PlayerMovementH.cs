@@ -22,7 +22,6 @@ namespace Hadal.Locomotion
 
         public override void Initialise(Transform target)
         {
-            /*base.Enable();*/
             this.target = target;
             Enable();
             EnableBoost();
@@ -64,7 +63,10 @@ namespace Hadal.Locomotion
             if (_isEnabled)
                 return;
 
-            base.Enable();
+            //this cant be enabled because when the game starts
+            //base.Enable will allow the allowUpdate.
+            //which allows the player to move while loading.
+            /*base.Enable();*/
 
             _isEnabled = true;
             Input = DefaultInputs;

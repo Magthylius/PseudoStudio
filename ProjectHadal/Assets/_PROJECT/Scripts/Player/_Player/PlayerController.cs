@@ -78,7 +78,9 @@ namespace Hadal.Player
 
         protected override void Awake()
         {
+            //base.awake enables mover and rotator
             base.Awake();
+
             _pView = photonInfo.PView;
             _rBody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
@@ -87,7 +89,8 @@ namespace Hadal.Player
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
-            Enable();
+            FirstEnable();
+            //Enable();
         }
 
         public override void OnDisable()
@@ -302,13 +305,19 @@ namespace Hadal.Player
 					"Ambience Player cannot be found in current scene.".Warn();
 			}
             
-            mover.ToggleEnablility(true);
+            /*mover.ToggleEnablility(true);
+            rotator.ToggleEnablility(true);*/
             LoadingManager.Instance.StartEndLoad();
             _manager.InstantiatePViewList();
             TrackNamesOnline();
             LocalGameStartEvent?.Invoke(this);
 
             UpdateDiegetics();
+        }
+
+        public void UnlockPlayerControlOnStart()
+        {
+            mover.ToggleEnablility(true);
         }
 
         public void TrackNamesOnline()
@@ -451,6 +460,7 @@ namespace Hadal.Player
         private IPlayerEnabler[] enablerArray;
         public void Enable()
         {
+            Debug.LogWarning("Hi, i am enabled");
             if (enablerArray.IsNullOrEmpty()) return;
             AllowUpdate = true;
             enablerArray.ToList().ForEach(i => i.Enable());
@@ -458,6 +468,17 @@ namespace Hadal.Player
             rotator.Enable();
             dodgeBooster.Enable();
         }
+
+        public void FirstEnable()
+        {
+            if (enablerArray.IsNullOrEmpty()) return;
+            AllowUpdate = true;
+            enablerArray.ToList().ForEach(i => i.Enable());
+            mover.Enable();
+            //rotator.Enable();
+            dodgeBooster.Enable();
+        }
+
         public void Disable()
         {
             if (enablerArray.IsNullOrEmpty()) return;
@@ -467,6 +488,7 @@ namespace Hadal.Player
             rotator.Disable();
             dodgeBooster.Disable();
         }
+
         public void ToggleEnablility()
         {
             AllowUpdate = !AllowUpdate;

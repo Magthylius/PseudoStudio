@@ -29,7 +29,7 @@ namespace Hadal.Locomotion
 
         public override void Initialise(Transform target)
         {
-            base.Enable();
+            /*base.Enable();*/
             this.target = target;
             Enable();
             EnableBoost();

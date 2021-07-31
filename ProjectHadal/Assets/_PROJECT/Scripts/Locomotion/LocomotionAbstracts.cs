@@ -57,7 +57,11 @@ namespace Hadal.Locomotion
         public void Enable() => allowUpdate = true;
         public void Disable() => allowUpdate = false;
         public void ToggleEnablility() => allowUpdate = !allowUpdate;
-
+        public void ToggleEnablility(bool isTrue)
+        {
+            // print("Toggle allow Update !");
+            allowUpdate = isTrue;
+        }
         public Quaternion localRotation => target.localRotation;
         public Quaternion rotation => target.rotation;
 

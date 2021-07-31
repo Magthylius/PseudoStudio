@@ -15,7 +15,7 @@ namespace Hadal.Locomotion
 
         public override void Initialise(Transform target)
         {
-            Enable();
+            /*Enable();*/
             this.target = target;
             Rotary.Initialise();
             Input = new StandardRotationInput();
