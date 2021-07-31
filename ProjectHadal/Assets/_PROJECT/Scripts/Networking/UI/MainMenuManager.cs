@@ -38,6 +38,7 @@ namespace Hadal.Networking.UI.MainMenu
         [SerializeField] Menu startMenu;
         [SerializeField] Menu nicknameMenu;
         [SerializeField] Menu lobbyMenu;
+        [SerializeField] Menu creditMenu;
         [SerializeField] Menu connectingMenu;
         [SerializeField] Menu roomMenu;
         [SerializeField] GameObject connectingTMP;
@@ -297,11 +298,27 @@ namespace Hadal.Networking.UI.MainMenu
             findRoomFR.StartLerp(true);
             createRoomFR.StartLerp(true);
         }
+
+        public void BTN_ShowCredits()
+        {
+            CloseMenu(lobbyMenu);
+            OpenMenu(creditMenu);
+            
+            confirmQuitFR.StartLerp(true);
+        }
+
+        public void BTN_HideCredits()
+        {
+            CloseMenu(creditMenu);
+            OpenMenu(lobbyMenu);
+        }
         
         public void BTN_StartGame()
         {
             CloseMenu(gameOptions);
             OpenMenu(roomOptions);
+            
+            confirmQuitFR.StartLerp(true);
         }
 
         public void BTN_LaunchTutorial()
