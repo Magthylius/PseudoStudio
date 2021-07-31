@@ -2590,6 +2590,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  BubblesVFX: {fileID: 619133030248666218}
   controller: {fileID: 7088606113726875039}
   aimParentRb: {fileID: 6419753948795626213}
   firePoint: {fileID: 3869409784348184770}
@@ -3355,6 +3356,10 @@ PrefabInstance:
     - target: {fileID: 4014725249324593813, guid: d4beff5e6cad4c44190baf07a976a0f9, type: 3}
       propertyPath: m_Name
       value: SeismicHarpoonLauncher
+      objectReference: {fileID: 0}
+    - target: {fileID: 7587868738020312899, guid: d4beff5e6cad4c44190baf07a976a0f9, type: 3}
+      propertyPath: reserveRegenerationTime
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4beff5e6cad4c44190baf07a976a0f9, type: 3}
