@@ -96,6 +96,8 @@ namespace Hadal.Usables.Projectiles
         {
             Rigidbody.isKinematic = true;
             ProjectileCollider.enabled = false;
+            if(bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", false);
 
             if (projPhysics.GetCurrentMode() == ProjectileMode.ProjectileModeEnum.IMPULSE)
             {

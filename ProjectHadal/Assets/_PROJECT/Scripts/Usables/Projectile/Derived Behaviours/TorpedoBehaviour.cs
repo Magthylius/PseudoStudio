@@ -129,6 +129,8 @@ namespace Hadal.Usables.Projectiles
             Rigidbody.isKinematic = true;
             isVisualizing = true;
             particleEffect.SetActive(true);
+            if(bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", false);
             projectileAsset.SetActive(false);
             PlayExplosionAudioBasedOnDistance();
             Create(CreateExplosionInfo());

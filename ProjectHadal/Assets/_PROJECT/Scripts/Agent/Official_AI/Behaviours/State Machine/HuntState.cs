@@ -127,6 +127,9 @@ namespace Hadal.AI.States
             if (targetCavern == null) return; //! do not update if cannot find most populated cavern
 
             CavernTag currentTag = AICavern != null ? AICavern.cavernTag : CavernTag.Invalid;
+            if (Brain.NextMoveCavern == null)
+                return;
+            
             if (targetCavern.cavernTag == Brain.NextMoveCavern.cavernTag)
             {
                 //! AI is moving through a tunnel to the next cavern

@@ -265,6 +265,7 @@ MonoBehaviour:
   IsAttached: 0
   particleEffect: {fileID: 0}
   projectileAsset: {fileID: 0}
+  bubbleAsset: {fileID: 0}
   impactVFXTime: 5
   impactAudio: {fileID: 0}
   triggerSound: {fileID: 11400000, guid: ad197eaf8c672df41b59d1244e74279d, type: 2}
@@ -460,6 +461,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7841513917575815044, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8978360714187810027, guid: e5788ca21b55d0b4091d1d6d0482c34a, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

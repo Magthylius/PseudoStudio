@@ -261,7 +261,7 @@ namespace Hadal.AI.States
                         CavernHandler targetCavern = null;
                         CavernTag aiCavernTag = AICavern != null ? AICavern.cavernTag : CavernTag.Invalid;
                         
-                        if (!anyPlayersToHunt || targetCavern.cavernTag == aiCavernTag)
+                        if (!anyPlayersToHunt || targetCavern == null || targetCavern.cavernTag == aiCavernTag)
                         {
                             RuntimeData.SetBrainState(BrainState.Ambush);
                             debugMsg = "Took too long and VERY ANGRY, but hunting is not a suitable option... therefore, preparing to ambush!!!";
