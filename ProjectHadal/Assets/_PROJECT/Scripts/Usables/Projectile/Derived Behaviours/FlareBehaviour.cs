@@ -105,11 +105,14 @@ namespace Hadal.Usables.Projectiles
         private void ModeSwap(bool isPowered) 
         {
             this.isPowerForm = isPowered;
-
-            if (!isPowerForm)
-                flareLight.intensity = defaultLightIntensity;
-            else
-                flareLight.intensity = poweredLightIntensit;
+            
+            if(flareLight != null)
+            {
+                if (!isPowerForm)
+                    flareLight.intensity = defaultLightIntensity;
+                else
+                    flareLight.intensity = poweredLightIntensit;
+            }
         }
 
         private void ModeOff() 
