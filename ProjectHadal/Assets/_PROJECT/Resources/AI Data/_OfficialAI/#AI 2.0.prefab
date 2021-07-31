@@ -54,7 +54,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1692377485682228084}
   - component: {fileID: 6021279049498701051}
-  - component: {fileID: 9221971048963321059}
   m_Layer: 0
   m_Name: Radar Handlers
   m_TagString: Untagged
@@ -96,20 +95,6 @@ MonoBehaviour:
   huntSphereDetectionRadius: 70
   detectionOffset: {x: 0, y: 0, z: 0}
   checkDelay: 1
---- !u!114 &9221971048963321059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793168799261823607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5375a488145582c4e95e857a1f336714, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  raycastRadius: 0
-  viewDistance: 0
 --- !u!1 &2206939684412345075
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,7 +156,7 @@ MonoBehaviour:
   healthManager: {fileID: 0}
   navigationHandler: {fileID: 4086058519835168119}
   senseDetection: {fileID: 6021279049498701051}
-  sightDetection: {fileID: 9221971048963321059}
+  sightDetection: {fileID: 0}
   damageManager: {fileID: 2206939684562575357}
   gameHandler: {fileID: 5734814273914985085}
   audioBank: {fileID: 1292777894468821637}
@@ -226,7 +211,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2206939684412345075}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 1000
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
