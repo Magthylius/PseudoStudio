@@ -138,12 +138,14 @@ namespace Hadal.Player.Behaviours
             _controller = controller;
             _pView = info.PhotonInfo.PView;
             _cameraController = info.CameraController;
-            ResetHealth();
+            _currentHealth = maxHealth;
+            _controller.UI.InvokeOnHealthChange(_currentHealth);
 
             if (!_initialiseOnce)
             {
                 _initialiseOnce = true;
                 PlayerController.OnInitialiseComplete += Initialise;
+                // _controller.LocalGameStartEvent += Initialise;
                 Debug_InitialiseRevivalTimerScreenLogger();
             }
         }
@@ -158,12 +160,14 @@ namespace Hadal.Player.Behaviours
                 return;
 
             PlayerController.OnInitialiseComplete -= Initialise;
+            // _controller.LocalGameStartEvent -= Initialise;
             StartCoroutine(InitialiseRoutine());
         }
 
         private IEnumerator InitialiseRoutine()
         {
             yield return new WaitForSeconds(0.1f);
+            ResetHealth();
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_HEALTH_UPDATE, Receive_HealthUpdate);
             NetworkEventManager.Instance.AddListener(ByteEvents.PLAYER_UPDATED_REVIVE_TIME, Receive_ReviveTimeUpdate);
 
@@ -183,13 +187,6 @@ namespace Hadal.Player.Behaviours
 
             if (TickKnockTimer(deltaTime) <= 0f)
                 _isKnocked = false;
-        }
-
-        public void ResetManager()
-        {
-            ResetHealth();
-            //_controller.UI.InvokeOnHealthChange(_currentHealth);
-            _controller.SetIsDown(false);
         }
 
         #endregion
@@ -426,11 +423,14 @@ namespace Hadal.Player.Behaviours
         {
             //! Only the local player can be deactivated
             if (!IsLocalPlayer)
+            {
+                if (debugEnabled)
+                    "Is not local player, do not deactivate.".Msg();
                 return;
+            }
 
             if (debugEnabled)
                 "Deactivating control system for local player.".Msg();
-            OnDown -= DeactivateControllerSystem; //! Unsubscribe so it is only called "once per life"
 
             _controller.SetIsDown(true); //! Disable movement & rotation
             _controller.SetPhysicHighFriction(); //! Update physics settings
@@ -441,6 +441,8 @@ namespace Hadal.Player.Behaviours
 
             if (enableDeathTimerWhenDown)
                 StartCoroutine(StartDeathTimer());
+
+            OnDown -= DeactivateControllerSystem; //! Unsubscribe so it is only called "once per life"
         }
 
         /// <summary> Activates movement & rotation system for revival. Will only be called on the local player. </summary>
