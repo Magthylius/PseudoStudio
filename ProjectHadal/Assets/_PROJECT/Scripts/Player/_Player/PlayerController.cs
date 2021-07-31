@@ -52,10 +52,10 @@ namespace Hadal.Player
         private Color playerColor;
         
         private bool _isKnocked;
-        private bool _isCarried;
-        private bool _isTaggedByLeviathan;
-        private bool _isDown;
-        private bool _isLocalPlayer;
+        [SerializeField, Tenshi.ReadOnly] private bool _isCarried;
+        [SerializeField, Tenshi.ReadOnly] private bool _isTaggedByLeviathan;
+        [SerializeField, Tenshi.ReadOnly] private bool _isDown;
+        [SerializeField, Tenshi.ReadOnly] private bool _isLocalPlayer;
         public Action<PlayerController> LocalGameStartEvent;
 
         //! Ready checks

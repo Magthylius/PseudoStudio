@@ -80,7 +80,7 @@ namespace Hadal.AI.Graphics
             if (colourRoutine != null)
                 StopCoroutine(colourRoutine);
             colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush, anticipation));
-
+            
             if (_onMasterClient)
             {
                 object[] content = new object[] { judgement, ambush, anticipation };
