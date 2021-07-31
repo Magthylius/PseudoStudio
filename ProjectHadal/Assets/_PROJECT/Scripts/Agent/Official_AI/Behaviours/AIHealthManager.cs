@@ -53,7 +53,7 @@ namespace Hadal.AI
             ResetHealth();
             ResetAllSlowStacks();
             UpdateDamageResistance(0f);
-			InitialiseHitboxHandlers();
+            InitialiseHitboxHandlers();
 
             //! Stun Timer
             stunTimer = brain.Create_A_Timer()
@@ -70,16 +70,16 @@ namespace Hadal.AI
         {
             CheckHealthStatus();
         }
-		
-		public void InitialiseHitboxHandlers()
-		{
-			var hitboxes = FindObjectsOfType<AIHitboxHandler>();
-			if (brain.DebugEnabled) $"Found {hitboxes.Length} active hitbox handlers for the AI. Initialisating all of them.".Msg();
-			
-			int i = -1;
-			while (++i < hitboxes.Length)
-				hitboxes[i].Initialise(this, LayerMask.NameToLayer("Monster"));
-		}
+
+        public void InitialiseHitboxHandlers()
+        {
+            var hitboxes = FindObjectsOfType<AIHitboxHandler>();
+            if (brain.DebugEnabled) $"Found {hitboxes.Length} active hitbox handlers for the AI. Initialisating all of them.".Msg();
+
+            int i = -1;
+            while (++i < hitboxes.Length)
+                hitboxes[i].Initialise(this, LayerMask.NameToLayer("Monster"));
+        }
 
         /// <summary> Checks whether the AI should die on the master client's computer and send the death event over the network. </summary>
         public void CheckHealthStatus()
@@ -118,6 +118,12 @@ namespace Hadal.AI
                 _additionalDamageResistance = GetHealthRatio <= lowHealthPercent ? resistenceOnLowHealth : 0f;
 
                 brain.RuntimeData.AddDamageCount();
+
+                if (!IsUnalive)
+                {
+                    brain.AnimationManager.SetAnimation(AIAnim.Hurt, 1f);
+                    brain.AudioBank.PlayOneShot(soundType: AISound.Hurt, brain.transform);
+                }
             }
 
             DoOnHitEffects(damage);
@@ -138,7 +144,7 @@ namespace Hadal.AI
 
             brain.DetachAnyCarriedPlayer();
             brain.AnimationManager.SetAnimation(AIAnim.Death);
-			brain.AudioBank.PlayOneShot(soundType: AISound.Death, brain.transform);
+            brain.AudioBank.PlayOneShot(soundType: AISound.Death, brain.transform);
 
             brain.DisableBrain(); //! disable update loops of the brain
             brain.StartCoroutine(Bleed(0.5f));
@@ -320,12 +326,6 @@ namespace Hadal.AI
                 int i = -1;
                 while (++i < vfxCountPerHit)
                     PlayVFXAt(vfx_OnDamaged, GetRandomHitPosition());
-            }
-
-            if (!IsUnalive)
-            {
-                brain.AnimationManager.SetAnimation(AIAnim.Hurt, 1f);
-			    brain.AudioBank.PlayOneShot(soundType: AISound.Hurt, brain.transform);
             }
         }
 
