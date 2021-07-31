@@ -393,7 +393,6 @@ namespace Hadal.Networking.UI.MainMenu
             else
             {
                 loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
-                NetworkEventManager.Instance.SettleStaticClassInfo();
             }
             
         }
