@@ -128,14 +128,14 @@ namespace Hadal.UI
 
             SetupReticle();
             SetupPauseMenu();
-            PNTR_Resume();
-
-            //Initialize(3);
-            //sl_UI = DebugManager.Instance.CreateScreenLogger();
-            //Debug.LogWarning("w: " + Screen.width + " | h: " + Screen.height);
-            //Debug.LogWarning(Screen.currentResolution);
-            //Debug.LogWarning("screen scale: " + (Screen.width / Screen.currentResolution.width));
-
+            
+            //! Bypass because Jin moment
+            //PNTR_Resume();
+            
+            pauseMenu.Close();
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            pauseMenuOpen = false;
         }
 
         void Update()
@@ -481,7 +481,7 @@ namespace Hadal.UI
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             //Cursor.lockState = CursorLockMode.Confined;
-            if (PauseMenuClosed != null) PauseMenuClosed.Invoke();
+            PauseMenuClosed?.Invoke();
 
             pauseMenuOpen = false;
         }
