@@ -5,15 +5,16 @@ using Hadal.Player.Behaviours;
 using Hadal.Usables;
 using UnityEngine;
 using Hadal.Networking;
+using Hadal.Networking.UI;
 
 namespace Hadal.Player
 {
     [CreateAssetMenu(menuName = "Player/Class Data")]
     public class PlayerClassData : ScriptableObject
     {
-        public string ClassName;
         public PlayerClassType ClassType;
-        
+        public PlayerClassInfo ClassInfo;
+
         [Header("Utility Power Ups")]
         public bool GiveFlareHarpoon;
         public bool PowerUpFlare;

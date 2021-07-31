@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1e83072208375b45a16fc5cdd137efa, type: 3}
-  m_Name: InformerClass
+  m_Name: MedicClass
   m_EditorClassIdentifier: 
-  ClassName: Informer
-  ClassType: 4
+  ClassType: 2
+  ClassInfo: {fileID: 11400000, guid: 9133e4e51e0d50842a11a34f693b90c5, type: 2}
   GiveFlareHarpoon: 0
-  PowerUpFlare: 1
+  PowerUpFlare: 0
   PowerUpHarpoon: 0
   PowerUpDodgeBoost: 0
   DodgeBoostCount: 3
-  PowerUpReviveTime: 0
+  PowerUpReviveTime: 1
   ReviveTime: 1
-  ActivateHydrophone: 1
+  RevivePercentHealth: 0.8
+  ActivateHydrophone: 0
   PowerUpTorpFireRate: 0
   TorpFireRate: 0.1
   ClassLauncher:
-  - {fileID: 1275541528094104063, guid: 9e033e0a224229c42b1a476ff0ec6e56, type: 3}
+  - {fileID: 1275541528094104063, guid: 362300cd82a960b4a9f754c4cf613f5f, type: 3}
