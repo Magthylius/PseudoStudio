@@ -90,8 +90,7 @@ namespace Hadal.Player
             GetComponentsInChildren<IPlayerComponent>().ToList().ForEach(i => i.Inject(this));
             var self = GetComponent<IPlayerEnabler>();
             enablerArray = GetComponentsInChildren<IPlayerEnabler>().Where(i => i != self).ToArray();
-            FirstEnable();
-            //Enable();
+            Enable();
         }
 
         public override void OnDisable()
@@ -295,7 +294,6 @@ namespace Hadal.Player
         {
             //! This is online called in online mode, this function is called on PlayerManager for host
             //print("Everyone ready. Begin !");
-            
             SetLocalPlayerSettings();
             PlayerClassManager.Instance.ApplyClass();
             if (PlayerClassManager.Instance.GetCurrentPlayerClass().ClassType == PlayerClassType.Informer)
@@ -319,6 +317,7 @@ namespace Hadal.Player
 
         public void UnlockPlayerAfterLoading()
         {
+            Debug.LogWarning("player has been allowed to move and rotate.");
             playerStarted = true;
             LoadingManager.Instance.LoadingFadeEndedEvent -= UnlockPlayerAfterLoading;
         }
@@ -468,22 +467,11 @@ namespace Hadal.Player
         private IPlayerEnabler[] enablerArray;
         public void Enable()
         {
-            Debug.LogWarning("Hi, i am enabled");
             if (enablerArray.IsNullOrEmpty()) return;
             AllowUpdate = true;
             enablerArray.ToList().ForEach(i => i.Enable());
             mover.Enable();
             rotator.Enable();
-            dodgeBooster.Enable();
-        }
-
-        public void FirstEnable()
-        {
-            if (enablerArray.IsNullOrEmpty()) return;
-            AllowUpdate = true;
-            enablerArray.ToList().ForEach(i => i.Enable());
-            mover.Enable();
-            //rotator.Enable();
             dodgeBooster.Enable();
         }
 
