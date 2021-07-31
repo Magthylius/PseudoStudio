@@ -45,7 +45,12 @@ namespace Hadal.Player.Behaviours
         }
 
         internal void CollisionEnter(Collision collision)
-        {
+        {       
+            if(LayerMask.LayerToName(collision.gameObject.layer) == "SnailFish")
+            {
+                return;
+            }
+
             float force = velocity.magnitude;
 
             string msg = $"Speed on collision point: {force}\n";
