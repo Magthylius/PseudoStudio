@@ -265,6 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3189345546925591471}
   - component: {fileID: 4297429361851390011}
+  - component: {fileID: 3823482448616407187}
   - component: {fileID: 2059736876725262861}
   - component: {fileID: 7865573592520856709}
   - component: {fileID: 5548288211505355130}
@@ -302,12 +303,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1da6c2fdcd6134bb2da8652919637c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LevelHandler: {fileID: 3823482448616407187}
   MainMenuScene: MainMenu
   InGameScene: Beta
   targetFrameRate: 60
   pViewList: []
   enableLevelTimer: 0
   levelTimer: 0
+--- !u!114 &3823482448616407187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6396702538524357952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c5ad470002af24bb158873658b2d89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LevelSettingsList:
+  - Scene: Title
+    BypassObjectPoolingChecks: 0
+  - Scene: MainMenu
+    BypassObjectPoolingChecks: 0
+  - Scene: Beta
+    BypassObjectPoolingChecks: 0
+  - Scene: Tutorial
+    BypassObjectPoolingChecks: 1
 --- !u!114 &2059736876725262861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,6 +449,10 @@ MonoBehaviour:
   SecondPlayerColor: {r: 0.51382273, g: 0.1960784, b: 0.7058824, a: 1}
   ThirdPlayerColor: {r: 0.8867924, g: 0.2216981, b: 0.30027282, a: 1}
   FourthPlayerColor: {r: 0.23722918, g: 0.7264151, b: 0.11307406, a: 1}
+  FirstPlayerColorHDR: {r: 0, g: 0, b: 0, a: 0}
+  SecondPlayerColorHDR: {r: 0, g: 0, b: 0, a: 0}
+  ThirdPlayerColorHDR: {r: 0, g: 0, b: 0, a: 0}
+  FourthPlayerColorHDR: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &8631276335166620515
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,13 +830,13 @@ PrefabInstance:
       objectReference: {fileID: 533662756}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
---- !u!1 &6125628879687998579 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2397172086048695281, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
-  m_PrefabInstance: {fileID: 8378643974000705410}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3558804987589490339 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4982535942677956897, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
+  m_PrefabInstance: {fileID: 8378643974000705410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6125628879687998579 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2397172086048695281, guid: 86f9cc7edaaf9af438400a5331f98ede, type: 3}
   m_PrefabInstance: {fileID: 8378643974000705410}
   m_PrefabAsset: {fileID: 0}

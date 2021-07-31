@@ -127,7 +127,7 @@ namespace Hadal.Networking.UI.Loading
 
             if (allowLoading)
             {
-                if ((loadingAO != null && loadingAO.isDone) || networkedLoad)
+                if (loadingAO is {isDone: true} || networkedLoad)
                 {
                     allowLoading = false;
                     
@@ -138,7 +138,16 @@ namespace Hadal.Networking.UI.Loading
                     }
                     else
                     {
-                        StartCoroutine(CheckAllLoaded());
+                        if (GameManager.Instance.LevelHandler.GetCurrentSceneSettings().BypassObjectPoolingChecks)
+                        {
+                            StartEndLoad();
+                            LoadingCompletedEvent.Invoke();
+
+                            PlayHiveSpinner();
+                            PlayConnectionParent();
+                        }
+                        else
+                            StartCoroutine(CheckAllLoaded());
                     }
 
                     loadingCGF.fadeEndedEvent.RemoveAllListeners();
@@ -255,6 +264,7 @@ namespace Hadal.Networking.UI.Loading
         IEnumerator EndLoading()
         {
             yield return new WaitForSeconds(fadeOutDelay);
+            Debug.LogWarning($"L check 0");
             
             connectionAnimator.SetTrigger("LoadingReady");
             hiveSpinnerAnimator.SetBool("LoadingReady", true);
@@ -268,17 +278,22 @@ namespace Hadal.Networking.UI.Loading
 
             allowPostProcess = true;
 
+            Debug.LogWarning($"L check 1");
             while (!connectionAnimator.GetBool(connectionAnimatorFinishedBool))
             {
                 //print("bool: " + connectionAnimator.GetBool(connectionAnimatorFinishedBool));
                 yield return null;
             }
-
+            Debug.LogWarning($"L check 2");
+            
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
-            GameManager.Instance.StartGameEvent();
+            
+            //if (GameManager.Instance.LevelHandler.CurrentScene == GameManager.Instance.InGameScene)
+                GameManager.Instance.StartGameEvent();
 
             ResetLoadingElements();
             
+            Debug.LogWarning($"L check 3");
             LoadingFadeEndedEvent?.Invoke();
         }
 

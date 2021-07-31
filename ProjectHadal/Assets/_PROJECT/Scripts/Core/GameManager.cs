@@ -21,9 +21,12 @@ namespace Hadal
 
         public static GameManager Instance;
 
+        public LevelHandler LevelHandler;
+        
         [Header("Settings")]
         [Scene] public string MainMenuScene;
         [Scene] public string InGameScene;
+        [Scene] public string TutorialScene;
         [SerializeField, Range(1, 60)] private int targetFrameRate = 60;
         
         [Header("Data")]

@@ -107,10 +107,8 @@ namespace Hadal.Networking.UI.MainMenu
             NetworkEventManager.Instance.LeftRoomAction += LeftRoom;
 
             DetermineMenuToOpen();
-            //if (!NetworkEventManager.Instance.IsConnected) mainMenuInitiated = true;
             InitMainMenu();
-            //p
-            
+
             bgmAmbience.Invoke();
 
         }
