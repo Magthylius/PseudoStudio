@@ -46,7 +46,7 @@ namespace Hadal.Interactables
 
         IEnumerator Explosion()
         {
-            for(float t = 0.0f; t <= 3.0f; t+= Time.deltaTime * speed1)
+            for(float t = 0.0f; t <= 3.0f; t+= Time.deltaTime * 2.5f)
             {
                 explosion1.transform.localScale = explosion1.transform.localScale * 1.005f;
                 explosion2.transform.localScale = explosion2.transform.localScale * 1.005f;
