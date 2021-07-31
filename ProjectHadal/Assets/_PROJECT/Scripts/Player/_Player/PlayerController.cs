@@ -394,7 +394,7 @@ namespace Hadal.Player
             {
                 //! Make sure player UI is inactive in prefab!
                 playerUI.gameObject.SetActive(true);
-                playerUI.InjectPlayer(pTrans, rotator, RotationInput, classType);
+                playerUI.InjectPlayer(pTrans, rotator, RotationInput);
                 playerUI.PauseMenuOpened += Disable;
                 playerUI.PauseMenuClosed += Enable;
 
@@ -593,7 +593,12 @@ namespace Hadal.Player
         public bool CanRotate => !_isDown && !_isCarried;
         public bool IsLocalPlayer => _isLocalPlayer;
         public PlayerClassType PlayerClass => classType;
-        public void SetPlayerClass(PlayerClassType type) => classType = type;
+
+        public void SetPlayerClass(PlayerClassType type)
+        {
+            classType = type;
+            UI.PauseInfoHandler.InitInformation(type);
+        }
         #endregion
 
         #region Accessors
