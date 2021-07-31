@@ -22,6 +22,7 @@ namespace Hadal.UI
 
         public void InitInformation(PlayerClassType type)
         {
+            Debug.LogWarning($"Pause UI type: {type}");
             PlayerClassInfo info = GetClassInfo(type);
             ClassIcon.sprite = info.ClassIcon;
             PassiveTitle.text = info.PassiveTitle;

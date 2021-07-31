@@ -310,7 +310,7 @@ namespace Hadal.UI
         #endregion
 
         #region Modules
-        public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput, PlayerClassType classType)
+        public void InjectPlayer(Transform Transform, Rotator Rotator, IRotationInput RotationInput)
         {
             playerTransform = Transform;
             playerRotator = Rotator;
@@ -323,7 +323,7 @@ namespace Hadal.UI
             EffectsHandler.InjectDependencies(playerRigidbody, ShootTracer);
             HydrophoneBehaviour.InjectPlayerDependencies(playerTransform);
             CockpitCamera.InjectDependencies(playerRotationInput);
-            PauseInfoHandler.InitInformation(classType);
+            //PauseInfoHandler.InitInformation(classType);
         }
 
         public void InjectAIDependencies(Transform AITransform)

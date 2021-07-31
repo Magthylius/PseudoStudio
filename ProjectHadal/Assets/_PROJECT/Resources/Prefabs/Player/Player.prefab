@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIVolume: {fileID: 7321777272075676571}
+  Controller: {fileID: 7088606113726875039}
   effectSpeed: 1
   AllowCameraEffects: 1
   playerCamera: {fileID: 2395039191367145501}
@@ -77,6 +78,10 @@ MonoBehaviour:
   caMaxIntensity: 1
   AllowMotionBlur: 1
   MotionBlurMaxIntensity: 0.1
+  PauseEffectSpeed: 10
+  AllowDepthOfField: 1
+  ClosedBlurFDistance: 3
+  OpenedBlurFDistance: 0.1
 --- !u!1 &146881534339094740
 GameObject:
   m_ObjectHideFlags: 0
