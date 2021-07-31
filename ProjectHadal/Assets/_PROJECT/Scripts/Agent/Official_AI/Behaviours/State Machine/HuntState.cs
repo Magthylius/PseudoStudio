@@ -47,6 +47,7 @@ namespace Hadal.AI.States
             SenseDetection.SetDetectionMode(AISenseDetection.DetectionMode.Hunt);
             NavigationHandler.SetSpeedMultiplier(settings.HU_RoamingSpeedMultiplier);
             NavigationHandler.SetIgnoreCavernLingerTimer(true);
+            // NavigationHandler.StopQueuedPath();
             TryUpdateCachedCavern();
         }
         public override void StateTick()
@@ -54,14 +55,11 @@ namespace Hadal.AI.States
             if (!AllowStateTick) return;
 
             RuntimeData.TickEngagementTicker(Brain.DeltaTime);
-            if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime || hasReachedTargetCavern)
+            if (RuntimeData.GetEngagementTicks > settings.HU_MaxHuntingTime)
                 RuntimeData.SetBrainState(BrainState.Anticipation);
 
-            if (Brain.CheckForJudgementStateCondition())
-            {
-                RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
-                return;
-            }
+            if (RuntimeData.GetEngagementTicks > settings.HU_PeriodicCavernUpdateTime)
+                UpdateTargetCavern();
         }
         public override void LateStateTick()
         {
@@ -85,6 +83,7 @@ namespace Hadal.AI.States
             TryUpdateCachedCavern();
             if (hasReachedTargetCavern)
             {
+                RuntimeData.UpdateConfidenceValue(settings.ConfidenceIncrementValue);
                 RuntimeData.SetBrainState(BrainState.Anticipation);
                 return;
             }
@@ -119,13 +118,43 @@ namespace Hadal.AI.States
 
         public override void OnCavernLeave(CavernHandler cavern)
         {
-            // if (hasReachedTargetCavern)
-            // {
-            //     DoRoar();
-            // }
-
             Brain.NavigationHandler.TunnelModeSteering();
+        }
 
+        private void UpdateTargetCavern()
+        {
+            CavernHandler targetCavern = CavernManager.GetMostPopulatedCavern(true);
+            if (targetCavern == null) return; //! do not update if cannot find most populated cavern
+
+            CavernTag currentTag = AICavern != null ? AICavern.cavernTag : CavernTag.Invalid;
+            if (targetCavern.cavernTag == Brain.NextMoveCavern.cavernTag)
+            {
+                //! AI is moving through a tunnel to the next cavern
+                if (currentTag == CavernTag.Invalid)
+                {
+                    hasReachedTargetCavern = true;
+                }
+                //! AI is in a cavern
+                else
+                {
+                    //! AI is not in next cavern
+                    if (currentTag != Brain.NextMoveCavern.cavernTag)
+                    {
+                        hasReachedTargetCavern = true;
+                    }
+                    //! AI is in next cavern (which is target cavern)
+                    else
+                    {
+                        hasReachedTargetCavern = true;
+                        OnCavernEnter(AICavern);
+                        return;
+                    }
+                }
+            }
+
+            Brain.UpdateTargetMoveCavern(targetCavern);
+            CavernManager.SeedCavernHeuristics(targetCavern);
+            targetTag = Brain.TargetMoveCavern.cavernTag;
         }
 
         private void TryToTargetClosestPlayerInAICavern()
@@ -143,7 +172,12 @@ namespace Hadal.AI.States
 
         private void DoRoar()
         {
-            AudioBank.PlayOneShot_RoarWithDistance(Brain.transform);
+            int rando = UnityEngine.Random.Range(0, 2);
+            if (rando == 2)
+            {
+                AudioBank.PlayOneShot_RoarWithDistance(Brain.transform);
+            }
+            
         }
 
         private void TryUpdateCachedCavern()

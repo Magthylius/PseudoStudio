@@ -258,11 +258,6 @@ namespace Hadal.Player
         public void SetIsDown(in bool statement) => _isDown = statement;
 
         public void Die() => _manager.TryToKill(attachedPlayer);
-        public void ResetController()
-        {
-            healthManager.Inject(this);
-            healthManager.ResetManager();
-        }
 
         public void EnableCollider() => _collider.enabled = true;
         public void DisableCollider() => _collider.enabled = false;
