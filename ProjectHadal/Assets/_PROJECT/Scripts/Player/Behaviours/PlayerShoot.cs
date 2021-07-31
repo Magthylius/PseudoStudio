@@ -8,6 +8,7 @@ using ExitGames.Client.Photon;
 using Hadal.UI;
 using Hadal.Networking;
 using UnityEngine.Events;
+using UnityEngine.VFX;
 
 namespace Hadal.Player.Behaviours
 {
@@ -20,7 +21,10 @@ namespace Hadal.Player.Behaviours
         [Header("Audio")] 
         public UnityEvent torpedoFireAudioEvent;
         public UnityEvent utilityFireAudioEvent;
-        
+
+        [Header("Visual")]
+        public VisualEffect BubblesVFX;
+
         [Header("Player")]
         [SerializeField] PlayerController controller;
 		private bool _allowUpdate;
@@ -180,6 +184,12 @@ namespace Hadal.Player.Behaviours
 
             //send event to torpedo ONLY when fire locally. local = (!eventFire)
             if (isLocal) SendTorpedoEvent(projectileID, info.AimedPoint);
+
+            //show bubbles when fired locally 
+            if(isLocal)
+            {
+                BubblesVFX.SendEvent("Bubble");
+            }
         }
 
         public void FireUtility(int projectileID, UsableLauncherObject usable, int selectedItem , float chargeTime, bool isPowered ,bool eventFire, Vector3 RELookatPoint)
@@ -209,6 +219,9 @@ namespace Hadal.Player.Behaviours
                 {
                     utilityFireAudioEvent.Invoke();
                 }
+
+                //here deals with the bubbles that shows when fired locally.
+                BubblesVFX.SendEvent("Bubble");
             }
 
             //! Use utility here. If utility is used, decrement chamber! //
