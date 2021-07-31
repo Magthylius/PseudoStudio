@@ -83,7 +83,7 @@ namespace Hadal.AI.Graphics
 
             if (_onMasterClient)
             {
-                object[] content = new object[] { judgement, ambush };
+                object[] content = new object[] { judgement, ambush, anticipation };
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.AI_COLOUR_CHANGE, content, SendOptions.SendReliable);
             }
         }

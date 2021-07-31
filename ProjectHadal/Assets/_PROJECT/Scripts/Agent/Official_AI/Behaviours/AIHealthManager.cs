@@ -143,7 +143,7 @@ namespace Hadal.AI
             brain.DisableBrain(); //! disable update loops of the brain
             brain.StartCoroutine(Bleed(0.5f));
             if (PhotonNetwork.IsMasterClient)
-                brain.NavigationHandler.DisableWithLerp(2f, Sink);
+                brain.NavigationHandler.DisableWithLerp(0.25f, Sink);
 
             void Sink()
             {

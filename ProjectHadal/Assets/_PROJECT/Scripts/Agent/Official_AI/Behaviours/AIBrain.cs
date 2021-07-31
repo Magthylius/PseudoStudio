@@ -76,7 +76,10 @@ namespace Hadal.AI
             CurrentTarget = newTarget;
         }
         /// <summary> Unsafely sets the current target. Can be intentionally used when switching targets midway is necessary. </summary>
-        public void ForceSetCurrentTarget(PlayerController newTarget) => CurrentTarget = newTarget;
+        public void ForceSetCurrentTarget(PlayerController newTarget)
+        {
+            CurrentTarget = newTarget;
+        }
         /// <summary> Network callback only version of <see cref="TrySetCurrentTarget"/> that bypasses the safety check. </summary>
         public void Net_SetCurrentTarget(PlayerController newTarget) => ForceSetCurrentTarget(newTarget);
 
@@ -659,7 +662,11 @@ namespace Hadal.AI
         }
 
 
-        public void TryToTargetClosestPlayerInAICavern() => TrySetCurrentTarget(GetClosestPlayerInAICavern());
+        public void TryToTargetClosestPlayerInAICavern()
+        {
+            TrySetCurrentTarget(GetClosestPlayerInAICavern());
+            CheckForJudgementStateCondition();
+        }
 
         public void ResetAllPlayersTaggedStatus() => Players.ForEach(p => p.SetIsTaggedByLeviathan(false));
 
@@ -679,13 +686,13 @@ namespace Hadal.AI
         public void UpdateTargetMoveCavern(CavernHandler newCavern)
         {
             targetMoveCavern = newCavern;
-            if (DebugEnabled) print("New target cavern: " + newCavern.cavernTag);
+            // if (DebugEnabled) print("New target cavern: " + newCavern.cavernTag);
         }
 
         public void UpdateNextMoveCavern(CavernHandler newCavern)
         {
             nextMoveCavern = newCavern;
-            if (DebugEnabled) print("Moving to next cavern: " + newCavern.cavernTag);
+            // if (DebugEnabled) print("Moving to next cavern: " + newCavern.cavernTag);
         }
 
         public void UpdateCachedCurrentCavern(CavernHandler newCavern)
@@ -694,7 +701,7 @@ namespace Hadal.AI
                 return;
 
             cachedCurrentCavern = newCavern;
-            if (DebugEnabled) print("Updated current cavern cache to: " + newCavern.cavernTag);
+            // if (DebugEnabled) print("Updated current cavern cache to: " + newCavern.cavernTag);
         }
 
         public CavernHandler TargetMoveCavern => targetMoveCavern;

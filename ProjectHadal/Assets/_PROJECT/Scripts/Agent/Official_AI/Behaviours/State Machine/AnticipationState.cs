@@ -6,7 +6,6 @@ using Tenshi.UnitySoku;
 using Hadal.AI.Caverns;
 using Hadal.Player;
 
-//! C: jet, E: jon
 namespace Hadal.AI.States
 {
     public class AnticipationState : AIStateBase
@@ -261,16 +260,16 @@ namespace Hadal.AI.States
                         bool anyPlayersToHunt = CavernManager.AnyPlayersPresentInAnyCavern();
                         CavernHandler targetCavern = null;
                         CavernTag aiCavernTag = AICavern != null ? AICavern.cavernTag : CavernTag.Invalid;
-                        if (anyPlayersToHunt)
-                        {
-                            targetCavern = SetNewTargetCavern();
-                            debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
-                        }
-
+                        
                         if (!anyPlayersToHunt || targetCavern.cavernTag == aiCavernTag)
                         {
                             RuntimeData.SetBrainState(BrainState.Ambush);
                             debugMsg = "Took too long and VERY ANGRY, but hunting is not a suitable option... therefore, preparing to ambush!!!";
+                        }
+                        else if (anyPlayersToHunt)
+                        {
+                            targetCavern = SetNewTargetCavern();
+                            debugMsg = "Took too long and VERY ANGRY, preparing to hunt!!!";
                         }
                     }
 
