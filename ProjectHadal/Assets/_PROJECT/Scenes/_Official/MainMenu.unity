@@ -26268,7 +26268,7 @@ GameObject:
   - component: {fileID: 1932922302}
   - component: {fileID: 1932922300}
   m_Layer: 5
-  m_Name: Class Explnations Anchor
+  m_Name: Class Explanations Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26315,48 +26315,14 @@ MonoBehaviour:
   PassiveDesc: {fileID: 1956878938}
   ActiveTitle: {fileID: 334525205}
   ActiveDesc: {fileID: 1009929135}
-  ClassDescriptionBlocks:
-  - ClassType: 1
-    ClassTitle: Hunter
-    ClassDesc: The point holder, the forward spear. Agile and mobile, this sub excels
-      in close range engagements.
-    PassiveTitle: 'PASSIVE: Powered Thrusters'
-    PassiveDesc: Supercharged thrusters allows twice the dodge boosting.
-    ActiveTitle: 'ACTIVE (R): Seismic Harpoons'
-    ActiveDesc: Large tremor harpoons that severely disrupts any movement once impaled.
-  - ClassType: 2
-    ClassTitle: Medic
-    ClassDesc: The saviour of subs, outfitted just to babysit and save others.
-    PassiveTitle: 'PASSIVE: Defib Cables'
-    PassiveDesc: Reviving others are much faster and much better.
-    ActiveTitle: 'ACTIVE (R): Static Grenades'
-    ActiveDesc: A imploding grenade that creates a static field to temporarily disorient
-      creatures.
-  - ClassType: 3
-    ClassTitle: Trapper
-    ClassDesc: Outfitted to ambush, traps set can change turn the mouse into a cat.
-    PassiveTitle: 'PASSIVE: Pneumatic Loaders'
-    PassiveDesc: Faster fire rate on torpedo and harpoon launchers.
-    ActiveTitle: 'ACTIVE (R): Paralyzers'
-    ActiveDesc: A remote-detonated trap device that severly impacts the movement
-      and reaction of creatures.
-  - ClassType: 4
-    ClassTitle: Tracker
-    ClassDesc: Dedicated for recon, this sub is crucial for providing information
-      to the team.
-    PassiveTitle: 'PASSIVE: Hydrophones'
-    PassiveDesc: Hydrophones has allowed the sub to listen and monitor creature noises
-      underwater.
-    ActiveTitle: 'ACTIVE (R): Tracker Darts'
-    ActiveDesc: Tracker darts launched creates sonar pings to inform the team on
-      activation.
-  - ClassType: 0
-    ClassTitle: Coming soon
-    ClassDesc: A mysterious sub... coming sooner or later..?
-    PassiveTitle: 
-    PassiveDesc: 
-    ActiveTitle: 
-    ActiveDesc: 
+  PassivePrefix: 'PASSIVE: '
+  ActivePrefix: 'ACTIVE: '
+  ClassInfos:
+  - {fileID: 11400000, guid: 88019f6da723af34dab3fef662c8d3ed, type: 2}
+  - {fileID: 11400000, guid: 9133e4e51e0d50842a11a34f693b90c5, type: 2}
+  - {fileID: 11400000, guid: 170f628ab31a6f24e9918f4d1c0e95c4, type: 2}
+  - {fileID: 11400000, guid: d8363a13134150c47bd5d7a8df16ef5b, type: 2}
+  - {fileID: 11400000, guid: 79bda5e9807354245a24087ba2b46ab4, type: 2}
 --- !u!114 &1932922301
 MonoBehaviour:
   m_ObjectHideFlags: 0

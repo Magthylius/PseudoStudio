@@ -394,7 +394,7 @@ namespace Hadal.Player
             {
                 //! Make sure player UI is inactive in prefab!
                 playerUI.gameObject.SetActive(true);
-                playerUI.InjectPlayer(pTrans, rotator, RotationInput);
+                playerUI.InjectPlayer(pTrans, rotator, RotationInput, classType);
                 playerUI.PauseMenuOpened += Disable;
                 playerUI.PauseMenuClosed += Enable;
 
