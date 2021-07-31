@@ -2,12 +2,9 @@
 using System;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
-// Version 1.6.0
+// Version 1.7.0
 namespace Magthylius
 {
     namespace Utilities
