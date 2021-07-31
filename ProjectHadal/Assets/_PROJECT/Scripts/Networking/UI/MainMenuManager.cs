@@ -111,6 +111,8 @@ namespace Hadal.Networking.UI.MainMenu
 
             bgmAmbience.Invoke();
 
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
         }
 
         void Update()

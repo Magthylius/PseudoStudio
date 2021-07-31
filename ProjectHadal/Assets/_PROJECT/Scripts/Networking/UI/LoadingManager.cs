@@ -114,7 +114,7 @@ namespace Hadal.Networking.UI.Loading
             
             ResetLoadingElements();
             
-            LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
+            //LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
             GameManager.Instance.GameEndedEvent += StartEndScreenAndReturn;
         }
 
@@ -264,7 +264,7 @@ namespace Hadal.Networking.UI.Loading
         IEnumerator EndLoading()
         {
             yield return new WaitForSeconds(fadeOutDelay);
-            Debug.LogWarning($"L check 0");
+            //Debug.LogWarning($"L check 0");
             
             connectionAnimator.SetTrigger("LoadingReady");
             hiveSpinnerAnimator.SetBool("LoadingReady", true);
@@ -278,23 +278,24 @@ namespace Hadal.Networking.UI.Loading
 
             allowPostProcess = true;
 
-            Debug.LogWarning($"L check 1");
+            //Debug.LogWarning($"L check 1");
+            LoadingFadeEndedEvent?.Invoke();
             while (!connectionAnimator.GetBool(connectionAnimatorFinishedBool))
             {
                 //print("bool: " + connectionAnimator.GetBool(connectionAnimatorFinishedBool));
                 yield return null;
             }
-            Debug.LogWarning($"L check 2");
+            //Debug.LogWarning($"L check 2");
             
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
             
-            //if (GameManager.Instance.LevelHandler.CurrentScene == GameManager.Instance.InGameScene)
+            if (GameManager.Instance.LevelHandler.CurrentScene == GameManager.Instance.InGameScene)
                 GameManager.Instance.StartGameEvent();
 
             ResetLoadingElements();
             
-            Debug.LogWarning($"L check 3");
-            LoadingFadeEndedEvent?.Invoke();
+            //Debug.LogWarning($"L check 3");
+            
         }
 
         /// <summary>
