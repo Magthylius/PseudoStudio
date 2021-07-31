@@ -45,6 +45,7 @@ namespace Hadal.Usables
         public bool IsRegenerating { get; private set; }
         public float ReserveRegenRatio => (_reserveRegenTimer.IsCompleted) ? 0f : _reserveRegenTimer.GetCompletionRatio;
         public bool HasAnyReserves => ReserveCount > 0;
+        public bool HasFullReserves => ReserveCount >= maxReserveCapacity;
         public event Action<bool> OnReservesChanged;
         private Timer _reserveRegenTimer;
 

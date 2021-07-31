@@ -116,6 +116,12 @@ namespace Hadal.Interactables
                 }
             }
 
+            // Check if full bullet 
+            if(actorPlayer.GetComponentInChildren<TorpedoLauncherObject>().HasFullReserves)
+            {
+                return;
+            }
+
             if (_activeTimerRoutine != null)
             {
                 if (enableDebug)
