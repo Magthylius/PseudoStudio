@@ -25,6 +25,7 @@ namespace Hadal.Player
         private IMovementInput input;
         private PlayerController playerController;
         private UIBoostBehaviour BoostBehaviour;
+        private bool canUpdate;
 
         [SerializeField, Range(0.1f, 0.6f)] private float tapDetectionTime;
         [SerializeField] private float dodgeForce;
@@ -56,6 +57,7 @@ namespace Hadal.Player
 
         public int TotalAmmoCount => ReserveCount + ChamberCount;
         #endregion
+
         [SerializeField] private AudioEventData boostSound;
 
         #region Unity Lifecycle
@@ -66,9 +68,17 @@ namespace Hadal.Player
             input = new RawMovementInput();
             input.DoubleTapDetectionTime = tapDetectionTime;
         }
+
+        public void Enable() => canUpdate = true;
+        public void Disable() => canUpdate = false;
         
         public void DoUpdate(float deltaTime)
         {
+            if(!canUpdate)
+            {
+                return;
+            }
+
             if(IsChamberLoaded)
             {
                 if(CheckForInput())
@@ -106,8 +116,6 @@ namespace Hadal.Player
                 IsReloading = true;
                 _chamberReloadTimer.Restart();
             }
-            
-
         }
 
         public void DoFixedUpdate(float fixedDeltaTime)

@@ -13070,20 +13070,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e43a2e562b690044a8340665e33d21a, type: 3}
---- !u!114 &121040508540857339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7172299681953287592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b0fc187d7cd3d8408bab40ca03b8aa6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitboxDamageMultiplier: 1
-  healthManager: {fileID: 0}
 --- !u!65 &199293295727278439
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15495,9 +15481,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8672693474246339963}
-  - component: {fileID: 121040508540857339}
   - component: {fileID: 6845262040030735943}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: Solid Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
