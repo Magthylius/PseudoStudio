@@ -191,7 +191,6 @@ namespace Magthylius
                 endPosition = endPos;
 
                 isMovingAway = true;
-                DetermineEndPosition();
             }
 
             void DetermineEndPosition()
