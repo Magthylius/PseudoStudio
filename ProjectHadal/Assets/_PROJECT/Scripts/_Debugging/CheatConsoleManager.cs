@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hadal.AI;
@@ -12,6 +13,8 @@ namespace Hadal.Debugging
 {
     public class CheatConsoleManager : MonoBehaviour
     {
+        public bool AllowCheats = true;
+        
         private bool showConsole = false;
         private bool showHelp = false;
 
@@ -59,8 +62,18 @@ namespace Hadal.Debugging
 
         #region Input system
 
+        private void Awake()
+        {
+            //! Disable cheats when not editor
+#if !UNITY_EDITOR
+            AllowCheats = false;
+#endif
+        }
+
         public void OnToggleDebug(InputValue value)
         {
+            if (!AllowCheats) return;
+            
             showConsole = !showConsole;
 
             if (showConsole)
