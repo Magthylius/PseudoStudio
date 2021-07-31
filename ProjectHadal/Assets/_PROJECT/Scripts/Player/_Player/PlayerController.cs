@@ -456,6 +456,7 @@ namespace Hadal.Player
             enablerArray.ToList().ForEach(i => i.Enable());
             mover.Enable();
             rotator.Enable();
+            dodgeBooster.Enable();
         }
         public void Disable()
         {
@@ -464,6 +465,7 @@ namespace Hadal.Player
             enablerArray.ToList().ForEach(i => i.Disable());
             mover.Disable();
             rotator.Disable();
+            dodgeBooster.Disable();
         }
         public void ToggleEnablility()
         {
