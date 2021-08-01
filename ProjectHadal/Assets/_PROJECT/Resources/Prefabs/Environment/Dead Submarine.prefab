@@ -521,7 +521,7 @@ MonoBehaviour:
   interactionMaintainDistance: 15
   interactionWindupTime: 3
   regenerateTimer: 0
-  regenerateTimerMax: 80
+  regenerateTimerMax: 5
   flareIndicator: {fileID: 1858030981906500889}
   submarineRenderer: {fileID: 3927018817974995140}
 --- !u!114 &2724608671914481981
@@ -671,7 +671,6 @@ VFXRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
