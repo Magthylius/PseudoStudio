@@ -98,9 +98,6 @@ namespace Hadal.AI
 			AnimationFloat curFloat = GetAnimationFloatFromAnimType(animType);
 			if (!curFloat.ShouldBeChangedIndependently())
 			{
-				//string msg = $"Calling animation {animType} from ";
-				//NetDebug(msg + "master client", msg + "non master client");
-				
 				mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
 				
 				if (animType == AIAnim.Death)
