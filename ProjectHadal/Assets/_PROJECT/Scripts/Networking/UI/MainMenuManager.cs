@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ using Hadal.Networking.UI.Loading;
 using NaughtyAttributes;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 //! C: Jon
 namespace Hadal.Networking.UI.MainMenu
@@ -86,12 +88,15 @@ namespace Hadal.Networking.UI.MainMenu
 
         [Header("Room Ready settings")]
         [SerializeField] TextMeshProUGUI roomNameText;
-        public GameObject startGameButton;
 
         [Header("Quit Settings")]
         [SerializeField] RectTransform confirmQuitPanel;
 
         FlexibleRect confirmQuitFR;
+
+        [Header("Actual Settings")] 
+        [SerializeField] private RectTransform settingsPanel;
+        private FlexibleRect settingsFR;
 
         //! Connections
         bool onMaster = false;
@@ -132,6 +137,7 @@ namespace Hadal.Networking.UI.MainMenu
                     if (createRoomFR != null) createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     if (findRoomFR != null) findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     if (confirmQuitFR != null) confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
+                    if (settingsFR != null) settingsFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     break;
             }
             
@@ -165,7 +171,11 @@ namespace Hadal.Networking.UI.MainMenu
 
             confirmQuitFR = new FlexibleRect(confirmQuitPanel);
             confirmQuitFR.SetTargetPosition(confirmQuitFR.GetBodyOffset(Vector2.right));
-            confirmQuitFR.MoveToEnd();            
+            confirmQuitFR.MoveToEnd();
+
+            settingsFR = new FlexibleRect(settingsPanel);
+            settingsFR.SetTargetPosition(settingsFR.GetBodyOffset(Vector2.right));
+            settingsFR.MoveToEnd();
         }
 
         //! make sure objects are active and inactive
@@ -188,6 +198,7 @@ namespace Hadal.Networking.UI.MainMenu
             createRoomPanel.gameObject.SetActive(true);
             findRoomPanel.gameObject.SetActive(true);
             confirmQuitPanel.gameObject.SetActive(true);
+            settingsPanel.gameObject.SetActive(true);
 
             warningNicknameTooLong.gameObject.SetActive(false);
             warningRoomNameTooLong.gameObject.SetActive(false);
@@ -227,6 +238,7 @@ namespace Hadal.Networking.UI.MainMenu
             createRoomFR.MoveToEnd();
             findRoomFR.MoveToEnd();
             confirmQuitFR.MoveToEnd();
+            settingsFR.MoveToEnd();
             
             DiegeticHandler.ExitAll();
         }
@@ -287,6 +299,12 @@ namespace Hadal.Networking.UI.MainMenu
         #endregion
 
         #region Lobby Phase
+        private bool settingsOpened = false;
+        public void BTN_OpenSettings()
+        {
+            settingsFR.StartLerp(settingsOpened);
+            settingsOpened = !settingsOpened;
+        }
 
         public void BTN_ChangeNickname()
         {
@@ -297,6 +315,8 @@ namespace Hadal.Networking.UI.MainMenu
             
             findRoomFR.StartLerp(true);
             createRoomFR.StartLerp(true);
+            settingsFR.StartLerp(true);
+            confirmQuitFR.StartLerp(true);
         }
 
         public void BTN_ShowCredits()
@@ -305,6 +325,7 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(creditMenu);
             
             confirmQuitFR.StartLerp(true);
+            settingsFR.StartLerp(true);
         }
 
         public void BTN_HideCredits()
@@ -319,6 +340,7 @@ namespace Hadal.Networking.UI.MainMenu
             OpenMenu(roomOptions);
             
             confirmQuitFR.StartLerp(true);
+            settingsFR.StartLerp(true);
         }
 
         public void BTN_LaunchTutorial()
