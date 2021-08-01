@@ -46,6 +46,9 @@ namespace Hadal.Usables.Projectiles
         private void OnDisable()
         {
             Rigidbody.isKinematic = false;
+
+            if (bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", true);
         }
         #endregion
 
@@ -142,8 +145,6 @@ namespace Hadal.Usables.Projectiles
         {
             isVisualizing = false;
             particleEffect.SetActive(false);
-            if(bubbleAsset != null)
-                bubbleAsset.SetBool("Playing", true);
             projectileAsset.SetActive(true);
             PPhysics.OnPhysicsFinished();
         }
