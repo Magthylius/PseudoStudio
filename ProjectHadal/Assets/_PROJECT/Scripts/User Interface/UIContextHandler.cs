@@ -76,6 +76,7 @@ namespace Hadal.UI
             if (torpCoroutine != null) StopCoroutine(torpCoroutine);
             
             //Debug.LogWarning($"UI End Received");
+            salvageAnimator.ResetTrigger(StartSalvage);
             if (success) salvageAnimator.SetFloat(SalvageOutcome, 1f);
             else salvageAnimator.SetFloat(SalvageOutcome, -1f);
 
