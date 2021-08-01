@@ -7,6 +7,7 @@ using Hadal.Utility;
 using Button = NaughtyAttributes.ButtonAttribute;
 using Photon.Pun;
 using System.Linq;
+using Hadal.AI.Graphics;
 
 namespace Hadal.AI
 {
@@ -148,11 +149,13 @@ namespace Hadal.AI
 
             brain.DisableBrain(); //! disable update loops of the brain
             brain.StartCoroutine(Bleed(0.5f));
+            
             if (PhotonNetwork.IsMasterClient)
                 brain.NavigationHandler.DisableWithLerp(0.25f, Sink);
 
             void Sink()
             {
+                brain.EmissiveColor.Death();
                 checkHitWallOnDeath = true;
                 Vector3 force = Vector3.down * 1000.0f;
                 brain.NavigationHandler.Rigidbody.isKinematic = false;

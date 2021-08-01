@@ -38,7 +38,7 @@ namespace Hadal.Interactables
         {
             //explosionAura.transform.localScale = new Vector3(0,0,0);
             //explosionAura2.transform.localScale = new Vector3(0,0,0);
-            StartCoroutine(Explosion());
+            //StartCoroutine(Explosion());
             StartCoroutine(ExplosionActivate());
             StartCoroutine(ExplosionActivate2());
             StartCoroutine(ExplosionActivate3());
