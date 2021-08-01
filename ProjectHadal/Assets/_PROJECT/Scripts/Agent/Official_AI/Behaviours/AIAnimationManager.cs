@@ -98,10 +98,13 @@ namespace Hadal.AI
 			AnimationFloat curFloat = GetAnimationFloatFromAnimType(animType);
 			if (!curFloat.ShouldBeChangedIndependently())
 			{
-				if (animType == AIAnim.Death)
-					StartCoroutine(LerpSpeedToDeathStop());
+				string msg = $"Calling animation {animType} from ";
+				NetDebug(msg + "master client", msg + "non master client");
 				
 				mainLerpRoutine = StartCoroutine(LerpAnimation(animType, customAnimLerpTime));
+				
+				if (animType == AIAnim.Death)
+					StartCoroutine(LerpSpeedToDeathStop());
 			}
 			else
 			{
@@ -300,6 +303,14 @@ namespace Hadal.AI
 		private void OnValidate()
 		{
 			floatData.ForEach(f => f.RefreshCachedName());
+		}
+
+		private void NetDebug(string masterDebug, string nonMasterDebug)
+		{
+			if (onMasterClient)
+				masterDebug.Msg();
+			else
+				nonMasterDebug.Msg();
 		}
 
 		[System.Serializable]
