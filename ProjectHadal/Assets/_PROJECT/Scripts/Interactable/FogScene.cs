@@ -21,6 +21,7 @@ namespace Hadal.Interactables
 
         private void OnTriggerEnter(Collider other)
         {
+            StopAllCoroutines();
             if(CanCollide(other))
                 StartCoroutine(colorLerpIn());
         }
