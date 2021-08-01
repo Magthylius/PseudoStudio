@@ -27,7 +27,7 @@ namespace Hadal.Interactables
 
         public void SonicActivate()
         {
-            StartCoroutine(Sonic());
+            //StartCoroutine(Sonic());
             StartCoroutine(DissolveAnim());
         }
 
