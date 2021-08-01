@@ -42,10 +42,10 @@ namespace Hadal.Networking.UI.EndScreen
         void Start()
         {
             //Debug.LogWarning("START IS CALLED?????");
-            Disable();
+            Disable(false);
         }
 
-        public void Disable()
+        public void Disable(bool restart)
         {
             //gameObject.SetActive(false);
             canvasGroup.alpha = 0f;
@@ -54,7 +54,7 @@ namespace Hadal.Networking.UI.EndScreen
             StopCoroutine(UpdateTimeText());
             currentTime = 0f;
             
-            ApplicationHandler.RestartApp();
+            if (restart) ApplicationHandler.RestartApp();
         }
 
         public void Enable()

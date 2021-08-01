@@ -26132,6 +26132,18 @@ PrefabInstance:
       propertyPath: TutorialScene
       value: Title
       objectReference: {fileID: 0}
+    - target: {fileID: 5705298423853267901, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5705298423853267901, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Hadal.Networking.UI.EndScreen.EndScreenManager, Hadal.Networking
+      objectReference: {fileID: 0}
+    - target: {fileID: 5705298423853267901, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
       value: PersistentEssentials
