@@ -116,6 +116,8 @@ namespace Hadal.Usables.Projectiles
         private void disableSonicDartUI()
         {
             sonicTrackerUIBehavior.Deactivate();
+            if(bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", true);
         }
 
         private void playPing()
