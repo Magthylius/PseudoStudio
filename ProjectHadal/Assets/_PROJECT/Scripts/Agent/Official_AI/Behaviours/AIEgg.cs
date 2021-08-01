@@ -57,8 +57,11 @@ namespace Hadal.AI
                 i = -1;
                 while (++i < mRenderers.Length)
                     mRenderers[i].enabled = false;
-                
-                GetComponent<Collider>().enabled = false;
+
+                foreach(Collider eggCollider in GetComponents<Collider>())
+                {
+                    eggCollider.enabled = false;
+                }
                 eggDestroyedEvent?.Invoke(true);
             }
         }
@@ -133,6 +136,7 @@ namespace Hadal.AI
                 if (isDead)
                 {
                     curHealth = 0;
+                    Debug.LogWarning("Egg Destroyed2");
                     CheckEggDestroyed();
                 }
                 else
