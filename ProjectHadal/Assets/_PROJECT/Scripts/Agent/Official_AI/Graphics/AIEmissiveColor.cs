@@ -80,7 +80,7 @@ namespace Hadal.AI.Graphics
             if (colourRoutine != null)
                 StopCoroutine(colourRoutine);
             colourRoutine = StartCoroutine(AIColorLerp(judgement, ambush, anticipation));
-            
+
             if (_onMasterClient)
             {
                 object[] content = new object[] { judgement, ambush, anticipation };
@@ -151,6 +151,21 @@ namespace Hadal.AI.Graphics
         {
             if (_onMasterClient)
                 _brain.RuntimeData.OnAIStateChange -= JudgementColor;
+        }
+
+        public void Death()
+        {
+            if (ambushPulseRoutine != null)
+                StopCoroutine(ambushPulseRoutine);
+
+            if (anticipationPulseRoutine != null)
+                StopCoroutine(anticipationPulseRoutine);
+
+            if (colourRoutine != null)
+                StopCoroutine(colourRoutine);
+
+            materialProp.SetColor("_EmissionColor", Color.black);
+            leviathanRenderer.SetPropertyBlock(materialProp);
         }
 
         IEnumerator AmbushStateColorPulse(bool isAmbush)
