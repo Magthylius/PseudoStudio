@@ -500,6 +500,7 @@ namespace Hadal.UI
         public void PNTR_Disconnect()
         {
             neManager.LeaveRoom(true,true);
+            ApplicationHandler.RestartApp();
         }
         #endregion
 
