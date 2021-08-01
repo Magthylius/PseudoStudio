@@ -53,6 +53,8 @@ namespace Hadal.Networking.UI.EndScreen
             canvasGroup.blocksRaycasts = false;
             StopCoroutine(UpdateTimeText());
             currentTime = 0f;
+            
+            ApplicationHandler.RestartApp();
         }
 
         public void Enable()
