@@ -58,6 +58,9 @@ namespace Hadal.Usables.Projectiles
             Rigidbody.isKinematic = false;
             ProjectileCollider.enabled = true;
             IsAttached = false;
+
+            if (bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", true);
         }
         #endregion
 
@@ -187,8 +190,6 @@ namespace Hadal.Usables.Projectiles
         protected override void StopImpactEffect()
         {
             isVisualizing = false;
-            if(bubbleAsset != null)
-                bubbleAsset.SetBool("Playing", true);
             particleEffect.SetActive(false);
         }
 

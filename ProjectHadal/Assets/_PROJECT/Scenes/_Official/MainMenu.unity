@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 705507994}
+  m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -880,7 +880,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &50785420
 PrefabInstance:
@@ -3412,7 +3412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://jinzhi.itch.io/
   highlightCG: {fileID: 181725969}
 --- !u!114 &256192639
 MonoBehaviour:
@@ -5413,11 +5413,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Lead Designer
+  m_text: '<color=#FDD244>Design Lead</color>
 
     Level Designer
 
-    QA Lead'
+    Lead Quality
+    Assurance'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 97eb2920862a436439bb88f34214afec, type: 2}
   m_sharedMaterial: {fileID: -6266749041970903357, guid: 97eb2920862a436439bb88f34214afec, type: 2}
@@ -6789,6 +6790,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1161908829212078117, guid: 70c62239cd4fceb44825061da3ac767c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f641bfb4312c64c4fbaf5452464a491f, type: 2}
     - target: {fileID: 919132149155446097, guid: 70c62239cd4fceb44825061da3ac767c, type: 3}
       propertyPath: m_Name
       value: SubmarineBody_LowPoly_Untextured
@@ -8472,99 +8477,6 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: -100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 1}
---- !u!1 &705507993
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 705507995}
-  - component: {fileID: 705507994}
-  m_Layer: 0
-  m_Name: Directional Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!108 &705507994
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 705507993}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 1
-  m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
-  m_Range: 10
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 2
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 1
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
---- !u!4 &705507995
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &711146079
 GameObject:
   m_ObjectHideFlags: 0
@@ -8913,7 +8825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://www.artstation.com/yeecheng
   highlightCG: {fileID: 1944996047}
 --- !u!114 &727722294
 MonoBehaviour:
@@ -9142,7 +9054,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://nicholastiew.itch.io/
   highlightCG: {fileID: 1410242386}
 --- !u!114 &735658634
 MonoBehaviour:
@@ -11233,7 +11145,11 @@ MonoBehaviour:
     Environment Concept Artist
 
     Creature
-    Concept Artist'
+    Concept Artist
+
+    Cinematic Artist
+
+    Promotional Visuals'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 97eb2920862a436439bb88f34214afec, type: 2}
   m_sharedMaterial: {fileID: -6266749041970903357, guid: 97eb2920862a436439bb88f34214afec, type: 2}
@@ -14089,6 +14005,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1161908829212078117, guid: 70c62239cd4fceb44825061da3ac767c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6cd572a7701062249b3e6bd8f8ffb632, type: 2}
     - target: {fileID: 919132149155446097, guid: 70c62239cd4fceb44825061da3ac767c, type: 3}
       propertyPath: m_Name
       value: SubmarineBody_LowPoly_Untextured
@@ -15691,7 +15611,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://miyuurii.artstation.com/
   highlightCG: {fileID: 1272938703}
 --- !u!114 &1026646104
 MonoBehaviour:
@@ -18618,7 +18538,7 @@ RectTransform:
   - {fileID: 1631016429}
   - {fileID: 1919678495}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -19059,7 +18979,7 @@ Transform:
   - {fileID: 1690289489}
   - {fileID: 188768106}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 17.779, y: -20.689, z: 8.653}
 --- !u!1 &1302396343
 GameObject:
@@ -24778,7 +24698,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 346575959947983435, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 346575959947983435, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -24823,6 +24743,10 @@ PrefabInstance:
     - target: {fileID: 3558804986233344276, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297429361851390011, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
+      propertyPath: TutorialScene
+      value: Title
       objectReference: {fileID: 0}
     - target: {fileID: 6298132451773036751, guid: 6dd8e959e8d100141bdfef6d01ebeddc, type: 3}
       propertyPath: m_Name
@@ -24995,7 +24919,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://hunkidori.itch.io/
   highlightCG: {fileID: 689543795}
 --- !u!114 &1393951034
 MonoBehaviour:
@@ -27053,7 +26977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://www.artstation.com/sushiworks
   highlightCG: {fileID: 1782652985}
 --- !u!114 &1517768791
 MonoBehaviour:
@@ -28094,7 +28018,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://adventurer8612.itch.io/
   highlightCG: {fileID: 1878794286}
 --- !u!114 &1616230559
 MonoBehaviour:
@@ -28493,7 +28417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://www.artstation.com/aeraesoma
   highlightCG: {fileID: 1823148895}
 --- !u!114 &1641120707
 MonoBehaviour:
@@ -29526,9 +29450,12 @@ MonoBehaviour:
       m_Calls: []
   m_text: '3D Character Artist
 
+    3D Prop Artist
+
     3D Generalist
 
-    Promotional Visuals'
+    Promotional
+    Visuals'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 97eb2920862a436439bb88f34214afec, type: 2}
   m_sharedMaterial: {fileID: -6266749041970903357, guid: 97eb2920862a436439bb88f34214afec, type: 2}
@@ -31967,18 +31894,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Audio Composition
+  m_text: 'Marketing
+
+    Audio Composition
 
     Tech Generalist
 
     Lead Networking
 
-    AI Design/Tech
+    AI
+    Design/Tech
 
-    UI
-    Art/Design/Tech
-
-    Producer/Marketing
+    UI Art/Design/Tech
 
     <color=#FDD244><b>Project Manager
 
@@ -32804,6 +32731,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1161908829212078117, guid: 70c62239cd4fceb44825061da3ac767c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 014a46b62cefe014fbd7bcacd2377733, type: 2}
     - target: {fileID: 919132149155446097, guid: 70c62239cd4fceb44825061da3ac767c, type: 3}
       propertyPath: m_Name
       value: SubmarineBody_LowPoly_Untextured
@@ -33764,7 +33695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeMultiplier: 1.5
   effectSpeed: 5
-  portfolioLink: 
+  portfolioLink: https://jaoushingan.itch.io/
   highlightCG: {fileID: 428151148}
 --- !u!114 &2059427772
 MonoBehaviour:

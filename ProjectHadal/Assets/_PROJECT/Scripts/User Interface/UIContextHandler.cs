@@ -31,8 +31,16 @@ namespace Hadal.UI
         private static readonly int JumpstartFailure = Animator.StringToHash("JumpstartFailure");
 
         public void StartJumpstart() => jumpstartAnimator.SetTrigger(AllowJumpstart);
-        public void SuccessJumpstart() => jumpstartAnimator.SetTrigger(JumpstartSucceed);
-        public void FailJumpstart() => jumpstartAnimator.SetTrigger(JumpstartFailure);
+        public void SuccessJumpstart()
+        {
+            jumpstartAnimator.ResetTrigger(AllowJumpstart);
+            jumpstartAnimator.SetTrigger(JumpstartSucceed);
+        }
+        public void FailJumpstart()
+        {
+            jumpstartAnimator.ResetTrigger(AllowJumpstart);
+            jumpstartAnimator.SetTrigger(JumpstartFailure);
+        }
 
         [Header("Torpedo Salvage UI")] 
         [SerializeField] private Image salvageLeftFiller;
@@ -76,6 +84,7 @@ namespace Hadal.UI
             if (torpCoroutine != null) StopCoroutine(torpCoroutine);
             
             //Debug.LogWarning($"UI End Received");
+            salvageAnimator.ResetTrigger(StartSalvage);
             if (success) salvageAnimator.SetFloat(SalvageOutcome, 1f);
             else salvageAnimator.SetFloat(SalvageOutcome, -1f);
 
