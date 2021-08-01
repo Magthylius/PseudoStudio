@@ -187,6 +187,8 @@ namespace Hadal.Usables.Projectiles
         protected override void StopImpactEffect()
         {
             isVisualizing = false;
+            if(bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", true);
             particleEffect.SetActive(false);
         }
 

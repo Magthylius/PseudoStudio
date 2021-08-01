@@ -142,6 +142,8 @@ namespace Hadal.Usables.Projectiles
         {
             isVisualizing = false;
             particleEffect.SetActive(false);
+            if(bubbleAsset != null)
+                bubbleAsset.SetBool("Playing", true);
             projectileAsset.SetActive(true);
             PPhysics.OnPhysicsFinished();
         }
