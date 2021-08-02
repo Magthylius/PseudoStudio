@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SonicTracker
-  m_Shader: {fileID: 4800000, guid: e260cfa7296ee7642b167f1eb5be5023, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 4118ba738ea45504583886e4b31071b8, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -101,6 +101,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_1cb1963175004f999fdcb4369ea1fe21: 0
+    - Vector1_7cede0e4bebb4d63864cacdb3ecfd1fc: 100.3
+    - Vector1_873be8b6d03e40209fa484b2ef28706b: -0.11
+    - Vector1_bd13037b39e04455a14456cf4c5f8443: 1
+    - Vector1_c9c2a49971e94053a2c6d625dbd2162b: 30
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -130,7 +135,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 2.9314747, g: 5.3403134, b: 2.1411633, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

@@ -361,10 +361,10 @@ namespace Hadal.Networking
         public void JoinRoom(RoomInfo roomInfo) => PhotonNetwork.JoinRoom(roomInfo.Name);
         public void LeaveRoom(bool voluntary, bool returnsToMainMenu)
         {
-            
+            LeftRoomAction?.Invoke();
             if (returnsToMainMenu)
             {
-                LeftRoomAction?.Invoke();
+                
                 loadsToMainMenu = true;
             }
 

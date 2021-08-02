@@ -20,8 +20,8 @@ namespace Hadal.Networking.UI
         //! Networked other player chosen classes, effectively NOT eligible player choices
         [SerializeField, ReadOnly] private List<PlayerClassType> chosenClassTypes = new List<PlayerClassType>();
 
-        private PlayerClassType _currentClassType = PlayerClassType.Invalid;
-        private MainMenuChooseClass _currentClassChooser = null;
+        [SerializeField, ReadOnly] private PlayerClassType _currentClassType = PlayerClassType.Invalid;
+        [SerializeField, ReadOnly] private MainMenuChooseClass _currentClassChooser = null;
 
         private void Start()
         {
@@ -146,6 +146,8 @@ namespace Hadal.Networking.UI
         {
             if (_currentClassChooser != null) 
                 _currentClassChooser.SetSelectState(false);
+
+            _currentClassChooser = null;
 
             foreach (var highlight in ChosenHighlighters)
                 highlight.Deselect();

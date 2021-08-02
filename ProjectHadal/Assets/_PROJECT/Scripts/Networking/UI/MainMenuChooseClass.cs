@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 namespace Hadal.Networking.UI
 {
@@ -11,7 +13,17 @@ namespace Hadal.Networking.UI
         public MainMenuIconBehaviour CorrespondingIconBehaviour;
         public PlayerClassType type;
         
-        private bool selected = false;
+        [SerializeField, ReadOnly] private bool selected = false;
+
+        private void Start()
+        {
+            NetworkEventManager.Instance.LeftRoomAction += OnLeaveRoom;
+        }
+
+        public void OnDestroy()
+        {
+            NetworkEventManager.Instance.LeftRoomAction -= OnLeaveRoom;
+        }
 
         public void ChooseClass()
         {
@@ -34,6 +46,11 @@ namespace Hadal.Networking.UI
                 Selector.SetClassChooser(null);
                 selected = false;
             }
+        }
+
+        public void OnLeaveRoom()
+        {
+            selected = false;
         }
 
         public void ToggleButton()

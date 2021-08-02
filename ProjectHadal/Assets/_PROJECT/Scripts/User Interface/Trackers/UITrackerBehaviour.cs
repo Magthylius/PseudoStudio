@@ -33,12 +33,17 @@ namespace Hadal.UI
         private FlexibleRect flexRect;
         private CanvasGroupFader cgf;
 
+        private float screenHWidth;
+        private float screenHHeight;
+
         //! UI Scaling
         private float resoScale;
         private float playerScale;
         
         //! Fading properties
         protected float distanceToTransform;
+
+        //private int sl_debug;
 
         public virtual void Start()
         {
@@ -51,6 +56,10 @@ namespace Hadal.UI
             cgf.SetOpaque();
 
             //if (!startsEnabled) Disable();
+            //sl_debug = DebugManager.Instance.CreateScreenLogger();
+
+            screenHWidth = Screen.width * 0.5f;
+            screenHHeight = Screen.height * 0.5f;
         }
 
         void Update()
@@ -63,16 +72,18 @@ namespace Hadal.UI
                 return;
             }
 
-            float minX = graphic.GetPixelAdjustedRect().width * 0.5f;
-            float minY = graphic.GetPixelAdjustedRect().height * 0.5f;
+            float minX = graphic.GetPixelAdjustedRect().width * 0.5f - screenHWidth;
+            float minY = graphic.GetPixelAdjustedRect().height * 0.5f - screenHHeight;
 
-            float maxX = Screen.width - minX;
-            float maxY = Screen.height - minY;
+            float maxX = Screen.width - screenHWidth;
+            float maxY = Screen.height - screenHHeight;
+            
+            //DebugManager.Instance.SLog(sl_debug, $"{minX}, {minY}, {maxX}, {maxY}");
 
             Vector3 trackedPosition = trackingTransform.position;
             Vector2 pos = playerCamera.WorldToScreenPoint(trackedPosition + positionOffset);
-            pos.x -= Screen.width * 0.5f;
-            pos.y -= Screen.height * 0.5f;
+            pos.x -= screenHWidth;
+            pos.y -= screenHHeight;
             
             pos *= resoScale * playerScale;
 
@@ -86,8 +97,11 @@ namespace Hadal.UI
 
             if (screenBounded)
             {
-                pos.x = Mathf.Clamp(pos.x, minX, maxX);
-                pos.y = Mathf.Clamp(pos.y, minY, maxY);
+                float c = 0.35f;
+                pos.x = Mathf.Clamp(pos.x, -screenHWidth *c, screenHWidth*c);
+                pos.y = Mathf.Clamp(pos.y, -screenHHeight*c, screenHHeight*c);
+                
+                //DebugManager.Instance.SLog(sl_debug, $"{pos}");
                 
                 rectTransform.anchoredPosition = pos;
             }
