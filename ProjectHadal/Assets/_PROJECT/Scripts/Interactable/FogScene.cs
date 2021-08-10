@@ -21,9 +21,12 @@ namespace Hadal.Interactables
 
         private void OnTriggerEnter(Collider other)
         {
-            StopAllCoroutines();
             if(CanCollide(other))
+            {
+                //Debug.Log("Fogger");
+                //StopAllCoroutines();
                 StartCoroutine(colorLerpIn());
+            }
         }
 
         IEnumerator colorLerpIn()
@@ -31,7 +34,7 @@ namespace Hadal.Interactables
             percent = 0f;
             while (percent < 1f)
             {
-                percent += Time.deltaTime * 0.05f;
+                percent += Time.deltaTime * 0.1f;
                 RenderSettings.fogColor = Color.Lerp(RenderSettings.fogColor, targetColor, lerpTime);
                 RenderSettings.fogDensity = Mathf.Lerp(RenderSettings.fogDensity, targetFogDensity, lerpTime * 2);
                 yield return null;
