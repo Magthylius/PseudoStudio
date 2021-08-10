@@ -4,7 +4,7 @@ using UnityEngine;
 //Created by Jet, E: Jon
 namespace Hadal.Locomotion
 {
-    public class PlayerRotation : Rotator
+    public class PlayerRotation : Rotator, IRotatable
     {
         [SerializeField, Min(0f)] float maxInputAxisClamp = 5f;
         [SerializeField, Range(0f, 1f)] float yawInfluenceOnRollFactor = 0.3f;
@@ -69,7 +69,7 @@ namespace Hadal.Locomotion
 
         public void AddRotation(Vector3 normalizedDirection, float force)
         {
-            targetQT *= Quaternion.Euler(normalizedDirection * force);
+            targetQT *= Quaternion.Euler(normalizedDirection * force * 5);
         }
 
         /*void CalculateRotationSpeed()

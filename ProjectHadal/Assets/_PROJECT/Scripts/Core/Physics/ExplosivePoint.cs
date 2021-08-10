@@ -47,6 +47,7 @@ namespace Hadal
                 {
                     r.GetComponentInChildren<IDamageable>().TakeDamage(ExplosionDamage);
                 }
+
                 //! determine direction of resultant force
                 Vector3 forceDirection = r.transform.position - GetPosition;
                 
@@ -62,7 +63,13 @@ namespace Hadal
                 Vector3 force = forceDirection.normalized * ForceAmount * inverseDistanceRatio;
 
                 r.AddForce(force, ForceMode.Impulse);
-               /* r.AddTorque(force.magnitude * transform.up, ForceMode.Impulse);*/
+
+                //!! remove this if you dont want rotation.
+                Vector3 normalizedDirection = forceDirection.normalized;
+                Vector3 rotationVector = new Vector3(normalizedDirection.z, normalizedDirection.y, normalizedDirection.x);
+                r.GetComponentInChildren<IRotatable>()?.AddRotation(rotationVector, force.magnitude);
+
+                /* r.AddTorque(force.magnitude * transform.up, ForceMode.Impulse);*/
             });
             
             OnExplode?.Invoke(GetSettingsForThisObject());
