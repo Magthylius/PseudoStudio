@@ -34,8 +34,8 @@ namespace Hadal.Locomotion
         public override void DoUpdate(in float deltaTime)
         {
             if (!allowUpdate) return;
-            LerpCummulatedAcceleration(deltaTime);
-            HandleAcceleration(deltaTime);
+            //LerpCummulatedAcceleration(deltaTime);
+            //HandleAcceleration(deltaTime);
             //AddVelocity();
             InstantVelocity();
             //LoseVelocity(deltaTime);
@@ -75,9 +75,13 @@ namespace Hadal.Locomotion
 
         private void HandleAcceleration(in float deltaTime)
         {
-            _currentForwardSpeed = VerticalInputSpeed * BoostInputSpeed * Accel.Forward * Accel.CummulatedAcceleration * deltaTime;
+            /*_currentForwardSpeed = VerticalInputSpeed * BoostInputSpeed * Accel.Forward * Accel.CummulatedAcceleration * deltaTime;
             _currentStrafeSpeed = HorizontalInputSpeed * BoostInputSpeed * Accel.Strafe * Accel.CummulatedAcceleration * deltaTime;
-            _currentHoverSpeed = HoverInputSpeed * BoostInputSpeed * Accel.Hover * Accel.CummulatedAcceleration * deltaTime;
+            _currentHoverSpeed = HoverInputSpeed * BoostInputSpeed * Accel.Hover * Accel.CummulatedAcceleration * deltaTime;*/
+
+            _currentForwardSpeed = VerticalInputSpeed * BoostInputSpeed * Accel.Forward * Accel.MaxCummulation * deltaTime;
+            _currentStrafeSpeed = HorizontalInputSpeed * BoostInputSpeed * Accel.Strafe * Accel.MaxCummulation * deltaTime;
+            _currentHoverSpeed = HoverInputSpeed * BoostInputSpeed * Accel.Hover * Accel.MaxCummulation * deltaTime;
         }
 
         private void AddVelocity()
@@ -137,6 +141,7 @@ namespace Hadal.Locomotion
                          $"Forward spd: {Speed.Forward}\n" +
                          $"Strafe (lft,rght) spd: {Speed.Strafe}\n" +
                          $"Hover (up,down) spd: {Speed.Hover}";
+
             DebugLog(log);
         }
 
@@ -151,9 +156,10 @@ namespace Hadal.Locomotion
             Ray ray = new Ray(target.position, direction);
             RaycastHit hit;
             if (!Physics.Raycast(ray, out hit, direction.magnitude, rayCastLayerMask, QueryTriggerInteraction.Ignore))
-                rigidBody.MovePosition(desiredPosition);
+                target.position = desiredPosition;
             else
-                rigidBody.MovePosition(hit.point);
+                target.position = hit.point;
+
         }
 
         private void LerpCummulatedAcceleration(in float deltaTime)
@@ -175,10 +181,15 @@ namespace Hadal.Locomotion
 
         private bool IsMoving => VerticalInputSpeed.Abs() > float.Epsilon || HorizontalInputSpeed.Abs() > float.Epsilon || HoverInputSpeed.Abs() > float.Epsilon;
 
-        private Vector3 ForwardVelocity => target.forward * _currentForwardSpeed;
+        //for acceleration.
+        /*private Vector3 ForwardVelocity => target.forward * _currentForwardSpeed;
         private Vector3 StrafeVelocity => target.right * _currentStrafeSpeed;
-        private Vector3 HoverVelocity => target.up * _currentHoverSpeed;
+        private Vector3 HoverVelocity => target.up * _currentHoverSpeed;*/
 
+
+        private Vector3 ForwardVelocity => target.forward * VerticalInputSpeed;
+        private Vector3 StrafeVelocity => target.right * HorizontalInputSpeed;
+        private Vector3 HoverVelocity => target.up * HoverInputSpeed;
         #endregion
     }
 }

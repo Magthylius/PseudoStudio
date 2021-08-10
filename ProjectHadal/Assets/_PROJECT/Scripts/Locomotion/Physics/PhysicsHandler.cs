@@ -111,7 +111,7 @@ namespace Hadal.Locomotion
                 }
             }
                                    //1/2  *  Density * Vector^2                                        * area
-            Vector3 finalDragForce = 0.5f * density * Vector3.SqrMagnitude(moveVector) * moveDirection * testHitCount * 0.099f;
+            Vector3 finalDragForce = 0.5f * density * Vector3.SqrMagnitude(moveVector) * moveDirection * testHitCount * 0.08f;
             rigidBody.AddForce(-finalDragForce, ForceMode.Force);
         }
         #endregion

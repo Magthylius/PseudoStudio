@@ -127,6 +127,8 @@ namespace Hadal.Locomotion
             Speed.Strafe = rigidBody.velocity.z;
             Speed.Hover = rigidBody.velocity.y;
 
+            //Debug.LogError(Speed.Normalised);
+
         }
         #endregion
 
