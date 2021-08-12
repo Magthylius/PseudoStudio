@@ -15,7 +15,16 @@ namespace Hadal
         [SerializeField] private ForceMode forceMode;
         [SerializeField] private LayerMask affectedLayers;
 
+        /// <summary>
+        /// The attached collider to the same game object of this script. Must
+        /// always be present, active and isTrigger == true.
+        /// </summary>
         private Collider _collider;
+
+        /// <summary>
+        /// List of cached rigidbodies that are considered within the trigger collider
+        /// so a constant force can be applied to them until they leave the zone.
+        /// </summary>
         private List<Rigidbody> collidees = new List<Rigidbody>();
 
         private Vector3 TotalForcePerFrame => worldDirection * force;
