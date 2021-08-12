@@ -15,20 +15,21 @@ namespace Hadal.Networking.UI.EndScreen
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private TextMeshProUGUI missionOutcomeTMP;
         [SerializeField] private TextMeshProUGUI timeTakenTMP;
+        [SerializeField] private TextMeshProUGUI timeTakenTitleTMP;
 
         [Header("Audio")]
         [SerializeField] private AudioSource endAudio;
         [SerializeField] private AudioClip winAudio;
         [SerializeField] private AudioClip loseAudio;
-        
-        [Header("Settings")] 
+
+        [Header("Settings")]
         [SerializeField] private string missionOutcomeText;
         [SerializeField] private string successOutcomeText;
         [SerializeField] private string failureOutcomeText;
         [SerializeField] private Color successColor;
         [SerializeField] private Color failureColor;
-        
-        [Header("Data")] 
+
+        [Header("Data")]
         [ReadOnly, SerializeField] bool MissionSuccess = false;
         [ReadOnly, SerializeField] float TimeTaken = 0f;
         private float currentTime = 0f;
@@ -53,7 +54,7 @@ namespace Hadal.Networking.UI.EndScreen
             canvasGroup.blocksRaycasts = false;
             StopCoroutine(UpdateTimeText());
             currentTime = 0f;
-            
+
             if (restart) ApplicationHandler.RestartApp();
         }
 
@@ -72,19 +73,28 @@ namespace Hadal.Networking.UI.EndScreen
             MissionSuccess = gameWon;
             TimeTaken = timeTaken;
 
-            string outcomeText = missionOutcomeText;
-
+            int numberXXX = UnityEngine.Random.Range(100, 399);
+            string numberText = numberXXX.ToString("D3");
+            //string outcomeText = missionOutcomeText;
+            string outcomeText;
             if (MissionSuccess)
             {
-                outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(successColor) + "> " + successOutcomeText;
+                missionOutcomeText = "LEVIATHAN " + numberText + ": " + successOutcomeText;
+                outcomeText = " <color=#" + ColorUtility.ToHtmlStringRGB(successColor) + "> " + missionOutcomeText;
+                //outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(successColor) + "> " + successOutcomeText;
+                timeTakenTMP.alpha = 0.75f;
+                timeTakenTMP.color = Color.green;
                 endAudio.clip = winAudio;
             }
             else
             {
-                outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(failureColor) + "> " + failureOutcomeText;
+                missionOutcomeText = "SQUAD " + numberText + ": " + failureOutcomeText;
+                outcomeText = " <color=#" + ColorUtility.ToHtmlStringRGB(failureColor) + "> " + missionOutcomeText;
+                //outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(failureColor) + "> " + failureOutcomeText;
+                timeTakenTMP.color = Color.red;
                 endAudio.clip = loseAudio;
             }
-            
+
             endAudio.Play();
 
             TimeSpan timeSpan = TimeSpan.FromSeconds(TimeTaken);
@@ -111,7 +121,7 @@ namespace Hadal.Networking.UI.EndScreen
             currentTime = TimeTaken;
             TimeSpan timeSpan2 = TimeSpan.FromSeconds(currentTime);
             timeTakenTMP.text = $"{timeSpan2.Hours:D2}:{timeSpan2.Minutes:D2}:{timeSpan2.Seconds:D2}";
-            
+
             yield return null;
         }
 
