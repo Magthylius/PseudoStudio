@@ -12,6 +12,7 @@ using NaughtyAttributes;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using Hadal.Networking.UI.EndScreen;
 
 //! C: Jon
 namespace Hadal.Networking.UI.MainMenu
@@ -25,17 +26,17 @@ namespace Hadal.Networking.UI.MainMenu
             START = 0,
             MAIN
         }
-        
+
         MenuPhase menuPhase = MenuPhase.START;
         LoadingManager loadingManager;
 
         bool mainMenuInitiated = false;
 
-        [Header("References")] 
+        [Header("References")]
         public MainMenuClassSelector ClassSelector;
         public DiegeticPlayerEntryHandler DiegeticHandler;
-        public UnityEvent bgmAmbience; 
-        
+        public UnityEvent bgmAmbience;
+
         [Header("Menu settings")]
         [SerializeField] Menu startMenu;
         [SerializeField] Menu nicknameMenu;
@@ -94,7 +95,7 @@ namespace Hadal.Networking.UI.MainMenu
 
         FlexibleRect confirmQuitFR;
 
-        [Header("Actual Settings")] 
+        [Header("Actual Settings")]
         [SerializeField] private RectTransform settingsPanel;
         private FlexibleRect settingsFR;
 
@@ -133,14 +134,14 @@ namespace Hadal.Networking.UI.MainMenu
                     //print("what the fuck");
                     break;
                 case MenuPhase.MAIN:
-                   // Debug.LogWarning("run");
+                    // Debug.LogWarning("run");
                     if (createRoomFR != null) createRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     if (findRoomFR != null) findRoomFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     if (confirmQuitFR != null) confirmQuitFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     if (settingsFR != null) settingsFR.Step(roomPanelLerpSpeed * Time.unscaledDeltaTime);
                     break;
             }
-            
+
             //print("?");
         }
 
@@ -219,7 +220,7 @@ namespace Hadal.Networking.UI.MainMenu
             }
 
             mainMenuInitiated = true;
-            
+
         }
 
         /// <summary>
@@ -232,14 +233,14 @@ namespace Hadal.Networking.UI.MainMenu
             //InitMainMenu();
             //EnsureSetup(false);
             loadToTutorial = false;
-            
+
             OpenMenu(lobbyMenu);
 
             createRoomFR.MoveToEnd();
             findRoomFR.MoveToEnd();
             confirmQuitFR.MoveToEnd();
             settingsFR.MoveToEnd();
-            
+
             DiegeticHandler.ExitAll();
         }
 
@@ -312,7 +313,7 @@ namespace Hadal.Networking.UI.MainMenu
             //NetworkEventManager.Instance.Disconnect();
             CloseMenu(lobbyMenu);
             OpenMenu(nicknameMenu);
-            
+
             findRoomFR.StartLerp(true);
             createRoomFR.StartLerp(true);
             settingsFR.StartLerp(true);
@@ -323,7 +324,7 @@ namespace Hadal.Networking.UI.MainMenu
         {
             CloseMenu(lobbyMenu);
             OpenMenu(creditMenu);
-            
+
             confirmQuitFR.StartLerp(true);
             settingsFR.StartLerp(true);
         }
@@ -333,12 +334,12 @@ namespace Hadal.Networking.UI.MainMenu
             CloseMenu(creditMenu);
             OpenMenu(lobbyMenu);
         }
-        
+
         public void BTN_StartGame()
         {
             CloseMenu(gameOptions);
             OpenMenu(roomOptions);
-            
+
             confirmQuitFR.StartLerp(true);
             settingsFR.StartLerp(true);
         }
@@ -351,7 +352,7 @@ namespace Hadal.Networking.UI.MainMenu
             ro.MaxPlayers = 1;
             ro.CleanupCacheOnLeave = true;
             ro.DeleteNullProperties = true;
-            ro.CustomRoomProperties = new Hashtable {{"s", (int) NetworkEventManager.RoomState.WAITING}};
+            ro.CustomRoomProperties = new Hashtable { { "s", (int)NetworkEventManager.RoomState.WAITING } };
 
             NetworkEventManager.Instance.CreateRoom($"Tutorial {(int)Random.Range(0, int.MaxValue)}", ro);
 
@@ -359,7 +360,7 @@ namespace Hadal.Networking.UI.MainMenu
             connectingMenu.Open();
             loadToTutorial = true;
         }
-        
+
         public void BTN_BackToLobby()
         {
             CloseMenu(roomOptions);
@@ -379,7 +380,7 @@ namespace Hadal.Networking.UI.MainMenu
         {
             if (!NetworkEventManager.Instance.InLobby) return;
             createRoomFR.StartLerp(false);
-            findRoomFR.StartLerp(true); 
+            findRoomFR.StartLerp(true);
         }
 
         public void BTN_CreateActualRoom()
@@ -411,7 +412,7 @@ namespace Hadal.Networking.UI.MainMenu
             //! Safety check from spams
             if (hasStartedLevel) return;
             hasStartedLevel = true;
-            
+
             NetworkEventManager.Instance.SetCurrentRoomCustomProperty("s", NetworkEventManager.RoomState.STARTED);
             NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_LOAD, null);
             NetworkEventManager.Instance.CurrentRoom.IsOpen = false;
@@ -425,7 +426,7 @@ namespace Hadal.Networking.UI.MainMenu
             {
                 loadingManager.LoadLevel(NetworkEventManager.Instance.InGameScene);
             }
-            
+
         }
 
         public void BTN_LeaveRoom()
@@ -478,9 +479,9 @@ namespace Hadal.Networking.UI.MainMenu
             {
                 Destroy(child.gameObject);
             }
-            
+
             DiegeticHandler.UpdateCurrentEntered(playerList.Length);
-            
+
             for (int i = 0; i < playerList.Length; i++)
             {
                 Color playerColor;
@@ -491,7 +492,7 @@ namespace Hadal.Networking.UI.MainMenu
                     case 2: playerColor = neManager.ThirdPlayerColor; break;
                     default: playerColor = neManager.FourthPlayerColor; break;
                 }
-                
+
                 AddPlayerList(playerList[i], playerColor);
             }
 
@@ -505,7 +506,7 @@ namespace Hadal.Networking.UI.MainMenu
                     ClassSelector.UpdateNetworkSelector((PlayerClassType)roomProps[playerIndex], playerIndex);
                 }
             }
-            
+
         }
 
         /// <summary> Update when someone leaves </summary>
@@ -540,7 +541,7 @@ namespace Hadal.Networking.UI.MainMenu
             Destroy(listItem.gameObject);
             //UpdateAllListedPlayers();
         }
-        
+
         public void LeftRoom()
         {
             while (_playerListItems.Count > 0)
@@ -550,7 +551,7 @@ namespace Hadal.Networking.UI.MainMenu
                 Destroy(item);
             }
         }
-        
+
         public void PlayerEnteredRoom(Player player)
         {
             Debug.LogWarning($"Player {player.NickName} has joined");
