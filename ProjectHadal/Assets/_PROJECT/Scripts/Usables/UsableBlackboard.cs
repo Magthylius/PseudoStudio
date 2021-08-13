@@ -10,7 +10,7 @@ namespace Hadal.Usables
         public static string[] AILayers = {"Monster", "MonsterEgg"};
         public static string[] CollidableLayers = {"Default", "Obstacle", "Interactable"};
         public static string[] UtilityLayers = { "Utilities" };
-
+        public static string[] LocalPlayerAndPlayer = { "Player", "LocalPlayer"};
         static string _AIHitboxLayer = "Monster";
         public static string AIHitboxLayerName => _AIHitboxLayer;
         public static int AIHitboxLayerInt => LayerMask.NameToLayer(_AIHitboxLayer);
