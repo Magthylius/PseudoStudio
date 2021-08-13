@@ -24,6 +24,7 @@ namespace Hadal.Interactables
             if(CanCollide(other))
             {
                 RenderSettings.fogColor = Color.Lerp(RenderSettings.fogColor, targetColor, lerpTime);
+                RenderSettings.fogDensity = Mathf.Lerp(RenderSettings.fogDensity, targetFogDensity, lerpTime);
             }
         }
         private bool CanCollide(Collider other) => other.gameObject.layer.IsAMatchingMask(reactiveMask);
