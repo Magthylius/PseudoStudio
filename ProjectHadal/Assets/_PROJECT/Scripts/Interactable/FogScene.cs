@@ -13,7 +13,7 @@ namespace Hadal.Interactables
         [SerializeField]private Color targetColor;
         [SerializeField][Range(0f, 0.05f)]private float targetFogDensity;
 
-        [SerializeField][Range(0f, 0.01f)] float lerpTime;
+        [SerializeField][Range(0f, 30f)] float lerpTime;
 
         [SerializeField] private LayerMask reactiveMask;
 

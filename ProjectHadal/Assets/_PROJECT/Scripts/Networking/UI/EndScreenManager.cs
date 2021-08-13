@@ -88,8 +88,6 @@ namespace Hadal.Networking.UI.EndScreen
                 outcomeText += $"{outComeCol}{successOutcomeText}";
                 GeneratedNumber = Random.Range((int)leviathanNumberGenRange.x, (int)leviathanNumberGenRange.y);
                 endAudio.clip = winAudio;
-                endAudio.volume = 0.2f;
-                endAudio.loop = true;
 
                 statusFlavourTMP.text = $"{statusFlavourSuccessText}{string.Format(GeneratedNumber.ToString("D2"))}{outComeCol}";
             }
