@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Hadal.Networking.UI.EndScreen
 {
@@ -14,23 +15,30 @@ namespace Hadal.Networking.UI.EndScreen
         [Header("References")]
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private TextMeshProUGUI missionOutcomeTMP;
+        [SerializeField] private TextMeshProUGUI statusFlavourTMP;
         [SerializeField] private TextMeshProUGUI timeTakenTMP;
+        [SerializeField] private TextMeshProUGUI timeTakenTitleTMP;
 
         [Header("Audio")]
         [SerializeField] private AudioSource endAudio;
         [SerializeField] private AudioClip winAudio;
         [SerializeField] private AudioClip loseAudio;
-        
+
         [Header("Settings")] 
+        [SerializeField, MinMaxSlider(1, 999)] private Vector2 squadNumberGenRange;
+        [SerializeField, MinMaxSlider(1, 99)] private Vector2 leviathanNumberGenRange;
         [SerializeField] private string missionOutcomeText;
         [SerializeField] private string successOutcomeText;
         [SerializeField] private string failureOutcomeText;
+        [SerializeField] private string statusFlavourSuccessText;
+        [SerializeField] private string statusFlavourFailureText;
         [SerializeField] private Color successColor;
         [SerializeField] private Color failureColor;
-        
-        [Header("Data")] 
+
+        [Header("Data")]
         [ReadOnly, SerializeField] bool MissionSuccess = false;
         [ReadOnly, SerializeField] float TimeTaken = 0f;
+        [ReadOnly, SerializeField] int GeneratedNumber = 0;
         private float currentTime = 0f;
 
         private void Awake()
@@ -53,7 +61,7 @@ namespace Hadal.Networking.UI.EndScreen
             canvasGroup.blocksRaycasts = false;
             StopCoroutine(UpdateTimeText());
             currentTime = 0f;
-            
+
             if (restart) ApplicationHandler.RestartApp();
         }
 
@@ -71,19 +79,29 @@ namespace Hadal.Networking.UI.EndScreen
         {
             MissionSuccess = gameWon;
             TimeTaken = timeTaken;
-
+            
             string outcomeText = missionOutcomeText;
 
             if (MissionSuccess)
             {
-                outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(successColor) + "> " + successOutcomeText;
+                string outComeCol = $"<color=#{ColorUtility.ToHtmlStringRGB(successColor)}>";
+                outcomeText += $"{outComeCol}{successOutcomeText}";
+                GeneratedNumber = Random.Range((int)leviathanNumberGenRange.x, (int)leviathanNumberGenRange.y);
                 endAudio.clip = winAudio;
+
+                statusFlavourTMP.text = $"{statusFlavourSuccessText}{string.Format(GeneratedNumber.ToString("D2"))}{outComeCol}";
             }
             else
             {
-                outcomeText += " <color=#" + ColorUtility.ToHtmlStringRGB(failureColor) + "> " + failureOutcomeText;
+                string outComeCol = $"<color=#{ColorUtility.ToHtmlStringRGB(failureColor)}>";
+                outcomeText += $"{outComeCol}{failureOutcomeText}";
+                GeneratedNumber = Random.Range((int)squadNumberGenRange.x, (int)squadNumberGenRange.y);
                 endAudio.clip = loseAudio;
+                
+                statusFlavourTMP.text = $"{statusFlavourFailureText}{string.Format(GeneratedNumber.ToString("D3"))}{outComeCol}";
             }
+
+            statusFlavourTMP.text += $" HUNTED";
             
             endAudio.Play();
 
@@ -111,7 +129,7 @@ namespace Hadal.Networking.UI.EndScreen
             currentTime = TimeTaken;
             TimeSpan timeSpan2 = TimeSpan.FromSeconds(currentTime);
             timeTakenTMP.text = $"{timeSpan2.Hours:D2}:{timeSpan2.Minutes:D2}:{timeSpan2.Seconds:D2}";
-            
+
             yield return null;
         }
 

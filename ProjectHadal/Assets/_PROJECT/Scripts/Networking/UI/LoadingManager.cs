@@ -64,7 +64,7 @@ namespace Hadal.Networking.UI.Loading
         [SerializeField, ReadOnly] private bool audioPoolersCheckedIn = false;
 
         [FormerlySerializedAs("endsScreenHandler")]
-        [Header("End screen")] 
+        [Header("End screen")]
         [SerializeField] private EndScreenManager endsScreenManager;
 
         [Header("Post processing effects")]
@@ -105,15 +105,15 @@ namespace Hadal.Networking.UI.Loading
 
             continueCGF = new CanvasGroupFader(continueCG, true, false);
             continueCGF.SetTransparent();
-            
+
             if (!neManager.IsMasterClient)
             {
                 neManager.AddListener(ByteEvents.GAME_START_LOAD, NetworkedLoad);
                 neManager.AddListener(ByteEvents.GAME_START_END, RE_StartEndScreenAndReturn);
             }
-            
+
             ResetLoadingElements();
-            
+
             //LoadingCompletedEvent.AddListener(LoadingCompletedPrint);
             GameManager.Instance.GameEndedEvent += StartEndScreenAndReturn;
         }
@@ -121,16 +121,16 @@ namespace Hadal.Networking.UI.Loading
         void FixedUpdate()
         {
             //Debug.LogWarning(gameObject.activeInHierarchy);
-            
+
             loadingCGF.Step(loadingFadeSpeed * Time.unscaledDeltaTime);
             continueCGF.Step(continueFadeSpeed * Time.unscaledDeltaTime);
 
             if (allowLoading)
             {
-                if (loadingAO is {isDone: true} || networkedLoad)
+                if (loadingAO is { isDone: true } || networkedLoad)
                 {
                     allowLoading = false;
-                    
+
                     if (loadingMode == LoadMode.Press_Any_Key_Continue)
                     {
                         allowContinue = true;
@@ -203,7 +203,7 @@ namespace Hadal.Networking.UI.Loading
             PlayConnectionParent();
 
             //! Suspend until allowed
-            while(!allowLoadingCompletion)
+            while (!allowLoadingCompletion)
             {
                 yield return null;
             }
@@ -216,7 +216,7 @@ namespace Hadal.Networking.UI.Loading
             }
 
             yield return null;
-            
+
             bool AllPoolersCheckedIn() => projectilePoolersCheckedIn && audioPoolersCheckedIn;
         }
 
@@ -244,7 +244,7 @@ namespace Hadal.Networking.UI.Loading
 
             loadingCGF.fadeEndedEvent.RemoveAllListeners();
             background.gameObject.SetActive(true);
-            
+
             StopAllAnimators();
 
             continueCGF.SetTransparent();
@@ -253,7 +253,7 @@ namespace Hadal.Networking.UI.Loading
             allowLoading = false;
             allowContinue = false;
             networkedLoad = false;
-            
+
             if (loadingMode == LoadMode.Load_After_Event) allowLoadingCompletion = false;
         }
 
@@ -265,7 +265,7 @@ namespace Hadal.Networking.UI.Loading
         {
             yield return new WaitForSeconds(fadeOutDelay);
             //Debug.LogWarning($"L check 0");
-            
+
             connectionAnimator.SetTrigger("LoadingReady");
             hiveSpinnerAnimator.SetBool("LoadingReady", true);
 
@@ -286,16 +286,16 @@ namespace Hadal.Networking.UI.Loading
                 yield return null;
             }
             //Debug.LogWarning($"L check 2");
-            
+
             connectionAnimator.SetBool(connectionAnimatorFinishedBool, false);
-            
+
             if (GameManager.Instance.LevelHandler.CurrentScene == GameManager.Instance.InGameScene)
                 GameManager.Instance.StartGameEvent();
 
             ResetLoadingElements();
-            
+
             //Debug.LogWarning($"L check 3");
-            
+
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace Hadal.Networking.UI.Loading
             //loadingCGF.FadeInEndedEvent += ActualLoad;
 
             //Debug.LogWarning("load the level!");
-            nextLoadLevelName = levelName; 
+            nextLoadLevelName = levelName;
         }
         public void FinishLoading()
         {
@@ -423,7 +423,7 @@ namespace Hadal.Networking.UI.Loading
         {
             Debug.LogWarning("Game ended! Players Won? " + playersWon);
 
-            object[] data = {playersWon, GameManager.Instance.LevelTimer};
+            object[] data = { playersWon, GameManager.Instance.LevelTimer };
             //Debug.LogWarning(GameManager.Instance.LevelTimer);
 
             if (NetworkEventManager.Instance.IsMasterClient)
@@ -431,7 +431,7 @@ namespace Hadal.Networking.UI.Loading
                 NetworkEventManager.Instance.RaiseEvent(ByteEvents.GAME_START_END, data);
                 Debug.LogWarning("Sending event to end game");
             }
-            
+
             StartCoroutine(TriggerEndScreen(playersWon, GameManager.Instance.LevelTimer));
         }
 
@@ -440,15 +440,15 @@ namespace Hadal.Networking.UI.Loading
             object[] parsedData = (object[])data.CustomData;
             bool playersWon = (bool)parsedData[0];
             float timeTaken = (float)parsedData[1];
-            
+
             //Debug.LogWarning("Received order to end myself: " + playersWon + ", " + timeTaken);
             StartCoroutine(TriggerEndScreen(playersWon, timeTaken));
         }
-        
+
         IEnumerator TriggerEndScreen(bool playersWon, float timeTaken)
         {
             yield return new WaitForSeconds(8f);
-                
+
             //! Enable first before update!
             endsScreenManager.Enable();
 
@@ -456,7 +456,6 @@ namespace Hadal.Networking.UI.Loading
             //while (!endsScreenHandler.IsActive) yield return null;
 
             endsScreenManager.UpdateEndData(playersWon, timeTaken);
-                
             NetworkEventManager.Instance.LeaveRoom(false, true);
         }
 
