@@ -66,7 +66,8 @@ namespace Hadal
 
                 //!! remove this if you dont want rotation.
                 Vector3 normalizedDirection = forceDirection.normalized;
-                Vector3 rotationVector = new Vector3(normalizedDirection.z, normalizedDirection.y, normalizedDirection.x);
+                //Vector3 rotationVector = new Vector3(normalizedDirection.z, normalizedDirection.y, normalizedDirection.x);
+                Vector3 rotationVector = new Vector3(normalizedDirection.y, normalizedDirection.x, normalizedDirection.z);
                 r.GetComponentInChildren<IRotatable>()?.AddRotation(rotationVector, force.magnitude);
 
                 /* r.AddTorque(force.magnitude * transform.up, ForceMode.Impulse);*/
