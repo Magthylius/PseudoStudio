@@ -624,6 +624,7 @@ namespace Hadal.AI
             expSettings.Position = position;
             expSettings.Radius = 70f + additionalRadius;
             expSettings.Force = knockForce;
+            expSettings.IsSpinPlayer = false;
             expSettings.IgnoreLayers = MachineData.Engagement.JG_KnockbackIgnoreMasks;
 
             ExplosivePoint.Create(expSettings);

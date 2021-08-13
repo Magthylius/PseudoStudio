@@ -179,6 +179,7 @@ namespace Hadal.Usables.Projectiles
             explodeInfo.Damage = explosionSelfDamage;
             explodeInfo.Position = this.transform.position;
 			explodeInfo.Force = 20f;
+            explodeInfo.IsSpinPlayer = true;
             return explodeInfo;
         }
 
