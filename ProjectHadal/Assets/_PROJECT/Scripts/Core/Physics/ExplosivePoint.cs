@@ -7,6 +7,7 @@ namespace Hadal
 {
     public class ExplosivePoint : MonoBehaviour
     {
+        public bool SpinPlayer { get; private set; }
         public int ExplosionDamage { get; private set; }
         public float RadiusOfEffect { get; private set; }
         public float ForceAmount { get; private set; }
@@ -64,10 +65,17 @@ namespace Hadal
 
                 r.AddForce(force, ForceMode.Impulse);
 
-                //!! remove this if you dont want rotation.
-                Vector3 normalizedDirection = forceDirection.normalized;
-                Vector3 rotationVector = new Vector3(normalizedDirection.z, normalizedDirection.y, normalizedDirection.x);
-                r.GetComponentInChildren<IRotatable>()?.AddRotation(rotationVector, force.magnitude);
+                if(LayerMask.LayerToName(r.gameObject.layer) == "LocalPlayer" || LayerMask.LayerToName(r.gameObject.layer) == "Player")
+                {
+                    if (!SpinPlayer)
+                        return;
+
+                    //!! remove this if you dont want rotation.
+                    Vector3 normalizedDirection = forceDirection.normalized;
+                    //Vector3 rotationVector = new Vector3(normalizedDirection.z, normalizedDirection.y, normalizedDirection.x);
+                    Vector3 rotationVector = new Vector3(0, normalizedDirection.x, 0);
+                    r.GetComponentInChildren<IRotatable>()?.AddRotation(rotationVector, force.magnitude);
+                }
 
                 /* r.AddTorque(force.magnitude * transform.up, ForceMode.Impulse);*/
             });
@@ -89,6 +97,7 @@ namespace Hadal
                 Position = GetPosition,
                 Radius = RadiusOfEffect,
                 Force = ForceAmount,
+                IsSpinPlayer = SpinPlayer,
                 DetonateOnRemote = !DetonateAutomatically,
                 IgnoreLayers = IgnoreLayerMasks
             };
@@ -109,6 +118,7 @@ namespace Hadal
             point.ExplosionDamage = settings.Damage;
             point.RadiusOfEffect = settings.Radius;
             point.ForceAmount = settings.Force;
+            point.SpinPlayer = settings.IsSpinPlayer;
             point.DetonateAutomatically = !settings.DetonateOnRemote;
             point.IgnoreLayerMasks = settings.IgnoreLayers;
             return point;
@@ -121,6 +131,7 @@ namespace Hadal
             public int Damage = 0;
             public float Radius = 30f;
             public float Force = 50f;
+            public bool IsSpinPlayer = false;
             public bool DetonateOnRemote = false;
             public LayerMask IgnoreLayers;
         }
