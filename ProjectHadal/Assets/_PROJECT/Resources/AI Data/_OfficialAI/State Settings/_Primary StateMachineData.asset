@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f97f7ae0167f1804a90964dbb8f2cf11, type: 3}
+  m_Name: _Primary StateMachineData
+  m_EditorClassIdentifier: 
+  Anticipation: {fileID: 11400000, guid: eec8d81bbf73292408bfbe489d63be92, type: 2}
+  Engagement: {fileID: 11400000, guid: 01d404c5532012f49bce1ce8cbeb6ed0, type: 2}
+  Recovery: {fileID: 11400000, guid: dc47404b1c014dc4990ea39d5508e647, type: 2}
+  Cooldown: {fileID: 11400000, guid: ff5515e0f63da304ab32e7cb193e8a41, type: 2}
+  RandomiseConfidenceOnAwake: 0
+  MinConfidence: 0
+  MaxConfidence: 100
+  InitialConfidence: 60
+  EggDestroyedPermanentConfidence: 40

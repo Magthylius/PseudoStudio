@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbea61f01ca1d4b4e965d2ecde50c4f0, type: 3}
+  m_Name: EngagementSettings
+  m_EditorClassIdentifier: 
+  ConfidenceIncrementValue: 5
+  ConfidenceDecrementValue: 1
+  G_ApproachCloseDistanceThreshold: 25
+  G_ApproachFarDistanceThreshold: 400
+  G_GlareAtTargetBeforeJudgementApproachTimeRange: {x: 1.5, y: 2}
+  G_PrepareHaltBeforeCarryDistance: 6
+  G_HaltingTime: 0.5
+  G_CarryDelayTimer: 0.7
+  G_TotalThreshTimeInSeconds: 2
+  G_BaseMinThreshDamagePerSecond: 20
+  G_BaseMaxThreshDamagePerSecond: 22
+  G_JudgementPersistChance: 0.8
+  G_DisruptionDamageCount: 6
+  G_CarryKnockbackAdditionalRange: 40
+  G_CarryKnockbackForce: 40
+  G_TunnelKnockbackCooldownTime: 2
+  G_TunnelKnockbackAdditionalRange: 40
+  G_TunnelKnockbackForce: 100
+  G_ConfidenceGateForNewJudgementTarget: 0.4
+  G_RoarStareAudioDelayTime: 2
+  G_BiteAnimationWaitTimeBeforeThresh: 1
+  G_DistanceFromFrontForBiteAnimation: 5
+  G_DistanceFromFrontForThreshAnimation: 4.5
+  AM_TargetPlayerRange: 100
+  AM_MaxWaitTime: 40
+  AM_PounceSpeedMultiplier: 3
+  AM_CarryDelayTimer: 0.25
+  AM_DisruptionDamageCount: 1
+  AM_AdditionalThreshDamagePerSecond: 4
+  HU_RoamingSpeedMultiplier: 2
+  HU_MaxHuntingTime: 60
+  HU_DisruptionDamageCount: 1
+  HU_PeriodicCavernUpdateTime: 4
+  JudgementTimer1: 40
+  JudgementTimer2: 40
+  JudgementTimer3: 35
+  JudgementTimer4: 30
+  JudgementPersistCountLimitPerEntry: 2
+  AGG_AdditionalThreshDamagePerSecond: 1
+  DEF_AdditionalThreshDamagePerSecond: 0
+  EGG_PermanentThreshDamagePerSecond: 2
+  EGG_PermanentDamageResistance: 0.1
+  JG_KnockbackIgnoreMasks:
+    serializedVersion: 2
+    m_Bits: 7359488
+  AG_AccumulatedDamageThresholdPercentage: 0.4
+  AllowTarget_HighestDMGPlayer: 1
+  AllowTarget_HighestHPPlayer: 1
+  AllowTarget_IsolatedPlayer: 1

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6ccae1271d08e74dbe5fcc2433763ee, type: 3}
+  m_Name: Enabled UnderwaterEffect
+  m_EditorClassIdentifier: 
+  effectMaterial: {fileID: 2100000, guid: e442f09a30aac374d9b5f819815e2262, type: 2}
+  pixelOffset: 0.001
+  noiseScale: 0.2
+  noiseFrequency: 10
+  noiseSpeed: 2
+  depthStart: 0
+  depthDistance: 1000

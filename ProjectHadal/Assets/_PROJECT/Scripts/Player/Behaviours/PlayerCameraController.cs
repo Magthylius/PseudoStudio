@@ -1,0 +1,156 @@
+﻿using Tenshi;
+using Tenshi.UnitySoku;
+using UnityEngine;
+
+//Created by Jet
+namespace Hadal.Player.Behaviours
+{
+    public class PlayerCameraController : CameraController, IPlayerComponent
+    {
+        #region Variable Definitions
+
+        [Header("FOV")]
+        [SerializeField] private float additionalFOVOnBoost;
+        [SerializeField] private float fovBoostTransitionSpeed;
+        [SerializeField] private float fovRecoverTransitionSpeed;
+
+        [Header("Special Effects")]
+        [SerializeField] private bool enableCameraShake = true;
+        [SerializeField] private CameraShakeProperties shakeProperties;
+        [SerializeField] private CameraShakeProperties leviathanShakeProperties;
+        [SerializeField] private CameraShakeProperties shakeSpeedMultiplier;
+        [SerializeField] private CameraShakeProperties maxShakeProperties;
+
+        private float _originalCameraFOV;
+        private bool _isDisabled = false;
+
+        #endregion
+
+        #region Unity Lifecycle
+
+        private void Awake()
+        {
+            _originalCameraFOV = selfCamera.fieldOfView;
+        }
+
+        #endregion
+
+        #region FOV Lerp Methods
+
+        public void CameraTransition(in float deltaTime, in bool isBoosted)
+        {
+            return;
+            // if (_isDisabled || true) return;
+            // if (isBoosted) LerpBoostedFOV(deltaTime);
+            // else LerpOriginalFOV(deltaTime);
+        }
+        private void LerpBoostedFOV(in float deltaTime)
+        {
+            float fov = selfCamera.fieldOfView;
+            fov.LerpAngle(BoostedFOV, fovBoostTransitionSpeed, deltaTime);
+            selfCamera.fieldOfView = fov;
+        }
+        private void LerpOriginalFOV(in float deltaTime)
+        {
+            float fov = selfCamera.fieldOfView;
+            fov.LerpAngle(_originalCameraFOV, fovRecoverTransitionSpeed, deltaTime);
+            selfCamera.fieldOfView = fov;
+        }
+
+        #endregion
+
+        #region Camera Shake
+
+        [NaughtyAttributes.Button("Shake Camera")]
+        private void ShakeCamera()
+        {
+            ShakeCameraDefault();
+        }
+
+        public void ShakeCamera(CameraShakeProperties customProperties)
+        {
+            if (_isDisabled || !enableCameraShake) return;
+            customProperties.Angle = Random.Range(0f, 360f);
+            this.ShakeCamera(selfCamera, customProperties);
+        }
+        public void ShakeCameraDefault()
+        {
+            if (_isDisabled || !enableCameraShake) return;
+            shakeProperties.Angle = Random.Range(0f, 360f);
+            this.ShakeCamera(selfCamera, shakeProperties);
+        }
+        public void ShakeCameraLeviathan()
+        {
+            if (_isDisabled || !enableCameraShake) return;
+            leviathanShakeProperties.Angle = Random.Range(0f, 360f);
+            this.ShakeCamera(selfCamera, leviathanShakeProperties);
+        }
+        public void ShakeCamera(float normSpeed)
+        {
+            if (_isDisabled || !enableCameraShake) return;
+            this.ShakeCamera(selfCamera, ShakePropertiesWithSpeed(normSpeed));
+        }
+        private CameraShakeProperties ShakePropertiesWithSpeed(float speed)
+        {
+            speed = speed.Clamp01();
+            var newShakeProperties = new CameraShakeProperties(
+                Random.Range(0f, 360f),
+                shakeProperties.Strength + (speed * shakeSpeedMultiplier.Strength),
+                shakeProperties.MaxSpeed + (speed * shakeSpeedMultiplier.MaxSpeed),
+                shakeProperties.MinSpeed + (speed * shakeSpeedMultiplier.MinSpeed),
+                shakeProperties.Duration + (speed * shakeSpeedMultiplier.Duration),
+                (shakeProperties.NoisePercent + (speed * shakeSpeedMultiplier.NoisePercent)).Clamp01(),
+                (shakeProperties.DampingPercent + (speed * shakeSpeedMultiplier.DampingPercent)).Clamp01(),
+                (shakeProperties.RotationPercent + (speed * shakeSpeedMultiplier.RotationPercent)).Clamp01()
+            );
+
+            newShakeProperties.Strength.Clamp(0f, maxShakeProperties.Strength);
+            newShakeProperties.MaxSpeed.Clamp(0f, maxShakeProperties.MaxSpeed);
+            newShakeProperties.MinSpeed.Clamp(0f, maxShakeProperties.MinSpeed);
+            newShakeProperties.Duration.Clamp(0f, maxShakeProperties.Duration);
+            newShakeProperties.NoisePercent.Clamp(0f, maxShakeProperties.NoisePercent);
+            newShakeProperties.DampingPercent.Clamp(0f, maxShakeProperties.DampingPercent);
+            newShakeProperties.RotationPercent.Clamp(0f, maxShakeProperties.RotationPercent);
+
+            // ($"str: {newShakeProperties.Strength}, max: {newShakeProperties.MaxSpeed}, min: {newShakeProperties.MinSpeed}, " +
+            // $"dur: {newShakeProperties.Duration}, noise: {newShakeProperties.NoisePercent}, damp: {newShakeProperties.DampingPercent}").Msg();
+            return newShakeProperties;
+        }
+
+        #endregion
+
+        #region Photon
+
+        public void Destroy()
+        {
+            Destroy(gameObject);
+        }
+
+        public void Activate()
+        {
+            _isDisabled = false;
+            selfCamera.enabled = true;
+            selfCamera.gameObject.SetActive(true);
+        }
+
+        public void Deactivate()
+        {
+            _isDisabled = true;
+            selfCamera.enabled = false;
+            selfCamera.gameObject.SetActive(false);
+        }
+
+        public void Inject(PlayerController controller)
+        {
+        }
+
+        #endregion
+
+        #region Shorthands
+
+        private float BoostedFOV => _originalCameraFOV + additionalFOVOnBoost;
+        public Camera GetCamera => selfCamera;
+
+        #endregion
+    }
+}

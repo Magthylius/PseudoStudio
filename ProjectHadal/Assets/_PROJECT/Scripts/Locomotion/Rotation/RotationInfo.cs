@@ -1,0 +1,225 @@
+﻿using Tenshi;
+using Hadal.Inputs;
+using UnityEngine;
+using NaughtyAttributes;
+using ReadOnly = NaughtyAttributes.ReadOnlyAttribute;
+
+//Created by Jet, E: Jon
+namespace Hadal.Locomotion
+{
+    [System.Serializable]
+    public class RotationInfo
+    {
+        [Header("Input Settings")]
+        [Min(0.1f)] public float OverallSensitivity;
+        [Min(0.1f)] public float PitchSensitivity;
+        [Min(0.1f)] public float YawSensitivity;
+        [Min(0.1f)] public float RollSensitivity;
+        public float Acceleration;
+
+        [Space(10f)]
+        public float XAxisInputClamp;
+        public float YAxisInputClamp;
+
+        [Header("X Axis Settings")]
+        public float XAxisClamp;
+        public float ClampTolerance;
+        public float PullBackSpeed;
+        [ReadOnly] public float CurrentXAxis;
+
+        [Header("Z Rotation Stabiliser")]
+        public float ZAxisClamp;
+        public float ZDampingSpeed;
+        public float ZActiveRotationSpeed;
+        public float SnapAngle;
+        [ReadOnly] public float ZClampAngle;
+        
+        private float _currentDampSpeed = 0.0f;
+        private bool _isVerticallyObserving = false;
+        private bool _isFlipped = false;
+        private const float UprightAngle = 0.0f;
+        private const float UpsideDownAngle = 180.0f;
+        private const float TiltAngle = 90.0f;
+        private const float FullAngle = 360.0f;
+
+        public void Initialise()
+        {
+            XAxisClamp = XAxisClamp.Abs();
+            CurrentXAxis = 0.0f;
+            ZClampAngle = UprightAngle;
+            SnapAngle = SnapAngle.Abs();
+            _isFlipped = false;
+        }
+
+        public void DoRotationWithLerp(in IRotationInput input, in float deltaTime, Transform target)
+        {
+            Vector3 rotation = target.rotation.eulerAngles;
+            float inputY = input.YAxis * OverallSensitivity, inputX = input.XAxis * OverallSensitivity;
+            float targetX = rotation.x - inputY - float.Epsilon;
+            float targetY = rotation.y + inputX - float.Epsilon;
+            rotation.x = Mathf.LerpAngle(rotation.x, targetX, Acceleration * deltaTime);
+            rotation.y = Mathf.LerpAngle(rotation.y, targetY, Acceleration * deltaTime);
+            rotation.z = RotateZAxisWithLerpClamp(input, rotation, deltaTime);
+            target.rotation = Quaternion.Euler(rotation);
+
+            /*Vector3 rotation = target.rotation.eulerAngles;
+            Vector3 playerInput = new Vector3(-input.YAxis, input.XAxis, -input.ZAxis);
+            targetLerpRotation = rotation + playerInput;*/
+        }
+
+        public void DoSmoothRotation(in IRotationInput input, in float deltaTime, Transform target)
+        {
+            Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
+            mouseDistance *= OverallSensitivity * Acceleration * deltaTime;
+
+            Vector3 rotation = target.localRotation.eulerAngles;
+            rotation.x = rotation.x.NormalisedAngle();
+            rotation.y = rotation.y.NormalisedAngle();
+            rotation.z = RotateZAxisWithLerpClamp(input, rotation, deltaTime);
+            target.localRotation = Quaternion.Euler(rotation);
+            target.Rotate(-mouseDistance.y, mouseDistance.x, 0.0f, Space.Self);
+        }
+
+        public void DoLocalRotation(in IRotationInput input, in float deltaTime, Transform target)
+        {
+            // Vector2 mouseDistance = new Vector2(input.XAxis, input.YAxis);
+            // mouseDistance *= (OverallSensitivity * Acceleration * deltaTime);
+
+            //Vector3 rotation = target.localEulerAngles;
+            Vector3 rotation = new Vector3();
+            rotation.x -= (input.YAxis * Mathf.Cos(rotation.z) + input.XAxis * Mathf.Sin(rotation.z)) * OverallSensitivity * Acceleration * deltaTime;
+            rotation.y += (input.XAxis * Mathf.Cos(rotation.z) + input.YAxis * Mathf.Sin(rotation.z)) * OverallSensitivity * Acceleration * deltaTime;
+            rotation.z -= input.ZAxis * OverallSensitivity * Acceleration * deltaTime;
+            //rotation.z = Mathf.Clamp(-mouseDistance.x / deltaTime, -ZAxisClamp, ZAxisClamp); 
+
+            //DebugManager.Instance.SLog(sl_rotationInput, "Rot Input: ", new Vector3(input.XAxis, input.YAxis, input.ZAxis));
+            // target.localEulerAngles = Vector3.Lerp(target.localEulerAngles, rotation, 5f * deltaTime);
+            
+            // target.rotation = Quaternion.Euler(rotation);
+            //target.localRotation = Quaternion.Lerp(target.localRotation, Quaternion.Euler(rotation), 5f * deltaTime);
+
+            // rotation.z = RotateZAxisWithLerpXClamp(input, rotation.z, -mouseDistance.x, deltaTime);
+            // rotation = target.rotation.eulerAngles;
+            
+            // target.rotation = Quaternion.Euler(rotation);
+            //target.rotation = Quaternion.Lerp(target.rotation, Quaternion.Euler(rotation), 5f * deltaTime);
+
+            target.Rotate(rotation.x, rotation.y, rotation.z);
+            //float tilt = Mathf.Clamp(-mouseDistance.x, -ZAxisClamp, ZAxisClamp);
+        }
+
+        public void DoLocalRotationFixedUpdate(in IRotationInput input, Transform target)
+        {
+            Vector3 rotation = new Vector3();
+            rotation.x -= input.YAxis * OverallSensitivity;
+            rotation.y += input.XAxis * OverallSensitivity;
+            rotation.z -= input.ZAxis * OverallSensitivity + (input.XAxis * 0.3f);
+
+            rotation *= OverallSensitivity * Time.deltaTime;
+
+            target.Rotate(rotation.x, rotation.y, rotation.z);
+        }
+
+        private float RotateZAxisWithLerpClamp(in IRotationInput input, in Vector3 euler, in float deltaTime)
+        {
+            float z = euler.z;
+            if (HandleZAxisClamp(euler, deltaTime, z) && !input.ZTrigger)
+            {
+                z = Mathf.SmoothDampAngle(z, ZClampAngle, ref _currentDampSpeed, SmoothingTime, MaxDampSpeed, SmoothDampStep * deltaTime);
+            }
+
+            return z * (!SnapDistanceReached()).AsFloat() + ZClampAngle * SnapDistanceReached().AsFloat();
+
+            #region Local Shorthands
+            bool SnapDistanceReached() => z.NormalisedAngle().DiffBetween(ZClampAngle.NormalisedAngle()).IsLessThan(SnapAngle);
+            #endregion
+        }
+
+        private float RotateZAxisWithLerpXClamp(in IRotationInput input, in float eulerZ, in float xMouseOffset, in float deltaTime)
+        {
+            float z = eulerZ;
+            z = HandleZAxisInput(input, deltaTime, z);
+            if (!_isFlipped)
+            {
+                if (xMouseOffset < -ZClampAngle || xMouseOffset > ZClampAngle)
+                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * OverallSensitivity * Acceleration * deltaTime);
+            }
+            else
+            {
+                if (xMouseOffset < -ZClampAngle || xMouseOffset > ZClampAngle)
+                    z = Mathf.Lerp(z, xMouseOffset, ZActiveRotationSpeed * OverallSensitivity * Acceleration * deltaTime);
+            }
+            return z;
+        }
+
+        private float HandleZAxisInput(in IRotationInput input, in float deltaTime, float z)
+        {
+            if (input.ZTrigger)
+            {
+                z -= input.ZAxis * ZActiveRotationSpeed * OverallSensitivity * Acceleration * deltaTime;
+                ZClampAngle = UpsideDownAngle * IsEligibleToFlip().AsFloat() + UprightAngle * (!IsEligibleToFlip()).AsFloat();
+                _isFlipped = IsEligibleToFlip();
+                return z;
+            }
+            // _isFlipped = IsEligibleToFlip();
+            return Mathf.Lerp(z, ZClampAngle, ZActiveRotationSpeed * Acceleration * deltaTime);
+
+            #region Local Shorthands
+            bool IsEligibleToFlip() => z.NormalisedAngle() < FullAngle - TiltAngle && z.NormalisedAngle() > TiltAngle;
+            #endregion
+        }
+        
+        private bool HandleZAxisClamp(Vector3 rotation, in float deltaTime, float z)
+        {
+            CurrentXAxis = rotation.x;
+            CurrentXAxis = CurrentXAxis.NormalisedAngle();
+            float normAxisClamp = FullAngle - XAxisClamp;
+            if ((UpperClamped() || LowerClamped()) && !_isVerticallyObserving) _isVerticallyObserving = true;
+            if (_isVerticallyObserving && HasReturnedToClamp(TiltAngle - XAxisClamp)) _isVerticallyObserving = false;
+
+            return !_isVerticallyObserving;
+            
+            #region Local Shorthands
+            bool UpperClamped() => CurrentXAxis < normAxisClamp && CurrentXAxis > 180.0f;
+            bool LowerClamped() => CurrentXAxis > XAxisClamp && CurrentXAxis < 180.0f;
+            bool HasReturnedToClamp(float yAxisDeviation)
+            {
+                return CurrentXAxis < FullAngle - TiltAngle - ClampTolerance - yAxisDeviation
+                    || CurrentXAxis > FullAngle - TiltAngle + ClampTolerance + yAxisDeviation;
+            }
+            #endregion
+        }
+
+        private Vector3 HandleAxisClamp(Vector3 rotationSelf, in float deltaTime)
+        {
+            CurrentXAxis = rotationSelf.x;
+            CurrentXAxis = CurrentXAxis.NormalisedAngle();
+
+            float normAxisClamp = FullAngle - XAxisClamp;
+            float upperClamp = normAxisClamp - ClampTolerance;
+            float lowerClamp = XAxisClamp + ClampTolerance;
+            if (CurrentXAxis < normAxisClamp && CurrentXAxis > 180.0f)
+            {
+                CurrentXAxis = Mathf.LerpAngle(CurrentXAxis, normAxisClamp, PullBackSpeed * deltaTime);
+                if (CurrentXAxis < upperClamp) CurrentXAxis = upperClamp;
+                rotationSelf.x = CurrentXAxis;
+                return rotationSelf;
+            }
+            if (CurrentXAxis > XAxisClamp && CurrentXAxis < 180.0f)
+            {
+                CurrentXAxis = Mathf.LerpAngle(CurrentXAxis, XAxisClamp, PullBackSpeed * deltaTime);
+                if (CurrentXAxis > lowerClamp) CurrentXAxis = lowerClamp;
+                rotationSelf.x = CurrentXAxis;
+            }
+            return rotationSelf;
+        }
+
+        private float MaxDampSpeed => ZActiveRotationSpeed * Acceleration;
+        private float SmoothingTime => MaxDampSpeed * OverallSensitivity;
+        private float SmoothDampStep => ZActiveRotationSpeed * Acceleration * OverallSensitivity * ZDampingSpeed;
+
+        public float GetPitchSensitivity => PitchSensitivity * OverallSensitivity;
+        public float GetYawSensitivity => YawSensitivity * OverallSensitivity;
+        public float GetRollSensivity => RollSensitivity * OverallSensitivity;
+    }
+}

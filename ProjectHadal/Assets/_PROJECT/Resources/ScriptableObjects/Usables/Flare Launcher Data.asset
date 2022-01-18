@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d809837dd6d453546aa06a8ab8dd9b76, type: 3}
+  m_Name: Flare Launcher Data
+  m_EditorClassIdentifier: 
+  Name: Flare Launcher
+  ProjectileData: {fileID: 11400000, guid: a0cc79636f887d842bb474b7aea7cd44, type: 2}
+  isChargable: 0
+  ModeToggleTreshold: 0.5
+  ChargingSpeed: 1
+  MaxForce: 70

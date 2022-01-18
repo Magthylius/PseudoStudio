@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1e83072208375b45a16fc5cdd137efa, type: 3}
+  m_Name: TrackerClass
+  m_EditorClassIdentifier: 
+  ClassType: 4
+  ClassInfo: {fileID: 11400000, guid: 170f628ab31a6f24e9918f4d1c0e95c4, type: 2}
+  GiveFlareHarpoon: 0
+  PowerUpFlare: 1
+  PowerUpHarpoon: 0
+  PowerUpDodgeBoost: 0
+  DodgeBoostCount: 3
+  PowerUpReviveTime: 0
+  ReviveTime: 1
+  RevivePercentHealth: 0.7
+  ActivateHydrophone: 1
+  PowerUpTorpFireRate: 0
+  TorpFireRate: 0.1
+  ClassLauncher:
+  - {fileID: 1275541528094104063, guid: 9e033e0a224229c42b1a476ff0ec6e56, type: 3}

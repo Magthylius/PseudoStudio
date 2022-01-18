@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - NavigationPoint
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -11,26 +13,26 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - PostProcessing
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - LocalPlayer
+  - Player
+  - Obstacle
+  - Interactable
+  - AINavigationLayer
+  - AI
+  - Wall
+  - Utilities
+  - Monster
+  - FogVolumeShadowCaster
+  - FogVolume
+  - FogVolumeSurrogate
+  - FogVolumeUniform
+  - TunnelDetectors
+  - PlayerGrabbed
+  - MonsterCarapace
+  - MonsterEgg
+  - LeviathanBrain
+  - SnailFish
+  - AccelZone
   - 
   - 
   - 
@@ -38,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: UI
+    uniqueID: 1326559287
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
